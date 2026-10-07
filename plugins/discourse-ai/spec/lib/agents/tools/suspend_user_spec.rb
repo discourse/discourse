@@ -18,6 +18,29 @@ RSpec.describe DiscourseAi::Agents::Tools::SuspendUser do
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
 
+  it "previews the user and duration concisely without repeated parameters or a diff" do
+    suspend_tool = tool(username: user.username, duration_days: 5, reason: "Testing")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(suspend_tool.approval_title))
+    expect(title.at_css("a.mention").text).to eq("@#{user.username}")
+    expect(suspend_tool.approval_details).to eq("5 days")
+    expect(
+      tool(username: user.username, duration_days: 1, reason: "Testing").approval_details,
+    ).to eq("1 day")
+    expect(suspend_tool.approval_description_label).to eq("Duration:")
+    expect(suspend_tool.approval_parameters).to be_empty
+    expect(suspend_tool.approval_changes).to be_empty
+    expect(suspend_tool.approval_question).to eq("Do you want to suspend this user?")
+    expect(user.reload.suspended?).to eq(false)
+    expect(
+      tool(
+        username: user.username,
+        duration_days: 5,
+        message: "Please read the guidelines",
+        reason: "Testing",
+      ).approval_parameters,
+    ).to eq([{ label: "Message to user", value: "Please read the guidelines" }])
+  end
+
   it "suspends the user" do
     result = tool(username: user.username, duration_days: 7, reason: "Repeated spam links").invoke
 

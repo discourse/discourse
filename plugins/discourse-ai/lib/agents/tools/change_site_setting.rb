@@ -191,6 +191,33 @@ module DiscourseAi
           { setting_name: setting_name, value: new_value }
         end
 
+        def approval_title
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.setting_title",
+            setting: DiscourseAi::AiBot::ChatToolApproval.format_value(setting_name),
+          )
+        end
+
+        def approval_changes
+          if !SiteSetting.has_setting?(setting_name) ||
+               SiteSetting.secret_settings.include?(setting_sym)
+            return []
+          end
+
+          empty = I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value")
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.setting_change_label"),
+              before: SiteSetting.public_send(setting_name).to_s.presence || empty,
+              after: new_value.presence || empty,
+            },
+          ]
+        end
+
+        def approval_parameters
+          []
+        end
+
         private
 
         def setting_name

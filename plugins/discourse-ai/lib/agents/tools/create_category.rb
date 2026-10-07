@@ -106,6 +106,25 @@ module DiscourseAi
           { name: parameters[:name] }
         end
 
+        def approval_title
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.create_category_title",
+            name: DiscourseAi::AiBot::ChatToolApproval.format_value(parameters[:name]),
+          )
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.create_category_question")
+        end
+
+        def approval_show_description?
+          false
+        end
+
+        def approval_parameters
+          super.reject { |parameter| parameter[:label] == "name" || parameter[:value].blank? }
+        end
+
         private
 
         def parent_category

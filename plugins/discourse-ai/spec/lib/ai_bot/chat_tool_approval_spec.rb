@@ -76,7 +76,38 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
     end
   end
 
+  describe ".format_value" do
+    it "renders multiline markup and backticks as code, and makes empty values explicit" do
+      value = "```\n<script>alert('test')</script>\n```"
+      cooked = Nokogiri::HTML5.fragment(Chat::Message.cook(described_class.format_value(value)))
+
+      expect(cooked.at_css("pre code").text.chomp).to eq(value)
+      expect(cooked.css("script")).to be_empty
+      empty = Nokogiri::HTML5.fragment(Chat::Message.cook(described_class.format_value("")))
+      expect(empty.at_css("code").text).to eq(
+        I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
+      )
+    end
+  end
+
   describe ".pending_blocks" do
+    it "builds a confirmation card with Yes and No actions" do
+      blocks =
+        described_class.pending_blocks(
+          7,
+          info: {
+            summary: "Edit category",
+            details: "Changing name",
+            question: "Do you want to make this change?",
+            parameters: [{ label: "name", value: "Wind & Rain" }],
+          },
+        )
+
+      expect(JSONSchemer.schema(Chat::Schemas::MessageBlocks).valid?(blocks.as_json)).to eq(true)
+      expect(blocks.first).to include(type: "confirmation", title: "Edit category")
+      expect(blocks.first[:elements].map { |element| element.dig(:text, :text) }).to eq(%w[Yes No])
+    end
+
     it "builds an actions block with approve/reject buttons carrying the reviewable id" do
       blocks = described_class.pending_blocks(7)
 
@@ -88,7 +119,133 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
     end
   end
 
+  describe ".handle_interaction for a tag rename" do
+    it "keeps the renamed tag badge and the original diff after approval" do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag, name: "old-name")
+      action =
+        AiToolAction.create!(
+          tool_name: "edit_tag",
+          tool_parameters: {
+            name: tag.name,
+            new_name: "Neat Stuff!",
+            reason: "Rebranding",
+          },
+          ai_agent: ai_agent,
+          bot_user_id: bot_user.id,
+        )
+      reviewable =
+        ReviewableAiToolAction.needs_review!(
+          target: action,
+          created_by: bot_user,
+          reviewable_by_moderator: true,
+          payload: {
+            reason: "Rebranding",
+          },
+        )
+      reviewable.add_score(
+        Discourse.system_user,
+        ReviewableScore.types[:needs_approval],
+        force_review: true,
+      )
+      message = message_for(reviewable)
+      changes = [{ label: "Changing name:", before: "old-name", after: "neat-stuff" }]
+      message.update!(
+        blocks:
+          described_class.pending_blocks(
+            reviewable.id,
+            info: {
+              summary: "Editing tag: #old-name::tag",
+              question: "Do you want to make this change?",
+              parameters: [],
+              changes: changes,
+            },
+          ),
+      )
+
+      described_class.handle_interaction(interaction_for(reviewable, user: admin, message: message))
+
+      expect(reviewable.reload).to be_approved
+      expect(tag.reload.name).to eq("neat-stuff")
+      card = message.reload.blocks.first
+      expect(card["changes"]).to eq(changes.as_json)
+      title = Nokogiri::HTML5.fragment(Chat::Message.cook(card["title"], user_id: admin.id))
+      expect(title.at_css("a.hashtag-cooked")["data-id"]).to eq(tag.id.to_s)
+    end
+  end
+
+  describe ".resolve_message!" do
+    it "preserves the card and proposed values while replacing the actions with the outcome" do
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: bot_user,
+          message: "Changing a setting",
+        )
+      message.update!(
+        blocks:
+          described_class.pending_blocks(
+            7,
+            info: {
+              summary: "Change site setting",
+              changes: [{ label: "Changing name:", before: "Old", after: "New" }],
+              details: message.message,
+              question: "Do you want to make this change?",
+              parameters: [{ label: "value", value: "<new `value`>" }],
+            },
+          ),
+      )
+
+      described_class.append_error!(message, "Try again")
+      expect(message.reload.blocks.first["error"]).to eq("Try again")
+      described_class.resolve_message!(message, "Approved")
+
+      card = message.reload.blocks.first
+      expect(card).to include(
+        "title" => "Change site setting",
+        "status" => "Approved",
+        "changes" => [{ "label" => "Changing name:", "before" => "Old", "after" => "New" }],
+        "elements" => [],
+        "parameters" => [{ "label" => "value", "value" => "<new `value`>" }],
+      )
+      expect(card).not_to have_key("error")
+      expect(message.message).to eq("Changing a setting")
+      expect(JSONSchemer.schema(Chat::Schemas::MessageBlocks).valid?(message.blocks)).to eq(true)
+    end
+  end
+
   describe ".handle_interaction" do
+    it "accepts a main-chat approval for a thread's original message" do
+      reviewable = create_reviewable
+      thread = Fabricate(:chat_thread, channel: dm_channel, original_message_user: admin)
+      reviewable.update!(
+        payload: reviewable.payload.merge("chat_message_id" => thread.original_message_id),
+      )
+      message = message_for(reviewable)
+
+      described_class.handle_interaction(
+        interaction_for(reviewable, user: admin, action: "reject", message: message),
+      )
+
+      expect(reviewable.reload).to be_rejected
+    end
+
+    it "rejects a main-chat approval for an actual thread reply" do
+      reviewable = create_reviewable
+      thread = Fabricate(:chat_thread, channel: dm_channel, original_message_user: admin)
+      source = Fabricate(:chat_message, chat_channel: dm_channel, thread: thread, user: admin)
+      reviewable.update!(payload: reviewable.payload.merge("chat_message_id" => source.id))
+      message = message_for(reviewable)
+
+      described_class.handle_interaction(
+        interaction_for(reviewable, user: admin, action: "reject", message: message),
+      )
+
+      expect(reviewable.reload).to be_pending
+      expect(message.reload.blocks).to be_present
+    end
+
     it "approves: suspends the user (credited to the approver) and resolves the message" do
       reviewable = create_reviewable
       message = message_for(reviewable)

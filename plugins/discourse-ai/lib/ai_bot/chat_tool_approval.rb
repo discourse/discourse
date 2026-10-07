@@ -22,30 +22,69 @@ module DiscourseAi
         { action: action, reviewable_id: reviewable_id.to_i }
       end
 
-      def self.pending_blocks(reviewable_id)
+      def self.format_value(value)
+        text = value.to_s
+        text = I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value") if text.empty?
+        longest_run = text.scan(/`+/).map(&:length).max.to_i
+
+        if text.include?("\n")
+          fence = "`" * [3, longest_run + 1].max
+          "\n#{fence}\n#{text}\n#{fence}\n"
+        else
+          delimiter = "`" * (longest_run + 1)
+          "#{delimiter} #{text} #{delimiter}"
+        end
+      end
+
+      def self.format_topic(topic)
+        format_link(topic.title, topic.url)
+      end
+
+      def self.format_link(text, url)
+        title = CGI.escapeHTML(text).gsub(/[\\`*_\[\]]/) { |character| "\\#{character}" }
+        "[#{title}](#{url})"
+      end
+
+      def self.pending_blocks(reviewable_id, info: nil)
         [
           {
-            type: "actions",
+            type: info ? "confirmation" : "actions",
             schema_version: 1,
+            **(
+              if info
+                {
+                  title: info[:summary],
+                  **(
+                    info[:description_label] ? { description_label: info[:description_label] } : {}
+                  ),
+                  show_description: info.fetch(:show_description, true),
+                  question: info[:question],
+                  parameters: info[:parameters],
+                  changes: info[:changes] || [],
+                }
+              else
+                {}
+              end
+            ),
             elements: [
               {
                 type: "button",
                 schema_version: 1,
                 action_id: build_action_id("approve", reviewable_id),
-                style: "primary",
+                style: "default",
                 text: {
                   type: "plain_text",
-                  text: I18n.t("discourse_ai.reviewables.ai_tool_action.approve.title"),
+                  text: I18n.t("discourse_ai.ai_bot.chat_tool_approval.approve_label"),
                 },
               },
               {
                 type: "button",
                 schema_version: 1,
                 action_id: build_action_id("reject", reviewable_id),
-                style: "danger",
+                style: "default",
                 text: {
                   type: "plain_text",
-                  text: I18n.t("discourse_ai.reviewables.ai_tool_action.reject.title"),
+                  text: I18n.t("discourse_ai.ai_bot.chat_tool_approval.reject_label"),
                 },
               },
             ],
@@ -82,6 +121,7 @@ module DiscourseAi
           resolve_message!(
             message,
             I18n.t("discourse_ai.ai_bot.chat_tool_approval.#{status_key}", username: user.username),
+            title: parsed[:action] == "approve" ? resolved_title(reviewable) : nil,
           )
         rescue => e
           # The reviewable stays pending; keep the buttons for a retry and
@@ -109,13 +149,30 @@ module DiscourseAi
         I18n.t("discourse_ai.ai_bot.chat_tool_approval.unexpected_error")
       end
 
-      # Appends the resolved status to the approval message and removes the
-      # buttons so it can no longer be actioned.
-      def self.resolve_message!(message, status_text)
+      def self.resolved_title(reviewable)
+        action = reviewable.target
+        return if action.tool_name != "edit_tag" || action.tool_parameters["new_name"].blank?
+
+        name = DiscourseTagging.clean_tag(action.tool_parameters["new_name"].to_s)
+        tag = Tag.where_name(name).first
+        return if tag.blank?
+
+        I18n.t("discourse_ai.ai_bot.chat_tool_approval.tag_title", tag: "##{tag.name}::tag")
+      end
+
+      def self.resolve_message!(message, status_text, title: nil)
         return if message.blank?
 
-        message.message = "#{message.message}\n\n#{status_text}"
-        message.blocks = nil
+        if (card = message.blocks&.find { |block| block["type"] == "confirmation" })
+          card["title"] = title if title
+          card.delete("error")
+          card["status"] = status_text
+          card["elements"] = []
+          card["parameters"].reject! { |parameter| parameter["label"] == "reason" }
+        else
+          message.message = "#{message.message}\n\n#{status_text}"
+          message.blocks = nil
+        end
         message.cook
         message.save!
         ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
@@ -126,7 +183,11 @@ module DiscourseAi
       def self.append_error!(message, status_text)
         return if message.blank?
 
-        message.message = "#{message.message}\n\n#{status_text}"
+        if (card = message.blocks&.find { |block| block["type"] == "confirmation" })
+          card["error"] = status_text
+        else
+          message.message = "#{message.message}\n\n#{status_text}"
+        end
         message.cook
         message.save!
         ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)

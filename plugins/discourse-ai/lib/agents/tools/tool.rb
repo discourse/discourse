@@ -110,6 +110,45 @@ module DiscourseAi
           I18n.t("discourse_ai.ai_bot.tool_description.#{name}", description_args)
         end
 
+        def approval_title
+          summary
+        end
+
+        def approval_changes
+          []
+        end
+
+        def approval_show_description?
+          true
+        end
+
+        def approval_description_label
+          nil
+        end
+
+        def approval_details
+          details
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.question")
+        end
+
+        def approval_parameters
+          parameters.filter_map do |key, value|
+            next if key.to_s == "reason"
+
+            parameter = {
+              label: key.to_s,
+              value: value.is_a?(String) ? value : JSON.generate(value),
+            }
+            if %w[color text_color].include?(key.to_s) && value.to_s.match?(/\A#?[0-9a-fA-F]{6}\z/)
+              parameter[:color] = value.to_s.delete_prefix("#")
+            end
+            parameter
+          end
+        end
+
         def help
           I18n.t("discourse_ai.ai_bot.tool_help.#{name}")
         end

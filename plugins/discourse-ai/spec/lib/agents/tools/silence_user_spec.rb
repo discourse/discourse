@@ -18,6 +18,29 @@ RSpec.describe DiscourseAi::Agents::Tools::SilenceUser do
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
 
+  it "previews a concise silence duration using the shared label and optional message" do
+    silence_tool = tool(username: user.username, duration_days: 7, reason: "Testing")
+    heading = Nokogiri::HTML5.fragment(Chat::Message.cook(silence_tool.approval_title))
+    expect(heading.at_css("a.mention").text).to eq("@#{user.username}")
+    expect(silence_tool.approval_description_label).to eq("Duration:")
+    expect(silence_tool.approval_details).to eq("7 days")
+    expect(
+      tool(username: user.username, duration_days: 1, reason: "Testing").approval_details,
+    ).to eq("1 day")
+    expect(silence_tool.approval_question).to eq("Do you want to silence this user?")
+    expect(silence_tool.approval_changes).to be_empty
+    expect(silence_tool.approval_parameters).to be_empty
+    expect(
+      tool(
+        username: user.username,
+        duration_days: 7,
+        message: "Please read the guidelines",
+        reason: "Testing",
+      ).approval_parameters,
+    ).to eq([{ label: "Message to user", value: "Please read the guidelines" }])
+    expect(user.reload.silenced?).to eq(false)
+  end
+
   it "silences the user" do
     result =
       tool(username: user.username, duration_days: 7, reason: "Repeated off-topic posts").invoke

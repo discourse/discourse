@@ -103,6 +103,65 @@ module DiscourseAi
           end
         end
 
+        def approval_title
+          topic = Topic.find_by(id: parameters[:topic_id])
+          return super if topic.blank?
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          topic = Topic.find_by(id: parameters[:topic_id])
+          return [] if topic.blank?
+
+          destination = Topic.find_by(id: parameters[:destination_topic_id]) if parameters[
+            :destination_topic_id
+          ].present?
+          destination_title = destination&.title || parameters[:new_title]
+          return [] if destination_title.blank?
+
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.posts_destination_label"),
+              before: topic.title,
+              after: destination_title,
+            },
+          ]
+        end
+
+        def approval_parameters
+          topic = Topic.find_by(id: parameters[:topic_id])
+          return [] if topic.blank?
+
+          numbers =
+            topic.posts.where(id: parameters[:post_ids]).order(:post_number).pluck(:post_number)
+          details = [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.posts_label"),
+              value:
+                numbers
+                  .map do |number|
+                    I18n.t("discourse_ai.ai_bot.chat_tool_approval.solution_post", number: number)
+                  end
+                  .join(", "),
+            },
+          ]
+          if parameters[:destination_topic_id].blank? && parameters[:category_id].present?
+            category = Category.find_by(id: parameters[:category_id])
+            if category
+              details << {
+                label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_label"),
+                value: category.name,
+                color: category.color,
+              }
+            end
+          end
+          details
+        end
+
         def description_args
           { topic_id: parameters[:topic_id], post_ids: (parameters[:post_ids] || []).join(", ") }
         end

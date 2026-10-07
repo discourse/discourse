@@ -76,6 +76,43 @@ module DiscourseAi
         def description_args
           { topic_id: parameters[:topic_id], deleted: parameters[:deleted] }
         end
+
+        def approval_title
+          return super if topic.blank?
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          return [] if topic.blank?
+
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_status_label"),
+              before:
+                I18n.t(
+                  "discourse_ai.ai_bot.chat_tool_approval.topic_states.#{topic.deleted_at.present? ? "deleted" : "active"}",
+                ),
+              after:
+                I18n.t(
+                  "discourse_ai.ai_bot.chat_tool_approval.topic_states.#{parameters[:deleted] ? "deleted" : "active"}",
+                ),
+            },
+          ]
+        end
+
+        def approval_parameters
+          []
+        end
+
+        private
+
+        def topic
+          @topic ||= Topic.with_deleted.find_by(id: parameters[:topic_id])
+        end
       end
     end
   end

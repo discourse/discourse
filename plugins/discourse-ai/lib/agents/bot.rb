@@ -524,7 +524,16 @@ module DiscourseAi
           # In chat the reply is rendered as interactive "blocks"; the chat
           # reply handler turns this into an Approve/Reject block message.
           update_blk.call(
-            { reviewable_id: reviewable.id, summary: tool.summary, details: tool.details },
+            {
+              reviewable_id: reviewable.id,
+              summary: tool.approval_title,
+              changes: tool.approval_changes,
+              details: tool.approval_details,
+              description_label: tool.approval_description_label,
+              show_description: tool.approval_show_description?,
+              question: tool.approval_question,
+              parameters: tool.approval_parameters,
+            },
             nil,
             :chat_approval,
           )

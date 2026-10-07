@@ -88,6 +88,39 @@ module DiscourseAi
           { name: parameters[:name], fields: changed_fields.join(", ") }
         end
 
+        def approval_title
+          return super if tag.blank?
+
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.tag_title", tag: "##{tag.name}::tag")
+        end
+
+        def approval_changes
+          return [] if tag.blank?
+
+          empty = I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value")
+          changes = []
+          if parameters[:new_name].present?
+            changes << {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_change_label.name"),
+              before: tag.name,
+              after: clean_new_name,
+            }
+          end
+          if description_provided?
+            changes << {
+              label:
+                I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_change_label.description"),
+              before: tag.description.presence || empty,
+              after: parameters[:description].presence || empty,
+            }
+          end
+          changes
+        end
+
+        def approval_parameters
+          []
+        end
+
         private
 
         def tag

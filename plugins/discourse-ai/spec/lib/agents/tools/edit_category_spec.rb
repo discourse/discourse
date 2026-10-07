@@ -40,6 +40,56 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     end
   end
 
+  describe "#approval_details" do
+    it "shows the current and proposed values without applying the changes" do
+      category.update!(name: "Storm", description: "Old description")
+      category_tool =
+        tool(
+          category_id: category.id,
+          name: "Wind & Rain",
+          description: "<script>alert('test')</script>",
+          reason: "Rebranding",
+        )
+
+      cooked =
+        Nokogiri::HTML5.fragment(
+          Chat::Message.cook(category_tool.approval_details, user_id: admin.id),
+        )
+
+      expect(category_tool.summary).to eq("Edit category name and description")
+
+      expect(cooked.css("code").map(&:text)).to eq(
+        [
+          "name",
+          "Storm",
+          "Wind & Rain",
+          "description",
+          "Old description",
+          "<script>alert('test')</script>",
+        ],
+      )
+      expect(cooked.css("script")).to be_empty
+      expect(category_tool.approval_changes).to eq(
+        [
+          { label: "Changing name:", before: "Storm", after: "Wind & Rain" },
+          {
+            label: "Changing description:",
+            before: "Old description",
+            after: "<script>alert('test')</script>",
+          },
+        ],
+      )
+      expect(category_tool.approval_question).to eq("Do you want to make this change?")
+      expect(category.reload.name).to eq("Storm")
+
+      question =
+        Nokogiri::HTML5.fragment(
+          Chat::Message.cook(category_tool.approval_title, user_id: admin.id),
+        )
+      expect(question.at_css("a.hashtag-cooked")["data-id"]).to eq(category.id.to_s)
+    end
+  end
+
   it "updates the category's name and colors" do
     result =
       tool(
@@ -129,6 +179,22 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
 
     expect(result[:status]).to eq("error")
     expect(result[:error]).to include("At least one")
+  end
+
+  it "does not queue a category edit when the requested values are already applied" do
+    category_tool = tool(category_id: category.id, name: category.name, reason: "Repeat request")
+
+    expect(category_tool.validation_error).to include(status: "error")
+    expect(category_tool.approval_details).to be_empty
+  end
+
+  it "does not queue a description edit that only repeats stored HTML as Markdown" do
+    category.update_columns(description: "<p>Same description.</p>")
+    category_tool =
+      tool(category_id: category.id, description: "Same description.", reason: "Repeat request")
+
+    expect(category_tool.validation_error).to include(status: "error")
+    expect(category_tool.approval_details).to be_empty
   end
 
   it "returns an error when reason is blank" do

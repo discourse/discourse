@@ -18,6 +18,38 @@ RSpec.describe DiscourseAi::Agents::Tools::EditPost do
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
 
+  it "previews content and title changes using the linked post and shared diff fields" do
+    post.topic.update!(title: "A [draft] *topic*")
+    post_tool =
+      tool(
+        post_id: post.id,
+        raw: "<script>alert('test')</script>\nUpdated content",
+        title: "New title",
+        edit_reason: "Requested by admin",
+      )
+    heading = Nokogiri::HTML5.fragment(Chat::Message.cook(post_tool.approval_title))
+    expect(heading.at_css("a").text).to eq("#{post.topic.title} · post ##{post.post_number}")
+    expect(heading.at_css("a")["href"]).to eq(post.url)
+    expect(post_tool.approval_changes).to eq(
+      [
+        {
+          label: "Changing content:",
+          before: post.raw,
+          after: "<script>alert('test')</script>\nUpdated content",
+        },
+        { label: "Changing topic title:", before: post.topic.title, after: "New title" },
+      ],
+    )
+    expect(post_tool.approval_parameters).to be_empty
+    expect(post.reload.raw).to eq("Original content")
+    expect(post.topic.reload.title).to eq("A [draft] *topic*")
+
+    title_tool = tool(post_id: post.id, title: "Another title", edit_reason: "Testing")
+    expect(title_tool.approval_changes).to eq(
+      [{ label: "Changing topic title:", before: post.topic.title, after: "Another title" }],
+    )
+  end
+
   it "edits the post content" do
     result = tool(post_id: post.id, raw: "Updated content", edit_reason: "Fixing typo").invoke
 

@@ -94,6 +94,12 @@ export default class ChatMessage extends Component {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
   }
 
+  get hasConfirmationBlock() {
+    return this.args.message.blocks?.some(
+      (block) => block.type === "confirmation"
+    );
+  }
+
   get includeSeparator() {
     return this.args.includeSeparator ?? true;
   }
@@ -380,7 +386,7 @@ export default class ChatMessage extends Component {
 
   @bind
   decorateCookedMessage(element, helper) {
-    this.messageContainer = element;
+    this.messageContainer = element.closest(".chat-confirmation") || element;
     this.initMentionedUsers();
     this.decorateMentions(element);
     _chatMessageDecorators.forEach((decorator) => {
@@ -756,37 +762,14 @@ export default class ChatMessage extends Component {
                   @threadContext={{this.threadContext}}
                 />
 
-                <ChatMessageText
-                  @cooked={{@message.cooked}}
-                  @decorate={{this.decorateCookedMessage}}
-                  @edited={{@message.edited}}
-                  @uploads={{@message.uploads}}
-                >
-                  {{#if this.shouldRenderReactions}}
-                    <div class="chat-message-reaction-list">
-                      {{#each @message.reactions as |reaction|}}
-                        <ChatMessageReaction
-                          @interactive={{@interactive}}
-                          @message={{@message}}
-                          @onReaction={{this.messageInteractor.react}}
-                          @reaction={{reaction}}
-                          @showTooltip={{true}}
-                        />
-                      {{/each}}
-
-                      {{#if this.shouldRenderOpenEmojiPickerButton}}
-                        <EmojiPicker
-                          class="chat-message-reaction"
-                          @btnClass="btn-flat react-btn chat-message-react-btn"
-                          @context="chat"
-                          @didSelectEmoji={{this.messageInteractor.selectReaction}}
-                          @onClose={{this.onEmojiPickerClose}}
-                          @onShow={{this.onEmojiPickerShow}}
-                        />
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                </ChatMessageText>
+                {{#unless this.hasConfirmationBlock}}
+                  <ChatMessageText
+                    @cooked={{@message.cooked}}
+                    @decorate={{this.decorateCookedMessage}}
+                    @edited={{@message.edited}}
+                    @uploads={{@message.uploads}}
+                  />
+                {{/unless}}
 
                 {{#if this.shouldRenderStopMessageStreamingButton}}
                   <div class="stop-streaming-btn-container">
@@ -800,7 +783,35 @@ export default class ChatMessage extends Component {
                   </div>
                 {{/if}}
 
-                <ChatMessageBlocks @message={{@message}} />
+                <ChatMessageBlocks
+                  @decorate={{this.decorateCookedMessage}}
+                  @message={{@message}}
+                />
+
+                {{#if this.shouldRenderReactions}}
+                  <div class="chat-message-reaction-list">
+                    {{#each @message.reactions as |reaction|}}
+                      <ChatMessageReaction
+                        @interactive={{@interactive}}
+                        @message={{@message}}
+                        @onReaction={{this.messageInteractor.react}}
+                        @reaction={{reaction}}
+                        @showTooltip={{true}}
+                      />
+                    {{/each}}
+
+                    {{#if this.shouldRenderOpenEmojiPickerButton}}
+                      <EmojiPicker
+                        class="chat-message-reaction"
+                        @btnClass="btn-flat react-btn chat-message-react-btn"
+                        @context="chat"
+                        @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                        @onClose={{this.onEmojiPickerClose}}
+                        @onShow={{this.onEmojiPickerShow}}
+                      />
+                    {{/if}}
+                  </div>
+                {{/if}}
 
                 <ChatMessageError
                   @message={{@message}}

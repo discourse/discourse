@@ -101,6 +101,45 @@ module DiscourseAi
         def description_args
           { topic_id: parameters[:topic_id], tags: (parameters[:tags] || []).join(", ") }
         end
+
+        def approval_title
+          return super if topic.blank?
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          return [] if topic.blank?
+
+          before = topic.tags.pluck(:name).sort
+          after =
+            (parameters[:tags] || [])
+              .map { |name| DiscourseTagging.clean_tag(name.to_s) }
+              .reject(&:blank?)
+          after += before if !parameters[:replace]
+          after = after.uniq.sort
+          empty = I18n.t("discourse_ai.ai_bot.chat_tool_approval.no_tags")
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_tags_label"),
+              before: before.empty? ? empty : before.join(", "),
+              after: after.empty? ? empty : after.join(", "),
+            },
+          ]
+        end
+
+        def approval_parameters
+          []
+        end
+
+        private
+
+        def topic
+          @topic ||= Topic.find_by(id: parameters[:topic_id])
+        end
       end
     end
   end
