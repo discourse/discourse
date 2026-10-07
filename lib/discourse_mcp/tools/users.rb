@@ -46,7 +46,7 @@ module DiscourseMcp
 
         page = arguments.fetch("page", 0)
         limit = arguments.fetch("limit", 100)
-        include_emails = arguments.fetch("include_emails", false)
+        include_emails = arguments.fetch("include_emails", false) && guardian.can_check_emails?(nil)
         query =
           AdminUserIndexQuery.new(
             {

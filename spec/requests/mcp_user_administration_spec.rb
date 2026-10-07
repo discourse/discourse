@@ -386,12 +386,19 @@ describe "MCP user administration tools" do
     expect(structured_content["meta"]).to include("page" => 0, "limit" => 1, "has_more" => false)
   end
 
-  it "lets staff list users without exposing email addresses they cannot inspect" do
+  it "lets staff list users without exposing or logging emails they cannot inspect" do
     SiteSetting.moderators_view_emails = false
     target_user = Fabricate(:user, username: "private_email_cat", email: "private@example.com")
     authorize("mcp:users:read", auth_user: moderator)
 
-    call_tool("discourse_list_users", { filter: target_user.username, include_emails: true })
+    expect do
+      call_tool("discourse_list_users", { filter: target_user.username, include_emails: true })
+    end.not_to change {
+      UserHistory.where(
+        action: UserHistory.actions[:check_email],
+        acting_user_id: moderator.id,
+      ).count
+    }
 
     expect(response.status).to eq(200)
     expect(structured_content["users"].first).to include(
