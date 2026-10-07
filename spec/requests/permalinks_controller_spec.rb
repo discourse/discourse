@@ -138,6 +138,17 @@ RSpec.describe PermalinksController do
         expect(response.headers["Location"]).to be_nil
       end
     end
+
+    it "returns 404 when the target tag has been deleted" do
+      tag = Fabricate(:tag)
+      permalink = Fabricate(:permalink, url: "deleted-tag", tag:)
+      tag.destroy!
+
+      get "/#{permalink.url}"
+
+      expect(response.status).to eq(404)
+      expect(response.headers["Location"]).to be_nil
+    end
   end
 
   describe "check" do
@@ -163,6 +174,17 @@ RSpec.describe PermalinksController do
         expect(json["found"]).to eq(false)
         expect(json["target_url"]).to be_nil
       end
+    end
+
+    it "reports not found when the target tag has been deleted" do
+      tag = Fabricate(:tag)
+      permalink = Fabricate(:permalink, url: "deleted-tag-check", tag:)
+      tag.destroy!
+
+      get "/permalink-check.json", params: { path: permalink.url }
+
+      expect(response.parsed_body["found"]).to eq(false)
+      expect(response.parsed_body["target_url"]).to be_nil
     end
   end
 end
