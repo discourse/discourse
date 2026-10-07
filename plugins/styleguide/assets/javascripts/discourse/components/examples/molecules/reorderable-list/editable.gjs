@@ -31,19 +31,19 @@ export default class ReorderableListEditableExample extends Component {
 
   <template>
     <DReorderableList
+      class="styleguide-reorderable-list"
       @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
       @onMove={{this.applyMove}}
       @onRemove={{this.remove}}
-      class="styleguide-reorderable-list"
     >
       <:row as |item|>
         <input
-          {{on "input" (fn this.updateValue item)}}
-          value={{item.value}}
-          type="text"
           class="styleguide-reorderable-list__input"
+          type="text"
+          value={{item.value}}
+          {{on "input" (fn this.updateValue item)}}
         />
       </:row>
     </DReorderableList>

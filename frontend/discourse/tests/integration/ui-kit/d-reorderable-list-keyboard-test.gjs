@@ -330,7 +330,7 @@ module(
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
-              <button type="button" class={{concat "extra-" item.id}}>x</button>
+              <button class={{concat "extra-" item.id}} type="button">x</button>
             </:row>
           </DReorderableList>
         </template>
@@ -622,26 +622,26 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              id="hint-primary"
               @group={{group}}
-              @listId="primary"
-              @listLabel="Primary"
               @items={{items}}
               @key="id"
               @label={{label}}
-              id="hint-primary"
+              @listId="primary"
+              @listLabel="Primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="hint-secondary"
               @group={{group}}
-              @listId="secondary"
-              @listLabel="Secondary"
               @items={{emptyItems}}
               @key="id"
               @label={{label}}
-              id="hint-secondary"
+              @listId="secondary"
+              @listLabel="Secondary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -782,26 +782,26 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              id="lone-primary"
               @group={{group}}
-              @listId="primary"
-              @listLabel="Primary"
               @items={{items}}
               @key="id"
               @label={{label}}
-              id="lone-primary"
+              @listId="primary"
+              @listLabel="Primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="lone-secondary"
               @group={{group}}
-              @listId="secondary"
-              @listLabel="Secondary"
               @items={{emptyItems}}
               @key="id"
               @label={{label}}
-              id="lone-secondary"
+              @listId="secondary"
+              @listLabel="Secondary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -835,8 +835,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -880,8 +880,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -915,8 +915,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <input id="field-{{item.id}}" value={{item.name}} />
@@ -945,15 +945,15 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <button
-                type="button"
-                role="switch"
                 aria-checked="false"
                 id="switch-{{item.id}}"
+                role="switch"
+                type="button"
               >{{item.name}}</button>
             </:row>
           </DReorderableList>
@@ -986,15 +986,15 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <button
-                type="button"
-                role="radio"
                 aria-checked="false"
                 id="radio-{{item.id}}"
+                role="radio"
+                type="button"
               >{{item.name}}</button>
             </:row>
           </DReorderableList>
@@ -1023,8 +1023,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{handleMove}}
             @movable={{isMovable}}
+            @onMove={{handleMove}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1061,8 +1061,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @movable={{isMovable}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1650,10 +1650,10 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @announceMove={{suppress}}
             @items={{items}}
             @key="id"
             @label={{label}}
-            @announceMove={{suppress}}
             @onMove={{handleMove}}
           >
             <:row as |item|>

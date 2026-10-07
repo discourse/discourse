@@ -20,11 +20,11 @@ export default class ReorderableListBasicExample extends Component {
 
   <template>
     <DReorderableList
+      class="styleguide-reorderable-list"
       @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
       @onMove={{this.applyMove}}
-      class="styleguide-reorderable-list"
     >
       <:row as |item|>
         <span>{{item.name}}</span>

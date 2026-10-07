@@ -27,18 +27,18 @@ interface CreateControlsSignature {
 const CreateControls: TemplateOnlyComponent<CreateControlsSignature> =
   <template>
     <input
+      aria-label={{i18n "reorder.add_item"}}
+      class="d-reorderable-list__create-input"
+      type="text"
       {{@captureInput}}
       {{on "keydown" @onKeydown}}
-      type="text"
-      class="d-reorderable-list__create-input"
-      aria-label={{i18n "reorder.add_item"}}
     />
     <DButton
-      @icon="plus"
+      class="btn-flat d-reorderable-list__create-button"
       @action={{@submit}}
+      @icon="plus"
       @translatedAriaLabel={{i18n "reorder.add_item"}}
       @translatedTitle={{i18n "reorder.add_item"}}
-      class="btn-flat d-reorderable-list__create-button"
     />
   </template>;
 
@@ -52,6 +52,7 @@ export default class CreateRow extends Component<CreateRowSignature> {
     this.#input = element;
     return () => (this.#input = undefined);
   });
+
   /**
    * The live input element. Read directly at submit time instead of mirroring
    * keystrokes into tracked state: the value only matters at that moment, and

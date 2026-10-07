@@ -48,28 +48,28 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            id="repair-spill-upper"
             @group={{group}}
-            @listId="upper"
-            @listLabel="Upper"
-            @spill={{true}}
             @items={{upper}}
             @key="id"
             @label={{label}}
-            id="repair-spill-upper"
+            @listId="upper"
+            @listLabel="Upper"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="repair-spill-lower"
             @group={{group}}
-            @listId="lower"
-            @listLabel="Lower"
-            @spill={{true}}
             @items={{lower}}
             @key="id"
             @label={{label}}
-            id="repair-spill-lower"
+            @listId="lower"
+            @listLabel="Lower"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -127,10 +127,10 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          @announceMove={{customSentence}}
           @items={{items}}
           @key="id"
           @label={{label}}
-          @announceMove={{customSentence}}
           @onMove={{handleMove}}
         >
           <:row as |item|>
@@ -220,13 +220,13 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
+            id="repair-vanish-solo"
             @group={{group}}
-            @listId="solo"
-            @listLabel="Solo"
             @items={{soloItems}}
             @key="id"
             @label={{label}}
-            id="repair-vanish-solo"
+            @listId="solo"
+            @listLabel="Solo"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -234,13 +234,13 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
           </DReorderableList>
           {{#if state.showPartner}}
             <DReorderableList
+              id="repair-vanish-partner"
               @group={{group}}
-              @listId="partner"
-              @listLabel="Partner"
               @items={{partnerItems}}
               @key="id"
               @label={{label}}
-              id="repair-vanish-partner"
+              @listId="partner"
+              @listLabel="Partner"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -326,24 +326,24 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
+            id="solo-list"
             @group={{group}}
-            @listId="solo"
             @items={{soloItems}}
             @key="id"
             @label={{label}}
-            id="solo-list"
+            @listId="solo"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="other-list"
             @group={{group}}
-            @listId="other"
             @items={{otherItems}}
             @key="id"
             @label={{label}}
-            id="other-list"
+            @listId="other"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>

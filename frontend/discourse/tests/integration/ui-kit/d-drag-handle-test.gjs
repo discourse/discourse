@@ -27,9 +27,9 @@ module("Integration | ui-kit | DDragHandle", function (hooks) {
     await render(
       <template>
         <DDragHandle
-          @label="Reorder Topics"
           class="my-row__handle"
           data-link-name="Topics"
+          @label="Reorder Topics"
         />
       </template>
     );

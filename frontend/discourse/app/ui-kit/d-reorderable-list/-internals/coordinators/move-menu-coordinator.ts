@@ -186,24 +186,6 @@ export default class MoveMenuCoordinator {
   }
 
   /**
-   * Puts focus on the first destination, which is always a legitimate landing
-   * spot: the menu renders only destinations the row can take.
-   *
-   * Focused without scrolling: the float is placed asynchronously and can
-   * still be sitting at the document origin, so asking the browser to reveal
-   * it would throw the reader to the top of the page.
-   */
-  #focusFirstDestination() {
-    const content = document.querySelector(MENU_CONTENT_SELECTOR);
-    if (!content) {
-      return;
-    }
-    content
-      .querySelector<HTMLElement>(".d-reorderable-list__move-item")
-      ?.focus({ preventScroll: true });
-  }
-
-  /**
    * Closes the list's menu, if it is open.
    *
    * @param focusTrigger - Whether to hand focus back to the handle the menu
@@ -255,6 +237,24 @@ export default class MoveMenuCoordinator {
       this.#onRefusedMove(key);
       return;
     }
+  }
+
+  /**
+   * Puts focus on the first destination, which is always a legitimate landing
+   * spot: the menu renders only destinations the row can take.
+   *
+   * Focused without scrolling: the float is placed asynchronously and can
+   * still be sitting at the document origin, so asking the browser to reveal
+   * it would throw the reader to the top of the page.
+   */
+  #focusFirstDestination() {
+    const content = document.querySelector(MENU_CONTENT_SELECTOR);
+    if (!content) {
+      return;
+    }
+    content
+      .querySelector<HTMLElement>(".d-reorderable-list__move-item")
+      ?.focus({ preventScroll: true });
   }
 
   /** What the menu part is handed as its list. Row and spill state stay live. */

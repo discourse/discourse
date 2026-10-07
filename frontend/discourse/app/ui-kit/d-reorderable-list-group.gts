@@ -143,6 +143,7 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
     },
     onMove: (move: ReorderableMove) => this.args.onMove(move),
   };
+
   /**
    * The registered members, by listId.
    *

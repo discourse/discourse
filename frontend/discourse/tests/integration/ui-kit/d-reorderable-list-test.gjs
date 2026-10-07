@@ -62,11 +62,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           <:row as |item controls|>
             <span
               class="row-content"
-              data-test-item={{item.id}}
-              data-index={{controls.index}}
               data-first={{if controls.isFirst "true" "false"}}
+              data-index={{controls.index}}
               data-last={{if controls.isLast "true" "false"}}
               data-movable={{if controls.movable "true" "false"}}
+              data-test-item={{item.id}}
             >{{item.name}}</span>
           </:row>
         </DReorderableList>
@@ -217,17 +217,17 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          class="consumer-list"
+          data-consumer="present"
+          id="custom-list"
+          @itemRole="option"
           @items={{items}}
+          @itemTag="article"
           @key="id"
           @label={{label}}
           @onMove={{noop}}
-          @tag="section"
-          @itemTag="article"
           @role="listbox"
-          @itemRole="option"
-          id="custom-list"
-          class="consumer-list"
-          data-consumer="present"
+          @tag="section"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -266,25 +266,25 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          id="string-classes"
           @items={{items}}
           @key="id"
           @label={{label}}
           @onMove={{noop}}
           @rowClass="string-one string-two"
-          id="string-classes"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </:row>
         </DReorderableList>
         <DReorderableList
+          id="callback-classes"
           @items={{items}}
           @key="id"
           @label={{label}}
-          @onMove={{noop}}
           @movable={{movable}}
+          @onMove={{noop}}
           @rowClass={{rowClass}}
-          id="callback-classes"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -319,11 +319,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          @controls="manual"
           @items={{items}}
           @key="id"
           @label={{label}}
           @onMove={{noop}}
-          @controls="manual"
         >
           <:row as |item controls|>
             <span class="row-content" data-test-item={{item.id}}>
@@ -353,11 +353,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          @disabled={{true}}
           @items={{items}}
           @key="id"
           @label={{label}}
           @onMove={{noop}}
-          @disabled={{true}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -398,13 +398,13 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @items={{items}}
           @key="id"
           @label={{label}}
-          @onMove={{onMove}}
           @movable={{movable}}
+          @onMove={{onMove}}
         >
           <:row as |item controls|>
             <span
-              data-test-item={{item.id}}
               data-movable={{if controls.movable "true" "false"}}
+              data-test-item={{item.id}}
             >{{item.name}}</span>
           </:row>
         </DReorderableList>
@@ -494,9 +494,9 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @key="id"
           @label={{state.itemLabel}}
           @movable={{state.movable}}
-          @removable={{state.removable}}
           @onMove={{noop}}
           @onRemove={{noop}}
+          @removable={{state.removable}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -583,8 +583,8 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @items={{items}}
           @key="id"
           @label={{label}}
-          @onMove={{noop}}
           @movable={{movable}}
+          @onMove={{noop}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -744,11 +744,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          @announceMove={{announceMove}}
           @items={{items}}
           @key="id"
           @label={{label}}
           @onMove={{onMove}}
-          @announceMove={{announceMove}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -786,11 +786,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          @announceMove={{announceMove}}
           @items={{items}}
           @key="id"
           @label={{label}}
           @onMove={{onMove}}
-          @announceMove={{announceMove}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1060,22 +1060,22 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
+          id="first-list"
           @items={{firstItems}}
           @key="id"
           @label={{label}}
           @onMove={{firstOnMove}}
-          id="first-list"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
           </:row>
         </DReorderableList>
         <DReorderableList
+          id="second-list"
           @items={{secondItems}}
           @key="id"
           @label={{label}}
           @onMove={{secondOnMove}}
-          id="second-list"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1250,11 +1250,11 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @controls="manual"
             @items={{items}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
-            @controls="manual"
           >
             <:row as |item controls|>
               <span class="row-content" data-test-item={{item.id}}>
@@ -1287,33 +1287,33 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            id="manual-api"
+            @controls="manual"
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
-            @controls="manual"
             @movable={{movable}}
-            id="manual-api"
+            @onMove={{noop}}
           >
             <:row as |item controls|>
               <span
-                data-test-item={{item.id}}
                 data-handle={{if controls.handle "true" "false"}}
+                data-test-item={{item.id}}
               >{{item.name}}</span>
               {{#if controls.handle}}<controls.handle />{{/if}}
             </:row>
           </DReorderableList>
 
           <DReorderableList
+            id="auto-api"
             @items={{items}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
-            id="auto-api"
           >
             <:row as |item controls|><span
-                data-test-item={{item.id}}
                 data-handle={{if controls.handle "true" "false"}}
+                data-test-item={{item.id}}
               >{{item.name}}</span></:row>
           </DReorderableList>
         </template>
@@ -1386,11 +1386,11 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @controls="manual"
             @items={{items}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
-            @controls="manual"
           >
             <:row as |item controls|>
               <div class="consumer-cell" data-test-item={{item.id}}>
@@ -1482,11 +1482,11 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @controls="manual"
             @items={{items}}
             @key="id"
             @label={{label}}
             @onMove={{onMove}}
-            @controls="manual"
           >
             <:row as |item controls|>
               <div data-test-item={{item.id}}>
@@ -1549,11 +1549,11 @@ module(
           <template>
             <DMenus />
             <DReorderableList
+              @controls="manual"
               @items={{items}}
               @key="id"
               @label={{label}}
               @onMove={{onMove}}
-              @controls="manual"
             >
               <:row as |item controls|>
                 <div data-test-item={{item.id}}><controls.handle /></div>
@@ -1624,11 +1624,11 @@ module(
           <template>
             <DMenus />
             <DReorderableList
+              @controls="manual"
               @items={{items}}
               @key="id"
               @label={{label}}
               @onMove={{noop}}
-              @controls="manual"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1657,12 +1657,12 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{noop}}
-            @allowCreate={{true}}
+            @onMove={{noop}}
           >
             <:row as |item|><span
                 data-test-item={{item.id}}
@@ -1720,12 +1720,12 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{onCreate}}
-            @allowCreate={{true}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1772,12 +1772,12 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{onCreate}}
-            @allowCreate={{true}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1825,8 +1825,8 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{noop}}
+            @onMove={{noop}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1850,12 +1850,12 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @key="id"
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{noop}}
-            @allowCreate={{true}}
+            @onMove={{noop}}
           >
             <:row as |item|><span
                 data-test-item={{item.id}}
@@ -1892,11 +1892,11 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @label={{label}}
-            @onMove={{noop}}
             @onCreate={{noop}}
-            @allowCreate={{true}}
+            @onMove={{noop}}
           >
             <:row as |item|><span data-test-item={{item}}>{{item}}</span></:row>
             <:empty><li data-slot="empty">Nothing here</li></:empty>
@@ -2043,9 +2043,9 @@ module(
             @items={{items}}
             @key="id"
             @label={{label}}
+            @movable={{movable}}
             @onMove={{noop}}
             @onRemove={{onRemove}}
-            @movable={{movable}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2071,13 +2071,13 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            @allowCreate={{true}}
             @items={{items}}
             @key="id"
             @label={{label}}
+            @onCreate={{noop}}
             @onMove={{noop}}
             @onRemove={{onRemove}}
-            @onCreate={{noop}}
-            @allowCreate={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2166,24 +2166,24 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              id="solo-list"
               @group={{group}}
-              @listId="solo"
               @items={{soloItems}}
               @key="id"
               @label={{label}}
-              id="solo-list"
+              @listId="solo"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="other-list"
               @group={{group}}
-              @listId="other"
               @items={{otherItems}}
               @key="id"
               @label={{label}}
-              id="other-list"
+              @listId="other"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2221,14 +2221,14 @@ module(
           {{! eslint-disable ember/template-table-groups }}
           <table>
             <DReorderableList
+              @allowCreate={{true}}
               @items={{items}}
+              @itemTag="tr"
               @key="id"
               @label={{label}}
-              @onMove={{noop}}
               @onCreate={{onCreate}}
-              @allowCreate={{true}}
+              @onMove={{noop}}
               @tag="tbody"
-              @itemTag="tr"
             >
               <:row as |item|>
                 <td data-test-item={{item.id}}>{{item.name}}</td>

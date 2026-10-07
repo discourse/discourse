@@ -38,15 +38,15 @@ export default class ReorderableListCrossListExample extends Component {
               "styleguide.sections.reorderable_list.cross_list_primary"
             }}</h4>
           <DReorderableList
+            class="styleguide-reorderable-list"
             @group={{group}}
+            @items={{this.primary}}
+            @key="id"
+            @label={{this.itemLabel}}
             @listId="primary"
             @listLabel={{i18n
               "styleguide.sections.reorderable_list.cross_list_primary"
             }}
-            @items={{this.primary}}
-            @key="id"
-            @label={{this.itemLabel}}
-            class="styleguide-reorderable-list"
           >
             <:row as |item|>
               <span>{{item.name}}</span>
@@ -61,15 +61,15 @@ export default class ReorderableListCrossListExample extends Component {
               "styleguide.sections.reorderable_list.cross_list_secondary"
             }}</h4>
           <DReorderableList
+            class="styleguide-reorderable-list"
             @group={{group}}
+            @items={{this.secondary}}
+            @key="id"
+            @label={{this.itemLabel}}
             @listId="secondary"
             @listLabel={{i18n
               "styleguide.sections.reorderable_list.cross_list_secondary"
             }}
-            @items={{this.secondary}}
-            @key="id"
-            @label={{this.itemLabel}}
-            class="styleguide-reorderable-list"
           >
             <:row as |item|>
               <span>{{item.name}}</span>

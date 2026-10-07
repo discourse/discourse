@@ -32,12 +32,12 @@ interface RemovePartSignature {
  */
 const RemovePart: TOC<RemovePartSignature> = <template>
   <DButton
-    @icon={{@icon}}
-    @action={{fn @onRemove @row.key}}
-    @translatedAriaLabel={{@row.removeLabel}}
-    @translatedTitle={{@row.removeLabel}}
     class="{{or @buttonClass 'btn-flat'}} d-reorderable-list__remove"
     ...attributes
+    @action={{fn @onRemove @row.key}}
+    @icon={{@icon}}
+    @translatedAriaLabel={{@row.removeLabel}}
+    @translatedTitle={{@row.removeLabel}}
   />
 </template>;
 

@@ -49,8 +49,8 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           <span data-placement="before">Before</span>
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <span
-              data-placement="first"
               data-group-context={{if group "present" "missing"}}
+              data-placement="first"
             >First</span>
             <span data-placement="last">Last</span>
           </DReorderableListGroup>
@@ -85,11 +85,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DReorderableListGroup @onMove={{groupMove}} as |group|>
           <DReorderableList
             @group={{group}}
-            @listId="primary"
-            @listLabel="Primary"
             @items={{items}}
             @key="id"
             @label={{label}}
+            @listId="primary"
+            @listLabel="Primary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -169,19 +169,19 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
                 the replacement member is constructed before the old one is torn
                 down and both briefly claim the same listId. }}
             <DReorderableList
+              @disabled={{state.frozen}}
               @items={{outer}}
               @key="id"
               @label={{label}}
               @onMove={{noop}}
-              @disabled={{state.frozen}}
             >
               <:row as |section|>
                 <DReorderableList
                   @group={{group}}
-                  @listId={{section.id}}
                   @items={{inner}}
                   @key="id"
                   @label={{label}}
+                  @listId={{section.id}}
                 >
                   <:row as |item|>
                     <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -237,25 +237,25 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              id="button-primary-list"
               @group={{group}}
-              @listId="primary"
-              @listLabel="Primary links"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="button-primary-list"
+              @listId="primary"
+              @listLabel="Primary links"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="button-secondary-list"
               @group={{group}}
-              @listId="secondary"
               @items={{secondaryItems}}
               @key="id"
               @label={{label}}
-              id="button-secondary-list"
+              @listId="secondary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -344,24 +344,24 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              id="drag-primary-list"
               @group={{group}}
-              @listId="primary"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="drag-primary-list"
+              @listId="primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="drag-secondary-list"
               @group={{group}}
-              @listId="secondary"
               @items={{secondaryItems}}
               @key="id"
               @label={{label}}
-              id="drag-secondary-list"
+              @listId="secondary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -457,27 +457,27 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            id="cross-primary-list"
             @group={{group}}
-            @listId="primary"
-            @listLabel="Primary links"
             @items={{primaryItems}}
             @key="id"
             @label={{label}}
+            @listId="primary"
+            @listLabel="Primary links"
             @movable={{movable}}
-            id="cross-primary-list"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="cross-secondary-list"
             @group={{group}}
-            @listId="secondary"
-            @listLabel="Secondary links"
             @items={{secondaryItems}}
             @key="id"
             @label={{label}}
-            id="cross-secondary-list"
+            @listId="secondary"
+            @listLabel="Secondary links"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -562,24 +562,24 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            id="boundary-primary-list"
             @group={{group}}
-            @listId="primary"
             @items={{primaryItems}}
             @key="id"
             @label={{label}}
-            id="boundary-primary-list"
+            @listId="primary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="boundary-secondary-list"
             @group={{group}}
-            @listId="secondary"
             @items={{secondaryItems}}
             @key="id"
             @label={{label}}
-            id="boundary-secondary-list"
+            @listId="secondary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -623,25 +623,25 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            id="empty-source-list"
             @group={{group}}
-            @listId="primary"
             @items={{primaryItems}}
             @key="id"
             @label={{label}}
-            id="empty-source-list"
+            @listId="primary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="empty-target-list"
             @group={{group}}
-            @listId="empty"
-            @listLabel="Empty links"
             @items={{emptyItems}}
             @key="id"
             @label={{label}}
-            id="empty-target-list"
+            @listId="empty"
+            @listLabel="Empty links"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -710,24 +710,24 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
+            id="non-empty-primary-list"
             @group={{group}}
-            @listId="primary"
             @items={{primaryItems}}
             @key="id"
             @label={{label}}
-            id="non-empty-primary-list"
+            @listId="primary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="non-empty-secondary-list"
             @group={{group}}
-            @listId="secondary"
             @items={{secondaryItems}}
             @key="id"
             @label={{label}}
-            id="non-empty-secondary-list"
+            @listId="secondary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -771,25 +771,25 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           <DReorderableList
+            id="unlabelled-primary-list"
             @group={{group}}
-            @listId="primary"
-            @listLabel="Primary links"
             @items={{primaryItems}}
             @key="id"
             @label={{label}}
-            id="unlabelled-primary-list"
+            @listId="primary"
+            @listLabel="Primary links"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="unlabelled-secondary-list"
             @group={{group}}
-            @listId="secondary"
             @items={{secondaryItems}}
             @key="id"
             @label={{label}}
-            id="unlabelled-secondary-list"
+            @listId="secondary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -842,12 +842,12 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{groupOnMove}} as |group|>
           <DReorderableList
+            id="isolated-grouped-list"
             @group={{group}}
-            @listId="grouped"
             @items={{groupedItems}}
             @key="id"
             @label={{label}}
-            id="isolated-grouped-list"
+            @listId="grouped"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -855,11 +855,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           </DReorderableList>
         </DReorderableListGroup>
         <DReorderableList
+          id="isolated-standalone-list"
           @items={{standaloneItems}}
           @key="id"
           @label={{label}}
           @onMove={{standaloneOnMove}}
-          id="isolated-standalone-list"
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -929,11 +929,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         {{#if state.showList}}
           <DReorderableList
+            id="teardown-menu-list"
             @items={{items}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
-            id="teardown-menu-list"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -982,12 +982,12 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DReorderableListGroup @onMove={{onMove}} as |group|>
           {{#if state.showPrimary}}
             <DReorderableList
+              id="teardown-primary-list"
               @group={{group}}
-              @listId="primary"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="teardown-primary-list"
+              @listId="primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -995,12 +995,12 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             </DReorderableList>
           {{/if}}
           <DReorderableList
+            id="teardown-secondary-list"
             @group={{group}}
-            @listId="secondary"
             @items={{secondaryItems}}
             @key="id"
             @label={{label}}
-            id="teardown-secondary-list"
+            @listId="secondary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1072,10 +1072,10 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
               @group={{group}}
-              @listId="duplicate"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
+              @listId="duplicate"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1083,10 +1083,10 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             </DReorderableList>
             <DReorderableList
               @group={{group}}
-              @listId="duplicate"
               @items={{secondaryItems}}
               @key="id"
               @label={{label}}
+              @listId="duplicate"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1122,11 +1122,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DReorderableListGroup @onMove={{noop}} as |group|>
           <DReorderableList
             @group={{group}}
-            @listId="primary"
-            @listLabel="Primary"
             @items={{primary}}
             @key="id"
             @label={{label}}
+            @listId="primary"
+            @listLabel="Primary"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1134,11 +1134,11 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
           </DReorderableList>
           <DReorderableList
             @group={{group}}
-            @listId="secondary"
-            @listLabel={{state.secondaryLabel}}
             @items={{secondary}}
             @key="id"
             @label={{label}}
+            @listId="secondary"
+            @listLabel={{state.secondaryLabel}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1194,28 +1194,28 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            class="spill-first"
             @group={{group}}
-            @listId="first"
-            @listLabel="First"
-            @spill={{true}}
             @items={{first}}
             @key="id"
             @label={{label}}
-            class="spill-first"
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            class="spill-second"
             @group={{group}}
-            @listId="second"
-            @listLabel="Second"
-            @spill={{true}}
             @items={{second}}
             @key="id"
             @label={{label}}
-            class="spill-second"
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1255,28 +1255,28 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            class="spill-first"
             @group={{group}}
-            @listId="first"
-            @listLabel="First"
-            @spill={{true}}
             @items={{first}}
             @key="id"
             @label={{label}}
-            class="spill-first"
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            class="spill-second"
             @group={{group}}
-            @listId="second"
-            @listLabel="Second"
-            @spill={{true}}
             @items={{second}}
             @key="id"
             @label={{label}}
-            class="spill-second"
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1309,28 +1309,28 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            class="spill-first"
             @group={{group}}
-            @listId="first"
-            @listLabel="First"
-            @spill={{true}}
             @items={{first}}
             @key="id"
             @label={{label}}
-            class="spill-first"
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            class="spill-second"
             @group={{group}}
-            @listId="second"
-            @listLabel="Second"
-            @spill={{true}}
             @items={{second}}
             @key="id"
             @label={{label}}
-            class="spill-second"
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1359,26 +1359,26 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            class="spill-first"
             @group={{group}}
-            @listId="first"
-            @listLabel="First"
             @items={{first}}
             @key="id"
             @label={{label}}
-            class="spill-first"
+            @listId="first"
+            @listLabel="First"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            class="spill-second"
             @group={{group}}
-            @listId="second"
-            @listLabel="Second"
             @items={{second}}
             @key="id"
             @label={{label}}
-            class="spill-second"
+            @listId="second"
+            @listLabel="Second"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1407,28 +1407,28 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         <DMenus />
         <DReorderableListGroup @onMove={{applyMove}} as |group|>
           <DReorderableList
+            class="spill-first"
             @group={{group}}
-            @listId="first"
-            @listLabel="First"
-            @spill={{true}}
             @items={{first}}
             @key="id"
             @label={{label}}
-            class="spill-first"
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            class="spill-second"
             @group={{group}}
-            @listId="second"
-            @listLabel="Second"
-            @spill={{true}}
             @items={{second}}
             @key="id"
             @label={{label}}
-            class="spill-second"
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1499,11 +1499,11 @@ module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
             {{#if item.children}}
               <DReorderableList
+                class="nested-inner"
                 @items={{inner}}
                 @key="id"
                 @label={{label}}
                 @onMove={{innerMove}}
-                class="nested-inner"
               >
                 <:row as |child|>
                   <span data-test-item={{child.id}}>{{child.name}}</span>
@@ -1550,11 +1550,11 @@ module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
             {{#if item.children}}
               <DReorderableList
+                class="nested-inner"
                 @items={{inner}}
                 @key="id"
                 @label={{label}}
                 @onMove={{noop}}
-                class="nested-inner"
               >
                 <:row as |child|>
                   <span data-test-item={{child.id}}>{{child.name}}</span>
@@ -1588,11 +1588,11 @@ module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
             {{#if item.children}}
               <DReorderableList
+                class="nested-inner"
                 @items={{inner}}
                 @key="id"
                 @label={{label}}
                 @onMove={{noop}}
-                class="nested-inner"
               >
                 <:row as |child|>
                   <span data-test-item={{child.id}}>{{child.name}}</span>
@@ -1632,11 +1632,11 @@ module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
             <span data-test-item={{item.id}}>{{item.name}}</span>
             {{#if item.children}}
               <DReorderableList
+                class="nested-inner"
                 @items={{inner}}
                 @key="id"
                 @label={{label}}
                 @onMove={{noop}}
-                class="nested-inner"
               >
                 <:row as |child|>
                   <span data-test-item={{child.id}}>{{child.name}}</span>
@@ -1693,27 +1693,27 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{noop}} as |group|>
             <DReorderableList
+              id="rev-disabled-menu-source"
               @group={{group}}
-              @listId="primary"
-              @listLabel="Primary"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="rev-disabled-menu-source"
+              @listId="primary"
+              @listLabel="Primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
-              @group={{group}}
-              @listId="archive"
-              @listLabel="Archive"
+              id="rev-disabled-menu-target"
               @disabled={{true}}
+              @group={{group}}
               @items={{archiveItems}}
               @key="id"
               @label={{label}}
-              id="rev-disabled-menu-target"
+              @listId="archive"
+              @listLabel="Archive"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1749,28 +1749,28 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              id="rev-spill-refused-source"
               @group={{group}}
-              @listId="primary"
-              @listLabel="Primary"
-              @spill={{true}}
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="rev-spill-refused-source"
+              @listId="primary"
+              @listLabel="Primary"
+              @spill={{true}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
-              @group={{group}}
-              @listId="archive"
-              @listLabel="Archive"
+              id="rev-spill-refused-target"
               @disabled={{true}}
+              @group={{group}}
               @items={{archiveItems}}
               @key="id"
               @label={{label}}
-              id="rev-spill-refused-target"
+              @listId="archive"
+              @listLabel="Archive"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1823,28 +1823,28 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              id="rev-refocus-source"
               @group={{group}}
-              @listId="source"
-              @listLabel="Source"
-              @spill={{true}}
               @items={{sourceItems}}
               @key="id"
               @label={{label}}
-              id="rev-refocus-source"
+              @listId="source"
+              @listLabel="Source"
+              @spill={{true}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="rev-refocus-target"
               @group={{group}}
-              @listId="target"
-              @listLabel="Target"
-              @movable={{movable}}
               @items={{targetItems}}
               @key="id"
               @label={{label}}
-              id="rev-refocus-target"
+              @listId="target"
+              @listLabel="Target"
+              @movable={{movable}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1882,25 +1882,25 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              id="rev-slot-source"
               @group={{group}}
-              @listId="index-source"
               @items={{sourceValues}}
               @key={{INDEX_KEY}}
               @label={{label}}
-              id="rev-slot-source"
+              @listId="index-source"
             >
               <:row as |item|>
                 <span data-test-item={{item}}>{{item}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="rev-slot-second"
               @group={{group}}
-              @listId="index-second"
-              @listLabel="Second"
               @items={{secondValues}}
               @key={{INDEX_KEY}}
               @label={{label}}
-              id="rev-slot-second"
+              @listId="index-second"
+              @listLabel="Second"
             >
               <:row as |item|>
                 <span data-test-item={{item}}>{{item}}</span>
@@ -1964,26 +1964,26 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              id="rev-menu-commit-source"
               @group={{group}}
-              @listId="first"
-              @listLabel="First links"
               @items={{firstItems}}
               @key="id"
               @label={{label}}
-              id="rev-menu-commit-source"
+              @listId="first"
+              @listLabel="First links"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="rev-menu-commit-target"
               @group={{group}}
-              @listId="second"
-              @listLabel="Second links"
               @items={{secondItems}}
               @key="id"
               @label={{label}}
-              id="rev-menu-commit-target"
+              @listId="second"
+              @listLabel="Second links"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2062,27 +2062,27 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              id="rev-menu-spill-first"
               @group={{group}}
-              @listId="first"
-              @listLabel="First"
-              @spill={{true}}
               @items={{firstItems}}
               @key="id"
               @label={{label}}
-              id="rev-menu-spill-first"
+              @listId="first"
+              @listLabel="First"
+              @spill={{true}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="rev-menu-spill-second"
               @group={{group}}
-              @listId="second"
-              @listLabel="Second"
               @items={{secondItems}}
               @key="id"
               @label={{label}}
-              id="rev-menu-spill-second"
+              @listId="second"
+              @listLabel="Second"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2135,25 +2135,25 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              id="rev-frozen-drop-source"
               @group={{group}}
-              @listId="source"
               @items={{sourceItems}}
               @key="id"
               @label={{label}}
-              id="rev-frozen-drop-source"
+              @listId="source"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              id="rev-frozen-drop-target"
               @group={{group}}
-              @listId="target"
-              @movable={{movable}}
               @items={{targetItems}}
               @key="id"
               @label={{label}}
-              id="rev-frozen-drop-target"
+              @listId="target"
+              @movable={{movable}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2198,12 +2198,12 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{onMove}} as |group|>
             <DReorderableList
+              id="rev-stale-source"
               @group={{group}}
-              @listId="primary"
               @items={{primaryItems}}
               @key="id"
               @label={{label}}
-              id="rev-stale-source"
+              @listId="primary"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2211,13 +2211,13 @@ module(
             </DReorderableList>
             {{#if state.showSecondary}}
               <DReorderableList
+                id="rev-stale-target"
                 @group={{group}}
-                @listId="secondary"
-                @listLabel="Secondary links"
                 @items={{secondaryItems}}
                 @key="id"
                 @label={{label}}
-                id="rev-stale-target"
+                @listId="secondary"
+                @listLabel="Secondary links"
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -2286,14 +2286,14 @@ module(
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             {{#each members key="listId" as |member|}}
               <DReorderableList
+                class={{member.className}}
                 @group={{group}}
-                @listId={{member.listId}}
-                @listLabel={{member.listLabel}}
-                @spill={{true}}
                 @items={{member.items}}
                 @key="id"
                 @label={{label}}
-                class={{member.className}}
+                @listId={{member.listId}}
+                @listLabel={{member.listLabel}}
+                @spill={{true}}
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>

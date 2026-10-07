@@ -35,24 +35,24 @@ export default class ReorderableList extends Component {
     </p>
 
     <StyleguideGroups
-      @groups={{this.groups}}
-      @section={{@section}}
       @active={{@group}}
       @ariaLabel={{i18n
         "styleguide.sections.reorderable_list.groups.aria_label"
       }}
+      @groups={{this.groups}}
+      @section={{@section}}
       as |Group|
     >
       <Group @id="start" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.reorderable_list.basic_example"}}
+          @code={{reorderableListBasicSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.basic_description"
           }}
+          @title={{i18n "styleguide.sections.reorderable_list.basic_example"}}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.basic_try_this"
           }}
-          @code={{reorderableListBasicSource}}
         >
           <ReorderableListBasicExample />
         </Example>
@@ -60,16 +60,16 @@ export default class ReorderableList extends Component {
 
       <Group @id="policies" as |Example|>
         <Example
-          @title={{i18n
-            "styleguide.sections.reorderable_list.policies_example"
-          }}
+          @code={{reorderableListPoliciesSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.policies_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.reorderable_list.policies_example"
           }}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.policies_try_this"
           }}
-          @code={{reorderableListPoliciesSource}}
         >
           <ReorderableListPoliciesExample />
         </Example>
@@ -77,40 +77,40 @@ export default class ReorderableList extends Component {
 
       <Group @id="content" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.reorderable_list.toggles_example"}}
+          @code={{reorderableListTogglesSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.toggles_description"
           }}
+          @title={{i18n "styleguide.sections.reorderable_list.toggles_example"}}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.toggles_try_this"
           }}
-          @code={{reorderableListTogglesSource}}
         >
           <ReorderableListTogglesExample />
         </Example>
         <Example
-          @title={{i18n
-            "styleguide.sections.reorderable_list.editable_example"
-          }}
+          @code={{reorderableListEditableSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.editable_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.reorderable_list.editable_example"
           }}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.editable_try_this"
           }}
-          @code={{reorderableListEditableSource}}
         >
           <ReorderableListEditableExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.reorderable_list.create_example"}}
+          @code={{reorderableListCreateSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.create_description"
           }}
+          @title={{i18n "styleguide.sections.reorderable_list.create_example"}}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.create_try_this"
           }}
-          @code={{reorderableListCreateSource}}
         >
           <ReorderableListCreateExample />
         </Example>
@@ -118,14 +118,14 @@ export default class ReorderableList extends Component {
 
       <Group @id="layouts" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.reorderable_list.table_example"}}
+          @code={{reorderableListTableSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.table_description"
           }}
+          @title={{i18n "styleguide.sections.reorderable_list.table_example"}}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.table_try_this"
           }}
-          @code={{reorderableListTableSource}}
         >
           <ReorderableListTableExample />
         </Example>
@@ -133,16 +133,16 @@ export default class ReorderableList extends Component {
 
       <Group @id="groups" as |Example|>
         <Example
-          @title={{i18n
-            "styleguide.sections.reorderable_list.cross_list_example"
-          }}
+          @code={{reorderableListCrossListSource}}
           @description={{i18n
             "styleguide.sections.reorderable_list.cross_list_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.reorderable_list.cross_list_example"
           }}
           @tryThis={{i18n
             "styleguide.sections.reorderable_list.cross_list_try_this"
           }}
-          @code={{reorderableListCrossListSource}}
         >
           <ReorderableListCrossListExample />
         </Example>
