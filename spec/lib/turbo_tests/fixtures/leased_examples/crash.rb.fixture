@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+RSpec.describe "a worker crash" do
+  it("exits during its lease") { exit!(17) }
+end
