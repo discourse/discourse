@@ -23095,6 +23095,13 @@ CREATE INDEX index_posts_on_id_and_baked_version ON public.posts USING btree (id
 
 
 --
+-- Name: index_posts_on_id_for_search; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_posts_on_id_for_search ON public.posts USING btree (id) INCLUDE (topic_id, post_number, post_type, user_id, created_at, like_count) WHERE ((deleted_at IS NULL) AND (NOT hidden));
+
+
+--
 -- Name: index_posts_on_id_topic_id_where_not_deleted_or_empty; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25568,6 +25575,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261007014815'),
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),

@@ -1277,7 +1277,12 @@ class Search
         posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        matching_weights = weights
+        matching_weights = nil if matching_weights == "ABCD"
+        posts =
+          posts.where(
+            "post_search_data.search_data @@ #{ts_query(weight_filter: matching_weights)}",
+          )
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1535,8 +1540,9 @@ class Search
       end
 
     if min_id > 0
-      low_set = query.dup.where("post_search_data.post_id < ?", min_id)
-      high_set = query.where("post_search_data.post_id >= ?", min_id)
+      low_set =
+        query.dup.where("posts.id < :min_id AND post_search_data.post_id < :min_id", min_id:)
+      high_set = query.where("posts.id >= :min_id AND post_search_data.post_id >= :min_id", min_id:)
 
       return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
     end
