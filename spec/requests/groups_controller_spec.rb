@@ -1471,6 +1471,73 @@ RSpec.describe GroupsController do
     context "when user is group admin" do
       before { sign_in(admin) }
 
+      context "with an automatic group" do
+        let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+        it "updates incoming email and SMTP settings" do
+          SiteSetting.enable_smtp = true
+
+          put "/groups/#{group.id}.json",
+              params: {
+                group: {
+                  incoming_email: "moderators@example.com",
+                  smtp_server: "smtp.example.com",
+                  smtp_port: 587,
+                  smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
+                  smtp_enabled: true,
+                  email_username: "moderators@example.com",
+                  email_password: "password",
+                  email_from_alias: "moderators-alias@example.com",
+                  allow_unknown_sender_topic_replies: true,
+                  name: "renamed",
+                  public_admission: true,
+                },
+              }
+
+          expect(response.status).to eq(200)
+          group.reload
+          expect(group.incoming_email).to eq("moderators@example.com")
+          expect(group.smtp_server).to eq("smtp.example.com")
+          expect(group.smtp_port).to eq(587)
+          expect(group.smtp_ssl_mode).to eq(Group.smtp_ssl_modes[:starttls])
+          expect(group.smtp_enabled).to eq(true)
+          expect(group.email_username).to eq("moderators@example.com")
+          expect(group.email_password).to eq("password")
+          expect(group.email_from_alias).to eq("moderators-alias@example.com")
+          expect(group.allow_unknown_sender_topic_replies).to eq(true)
+          expect(group.smtp_updated_by).to eq(admin)
+          expect(group.name).to eq("moderators")
+          expect(group.public_admission).to eq(false)
+        end
+
+        it "rejects an invalid incoming email" do
+          put "/groups/#{group.id}.json", params: { group: { incoming_email: "invalid" } }
+
+          expect(response.status).to eq(422)
+          expect(group.reload.incoming_email).to be_nil
+        end
+
+        it "clears SMTP settings when SMTP is disabled" do
+          group.update!(
+            smtp_enabled: true,
+            smtp_server: "smtp.example.com",
+            smtp_port: 587,
+            email_username: "moderators@example.com",
+            email_password: "password",
+          )
+
+          put "/groups/#{group.id}.json", params: { group: { smtp_enabled: false } }
+
+          expect(response.status).to eq(200)
+          group.reload
+          expect(group.smtp_enabled).to eq(false)
+          expect(group.smtp_server).to be_nil
+          expect(group.smtp_port).to be_nil
+          expect(group.email_username).to be_nil
+          expect(group.email_password).to be_nil
+        end
+      end
+
       it "updates the group" do
         group.update!(visibility_level: 2, members_visibility_level: 2, grant_trust_level: 0)
 
@@ -1710,6 +1777,31 @@ RSpec.describe GroupsController do
       before do
         SiteSetting.moderators_manage_groups = true
         sign_in(moderator)
+      end
+
+      it "can update an automatic group's incoming email but not its SMTP credentials" do
+        group = Group.find(Group::AUTO_GROUPS[:moderators])
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                incoming_email: "moderators@example.com",
+                smtp_server: "smtp.example.com",
+                smtp_port: 587,
+                email_username: "moderators@example.com",
+                email_password: "password",
+                allow_unknown_sender_topic_replies: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        group.reload
+        expect(group.incoming_email).to eq("moderators@example.com")
+        expect(group.smtp_server).to be_nil
+        expect(group.email_username).to be_nil
+        expect(group.email_password).to be_nil
+        expect(group.smtp_enabled).to eq(false)
+        expect(group.allow_unknown_sender_topic_replies).to eq(false)
       end
 
       it "does not update the group when the site setting is disabled" do

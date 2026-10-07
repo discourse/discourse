@@ -215,6 +215,50 @@ RSpec.describe Group do
       expect(group.valid?).to eq(true)
     end
 
+    context "when an automatic group has an incoming email" do
+      let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+      it "accepts valid incoming addresses" do
+        group.incoming_email = "moderators@example.com|staff@example.com"
+
+        expect(group).to be_valid
+      end
+
+      it "rejects an invalid incoming address" do
+        group.incoming_email = "invalid"
+
+        expect(group).not_to be_valid
+      end
+
+      it "rejects an incoming address used by another group" do
+        Fabricate(:group, incoming_email: "support@example.com")
+        group.incoming_email = "support@example.com"
+
+        expect(group).not_to be_valid
+        expect(group.errors[:base]).to include(
+          I18n.t(
+            "groups.errors.email_already_used_in_group",
+            email: "support@example.com",
+            group_name: Group.find_by_email("support@example.com").name,
+          ),
+        )
+      end
+
+      it "rejects an incoming address used by a category" do
+        category = Fabricate(:category, email_in: "support@example.com")
+        group.incoming_email = "support@example.com"
+
+        expect(group).not_to be_valid
+        expect(group.errors[:base]).to include(
+          I18n.t(
+            "groups.errors.email_already_used_in_category",
+            email: "support@example.com",
+            category_name: category.name,
+          ),
+        )
+      end
+    end
+
     context "when a group has no owners" do
       describe "group has not been persisted" do
         it "does not allow membership requests" do

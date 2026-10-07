@@ -53,13 +53,9 @@ export default class GroupsFormInteractionFields extends Component {
     return this.watchingNotificationLevel;
   }
 
-  @computed("siteSettings.email_in", "model.automatic", "currentUser.admin")
+  @computed("siteSettings.email_in", "currentUser.admin")
   get showEmailSettings() {
-    return (
-      this.siteSettings?.email_in &&
-      this.currentUser?.admin &&
-      !this.model?.automatic
-    );
+    return this.siteSettings?.email_in && this.currentUser?.admin;
   }
 
   @computed(
