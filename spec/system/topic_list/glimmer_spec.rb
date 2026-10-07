@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-describe "glimmer topic list" do
+describe "glimmer topic list", native_playwright: true do
   fab!(:user)
 
-  let(:topic_list) { PageObjects::Components::TopicList.new }
-  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:topic_list) { PageObjects::Native::TopicList.new(browser_page) }
+  let(:topic_page) { PageObjects::Native::Topic.new(browser_page) }
 
   before { sign_in(user) }
 
   describe "/latest" do
     it "shows the list" do
       Fabricate.times(5, :topic)
-      visit("/latest")
+      topic_list.visit_latest
 
-      expect(topic_list).to have_topics(count: 5)
+      expect(topic_list.topics).to have_count(5)
     end
   end
 
@@ -23,17 +23,17 @@ describe "glimmer topic list" do
       Fabricate(:topic)
       Fabricate(:new_reply_topic, current_user: user)
 
-      visit("/new")
+      topic_list.visit_new
 
-      expect(topic_list).to have_topics(count: 2)
-      expect(page).to have_css(".topics-replies-toggle.--all")
-      expect(page).to have_css(".topics-replies-toggle.--topics")
-      expect(page).to have_css(".topics-replies-toggle.--replies")
+      expect(topic_list.topics).to have_count(2)
+      expect(topic_list.all_toggle).to be_visible
+      expect(topic_list.topics_toggle).to be_visible
+      expect(topic_list.replies_toggle).to be_visible
     end
   end
 
   describe "categories-with-featured-topics page" do
-    let(:category_list) { PageObjects::Components::CategoryList.new }
+    let(:category_list) { PageObjects::Native::CategoryList.new(browser_page) }
 
     it "shows the list" do
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -42,10 +42,10 @@ describe "glimmer topic list" do
       topic2 = Fabricate(:topic)
       CategoryFeaturedTopic.feature_topics
 
-      visit("/categories")
+      category_list.visit
 
-      expect(category_list).to have_topic(topic)
-      expect(category_list).to have_topic(topic2)
+      expect(category_list.featured_topic(topic)).to be_visible
+      expect(category_list.featured_topic(topic2)).to be_visible
     end
   end
 
@@ -55,15 +55,13 @@ describe "glimmer topic list" do
       topic2 = Fabricate(:post).topic
       new_reply = Fabricate(:new_reply_topic, current_user: user, count: 3)
 
-      visit(topic1.relative_url)
+      topic_page.visit(topic1)
 
-      expect(topic_page).to have_suggested_topic(topic2)
-      expect(page).to have_css("[data-topic-id='#{topic2.id}'] a.badge-notification.new-topic")
+      expect(topic_page.suggested_topic(topic2)).to be_visible
+      expect(topic_page.new_topic_badge(topic2)).to be_visible
 
-      expect(topic_page).to have_suggested_topic(new_reply)
-      expect(
-        find("[data-topic-id='#{new_reply.id}'] a.badge-notification.unread-posts").text,
-      ).to eq("3")
+      expect(topic_page.suggested_topic(new_reply)).to be_visible
+      expect(topic_page.unread_posts_badge(new_reply)).to have_text(/^3$/, useInnerText: true)
     end
   end
 
@@ -71,28 +69,28 @@ describe "glimmer topic list" do
     it "highlights newly received topics" do
       Fabricate(:read_topic, current_user: user)
 
-      visit("/latest")
+      topic_list.visit_latest
 
       new_topic = Fabricate(:post).topic
       TopicTrackingState.publish_new(new_topic)
 
-      topic_list.had_new_topics_alert?
-      topic_list.click_new_topics_alert
+      expect(topic_list.new_topics_alert).to be_visible
+      topic_list.new_topics_alert.click
 
-      expect(topic_list).to have_highlighted_topic(new_topic)
+      expect(topic_list.highlighted_topic(new_topic)).to be_visible
     end
 
     it "highlights the previous topic after navigation" do
       topic = Fabricate(:read_topic, current_user: user)
 
-      visit("/latest")
-      topic_list.visit_topic(topic)
+      topic_list.visit_latest
+      topic_list.open_topic(topic)
 
-      expect(topic_page).to have_topic_title(topic.title)
+      expect(topic_page.title).to contain_text(topic.title)
 
-      page.go_back
+      topic_list.go_back
 
-      expect(topic_list).to have_highlighted_topic(topic)
+      expect(topic_list.highlighted_topic(topic)).to be_visible
     end
   end
 
@@ -101,39 +99,39 @@ describe "glimmer topic list" do
 
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
-      visit("/latest")
+      topic_list.visit_latest
 
-      find("button.bulk-select").click
-      expect(topic_list).to have_topic_checkbox(topics.first)
-      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+      topic_list.bulk_select.click
+      expect(topic_list.topic_checkbox(topics.first)).to be_visible
+      expect(topic_list.bulk_actions).to have_count(0)
 
-      topic_list.click_topic_checkbox(topics.first)
-      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      topic_list.topic_checkbox(topics.first).click
+      expect(topic_list.bulk_actions).to be_visible
     end
 
     context "when on mobile", mobile: true do
       it "shows the buttons and checkboxes" do
         topics = Fabricate.times(2, :topic)
-        visit("/latest")
+        topic_list.visit_latest
 
-        find("button.bulk-select").click
-        expect(topic_list).to have_topic_checkbox(topics.first)
-        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+        topic_list.bulk_select.click
+        expect(topic_list.topic_checkbox(topics.first)).to be_visible
+        expect(topic_list.bulk_actions).to have_count(0)
 
-        topic_list.click_topic_checkbox(topics.first)
-        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+        topic_list.topic_checkbox(topics.first).click
+        expect(topic_list.bulk_actions).to be_visible
       end
     end
   end
 
   it "unpins globally pinned topics on click" do
     topic = Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
-    visit("/latest")
+    topic_list.visit_latest
 
-    expect(page).to have_css(".topic-list-item .d-icon-thumbtack:not(.unpinned)")
+    expect(topic_list.pinned_icon).to be_visible
 
-    find(".topic-list-item .d-icon-thumbtack").click
-    expect(page).to have_css(".topic-list-item .d-icon-thumbtack.unpinned")
+    topic_list.click_pin
+    expect(topic_list.unpinned_icon).to be_visible
 
     wait_for { TopicUser.exists?(topic:, user:) }
     expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
@@ -146,8 +144,8 @@ describe "glimmer topic list" do
     visited_topic = Fabricate(:topic)
     Fabricate(:post, topic: visited_topic)
 
-    visit(visited_topic.url)
-    expect(page).to have_css("#post_1")
+    topic_page.visit(visited_topic)
+    expect(topic_page.first_post).to be_visible
 
     # Visit registration in screen tracking is async. Wait for it before navigating away.
     visited_check_js = <<~JS
@@ -157,14 +155,15 @@ describe "glimmer topic list" do
         return state && state.last_read_post_number >= state.highest_post_number;
       })()
     JS
-    wait_for(timeout: 5) { page.evaluate_script(visited_check_js) }
+    wait_for(timeout: 5) { browser_page.evaluate(visited_check_js) }
 
     # Clicking the logo is "safer" than visiting /latest so the client-side
     # app can update the visited status of the topic
-    find("#site-logo").click
+    topic_list.return_to_list
 
-    visited_color = find(".topic-list .topic-list-item.visited a.title").style("color")
-    not_visited_color = find(".topic-list .topic-list-item:not(.visited) a.title").style("color")
+    visited_color = topic_list.visited_title.evaluate("element => getComputedStyle(element).color")
+    not_visited_color =
+      topic_list.unvisited_title.evaluate("element => getComputedStyle(element).color")
 
     expect(visited_color).to_not eq(not_visited_color)
   end

@@ -42,7 +42,7 @@ module SystemDrivers
     driver.join("_").to_sym
   end
 
-  def self.register!(example)
+  def self.options_for(example)
     base_options = {
       browser_type: :chromium,
       channel: :chromium,
@@ -62,6 +62,19 @@ module SystemDrivers
       base_options[:browser] = :remote
       base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
     end
+
+    base_options
+  end
+
+  def self.native_options_for(example)
+    options_for(example).merge(
+      args: apply_base_chrome_args(allow_network: allow_network_hosts(example)),
+      **mobile_options(mobile: !!example.metadata[:mobile]),
+    )
+  end
+
+  def self.register!(example)
+    base_options = options_for(example)
 
     register_chrome(
       :playwright_mobile_chrome,
@@ -87,22 +100,23 @@ module SystemDrivers
   end
 
   def self.register_chrome(name, mobile:, **options)
-    mobile_options =
-      if mobile
-        {
-          deviceScaleFactor: 3,
-          isMobile: true,
-          hasTouch: true,
-          userAgent: MOBILE_USER_AGENT,
-          defaultBrowserType: "webkit",
-          viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
-        }
-      else
-        { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
-      end
-
     Capybara.register_driver(name) do |app|
-      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
+      Capybara::Playwright::Driver.new(app, **options, **mobile_options(mobile:))
+    end
+  end
+
+  def self.mobile_options(mobile:)
+    if mobile
+      {
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        userAgent: MOBILE_USER_AGENT,
+        defaultBrowserType: "webkit",
+        viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
+      }
+    else
+      { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
     end
   end
 
@@ -171,7 +185,10 @@ module SystemDrivers
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
+  private_class_method :apply_base_chrome_args,
+                       :register_chrome,
+                       :allow_network_hosts,
+                       :mobile_options
 end
 
 RSpec.configure do |config|
