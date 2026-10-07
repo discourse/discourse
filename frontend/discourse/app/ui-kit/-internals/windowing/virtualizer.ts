@@ -13,8 +13,87 @@ import {
   measureElement,
   observeElementOffset,
   observeElementRect,
+  type Rect,
   Virtualizer,
 } from "@tanstack/virtual-core";
+
+/* The narrow contract consumers hold. Engine types stay inside this module. */
+
+/** A row key: an item's own primitive value, or a generated identity key. */
+export type VirtualKey = number | string | bigint;
+
+/** The indices of the first and last rows in the rendered window. */
+export interface VisibleRange {
+  startIndex: number;
+  endIndex: number;
+}
+
+/** A {@link VisibleRange} with the overscan and total count it was computed from. */
+export interface VirtualRange extends VisibleRange {
+  overscan: number;
+  count: number;
+}
+
+/** A row the engine has placed: its key, index, and measured or estimated box. */
+export interface VirtualItem {
+  key: VirtualKey;
+  index: number;
+  start: number;
+  end: number;
+  size: number;
+  lane: number;
+}
+
+/** How to place a row in the viewport, and how to animate getting there. */
+export interface VirtualizerScrollOptions {
+  align?: "start" | "center" | "end" | "auto";
+  behavior?: ScrollBehavior;
+}
+
+/** The options a caller supplies. The element-adapter plumbing is added here. */
+export interface VirtualizerOptions {
+  anchorTo: "start" | "end";
+  count: number;
+  getScrollElement: () => HTMLDivElement | null;
+  estimateSize: (index: number) => number;
+  getItemKey: (index: number) => VirtualKey;
+  overscan: number;
+  onChange: () => void;
+  followOnAppend: boolean;
+  scrollEndThreshold?: number;
+  rangeExtractor?: (range: VirtualRange) => number[];
+}
+
+/**
+ * The element-backed virtualizer as callers see it. Options are re-synced with
+ * {@link updateElementVirtualizer}, never by calling the engine directly.
+ */
+export interface VirtualizerApi {
+  range: VisibleRange | null;
+  isScrolling: boolean;
+  /** The viewport the engine measures and scrolls. Null until it mounts. */
+  scrollElement: HTMLElement | null;
+
+  /**
+   * The engine's cached scroll offset (px). Null until the first measure. The
+   * element's real `scrollTop` is the source of truth; this can drift from it
+   * when the browser clamps a scroll the engine never observed.
+   */
+  scrollOffset: number | null;
+  _didMount(): () => void;
+  _willUpdate(): void;
+  getTotalSize(): number;
+  getVirtualItems(): VirtualItem[];
+  measure(): void;
+  measureElement(element: HTMLElement | null): void;
+  scrollToIndex(index: number, options?: VirtualizerScrollOptions): void;
+  scrollToOffset(
+    offset: number,
+    options?: Pick<VirtualizerScrollOptions, "behavior">
+  ): void;
+}
+
+type ElementEngine = Virtualizer<HTMLElement, HTMLElement>;
 
 let VIRTUALIZATION_ENABLED = true;
 
@@ -46,16 +125,12 @@ export function enableVirtualization() {
   VIRTUALIZATION_ENABLED = true;
 }
 
-/**
- * Whether rows are windowed. False means the render-all fallback is active.
- *
- * @returns {boolean}
- */
-export function isVirtualizationEnabled() {
+/** Whether rows are windowed. False means the render-all fallback is active. */
+export function isVirtualizationEnabled(): boolean {
   return VIRTUALIZATION_ENABLED;
 }
 
-const STABLE_KEYS = new WeakMap();
+const STABLE_KEYS = new WeakMap<object, string>();
 
 /**
  * Keys for symbol items. A strong map, unlike the object one, so a symbol used as
@@ -63,7 +138,7 @@ const STABLE_KEYS = new WeakMap();
  * sentinel values a consumer defines a fixed number of, not per-row data — but it
  * is the one entry here that does not release.
  */
-const STABLE_SYMBOL_KEYS = new Map();
+const STABLE_SYMBOL_KEYS = new Map<symbol, string>();
 
 const KEY_NAMESPACE = "d-virtual-list:key:";
 let stableKeyCounter = 0;
@@ -79,19 +154,19 @@ let stableKeyCounter = 0;
  *
  * A consumer whose ids are immutable AND who rebuilds its item objects each render
  * (so object identity is NOT stable) should instead pass `@key` — see {@link keyFor}.
- *
- * @param {unknown} item
- * @returns {number | string | bigint}
  */
-export function stableKeyFor(item) {
+export function stableKeyFor(item: unknown): VirtualKey {
   const type = typeof item;
 
   if (type === "string") {
-    return item.startsWith(KEY_NAMESPACE) ? `${KEY_NAMESPACE}${item}` : item;
+    // `type` is an alias of `typeof item`, which TypeScript does not narrow through.
+    return (item as string).startsWith(KEY_NAMESPACE)
+      ? `${KEY_NAMESPACE}${item as string}`
+      : (item as string);
   }
 
   if (type === "number" || type === "bigint") {
-    return item;
+    return item as number | bigint;
   }
 
   if (type === "boolean" || item === null || type === "undefined") {
@@ -99,18 +174,19 @@ export function stableKeyFor(item) {
   }
 
   if (type === "symbol") {
-    let key = STABLE_SYMBOL_KEYS.get(item);
+    let key = STABLE_SYMBOL_KEYS.get(item as symbol);
     if (key === undefined) {
       key = `${KEY_NAMESPACE}symbol:${++stableKeyCounter}`;
-      STABLE_SYMBOL_KEYS.set(item, key);
+      STABLE_SYMBOL_KEYS.set(item as symbol, key);
     }
     return key;
   }
 
-  let key = STABLE_KEYS.get(item);
+  // Every primitive returned above, so `item` is an object or a function here.
+  let key = STABLE_KEYS.get(item as object);
   if (key === undefined) {
     key = `${KEY_NAMESPACE}object:${++stableKeyCounter}`;
-    STABLE_KEYS.set(item, key);
+    STABLE_KEYS.set(item as object, key);
   }
   return key;
 }
@@ -129,14 +205,10 @@ export function stableKeyFor(item) {
  *
  * The single source of truth for both keying paths (the modifier's `getItemKey`
  * and the component's render-all fallback), so the two can never drift.
- *
- * @param {unknown} item
- * @param {string} [field]
- * @returns {number | string | bigint}
  */
-export function keyFor(item, field) {
+export function keyFor(item: unknown, field?: string): VirtualKey {
   if (field != null && item != null && typeof item === "object") {
-    const value = item[field];
+    const value = (item as Record<string, unknown>)[field];
     return value == null ? stableKeyFor(item) : stableKeyFor(value);
   }
   return stableKeyFor(item);
@@ -151,9 +223,12 @@ export function keyFor(item, field) {
  * the callback lets it say so. `measure()` is not that lever: it clears the item-size cache and
  * never re-reads the viewport.
  */
-const RECT_CALLBACKS = new WeakMap();
+const RECT_CALLBACKS = new WeakMap<object, (rect: Rect) => void>();
 
-function observeElementRectWithHandle(instance, callback) {
+function observeElementRectWithHandle(
+  instance: ElementEngine,
+  callback: (rect: Rect) => void
+) {
   RECT_CALLBACKS.set(instance, callback);
   return observeElementRect(instance, callback);
 }
@@ -169,9 +244,15 @@ function observeElementRectWithHandle(instance, callback) {
  * `isScrolling` for the reset delay, suppressing synchronous row measurement
  * for that whole window.
  */
-const OFFSET_CALLBACKS = new WeakMap();
+const OFFSET_CALLBACKS = new WeakMap<
+  object,
+  (offset: number, isScrolling: boolean) => void
+>();
 
-function observeElementOffsetWithHandle(instance, callback) {
+function observeElementOffsetWithHandle(
+  instance: ElementEngine,
+  callback: (offset: number, isScrolling: boolean) => void
+) {
   OFFSET_CALLBACKS.set(instance, callback);
   return observeElementOffset(instance, callback);
 }
@@ -179,10 +260,10 @@ function observeElementOffsetWithHandle(instance, callback) {
 /**
  * Tell the engine the viewport's current scroll offset, without pretending a
  * user scrolled. A no-op before the engine has mounted or once it has torn down.
- *
- * @param {{ scrollElement?: HTMLElement | null }} virtualizer
  */
-export function pushScrollOffset(virtualizer) {
+export function pushScrollOffset(virtualizer: {
+  scrollElement?: HTMLElement | null;
+}) {
   const callback = OFFSET_CALLBACKS.get(virtualizer);
   const element = virtualizer?.scrollElement;
 
@@ -199,10 +280,10 @@ export function pushScrollOffset(virtualizer) {
  *
  * Measured the way the engine measures it — `offsetWidth`/`offsetHeight`, rounded — so a
  * pushed rect and an observed one are the same value and cannot disagree.
- *
- * @param {{ scrollElement?: HTMLElement | null }} virtualizer
  */
-export function remeasureViewport(virtualizer) {
+export function remeasureViewport(virtualizer: {
+  scrollElement?: HTMLElement | null;
+}) {
   const callback = RECT_CALLBACKS.get(virtualizer);
   const element = virtualizer?.scrollElement;
 
@@ -230,7 +311,9 @@ const ELEMENT_ADAPTER = {
   observeElementRect: observeElementRectWithHandle,
   observeElementOffset: observeElementOffsetWithHandle,
   measureElement,
-};
+} satisfies Partial<
+  ConstructorParameters<typeof Virtualizer<HTMLElement, HTMLElement>>[0]
+>;
 
 /**
  * A `rangeExtractor` extended with consumer-selected, otherwise-out-of-window
@@ -259,15 +342,19 @@ const ELEMENT_ADAPTER = {
  * one of those changes — which, for a consumer following the documented
  * reactivity contract, happens on the next input change.
  *
- * @param {(indices: readonly number[], range: { startIndex: number, endIndex: number, overscan: number, count: number }) => readonly number[] | null | undefined} pins Returns extra indices to keep mounted.
- * @returns {(range: { startIndex: number, endIndex: number, overscan: number, count: number }) => number[]}
+ * @param pins - Returns extra indices to keep mounted.
  */
-export function rangeExtractorWithPins(pins) {
+export function rangeExtractorWithPins(
+  pins: (
+    indices: readonly number[],
+    range: VirtualRange
+  ) => readonly number[] | null | undefined
+): (range: VirtualRange) => number[] {
   return (range) => {
     const indices = defaultRangeExtractor(range);
     const merged = new Set(indices);
 
-    let extra;
+    let extra: readonly number[];
     try {
       extra = pins(indices, range) ?? [];
     } catch (e) {
@@ -290,24 +377,29 @@ export function rangeExtractorWithPins(pins) {
  * Construct an element-backed virtualizer, filling in the element-observer
  * plumbing the caller does not supply. See {@link ELEMENT_ADAPTER}.
  *
- * @param {object} options
- * @returns {object} An element-backed virtualizer instance.
+ * Returned as the narrow {@link VirtualizerApi}: the engine instance has to
+ * satisfy it here, which is what lets callers use it without a cast.
  */
-export function createElementVirtualizer(options) {
-  return new Virtualizer({ ...ELEMENT_ADAPTER, ...options });
+export function createElementVirtualizer(
+  options: VirtualizerOptions
+): VirtualizerApi {
+  return new Virtualizer<HTMLElement, HTMLElement>({
+    ...ELEMENT_ADAPTER,
+    ...options,
+  });
 }
 
 /**
  * Re-sync options on an existing element virtualizer, preserving the adapter
  * plumbing. Always use this instead of calling `setOptions` directly.
  *
- * Typed structurally rather than as the engine's own class: callers hold their
- * own narrow view of the instance, and naming the engine type here would leak it
- * back across the wall this module exists to be.
- *
- * @param {{ setOptions: (options: object) => void }} virtualizer
- * @param {object} options
+ * Takes the narrow {@link VirtualizerApi} so the engine type does not leak to
+ * callers. Every one was made by {@link createElementVirtualizer}, so the cast
+ * back to the engine is the only place that crossing happens.
  */
-export function updateElementVirtualizer(virtualizer, options) {
-  virtualizer.setOptions({ ...ELEMENT_ADAPTER, ...options });
+export function updateElementVirtualizer(
+  virtualizer: VirtualizerApi,
+  options: VirtualizerOptions
+): void {
+  (virtualizer as ElementEngine).setOptions({ ...ELEMENT_ADAPTER, ...options });
 }
