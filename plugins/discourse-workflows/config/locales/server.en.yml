@@ -202,10 +202,12 @@ en:
       destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     user:
       check_email_context: "Workflow user node"
     flag_user:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."

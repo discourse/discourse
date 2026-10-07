@@ -217,6 +217,12 @@ if defined?(DiscourseWorkflows)
             validate_mode!(mode)
 
             agent = resolve_agent(exec_ctx)
+            exec_ctx.set_metadata(
+              review_agent: {
+                id: agent[:record].id,
+                name: agent[:record].name,
+              },
+            )
 
             return [[run_once_for_all_items(exec_ctx, agent)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
 
