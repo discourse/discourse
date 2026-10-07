@@ -85,7 +85,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if post.blank?
+          return super if !previewable?(post)
 
           label =
             I18n.t(
@@ -100,7 +100,7 @@ module DiscourseAi
         end
 
         def approval_changes
-          return [] if post.blank?
+          return [] if !previewable?(post)
 
           changes = []
           if parameters[:raw].present?

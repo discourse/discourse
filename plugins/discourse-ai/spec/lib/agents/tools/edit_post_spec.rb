@@ -50,6 +50,31 @@ RSpec.describe DiscourseAi::Agents::Tools::EditPost do
     )
   end
 
+  it "falls back to the generic preview when the requester cannot see the post" do
+    private_category = Fabricate(:private_category, group: Group[:staff])
+    hidden_post =
+      Fabricate(:post, raw: "Secret", topic: Fabricate(:topic, category: private_category))
+    requester_context = DiscourseAi::Agents::BotContext.new(user: Fabricate(:user))
+    post_tool =
+      described_class.new(
+        { post_id: hidden_post.id, raw: "Changed", edit_reason: "Testing" },
+        bot_user: bot_user,
+        llm: llm,
+        context: requester_context,
+      )
+
+    expect(post_tool.approval_title).to eq(post_tool.summary)
+    expect(post_tool.approval_changes).to be_empty
+  end
+
+  it "falls back to the generic preview when the post's topic was deleted" do
+    post.topic.trash!(Discourse.system_user)
+    post_tool = tool(post_id: post.id, raw: "Changed", edit_reason: "Testing")
+
+    expect(post_tool.approval_title).to eq(post_tool.summary)
+    expect(post_tool.approval_changes).to be_empty
+  end
+
   it "edits the post content" do
     result = tool(post_id: post.id, raw: "Updated content", edit_reason: "Fixing typo").invoke
 

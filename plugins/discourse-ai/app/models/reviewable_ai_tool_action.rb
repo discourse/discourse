@@ -70,6 +70,13 @@ class ReviewableAiToolAction < Reviewable
     resolution_result(:rejected, args)
   end
 
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
+  end
+
   private
 
   def resolution_result(status, args, tool_result: nil)

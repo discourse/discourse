@@ -79,7 +79,10 @@ module DiscourseAi
           m.message = instruction_message if m.id == current_id && instruction_message
 
           if bot_user_ids.include?(m.user_id)
-            builder.push(type: :model, content: m.message)
+            builder.push(
+              type: :model,
+              content: DiscourseAi::AiBot::ChatToolApproval.transcript_text(m),
+            )
           else
             upload_ids =
               filtered_upload_ids_from_uploads(

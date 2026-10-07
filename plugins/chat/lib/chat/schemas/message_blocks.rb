@@ -146,6 +146,8 @@ module Chat
       additionalProperties: false,
     }
 
+    CONFIRMATION_VALUE_MAX_LENGTH = 5000
+
     ConfirmationV1 = {
       type: "object",
       properties: {
@@ -185,12 +187,15 @@ module Chat
             properties: {
               label: {
                 type: "string",
+                maxLength: 255,
               },
               before: {
                 type: "string",
+                maxLength: CONFIRMATION_VALUE_MAX_LENGTH,
               },
               after: {
                 type: "string",
+                maxLength: CONFIRMATION_VALUE_MAX_LENGTH,
               },
               before_color: {
                 type: "string",
@@ -212,9 +217,11 @@ module Chat
             properties: {
               label: {
                 type: "string",
+                maxLength: 255,
               },
               value: {
                 type: "string",
+                maxLength: CONFIRMATION_VALUE_MAX_LENGTH,
               },
               color: {
                 type: "string",

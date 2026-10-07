@@ -103,7 +103,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if topic.blank?
+          return super if !previewable?(topic)
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.topic_title",
@@ -112,9 +112,9 @@ module DiscourseAi
         end
 
         def approval_changes
-          return [] if topic.blank?
+          return [] if !previewable?(topic)
 
-          before = topic.tags.pluck(:name).sort
+          before = DiscourseTagging.filter_visible(topic.tags, guardian).pluck(:name).sort
           after =
             (parameters[:tags] || [])
               .map { |name| DiscourseTagging.clean_tag(name.to_s) }

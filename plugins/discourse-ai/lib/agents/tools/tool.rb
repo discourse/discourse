@@ -114,6 +114,12 @@ module DiscourseAi
           summary
         end
 
+        # Replacement heading once the action ran, for tools whose target is
+        # renamed by the action itself. nil keeps the pending title.
+        def approval_resolved_title
+          nil
+        end
+
         def approval_changes
           []
         end
@@ -146,6 +152,21 @@ module DiscourseAi
               parameter[:color] = value.to_s.delete_prefix("#")
             end
             parameter
+          end
+        end
+
+        # Approval previews are built before the tool's own permission checks
+        # run, so they must only describe targets the requesting user can see.
+        def previewable?(target)
+          case target
+          when Topic
+            guardian.can_see_topic?(target)
+          when Post
+            target.topic.present? && guardian.can_see_post?(target)
+          when Category
+            guardian.can_see_category?(target)
+          else
+            false
           end
         end
 

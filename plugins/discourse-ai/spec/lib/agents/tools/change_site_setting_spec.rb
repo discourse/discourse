@@ -41,6 +41,15 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
       )
     end
 
+    it "previews the coerced value that would be saved" do
+      SiteSetting.min_post_length = 20
+      setting_tool = tool(setting_name: "min_post_length", value: "2.5", reason: "Testing")
+
+      expect(setting_tool.approval_changes).to eq(
+        [{ label: "Changing value:", before: "20", after: "25" }],
+      )
+    end
+
     it "omits previews for secret and unknown settings" do
       secret_setting = SiteSetting.secret_settings.first
       expect(
