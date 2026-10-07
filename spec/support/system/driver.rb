@@ -98,12 +98,36 @@ module SystemDrivers
           viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
         }
       else
-        { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
+        viewport = ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 }
+        { viewport: viewport, **hidpi_options(viewport) }
       end
 
     Capybara.register_driver(name) do |app|
       Capybara::Playwright::Driver.new(app, **options, **mobile_options)
     end
+  end
+
+  # Set CHROME_DEVICE_SCALE_FACTOR=2 to capture screenshots and video at twice
+  # the viewport's resolution, for a screenshot someone will look at closely.
+  def self.device_scale_factor
+    factor = ENV["CHROME_DEVICE_SCALE_FACTOR"].to_i
+    factor > 1 ? factor : 1
+  end
+
+  # Chromium composes video frames at the recording size, not the viewport, so
+  # the recording has to be scaled too or the extra pixels are thrown away.
+  def self.hidpi_options(viewport)
+    return {} if device_scale_factor == 1
+
+    options = { deviceScaleFactor: device_scale_factor }
+    return options if viewport.nil?
+
+    options.merge(
+      record_video_size: {
+        width: viewport[:width] * device_scale_factor,
+        height: viewport[:height] * device_scale_factor,
+      },
+    )
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
@@ -166,12 +190,16 @@ module SystemDrivers
     end
 
     if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
-      base_args << "--force-device-scale-factor=1"
+      base_args << "--force-device-scale-factor=#{device_scale_factor}"
     end
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
+  private_class_method :apply_base_chrome_args,
+                       :register_chrome,
+                       :allow_network_hosts,
+                       :device_scale_factor,
+                       :hidpi_options
 end
 
 RSpec.configure do |config|
