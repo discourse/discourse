@@ -102,6 +102,33 @@ describe "Flagging post" do
     end
   end
 
+  context "when silenced" do
+    fab!(:silenced_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    before do
+      UserSilencer.silence(silenced_user)
+      sign_in(silenced_user)
+    end
+
+    it "allows to mark posts as illegal when allow_all_users_to_flag_illegal_content setting is enabled" do
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+
+      topic_page.visit_topic(topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.click_post_action_button(post_to_flag, :flag)
+
+      expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
+
+      flag_modal.choose_type(:illegal)
+      flag_modal.fill_message("This looks totally illegal to me.")
+      flag_modal.check_confirmation
+      flag_modal.confirm_flag
+
+      expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+    end
+  end
+
   context "when tl0" do
     fab!(:tl0_user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     before { sign_in(tl0_user) }

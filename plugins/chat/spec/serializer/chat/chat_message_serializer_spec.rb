@@ -224,6 +224,29 @@ describe Chat::MessageSerializer do
         expect(serialized[:available_flags]).to be_empty
       end
 
+      context "when allow_all_users_to_flag_illegal_content is enabled" do
+        before do
+          SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+          SiteSetting.allow_all_users_to_flag_illegal_content = true
+        end
+
+        it "returns only the illegal flag for silenced users" do
+          guardian.user.update!(silenced_till: 1.month.from_now)
+
+          serialized = described_class.new(message_1, options).as_json
+
+          expect(serialized[:available_flags]).to contain_exactly(:illegal)
+        end
+
+        it "returns only the illegal flag for users outside the allowed groups" do
+          SiteSetting.chat_message_flag_allowed_groups = ""
+
+          serialized = described_class.new(message_1, options).as_json
+
+          expect(serialized[:available_flags]).to contain_exactly(:illegal)
+        end
+      end
+
       it "returns an empty list if the message was deleted" do
         message_1.trash!
 

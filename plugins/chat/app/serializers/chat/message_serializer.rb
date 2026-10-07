@@ -183,6 +183,10 @@ module Chat
       return [] if !scope.can_flag_chat_message?(object)
       return [] if reviewable_id.present? && user_flag_status == ReviewableScore.statuses[:pending]
 
+      if scope.can_only_flag_chat_messages_as_illegal?
+        return PostActionType.flag_types.slice(:illegal).keys
+      end
+
       PostActionType.flag_types.map do |sym, id|
         if channel_object.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)
           next

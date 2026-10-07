@@ -463,6 +463,47 @@ RSpec.describe Chat::GuardianExtensions do
           expect(staff_guardian.can_flag_chat_message?(message)).to eq(true)
         end
       end
+
+      context "when allow_all_users_to_flag_illegal_content is enabled" do
+        before do
+          SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+          SiteSetting.allow_all_users_to_flag_illegal_content = true
+        end
+
+        it "returns true for users outside the allowed groups" do
+          expect(guardian.can_flag_chat_message?(message)).to eq(true)
+        end
+
+        it "returns true for silenced users" do
+          UserSilencer.silence(user, staff)
+          expect(Guardian.new(user).can_flag_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
+    describe "#can_flag_message_as?" do
+      let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      before do
+        SiteSetting.chat_message_flag_allowed_groups = ""
+        SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+        SiteSetting.allow_all_users_to_flag_illegal_content = true
+      end
+
+      it "only allows the illegal flag for users outside the allowed groups" do
+        expect(guardian.can_flag_message_as?(message, ReviewableScore.types[:illegal], {})).to eq(
+          true,
+        )
+        expect(guardian.can_flag_message_as?(message, ReviewableScore.types[:spam], {})).to eq(
+          false,
+        )
+      end
+
+      it "allows any flag for users in the allowed groups" do
+        expect(
+          staff_guardian.can_flag_message_as?(message, ReviewableScore.types[:spam], {}),
+        ).to eq(true)
+      end
     end
 
     describe "#can_see_chat_message?" do
