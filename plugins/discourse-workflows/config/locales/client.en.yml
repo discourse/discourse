@@ -20,6 +20,10 @@ en:
             discourse_workflows_workflow_created: "Create workflow"
             discourse_workflows_workflow_destroyed: "Delete workflow"
   js:
+    review:
+      types:
+        discourse_workflows_workflow:
+          title: "Workflows"
     discourse_ai:
       features:
         discourse_workflows:
