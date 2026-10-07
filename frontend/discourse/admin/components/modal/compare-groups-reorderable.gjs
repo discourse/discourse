@@ -63,25 +63,6 @@ export default class CompareGroups extends Component {
     );
   }
 
-  buildRows() {
-    SYNTHETIC_KEYS.forEach((key) => {
-      this.rowsByKey.set(key, {
-        key,
-        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
-        description: i18n(
-          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
-        ),
-      });
-    });
-
-    (this.site.groups ?? [])
-      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
-      .forEach((group) => {
-        const key = groupToken(group.id);
-        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
-      });
-  }
-
   get enabledRows() {
     return this.list.enabledOrder
       .map((key) => this.rowsByKey.get(key))
@@ -114,6 +95,25 @@ export default class CompareGroups extends Component {
     return this.enabledRows.length - 1;
   }
 
+  buildRows() {
+    SYNTHETIC_KEYS.forEach((key) => {
+      this.rowsByKey.set(key, {
+        key,
+        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
+        description: i18n(
+          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
+        ),
+      });
+    });
+
+    (this.site.groups ?? [])
+      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
+      .forEach((group) => {
+        const key = groupToken(group.id);
+        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
+      });
+  }
+
   @action
   updateSearch(event) {
     this.search = event.target.value;
@@ -140,12 +140,12 @@ export default class CompareGroups extends Component {
 
   <template>
     <DModal
+      class="compare-groups has-search manageable-row-list"
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n
         "admin.dashboard.sections.engagement.whos_posting.modal.title"
       }}
-      @closeModal={{@closeModal}}
-      @inline={{@inline}}
-      class="compare-groups has-search manageable-row-list"
     >
 
       <:belowModalTitle>
@@ -161,12 +161,12 @@ export default class CompareGroups extends Component {
       <:belowHeader>
         <div class="manageable-row-list__search-wrapper">
           <DFilterInput
-            @icons={{hash left="magnifying-glass"}}
-            @value={{this.search}}
-            @filterAction={{this.updateSearch}}
             placeholder={{i18n
               "admin.dashboard.sections.engagement.whos_posting.modal.search_placeholder"
             }}
+            @filterAction={{this.updateSearch}}
+            @icons={{hash left="magnifying-glass"}}
+            @value={{this.search}}
           />
         </div>
       </:belowHeader>
@@ -188,9 +188,9 @@ export default class CompareGroups extends Component {
           <:row as |row|>
             <ManageableRowListItemReorderable
               @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
+              @onToggle={{this.toggle}}
               @row={{row}}
               @toggleDisabled={{this.toggleDisabled row}}
-              @onToggle={{this.toggle}}
             />
           </:row>
         </DReorderableList>
@@ -202,16 +202,16 @@ export default class CompareGroups extends Component {
         {{/if}}
         <div class="compare-groups__footer-actions">
           <DButton
-            @label="js.cancel_value"
-            @action={{@closeModal}}
             class="btn-transparent compare-groups__cancel"
+            @action={{@closeModal}}
+            @label="js.cancel_value"
           />
           <DButton
-            @label="admin.dashboard.sections.engagement.whos_posting.modal.apply"
+            class="btn-primary compare-groups__apply"
             @action={{this.apply}}
             @disabled={{this.applying}}
             @isLoading={{this.applying}}
-            class="btn-primary compare-groups__apply"
+            @label="admin.dashboard.sections.engagement.whos_posting.modal.apply"
           />
         </div>
       </:footer>

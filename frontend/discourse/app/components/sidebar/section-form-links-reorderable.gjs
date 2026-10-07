@@ -60,21 +60,21 @@ export default class SidebarSectionFormLinksReorderable extends Component {
   <template>
     <DReorderableListGroup @onMove={{this.handleMove}} as |group|>
       <DReorderableList
-        @group={{group}}
-        @listId="primary"
-        @listLabel={{i18n "sidebar.sections.custom.links.title"}}
-        @items={{@activeLinks}}
-        @key="objectId"
-        @label={{this.linkName}}
-        @controls="manual"
-        @tag="div"
-        @role="table"
-        @itemTag="div"
-        @itemRole="row"
-        @rowClass="sidebar-section-form-link row-wrapper"
         aria-labelledby="section-links-label"
         aria-rowcount={{@activeLinks.length}}
         class="sidebar-section-form__links-wrapper"
+        @controls="manual"
+        @group={{group}}
+        @itemRole="row"
+        @items={{@activeLinks}}
+        @itemTag="div"
+        @key="objectId"
+        @label={{this.linkName}}
+        @listId="primary"
+        @listLabel={{i18n "sidebar.sections.custom.links.title"}}
+        @role="table"
+        @rowClass="sidebar-section-form-link row-wrapper"
+        @tag="div"
       >
         <:header>
           {{! The list element around this block carries the table role
@@ -83,27 +83,27 @@ export default class SidebarSectionFormLinksReorderable extends Component {
           {{! eslint-disable-next-line ember/template-require-context-role }}
           <div class="row-wrapper header" role="row">
             <div
+              aria-sort="none"
               class="input-group link-icon"
               role="columnheader"
-              aria-sort="none"
             >
               {{! eslint-disable-next-line ember/template-no-nested-interactive }}
               <label>{{i18n "sidebar.sections.custom.links.icon.label"}}</label>
             </div>
 
             <div
+              aria-sort="none"
               class="input-group link-name"
               role="columnheader"
-              aria-sort="none"
             >
               {{! eslint-disable-next-line ember/template-no-nested-interactive }}
               <label>{{i18n "sidebar.sections.custom.links.name.label"}}</label>
             </div>
 
             <div
+              aria-sort="none"
               class="input-group link-url"
               role="columnheader"
-              aria-sort="none"
             >
               {{! eslint-disable-next-line ember/template-no-nested-interactive }}
               <label>{{i18n
@@ -115,20 +115,20 @@ export default class SidebarSectionFormLinksReorderable extends Component {
         <:row as |link controls|>
           <SectionFormLinkReorderable
             @controls={{controls}}
-            @link={{link}}
-            @focusNameInput={{eq link.objectId @initialFocusLinkObjectId}}
-            @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
             @deleteLink={{@deleteLink}}
+            @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
+            @focusNameInput={{eq link.objectId @initialFocusLinkObjectId}}
+            @link={{link}}
           />
         </:row>
       </DReorderableList>
       <DButton
+        class="btn-flat btn-text add-link"
         @action={{@addLink}}
-        @title="sidebar.sections.custom.links.add"
+        @ariaLabel="sidebar.sections.custom.links.add"
         @icon="plus"
         @label="sidebar.sections.custom.links.add"
-        @ariaLabel="sidebar.sections.custom.links.add"
-        class="btn-flat btn-text add-link"
+        @title="sidebar.sections.custom.links.add"
       />
 
       {{#if @sectionType}}
@@ -139,38 +139,38 @@ export default class SidebarSectionFormLinksReorderable extends Component {
         {{! The rows resolve their columns through the wrapper's grid, so
           a list rendered without one would collapse. }}
         <DReorderableList
-          @group={{group}}
-          @listId="secondary"
-          @listLabel={{i18n "sidebar.sections.custom.more_menu"}}
-          @items={{@activeSecondaryLinks}}
-          @key="objectId"
-          @label={{this.linkName}}
-          @controls="manual"
-          @tag="div"
-          @role="table"
-          @itemTag="div"
-          @itemRole="row"
-          @rowClass="sidebar-section-form-link row-wrapper"
           aria-labelledby="section-secondary-links-label"
           aria-rowcount={{@activeSecondaryLinks.length}}
           class="sidebar-section-form__links-wrapper --secondary"
+          @controls="manual"
+          @group={{group}}
+          @itemRole="row"
+          @items={{@activeSecondaryLinks}}
+          @itemTag="div"
+          @key="objectId"
+          @label={{this.linkName}}
+          @listId="secondary"
+          @listLabel={{i18n "sidebar.sections.custom.more_menu"}}
+          @role="table"
+          @rowClass="sidebar-section-form-link row-wrapper"
+          @tag="div"
         >
           <:row as |link controls|>
             <SectionFormLinkReorderable
               @controls={{controls}}
-              @link={{link}}
-              @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
               @deleteLink={{@deleteLink}}
+              @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
+              @link={{link}}
             />
           </:row>
         </DReorderableList>
         <DButton
+          class="btn-flat btn-text add-link"
           @action={{@addSecondaryLink}}
-          @title="sidebar.sections.custom.links.add"
+          @ariaLabel="sidebar.sections.custom.links.add"
           @icon="plus"
           @label="sidebar.sections.custom.links.add"
-          @ariaLabel="sidebar.sections.custom.links.add"
-          class="btn-flat btn-text add-link"
+          @title="sidebar.sections.custom.links.add"
         />
       {{/if}}
     </DReorderableListGroup>

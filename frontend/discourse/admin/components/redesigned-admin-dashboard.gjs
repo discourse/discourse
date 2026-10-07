@@ -67,15 +67,15 @@ export default class RedesignedAdminDashboard extends Component {
                   legacy component once the change ships. }}
               {{#if this.siteSettings.enable_new_reordering_controls}}
                 <ConfigureMenuReorderable
-                  @sections={{this.configurationSections}}
                   @onReorder={{@reorderSections}}
                   @onToggleVisibility={{@toggleSection}}
+                  @sections={{this.configurationSections}}
                 />
               {{else}}
                 <ConfigureMenu
-                  @sections={{this.configurationSections}}
                   @onReorder={{@reorderSections}}
                   @onToggleVisibility={{@toggleSection}}
+                  @sections={{this.configurationSections}}
                 />
               {{/if}}
             </:content>

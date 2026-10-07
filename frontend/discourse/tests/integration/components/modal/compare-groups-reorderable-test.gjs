@@ -32,11 +32,11 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash
               currentTokens=(array "new_members" "returning" "staff")
             }}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -68,9 +68,9 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash currentTokens=(array "staff")}}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -87,9 +87,9 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash currentTokens=(array "staff")}}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -105,9 +105,9 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash currentTokens=(array "staff")}}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -129,9 +129,9 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash currentTokens=(array "staff")}}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -158,6 +158,7 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{noop}}
             @inline={{true}}
             @model={{hash
               currentTokens=(array
@@ -173,7 +174,6 @@ module(
                 "group:109"
               )
             }}
-            @closeModal={{noop}}
           />
         </template>
       );
@@ -196,9 +196,9 @@ module(
       await render(
         <template>
           <CompareGroupsReorderable
+            @closeModal={{closeModal}}
             @inline={{true}}
             @model={{hash currentTokens=(array "staff") onApply=onApply}}
-            @closeModal={{closeModal}}
           />
         </template>
       );

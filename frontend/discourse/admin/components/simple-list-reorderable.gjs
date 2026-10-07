@@ -88,15 +88,15 @@ export default class SimpleList extends Component {
   <template>
     <div class="simple-list value-list" ...attributes>
       <DReorderableList
+        class="values"
         @items={{this.collection}}
+        @itemTag="div"
         @key={{INDEX_KEY}}
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
         @onRemove={{this.removeValue}}
-        @tag="div"
-        @itemTag="div"
         @rowClass="value"
-        class="values"
+        @tag="div"
       >
         <:row as |value controls|>
           {{#if this.isPredefinedList}}
@@ -108,11 +108,11 @@ export default class SimpleList extends Component {
             >{{value}}</span>
           {{else}}
             <input
-              {{on "focusout" (fn this.changeValue controls.index)}}
-              value={{value}}
+              class="value-input"
               title={{value}}
               type="text"
-              class="value-input"
+              value={{value}}
+              {{on "focusout" (fn this.changeValue controls.index)}}
             />
           {{/if}}
         </:row>
@@ -122,11 +122,10 @@ export default class SimpleList extends Component {
         {{#if this.isPredefinedList}}
           {{#if this.validValues}}
             <ComboBox
+              class="add-value-input"
               @content={{this.validValues}}
-              @value={{this.newValue}}
-              @onChange={{this.addValue}}
-              @valueProperty={{@setting.computedValueProperty}}
               @nameProperty={{@setting.computedNameProperty}}
+              @onChange={{this.addValue}}
               {{! Without an empty-selection label the closed-set picker renders
                 as an empty box under the list. The free-text branch below shows
                 the same string as its placeholder. }}
@@ -135,26 +134,27 @@ export default class SimpleList extends Component {
                 allowAny=false
                 none="admin.site_settings.simple_list.add_item"
               }}
-              class="add-value-input"
+              @value={{this.newValue}}
+              @valueProperty={{@setting.computedValueProperty}}
             />
           {{/if}}
         {{else}}
           <input
-            {{on "input" (withEventValue (fn (mut this.newValue)))}}
-            {{on "keydown" this.keyDown}}
-            value={{this.newValue}}
-            type="text"
-            placeholder={{i18n "admin.site_settings.simple_list.add_item"}}
+            autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            autocapitalize="off"
             class="add-value-input"
+            placeholder={{i18n "admin.site_settings.simple_list.add_item"}}
+            type="text"
+            value={{this.newValue}}
+            {{on "input" (withEventValue (fn (mut this.newValue)))}}
+            {{on "keydown" this.keyDown}}
           />
           <DButton
+            class="add-value-btn btn-default btn-small"
             @action={{fn this.addValue this.newValue}}
             @disabled={{not this.newValue}}
             @icon="plus"
-            class="add-value-btn btn-default btn-small"
           />
         {{/if}}
       </div>

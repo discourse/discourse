@@ -316,19 +316,19 @@ export default class AdminLogoForm extends Component {
                     legacy component once the change ships. }}
                 {{#if this.siteSettings.enable_new_reordering_controls}}
                   <SimpleListReorderable
-                    @onChange={{fn this.updateManifestScreenshots field}}
-                    @inputDelimiter="|"
-                    @values={{field.value}}
-                    @allowAny={{true}}
                     id={{field.id}}
+                    @allowAny={{true}}
+                    @inputDelimiter="|"
+                    @onChange={{fn this.updateManifestScreenshots field}}
+                    @values={{field.value}}
                   />
                 {{else}}
                   <SimpleList
-                    @onChange={{fn this.updateManifestScreenshots field}}
-                    @inputDelimiter="|"
-                    @values={{field.value}}
-                    @allowAny={{true}}
                     id={{field.id}}
+                    @allowAny={{true}}
+                    @inputDelimiter="|"
+                    @onChange={{fn this.updateManifestScreenshots field}}
+                    @values={{field.value}}
                   />
                 {{/if}}
               </field.Control>

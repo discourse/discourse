@@ -63,9 +63,9 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
       <template>
         <DMenus />
         <SimpleListReorderable
-          @values={{values}}
           @allowAny={{false}}
           @choices={{choices}}
+          @values={{values}}
         />
       </template>
     );
@@ -91,7 +91,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @values={{values}} @onChange={{onChange}} />
+        <SimpleListReorderable @onChange={{onChange}} @values={{values}} />
       </template>
     );
 
@@ -131,7 +131,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @values="vinkas|osama" @inputDelimiter="|" />
+        <SimpleListReorderable @inputDelimiter="|" @values="vinkas|osama" />
       </template>
     );
 
@@ -155,7 +155,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @values={{state.values}} @inputDelimiter="|" />
+        <SimpleListReorderable @inputDelimiter="|" @values={{state.values}} />
       </template>
     );
 
@@ -179,10 +179,10 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
       <template>
         <DMenus />
         <SimpleListReorderable
-          @values={{values}}
-          @inputDelimiter="|"
-          @choices={{choices}}
           @allowAny={{false}}
+          @choices={{choices}}
+          @inputDelimiter="|"
+          @values={{values}}
         />
       </template>
     );
@@ -203,8 +203,8 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus /><SimpleListReorderable
-          @values={{values}}
           @inputDelimiter="|"
+          @values={{values}}
         />
       </template>
     );
@@ -223,8 +223,8 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus /><SimpleListReorderable
-          @values={{values}}
           @inputDelimiter="|"
+          @values={{values}}
         />
       </template>
     );

@@ -123,29 +123,29 @@ export default class EditUserDirectoryColumns extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "directory.edit_columns.title"}}
       class="edit-user-directory-columns-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "directory.edit_columns.title"}}
     >
       <:body>
         {{#if this.loading}}
           {{dLoadingSpinner size="large"}}
         {{else}}
           <DReorderableList
+            class="edit-directory-columns-container"
             @items={{this.columns}}
+            @itemTag="div"
             @key="id"
             @label={{this.columnLabel}}
             @onMove={{this.handleMove}}
-            @tag="div"
-            @itemTag="div"
             @rowClass="edit-directory-column"
-            class="edit-directory-columns-container"
+            @tag="div"
           >
             <:row as |column|>
               <div class="left-content">
                 <label class="column-name">
-                  <Input @type="checkbox" @checked={{column.enabled}} />
+                  <Input @checked={{column.enabled}} @type="checkbox" />
                   {{#if (directoryColumnIsAutomatic column=column)}}
                     {{directoryTableHeaderTitle
                       field=column.name
@@ -170,14 +170,14 @@ export default class EditUserDirectoryColumns extends Component {
       </:body>
       <:footer>
         <DButton
-          @label="directory.edit_columns.save"
-          @action={{this.save}}
           class="btn-primary"
+          @action={{this.save}}
+          @label="directory.edit_columns.save"
         />
         <DButton
-          @label="directory.edit_columns.reset_to_default"
-          @action={{this.resetToDefault}}
           class="btn-default reset-to-default"
+          @action={{this.resetToDefault}}
+          @label="directory.edit_columns.reset_to_default"
         />
       </:footer>
     </DModal>

@@ -84,27 +84,27 @@ export default class EditBadgeGroupings extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
       @bodyClass="badge-groupings-modal"
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
     >
       <:body>
         <div class="badge-groupings">
           <DReorderableList
+            class="badge-groupings-list"
+            @controls="manual"
             @items={{this.workingCopy}}
             @label={{this.groupingLabel}}
             @onMove={{this.handleMove}}
             @onRemove={{this.delete}}
             @removable={{this.canDelete}}
-            @controls="manual"
             @rowClass="badge-grouping-item"
-            class="badge-groupings-list"
           >
             <:row as |wc controls|>
               <controls.handle />
               <div class="badge-grouping">
                 {{#if wc.editing}}
-                  <Input @value={{wc.name}} class="badge-grouping-name-input" />
+                  <Input class="badge-grouping-name-input" @value={{wc.name}} />
                 {{else}}
                   <span>{{wc.displayName}}</span>
                 {{/if}}
@@ -112,16 +112,16 @@ export default class EditBadgeGroupings extends Component {
               <div class="actions">
                 {{#if wc.editing}}
                   <DButton
+                    class="btn-flat"
                     @action={{fn (mut wc.editing) false}}
                     @icon="check"
-                    class="btn-flat"
                   />
                 {{else}}
                   {{#unless wc.system}}
                     <DButton
+                      class="btn-flat"
                       @action={{fn (mut wc.editing) true}}
                       @icon="pencil"
-                      class="btn-flat"
                     />
                   {{/unless}}
                 {{/if}}
@@ -133,17 +133,17 @@ export default class EditBadgeGroupings extends Component {
           </DReorderableList>
         </div>
         <DButton
-          @action={{this.add}}
           class="btn-default badge-groupings__add-grouping"
+          @action={{this.add}}
           @label="admin.badges.new"
         />
       </:body>
       <:footer>
         <DButton
-          @action={{this.saveAll}}
-          @label="admin.badges.save"
           class="btn-primary badge-groupings__save"
+          @action={{this.saveAll}}
           @disabled={{this.submitDisabled}}
+          @label="admin.badges.save"
         />
         <DButton
           class="btn-flat d-modal-cancel"

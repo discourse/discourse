@@ -109,22 +109,22 @@ export default class AdminConfigAreasFlags extends Component {
             }}</th>
         </thead>
         <DReorderableList
+          class="d-table__body"
+          @controls="manual"
           @items={{this.flags}}
+          @itemTag="tr"
           @key="id"
           @label={{this.flagLabel}}
           @movable={{this.movable}}
           @onMove={{this.handleMove}}
-          @controls="manual"
-          @tag="tbody"
-          @itemTag="tr"
           @rowClass={{this.rowClass}}
-          class="d-table__body"
+          @tag="tbody"
         >
           <:row as |flag controls|>
             <AdminFlagItemReorderable
               @controls={{controls}}
-              @flag={{flag}}
               @deleteFlagCallback={{this.deleteFlagCallback}}
+              @flag={{flag}}
               @setPending={{this.setPending}}
             />
           </:row>

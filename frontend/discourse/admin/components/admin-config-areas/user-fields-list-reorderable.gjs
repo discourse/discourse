@@ -102,31 +102,31 @@ export default class AdminConfigAreasUserFieldsList extends Component {
             </tr>
           </thead>
           <DReorderableList
+            class="d-table__body"
+            @controls="manual"
             @items={{this.sortedFields}}
+            @itemTag="tr"
             @key="id"
             @label={{this.fieldLabel}}
             @onMove={{this.handleMove}}
-            @controls="manual"
-            @tag="tbody"
-            @itemTag="tr"
             @rowClass="d-table__row admin-user_field-item"
-            class="d-table__body"
+            @tag="tbody"
           >
             <:row as |field controls|>
               <AdminUserFieldItemReorderable
                 @controls={{controls}}
-                @userField={{field}}
-                @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}
+                @fieldTypes={{this.fieldTypes}}
+                @userField={{field}}
               />
             </:row>
           </DReorderableList>
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="admin-user_fields__add-emoji"
           @ctaLabel="admin.user_fields.add"
           @ctaRoute="adminUserFields.new"
-          @ctaClass="admin-user_fields__add-emoji"
           @emptyLabel="admin.user_fields.no_user_fields"
         />
       {{/if}}

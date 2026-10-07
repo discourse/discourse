@@ -15,15 +15,15 @@ export default class UrlList extends Component {
           legacy component once the change ships. }}
       {{#if this.siteSettings.enable_new_reordering_controls}}
         <ValueListReorderable
+          @addKey="admin.site_settings.add_url"
           @disabled={{@disabled}}
           @values={{this.value}}
-          @addKey="admin.site_settings.add_url"
         />
       {{else}}
         <ValueList
+          @addKey="admin.site_settings.add_url"
           @disabled={{@disabled}}
           @values={{this.value}}
-          @addKey="admin.site_settings.add_url"
         />
       {{/if}}
     </div>

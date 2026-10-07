@@ -141,9 +141,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -168,9 +168,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{onToggle}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -191,9 +191,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -218,9 +218,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -252,9 +252,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -304,9 +304,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -378,9 +378,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -414,9 +414,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{state.sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{state.sections}}
           />
         </template>
       );
@@ -447,9 +447,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -479,9 +479,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -504,9 +504,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -537,9 +537,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -580,9 +580,9 @@ module(
           <DMenus />
           <div style="--d-drag-indicator-color: rgb(1, 2, 3)">
             <ConfigureMenuReorderable
-              @sections={{FOUR_SECTIONS}}
               @onReorder={{noop}}
               @onToggleVisibility={{noop}}
+              @sections={{FOUR_SECTIONS}}
             />
           </div>
         </template>
@@ -610,9 +610,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -641,9 +641,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -665,9 +665,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -699,9 +699,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -751,9 +751,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -773,9 +773,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{FOUR_SECTIONS}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{FOUR_SECTIONS}}
           />
         </template>
       );
@@ -811,9 +811,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );
@@ -833,9 +833,9 @@ module(
         <template>
           <DMenus />
           <ConfigureMenuReorderable
-            @sections={{sections}}
             @onReorder={{noop}}
             @onToggleVisibility={{noop}}
+            @sections={{sections}}
           />
         </template>
       );

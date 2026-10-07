@@ -22,22 +22,22 @@ const SectionFormLink = <template>
       grip rather than anywhere on the row, so a press that was meant to
       scroll still scrolls, and its menu carries the paths a drag cannot. }}
   <@controls.handle
-    role="cell"
     class="draggable"
     data-link-name={{@link.name}}
+    role="cell"
   />
 
   <div class="input-group link-icon" role="cell">
     <DIconGridPicker
-      @value={{@link.icon}}
+      aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+      @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
       @onChange={{fn (mut @link.icon)}}
       @showCaret={{true}}
-      @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
-      aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+      @value={{@link.icon}}
     />
 
     {{#if @link.invalidIconMessage}}
-      <div class="icon warning" role="alert" aria-live="assertive">
+      <div aria-live="assertive" class="icon warning" role="alert">
         {{@link.invalidIconMessage}}
       </div>
     {{/if}}
@@ -46,18 +46,18 @@ const SectionFormLink = <template>
   <div class="input-group link-name" role="cell">
 
     <Input
-      {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
-      {{on "input" (withEventValue (fn (mut @link.name)))}}
-      @type="text"
-      @value={{@link.name}}
-      name="link-name"
       aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
       class={{@link.nameCssClass}}
       data-1p-ignore
+      name="link-name"
+      @type="text"
+      @value={{@link.name}}
+      {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
+      {{on "input" (withEventValue (fn (mut @link.name)))}}
     />
 
     {{#if @link.invalidNameMessage}}
-      <div role="alert" aria-live="assertive" class="name warning">
+      <div aria-live="assertive" class="name warning" role="alert">
         {{@link.invalidNameMessage}}
       </div>
     {{/if}}
@@ -66,16 +66,16 @@ const SectionFormLink = <template>
   <div class="input-group link-url" role="cell">
 
     <Input
-      {{on "input" (withEventValue (fn (mut @link.value)))}}
-      @type="text"
-      @value={{@link.value}}
-      name="link-url"
       aria-label={{i18n "sidebar.sections.custom.links.value.label"}}
       class={{@link.valueCssClass}}
+      name="link-url"
+      @type="text"
+      @value={{@link.value}}
+      {{on "input" (withEventValue (fn (mut @link.value)))}}
     />
 
     {{#if @link.invalidValueMessage}}
-      <div role="alert" aria-live="assertive" class="value warning">
+      <div aria-live="assertive" class="value warning" role="alert">
         {{@link.invalidValueMessage}}
       </div>
     {{else if @duplicateValue}}
@@ -88,11 +88,11 @@ const SectionFormLink = <template>
   </div>
 
   <DButton
-    @icon="trash-can"
-    @action={{fn @deleteLink @link}}
-    @title="sidebar.sections.custom.links.delete"
-    role="cell"
     class="btn-flat delete-link"
+    role="cell"
+    @action={{fn @deleteLink @link}}
+    @icon="trash-can"
+    @title="sidebar.sections.custom.links.delete"
   />
 </template>;
 

@@ -100,8 +100,8 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
       <template>
         <DMenus />
         <ValueListReorderable
-          @values={{this.values}}
           @choices={{this.choices}}
+          @values={{this.values}}
         />
       </template>
     );
@@ -126,7 +126,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ValueListReorderable @values={{this.values}} @inputType="array" />
+        <ValueListReorderable @inputType="array" @values={{this.values}} />
       </template>
     );
 
@@ -153,7 +153,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ValueListReorderable @values={{this.values}} @inputDelimiter="|" />
+        <ValueListReorderable @inputDelimiter="|" @values={{this.values}} />
       </template>
     );
 

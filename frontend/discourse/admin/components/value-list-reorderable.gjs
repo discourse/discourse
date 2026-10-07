@@ -38,11 +38,6 @@ export default class ValueList extends Component {
   valueLabel = (value) => value;
   @tracked _noneKeyOverride;
 
-  @computed("newValue")
-  get inputInvalid() {
-    return isEmpty(this.newValue);
-  }
-
   @computed("addKey")
   get noneKey() {
     if (this._noneKeyOverride !== undefined) {
@@ -53,6 +48,16 @@ export default class ValueList extends Component {
 
   set noneKey(value) {
     this._noneKeyOverride = value;
+  }
+
+  @computed("newValue")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   didReceiveAttrs() {
@@ -67,11 +72,6 @@ export default class ValueList extends Component {
       "collection",
       this._splitValues(this.values, this.inputDelimiter || "\n")
     );
-  }
-
-  @computed("choices.[]", "collection.[]")
-  get filteredChoices() {
-    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -174,21 +174,21 @@ export default class ValueList extends Component {
   <template>
     {{#if this.collection}}
       <DReorderableList
+        class="values"
         @items={{this.collection}}
+        @itemTag="div"
         @key={{INDEX_KEY}}
         @label={{this.valueLabel}}
         @onMove={{this.handleMove}}
         @onRemove={{this.removeValue}}
-        @tag="div"
-        @itemTag="div"
         @rowClass="value"
-        class="values"
+        @tag="div"
       >
         <:row as |value controls|>
           <Input
+            class="value-input"
             title={{value}}
             @value={{value}}
-            class="value-input"
             {{on "focusout" (fn this.changeValue controls.index)}}
           />
         </:row>
@@ -196,12 +196,12 @@ export default class ValueList extends Component {
     {{/if}}
 
     <ComboBox
-      @valueProperty={{null}}
-      @nameProperty={{null}}
-      @value={{this.newValue}}
       @content={{this.filteredChoices}}
+      @nameProperty={{null}}
       @onChange={{this.selectChoice}}
       @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
+      @value={{this.newValue}}
+      @valueProperty={{null}}
     />
   </template>
 }

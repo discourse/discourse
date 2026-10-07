@@ -37,13 +37,13 @@ export default class ConfigureMenu extends Component {
   <template>
     <div class="db-configure">
       <DReorderableList
+        aria-label={{i18n "admin.dashboard.configure.menu_title"}}
+        class="db-configure__list"
         @items={{@sections}}
         @key="id"
         @label={{this.sectionLabel}}
         @onMove={{this.handleMove}}
         @rowClass="db-configure__row"
-        class="db-configure__list"
-        aria-label={{i18n "admin.dashboard.configure.menu_title"}}
       >
         <:row as |section|>
           <span class="db-configure__section-name">
@@ -51,9 +51,9 @@ export default class ConfigureMenu extends Component {
           </span>
 
           <DToggleSwitch
+            aria-label={{this.toggleLabel section}}
             @state={{section.visible}}
             {{on "click" (fn @onToggleVisibility section.id)}}
-            aria-label={{this.toggleLabel section}}
           />
         </:row>
       </DReorderableList>

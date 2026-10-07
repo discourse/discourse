@@ -201,15 +201,15 @@ export default class AdminUserFieldsForm extends Component {
                 legacy component once the change ships. }}
             {{#if this.siteSettings.enable_new_reordering_controls}}
               <ValueListReorderable
-                @values={{transientData.options}}
                 @inputType="array"
                 @onChange={{field.set}}
+                @values={{transientData.options}}
               />
             {{else}}
               <ValueList
-                @values={{transientData.options}}
                 @inputType="array"
                 @onChange={{field.set}}
+                @values={{transientData.options}}
               />
             {{/if}}
           </field.Control>

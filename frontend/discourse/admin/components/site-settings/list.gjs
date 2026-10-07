@@ -15,17 +15,17 @@ export default class List extends Component {
           legacy component once the change ships. }}
       {{#if this.siteSettings.enable_new_reordering_controls}}
         <ValueListReorderable
-          @values={{this.value}}
-          @inputDelimiter="|"
           @choices={{this.setting.choices}}
           @disabled={{@disabled}}
+          @inputDelimiter="|"
+          @values={{this.value}}
         />
       {{else}}
         <ValueList
-          @values={{this.value}}
-          @inputDelimiter="|"
           @choices={{this.setting.choices}}
           @disabled={{@disabled}}
+          @inputDelimiter="|"
+          @values={{this.value}}
         />
       {{/if}}
     </div>

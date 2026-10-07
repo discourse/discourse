@@ -30,8 +30,6 @@ const ManageableRowListItem = <template>
     </div>
 
     <DToggleSwitch
-      @state={{@row.enabled}}
-      disabled={{@toggleDisabled}}
       aria-label={{i18n
         (if
           @row.enabled
@@ -40,6 +38,8 @@ const ManageableRowListItem = <template>
         )
         title=@row.title
       }}
+      disabled={{@toggleDisabled}}
+      @state={{@row.enabled}}
       {{on "click" (fn @onToggle @row)}}
     />
   </div>

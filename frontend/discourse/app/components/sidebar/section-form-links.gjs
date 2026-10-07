@@ -72,24 +72,24 @@ export default class SidebarSectionFormLinks extends Component {
 
   <template>
     <div
-      role="table"
       aria-labelledby="section-links-label"
       aria-rowcount={{@activeLinks.length}}
       class="sidebar-section-form__links-wrapper"
+      role="table"
     >
 
       <div class="row-wrapper header" role="row">
-        <div class="input-group link-icon" role="columnheader" aria-sort="none">
+        <div aria-sort="none" class="input-group link-icon" role="columnheader">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <label>{{i18n "sidebar.sections.custom.links.icon.label"}}</label>
         </div>
 
-        <div class="input-group link-name" role="columnheader" aria-sort="none">
+        <div aria-sort="none" class="input-group link-name" role="columnheader">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <label>{{i18n "sidebar.sections.custom.links.name.label"}}</label>
         </div>
 
-        <div class="input-group link-url" role="columnheader" aria-sort="none">
+        <div aria-sort="none" class="input-group link-url" role="columnheader">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <label>{{i18n "sidebar.sections.custom.links.value.label"}}</label>
         </div>
@@ -97,12 +97,12 @@ export default class SidebarSectionFormLinks extends Component {
 
       {{#each @activeLinks key="objectId" as |link index|}}
         <SectionFormLink
-          @link={{link}}
+          @deleteLink={{@deleteLink}}
+          @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
+          @focusNameInput={{eq link.objectId @initialFocusLinkObjectId}}
           @index={{index}}
           @lastIndex={{this.lastActiveLinkIndex}}
-          @focusNameInput={{eq link.objectId @initialFocusLinkObjectId}}
-          @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
-          @deleteLink={{@deleteLink}}
+          @link={{link}}
           @reorderCallback={{this.reorder}}
           @setDraggedLinkCallback={{this.setDraggedLink}}
         />
@@ -110,12 +110,12 @@ export default class SidebarSectionFormLinks extends Component {
 
     </div>
     <DButton
+      class="btn-flat btn-text add-link"
       @action={{@addLink}}
-      @title="sidebar.sections.custom.links.add"
+      @ariaLabel="sidebar.sections.custom.links.add"
       @icon="plus"
       @label="sidebar.sections.custom.links.add"
-      @ariaLabel="sidebar.sections.custom.links.add"
-      class="btn-flat btn-text add-link"
+      @title="sidebar.sections.custom.links.add"
     />
 
     {{#if @sectionType}}
@@ -123,22 +123,22 @@ export default class SidebarSectionFormLinks extends Component {
       <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
       {{#each @activeSecondaryLinks key="objectId" as |link index|}}
         <SectionFormLink
-          @link={{link}}
+          @deleteLink={{@deleteLink}}
+          @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
           @index={{index}}
           @lastIndex={{this.lastActiveSecondaryLinkIndex}}
-          @duplicateValue={{has @duplicateLinkObjectIds link.objectId}}
-          @deleteLink={{@deleteLink}}
+          @link={{link}}
           @reorderCallback={{this.reorder}}
           @setDraggedLinkCallback={{this.setDraggedLink}}
         />
       {{/each}}
       <DButton
+        class="btn-flat btn-text add-link"
         @action={{@addSecondaryLink}}
-        @title="sidebar.sections.custom.links.add"
+        @ariaLabel="sidebar.sections.custom.links.add"
         @icon="plus"
         @label="sidebar.sections.custom.links.add"
-        @ariaLabel="sidebar.sections.custom.links.add"
-        class="btn-flat btn-text add-link"
+        @title="sidebar.sections.custom.links.add"
       />
     {{/if}}
   </template>

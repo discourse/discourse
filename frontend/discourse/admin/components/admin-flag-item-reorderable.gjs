@@ -114,9 +114,9 @@ export default class AdminFlagItem extends Component {
     <td class="d-table__cell --overview">
       {{#if this.canEdit}}
         <LinkTo
-          @route="adminConfig.flags.edit"
-          @model={{@flag}}
           class="d-table__overview-link"
+          @model={{@flag}}
+          @route="adminConfig.flags.edit"
         >
           <div
             class="d-table__overview-name admin-flag-item__name"
@@ -139,8 +139,8 @@ export default class AdminFlagItem extends Component {
         {{i18n "admin.config_areas.flags.enabled"}}
       </div>
       <DToggleSwitch
-        @state={{this.enabled}}
         class="admin-flag-item__toggle {{@flag.name_key}}"
+        @state={{this.enabled}}
         {{on "click" (fn this.toggleFlagEnabled @flag)}}
       />
     </td>
@@ -150,17 +150,17 @@ export default class AdminFlagItem extends Component {
         <DButton
           class="btn-default btn-small admin-flag-item__edit"
           @action={{this.edit}}
-          @label="admin.config_areas.flags.edit"
           @disabled={{not this.canEdit}}
+          @label="admin.config_areas.flags.edit"
           @title={{this.editTitle}}
         />
 
         {{#if this.canMove}}
           <DMenu
-            @identifier="flag-menu"
-            @title={{i18n "admin.config_areas.flags.more_options.title"}}
             @icon="ellipsis-vertical"
+            @identifier="flag-menu"
             @onRegisterApi={{this.onRegisterApi}}
+            @title={{i18n "admin.config_areas.flags.more_options.title"}}
             @triggerClass="btn-default"
           >
             <:content>
@@ -168,11 +168,11 @@ export default class AdminFlagItem extends Component {
 
                 <dropdown.item>
                   <DButton
-                    @label="admin.config_areas.flags.delete"
-                    @icon="trash-can"
                     class="btn-transparent --danger admin-flag-item__delete"
                     @action={{this.delete}}
                     @disabled={{not this.canDelete}}
+                    @icon="trash-can"
+                    @label="admin.config_areas.flags.delete"
                     @title={{this.deleteTitle}}
                   />
                 </dropdown.item>
