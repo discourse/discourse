@@ -401,7 +401,7 @@ module DiscourseWorkflows
               "inputs" => ports_to_item_groups(run["inputs"]),
               "outputs" => ports_to_item_groups(run["outputs"]),
               "input_sources" => input_sources(run["inputs"]),
-            }
+            }.tap { |restored| restored["metadata"] = run["metadata"] if run["metadata"].present? }
           end
         end
       end
@@ -430,6 +430,7 @@ module DiscourseWorkflows
           "node_type" => step&.node_type,
           "status" => step&.status,
           "run_index" => run_index,
+          "metadata" => run["metadata"],
           "inputs" =>
             serialize_ports(
               run["inputs"] || run[:inputs],
