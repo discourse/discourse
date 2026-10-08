@@ -80,13 +80,15 @@ class DsaStatementOfReason < ActiveRecord::Base
   end
 
   def reverse!
-    attributes = { reversed_at: Time.zone.now }
-    if attempts.zero? && payload["decision_visibility"]
-      attributes[:payload] = payload.merge(
-        "end_date_visibility_restriction" => Time.zone.today.iso8601,
-      )
+    with_lock do
+      attributes = { reversed_at: Time.zone.now }
+      if attempts.zero? && payload["decision_visibility"]
+        attributes[:payload] = payload.merge(
+          "end_date_visibility_restriction" => Time.zone.today.iso8601,
+        )
+      end
+      update!(attributes)
     end
-    update!(attributes)
   end
 
   def submission_metadata_complete?

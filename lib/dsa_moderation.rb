@@ -332,7 +332,8 @@ class DsaModeration
     if @reviewable.is_a?(ReviewableQueuedPost) &&
          (
            @reviewable.rejected? ||
-             @reviewable.deleted? && before[:reviewable_status].to_sym == :pending
+             @reviewable.deleted? && before[:reviewable_status].to_sym == :pending &&
+               @actor&.id != @reviewable.target_created_by_id
          )
       visibility << "DECISION_VISIBILITY_CONTENT_DISABLED"
     end

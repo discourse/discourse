@@ -111,6 +111,15 @@ RSpec.describe DsaModeration do
       )
     end
 
+    it "excludes an author withdrawing their own queued submission" do
+      queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
+
+      queued.perform(post.user, :delete)
+
+      expect(queued.reload).to be_deleted
+      expect(DsaStatementOfReason.where(reviewable_id: queued.id)).to be_empty
+    end
+
     it "records an actual user termination and excludes a deletion that fails because posts exist" do
       user = Fabricate(:user, approved: false)
       reviewable = ReviewableUser.create_for(user)

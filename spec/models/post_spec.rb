@@ -9,7 +9,10 @@ RSpec.describe Post do
 
   it_behaves_like "it has custom fields"
 
-  it { is_expected.to have_many(:reviewables).dependent(:destroy) }
+  it do
+    is_expected.to have_many(:reviewables)
+    is_expected.to have_many(:reviewables_for_cleanup).dependent(:destroy)
+  end
 
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do
