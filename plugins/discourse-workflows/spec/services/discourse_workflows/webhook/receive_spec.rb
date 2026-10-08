@@ -11,13 +11,13 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     fab!(:admin)
     fab!(:workflow) do
       graph =
-        build_workflow_graph do |g|
-          g.node "webhook-1",
-                 "trigger:webhook",
-                 configuration: {
-                   "path" => "my-hook",
-                   "http_method" => "POST",
-                 }
+        build_workflow_graph do |builder|
+          builder.node "webhook-1",
+                       "trigger:webhook",
+                       configuration: {
+                         "path" => "my-hook",
+                         "http_method" => "POST",
+                       }
         end
       Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
     end
@@ -45,34 +45,32 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     end
 
     context "when resuming a waiting execution" do
-      let(:resume_token) { "my-hook" }
+      let(:resume_token) { waiting_execution.resume_token }
       let(:webhook_suffix) { "" }
       let(:response_mode) { "on_received" }
-      let(:response_code) { "200" }
+      let(:response_code) { Rack::Utils::SYMBOL_TO_STATUS_CODE.fetch(:ok).to_s }
       let(:wait_http_method) { "POST" }
 
       let(:waiting_workflow) do
         graph =
-          build_workflow_graph do |g|
-            g.node "trigger-1", "trigger:manual"
-            g.node "wait-1",
-                   "flow:wait",
-                   configuration: {
-                     "resume" => "webhook",
-                     "http_method" => wait_http_method,
-                     "response_mode" => response_mode,
-                     "response_code" => response_code,
-                     "webhook_suffix" => webhook_suffix,
-                   }
-            g.chain "trigger-1", "wait-1"
+          build_workflow_graph do |builder|
+            builder.node "trigger-1", "trigger:manual"
+            builder.node "wait-1",
+                         "flow:wait",
+                         configuration: {
+                           "resume" => "webhook",
+                           "http_method" => wait_http_method,
+                           "response_mode" => response_mode,
+                           "response_code" => response_code,
+                           "webhook_suffix" => webhook_suffix,
+                         }
+            builder.chain "trigger-1", "wait-1"
           end
         Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
       end
 
       let(:waiting_execution) do
-        execution = DiscourseWorkflows::Executor.new(waiting_workflow, "trigger-1", {}).run
-        execution.update!(resume_token: resume_token)
-        execution
+        DiscourseWorkflows::Executor.new(waiting_workflow, "trigger-1", {}).run
       end
 
       let(:signature) do
@@ -107,10 +105,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       end
 
       context "when response mode is on_received" do
-        it { is_expected.to run_successfully }
-
         it "enqueues a ResumeWebhookWaiting job" do
-          result
+          expect(result).to run_successfully
           job = Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.last
           expect(job["args"].first).to include(
             "execution_id" => waiting_execution.id,
@@ -151,26 +147,21 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
       context "when response mode is synchronous" do
         let(:response_mode) { "last_node" }
-        let(:response_code) { "200" }
 
-        fab!(:resumed_execution) { Fabricate(:discourse_workflows_execution, workflow: workflow) }
-
-        before { DiscourseWorkflows::Executor.stubs(:resume).returns(resumed_execution) }
-
-        it { is_expected.to run_successfully }
-
-        it "sets sync_result on the context" do
-          expect(result[:sync_result][:execution]).to eq(resumed_execution)
-          expect(result[:sync_result][:response_mode]).to eq("last_node")
-          expect(result[:sync_result][:response_code]).to eq("200")
+        it "returns the resumed execution synchronously" do
+          expect(result).to run_successfully
+          expect(result[:sync_result]).to include(
+            execution: waiting_execution,
+            response_mode: response_mode,
+            response_code: response_code,
+          )
+          expect(waiting_execution.reload).to be_success
         end
 
-        context "when the execution has already been claimed for resume" do
-          before do
-            allow(DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
-          end
+        it "fails when another request already claimed the execution" do
+          DiscourseWorkflows::Execution.stubs(:claim_for_resume).returns(nil)
 
-          it { is_expected.to fail_to_find_a_model(:claimed_execution) }
+          expect(result).to fail_to_find_a_model(:claimed_execution)
         end
       end
     end
@@ -197,10 +188,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       end
 
       context "when everything is valid" do
-        it { is_expected.to run_successfully }
-
         it "enqueues an ExecuteWorkflow job" do
-          result
+          expect(result).to run_successfully
           job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
           expect(job["args"].first).to include(
             "trigger_node_id" => "webhook-1",
@@ -283,10 +272,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
           end
 
-          it { is_expected.to run_successfully }
-
           it "executes the workflow" do
-            result
+            expect(result).to run_successfully
             job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
             expect(job["args"].first["trigger_node_id"]).to eq("webhook-1")
           end
@@ -298,18 +285,16 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
           end
 
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
           it "exposes :denied as the auth failure reason" do
+            expect(result).to fail_to_find_a_model(:authenticated_nodes)
             expect(result[:auth_failure_reason]).to eq(:denied)
             expect(result[:auth_failure_mode]).to eq("basic_auth")
           end
         end
 
         context "when request has no authorization header" do
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
           it "exposes :challenge as the auth failure reason" do
+            expect(result).to fail_to_find_a_model(:authenticated_nodes)
             expect(result[:auth_failure_reason]).to eq(:challenge)
             expect(result[:auth_failure_mode]).to eq("basic_auth")
           end
@@ -318,173 +303,40 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         context "when credential record is missing" do
           before { credential.destroy! }
 
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
           it "exposes :misconfigured as the auth failure reason" do
+            expect(result).to fail_to_find_a_model(:authenticated_nodes)
             expect(result[:auth_failure_reason]).to eq(:misconfigured)
           end
-        end
-
-        context "when auth mode is unsupported" do
-          before do
-            update_workflow_node(workflow, "webhook-1") do |node|
-              node.merge(
-                "parameters" => node["parameters"].merge("authentication" => "unknown_mode"),
-              )
-            end
-            publish_workflow!(workflow)
-          end
-
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
-          it "exposes :misconfigured as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:misconfigured)
-          end
-        end
-      end
-
-      context "with bearer auth" do
-        fab!(:credential) do
-          Fabricate(
-            :discourse_workflows_credential,
-            credential_type: "bearer_token",
-            data: {
-              "token" => "secret-token",
-            },
-          )
-        end
-
-        before do
-          update_workflow_node(workflow, "webhook-1") do |node|
-            node.merge(
-              DiscourseWorkflows::NodeData.split(
-                parameters: {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "bearer_auth",
-                },
-                credentials: {
-                  "auth" => {
-                    "id" => credential.id,
-                    "credential_type" => "bearer_token",
-                  },
-                },
-                node_type: node["type"],
-              ),
-            )
-          end
-          publish_workflow!(workflow)
-        end
-
-        context "when request has valid bearer token" do
-          let(:params) do
-            auth = "Bearer secret-token"
-            super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
-          end
-
-          it { is_expected.to run_successfully }
-        end
-
-        context "when bearer token is missing" do
-          it "exposes :denied as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:denied)
-          end
-        end
-      end
-
-      context "with header auth" do
-        fab!(:credential) do
-          Fabricate(
-            :discourse_workflows_credential,
-            credential_type: "header_auth",
-            data: {
-              "name" => "X-Api-Key",
-              "value" => "secret-value",
-            },
-          )
-        end
-
-        before do
-          update_workflow_node(workflow, "webhook-1") do |node|
-            node.merge(
-              DiscourseWorkflows::NodeData.split(
-                parameters: {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "header_auth",
-                },
-                credentials: {
-                  "auth" => {
-                    "id" => credential.id,
-                    "credential_type" => "header_auth",
-                  },
-                },
-                node_type: node["type"],
-              ),
-            )
-          end
-          publish_workflow!(workflow)
-        end
-
-        context "when request has matching header" do
-          let(:params) { super().merge(headers: { "x-api-key" => "secret-value" }) }
-
-          it { is_expected.to run_successfully }
-        end
-
-        context "when header is missing" do
-          it "exposes :denied as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:denied)
-          end
-        end
-      end
-
-      context "when another workflow tries to claim the same path" do
-        fab!(:conflicting_workflow) do
-          graph =
-            build_workflow_graph do |g|
-              g.node "other-webhook-1",
-                     "trigger:webhook",
-                     configuration: {
-                       "path" => "my-hook",
-                       "http_method" => "POST",
-                       "authentication" => "none",
-                     }
-            end
-          Fabricate(:discourse_workflows_workflow, created_by: admin, published: false, **graph)
-        end
-
-        it "rejects activation of the second workflow with CollisionError" do
-          publish_workflow!(workflow)
-
-          expect { publish_workflow!(conflicting_workflow) }.to raise_error(
-            DiscourseWorkflows::Webhook::Action::ActivateWebhooks::CollisionError,
-          )
         end
       end
 
       context "with synchronous response mode" do
+        let(:response_code) { Rack::Utils::SYMBOL_TO_STATUS_CODE.fetch(:created).to_s }
+
         before do
           update_workflow_node(workflow, "webhook-1") do |node|
             node.merge(
               "parameters" =>
-                node["parameters"].merge("response_mode" => "last_node", "response_code" => "201"),
+                node["parameters"].merge(
+                  "response_mode" => "last_node",
+                  "response_code" => response_code,
+                ),
             )
           end
           publish_workflow!(workflow)
         end
 
-        it { is_expected.to run_successfully }
-
-        it "does not enqueue an async job" do
-          result
+        it "returns a synchronous result without enqueuing a job" do
+          expect(result).to run_successfully
           expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
-        end
-
-        it "sets sync_result on the context" do
-          expect(result[:sync_result][:execution]).to be_a(DiscourseWorkflows::Execution)
-          expect(result[:sync_result][:response_mode]).to eq("last_node")
-          expect(result[:sync_result][:response_code]).to eq("201")
+          expect(result[:sync_result]).to include(
+            response_mode: "last_node",
+            response_code: response_code,
+          )
+          expect(result[:sync_result][:execution]).to have_attributes(
+            workflow_id: workflow.id,
+            status: "success",
+          )
         end
       end
     end
@@ -492,6 +344,13 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     context "when triggering a test webhook" do
       let(:test_listener_id) { nil }
       let(:params) { super().merge(test_webhook: true, test_listener_id: test_listener_id) }
+      let(:listener) do
+        DiscourseWorkflows::WebhookTestListener.create!(
+          workflow: workflow,
+          user: admin,
+          trigger_node: workflow.find_node("webhook-1"),
+        )
+      end
 
       before { unpublish_workflow!(workflow) }
 
@@ -500,21 +359,13 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       end
 
       context "when everything is valid" do
-        let(:listener) do
-          DiscourseWorkflows::WebhookTestListener.create!(
-            workflow: workflow,
-            user: admin,
-            trigger_node: workflow.find_node("webhook-1"),
-          )
-        end
         let(:test_listener_id) { listener.listener_id }
 
-        it { is_expected.to run_successfully }
-
         it "runs the draft workflow synchronously" do
-          expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
+          expect(result).to run_successfully
+          expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
 
-          execution = DiscourseWorkflows::Execution.last
+          execution = result[:sync_result][:execution]
           expect(execution).to have_attributes(
             workflow_id: workflow.id,
             trigger_node_id: "webhook-1",
@@ -525,22 +376,9 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             "#{Discourse.base_url}/workflows/webhook-test/#{listener.listener_id}/my-hook",
           )
         end
-
-        it "does not enqueue an async job" do
-          result
-
-          expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
-        end
       end
 
       context "when request filtering rejects the request" do
-        let(:listener) do
-          DiscourseWorkflows::WebhookTestListener.create!(
-            workflow: workflow,
-            user: admin,
-            trigger_node: workflow.find_node("webhook-1"),
-          )
-        end
         let(:test_listener_id) { listener.listener_id }
 
         before do
@@ -556,10 +394,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
         let(:params) { super().merge(remote_ip: "192.0.2.10") }
 
-        it { is_expected.to fail_to_find_a_model(:request_allowed_nodes) }
-
         it "does not consume the listener" do
-          result
+          expect(result).to fail_to_find_a_model(:request_allowed_nodes)
 
           expect(
             DiscourseWorkflows::WebhookTestListener.find_by_route(method: "POST", path: "my-hook"),

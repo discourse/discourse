@@ -172,7 +172,7 @@ module DiscourseWorkflows
     end
 
     def async_resume?(waiting_node:)
-      wait_node_response_mode(waiting_node) == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
+      node_response_mode(waiting_node) == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
     end
 
     def sync_resume?(waiting_node:)
@@ -310,7 +310,7 @@ module DiscourseWorkflows
     def enqueue_async_workflows(request_allowed_nodes:, webhook_context:)
       request_allowed_nodes.each do |published_trigger|
         node = published_trigger.trigger_node
-        response_mode = trigger_node_response_mode(node)
+        response_mode = node_response_mode(node)
         next unless response_mode == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
 
         DiscourseWorkflows::TriggerDispatcher.enqueue(
@@ -325,7 +325,7 @@ module DiscourseWorkflows
       request_allowed_nodes.each do |published_trigger|
         node = published_trigger.trigger_node
         parameters = NodeData.parameters(node)
-        response_mode = trigger_node_response_mode(node)
+        response_mode = node_response_mode(node)
         next if response_mode == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
 
         execution =
@@ -372,7 +372,7 @@ module DiscourseWorkflows
 
       {
         execution: execution,
-        response_mode: trigger_node_response_mode(node),
+        response_mode: node_response_mode(node),
         response_code: parameters["response_code"],
         response_data: parameters["response_data"],
         response_parameters: parameters,
@@ -408,12 +408,7 @@ module DiscourseWorkflows
       end
     end
 
-    def wait_node_response_mode(waiting_node)
-      NodeData.parameters(waiting_node)["response_mode"] ||
-        Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
-    end
-
-    def trigger_node_response_mode(node)
+    def node_response_mode(node)
       NodeData.parameters(node)["response_mode"] || Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
     end
 
