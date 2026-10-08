@@ -106,12 +106,18 @@ module DiscourseWorkflows
         execution
       end
 
-      def create_execution_with_status(status, trigger_data: self.trigger_data)
-        persist_execution!(status:, trigger_data:, finished_at: Time.current)
+      def create_execution_with_status(status, trigger_data: self.trigger_data, error: nil)
+        persist_execution!(status:, trigger_data:, finished_at: Time.current, error:)
       end
 
-      def create_rate_limited_execution
-        create_execution_with_status(:rate_limited, trigger_data: { "rate_limited" => true })
+      def create_rate_limited_execution(error:)
+        create_execution_with_status(
+          :rate_limited,
+          trigger_data: {
+            "rate_limited" => true,
+          },
+          error:,
+        )
       end
 
       def pause_waiting_execution!(node:, waiting_until: nil, timeout_action: nil, steps: [])
@@ -147,7 +153,7 @@ module DiscourseWorkflows
 
       private
 
-      def persist_execution!(status:, trigger_data:, finished_at: nil)
+      def persist_execution!(status:, trigger_data:, finished_at: nil, error: nil)
         @execution = @options.existing_execution || Execution.new
         created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
@@ -160,6 +166,7 @@ module DiscourseWorkflows
           execution_mode: @execution_mode,
           started_at: @execution.started_at || Time.current,
           finished_at:,
+          **{ error: }.compact,
         }
 
         if @options.job_id.present?

@@ -640,6 +640,9 @@ RSpec.describe DiscourseWorkflows::Executor do
         second_execution = described_class.new(workflow, "trigger-1", trigger_data).run
         expect(second_execution.status).to eq("rate_limited")
         expect(second_execution.trigger_data).to eq("rate_limited" => true)
+        expect(second_execution.error).to eq(
+          I18n.t("discourse_workflows.errors.rate_limited.per_workflow", count: 1),
+        )
       end
 
       it "updates an existing execution when limits are exceeded" do
@@ -667,6 +670,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         existing_execution.reload
         expect(existing_execution.status).to eq("rate_limited")
         expect(existing_execution.trigger_data).to eq("rate_limited" => true)
+        expect(existing_execution.error).to be_present
       end
     end
 

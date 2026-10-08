@@ -994,8 +994,8 @@ module DiscourseWorkflows
         return false
       end
 
-      unless rate_limiter.within_limits?
-        @store.create_rate_limited_execution
+      if (rate_limit_message = rate_limiter.exceeded_limit_message)
+        @store.create_rate_limited_execution(error: rate_limit_message)
         return false
       end
 
