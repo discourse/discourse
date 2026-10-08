@@ -508,6 +508,7 @@
   .user-status {
     display: flex;
     align-items: center;
+    gap: var(--space-1);
     position: absolute;
     top: 0;
     left: 50%;
@@ -524,16 +525,19 @@
       0 2px 12px rgb(0, 0, 0, 0.1);
     font-size: var(--font-down-1);
 
-    img.emoji {
-      margin-right: 0.3em;
+    &.--empty {
+      font-style: italic;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
     }
 
     .relative-date {
       flex: 1 0 auto;
       text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 0.5em;
-      margin-left: 0.6em;
+      font-size: var(--font-down-2);
+      margin-left: var(--space-half);
       color: var(--primary-medium);
     }
 

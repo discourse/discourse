@@ -3,6 +3,7 @@ import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
@@ -13,6 +14,7 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
+import UserStatusModal from "discourse/components/modal/user-status";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
 import formatUsername from "discourse/helpers/format-username";
@@ -47,6 +49,9 @@ import { i18n } from "discourse-i18n";
 )
 @attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase {
+  @service modal;
+  @service userStatus;
+
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
@@ -181,11 +186,6 @@ export default class UserCardContents extends CardContentsBase {
   @computed("user")
   get hasLocaleOrWebsite() {
     return this.user.location || this.user.website_name || this.userTimezone;
-  }
-
-  @computed("user.status")
-  get hasStatus() {
-    return this.siteSettings.enable_user_status && this.user.status;
   }
 
   @computed("user.status.emoji")
@@ -367,6 +367,21 @@ export default class UserCardContents extends CardContentsBase {
     user.checkEmail();
   }
 
+  @action
+  editUserStatus() {
+    this._close();
+
+    this.modal.show(UserStatusModal, {
+      model: {
+        status: this.currentUser.status,
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
+        deleteAction: () => this.userStatus.clear(),
+      },
+    });
+  }
+
   @onEvent("didInsertElement")
   _inserted() {
     this.appEvents.on("dom:clean", this, this.cleanUp);
@@ -490,14 +505,43 @@ export default class UserCardContents extends CardContentsBase {
                   </div>
                 </div>
 
-                {{#if this.hasStatus}}
-                  <div class="user-status">
-                    {{trustHTML this.userStatusEmoji}}
-                    <span class="user-status__description">
-                      {{this.user.status.description}}
-                    </span>
-                    {{dFormatDate this.user.status.ends_at format="tiny"}}
-                  </div>
+                {{#if this.siteSettings.enable_user_status}}
+                  {{#if this.user.status}}
+                    {{#if this.isOwnCard}}
+                      <button
+                        class="user-status --editable"
+                        title={{i18n "user_status.edit_status"}}
+                        type="button"
+                        {{on "click" this.editUserStatus}}
+                      >
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </button>
+                    {{else}}
+                      <div class="user-status">
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </div>
+                    {{/if}}
+                  {{else if this.isOwnCard}}
+                    <button
+                      class="user-status --empty"
+                      title={{i18n "user_status.set_custom_status"}}
+                      type="button"
+                      {{on "click" this.editUserStatus}}
+                    >
+                      {{dIcon "circle-plus"}}
+                      <span class="user-status__description">
+                        {{i18n "user_status.placeholder"}}
+                      </span>
+                    </button>
+                  {{/if}}
                 {{/if}}
               </div>
               <div class="names">
