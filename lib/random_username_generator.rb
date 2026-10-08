@@ -7,8 +7,8 @@
 module RandomUsernameGenerator
   # Returns nil when the site has opted out, or when the configured word lists
   # can't produce a usable name, so callers fall back to their own suggestion.
-  def self.generate
-    return nil if !SiteSetting.enable_random_usernames
+  def self.generate(allow_when_disabled: false)
+    return nil if !allow_when_disabled && !SiteSetting.enable_random_usernames
 
     adjective = pick(SiteSetting.random_username_adjectives_map)
     noun = pick(SiteSetting.random_username_nouns_map)

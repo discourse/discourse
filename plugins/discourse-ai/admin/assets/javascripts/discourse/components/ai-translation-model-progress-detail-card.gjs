@@ -91,9 +91,9 @@ export default class AiTranslationModelProgressDetailCard extends Component {
               {{#if this.showPending}}
                 <th class="ai-translation-locale-progress__pending-header">
                   <DTooltip
-                    @icon="circle-question"
-                    @content={{this.pendingHelp}}
                     class="ai-translation-locale-progress__help"
+                    @content={{this.pendingHelp}}
+                    @icon="circle-question"
                   />
                   <span>
                     {{i18n
@@ -105,9 +105,9 @@ export default class AiTranslationModelProgressDetailCard extends Component {
               <th class="ai-translation-locale-progress__denominator-header">
                 {{#unless this.isTag}}
                   <DTooltip
-                    @icon="circle-question"
-                    @content={{this.eligibleHelp}}
                     class="ai-translation-locale-progress__help"
+                    @content={{this.eligibleHelp}}
+                    @icon="circle-question"
                   />
                 {{/unless}}
                 <span>{{this.denominatorLabel}}</span>
@@ -181,12 +181,12 @@ export default class AiTranslationModelProgressDetailCard extends Component {
                     }}
                   </span>
                   <div
+                    aria-label={{this.progressLabel row}}
+                    aria-valuemax="100"
+                    aria-valuemin="0"
+                    aria-valuenow={{row.percentage}}
                     class="ai-translation-progress-bar"
                     role="progressbar"
-                    aria-label={{this.progressLabel row}}
-                    aria-valuenow={{row.percentage}}
-                    aria-valuemin="0"
-                    aria-valuemax="100"
                   >
                     <span
                       class="ai-translation-progress-bar__fill"

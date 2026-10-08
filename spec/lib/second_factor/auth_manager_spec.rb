@@ -3,6 +3,7 @@
 RSpec.describe SecondFactor::AuthManager do
   fab!(:user)
   let(:guardian) { Guardian.new(user) }
+
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
 
   def create_request(request_method: "GET", path: "/")

@@ -211,6 +211,7 @@ hy:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
     back_button: "Ետ"
+    confirm_button: "Հաստատել"
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
@@ -1348,6 +1349,13 @@ hy:
       ignored_users_instructions: "Անտեսել այս օգտատերերի բոլոր գրառումները, ծանուցումները և անձնական հաղորդագրությունները:"
       tracked_topics_link: "Ցուցադրել"
       apps: "Հավելվածներ"
+      mcp_authorizations:
+        details: "Մանրամասներ"
+        never: "Երբեք"
+        status: "Ստատուս"
+        statuses:
+          active: "Ակտիվ"
+          revoked: "Հետկանչված"
       revoke_access: "Հետ Կանչել Թույլտվությունը"
       undo_revoke_access: "Ետարկել Թույլտվության Հետկանչումը (Undo Revoke Access)"
       api_approved: "Հաստատված է՝"
@@ -3237,6 +3245,7 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      latest_topics: "Վերջին թեմաները"
       description_expand: "Ցույց տալ ավելին"
       description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
@@ -3430,6 +3439,7 @@ hy:
       with_topics: "%{filter} թեմա"
       with_category: "%{filter} %{category} թեմա"
       filter:
+        reset: "վերահաստատել"
         button:
           label: "Ֆիլտր"
       latest:
@@ -3895,6 +3905,59 @@ hy:
       config:
         developer:
           title: "Ծրագրավորող"
+        mcp:
+          tabs:
+            access: "Հասանելիություն"
+            activity: "Ակտիվության"
+          overview:
+            status: "Ստատուս"
+          access:
+            title: "Հասանելիություն"
+            group: "Խմբավորել"
+            groups: "Խմբեր"
+            actions: "Գործողություններ"
+            edit: "Խմբագրել"
+            delete: "Ջնջել"
+          primitives:
+            group_by_options:
+              provider: "Մատակարար"
+              kind: "Տիպ"
+            provider: "Մատակարար"
+            kind: "Տիպ"
+          clients:
+            actions: "Գործողություններ"
+            block: "Արգելափակել"
+            presets:
+              custom: "Մասնավոր"
+          authorizations:
+            user: "Օգտատեր"
+            status: "Ստատուս"
+            actions: "Գործողություններ"
+          activity:
+            time: "Ժամ"
+            user: "Օգտատեր"
+          values:
+            server_status:
+              disabled: "Անջատված"
+            client_trust:
+              approved: "Հաստատված է"
+            authorization_status:
+              active: "Ակտիվ"
+              revoked: "Հետկանչված"
+            activity_outcome:
+              success: "Հաջողություն"
+              error: "Սխալ"
+            primitive_state:
+              disabled: "Անջատված"
+            primitive_kind:
+              all: "Բոլոր տեսակները"
+            primitive_risk:
+              moderation: "Մոդերացիա"
+            filter:
+              all: "Բոլոր"
+          never: "Երբեք"
+          actions:
+            revoke: "Հետ կանչել"
         emojis:
           title: "Էմոջի"
         flags:
@@ -4118,6 +4181,7 @@ hy:
           series:
             anonymous: "Անանուն"
             crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
+          crawler_learn_more: "Իմանալ ավելին"
         period:
           custom: "Մասնավոր"
         reports:
@@ -5236,12 +5300,11 @@ hy:
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
-        search: "Որոնել տեքստը, որը կցանկանայիք խմբագրել"
+        search_label: "Որոնում"
+        theme_disabled: "Անջատված"
+        filters: "Ֆիլտրներ"
         edit: "Խմբագրել"
-        revert: "Վերադարձնել Փոփոխությունները"
         revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել կատարված փոփոխությունները:"
-        go_back: "Վերադարձ Որոնմանը"
-        recommended: "Մենք խորհուրդ ենք տալիս անհատականացնել հետևյալ տեքստը՝ Ձեր պահանջներին համապատասխանեցնելու համար՝ "
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         more_than_50_results: "Կա 50-ից ավել արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը:"
         outdated:

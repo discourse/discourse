@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 114
+  BASE_COMPILER_VERSION = 120
 
   BUNDLE =
     PrecompiledBundle.new(
       dir: "tmp/asset-processor",
       filename_prefix: "asset-processor",
       dependency_globs: %w[
-        node_modules/.pnpm/lock.yaml
+        pnpm-lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
         app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
@@ -41,6 +41,7 @@ class AssetProcessor
         "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
         {
           id: "discourse.es6-extension",
+          reportAtCallSite: true,
           url: "https://meta.discourse.org/t/398894",
         }
       );

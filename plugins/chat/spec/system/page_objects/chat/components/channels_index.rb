@@ -17,8 +17,39 @@ module PageObjects
           find(context).find(SELECTOR)
         end
 
+        def show_all_channels
+          component.find(".empty-state__cta .btn").click
+        end
+
+        def toggle_channel_filter
+          component.find(".chat-channel-list-filter-toggle").click
+        end
+
         def open_browse
-          component.find(".open-browse-page-btn").click
+          open_channel_list_options.option('[data-menu-option-id="browseChannels"]').click
+        end
+
+        def open_channel_list_options
+          trigger = component.find(".chat-channel-list-options-button")
+          trigger.click
+          PageObjects::Components::DMenu.new(trigger, "chat-channel-list-options-menu")
+        end
+
+        def set_channel_sort(sort)
+          menu = open_channel_list_options
+          sort_trigger = menu.option('[data-menu-option-id="sortChannels"]')
+          sort_trigger.click
+          submenu = PageObjects::Components::DMenu.new(sort_trigger, "chat-channel-list-sort-menu")
+          submenu.option(%([data-menu-option-id="#{sort}"])).click
+        end
+
+        def set_channel_filter(filter)
+          menu = open_channel_list_options
+          filter_trigger = menu.option('[data-menu-option-id="filterChannels"]')
+          filter_trigger.click
+          submenu =
+            PageObjects::Components::DMenu.new(filter_trigger, "chat-channel-list-filter-menu")
+          submenu.option(%([data-menu-option-id="#{filter}"])).click
         end
 
         def open_channel(channel)
@@ -37,8 +68,8 @@ module PageObjects
           has_no_css?(channel_row_selector(channel))
         end
 
-        def has_no_browse_page_button?
-          has_no_css?(".open-browse-page-btn")
+        def has_no_channel_list_options_button?
+          has_no_css?(".chat-channel-list-options-button")
         end
 
         def has_unread_channel?(

@@ -200,6 +200,7 @@ RSpec.describe Email::Receiver do
 
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
+
       it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
         expect { process(:cc) }.to change(Topic, :count)
 
@@ -583,6 +584,7 @@ RSpec.describe Email::Receiver do
         process(:email_to_group_email_username_1)
         Topic.last
       end
+
       fab!(:user_in_group) do
         u = Fabricate(:user)
         Fabricate(:group_user, user: u, group: group)
@@ -784,7 +786,7 @@ RSpec.describe Email::Receiver do
       )
     end
 
-    it "works" do
+    it "publishes the topic_created event with incoming addresses" do
       handler_calls = 0
       handler =
         proc do |topic|
@@ -824,80 +826,51 @@ RSpec.describe Email::Receiver do
       expect(handler_calls).to eq(1)
     end
 
-    it "creates visible topic for ham" do
-      SiteSetting.email_in_spam_header = "none"
-
-      Fabricate(
-        :user,
-        email: "existing@bar.com",
-        trust_level: TrustLevel[2],
-        refresh_auto_groups: true,
-      )
-      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(true)
-
-      post = Post.last
-      expect(post.hidden).to eq(false)
-      expect(post.hidden_at).to eq(nil)
-      expect(post.hidden_reason_id).to eq(nil)
-    end
-
-    it "creates hidden topic for X-Spam-Flag" do
-      SiteSetting.email_in_spam_header = "X-Spam-Flag"
-
-      user =
+    context "with spam and Authentication-Results headers" do
+      fab!(:user) do
         Fabricate(
           :user,
           email: "existing@bar.com",
           trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
-      expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      end
 
-    it "creates hidden topic for X-Spam-Status" do
-      SiteSetting.email_in_spam_header = "X-Spam-Status"
+      it "creates visible topic for ham" do
+        SiteSetting.email_in_spam_header = "none"
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+        expect { process(:existing_user) }.to change { Topic.count }.by(1)
 
-    it "creates hidden topic for X-SES-Spam-Verdict" do
-      SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
+        expect(Topic.last.visible).to eq(true)
+        expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      {
+        "X-Spam-Flag" => :spam_x_spam_flag,
+        "X-Spam-Status" => :spam_x_spam_status,
+        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
+      }.each do |header, fixture|
+        it "enqueues the post and silences the user for #{header}" do
+          SiteSetting.email_in_spam_header = header
 
-    it "creates hidden topic for failed Authentication-Results header" do
-      SiteSetting.email_in_authserv_id = "example.com"
+          expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
+          expect(user.reload.silenced?).to be(true)
+        end
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(false)
+      it "enqueues the post for a failed Authentication-Results header" do
+        SiteSetting.email_in_authserv_id = "example.com"
+
+        expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(false)
+      end
+
+      it "enqueues the post when evaluating the Authentication-Results header fails" do
+        Email::AuthenticationResults.any_instance.stubs(:action).raises(StandardError)
+        Discourse.expects(:warn_exception).once
+
+        expect { process(:existing_user) }.to change { ReviewableQueuedPost.count }.by(1)
+      end
     end
 
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
@@ -1091,7 +1064,7 @@ RSpec.describe Email::Receiver do
       SiteSetting.alternative_reply_by_email_addresses = ""
     end
 
-    it "it matches nothing if there is not reply_by_email_address" do
+    it "matches nothing when reply_by_email_address is blank" do
       expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
@@ -1420,12 +1393,12 @@ RSpec.describe Email::Receiver do
 
     before { SiteSetting.block_auto_generated_emails = true }
 
-    it "should allow creating topic even when email is autogenerated" do
+    it "allows creating a topic from an autogenerated email" do
       expect { process(:mailinglist) }.to change { Topic.count }
       expect(IncomingEmail.last.is_auto_generated).to eq(false)
     end
 
-    it "should allow replying without reply key" do
+    it "allows replying without a reply key" do
       process(:mailinglist)
       topic = Topic.last
 
@@ -1465,12 +1438,12 @@ RSpec.describe Email::Receiver do
       )
     end
 
-    it "should skip validations for staged users" do
+    it "skips validations for staged users" do
       Fabricate(:user, email: "alice@foo.com", staged: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
 
-    it "should skip validations for regular users" do
+    it "skips validations for regular users" do
       Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
@@ -1484,11 +1457,11 @@ RSpec.describe Email::Receiver do
         Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       end
 
-      it "should allow creating topic within read-only category" do
+      it "allows creating a topic in the read-only category" do
         expect { process(:mailinglist) }.to change { Topic.count }
       end
 
-      it "should allow replying within read-only category" do
+      it "allows replying in the read-only category" do
         process(:mailinglist)
         topic = Topic.last
 
@@ -2003,7 +1976,8 @@ RSpec.describe Email::Receiver do
           Email::Receiver::ReplyNotAllowedError,
         )
       end
-      it "works" do
+
+      it "creates the reply" do
         expect { process(:reply_user_matching) }.to change { topic.posts.count }
       end
 
@@ -2207,7 +2181,7 @@ RSpec.describe Email::Receiver do
         )
       end
 
-      it "removes the translated 'Previous Replies' marker" do
+      it "removes the translated 'Previous Replies' marker from previous-replies email" do
         expect { process(:previous_replies_de) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to eq(
           "This will not include the previous discussion that is present in this email.",
@@ -2221,7 +2195,7 @@ RSpec.describe Email::Receiver do
         )
       end
 
-      it "removes the translated 'Previous Replies' marker" do
+      it "removes the translated 'Previous Replies' marker from reply-above email" do
         expect { process(:reply_above_de) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to eq(
           "This will not include the previous discussion that is present in this email.",

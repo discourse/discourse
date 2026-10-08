@@ -55,9 +55,9 @@ export default class VoiceIncomingCallModal extends Component {
 
   <template>
     <DModal
+      class="voice-incoming-call-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.call.incoming_title"}}
-      class="voice-incoming-call-modal"
     >
       <:body>
         <div class="voice-incoming-call-modal__caller">
@@ -74,16 +74,16 @@ export default class VoiceIncomingCallModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary voice-incoming-call-modal__answer"
           @action={{this.answer}}
           @icon="phone"
           @label="voice.call.answer"
-          class="btn-primary voice-incoming-call-modal__answer"
         />
         <DButton
+          class="btn-danger voice-incoming-call-modal__decline"
           @action={{this.decline}}
           @icon="phone-slash"
           @label="voice.call.decline"
-          class="btn-danger voice-incoming-call-modal__decline"
         />
       </:footer>
     </DModal>

@@ -11,7 +11,7 @@ describe Jobs::UpdateStaleLeaderboardPositions do
   end
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 
-  it "it updates all stale leaderboard positions" do
+  it "updates all stale leaderboard positions" do
     DiscourseGamification::LeaderboardCachedView.new(leaderboard).create
 
     expect(leaderboard_positions.scores.length).to eq(1)

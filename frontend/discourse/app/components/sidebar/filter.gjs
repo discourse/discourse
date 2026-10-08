@@ -37,19 +37,19 @@ export default class Filter extends Component {
       <div class="sidebar-filter">
         <div class="sidebar-filter__input-container">
           <input
-            {{on "input" this.setFilter}}
-            value={{this.sidebarState.filter}}
+            class="sidebar-filter__input"
+            enterkeyhint="done"
             placeholder={{i18n "sidebar.filter_links"}}
             type="text"
-            enterkeyhint="done"
-            class="sidebar-filter__input"
+            value={{this.sidebarState.filter}}
+            {{on "input" this.setFilter}}
           />
 
           {{#if this.displayClearFilter}}
             <DButton
+              class="sidebar-filter__clear btn-transparent"
               @action={{this.clearFilter}}
               @icon="xmark"
-              class="sidebar-filter__clear btn-transparent"
             />
           {{/if}}
         </div>

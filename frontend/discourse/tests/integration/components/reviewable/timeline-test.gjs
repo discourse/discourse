@@ -94,8 +94,8 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
     await render(
       <template>
         <ReviewableTimeline
-          @reviewable={{reviewable}}
           @historyEvents={{historyEvents}}
+          @reviewable={{reviewable}}
         />
       </template>
     );

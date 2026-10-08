@@ -30,8 +30,8 @@ export default class ShowNotesOnProfile extends Component {
   <template>
     <li class="user-profile-controls-outlet show-notes-on-profile">
       <ShowUserNotes
-        @show={{this.showUserNotes}}
         @count={{this.userNotesCount}}
+        @show={{this.showUserNotes}}
       />
     </li>
   </template>

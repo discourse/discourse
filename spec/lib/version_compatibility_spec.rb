@@ -41,6 +41,28 @@ RSpec.describe Discourse do
       expect(Discourse.has_needed_version?("1.3.0.beta4", "1.3.0.beta3")).to eq(true)
       expect(Discourse.has_needed_version?("1.3.0", "1.3.0.beta3")).to eq(true)
     end
+
+    it "treats -latest builds as pre-releases of the same version" do
+      expect(Discourse.has_needed_version?("2026.8.0-latest", "2026.7.2")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0-latest.1", "2026.8.0-latest")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0", "2026.8.0-latest.1")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0-latest", "2026.8.0-latest.1")).to eq(false)
+      expect(Discourse.has_needed_version?("2026.8.0-latest.1", "2026.8.0")).to eq(false)
+    end
+  end
+
+  describe "VERSION_REGEXP" do
+    it "matches release, beta and -latest versions" do
+      %w[2026.8.0 1.3.0.beta3 2026.8.0-latest 2026.8.0-latest.1].each do |v|
+        expect(v).to match(Discourse::VERSION_REGEXP)
+      end
+    end
+
+    it "rejects other suffixes" do
+      %w[2026.8 2026.8.0-beta 2026.8.0-latest. 2026.8.0-latest.1.2 2026.8.0latest].each do |v|
+        expect(v).not_to match(Discourse::VERSION_REGEXP)
+      end
+    end
   end
 
   describe ".find_compatible_resource" do
@@ -98,6 +120,7 @@ RSpec.describe Discourse do
         2.4.4.beta6: twofourfourbetasix
         2.4.2.beta1: twofourtwobetaone
         YML
+
       include_examples "test compatible resource"
     end
 
@@ -109,6 +132,7 @@ RSpec.describe Discourse do
         2.5.0.beta2: twofivebetatwo
         2.4.4.beta6: twofourfourbetasix
         YML
+
       include_examples "test compatible resource"
     end
 

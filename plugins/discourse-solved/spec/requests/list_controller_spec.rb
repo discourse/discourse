@@ -22,6 +22,7 @@ RSpec.describe ListController do
   describe "with multiple solutions enabled" do
     fab!(:p4) { Fabricate(:post, topic: p1.topic) }
     before { SiteSetting.solved_allow_multiple_solutions = true }
+
     it "shows the user who posted the accepted answers second" do
       TopicFeaturedUsers.ensure_consistency!
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: p3.id }, guardian: p1.user.guardian)

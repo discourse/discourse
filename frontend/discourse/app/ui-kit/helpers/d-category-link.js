@@ -1,13 +1,14 @@
 import { get } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import categoryStyleType from "discourse/lib/category-style-type";
 import getURL from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
@@ -51,7 +52,7 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (!opts.styleType) {
-    opts.styleType = category.style_type || "square";
+    opts.styleType = categoryStyleType(category.style_type) || "square";
 
     if (opts.styleType === "icon") {
       opts.icon = opts.icon || category.icon;
@@ -187,7 +188,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    html += dReplaceEmoji(`:${opts.emoji}:`);
+    html += dEmoji(opts.emoji) ?? "";
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

@@ -8,6 +8,10 @@ nb_NO:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dato"
+          outcomes:
+            failed: "Feilet"
         reports:
           filters:
             sort_by:

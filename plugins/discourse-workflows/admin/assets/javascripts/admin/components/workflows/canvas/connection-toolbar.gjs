@@ -13,17 +13,17 @@ function stopAndCall(callback, e) {
 export default <template>
   <CanvasHoverToolbar
     @hoverQuery=".workflow-connection__hit"
-    @visibilityQuery=".workflow-connection__toolbar-fo"
     @inline={{true}}
+    @visibilityQuery=".workflow-connection__toolbar-fo"
   >
     <DTooltip
-      @identifier="workflow-connection-add-step"
       @content={{i18n "discourse_workflows.canvas.add_step"}}
+      @identifier="workflow-connection-add-step"
     >
       <:trigger>
         <button
-          type="button"
           class="workflow-canvas-toolbar__btn"
+          type="button"
           {{on "click" (fn stopAndCall @onAdd)}}
         >
           {{dIcon "plus"}}
@@ -31,13 +31,13 @@ export default <template>
       </:trigger>
     </DTooltip>
     <DTooltip
-      @identifier="workflow-connection-remove"
       @content={{i18n "discourse_workflows.canvas.remove_connection"}}
+      @identifier="workflow-connection-remove"
     >
       <:trigger>
         <button
-          type="button"
           class="workflow-canvas-toolbar__btn"
+          type="button"
           {{on "click" (fn stopAndCall @onDelete)}}
         >
           {{dIcon "trash-can"}}

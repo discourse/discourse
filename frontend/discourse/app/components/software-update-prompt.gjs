@@ -86,18 +86,18 @@ export default class SoftwareUpdatePrompt extends Component {
         <div class="wrap">
           <div aria-live="polite" class="update-prompt-main-content">
             <DButton
+              class="btn-transparent update-prompt-message"
               @action={{this.refreshPage}}
               @icon="arrow-rotate-right"
               @label="software_update_prompt.message"
-              class="btn-transparent update-prompt-message"
             />
 
             <span class="update-prompt-dismiss">
               <DButton
-                @action={{this.dismiss}}
-                @icon="xmark"
                 aria-label={{i18n "software_update_prompt.dismiss"}}
                 class="btn-transparent"
+                @action={{this.dismiss}}
+                @icon="xmark"
               />
             </span>
           </div>

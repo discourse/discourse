@@ -115,48 +115,48 @@ export default class ToggleColorMode extends Component {
   <template>
     {{#if this.shouldRender}}
       <DMenu
-        @icon={{this.icon}}
-        @identifier="styleguide-color-mode"
+        class="toggle-color-mode"
+        data-current-mode={{this.mode}}
         @animated={{false}}
-        @title={{i18n "sidebar.footer.interface_color_selector.title"}}
         @ariaLabel={{i18n
           "sidebar.footer.interface_color_selector.aria_label"
           mode=this.mode
         }}
+        @icon={{this.icon}}
+        @identifier="styleguide-color-mode"
+        @title={{i18n "sidebar.footer.interface_color_selector.title"}}
         @triggerClass="btn-default btn-small"
-        class="toggle-color-mode"
-        data-current-mode={{this.mode}}
       >
         <:content as |dMenu|>
           <DDropdownMenu as |dropdown|>
             <dropdown.item>
               <DButton
                 class="toggle-color-mode__light-option"
+                @action={{fn this.select LIGHT dMenu}}
                 @icon="sun"
                 @translatedLabel={{i18n
                   "sidebar.footer.interface_color_selector.light"
                 }}
-                @action={{fn this.select LIGHT dMenu}}
               />
             </dropdown.item>
             <dropdown.item>
               <DButton
                 class="toggle-color-mode__dark-option"
+                @action={{fn this.select DARK dMenu}}
                 @icon="moon"
                 @translatedLabel={{i18n
                   "sidebar.footer.interface_color_selector.dark"
                 }}
-                @action={{fn this.select DARK dMenu}}
               />
             </dropdown.item>
             <dropdown.item>
               <DButton
                 class="toggle-color-mode__auto-option"
+                @action={{fn this.select AUTO dMenu}}
                 @icon="circle-half-stroke"
                 @translatedLabel={{i18n
                   "sidebar.footer.interface_color_selector.auto"
                 }}
-                @action={{fn this.select AUTO dMenu}}
               />
             </dropdown.item>
           </DDropdownMenu>

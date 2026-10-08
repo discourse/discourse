@@ -18,6 +18,11 @@ module ::Voice
     SiteSetting.voice_enabled
   end
 
+  # Callers must omit raw errors and payloads, which can contain credentials or content.
+  def self.warn(message)
+    Rails.logger.warn(message) if SiteSetting.voice_verbose_logging
+  end
+
   def self.room_channel(room_id)
     "#{ROOM_CHANNEL_PREFIX}/#{room_id}"
   end
@@ -49,6 +54,9 @@ require_relative "voice/livekit/twirp"
 require_relative "voice/livekit/egress_client"
 require_relative "voice/livekit/health_check"
 require_relative "voice/livekit/room_service_client"
+require_relative "voice/livekit/agent_dispatch_client"
+require_relative "voice/livekit/cloud_agent_client"
 require_relative "voice/livekit/webhook_verifier"
 require_relative "voice/room_hashtag_data_source"
 require_relative "voice/user_status_manager"
+require_relative "../app/services/voice/agent_manager"

@@ -7,6 +7,8 @@ Boards::Engine.routes.draw do
     get "/boards/:id" => "boards#show"
     post "/boards" => "boards#create"
     put "/boards/:id" => "boards#update"
+    post "/boards/:id/archive" => "boards#archive"
+    post "/boards/:id/unarchive" => "boards#unarchive"
     delete "/boards/:id" => "boards#destroy"
     post "/boards/:id/move-column" => "boards#move_column"
     post "/boards/:id/constraint-preview" => "boards#constraint_preview"

@@ -6,12 +6,24 @@ module DiscourseRewind
       option :user
       option :date
 
-      def call
-        raise NotImplementedError
+      def self.publicly_visible_topics
+        Topic.listable_topics.visible.secured
+      end
+
+      def self.publicly_visible_posts
+        Post.visible.merge(publicly_visible_topics).where.not(post_type: Post.types[:whisper])
+      end
+
+      def self.filter_for_viewer(report, **)
+        report
       end
 
       def self.enabled?
         true
+      end
+
+      def self.plugin_enabled?(name)
+        Discourse.plugins_by_name[name]&.enabled?
       end
 
       def should_use_fake_data?

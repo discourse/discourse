@@ -21,7 +21,7 @@ export default <template>
   <div class="created-by">
     {{#if @user}}
       <DUserLink @user={{@user}}>{{dAvatar @user imageSize="small"}}</DUserLink>
-      <ReviewableCreatedByName @user={{@user}} @penalties={{@penalties}} />
+      <ReviewableCreatedByName @penalties={{@penalties}} @user={{@user}} />
     {{else}}
       <div class="deleted-user">
         {{dIcon "trash-can" class="deleted-user-avatar"}}

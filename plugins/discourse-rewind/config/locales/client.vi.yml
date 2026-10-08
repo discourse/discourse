@@ -19,16 +19,8 @@ vi:
         reading_time:
           title: Thời gian đọc
         chat_usage:
-          messages: tin nhắn
           author: Bạn
           author_others: "%{username}"
           status_online: "● trực tuyến"
-        invites:
-          title: Lời mời
-          invitee_posts: Tút đã được tạo
-          invitee_likes: Lượt Likes
-        new_user_interactions:
-          likes_given: Lượt Likes
-          mentions: Được nhắc đến
         writing_analysis:
           menu_other: Khác

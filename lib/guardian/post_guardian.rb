@@ -320,6 +320,23 @@ module PostGuardian
     false
   end
 
+  def reviewable_post_scope
+    return Post.with_deleted if is_admin?
+    return Post.none if !is_staff? && !category_group_moderation_allowed?
+
+    topics = visible_topic_scope(Topic.with_deleted)
+    topics = topics.where(category_id: category_group_moderator_scope.select(:id)) if !is_staff?
+
+    Post.with_deleted.secured(self).where(topic_id: topics.select(:id))
+  end
+
+  def can_review_post?(post)
+    return false if post.blank?
+    return true if is_admin?
+
+    reviewable_post_scope.exists?(id: post.id)
+  end
+
   def can_see_deleted_post?(post)
     return false if !post.trashed?
     return false if @user.anonymous?

@@ -24,8 +24,8 @@ class MyModalClass extends Component {
       Modal content is
       {{@model.text}}
       <button
-        type="button"
         class="custom-data"
+        type="button"
         {{on "click" this.closeWithCustomData}}
       ></button>
     </DModal>
@@ -165,8 +165,8 @@ acceptance("Modal service: component-based API", function () {
       {{#if testState.showDeclarativeModal}}
         <DModal
           class="declarative-modal"
-          @title="Declarative modal"
           @closeModal={{closeModal}}
+          @title="Declarative modal"
         >
           <span class="declarative-modal-content">Declarative modal content</span>
         </DModal>

@@ -40,7 +40,7 @@ RSpec.describe Sidekiq::Pausable, type: :multisite do
       ) { yield }
     end
 
-    it "should delay the job" do
+    it "delays the job" do
       Sidekiq.pause!
 
       called = false

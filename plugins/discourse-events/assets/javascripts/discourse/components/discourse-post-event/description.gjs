@@ -70,8 +70,8 @@ export default class DiscoursePostEventDescription extends Component {
           </div>
           {{#if this.showToggle}}
             <a
-              href
               class="event-description__toggle"
+              href
               {{on "click" this.toggle}}
             >{{this.toggleLabel}}</a>
           {{/if}}

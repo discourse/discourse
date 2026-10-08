@@ -32,6 +32,10 @@ pt_BR:
           title: "Entradas de data/hora"
         menus:
           title: "Menus"
+        context_menu:
+          actions:
+            duplicate: "Duplicado(a)"
+            delete: "Excluir"
         multi_select:
           title: "Múltipla escolha"
         toasts:

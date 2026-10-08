@@ -10,9 +10,9 @@ export default class GamificationScore extends Component {
     <span class="gamification-score" ...attributes>
       {{#if this.site.default_gamification_leaderboard_id}}
         <LinkTo
-          @route="gamificationLeaderboard.byName"
-          @model={{this.site.default_gamification_leaderboard_id}}
           class="gamification-score__link"
+          @model={{this.site.default_gamification_leaderboard_id}}
+          @route="gamificationLeaderboard.byName"
         >
           {{fullnumber this.model.gamification_score}}
         </LinkTo>

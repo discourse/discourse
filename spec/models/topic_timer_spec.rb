@@ -42,7 +42,7 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe "#status_type" do
-      it "should ensure that only one active public topic status update exists" do
+      it "allows only one active public topic status update" do
         topic_timer.update!(topic: topic)
         Fabricate(:topic_timer, deleted_at: Time.zone.now, topic: topic)
 
@@ -52,7 +52,7 @@ RSpec.describe TopicTimer, type: :model do
 
     describe "#execute_at" do
       describe "when #execute_at is greater than #created_at" do
-        it "should be valid" do
+        it "is valid" do
           topic_timer =
             Fabricate.build(
               :topic_timer,
@@ -66,7 +66,7 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       describe "when #execute_at is smaller than #created_at" do
-        it "should not be valid" do
+        it "is invalid" do
           topic_timer =
             Fabricate.build(
               :topic_timer,
@@ -84,7 +84,7 @@ RSpec.describe TopicTimer, type: :model do
     describe "#category_id" do
       describe "when #status_type is publish_to_category" do
         describe "when #category_id is not present" do
-          it "should not be valid" do
+          it "is invalid" do
             topic_timer =
               Fabricate.build(:topic_timer, status_type: TopicTimer.types[:publish_to_category])
 
@@ -94,7 +94,7 @@ RSpec.describe TopicTimer, type: :model do
         end
 
         describe "when #category_id is present" do
-          it "should be valid" do
+          it "is valid" do
             topic_timer =
               Fabricate.build(
                 :topic_timer,
@@ -113,7 +113,7 @@ RSpec.describe TopicTimer, type: :model do
 
   describe "Callbacks" do
     describe "when #execute_at and #user_id are not changed" do
-      it "should not schedule another to update topic" do
+      it "does not schedule another topic update" do
         Jobs.expects(:enqueue_at).never
 
         topic_timer.update!(topic: Fabricate(:topic))
@@ -128,7 +128,7 @@ RSpec.describe TopicTimer, type: :model do
 
       before { Jobs.run_immediately! }
 
-      it "should close the topic" do
+      it "closes the topic" do
         topic_timer.send(:schedule_auto_open_job)
         expect(topic.reload.closed).to eq(true)
       end
@@ -142,7 +142,7 @@ RSpec.describe TopicTimer, type: :model do
 
       before { Jobs.run_immediately! }
 
-      it "should open the topic" do
+      it "opens the topic" do
         topic_timer.send(:schedule_auto_close_job)
         expect(topic.reload.closed).to eq(false)
       end

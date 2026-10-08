@@ -1234,6 +1234,12 @@ bg:
       tracked_topics_link: "Покажи "
       automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
+      mcp_authorizations:
+        details: "Детайли"
+        never: "Никога"
+        status: "Статус"
+        statuses:
+          active: "Активни"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
@@ -3002,6 +3008,7 @@ bg:
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
+      latest_topics: "Последни теми"
       description_expand: "Покажи повече"
       description_collapse: "Покажи по-малко"
       already_used: "Този цвят вече е използван за друга категория. "
@@ -3157,6 +3164,7 @@ bg:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
       filter:
+        reset: "изчисти"
         button:
           label: "Филтър"
       latest:
@@ -3542,6 +3550,55 @@ bg:
       config:
         developer:
           title: "Разработчик"
+        mcp:
+          tabs:
+            access: "Достъп"
+            activity: "Активност"
+          overview:
+            status: "Статус"
+          access:
+            title: "Достъп"
+            group: "Група"
+            groups: "Групи"
+            actions: "Действия"
+            edit: "Редактирай"
+            delete: "Изтрий"
+          primitives:
+            group_by_options:
+              kind: "Тип"
+            kind: "Тип"
+          clients:
+            actions: "Действия"
+            block: "Блокирай "
+            presets:
+              custom: "По избор"
+          authorizations:
+            user: "Потребител"
+            status: "Статус"
+            actions: "Действия"
+          activity:
+            time: "Време "
+            user: "Потребител"
+            duration: "Продължителност"
+          values:
+            server_status:
+              disabled: "Деактивирани"
+            client_trust:
+              approved: "Одобрена"
+            authorization_status:
+              active: "Активни"
+            activity_outcome:
+              error: "Грешка"
+            primitive_state:
+              enabled: "Да е включен"
+              disabled: "Деактивирани"
+            primitive_kind:
+              all: "Всички видове"
+            filter:
+              all: "Всички"
+          never: "Никога"
+          actions:
+            revoke: "Анулирай"
         emojis:
           title: "Емотикони"
         files:
@@ -3721,6 +3778,7 @@ bg:
         site_traffic:
           series:
             anonymous: "Анонимен"
+          crawler_learn_more: "Научете повече"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"
@@ -4503,12 +4561,10 @@ bg:
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
-        search: "Търсене на текст които искате да редактирате"
+        search_label: "Търсене"
+        theme_disabled: "Деактивирани"
         edit: "Редактирай"
-        revert: "Върни промените"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
-        go_back: "Към търсачката"
-        recommended: "За вашите нужди, Ви препоръчваме да редактирате следният текст:"
         show_overriden: "Избери само презаписаните"
         outdated:
           dismiss: "Отмени"

@@ -12,11 +12,11 @@ export default <template>
   />
 
   <DButton
+    class="btn-default"
     @action={{@controller.exportScreenedUrlList}}
-    @title="admin.export_csv.button_title.screened_url"
     @icon="download"
     @label="admin.export_csv.button_text"
-    class="btn-default"
+    @title="admin.export_csv.button_title.screened_url"
   />
   <br />
 

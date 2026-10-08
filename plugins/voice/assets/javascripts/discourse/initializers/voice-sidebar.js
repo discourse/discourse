@@ -4,6 +4,7 @@ import { avatarUrl } from "discourse/lib/avatar-utils";
 import getURL from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
 import { i18n } from "discourse-i18n";
 import VoiceCreateRoomModal from "discourse/plugins/voice/discourse/components/modal/voice-create-room";
 import VoiceParticipantSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-context-menu";
@@ -12,7 +13,6 @@ import VoiceRoomSidebarContextMenu from "discourse/plugins/voice/discourse/compo
 import buildAnonRoomsSection from "../lib/voice/anon-rooms-section";
 import { humanKeyName } from "../lib/voice/ptt-utils";
 import roomIcon, { roomBadge } from "../lib/voice/room-icon";
-import virtualElementFromEvent from "../lib/voice/virtual-element-from-event";
 
 const LINK_NAME_PREFIX = "voice-room-";
 const CHAT_PANEL = "chat";
@@ -772,17 +772,20 @@ export default {
             return;
           }
 
-          menuService.show(virtualElementFromEvent(event), {
-            identifier: "voice-participant-menu",
-            component: VoiceParticipantSidebarContextMenu,
-            placement: "bottom-start",
-            data: {
-              room,
-              participant,
-              canManageRoom: room.can_manage,
-              isCurrentUser: participant.id === currentUser?.id,
-            },
-          });
+          menuService.show(
+            virtualElementFromPoint(event.clientX, event.clientY),
+            {
+              identifier: "voice-participant-menu",
+              component: VoiceParticipantSidebarContextMenu,
+              placement: "bottom-start",
+              data: {
+                room,
+                participant,
+                canManageRoom: room.can_manage,
+                isCurrentUser: participant.id === currentUser?.id,
+              },
+            }
+          );
           return;
         }
 
@@ -814,12 +817,15 @@ export default {
           return;
         }
 
-        menuService.show(virtualElementFromEvent(event), {
-          identifier: "voice-room-menu",
-          component: VoiceRoomSidebarContextMenu,
-          placement: "bottom-start",
-          data: { room },
-        });
+        menuService.show(
+          virtualElementFromPoint(event.clientX, event.clientY),
+          {
+            identifier: "voice-room-menu",
+            component: VoiceRoomSidebarContextMenu,
+            placement: "bottom-start",
+            data: { room },
+          }
+        );
       };
 
       document.addEventListener("contextmenu", sidebarContextMenuHandler);

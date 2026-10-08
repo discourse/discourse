@@ -23,8 +23,8 @@ en:
         description: "Write a custom SQL query to surface anything specific to your community."
     explorer:
       resize_editor: "Resize the query editor"
-      default_query: "Default"
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
+      view_query: "View"
       queries: "Queries"
       query_created: "Query created!"
       mode:
@@ -33,6 +33,7 @@ en:
         ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
+      hidden_relation: "You do not have access to this content."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Create"
@@ -107,6 +108,12 @@ en:
       undo: "Discard changes"
       delete: "Delete"
       recover: "Undelete query"
+      dashboard:
+        add: "Add to dashboard"
+        remove: "Remove from dashboard"
+        added: "Query added to dashboard"
+        removed: "Query removed from dashboard"
+        unmountable: "Queries with required parameters that have no default value can't be shown on the dashboard"
       sql_label: "SQL"
       run_with_explain: "Run with query plan"
       run_options: "More run options"
@@ -144,6 +151,8 @@ en:
         other: "Showing top %{count} results."
       query_name: "Query"
       query_groups: "Groups"
+      query_tags: "Tags"
+      default_tag_mandatory: "The default tag cannot be removed from bundled queries."
       link: "Link for"
       report_name: "Report"
       query_description: "Description"
@@ -153,6 +162,8 @@ en:
       save_params: "Set defaults"
       reset_params: "Reset"
       search_placeholder: "Search..."
+      filter_by_tag: "Filter by tag"
+      filter_by_this_tag: "Filter the list by this tag"
       no_search_results: "Sorry, we couldn't find any results matching your text."
       form:
         errors:

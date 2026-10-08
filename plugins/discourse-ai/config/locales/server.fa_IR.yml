@@ -24,6 +24,23 @@ fa_IR:
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"
       title: "%{title} - گفتگوی هوش‌مصنوعی - %{site_name}"
     ai_bot:
+      navigation:
+        settings:
+          title: "تنظیمات سایت"
+        users:
+          title: "کاربران"
+        groups:
+          title: "گروه‌ها"
+        review:
+          title: "صف بررسی"
+        categories:
+          title: "دسته‌بندی‌ها"
+        tags:
+          title: "برچسب‌ها"
+        themes:
+          title: "قالب‌ها"
+        backups:
+          title: "نسخه‌های پشتیبان"
       read_post:
         unknown_post: "نوشته"
       agents:

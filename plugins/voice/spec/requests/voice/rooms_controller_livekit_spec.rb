@@ -156,6 +156,24 @@ RSpec.describe Voice::RoomsController do
       expect(Voice::ParticipantTracker.pinned_transport(room.id)).to eq("livekit")
     end
 
+    it "cleans up an agent-only call before falling back to mesh" do
+      configure_livekit!
+      SiteSetting.voice_livekit_mesh_fallback = true
+      bot_id = Fabricate(:user, id: -1400).id
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, bot_id)
+      Voice::Livekit.stubs(:mint_token).raises(Voice::Livekit::MintError.new("boom"))
+      Voice::Livekit::RoomServiceClient.expects(:remove_participant).with(room, bot_id)
+      Voice::Livekit::RoomServiceClient.expects(:delete_room).with(room)
+
+      post "/voice/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["transport"]).to eq("mesh")
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to contain_exactly(user.id)
+      expect(Voice::ParticipantTracker.pinned_transport(room.id)).to eq("mesh")
+    end
+
     it "fails a livekit-pinned join when the config was half-deleted" do
       configure_livekit!
       Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
@@ -177,6 +195,25 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/livekit_token.json"
 
       expect(response.status).to eq(403)
+    end
+
+    it "refuses a token for a new participant when the room is full" do
+      full_room_participant = Fabricate(:user)
+      room.update!(max_participants: 2)
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, other_user.id)
+      Voice::ParticipantTracker.add(room.id, full_room_participant.id)
+      sign_in(user)
+
+      post "/voice/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("voice.errors.room_full"))
+      expect(response.parsed_body).not_to have_key("token")
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to contain_exactly(
+        other_user.id,
+        full_room_participant.id,
+      )
     end
 
     it "reissues a token, re-adds lapsed presence, and mints a fresh participant session" do

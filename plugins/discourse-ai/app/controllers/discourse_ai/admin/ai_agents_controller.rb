@@ -110,6 +110,7 @@ module DiscourseAi
         mcp_server_ids = params.delete(:ai_mcp_server_ids)
         mcp_server_tool_names = params.delete(:mcp_server_tool_names) || {}
         initial_attributes = @ai_agent.attributes.dup
+        initial_spam_settings = AiModerationSetting.spam if params.key?(:default_llm_id)
 
         if @ai_agent.update(params.except(:rag_uploads))
           ensure_ai_agent_user(@ai_agent)
@@ -118,6 +119,7 @@ module DiscourseAi
           end
           RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
           log_ai_agent_update(@ai_agent, initial_attributes)
+          log_ai_spam_model_update(initial_spam_settings)
 
           render_ai_agent_resource(@ai_agent)
         else
@@ -736,6 +738,23 @@ module DiscourseAi
           initial_attributes,
           ai_agent_logger_fields,
           entity_details,
+        )
+      end
+
+      def log_ai_spam_model_update(settings)
+        return if settings.blank? || settings.ai_agent_id != @ai_agent.id
+
+        previous_model_id = settings.llm_model_id
+        settings.reload
+        return if settings.llm_model_id == previous_model_id
+
+        previous_model_name =
+          LlmModel.find_by(id: previous_model_id)&.display_name || previous_model_id
+        logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
+        logger.log_custom(
+          "update_ai_spam_settings",
+          subject: I18n.t("discourse_ai.spam_detection.logging_subject"),
+          llm_model_id: "#{previous_model_name} → #{settings.llm_model.display_name}",
         )
       end
 

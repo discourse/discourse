@@ -383,6 +383,7 @@ module DiscourseAi
             decoded =
               lines
                 .map do |line|
+                  line = line.sub(/\A[\r\n]+/, "")
                   if line.start_with?("data: {")
                     begin
                       JSON.parse(line[6..-1], symbolize_names: true)
@@ -409,6 +410,7 @@ module DiscourseAi
 
         def decode(chunk)
           json = JSON.parse(chunk, symbolize_names: true)
+          check_for_failure!(json)
           update_usage(json)
 
           candidate = json.dig(:candidates, 0)
@@ -423,6 +425,7 @@ module DiscourseAi
           streaming_decoder
             .decode(chunk)
             .map do |parsed|
+              check_for_failure!(parsed)
               update_usage(parsed)
               candidate = parsed.dig(:candidates, 0)
               parts = candidate&.dig(:content, :parts)
@@ -432,6 +435,17 @@ module DiscourseAi
             end
             .flatten
             .compact
+        end
+
+        # Gemini reports errors and blocked prompts inside a successful (HTTP 200) response.
+        def check_for_failure!(parsed)
+          if (error = parsed[:error])
+            raise CompletionFailed, error[:message].presence || error.to_json
+          end
+
+          if (block_reason = parsed.dig(:promptFeedback, :blockReason))
+            Rails.logger.warn("#{self.class.name}: prompt blocked by provider: #{block_reason}")
+          end
         end
 
         def decode_parts(parts, batch_token:, streaming: false)

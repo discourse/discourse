@@ -6,7 +6,20 @@
 
 nb_NO:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Tittel"
+        icon: "Ikon"
+        color: "Farge"
+      create_board:
+        name: "Navn"
+        slug: "Navn i URL"
+        tag_names: "Stikkord"
+        category_ids: "Kategorier"
     boards:
+      status:
+        all: "Alle"
+        open: "Åpne"
       board:
         remove_card: "Fjern"
         title: "Tittel"

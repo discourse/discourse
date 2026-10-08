@@ -27,6 +27,10 @@ sv:
           title: "Inmatad datum/tid"
         menus:
           title: "Menyer"
+        context_menu:
+          actions:
+            duplicate: "Duplicera"
+            delete: "Ta bort"
         toasts:
           title: "Popup-fönster"
         font_scale:

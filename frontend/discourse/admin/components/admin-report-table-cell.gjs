@@ -74,8 +74,8 @@ export default class AdminReportTableCell extends Component {
 
   <template>
     <td
-      title={{if this.hasRelatedItemsSummary null this.value}}
       class={{dConcatClass "admin-report-table-cell" this.type this.property}}
+      title={{if this.hasRelatedItemsSummary null this.value}}
       ...attributes
     >
       {{#if this.hasRelatedItemsSummary}}
@@ -87,8 +87,8 @@ export default class AdminReportTableCell extends Component {
               @itemComponent={{this.relatedItemsSummary.itemComponent}}
               @itemsKey={{this.relatedItemsSummary.itemsKey}}
               @listClass={{this.relatedItemsSummary.listClass}}
-              @reportType={{this.reportType}}
               @reportFilters={{this.reportFilters}}
+              @reportType={{this.reportType}}
               @titleKey={{this.relatedItemsSummary.titleKey}}
             />
           {{else}}
@@ -98,8 +98,8 @@ export default class AdminReportTableCell extends Component {
           <AdminReportTableSummary
             @date={{this.data.x}}
             @formattedValue={{this.formattedValue}}
-            @reportType={{this.reportType}}
             @reportFilters={{this.reportFilters}}
+            @reportType={{this.reportType}}
           />
         {{/if}}
       {{else}}

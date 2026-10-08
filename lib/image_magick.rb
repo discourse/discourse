@@ -70,6 +70,7 @@ module ImageMagick
           rlimits: RLIMITS,
           failure_message:,
           seccomp_deny_network: true,
+          seccomp_deny_child_processes: true,
         )
       end
     end

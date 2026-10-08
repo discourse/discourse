@@ -18,15 +18,15 @@ export default class FormTemplateChooser extends MultiSelectComponent {
     this.triggerSearch();
   }
 
+  @computed("templates")
+  get content() {
+    return this.templates;
+  }
+
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
     this.set("templatesLoaded", false);
     this.triggerSearch();
-  }
-
-  @computed("templates")
-  get content() {
-    return this.templates;
   }
 
   search(filter) {

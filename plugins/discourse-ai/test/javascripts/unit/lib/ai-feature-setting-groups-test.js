@@ -66,6 +66,10 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     const groups = getSettingGroupsForFeature("summarization");
 
     assert.strictEqual(groups.length, 3, "summarization should have 3 groups");
+    assert.true(
+      groups[0].settings.includes("ai_summaries_for_crawlers"),
+      "basic settings should include summary publication"
+    );
   });
 
   test("returns correct groups for search", function (assert) {
@@ -73,7 +77,7 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
 
     assert.deepEqual(
       groups.map((group) => group.key),
-      ["settings", "agents", "access_control"]
+      ["settings", "agents", "access_control", "ask_ai_reports"]
     );
     assert.deepEqual(groups[0].settings, [
       "ai_discover_enabled",
@@ -85,9 +89,16 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       "ai_discover_agent",
       "ai_ask_ai_agent",
       "ai_ask_ai_query_rewriter_agent",
+      "ai_ask_ai_report_agent",
       "ai_ask_ai_follow_up_agent",
     ]);
     assert.deepEqual(groups[2].settings, ["ai_ask_ai_allowed_groups"]);
+    assert.deepEqual(groups[3].settings, [
+      "ai_ask_ai_report_weekly_enabled",
+      "ai_ask_ai_report_exclude_groups",
+      "ai_ask_ai_report_max_asks",
+      "ai_ask_ai_report_recipient_groups",
+    ]);
   });
 
   test("returns correct groups for translation", function (assert) {

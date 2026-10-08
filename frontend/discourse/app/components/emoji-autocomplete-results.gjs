@@ -33,13 +33,13 @@ export default class EmojiAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li>
             <a
-              href
               class={{if (eq index @selectedIndex) "selected"}}
+              href
               {{on "click" (fn this.handleResultClick result index)}}
             >
               <span class="text-content">
                 {{#if result.src}}
-                  <img src={{result.src}} class="emoji" />
+                  <img class="emoji" src={{result.src}} />
                   <span class="emoji-shortname">{{result.code}}</span>
                 {{else}}
                   {{result.label}}

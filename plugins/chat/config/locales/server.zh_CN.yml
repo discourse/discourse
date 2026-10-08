@@ -157,6 +157,8 @@ zh_CN:
           title: "忽略举报"
           description: "将其从队列中移除，不采取任何措施。"
         unsilence_user:
+          title: "取消禁言作者"
+          description: "解除对作者的禁言。此标志保留在队列中。"
           complete: "作者不再禁言。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"

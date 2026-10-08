@@ -178,6 +178,7 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
@@ -1104,6 +1105,15 @@ gl:
       tracked_topics_link: "Amosar"
       automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Ámbitos"
+        details: "Detalles"
+        never: "Nunca"
+        status: "Estado"
+        statuses:
+          active: "Activo"
+          revoked: "Revogada"
       revoke_access: "Revogar acceso"
       undo_revoke_access: "Desfacer a revogación de acceso"
       api_approved: "Aprobado:"
@@ -2856,6 +2866,7 @@ gl:
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
+      latest_topics: "Últimos temas"
       already_used: "Esta cor usouna outra categoría"
       security: "Seguranza"
       security_add_group: "Engadir grupo"
@@ -3049,6 +3060,7 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
+        reset: "restabelecer"
         button:
           label: "Filtro"
       latest:
@@ -3502,6 +3514,63 @@ gl:
       config:
         developer:
           title: "Desenvolvedor"
+        mcp:
+          tabs:
+            access: "Acceso"
+            activity: "Actividade"
+          overview:
+            status: "Estado"
+          access:
+            title: "Acceso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Accións"
+            edit: "Editar"
+            delete: "Eliminar"
+          primitives:
+            group_by_options:
+              provider: "Fornecedor"
+              kind: "Tipo"
+            provider: "Fornecedor"
+            kind: "Tipo"
+            scopes: "Ámbitos"
+          clients:
+            actions: "Accións"
+            block: "Bloquear"
+            presets:
+              custom: "Personalizado"
+          authorizations:
+            user: "Usuario"
+            status: "Estado"
+            actions: "Accións"
+          activity:
+            time: "Hora"
+            user: "Usuario"
+            duration: "Duración"
+          values:
+            server_status:
+              disabled: "Desactivado"
+            client_trust:
+              approved: "Aprobado"
+            authorization_status:
+              active: "Activo"
+              revoked: "Revogada"
+            activity_outcome:
+              success: "Feito"
+              error: "Erro"
+            primitive_state:
+              enabled: "Activado"
+              disabled: "Desactivado"
+            primitive_kind:
+              all: "Todos os tipos"
+              resource: "Recurso"
+            primitive_risk:
+              moderation: "Moderación"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         emojis:
           title: "Emoji"
         flags:
@@ -3741,6 +3810,7 @@ gl:
           series:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
+          crawler_learn_more: "Saber máis"
         period:
           custom: "Personalizado"
         reports:
@@ -4936,12 +5006,11 @@ gl:
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
-        search: "Busque o texto que quere editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
         edit: "Editar"
-        revert: "Reverter os cambios"
         revert_confirm: "Confirma a reversión dos cambios?"
-        go_back: "Volver á busca"
-        recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."

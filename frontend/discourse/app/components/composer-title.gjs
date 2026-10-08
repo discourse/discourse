@@ -34,35 +34,6 @@ export default class ComposerTitle extends Component {
     return this.composer?.loading || this.composer?.disableTitleInput;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    const titleInput = this.element.querySelector("input");
-
-    this._focusHandler = () => this.set("isTitleFocused", true);
-    this._blurHandler = () => this.set("isTitleFocused", false);
-
-    titleInput.addEventListener("focus", this._focusHandler);
-    titleInput.addEventListener("blur", this._blurHandler);
-
-    if (this.focusTarget === "title") {
-      putCursorAtEnd(titleInput);
-    }
-
-    if (this.get("composer.titleLength") > 0) {
-      discourseDebounce(this, this._titleChanged, 10);
-    }
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    const titleInput = this.element.querySelector("input");
-
-    if (titleInput) {
-      titleInput.removeEventListener("focus", this._focusHandler);
-      titleInput.removeEventListener("blur", this._blurHandler);
-    }
-  }
-
   @computed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
@@ -103,6 +74,66 @@ export default class ComposerTitle extends Component {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
     return this.watchForLink ? null : this.siteSettings.max_topic_title_length;
+  }
+
+  @computed("composer.title", "composer.titleLength")
+  get isAbsoluteUrl() {
+    return (
+      this.composer?.titleLength > 0 &&
+      /^(https?:)?\/\/[\w\.\-]+/i.test(this.composer?.title) &&
+      !/\s/.test(this.composer?.title)
+    );
+  }
+
+  @computed("composer.categoryTitlePlaceholder", "composer.titlePlaceholder")
+  get titleAriaLabel() {
+    return (
+      this.composer.categoryTitlePlaceholder ||
+      i18n(this.composer.titlePlaceholder)
+    );
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    const titleInput = this.element.querySelector("input");
+
+    this._focusHandler = () => this.set("isTitleFocused", true);
+    this._blurHandler = () => this.set("isTitleFocused", false);
+
+    titleInput.addEventListener("focus", this._focusHandler);
+    titleInput.addEventListener("blur", this._blurHandler);
+
+    if (this.focusTarget === "title") {
+      putCursorAtEnd(titleInput);
+    }
+
+    if (this.get("composer.titleLength") > 0) {
+      discourseDebounce(this, this._titleChanged, 10);
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    const titleInput = this.element.querySelector("input");
+
+    if (titleInput) {
+      titleInput.removeEventListener("focus", this._focusHandler);
+      titleInput.removeEventListener("blur", this._blurHandler);
+    }
+  }
+
+  changeTitle(val) {
+    if (val && val.length > 0) {
+      this.set("composer.title", val.trim());
+    }
+  }
+
+  bodyIsDefault() {
+    const reply = this.get("composer.reply") || "";
+    return (
+      reply.length === 0 ||
+      reply === (this.get("composer.category.topic_template") || "")
+    );
   }
 
   @observes("composer.titleLength", "watchForLink")
@@ -224,52 +255,21 @@ export default class ComposerTitle extends Component {
     }
   }
 
-  changeTitle(val) {
-    if (val && val.length > 0) {
-      this.set("composer.title", val.trim());
-    }
-  }
-
-  @computed("composer.title", "composer.titleLength")
-  get isAbsoluteUrl() {
-    return (
-      this.composer?.titleLength > 0 &&
-      /^(https?:)?\/\/[\w\.\-]+/i.test(this.composer?.title) &&
-      !/\s/.test(this.composer?.title)
-    );
-  }
-
-  @computed("composer.categoryTitlePlaceholder", "composer.titlePlaceholder")
-  get titleAriaLabel() {
-    return (
-      this.composer.categoryTitlePlaceholder ||
-      i18n(this.composer.titlePlaceholder)
-    );
-  }
-
-  bodyIsDefault() {
-    const reply = this.get("composer.reply") || "";
-    return (
-      reply.length === 0 ||
-      reply === (this.get("composer.category.topic_template") || "")
-    );
-  }
-
   <template>
     <DTextField
-      @value={{this.composer.title}}
+      @aria-label={{this.titleAriaLabel}}
+      @autocomplete="off"
+      @disabled={{this.disabled}}
       @id="reply-title"
       @maxLength={{this.titleMaxLength}}
-      @placeholderKey={{this.composer.titlePlaceholder}}
       @placeholder={{this.composer.categoryTitlePlaceholder}}
-      @aria-label={{this.titleAriaLabel}}
-      @disabled={{this.disabled}}
-      @autocomplete="off"
+      @placeholderKey={{this.composer.titlePlaceholder}}
+      @value={{this.composer.title}}
     />
 
     <PluginOutlet
-      @name="after-composer-title-input"
       @connectorTagName="div"
+      @name="after-composer-title-input"
       @outletArgs={{lazyHash composer=this.composer}}
     />
 

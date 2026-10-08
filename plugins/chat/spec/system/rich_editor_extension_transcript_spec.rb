@@ -185,5 +185,32 @@ describe "chat transcripts in rich editor" do
         expect(rich).to have_css(".chat-transcript")
       end
     end
+
+    it "keeps a channel ID which closes the href inside the href" do
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+      composer.focus
+
+      channel_id = %q(" onmouseover="alert(1)" x=")
+      markdown = <<~MARKDOWN
+        [chat quote="hunter;29856;2025-03-20T07:13:04Z" channel="design" channelId='#{channel_id}' multiQuote=true]
+        haha
+        [/chat]
+      MARKDOWN
+
+      cdp.copy_paste(markdown, css_selector: composer.composer_input_selector)
+
+      expect(rich).to have_css(".chat-transcript-meta a")
+
+      attributes = page.evaluate_script(<<~JS)
+        Object.fromEntries(
+          Array.from(
+            document.querySelector(".d-editor-input.ProseMirror .chat-transcript-meta a").attributes
+          ).map((attribute) => [attribute.name, attribute.value])
+        )
+      JS
+
+      expect(attributes).to eq({ "href" => "/chat/c/-/#{channel_id}" })
+    end
   end
 end

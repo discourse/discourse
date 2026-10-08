@@ -14,6 +14,34 @@ describe CategoriesController do
     sign_in(admin)
   end
 
+  describe "#index" do
+    it "includes event dates on featured topics" do
+      freeze_time(Time.utc(2020, 4, 24, 14, 10))
+      Jobs.run_immediately!
+      topic = Fabricate(:topic, category:)
+      post = Fabricate(:post, topic:)
+      DiscourseEvents::Events::Event.create!(
+        id: post.id,
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+      CategoryFeaturedTopic.feature_topics
+
+      get "/categories.json?include_topics=true"
+
+      expect(response.status).to eq(200)
+      categories = response.parsed_body["category_list"]["categories"]
+      serialized_category = categories.find { |serialized| serialized["id"] == category.id }
+      expect(serialized_category["topics"]).to include(
+        a_hash_including(
+          "id" => topic.id,
+          "event_starts_at" => "2020-04-24T15:10:00.000Z",
+          "event_ends_at" => "2020-04-24T16:10:00.000Z",
+        ),
+      )
+    end
+  end
+
   describe "#update" do
     it "persists category_type_settings into calendar_categories" do
       put "/categories/#{category.id}.json",

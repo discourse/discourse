@@ -44,9 +44,9 @@ async function showMicPermissionHelp(modal) {
 
 const VoiceMicPermissionModal = <template>
   <DModal
+    class="voice-mic-permission-modal"
     @closeModal={{@closeModal}}
     @title={{i18n "voice.mic_permission.title"}}
-    class="voice-mic-permission-modal"
   >
     <:body>
       <p class="voice-mic-permission-modal__body">
@@ -58,9 +58,9 @@ const VoiceMicPermissionModal = <template>
     </:body>
     <:footer>
       <DButton
+        class="btn-primary voice-mic-permission-modal__ok"
         @action={{@closeModal}}
         @label="voice.mic_permission.ok"
-        class="btn-primary voice-mic-permission-modal__ok"
       />
     </:footer>
   </DModal>

@@ -14,6 +14,10 @@ module Boards
                :show_tags,
                :card_style,
                :show_topic_thumbnail,
+               :archived,
+               :old_slug_used,
+               :can_archive,
+               :can_unarchive,
                :can_write,
                :can_manage,
                :created_by,
@@ -32,12 +36,29 @@ module Boards
       object.anonymous_can_read?
     end
 
+    def old_slug_used
+      return false unless object.archived?
+      if @options.key?(:used_slugs)
+        @options[:used_slugs].include?(object.original_slug)
+      else
+        object.old_slug_used?
+      end
+    end
+
+    def can_archive
+      scope.can_archive_board?(object)
+    end
+
+    def can_unarchive
+      scope.can_unarchive_board?(object)
+    end
+
     def can_write
-      scope.can_write_boards_board?(object)
+      scope.can_write_board?(object)
     end
 
     def can_manage
-      scope.can_manage_boards_board?(object)
+      scope.can_manage_board?(object)
     end
 
     def created_by

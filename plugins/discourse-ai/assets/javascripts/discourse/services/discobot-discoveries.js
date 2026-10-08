@@ -58,6 +58,25 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.resetStreaming();
   }
 
+  get showDiscoveryTitle() {
+    return Boolean(
+      this.discovery.length > 0 ||
+      this.sources.length > 0 ||
+      this.loadingDiscoveries ||
+      this.discoveryTimedOut ||
+      this.answerable === false ||
+      this.errorMessage
+    );
+  }
+
+  get isStreaming() {
+    return this.smoothStreamer.isStreaming;
+  }
+
+  get streamedText() {
+    return this.smoothStreamer?.renderedText;
+  }
+
   async onDiscoveryUpdate(update) {
     if (update.request_id !== this.activeRequestId) {
       return;
@@ -176,25 +195,6 @@ export default class DiscobotDiscoveries extends Service {
     this.lastQuery = "";
   }
 
-  get showDiscoveryTitle() {
-    return Boolean(
-      this.discovery.length > 0 ||
-      this.sources.length > 0 ||
-      this.loadingDiscoveries ||
-      this.discoveryTimedOut ||
-      this.answerable === false ||
-      this.errorMessage
-    );
-  }
-
-  get isStreaming() {
-    return this.smoothStreamer.isStreaming;
-  }
-
-  get streamedText() {
-    return this.smoothStreamer?.renderedText;
-  }
-
   @action
   async triggerDiscovery(query) {
     const normalizedQuery = query?.trim();
@@ -218,6 +218,10 @@ export default class DiscobotDiscoveries extends Service {
     const requestId = buildRequestId();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
+    this.a11y.announce(
+      i18n("discourse_ai.discobot_discoveries.asking"),
+      "polite"
+    );
 
     this.scheduleDiscoveryTimeout();
 

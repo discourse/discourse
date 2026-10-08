@@ -22,9 +22,9 @@ export default class FullscreenTable extends Component {
 
   <template>
     <DModal
-      @title={{i18n "fullscreen_table.view_table"}}
-      @closeModal={{@closeModal}}
       class="fullscreen-table-modal --max"
+      @closeModal={{@closeModal}}
+      @title={{i18n "fullscreen_table.view_table"}}
     >
       <:body>
         <div

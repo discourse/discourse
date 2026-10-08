@@ -145,30 +145,43 @@ module DiscourseAi
           current_server = server
           current_context = context || DiscourseAi::Agents::BotContext.new(messages: [])
 
-          client = DiscourseAi::Mcp::Client.new(current_server)
+          protocol_version = current_context.mcp_protocol_version_for(self.class.server_id)
+          client = DiscourseAi::Mcp::Client.new(current_server, protocol_version: protocol_version)
           result = invoke_with_session(client, current_context)
 
           return error_response(normalize_content(result)) if result["isError"]
 
           { result: normalize_content(result) }
+        rescue DiscourseAi::Mcp::HeaderMapper::InvalidArgumentError => error
+          error_response(error.message)
         end
 
         private
 
         def invoke_with_session(client, current_context)
-          session_id = current_context.mcp_session_for(self.class.server_id)
-
-          if session_id.blank?
-            initialized = client.initialize_session
-            current_context.store_mcp_session(self.class.server_id, initialized[:session_id])
-            session_id = initialized[:session_id]
-          end
-
-          client.call_tool(self.class.tool_name, parameters, session_id: session_id)
+          initialize_and_store(client, current_context) if client.protocol_version.blank?
+          call_tool(client, current_context)
         rescue DiscourseAi::Mcp::Client::SessionExpiredError
+          initialize_and_store(client, current_context)
+          call_tool(client, current_context)
+        end
+
+        def initialize_and_store(client, current_context)
           initialized = client.initialize_session
-          current_context.store_mcp_session(self.class.server_id, initialized[:session_id])
-          client.call_tool(self.class.tool_name, parameters, session_id: initialized[:session_id])
+          current_context.store_mcp_session(
+            self.class.server_id,
+            initialized[:session_id],
+            protocol_version: initialized[:result]["protocolVersion"],
+          )
+        end
+
+        def call_tool(client, current_context)
+          client.call_tool(
+            self.class.tool_name,
+            parameters,
+            session_id: current_context.mcp_session_for(self.class.server_id),
+            input_schema: self.class.schema_value["inputSchema"],
+          )
         end
 
         def normalize_content(result)

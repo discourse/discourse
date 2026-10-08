@@ -143,8 +143,14 @@ et:
         sort:
           relevance: "Asjakohasus"
           latest: "Värskeimad"
+      direct_messages:
+        close: "Sulge kanal"
       channel_list:
         title: "Kanalid"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Mainimised"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"

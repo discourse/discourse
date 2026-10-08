@@ -13,8 +13,8 @@ import TopicStatus from "./topic-status";
 @attributeBindings("topic.id:data-topic-id")
 export default class FeaturedTopic extends Component {
   <template>
-    <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
-    <a href={{this.topic.lastUnreadUrl}} class="title">{{trustHTML
+    <TopicStatus @disableActions={{true}} @topic={{this.topic}} />
+    <a class="title" href={{this.topic.lastUnreadUrl}}>{{trustHTML
         this.topic.fancyTitle
       }}</a>
     <TopicPostBadges
@@ -23,7 +23,7 @@ export default class FeaturedTopic extends Component {
       @url={{this.topic.lastUnreadUrl}}
     />
 
-    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{dAgeWithTooltip
+    <a class="last-posted-at" href={{this.topic.lastPostUrl}}>{{dAgeWithTooltip
         this.topic.last_posted_at
       }}</a>
   </template>

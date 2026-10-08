@@ -12,6 +12,10 @@ enabled_site_setting :enable_discourse_workflows
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
   TEMPLATES_PATH = File.expand_path("config/templates", __dir__)
+
+  def self.reviewable_score_context(workflow_id)
+    "discourse_workflows:workflow:#{workflow_id}" if workflow_id.present?
+  end
 end
 
 require_relative "lib/discourse_workflows/engine"
@@ -56,6 +60,7 @@ register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
+register_svg_icon "sliders"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -64,6 +69,40 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential
 
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
+
+  add_custom_reviewable_filter(
+    [
+      :workflow_id,
+      proc do |results, value|
+        context = "discourse_workflows:workflow:%"
+        if value != :all
+          workflow_id = value.to_s[/\A[1-9]\d*\z/]
+          next results if !workflow_id
+
+          context = DiscourseWorkflows.reviewable_score_context(workflow_id)
+        end
+
+        results.where(<<~SQL, context:)
+          EXISTS (
+            SELECT 1
+            FROM reviewable_scores
+            WHERE reviewable_scores.reviewable_id = reviewables.id
+            AND reviewable_scores.context LIKE :context
+          )
+        SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_workflows:workflow",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseWorkflows::Workflow
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "discourse_workflows:workflow:#{id}", name:, value: id } }
+    end,
+  )
 
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 

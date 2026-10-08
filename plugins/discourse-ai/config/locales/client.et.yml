@@ -8,6 +8,10 @@ et:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Kuupäev"
+          outcomes:
+            failed: "Ebaõnnestunud"
         reports:
           filters:
             sort_by:

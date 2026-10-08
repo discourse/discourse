@@ -36,12 +36,12 @@ export default class DNavigationItem extends Component {
   <template>
     <li
       aria-current={{this.ariaCurrent}}
-      title={{@title}}
       class={{@class}}
+      title={{@title}}
       ...attributes
     >
       {{#if this.models}}
-        <LinkTo @route={{@route}} @models={{this.models}}>
+        <LinkTo @models={{this.models}} @route={{@route}}>
           {{yield}}
         </LinkTo>
       {{else}}

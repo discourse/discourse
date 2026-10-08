@@ -18,13 +18,13 @@ RSpec.describe Boards::GuardianExtensions do
     write_group.add(writer)
   end
 
-  describe "#can_read_boards_board?" do
+  describe "#can_read_board?" do
     it "denies read to non-editors when no read or write groups are set" do
       board = Boards::Board.create!(name: "Roadmap", slug: "roadmap")
 
-      expect(reader.guardian.can_read_boards_board?(board)).to be_falsey
-      expect(outsider.guardian.can_read_boards_board?(board)).to be_falsey
-      expect(anonymous_guardian.can_read_boards_board?(board)).to be_falsey
+      expect(reader.guardian.can_read_board?(board)).to be_falsey
+      expect(outsider.guardian.can_read_board?(board)).to be_falsey
+      expect(anonymous_guardian.can_read_board?(board)).to be_falsey
     end
 
     it "does not allow anonymous users to read when read_group_ids are set" do
@@ -35,7 +35,7 @@ RSpec.describe Boards::GuardianExtensions do
         permission: "view",
         groups: [read_group],
       )
-      expect(anonymous_guardian.can_read_boards_board?(board)).to be_falsey
+      expect(anonymous_guardian.can_read_board?(board)).to be_falsey
     end
 
     it "grants read through read groups" do
@@ -47,8 +47,8 @@ RSpec.describe Boards::GuardianExtensions do
         groups: [read_group],
       )
 
-      expect(reader.guardian.can_read_boards_board?(board)).to be_truthy
-      expect(outsider.guardian.can_read_boards_board?(board)).to be_falsey
+      expect(reader.guardian.can_read_board?(board)).to be_truthy
+      expect(outsider.guardian.can_read_board?(board)).to be_falsey
     end
 
     it "returns true when the user can write" do
@@ -60,7 +60,7 @@ RSpec.describe Boards::GuardianExtensions do
         groups: [write_group],
       )
 
-      expect(writer.guardian.can_read_boards_board?(board)).to be_truthy
+      expect(writer.guardian.can_read_board?(board)).to be_truthy
     end
 
     it "grants public read to anonymous and logged in users via the anonymous and trust level 0 groups" do
@@ -75,8 +75,8 @@ RSpec.describe Boards::GuardianExtensions do
         ],
       )
 
-      expect(anonymous_guardian.can_read_boards_board?(board)).to be_truthy
-      expect(member.guardian.can_read_boards_board?(board)).to be_truthy
+      expect(anonymous_guardian.can_read_board?(board)).to be_truthy
+      expect(member.guardian.can_read_board?(board)).to be_truthy
     end
 
     it "grants members-only read via logged in users while excluding anonymous users" do
@@ -88,12 +88,12 @@ RSpec.describe Boards::GuardianExtensions do
         allowed_group_ids: [Group::AUTO_GROUPS[:logged_in_users]],
       )
 
-      expect(member.guardian.can_read_boards_board?(board)).to be_truthy
-      expect(anonymous_guardian.can_read_boards_board?(board)).to be_falsey
+      expect(member.guardian.can_read_board?(board)).to be_truthy
+      expect(anonymous_guardian.can_read_board?(board)).to be_falsey
     end
   end
 
-  describe "#can_write_boards_board?" do
+  describe "#can_write_board?" do
     it "grants write through write groups" do
       board = Boards::Board.create!(name: "Operations", slug: "operations")
       Fabricate(
@@ -103,14 +103,14 @@ RSpec.describe Boards::GuardianExtensions do
         groups: [write_group],
       )
 
-      expect(writer.guardian.can_write_boards_board?(board)).to eq(true)
-      expect(outsider.guardian.can_write_boards_board?(board)).to eq(false)
+      expect(writer.guardian.can_write_board?(board)).to eq(true)
+      expect(outsider.guardian.can_write_board?(board)).to eq(false)
     end
 
     it "does not grant write to admins without an edit or manage ACL" do
       board = Boards::Board.create!(name: "Engineering", slug: "engineering")
 
-      expect(admin.guardian.can_write_boards_board?(board)).to eq(false)
+      expect(admin.guardian.can_write_board?(board)).to eq(false)
     end
 
     it "does not allow creator special priveleges to write if they are not in a write group" do
@@ -122,12 +122,38 @@ RSpec.describe Boards::GuardianExtensions do
         groups: [write_group],
       )
 
-      expect(creator.guardian.can_write_boards_board?(board)).to eq(false)
+      expect(creator.guardian.can_write_board?(board)).to eq(false)
 
       write_group.add(creator)
       creator.reload
 
-      expect(creator.guardian.can_write_boards_board?(board)).to eq(true)
+      expect(creator.guardian.can_write_board?(board)).to eq(true)
+    end
+  end
+
+  describe "archived board permissions" do
+    fab!(:board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+
+    it "preserves read access granted by View, Edit, or Manage ACL permissions" do
+      AccessControlList.where(target: board).delete_all
+
+      %w[view edit manage].each do |permission|
+        group = Fabricate(:group)
+        user = Fabricate(:user, groups: [group])
+        Fabricate(:access_control_list_with_groups, target: board, permission:, groups: [group])
+
+        expect(user.guardian.can_read_board?(board)).to eq(true)
+        expect(user.guardian.can_write_board?(board)).to eq(false)
+        expect(user.guardian.can_manage_board?(board)).to eq(false)
+        expect(user.guardian.can_destroy_board?(board)).to eq(false)
+        expect(user.guardian.can_unarchive_board?(board)).to eq(permission == "manage")
+      end
+    end
+
+    it "retains private board visibility restrictions" do
+      expect(outsider.guardian.can_read_board?(board)).to eq(false)
+      expect(anonymous_guardian.can_read_board?(board)).to eq(false)
+      expect(anonymous_guardian.can_unarchive_board?(board)).to eq(false)
     end
   end
 end

@@ -292,7 +292,7 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "background request rate limit" do
-    it "will rate limit background requests" do
+    it "rate limits background requests" do
       app = Middleware::AnonymousCache.new(lambda { |env| [200, {}, ["ok"]] })
 
       global_setting :background_requests_max_queue_length, "0.5"
@@ -332,7 +332,7 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    it "will revert to anonymous once we reach the limit" do
+    it "reverts to anonymous when the limit is reached" do
       is_anon = false
 
       app =
@@ -485,7 +485,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block robots.txt" do
+    it "allows robots.txt requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/robots.txt",
@@ -496,7 +496,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block srv/status" do
+    it "allows srv/status requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/srv/status",

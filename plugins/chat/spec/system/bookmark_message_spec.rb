@@ -28,6 +28,7 @@ RSpec.describe "Bookmark message" do
 
       expect(channel_page).to have_bookmarked_message(message_1)
     end
+
     context "when in a long thread" do
       it "supports linking to a bookmark in a long thread" do
         category_channel_1.update!(threading_enabled: true)

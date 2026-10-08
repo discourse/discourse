@@ -33,9 +33,9 @@ describe "Facebook OAuth2" do
   end
 
   before do
-    SiteSetting.enable_facebook_logins = true
     SiteSetting.facebook_app_id = app_id
     SiteSetting.facebook_app_secret = app_secret
+    SiteSetting.enable_facebook_logins = true
 
     stub_request(:post, "https://graph.facebook.com/v19.0/oauth/access_token").with(
       body:

@@ -247,12 +247,6 @@
   }
 
   &__context-menu {
-    position: absolute;
-    z-index: var(--z-canvas-chrome);
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
     padding: var(--space-1) 0;
     min-width: 180px;
     max-height: 400px;

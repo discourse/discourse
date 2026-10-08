@@ -12,24 +12,24 @@ export default class DismissNotificationConfirmation extends Component {
 
   <template>
     <DModal
-      @headerClass="hidden"
       class="dismiss-notification-confirmation"
       @closeModal={{@closeModal}}
+      @headerClass="hidden"
     >
       <:body>
         {{@model.confirmationMessage}}
       </:body>
       <:footer>
         <DButton
-          @icon="check"
           class="btn-primary"
           @action={{this.dismiss}}
+          @icon="check"
           @label="notifications.dismiss_confirmation.dismiss"
         />
         <DButton
+          class="btn-default"
           @action={{@closeModal}}
           @label="notifications.dismiss_confirmation.cancel"
-          class="btn-default"
         />
       </:footer>
     </DModal>

@@ -220,12 +220,11 @@ RSpec.describe "Nested view post lifecycle" do
     context "when logged in as regular user" do
       before { sign_in(user) }
 
-      it "does not show an eye button on deleted posts" do
+      it "hides deleted root leaves" do
         root_reply.update!(deleted_at: Time.current)
 
         nested_view.visit_nested(topic)
-        expect(nested_view).to have_deleted_placeholder_for(root_reply)
-        expect(nested_view).to have_no_toggle_deleted_content_button_for(root_reply)
+        expect(nested_view).to have_no_post(root_reply)
       end
     end
   end

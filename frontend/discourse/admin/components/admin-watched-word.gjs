@@ -29,9 +29,9 @@ export default class AdminWatchedWord extends Component {
   <template>
     <div class="watched-word">
       <DButton
+        class="btn-transparent delete-word-record"
         @action={{this.deleteWord}}
         @icon="xmark"
-        class="btn-transparent delete-word-record"
       />
 
       <span class="watched-word__content">{{@word.word}}</span>

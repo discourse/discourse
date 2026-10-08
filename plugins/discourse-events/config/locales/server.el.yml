@@ -21,11 +21,22 @@ el:
   system_messages:
     discourse_post_event_bulk_invite_failed:
       subject_template: "Η επεξεργασία του αρχείου μαζικής πρόσκλησης ολοκληρώθηκε με λάθη"
+    discourse_post_event_reminder:
+      title: "Υπενθύμιση εκδήλωσης"
   site_settings:
     map_events_to_color: "Ανάθεση χρώματος σε κάθε ετικέτα ή κατηγορία."
     discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
     event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} πρόκειται να ξεκινήσει"
+        ongoing: "%{title} βρίσκεται σε εξέλιξη"
+        after: "%{title} έχει τελειώσει"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  και %{count} ακόμα"
+        other: "  και %{count} ακόμα"
     category_type:
       default_calendar_view:
         label: "Προεπιλεγμένη προβολή ημερολογίου"
@@ -64,7 +75,6 @@ el:
           raw_invitees_length: "Μια εκδήλωση περιορίζεται σε %{count} χρήστες/ομάδες."
           raw_invitees:
             only_group: "Μια εκδήλωση δέχεται μόνο ονόματα ομάδων."
-          ends_at_before_starts_at: "Μια εκδήλωση δεν μπορεί να τελειώσει πριν ξεκινήσει."
           max_attendees_reached: "Αυτή η εκδήλωση είναι πλήρης."
           start_must_be_present_and_a_valid_date: "Μια εκδήλωση απαιτεί έγκυρη ημερομηνία έναρξης."
           end_must_be_a_valid_date: "Η ημερομηνία λήξης πρέπει να είναι έγκυρη ημερομηνία."

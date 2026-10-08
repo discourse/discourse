@@ -542,22 +542,28 @@ export default class DModal extends Component<DModalSignature> {
     {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <DConditionalInElement
+      @append={{true}}
       @element={{this.modal.containerElement}}
       @inline={{@inline}}
-      @append={{true}}
     >
       {{#unless @inline}}
         {{htmlClass "modal-open"}}
       {{/unless}}
       <this.dynamicElement
+        {{! The title element lives in the header, so hiding the header leaves this pointing at
+            nothing. A dangling reference is dropped when the accessible name is computed, which
+            leaves the dialog unnamed. Such a modal should supply its own label attribute. }}
+        aria-labelledby={{if
+          (and @title (not @hideHeader))
+          "discourse-modal-title"
+        }}
+        aria-modal="true"
         class={{dConcatClass
           "modal d-modal"
           (if this.animating "is-animating")
         }}
         data-keyboard="false"
-        aria-modal="true"
         role="dialog"
-        aria-labelledby={{if @title "discourse-modal-title"}}
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
@@ -603,10 +609,10 @@ export default class DModal extends Component<DModalSignature> {
               }}
                 <div class="d-modal__dismiss-action">
                   <DButton
-                    @label="cancel"
-                    @action={{this.handleCloseButton}}
-                    @title="modal.close"
                     class="btn-transparent d-modal__dismiss-action-button"
+                    @action={{this.handleCloseButton}}
+                    @label="cancel"
+                    @title="modal.close"
                   />
                 </div>
               {{/if}}
@@ -614,8 +620,8 @@ export default class DModal extends Component<DModalSignature> {
               {{#if @title}}
                 <div class="d-modal__title">
                   <h1
-                    id="discourse-modal-title"
                     class="d-modal__title-text"
+                    id="discourse-modal-title"
                   >{{@title}}</h1>
 
                   {{#if @subtitle}}
@@ -635,10 +641,10 @@ export default class DModal extends Component<DModalSignature> {
                 </div>
               {{else if this.dismissable}}
                 <DButton
-                  @icon="xmark"
-                  @action={{this.handleCloseButton}}
-                  @title="modal.close"
                   class="btn-transparent modal-close"
+                  @action={{this.handleCloseButton}}
+                  @icon="xmark"
+                  @title="modal.close"
                 />
               {{/if}}
             </div>

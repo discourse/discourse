@@ -16,6 +16,19 @@ et:
         image_generation_custom:
           name: "Individuaalne"
     ai_bot:
+      navigation:
+        users:
+          title: "Kasutajad"
+        groups:
+          title: "Rühmad"
+        categories:
+          title: "Liigid"
+        tags:
+          title: "Sildid"
+        themes:
+          title: "Kujundused"
+        backups:
+          title: "Varukoopiad"
       read_post:
         unknown_post: "postitus"
       tool_summary:

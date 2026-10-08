@@ -8,6 +8,10 @@ lv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datums"
+          outcomes:
+            failed: "Neizdevies"
         reports:
           filters:
             sort_by:

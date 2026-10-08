@@ -68,31 +68,6 @@ export default class MiniTagChooser extends MultiSelectComponent {
     return makeArray(this.value);
   }
 
-  modifyComponentForRow(collection, item) {
-    if (typeof item?.onSelect === "function") {
-      return SelectKitRow;
-    }
-
-    if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return SelectKitRow;
-    }
-
-    return TagRow;
-  }
-
-  modifyNoSelection() {
-    if (this.selectKit.options.minimum > 0) {
-      return this.defaultItem(
-        null,
-        i18n("tagging.choose_for_topic_required", {
-          count: this.selectKit.options.minimum,
-        })
-      );
-    } else {
-      return this.defaultItem(null, i18n("tagging.choose_for_topic"));
-    }
-  }
-
   @computed("value.[]", "content.[]")
   get caretIcon() {
     const maximum = this.selectKit.options.maximum;
@@ -125,12 +100,28 @@ export default class MiniTagChooser extends MultiSelectComponent {
     });
   }
 
-  @action
-  _onChange(value, items) {
-    if (this.onChange) {
-      this.onChange(items);
+  modifyComponentForRow(collection, item) {
+    if (typeof item?.onSelect === "function") {
+      return SelectKitRow;
+    }
+
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return SelectKitRow;
+    }
+
+    return TagRow;
+  }
+
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum > 0) {
+      return this.defaultItem(
+        null,
+        i18n("tagging.choose_for_topic_required", {
+          count: this.selectKit.options.minimum,
+        })
+      );
     } else {
-      this.set("value", items);
+      return this.defaultItem(null, i18n("tagging.choose_for_topic"));
     }
   }
 
@@ -191,6 +182,15 @@ export default class MiniTagChooser extends MultiSelectComponent {
     return this.tagUtils.searchTags("/tags/filter/search", data, (json) =>
       this._transformJson(json, { skipSort: prioritizeRecentTags })
     );
+  }
+
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("value", items);
+    }
   }
 
   _transformJson(json, { skipSort = false } = {}) {

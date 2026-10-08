@@ -56,8 +56,8 @@ export default class AutoLinkedText extends Component {
       {{#if segment.isUrl}}
         <a
           href={{segment.href}}
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >{{segment.value}}</a>
       {{else}}
         {{segment.value}}

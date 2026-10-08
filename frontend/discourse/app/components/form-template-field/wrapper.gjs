@@ -17,13 +17,13 @@ import UploadField from "./upload";
 
 const FormTemplateField = <template>
   <@component
-    @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
-    @validations={{@content.validations}}
-    @value={{@initialValue}}
+    @id={{@content.id}}
     @onChange={{@onChange}}
     @uppyComposerUpload={{@uppyComposerUpload}}
+    @validations={{@content.validations}}
+    @value={{@initialValue}}
   />
 </template>;
 
@@ -66,6 +66,20 @@ export default class FormTemplateFieldWrapper extends Component {
     });
   }
 
+  // child components expect an onChange function
+  get onChange() {
+    return this.args.onChange || (() => {});
+  }
+
+  @action
+  refreshTemplate() {
+    if (Array.isArray(this.args?.id) && this.args?.id.length === 0) {
+      return;
+    }
+
+    return this._fetchTemplate(this.args.id);
+  }
+
   async _loadTemplate(templateContent) {
     try {
       const promise = import("js-yaml");
@@ -78,24 +92,10 @@ export default class FormTemplateFieldWrapper extends Component {
     }
   }
 
-  @action
-  refreshTemplate() {
-    if (Array.isArray(this.args?.id) && this.args?.id.length === 0) {
-      return;
-    }
-
-    return this._fetchTemplate(this.args.id);
-  }
-
   async _fetchTemplate(id) {
     const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
     return this._loadTemplate(templateContent);
-  }
-
-  // child components expect an onChange function
-  get onChange() {
-    return this.args.onChange || (() => {});
   }
 
   <template>

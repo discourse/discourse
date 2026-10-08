@@ -4,6 +4,22 @@ module DiscourseAi
   module Summarization
     class EntryPoint
       def inject_into(plugin)
+        plugin.register_html_builder("server:topic-show-before-posts") do |controller, topic_view:|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian: controller.guardian,
+            )
+          next if !publication.summary
+
+          controller.render_to_string(
+            partial: "discourse_ai/summarization/published_summary",
+            locals: {
+              publication:,
+            },
+          )
+        end
+
         plugin.add_to_serializer(:current_user, :can_request_gists) { scope.can_request_gists? }
 
         plugin.add_to_serializer(:current_user, :can_summarize) do

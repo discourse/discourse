@@ -13,11 +13,11 @@ const IconAvatar = <template>
         causes a visible flicker.
       --}}
     <img
+      class="avatar"
+      height={{avatarPx}}
       lazy="lazy"
       src={{avatarUrl @data.avatarTemplate "medium"}}
       width={{avatarPx}}
-      height={{avatarPx}}
-      class="avatar"
     />
     <div class="icon-avatar__icon-wrapper">
       {{dIcon @data.icon}}

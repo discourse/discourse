@@ -47,23 +47,23 @@ export default class DashboardDateRange extends Component {
 
   <template>
     <DMenu
-      @identifier="db-date-range-menu"
-      @triggerClass="btn-default db-date-range__trigger"
-      @modalForMobile={{true}}
-      @placement="bottom-end"
-      @maxWidth={{800}}
       @contentClass="db-date-range__popover"
       @icon="calendar-days"
+      @identifier="db-date-range-menu"
       @label={{this.triggerLabel}}
+      @maxWidth={{800}}
+      @modalForMobile={{true}}
+      @placement="bottom-end"
+      @triggerClass="btn-default db-date-range__trigger"
     >
       <:content as |args|>
         <DashboardDateRangePicker
-          @from={{@startDate}}
-          @to={{@endDate}}
-          @presets={{this.presets}}
           @activePreset={{this.activePreset}}
+          @from={{@startDate}}
           @onApply={{fn this.handleApply args.close}}
           @onCancel={{args.close}}
+          @presets={{this.presets}}
+          @to={{@endDate}}
         />
       </:content>
     </DMenu>

@@ -231,7 +231,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         context "when the topic is nil in the case of a new topic being created" do
           let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
-          it "works" do
+          it "sends revision feedback for the rejected new topic" do
             args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
             expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
               Topic.where(archetype: Archetype.private_message).count

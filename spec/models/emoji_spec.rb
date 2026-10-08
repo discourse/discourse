@@ -92,7 +92,7 @@ RSpec.describe Emoji do
     end
   end
 
-  describe ".lookup_unicode" do
+  describe ".lookup_unicode for ZWJ sequences" do
     before { Emoji.clear_cache }
 
     it "returns correct unicode for skin tone and gendered ZWJ sequences" do
@@ -110,7 +110,7 @@ RSpec.describe Emoji do
     end
   end
 
-  describe ".lookup_unicode" do
+  describe ".lookup_unicode for names and aliases" do
     it "returns unicode for emoji, aliases, and skin tones" do
       expect(Emoji.lookup_unicode("trade_mark")).to eq("™")
       expect(Emoji.lookup_unicode("blonde_man")).to eq("👱‍♂️")

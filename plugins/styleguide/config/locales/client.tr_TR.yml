@@ -32,6 +32,10 @@ tr_TR:
           title: "Tarih/Saat girdileri"
         menus:
           title: "Menüler"
+        context_menu:
+          actions:
+            duplicate: "Eş Kopya"
+            delete: "Sil"
         multi_select:
           title: "Çoklu seçim"
         toasts:

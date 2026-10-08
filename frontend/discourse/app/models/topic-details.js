@@ -44,15 +44,6 @@ export default class TopicDetails extends RestCompatModel {
     this.#topicId = topicId == null ? null : String(topicId);
   }
 
-  // Topic's `_details` field initializer runs before Topic.id is assigned, so
-  // back-fill lazily from `this.topic.id` on first access.
-  #effectiveTopicId() {
-    if (this.#topicId == null && this.topic?.id != null) {
-      this.#topicId = String(this.topic.id);
-    }
-    return this.#topicId;
-  }
-
   // `#topicId in this` is only true once `super()` has returned and our own
   // fields and private methods are installed. The base constructor fires plugin
   // `init` callbacks, which can reach `id` / `__resource` before that — and
@@ -142,6 +133,15 @@ export default class TopicDetails extends RestCompatModel {
     this.allowed_users = trackedArray(
       this.allowed_users.filter((u) => u.username !== username)
     );
+  }
+
+  // Topic's `_details` field initializer runs before Topic.id is assigned, so
+  // back-fill lazily from `this.topic.id` on first access.
+  #effectiveTopicId() {
+    if (this.#topicId == null && this.topic?.id != null) {
+      this.#topicId = String(this.topic.id);
+    }
+    return this.#topicId;
   }
 }
 

@@ -110,9 +110,9 @@ export default class FlagActionType extends Component {
           <label class="radio checkbox-label">
             <input
               id="radio_{{this.flag.name_key}}"
-              {{on "click" (fn this.changePostActionType this.flag)}}
-              type="radio"
               name="post_action_type_index"
+              type="radio"
+              {{on "click" (fn this.changePostActionType this.flag)}}
             />
 
             <div class="flag-action-type-details">
@@ -122,10 +122,10 @@ export default class FlagActionType extends Component {
               {{#if this.showMessageInput}}
                 {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
-                  name="message"
-                  class="flag-message"
-                  placeholder={{this.customPlaceholder}}
                   aria-label={{i18n "flagging.notify_user_textarea_label"}}
+                  class="flag-message"
+                  name="message"
+                  placeholder={{this.customPlaceholder}}
                   @value={{this.message}}
                 />
                 <div
@@ -148,11 +148,11 @@ export default class FlagActionType extends Component {
         <div class="controls {{this.flag.name_key}}">
           <label class="radio checkbox-label">
             <input
-              id="radio_{{this.flag.name_key}}"
-              {{on "click" (fn this.changePostActionType this.flag)}}
               checked={{this.selected}}
-              type="radio"
+              id="radio_{{this.flag.name_key}}"
               name="post_action_type_index"
+              type="radio"
+              {{on "click" (fn this.changePostActionType this.flag)}}
             />
             <div class="flag-action-type-details">
               <strong class="flag-name">{{this.formattedName}}</strong>
@@ -160,12 +160,12 @@ export default class FlagActionType extends Component {
               {{#if this.showMessageInput}}
                 {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
-                  name="message"
-                  class="flag-message"
-                  placeholder={{this.customPlaceholder}}
                   aria-label={{i18n
                     "flagging.notify_moderators_textarea_label"
                   }}
+                  class="flag-message"
+                  name="message"
+                  placeholder={{this.customPlaceholder}}
                   @value={{this.message}}
                 />
                 <div
@@ -183,8 +183,8 @@ export default class FlagActionType extends Component {
             <label class="checkbox-label flag-confirmation">
               <Input
                 name="confirmation"
-                @type="checkbox"
                 @checked={{this.isConfirmed}}
+                @type="checkbox"
               />
               <span>{{i18n "flagging.confirmation_illegal"}}</span>
             </label>

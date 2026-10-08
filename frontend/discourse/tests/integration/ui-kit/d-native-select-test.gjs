@@ -34,7 +34,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
 
     await render(
       <template>
-        <DNativeSelect @value="foo" @onChange={{handleChange}} as |s|>
+        <DNativeSelect @onChange={{handleChange}} @value="foo" as |s|>
           <s.Option @value="foo">The real foo</s.Option>
         </DNativeSelect>
       </template>
@@ -150,8 +150,8 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
       <template>
         <DNativeSelect
           @includeNone={{false}}
-          @value={{state.value}}
           @onChange={{handleChange}}
+          @value={{state.value}}
           as |s|
         >
           <s.Option @value={{1}}>One</s.Option>
@@ -188,7 +188,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
     await render(
       <template>
         <DNativeSelect as |s|>
-          <s.Option @value="foo" class="test">The real foo</s.Option>
+          <s.Option class="test" @value="foo">The real foo</s.Option>
         </DNativeSelect>
       </template>
     );

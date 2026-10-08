@@ -836,7 +836,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
           compliance.streaming_mode_simple_prompt(open_ai_mock)
         end
 
-        it "will automatically recover from a bad payload" do
+        it "recovers automatically from a bad payload" do
           called = false
 
           # this should not happen, but lets ensure nothing bad happens
@@ -907,6 +907,51 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
       context "with tools" do
         it "returns a function invocation" do
           compliance.streaming_mode_tools(open_ai_mock)
+        end
+
+        it "emits every tool call when a streamed event contains multiple calls" do
+          event = {
+            choices: [
+              {
+                index: 0,
+                delta: {
+                  content: "Searching\n",
+                  tool_calls: [
+                    {
+                      index: 0,
+                      id: "call_sam",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"sam"}',
+                      },
+                    },
+                    {
+                      index: 1,
+                      id: "call_dan",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"dan"}',
+                      },
+                    },
+                  ],
+                },
+                finish_reason: "tool_calls",
+              },
+            ],
+          }
+          open_ai_mock.stub_raw("data: #{event.to_json}\n\ndata: [DONE]\n\n")
+          dialect = compliance.dialect(prompt: compliance.generic_prompt(tools: tools))
+          response = []
+
+          endpoint.perform_completion!(dialect, user) { |partial| response << partial }
+
+          expect(response.first).to eq("Searching\n")
+          tool_calls = response.drop(1)
+          expect(tool_calls.map(&:id)).to eq(%w[call_sam call_dan])
+          expect(tool_calls.map(&:parameters)).to eq(
+            [{ search_query: "sam" }, { search_query: "dan" }],
+          )
+          expect(tool_calls).to all(have_attributes(partial: false))
         end
 
         it "properly handles multiple tool calls" do

@@ -5,10 +5,10 @@ const PostMenuShareButton = <template>
     class="post-action-menu__share share"
     ...attributes
     @action={{@buttonActions.share}}
+    @ariaLabel="post.controls.share"
     @icon="d-post-share"
     @label={{if @showLabel "post.controls.share_action"}}
     @title="post.controls.share"
-    @ariaLabel="post.controls.share"
   />
 </template>;
 

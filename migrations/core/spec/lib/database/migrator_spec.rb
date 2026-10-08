@@ -40,12 +40,12 @@ RSpec.describe Migrations::Database::Migrator do
       end
     end
 
-    it "works with the UploadsDB schema" do
+    it "works with the FilesDB schema" do
       migrate(
-        migrations_path: Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
-        db_filename: "uploads.db",
+        migrations_path: Migrations::Database::FILES_DB_SCHEMA_PATH,
+        db_filename: "files.db",
       ) do |db_path, storage_path|
-        expect(Dir.children(storage_path)).to contain_exactly("uploads.db")
+        expect(Dir.children(storage_path)).to contain_exactly("files.db")
 
         db = Extralite::Database.new(db_path)
         expect(db.tables).not_to be_empty

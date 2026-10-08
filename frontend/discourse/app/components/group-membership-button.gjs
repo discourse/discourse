@@ -100,27 +100,27 @@ export default class GroupMembershipButton extends Component {
     <div class="group-membership-button" ...attributes>
       {{#if this.canJoinGroup}}
         <DButton
+          class="btn-default group-index-join"
           @action={{this.joinGroup}}
+          @disabled={{this.updatingMembership}}
           @icon="user-plus"
           @label="groups.join"
-          @disabled={{this.updatingMembership}}
-          class="btn-default group-index-join"
         />
       {{else if this.canLeaveGroup}}
         <DButton
+          class="btn-danger group-index-leave"
           @action={{this.leaveGroup}}
+          @disabled={{this.updatingMembership}}
           @icon="user-xmark"
           @label="groups.leave"
-          @disabled={{this.updatingMembership}}
-          class="btn-danger group-index-leave"
         />
       {{else if this.canRequestMembership}}
         <DButton
+          class="btn-default group-index-request"
           @action={{this.showRequestMembershipForm}}
           @disabled={{this.loading}}
           @icon="user-plus"
           @label="groups.request"
-          class="btn-default group-index-request"
         />
       {{else}}
         {{yield}}

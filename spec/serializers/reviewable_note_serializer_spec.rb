@@ -12,12 +12,14 @@ RSpec.describe ReviewableNoteSerializer do
   end
   describe "serialization" do
     let(:json) { serialized_note(note) }
+
     it "includes basic attributes" do
       expect(json[:id]).to eq(note.id)
       expect(json[:content]).to eq("Test note content")
       expect(json[:created_at]).to be_present
       expect(json[:updated_at]).to be_present
     end
+
     it "includes user information" do
       expect(json[:user]).to be_present
       expect(json[:user][:id]).to eq(admin.id)

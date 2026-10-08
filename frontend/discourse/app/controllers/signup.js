@@ -37,7 +37,10 @@ export default class SignupPageController extends Controller {
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
   @tracked codeSignupStep = "email";
+  @tracked signupContext;
   @autoTrackedArray rejectedEmails = [];
+
+  queryParams = [{ signupContext: "signup_context" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -116,25 +119,6 @@ export default class SignupPageController extends Controller {
     return this.nameValidationHelper.forceValidationReason;
   }
 
-  @bind
-  actionOnEnter(event) {
-    if (!this.submitDisabled && event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.createAccount();
-      return false;
-    }
-  }
-
-  @bind
-  selectKitFocus(event) {
-    const target = document.getElementById(event.target.getAttribute("for"));
-    if (target?.classList.contains("select-kit")) {
-      event.preventDefault();
-      target.querySelector(".select-kit-header").click();
-    }
-  }
-
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
@@ -144,10 +128,17 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+  @computed(
+    "hasAuthOptions",
+    "canCreateLocal",
+    "siteSettings.enable_local_logins_via_code",
+    "siteSettings.enable_local_logins_via_email",
+    "skipConfirmation"
+  )
   get showCodeSignupForm() {
     return (
       this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
       this.canCreateLocal &&
       !this.hasAuthOptions &&
       !this.skipConfirmation
@@ -156,11 +147,6 @@ export default class SignupPageController extends Controller {
 
   get codeSignupOnEmailStep() {
     return this.codeSignupStep === "email";
-  }
-
-  @action
-  updateCodeSignupStep(step) {
-    this.codeSignupStep = step;
   }
 
   @computed("site.desktopView", "hasAuthOptions")
@@ -320,6 +306,81 @@ export default class SignupPageController extends Controller {
     });
   }
 
+  get emailDisabled() {
+    return (
+      this.authOptions?.email === this.accountEmail &&
+      this.authOptions?.email_valid
+    );
+  }
+
+  // Determines whether at least one login button is enabled
+  @computed
+  get hasAtLeastOneLoginButton() {
+    return findAll().length > 0;
+  }
+
+  @computed("hasAtLeastOneLoginButton", "canCreateLocal", "hasAuthOptions")
+  get hasNoLoginOptions() {
+    return (
+      !this.hasAtLeastOneLoginButton &&
+      !this.canCreateLocal &&
+      !this.hasAuthOptions
+    );
+  }
+
+  @computed(
+    "authOptions",
+    "hasAtLeastOneLoginButton",
+    "showCodeSignupForm",
+    "codeSignupStep"
+  )
+  get showRightSide() {
+    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
+      return false;
+    }
+    return !this.authOptions && this.hasAtLeastOneLoginButton;
+  }
+
+  @computed("authOptions")
+  get progressBarStep() {
+    return this.authOptions ? "activate" : "signup";
+  }
+
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
+      return;
+    }
+    return i18n("create_account.associate", {
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
+    });
+  }
+
+  @bind
+  actionOnEnter(event) {
+    if (!this.submitDisabled && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.createAccount();
+      return false;
+    }
+  }
+
+  @bind
+  selectKitFocus(event) {
+    const target = document.getElementById(event.target.getAttribute("for"));
+    if (target?.classList.contains("select-kit")) {
+      event.preventDefault();
+      target.querySelector(".select-kit-header").click();
+    }
+  }
+
+  @action
+  updateCodeSignupStep(step) {
+    this.codeSignupStep = step;
+  }
+
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
@@ -373,13 +434,6 @@ export default class SignupPageController extends Controller {
       });
   }
 
-  get emailDisabled() {
-    return (
-      this.authOptions?.email === this.accountEmail &&
-      this.authOptions?.email_valid
-    );
-  }
-
   authProviderDisplayName(name) {
     return (
       findAll()
@@ -411,39 +465,6 @@ export default class SignupPageController extends Controller {
         500
       );
     }
-  }
-
-  // Determines whether at least one login button is enabled
-  @computed
-  get hasAtLeastOneLoginButton() {
-    return findAll().length > 0;
-  }
-
-  @computed("hasAtLeastOneLoginButton", "canCreateLocal", "hasAuthOptions")
-  get hasNoLoginOptions() {
-    return (
-      !this.hasAtLeastOneLoginButton &&
-      !this.canCreateLocal &&
-      !this.hasAuthOptions
-    );
-  }
-
-  @computed(
-    "authOptions",
-    "hasAtLeastOneLoginButton",
-    "showCodeSignupForm",
-    "codeSignupStep"
-  )
-  get showRightSide() {
-    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
-      return false;
-    }
-    return !this.authOptions && this.hasAtLeastOneLoginButton;
-  }
-
-  @computed("authOptions")
-  get progressBarStep() {
-    return this.authOptions ? "activate" : "signup";
   }
 
   fetchConfirmationValue() {
@@ -534,7 +555,11 @@ export default class SignupPageController extends Controller {
 
             let { destination_url } = this.authOptions || {};
 
-            if (destination_url && destination_url !== "/signup") {
+            if (
+              result.active &&
+              destination_url &&
+              destination_url !== "/signup"
+            ) {
               set("redirect", destination_url);
             } else {
               set("redirect", userPath("account-created"));
@@ -564,17 +589,6 @@ export default class SignupPageController extends Controller {
         return this.set("flash", i18n("create_account.failed"));
       }
     );
-  }
-
-  @computed("authOptions.associate_url", "authOptions.auth_provider")
-  get associateHtml() {
-    if (!this.authOptions?.associate_url) {
-      return;
-    }
-    return i18n("create_account.associate", {
-      associate_link: this.authOptions?.associate_url,
-      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
-    });
   }
 
   @action

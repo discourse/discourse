@@ -7,7 +7,6 @@
 lv:
   js:
     explorer:
-      default_query: "Noklusējums"
       or: "vai"
       create: "Izveidot"
       ai:
@@ -28,6 +27,7 @@ lv:
         form:
           bar: "Josla"
       query_groups: "Grupas"
+      query_tags: "Birkas"
       query_description: "Apraksts"
       reset_params: "Atlikt"
       search_placeholder: "Meklēt..."

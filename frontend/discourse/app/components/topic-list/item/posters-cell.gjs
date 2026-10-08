@@ -8,9 +8,9 @@ const PostersCell = <template>
         <a class="posters-more-count">{{poster.moreCount}}</a>
       {{else}}
         <DUserLink
-          @username={{poster.user.username}}
-          @href={{poster.user.path}}
           class={{poster.extraClasses}}
+          @href={{poster.user.path}}
+          @username={{poster.user.username}}
         >
           {{dAvatar
             poster

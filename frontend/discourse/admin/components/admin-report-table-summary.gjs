@@ -101,6 +101,7 @@ export default class AdminReportTableSummary extends Component {
 
   <template>
     <DMenu
+      aria-label={{this.triggerLabel}}
       @ariaLabel={{this.triggerLabel}}
       @contentClass="admin-report-table-summary__content"
       @fallbackPlacements={{array "top-start"}}
@@ -111,11 +112,10 @@ export default class AdminReportTableSummary extends Component {
       @modalForMobile={{true}}
       @onShow={{this.load}}
       @placement="bottom-start"
-      @triggerComponent={{dElement "button"}}
       @triggerClass="admin-report-table-summary"
+      @triggerComponent={{dElement "button"}}
       @triggers={{array "delayed-hover" "click"}}
       @untriggers={{array "hover" "click"}}
-      aria-label={{this.triggerLabel}}
     >
       <:trigger>{{trustHTML @formattedValue}}</:trigger>
       <:content>

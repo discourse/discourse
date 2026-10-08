@@ -85,6 +85,81 @@ export default class DesignWizardService extends Service {
   #originalColorSchemeLinks;
   #prefetched = false;
 
+  get selectedTheme() {
+    return this.data?.themes.find((theme) => theme.id === this.themeId);
+  }
+
+  get pairs() {
+    return this.selectedTheme?.palette_pairs ?? [];
+  }
+
+  get selectedPair() {
+    const key = this.selectedPairKeys.get(this.themeId);
+    return this.pairs.find((pair) => pair.key === key) ?? this.pairs[0];
+  }
+
+  get effectiveColorMode() {
+    return this.selectedPair?.dark_only ? "dark" : this.colorMode;
+  }
+
+  get previewPalette() {
+    const pair = this.selectedPair;
+    if (!pair) {
+      return;
+    }
+    return this.effectiveColorMode === "dark"
+      ? (pair.dark ?? pair.light)
+      : (pair.light ?? pair.dark);
+  }
+
+  // the endpoint only accepts core themes, so a site whose default theme the
+  // wizard cannot express is not offered a way back to it
+  get canRevert() {
+    return (
+      this.source === SOURCE_ADMIN && this.progressSaved && !!this.#snapshot
+    );
+  }
+
+  // closing a run that changed the live site is a decision, even when the
+  // change cannot be undone from here
+  get needsCloseConfirmation() {
+    return this.source === SOURCE_ADMIN && this.progressSaved;
+  }
+
+  get #selectionsPayload() {
+    return {
+      theme_id: this.themeId,
+      light_palette_id: this.selectedPair?.light?.id,
+      dark_palette_id: this.selectedPair?.dark?.id,
+      palettes_user_selectable: this.palettesUserSelectable,
+      base_font: this.bodyFont,
+      heading_font: this.headingFont,
+      homepage: this.homepage,
+      category_page_style:
+        this.homepage === "categories" ? this.categoryPageStyle : null,
+      enable_welcome_banner: this.welcomeBanner,
+      welcome_banner_location: this.welcomeBannerLocation,
+      search_experience: this.searchExperience,
+    };
+  }
+
+  get #storedState() {
+    const raw = this.keyValueStore.get(STATE_KEY);
+    if (!raw) {
+      return;
+    }
+
+    try {
+      return JSON.parse(raw);
+    } catch {
+      this.keyValueStore.remove(STATE_KEY);
+    }
+  }
+
+  get #currentPreviewThemeId() {
+    return new URLSearchParams(window.location.search).get("preview_theme_id");
+  }
+
   // warms the browser cache for the theme screenshots, which dominate the
   // panel's first paint on a slow connection
   async prefetch() {
@@ -205,47 +280,6 @@ export default class DesignWizardService extends Service {
     }
 
     this.start({ onComplete, resuming: true });
-  }
-
-  get selectedTheme() {
-    return this.data?.themes.find((theme) => theme.id === this.themeId);
-  }
-
-  get pairs() {
-    return this.selectedTheme?.palette_pairs ?? [];
-  }
-
-  get selectedPair() {
-    const key = this.selectedPairKeys.get(this.themeId);
-    return this.pairs.find((pair) => pair.key === key) ?? this.pairs[0];
-  }
-
-  get effectiveColorMode() {
-    return this.selectedPair?.dark_only ? "dark" : this.colorMode;
-  }
-
-  get previewPalette() {
-    const pair = this.selectedPair;
-    if (!pair) {
-      return;
-    }
-    return this.effectiveColorMode === "dark"
-      ? (pair.dark ?? pair.light)
-      : (pair.light ?? pair.dark);
-  }
-
-  // the endpoint only accepts core themes, so a site whose default theme the
-  // wizard cannot express is not offered a way back to it
-  get canRevert() {
-    return (
-      this.source === SOURCE_ADMIN && this.progressSaved && !!this.#snapshot
-    );
-  }
-
-  // closing a run that changed the live site is a decision, even when the
-  // change cannot be undone from here
-  get needsCloseConfirmation() {
-    return this.source === SOURCE_ADMIN && this.progressSaved;
   }
 
   dismissIntro() {
@@ -524,40 +558,6 @@ export default class DesignWizardService extends Service {
       welcome_banner_location: settings.welcome_banner_location,
       search_experience: settings.search_experience,
     };
-  }
-
-  get #selectionsPayload() {
-    return {
-      theme_id: this.themeId,
-      light_palette_id: this.selectedPair?.light?.id,
-      dark_palette_id: this.selectedPair?.dark?.id,
-      palettes_user_selectable: this.palettesUserSelectable,
-      base_font: this.bodyFont,
-      heading_font: this.headingFont,
-      homepage: this.homepage,
-      category_page_style:
-        this.homepage === "categories" ? this.categoryPageStyle : null,
-      enable_welcome_banner: this.welcomeBanner,
-      welcome_banner_location: this.welcomeBannerLocation,
-      search_experience: this.searchExperience,
-    };
-  }
-
-  get #storedState() {
-    const raw = this.keyValueStore.get(STATE_KEY);
-    if (!raw) {
-      return;
-    }
-
-    try {
-      return JSON.parse(raw);
-    } catch {
-      this.keyValueStore.remove(STATE_KEY);
-    }
-  }
-
-  get #currentPreviewThemeId() {
-    return new URLSearchParams(window.location.search).get("preview_theme_id");
   }
 
   #initFromData() {

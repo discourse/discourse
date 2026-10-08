@@ -25,7 +25,7 @@ RSpec.describe UploadsController do
       context "when rate limited" do
         before { RateLimiter.enable }
 
-        it "should return 429 response code when maximum number of uploads per minute has been exceeded for a user" do
+        it "returns 429 after the user exceeds the upload rate limit" do
           SiteSetting.max_uploads_per_minute = 1
 
           post "/uploads.json",
@@ -83,6 +83,31 @@ RSpec.describe UploadsController do
         expect(response.status).to eq 200
         expect(response.parsed_body["id"]).to be_present
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
+      end
+
+      it "logs unexpected upload errors and returns a generic message" do
+        error =
+          Discourse::Utils::CommandError.new(
+            "magick /private/tmp/upload.png /private/tmp/image.jpg\nImage conversion failed",
+          )
+        FileStore::LocalStore.any_instance.stubs(:store_upload).raises(error)
+
+        logger =
+          track_log_messages do
+            post "/uploads.json", params: { file: logo, upload_type: "composer" }
+          end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          "failed" => "FAILED",
+          "message" => I18n.t("upload.failed"),
+        )
+        expect(logger.errors.join("\n")).to include(
+          "Failed to create upload",
+          error.class.name,
+          error.message,
+          error.backtrace.first,
+        )
       end
 
       it 'returns "raw" url for site settings' do
@@ -296,7 +321,7 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "should accept large files if system user" do
+      it "accepts large files from the system user" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.system_user_max_attachment_size_kb = 421_730
 
@@ -304,7 +329,7 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "should fail to accept large files if system user system_user_max_attachment_size_kb setting is low" do
+      it "rejects large system-user files above the system limit" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
         SiteSetting.system_user_max_attachment_size_kb = 1
@@ -318,7 +343,7 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "should fail to accept large files if system user system_user_max_attachment_size_kb setting is low and general setting is low" do
+      it "rejects large system-user files when both limits are low" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 10
         SiteSetting.system_user_max_attachment_size_kb = 5
@@ -332,7 +357,7 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "should fail to accept large files if attachment_size settings are low" do
+      it "rejects large files above the attachment limit" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
         SiteSetting.system_user_max_attachment_size_kb = 10
@@ -567,7 +592,7 @@ RSpec.describe UploadsController do
 
       before { setup_s3 }
 
-      it "should redirect to the s3 URL" do
+      it "redirects to the S3 URL" do
         get upload.short_path
 
         expect(response).to redirect_to(upload.url)
@@ -652,12 +677,12 @@ RSpec.describe UploadsController do
         SiteSetting.secure_uploads = true
       end
 
-      it "should return 404 for anonymous requests requests" do
+      it "returns 404 for anonymous requests" do
         get secure_url
         expect(response.status).to eq(404)
       end
 
-      it "should return signed url for legitimate request" do
+      it "returns a signed URL for an authorized request" do
         sign_in(user)
         get secure_url
 
@@ -677,7 +702,7 @@ RSpec.describe UploadsController do
         expect(response.redirect_url).to include("response-content-disposition=inline")
       end
 
-      it "should return secure uploads URL when looking up urls" do
+      it "returns the secure-upload URL during lookup" do
         upload.update_column(:secure, true)
         sign_in(user)
 
@@ -705,13 +730,13 @@ RSpec.describe UploadsController do
         before { upload.update(access_control_post_id: post.id) }
 
         context "when the user is anon" do
-          it "should return signed url for public posts" do
+          it "returns a signed URL for public posts" do
             get secure_url
             expect(response.status).to eq(302)
             expect(response.redirect_url).to match("Amz-Expires")
           end
 
-          it "should return 403 for deleted posts" do
+          it "returns 403 for deleted posts" do
             post.trash!
             get secure_url
             expect(response.status).to eq(403)
@@ -731,7 +756,7 @@ RSpec.describe UploadsController do
           before { sign_in(user) }
 
           context "when the user has access to the post via guardian" do
-            it "should return signed url for legitimate request" do
+            it "returns a signed URL for an authorized request" do
               get secure_url
               expect(response.status).to eq(302)
               expect(response.redirect_url).to match("Amz-Expires")
@@ -751,6 +776,7 @@ RSpec.describe UploadsController do
 
       context "when the upload is an attachment file" do
         before { upload.update(original_filename: "test.pdf") }
+
         it "redirects to the signed_url_for_path" do
           sign_in(user)
           get secure_url
@@ -805,7 +831,7 @@ RSpec.describe UploadsController do
         context "if the upload is secure false, meaning the ACL is probably public" do
           before { upload.update(secure: false) }
 
-          it "should redirect to the regular show route" do
+          it "redirects to the regular show route" do
             secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
             sign_in(user)
             get secure_url
@@ -818,7 +844,7 @@ RSpec.describe UploadsController do
         context "if the upload is secure true, meaning the ACL is probably private" do
           before { upload.update(secure: true) }
 
-          it "should redirect to the presigned URL still otherwise we will get a 403" do
+          it "redirects to the presigned URL" do
             secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
             sign_in(user)
             get secure_url
@@ -959,7 +985,7 @@ RSpec.describe UploadsController do
     fab!(:upload)
 
     describe "when url is missing" do
-      it "should return the right response" do
+      it "requires a URL" do
         post "/uploads/lookup-metadata.json"
 
         expect(response.status).to eq(403)
@@ -967,7 +993,7 @@ RSpec.describe UploadsController do
     end
 
     describe "when not signed in" do
-      it "should return the right response" do
+      it "requires authentication" do
         post "/uploads/lookup-metadata.json", params: { url: upload.url }
 
         expect(response.status).to eq(403)
@@ -1002,14 +1028,14 @@ RSpec.describe UploadsController do
       end
 
       describe "when url is invalid" do
-        it "should return the right response" do
+        it "rejects an invalid URL" do
           post "/uploads/lookup-metadata.json", params: { url: "abc" }
 
           expect(response.status).to eq(404)
         end
       end
 
-      it "should return the right response" do
+      it "returns the upload metadata" do
         post "/uploads/lookup-metadata.json", params: { url: upload.url }
 
         expect(response.status).to eq(200)
@@ -1138,6 +1164,20 @@ RSpec.describe UploadsController do
 
     context "when the store is not external" do
       before { sign_in(user) }
+
+      it "returns 404 even when direct S3 uploads are enabled" do
+        SiteSetting.enable_s3_uploads = false
+        SiteSetting.enable_direct_s3_uploads = true
+
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+
+        expect(response.status).to eq(404)
+      end
 
       it "returns 404" do
         post "/uploads/generate-presigned-put.json",

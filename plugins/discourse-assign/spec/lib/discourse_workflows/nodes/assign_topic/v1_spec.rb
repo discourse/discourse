@@ -8,6 +8,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
 
   let(:assign_allowed_group) { Group.find_by(name: "staff") }
   let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
+
   after { sandbox.dispose }
 
   before do

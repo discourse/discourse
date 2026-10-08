@@ -20,12 +20,12 @@ export default class SelectedCategory extends SelectedNameComponent {
 
   <template>
     <div
-      {{on "click" this.onSelectedNameClick}}
+      class="select-kit-selected-name selected-name choice"
+      data-name={{this.name}}
+      data-value={{this.value}}
       tabindex="0"
       title={{this.title}}
-      data-value={{this.value}}
-      data-name={{this.name}}
-      class="select-kit-selected-name selected-name choice"
+      {{on "click" this.onSelectedNameClick}}
     >
       <div class="body">
         {{this.badge}}

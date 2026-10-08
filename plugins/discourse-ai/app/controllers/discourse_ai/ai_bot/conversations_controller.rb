@@ -6,7 +6,11 @@ module DiscourseAi
       include AiCreditLimitHandler
 
       requires_plugin PLUGIN_NAME
-      requires_login
+      # `index` also serves the page's HTML, which anonymous visitors may load
+      # for a preview or a login prompt. This check runs after `check_xhr` has
+      # already rendered that HTML, so it only guards the conversation list.
+      requires_login except: %i[index]
+      before_action :ensure_logged_in, only: %i[index]
 
       def index
         ListConversations.call(service_params) do

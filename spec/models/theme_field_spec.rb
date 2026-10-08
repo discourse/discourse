@@ -121,7 +121,7 @@ RSpec.describe ThemeField do
     css = "body {"
     field = theme.set_field(target: :common, name: :scss, value: css)
     theme.save!
-    expect(field.reload.error).to include('Error: expected "}"')
+    expect(field.reload.error).to include('expected "}"')
 
     theme.set_field(target: :common, name: :scss, value: <<~SCSS)
       body {
@@ -133,7 +133,7 @@ RSpec.describe ThemeField do
 
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
-    expect(field.reload.error).to include("Error: Can't find stylesheet to import.")
+    expect(field.reload.error).to include("Can't find stylesheet to import.")
 
     theme.set_field(target: :common, name: :scss, value: "body {color: blue};")
     theme.save!

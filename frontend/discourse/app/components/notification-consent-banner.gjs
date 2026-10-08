@@ -23,13 +23,6 @@ export default class NotificationConsentBanner extends Component {
     );
   }
 
-  setBannerDismissed(value) {
-    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
-      userDismissedPromptKey
-    );
-  }
-
   get showNotificationPromptBanner() {
     return (
       this.siteSettings.push_notifications_prompt &&
@@ -40,6 +33,13 @@ export default class NotificationConsentBanner extends Component {
       Notification.permission !== "granted" &&
       !this.desktopNotifications.isEnabled &&
       !this.bannerDismissed
+    );
+  }
+
+  setBannerDismissed(value) {
+    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
+    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
+      userDismissedPromptKey
     );
   }
 
@@ -61,16 +61,16 @@ export default class NotificationConsentBanner extends Component {
           <span>
             {{i18n "user.desktop_notifications.consent_prompt"}}
             <DButton
-              @display="link"
               @action={{this.turnon}}
+              @display="link"
               @label="user.desktop_notifications.enable"
             />
           </span>
           <DButton
-            @icon="xmark"
-            @action={{this.dismiss}}
-            @title="banner.close"
             class="btn-transparent close"
+            @action={{this.dismiss}}
+            @icon="xmark"
+            @title="banner.close"
           />
         </div>
       </div>

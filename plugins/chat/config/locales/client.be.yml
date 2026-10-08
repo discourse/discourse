@@ -101,6 +101,11 @@ be:
         no_results: "Няма вынікаў"
         sort:
           latest: "апошняя"
+      channel_list:
+        options:
+          filter: "Фільтр"
+        filter:
+          mentions: "Згадкі"
       incoming_webhooks:
         back: "Назад"
         description: "Апісанне"

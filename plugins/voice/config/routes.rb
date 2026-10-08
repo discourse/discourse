@@ -3,6 +3,7 @@
 Voice::Engine.routes.draw do
   resources :rooms do
     member do
+      post :invite_agent
       post :join
       post :heartbeat
       delete :leave
@@ -31,6 +32,8 @@ Voice::Engine.routes.draw do
 
   resources :calls, only: %i[create]
 
+  get "agents" => "agents#index"
+
   # LiveKit server webhooks — machine-to-machine, authenticated by the
   # signature on the request body, not by a user session.
   post "livekit/webhook" => "livekit_webhooks#create"
@@ -38,7 +41,11 @@ Voice::Engine.routes.draw do
   get "contacts" => "contacts#index"
   get "chat_threads/:id" => "chat_threads#show", :constraints => { id: /\d+/ }
   get "r/:slug" => "page#show", :format => false
-  get "r/:slug/invited-by/:username" => "page#show", :format => false
+  get "r/:slug/invited-by/:username" => "page#show",
+      :format => false,
+      :constraints => {
+        username: RouteFormat.username,
+      }
 end
 
 Discourse::Application.routes.draw do

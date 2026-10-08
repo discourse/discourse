@@ -2,6 +2,45 @@
 
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
+  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar current]
+
+  def can_edit_avatar?(target_user)
+    can_edit?(target_user) && !SiteSetting.auth_overrides_avatar &&
+      !SiteSetting.discourse_connect_overrides_avatar
+  end
+
+  def can_pick_avatar_source?(target_user, type)
+    return false unless can_edit_avatar?(target_user)
+
+    case type
+    when "system"
+      return true
+    when *AVATAR_TYPES_WITH_UPLOAD
+      return false if type == "gravatar" && !SiteSetting.gravatar_enabled?
+
+      return true if target_user.is_system_user?
+
+      return target_user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
+    when "associated_account"
+      unless target_user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
+        return false
+      end
+    else
+      return false
+    end
+
+    case SiteSetting.selectable_avatars_mode
+    when "no_one"
+      false
+    when "staff"
+      target_user.staff?
+    when /\Atl([1-4])\z/
+      target_user.staff? || target_user.trust_level >= Regexp.last_match(1).to_i
+    else
+      true
+    end
+  end
+
   def can_claim_reviewable_topic?(topic, automatic = false)
     (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
@@ -11,6 +50,7 @@ module UserGuardian
     return true if is_admin?
     # can always pick blank avatar
     return true if !upload
+    return true if user_avatar.user.uploaded_avatar_id == upload.id
     return true if user_avatar.contains_upload?(upload.id)
     return true if upload.user_id == user_avatar.user_id || is_my_own?(upload)
 

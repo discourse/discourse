@@ -6,7 +6,19 @@
 
 bs_BA:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Naslov"
+        icon: "Icon"
+        color: "Color"
+      create_board:
+        name: "Ime"
+        tag_names: "Oznake"
+        category_ids: "Kategorije"
     boards:
+      status:
+        all: "Sve"
+        open: "Otvori"
       board:
         remove_card: "Ukloni"
         title: "Naslov"

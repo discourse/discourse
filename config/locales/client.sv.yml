@@ -223,6 +223,7 @@ sv:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
     back_button: "Tillbaka"
+    confirm_button: "Bekräfta"
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
@@ -1306,6 +1307,15 @@ sv:
       tracked_topics_link: "Visa"
       automatically_unpin_topics: "Ta automatiskt ner ämnen när jag når botten"
       apps: "Appar"
+      mcp_authorizations:
+        endpoint: "Resurs"
+        scopes: "Omfattningar"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Återkallad"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
       api_approved: "Godkänd:"
@@ -3542,6 +3552,7 @@ sv:
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       no_description: "Lägg till en beskrivning för den här kategorin."
+      latest_topics: "Aktuella ämnen"
       description_expand: "Visa mer"
       description_collapse: "Visa mindre"
       already_used: "Den här färgen används redan av en annan kategori"
@@ -3763,6 +3774,7 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       filter:
+        reset: "återställ"
         button:
           label: "Filter"
       latest:
@@ -3950,11 +3962,11 @@ sv:
       favorite_max_not_reached: "Markera denna utmärkelse som favorit"
       favorite_count: "%{count}/%{max} utmärkelser markerade som favorit"
     download_calendar:
-      title: "Ladda ner kalender"
+      title: "Lägg till i kalender"
+      calendar: "Kalender"
       save_ics: "Ladda ner .ics -fil"
       save_google: "Lägg till i Google -kalender"
       remember: "Fråga mig inte igen"
-      remember_explanation: "(du kan ändra denna inställning under dina användarinställningar)"
       download: "Ladda ner"
       default_calendar: "Standardkalender"
       default_calendar_instruction: "Bestäm vilken kalender som ska användas när datum sparas"
@@ -4463,6 +4475,66 @@ sv:
           title: "Om din webbplats"
         developer:
           title: "Utvecklare"
+        mcp:
+          tabs:
+            access: "Tillgång"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tillgång"
+            group: "Grupp"
+            groups: "Grupper"
+            actions: "Åtgärder"
+            edit: "Redigera"
+            delete: "Radera"
+          primitives:
+            group_by_options:
+              scope: "Omfattning"
+              provider: "Leverantör"
+              kind: "Typ"
+            provider: "Leverantör"
+            kind: "Typ"
+            scope: "Omfattning"
+            scopes: "Omfattningar"
+          clients:
+            actions: "Åtgärder"
+            block: "Blockera"
+            presets:
+              custom: "Anpassad"
+          authorizations:
+            user: "Användare"
+            status: "Status"
+            actions: "Åtgärder"
+          activity:
+            time: "Tid"
+            user: "Användare"
+            duration: "Varaktighet"
+          values:
+            server_status:
+              disabled: "Inaktiverad"
+            client_trust:
+              approved: "Godkända"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Återkallad"
+            activity_outcome:
+              success: "Lyckades"
+              error: "Fel"
+            primitive_state:
+              enabled: "Aktiverad"
+              disabled: "Inaktiverad"
+            primitive_kind:
+              all: "Alla typer"
+              resource: "Resurs"
+            primitive_risk:
+              read: "Skrivskyddad"
+              moderation: "Moderering"
+            filter:
+              all: "Alla"
+          never: "Aldrig"
+          actions:
+            revoke: "Återkalla"
         emojis:
           title: "Emoji"
         flags:
@@ -4705,6 +4777,7 @@ sv:
           series:
             anonymous: "Anonym"
             crawlers: "Sökrobotar"
+          crawler_learn_more: "Läs mer"
         period:
           last_7_days: "Senaste 7 dagarna"
           last_30_days: "Senaste 30 dagarna"
@@ -6215,12 +6288,11 @@ sv:
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
       site_text:
-        search: "Sök efter texten som du vill redigera"
+        search_label: "Sök"
+        theme_disabled: "Inaktiverad"
+        filters: "Filter"
         edit: "Redigera"
-        revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
-        go_back: "Tillbaka till sökningen"
-        recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         show_outdated: "Visa endast inaktuella/ogiltiga"
         locale: "Språk:"

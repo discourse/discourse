@@ -94,6 +94,7 @@ $danger-medium: dark-light-diff($danger, $secondary, 30%, -35%) !default;
 $danger-hover: dark-light-diff($danger, $secondary, -20%, -20%) !default;
 
 // success
+$success-very-low: dark-light-diff($success, $secondary, 90%, -70%) !default;
 $success-low: dark-light-diff($success, $secondary, 80%, -60%) !default;
 $success-medium: dark-light-diff($success, $secondary, 50%, -40%) !default;
 $success-hover: dark-light-diff($success, $secondary, -20%, -20%) !default;

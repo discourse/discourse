@@ -39,7 +39,7 @@ module Boards
     end
 
     def can_write(board:, guardian:)
-      guardian.can_write_boards_board?(board)
+      guardian.can_write_board?(board)
     end
 
     def fetch_topic(params:)
@@ -95,9 +95,14 @@ module Boards
       Publisher.publish_card_created!(board, payload, client_id: params.client_id)
     end
 
-    def publish_card_moved(board:, card:, params:)
+    def publish_card_moved(board:, card:, params:, guardian:)
       payload = CardSerializer.new(card, root: false).as_json
-      Publisher.publish_card_moved!(board, payload, client_id: params.client_id)
+      Publisher.publish_card_moved!(
+        board,
+        payload,
+        acting_user: guardian.user,
+        client_id: params.client_id,
+      )
     end
   end
 end

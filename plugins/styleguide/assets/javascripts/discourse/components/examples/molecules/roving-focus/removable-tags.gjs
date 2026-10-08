@@ -50,9 +50,9 @@ export default class RovingFocusRemovableTagsExample extends Component {
   <template>
     <div class="roving-demo__tags">
       <div
+        aria-label={{i18n "styleguide.sections.roving_focus.tags.label"}}
         class="roving-demo__tag-bar"
         role="toolbar"
-        aria-label={{i18n "styleguide.sections.roving_focus.tags.label"}}
         {{dRovingFocus
           orientation="horizontal"
           itemSelector=".roving-demo__tag"
@@ -63,13 +63,13 @@ export default class RovingFocusRemovableTagsExample extends Component {
         {{#each this.rows key="id" as |row|}}
           <DButton
             class="roving-demo__tag"
+            @action={{fn this.remove row.id}}
             @icon="xmark"
-            @translatedLabel={{row.label}}
             @translatedAriaLabel={{i18n
               "styleguide.sections.roving_focus.tags.remove"
               tag=row.label
             }}
-            @action={{fn this.remove row.id}}
+            @translatedLabel={{row.label}}
           />
         {{/each}}
       </div>
@@ -77,10 +77,10 @@ export default class RovingFocusRemovableTagsExample extends Component {
       {{#unless this.tags.length}}
         <DButton
           class="roving-demo__reset"
+          @action={{this.reset}}
           @translatedLabel={{i18n
             "styleguide.sections.roving_focus.tags.reset"
           }}
-          @action={{this.reset}}
         />
       {{/unless}}
     </div>

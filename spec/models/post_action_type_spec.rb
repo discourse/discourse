@@ -3,7 +3,7 @@
 RSpec.describe PostActionType do
   describe "Callbacks" do
     describe "#expiry_cache" do
-      it "should clear the cache on save" do
+      it "clears the cache on save" do
         Discourse.cache.write("post_action_types_#{I18n.locale}", "test")
         Discourse.cache.write("post_action_flag_types_#{I18n.locale}", "test2")
 

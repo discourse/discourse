@@ -4,8 +4,8 @@ module DiscourseAi::Completions
     attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
 
     def initialize(partial_tool_calls: false)
-      @tool = nil
-      @tool_arguments = +""
+      @tools = {}
+      @current_tool_key = nil
       @prompt_tokens = nil
       @completion_tokens = nil
       @cache_read_tokens = nil
@@ -36,91 +36,120 @@ module DiscourseAi::Completions
     end
 
     def process_streamed_message(json)
-      rval = nil
-
+      result = []
       tool_calls = json.dig(:choices, 0, :delta, :tool_calls)
       content = json.dig(:choices, 0, :delta, :content)
-
       finished_tools = json.dig(:choices, 0, :finish_reason) || tool_calls == []
 
-      if tool_calls.present?
-        id = tool_calls.dig(0, :id)
-        name = tool_calls.dig(0, :function, :name)
-        arguments = tool_calls.dig(0, :function, :arguments)
+      tool_calls&.each do |tool_call|
+        key =
+          if !tool_call[:index].nil?
+            [:index, tool_call[:index]]
+          elsif tool_call[:id].present?
+            [:id, tool_call[:id]]
+          else
+            @current_tool_key
+          end
 
-        # TODO: multiple tool support may require index
-        #index = tool_calls[0].dig(:index)
+        state = @tools[key]
+        id = tool_call[:id]
+        name = tool_call.dig(:function, :name)
 
-        if id.present? && @tool && @tool.id != id
-          process_arguments
-          @tool.partial = false
-          rval = @tool
-          @tool = nil
+        # A continuation's explicit ID is more reliable than a conflicting index.
+        if id.present? && name.blank? && (!state || state.id != id)
+          indexed_state = state
+          state = @tools.values.find { |candidate| candidate.id == id }
+          key = [:id, id] if state && (!state.index.nil? || indexed_state)
         end
 
-        if id.present? && name.present?
-          @tool_arguments = +""
-          @tool = ToolCall.new(id: id, name: name)
-          @streaming_parser = JsonStreamingTracker.new(self) if @partial_tool_calls
+        # Some compatible servers reuse an index for successive calls.
+        if state && id.present? && name.present? && state.id != id
+          result << state.finish
+          @tools.delete_if { |_, candidate| candidate.equal?(state) }
+          state = nil
         end
 
-        @tool_arguments << arguments.to_s
-        @streaming_parser << arguments.to_s if @streaming_parser && !arguments.to_s.empty?
-        rval = current_tool_progress if !rval
-      elsif finished_tools && @tool
-        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
-        @tool.parameters = parsed_args
-        @tool.partial = false
-        rval = @tool
-        @tool = nil
-      elsif !content.to_s.empty?
-        # we don't want to strip empty content like "\n", do not use present?
-        rval = content
+        if !state && id.present?
+          state =
+            @tools.values.find do |candidate|
+              candidate.id == id &&
+                (
+                  tool_call[:index].nil? || candidate.index.nil? ||
+                    candidate.index == tool_call[:index]
+                )
+            end
+        elsif !state && id.blank? && @current_tool_key && @tools[@current_tool_key]&.index.nil?
+          state = @tools[@current_tool_key]
+        end
+
+        if !state && id.present? && name.present?
+          state = ToolState.new(tool_call, partial_tool_calls: @partial_tool_calls)
+        end
+        next if !state
+
+        state.index ||= tool_call[:index]
+        @tools[key] = state
+        @current_tool_key = key
+        state.append(tool_call.dig(:function, :arguments).to_s)
+        progress = state.progress
+        result << progress if progress && !finished_tools
       end
 
+      # Switching indexes does not complete a call: argument fragments can interleave.
+      result.concat(finish) if finished_tools
+      # Content and tool calls may share a delta; preserve whitespace-only text.
+      result.unshift(content) if !content.to_s.empty?
       update_usage(json)
 
-      rval
-    end
-
-    def notify_progress(key, value)
-      if @tool
-        @tool.partial = true
-        @tool.parameters[key.to_sym] = value
-        @has_new_data = true
-      end
-    end
-
-    def current_tool_progress
-      if @has_new_data
-        @has_new_data = false
-        @tool
-      else
-        nil
-      end
+      result.length > 1 ? result : result.first
     end
 
     def finish
-      rval = []
-      if @tool
-        process_arguments
-        @tool.partial = false
-        rval << @tool
-        @tool = nil
-      end
-
-      rval
+      result = @tools.values.uniq.map(&:finish)
+      @tools.clear
+      @current_tool_key = nil
+      result
     end
 
     private
 
-    def process_arguments
-      if @tool_arguments.present?
-        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
-        @tool.parameters = parsed_args
-        @tool_arguments = nil
+    class ToolState
+      attr_reader :id
+      attr_accessor :index
+
+      def initialize(tool_call, partial_tool_calls:)
+        @id = tool_call[:id]
+        @index = tool_call[:index]
+        @tool = ToolCall.new(id: @id, name: tool_call.dig(:function, :name))
+        @arguments = +""
+        @streaming_parser = JsonStreamingTracker.new(self) if partial_tool_calls
+      end
+
+      def append(arguments)
+        @arguments << arguments
+        @streaming_parser << arguments if @streaming_parser && !arguments.empty?
+      end
+
+      def notify_progress(key, value)
+        @tool.partial = true
+        @tool.parameters[key.to_sym] = value
+        @has_new_data = true
+      end
+
+      def progress
+        return if !@has_new_data
+
+        @has_new_data = false
+        @tool
+      end
+
+      def finish
+        @tool.parameters = ToolArgumentsParser.parse(@arguments) if @arguments.present?
+        @tool.partial = false
+        @tool
       end
     end
+    private_constant :ToolState
 
     def update_usage(json)
       usage = json.dig(:usage)

@@ -2,6 +2,7 @@
 
 describe "Admin Site Setting Formatting" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
 
   before { sign_in(admin) }

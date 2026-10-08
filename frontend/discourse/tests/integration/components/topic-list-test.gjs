@@ -20,8 +20,8 @@ module("Integration | Component | TopicList", function (hooks) {
     await render(
       <template>
         <TopicList
-          @canBulkSelect={{true}}
           @bulkSelectHelper={{bulkSelectHelper}}
+          @canBulkSelect={{true}}
           @topics={{topics}}
         />
       </template>
@@ -66,7 +66,7 @@ module("Integration | Component | TopicList", function (hooks) {
 
     await render(
       <template>
-        <TopicList @topics={{topics}} @highlightLastVisited={{true}} />
+        <TopicList @highlightLastVisited={{true}} @topics={{topics}} />
       </template>
     );
 
@@ -97,7 +97,7 @@ module("Integration | Component | TopicList", function (hooks) {
 
     await render(
       <template>
-        <TopicList @topics={{topics}} @listContext="test-context" />
+        <TopicList @listContext="test-context" @topics={{topics}} />
       </template>
     );
 
@@ -139,7 +139,7 @@ module("Integration | Component | TopicList", function (hooks) {
 
     await render(
       <template>
-        <TopicList @topics={{topics}} @listContext="other-context" />
+        <TopicList @listContext="other-context" @topics={{topics}} />
       </template>
     );
 

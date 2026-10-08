@@ -16,6 +16,14 @@ he:
         categories:
           discourse_ai: "בינה מלאכותית ב־Discourse"
       dashboard:
+        sections:
+          ask_ai:
+            title: "לשאול בינה מלאכותית"
+        ask_ai:
+          title: "לשאול בינה מלאכותית"
+          date: "תאריך"
+          outcomes:
+            failed: "נכשל"
         emotion:
           title: "רגש"
         reports:

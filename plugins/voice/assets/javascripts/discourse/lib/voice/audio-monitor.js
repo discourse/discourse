@@ -1,3 +1,5 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
+
 const SAMPLE_INTERVAL_MS = 100;
 const FFT_SIZE = 2048;
 
@@ -83,9 +85,8 @@ export default class AudioMonitor {
       });
 
       this.#startSampling();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to initialize audio monitor", error);
+    } catch {
+      voiceLog.warn("[voice] failed to initialize audio monitor");
     }
   }
 

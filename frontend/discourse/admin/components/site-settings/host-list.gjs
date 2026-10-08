@@ -27,11 +27,11 @@ export default class HostList extends Component {
   <template>
     <div ...attributes>
       <ListSetting
-        @value={{this.settingValue}}
-        @settingName={{this.setting.setting}}
         @choices={{this.settingValue}}
         @onChange={{this.onChange}}
         @options={{hash allowAny=this.allowAny disabled=@disabled}}
+        @settingName={{this.setting.setting}}
+        @value={{this.settingValue}}
       />
     </div>
   </template>

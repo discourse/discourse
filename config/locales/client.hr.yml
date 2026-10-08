@@ -349,6 +349,7 @@ hr:
       message: "Ažurirali smo ovu stranicu, <span>molimo osvježite</span> kako bi sve nesmetano funkcioniralo."
       dismiss: "Odbaciti"
     back_button: "Natrag"
+    confirm_button: "Potvrdi"
     welcome_banner:
       header:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
@@ -1658,6 +1659,16 @@ hr:
       tracked_topics_link: "Pokaži"
       automatically_unpin_topics: "Automatski otkvači teme kada dođem do dna"
       apps: "Aplikacije"
+      mcp_authorizations:
+        endpoint: "Resurs"
+        scopes: "Opsezi"
+        details: "Detalji"
+        last_used: "Zadnje korišteno"
+        never: "nikada"
+        status: "Statust"
+        statuses:
+          active: "Aktivno"
+          revoked: "Opoziv"
       revoke_access: "Opoziv pristupa"
       undo_revoke_access: "Poništi opozivanje pristupa"
       api_approved: "Odobrio:"
@@ -4400,6 +4411,7 @@ hr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Posljednje teme"
       description_expand: "Prikaži više"
       description_collapse: "Prikaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -4667,6 +4679,7 @@ hr:
       with_category: "%{filter} %{category} teme"
       filter:
         title: "Filtrirani rezultati za %{filter}"
+        reset: "resetiraj"
         button:
           label: "Filter"
       latest:
@@ -4882,11 +4895,10 @@ hr:
       favorite_max_not_reached: "Označi ovu značku kao omiljenu"
       favorite_count: "%{count}/%{max} značke označene kao omiljene"
     download_calendar:
-      title: "Preuzmite kalendar"
+      title: "Dodaj u kalendar"
       save_ics: "Preuzmite .ics datoteku"
       save_google: "Dodaj u Google kalendar"
       remember: "Ne pitaj me više"
-      remember_explanation: "(možete promijeniti ovu postavku u svojim korisničkim postavkama)"
       download: "Preuzmi"
       default_calendar: "Zadani kalendar"
       default_calendar_instruction: "Odredite koji kalendar treba koristiti kada se datumi spremaju"
@@ -5524,6 +5536,67 @@ hr:
           header_description: "Ovdje navedite informacije o ovoj stranici i svom timu kako bi ljudi mogli saznati o čemu se radi u vašoj zajednici, tko stoji iza nje i kako vas kontaktirati u slučaju problema. Prikazano na stranici <a href='%{basePath}/about'>O nama</a>vaše stranice."
         developer:
           title: "Programer"
+        mcp:
+          tabs:
+            access: "Pristup"
+            activity: "Aktivnosti"
+          overview:
+            status: "Statust"
+          access:
+            title: "Pristup"
+            group: "Grupa"
+            groups: "Grupe"
+            actions: "Akcije"
+            edit: "Uredi"
+            delete: "Izbriši"
+          primitives:
+            group_by_options:
+              scope: "Opsezi"
+              provider: "Pružatelj usluga"
+              kind: "Tip"
+            provider: "Pružatelj usluga"
+            kind: "Tip"
+            scope: "Opsezi"
+            scopes: "Opsezi"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Posebna"
+          authorizations:
+            user: "Korisnik"
+            last_used: "Zadnje korišteno"
+            status: "Statust"
+            actions: "Akcije"
+          activity:
+            time: "Vrijeme"
+            user: "Korisnik"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Onemogućeno"
+            client_trust:
+              approved: "Odobrio/la"
+            authorization_status:
+              active: "Aktivno"
+              revoked: "Opoziv"
+            activity_outcome:
+              success: "Uspjeh"
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućeno"
+              disabled: "Onemogućeno"
+            primitive_kind:
+              all: "Svi tipovi"
+              resource: "Resurs"
+            primitive_risk:
+              read: "Samo za čitanje"
+              moderation: "Moderiranje"
+            filter:
+              all: "Sve"
+          never: "nikada"
+          actions:
+            revoke: "Povuci"
         experimental:
           title: "Eksperimentalno"
           header_description: "Uključite ili isključite eksperimentalne značajke za svoju web stranicu, većinu njih možete kontrolirati na grupnoj osnovi"
@@ -5941,6 +6014,7 @@ hr:
         site_traffic:
           series:
             anonymous: "Anonimno"
+          crawler_learn_more: "Saznajte više"
         period:
           last_7_days: "Zadnjih 7 dana"
           last_30_days: "Zadnjih 30 dana"
@@ -7461,12 +7535,11 @@ hr:
           multiselect: "Višestruki odabir"
       site_text:
         description: "Možete prilagoditi bilo koji tekst na svom forumu."
-        search: "Potražite tekst koji želite urediti"
+        search_label: "Pretraživanje"
+        theme_disabled: "Onemogućeno"
+        filters: "Filteri"
         edit: "Uredi"
-        revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite poništiti promjene?"
-        go_back: "Natrag na pretraživanje"
-        recommended: "Preporučujemo da prilagodite sljedeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Pokazuj samo promijenjeno"
         locale: "Jezik:"
         more_than_50_results: "Postoji više od 50 rezultata. Molimo suzite kriterije vaše pretrage."

@@ -11,6 +11,9 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/411337"
       requires_plugin_enabled: false
       permanent_warning: false
+  voice_verbose_logging:
+    default: false
+    client: true
   voice_allowed_groups:
     type: group_list
     list_type: compact
@@ -90,11 +93,40 @@ plugins:
     default: ""
   voice_livekit_mesh_fallback:
     default: false
+  voice_livekit_agent_enabled:
+    default: false
+    validator: "VoiceLivekitAgentValidator"
+    refresh: true
+  voice_livekit_agent_invite_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1" # auto group admins
+    allow_any: false
+    refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
+    depends_on:
+      - voice_livekit_agent_enabled
   voice_livekit_recording_enabled:
     default: false
     client: true
   voice_livekit_recording_filepath:
     default: "voice/{room_name}-{utc}"
+  voice_livekit_recording_s3_region:
+    default: "us-east-1"
+  voice_livekit_recording_s3_access_key_id:
+    default: ""
+    secret: true
+  voice_livekit_recording_s3_secret_access_key:
+    default: ""
+    secret: true
+  voice_livekit_recording_s3_endpoint:
+    default: ""
+    regex: '^https://[a-zA-Z0-9.-]+(:[0-9]+)?$'
+  voice_livekit_recording_s3_bucket:
+    default: ""
+    regex: '^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$'
+    validator: "VoiceLivekitRecordingS3BucketValidator"
   voice_video_enabled:
     default: true
     client: true
@@ -159,6 +191,8 @@ plugins:
     client: true
   voice_badges_enabled:
     default: true
+    depends_on:
+      - voice_enabled
   voice_analytics_enabled:
     default: true
   voice_session_retention_days:

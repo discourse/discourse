@@ -7,6 +7,7 @@ import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
+import productionEmberDeprecations from "./lib/production-ember-deprecations.mjs";
 import { exitIfDevServerRunning } from "./lib/rolldown-devserver-lock.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
@@ -73,7 +74,6 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      vendor: "vendor.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -98,6 +98,7 @@ export function buildConfig({ devMode } = {}) {
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
       discourseSourceImports(),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

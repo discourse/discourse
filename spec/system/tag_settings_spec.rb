@@ -23,6 +23,30 @@ describe "Tag Settings" do
   end
 
   context "when using the tag settings page" do
+    it "lets users set and clear the tag source language without assuming a default" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      sign_in(admin)
+      tag_settings_page.visit_tab(tag_1, "localizations")
+
+      expect(form.field("locale")).to have_value(
+        PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+      )
+      form.field("locale").select("ja")
+      tag_settings_page.click_save
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      page.refresh
+      expect(form.field("locale")).to have_value("ja")
+
+      form.field("locale").select_none
+      tag_settings_page.click_save
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      page.refresh
+      expect(form.field("locale")).to have_value(
+        PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+      )
+    end
+
     it "loads the tag edit page for tags with empty slugs" do
       tag_1.update_column(:slug, "")
       sign_in(admin)

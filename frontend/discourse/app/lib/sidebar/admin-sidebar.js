@@ -528,17 +528,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return !currentUser.admin && currentUser.moderator;
   }
 
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
+  }
+
   filterNoResultsDescription(filter) {
     const escapedFilter = escapeExpression(filter);
 
     i18n("sidebar.no_results.description_admin_search", {
       filter: escapedFilter,
     });
-  }
-
-  get onSearchClick() {
-    getOwnerWithFallback(this)
-      .lookup("service:modal")
-      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

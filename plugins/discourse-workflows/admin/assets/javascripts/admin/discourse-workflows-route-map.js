@@ -1,6 +1,8 @@
 export default {
   resource: "admin.adminPlugins.show",
   path: "/plugins",
+  bundleName: "workflows-admin",
+
   map() {
     this.route("discourse-workflows", { path: "workflows" }, function () {
       this.route("new");

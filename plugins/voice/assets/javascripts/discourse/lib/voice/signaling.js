@@ -1,13 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 
 export default class SignalingManager {
-  static #defaultCandidateBatchDelayMs = 75;
-  static #defaultCandidateBatchSize = 5;
-  static #defaultHttpBatchDelayMs = 200;
-  // The server rejects batches with more than 25 events for one recipient;
-  // flushing at 20 keeps a candidate batch appended mid-window under that cap.
-  static #httpFlushEventThreshold = 20;
-
   static peerKey(roomId, userId) {
     return `${roomId}:${userId}`;
   }
@@ -36,6 +30,15 @@ export default class SignalingManager {
       })),
     };
   }
+
+  static #defaultCandidateBatchDelayMs = 75;
+  static #defaultCandidateBatchSize = 5;
+
+  static #defaultHttpBatchDelayMs = 200;
+
+  // The server rejects batches with more than 25 events for one recipient;
+  // flushing at 20 keeps a candidate batch appended mid-window under that cap.
+  static #httpFlushEventThreshold = 20;
 
   #candidateBatchDelayMs;
   #candidateBatchSize;
@@ -106,36 +109,6 @@ export default class SignalingManager {
     await this.#postSignals(roomId, recipientId, [payload]);
   }
 
-  #queue(roomId, recipientId, payload) {
-    const key = SignalingManager.peerKey(roomId, recipientId);
-    const queue = this.#signalQueues.get(key) || [];
-    queue.push(payload);
-    this.#signalQueues.set(key, queue);
-
-    if (queue.length >= this.#candidateBatchSize) {
-      this.flushQueued(roomId, recipientId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush signal queue", error);
-      });
-      return;
-    }
-
-    const existingTimer = this.#signalFlushTimers.get(key);
-    if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
-
-    const timer = setTimeout(() => {
-      this.#signalFlushTimers.delete(key);
-      this.flushQueued(roomId, recipientId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush signal queue", error);
-      });
-    }, this.#candidateBatchDelayMs);
-
-    this.#signalFlushTimers.set(key, timer);
-  }
-
   async flushQueued(roomId, recipientId) {
     const key = SignalingManager.peerKey(roomId, recipientId);
     const queue = this.#signalQueues.get(key);
@@ -157,153 +130,6 @@ export default class SignalingManager {
     }
 
     await this.#postSignals(roomId, recipientId, queue);
-  }
-
-  async #postSignals(roomId, recipientId, events) {
-    if (!events?.length || !this.#isActiveRoom(roomId)) {
-      return;
-    }
-
-    await this.#enqueueHttp(roomId, recipientId, events);
-  }
-
-  #enqueueHttp(roomId, recipientId, events) {
-    if (this.#destroyed || !roomId || !recipientId || !events?.length) {
-      return Promise.resolve();
-    }
-
-    let entry = this.#httpSignalQueues.get(roomId);
-
-    if (!entry) {
-      entry = {
-        recipients: new Map(),
-        pending: [],
-      };
-
-      this.#httpSignalQueues.set(roomId, entry);
-    }
-
-    const roomQueue = entry.recipients;
-    const existingEvents = roomQueue.get(recipientId);
-
-    if (existingEvents) {
-      existingEvents.push(...events);
-    } else {
-      roomQueue.set(recipientId, [...events]);
-    }
-
-    const promise = new Promise((resolve, reject) => {
-      entry.pending.push({ recipientId, resolve, reject });
-    });
-
-    const queuedEvents = roomQueue.get(recipientId);
-    if (queuedEvents.length >= SignalingManager.#httpFlushEventThreshold) {
-      const timer = this.#httpSignalFlushTimers.get(roomId);
-      if (timer) {
-        clearTimeout(timer);
-        this.#httpSignalFlushTimers.delete(roomId);
-      }
-      this.#flushHttp(roomId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush HTTP signal queue", error);
-      });
-    } else {
-      this.#scheduleHttpFlush(roomId);
-    }
-
-    return promise;
-  }
-
-  #scheduleHttpFlush(roomId) {
-    if (this.#destroyed || this.#httpSignalFlushTimers.has(roomId)) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      this.#httpSignalFlushTimers.delete(roomId);
-      this.#flushHttp(roomId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush HTTP signal queue", error);
-      });
-    }, this.#httpBatchDelayMs);
-
-    this.#httpSignalFlushTimers.set(roomId, timer);
-  }
-
-  async #flushHttp(roomId) {
-    const entry = this.#httpSignalQueues.get(roomId);
-    if (!entry) {
-      return;
-    }
-
-    if (!this.#isActiveRoom(roomId)) {
-      entry.recipients?.clear?.();
-      this.#settlePending(entry.pending.splice(0), "resolve");
-      this.#httpSignalQueues.delete(roomId);
-      return;
-    }
-
-    const roomQueue = entry.recipients;
-    const pending = entry.pending;
-    entry.recipients = new Map();
-    entry.pending = [];
-
-    if (!roomQueue?.size) {
-      this.#settlePending(pending, "resolve");
-      if (!entry.recipients.size && !entry.pending.length) {
-        this.#httpSignalQueues.delete(roomId);
-      }
-      return;
-    }
-
-    const messages = [];
-    const activeRecipientIds = new Set();
-
-    roomQueue.forEach((events, recipientId) => {
-      if (!events?.length || !this.#hasPeer(roomId, recipientId)) {
-        return;
-      }
-
-      messages.push({
-        recipient_id: recipientId,
-        events,
-      });
-      activeRecipientIds.add(recipientId);
-    });
-
-    const [batchPending, droppedPending] = this.#partitionPending(
-      pending,
-      activeRecipientIds
-    );
-    this.#settlePending(droppedPending, "resolve");
-
-    if (!messages.length) {
-      this.#settlePending(batchPending, "resolve");
-      if (!entry.recipients.size && !entry.pending.length) {
-        this.#httpSignalQueues.delete(roomId);
-      }
-      return;
-    }
-
-    const payload = SignalingManager.#buildPayload(messages);
-
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] 🚀 sending ${messages.length} batched signal recipient(s) in room ${roomId}`
-    );
-
-    try {
-      await this.#requestSignals(roomId, payload);
-
-      this.#settlePending(batchPending, "resolve");
-    } catch (error) {
-      this.#settlePending(batchPending, "reject", error);
-      throw error;
-    } finally {
-      if (!entry.recipients.size && !entry.pending.length) {
-        this.#httpSignalQueues.delete(roomId);
-      }
-    }
   }
 
   clearForPeer(roomId, recipientId) {
@@ -389,6 +215,178 @@ export default class SignalingManager {
     });
     this.#httpSignalQueues.clear();
     this.#signalQueues.clear();
+  }
+
+  #queue(roomId, recipientId, payload) {
+    const key = SignalingManager.peerKey(roomId, recipientId);
+    const queue = this.#signalQueues.get(key) || [];
+    queue.push(payload);
+    this.#signalQueues.set(key, queue);
+
+    if (queue.length >= this.#candidateBatchSize) {
+      this.flushQueued(roomId, recipientId).catch(() => {
+        voiceLog.warn("[voice] failed to flush signal queue");
+      });
+      return;
+    }
+
+    const existingTimer = this.#signalFlushTimers.get(key);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+
+    const timer = setTimeout(() => {
+      this.#signalFlushTimers.delete(key);
+      this.flushQueued(roomId, recipientId).catch(() => {
+        voiceLog.warn("[voice] failed to flush signal queue");
+      });
+    }, this.#candidateBatchDelayMs);
+
+    this.#signalFlushTimers.set(key, timer);
+  }
+
+  async #postSignals(roomId, recipientId, events) {
+    if (!events?.length || !this.#isActiveRoom(roomId)) {
+      return;
+    }
+
+    await this.#enqueueHttp(roomId, recipientId, events);
+  }
+
+  #enqueueHttp(roomId, recipientId, events) {
+    if (this.#destroyed || !roomId || !recipientId || !events?.length) {
+      return Promise.resolve();
+    }
+
+    let entry = this.#httpSignalQueues.get(roomId);
+
+    if (!entry) {
+      entry = {
+        recipients: new Map(),
+        pending: [],
+      };
+
+      this.#httpSignalQueues.set(roomId, entry);
+    }
+
+    const roomQueue = entry.recipients;
+    const existingEvents = roomQueue.get(recipientId);
+
+    if (existingEvents) {
+      existingEvents.push(...events);
+    } else {
+      roomQueue.set(recipientId, [...events]);
+    }
+
+    const promise = new Promise((resolve, reject) => {
+      entry.pending.push({ recipientId, resolve, reject });
+    });
+
+    const queuedEvents = roomQueue.get(recipientId);
+    if (queuedEvents.length >= SignalingManager.#httpFlushEventThreshold) {
+      const timer = this.#httpSignalFlushTimers.get(roomId);
+      if (timer) {
+        clearTimeout(timer);
+        this.#httpSignalFlushTimers.delete(roomId);
+      }
+      this.#flushHttp(roomId).catch(() => {
+        voiceLog.warn("[voice] failed to flush HTTP signal queue");
+      });
+    } else {
+      this.#scheduleHttpFlush(roomId);
+    }
+
+    return promise;
+  }
+
+  #scheduleHttpFlush(roomId) {
+    if (this.#destroyed || this.#httpSignalFlushTimers.has(roomId)) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      this.#httpSignalFlushTimers.delete(roomId);
+      this.#flushHttp(roomId).catch(() => {
+        voiceLog.warn("[voice] failed to flush HTTP signal queue");
+      });
+    }, this.#httpBatchDelayMs);
+
+    this.#httpSignalFlushTimers.set(roomId, timer);
+  }
+
+  async #flushHttp(roomId) {
+    const entry = this.#httpSignalQueues.get(roomId);
+    if (!entry) {
+      return;
+    }
+
+    if (!this.#isActiveRoom(roomId)) {
+      entry.recipients?.clear?.();
+      this.#settlePending(entry.pending.splice(0), "resolve");
+      this.#httpSignalQueues.delete(roomId);
+      return;
+    }
+
+    const roomQueue = entry.recipients;
+    const pending = entry.pending;
+    entry.recipients = new Map();
+    entry.pending = [];
+
+    if (!roomQueue?.size) {
+      this.#settlePending(pending, "resolve");
+      if (!entry.recipients.size && !entry.pending.length) {
+        this.#httpSignalQueues.delete(roomId);
+      }
+      return;
+    }
+
+    const messages = [];
+    const activeRecipientIds = new Set();
+
+    roomQueue.forEach((events, recipientId) => {
+      if (!events?.length || !this.#hasPeer(roomId, recipientId)) {
+        return;
+      }
+
+      messages.push({
+        recipient_id: recipientId,
+        events,
+      });
+      activeRecipientIds.add(recipientId);
+    });
+
+    const [batchPending, droppedPending] = this.#partitionPending(
+      pending,
+      activeRecipientIds
+    );
+    this.#settlePending(droppedPending, "resolve");
+
+    if (!messages.length) {
+      this.#settlePending(batchPending, "resolve");
+      if (!entry.recipients.size && !entry.pending.length) {
+        this.#httpSignalQueues.delete(roomId);
+      }
+      return;
+    }
+
+    const payload = SignalingManager.#buildPayload(messages);
+
+    voiceLog.info(
+      `[voice] 🚀 sending ${messages.length} batched signal recipient(s) in room ${roomId}`
+    );
+
+    try {
+      await this.#requestSignals(roomId, payload);
+
+      this.#settlePending(batchPending, "resolve");
+    } catch (error) {
+      this.#settlePending(batchPending, "reject", error);
+      throw error;
+    } finally {
+      if (!entry.recipients.size && !entry.pending.length) {
+        this.#httpSignalQueues.delete(roomId);
+      }
+    }
   }
 
   #partitionPending(pending, allowedRecipientIds, clearedRecipientId = null) {

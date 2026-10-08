@@ -42,6 +42,99 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "permalink topic URL placeholders" do
+      fab!(:topic)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@topics, { 291_850_680 => topic.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        source_db.execute(<<~SQL)
+          CREATE TABLE permalinks (
+            url TEXT, topic_id INTEGER, post_id INTEGER, category_id INTEGER,
+            tag_id INTEGER, user_id INTEGER, external_url TEXT, external_url_placeholders TEXT
+          )
+        SQL
+        source_db.execute(
+          "INSERT INTO permalinks (url, external_url, external_url_placeholders) VALUES (?, ?, ?)",
+          [
+            "old-feed",
+            "/[notice-topic].rss",
+            [{ type: "topic_url", id: 291_850_680, placeholder: "[notice-topic]" }].to_json,
+          ],
+        )
+      end
+
+      after { source_db.close }
+
+      describe "#calculate_external_url" do
+        it "resolves a topic URL to the destination ID and final slug" do
+          topic.update!(title: "Final notice slug")
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+
+          expect(importer.calculate_external_url(row)).to eq("/t/final-notice-slug/#{topic.id}.rss")
+          expect(topic.id).not_to eq(291_850_680)
+        end
+
+        it "skips the URL when a later topic placeholder has no mapping" do
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          row["external_url"] += "?next=[missing-topic]"
+          placeholders = JSON.parse(row["external_url_placeholders"])
+          placeholders << { type: "topic_url", id: 999, placeholder: "[missing-topic]" }
+          row["external_url_placeholders"] = placeholders.to_json
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 999/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+
+        it "warns and returns no URL when the mapped topic no longer exists" do
+          importer.instance_variable_set(:@topics, { 291_850_680 => -999 })
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+      end
+
+      describe "#import_permalinks" do
+        it "warns and skips a permalink whose topic mapping is missing" do
+          importer.instance_variable_set(:@topics, {})
+
+          expect { importer.import_permalinks }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 291850680/,
+          ).to_stdout
+
+          expect(Permalink.exists?(url: "old-feed")).to eq(false)
+        end
+
+        it "preserves an existing destination permalink" do
+          Permalink.create!(url: "old-feed", external_url: "/reviewed-feed.rss")
+
+          importer.import_permalinks
+
+          expect(Permalink.find_by!(url: "old-feed").external_url).to eq("/reviewed-feed.rss")
+        end
+      end
+    end
+
     describe "importing notification choices" do
       fab!(:subscriber, :user)
       fab!(:category)
@@ -1493,6 +1586,175 @@ if generic_import_dependencies_available
         source_db&.close
       end
     end
+
+    describe "#update_category_read_restricted" do
+      it "reconciles uploads when imported permissions restrict an existing category" do
+        category = Fabricate(:category)
+        CategoryGroup.create!(
+          category: category,
+          group: Group[:admins],
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        expect_enqueued_with(
+          job: :update_category_upload_security,
+          args: {
+            category_id: category.id,
+          },
+        ) { described_class.allocate.update_category_read_restricted }
+
+        expect(category.reload.read_restricted).to eq(true)
+      end
+    end
+
+    describe "#import_user_associated_groups" do
+      fab!(:employee, :user)
+      fab!(:customer, :user)
+      fab!(:claimed_customer, :user)
+      fab!(:manual_customer, :user)
+      fab!(:employee_group, :group)
+      fab!(:customer_group, :group)
+      fab!(:unlinked_group, :group)
+
+      fab!(:internal_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Internal",
+          provider_name: "oidc",
+          provider_id: "SailPoint Internal",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:employee_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Employee",
+          provider_name: "oidc",
+          provider_id: "SailPoint Employee",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:customer_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "oidc",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:saml_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "saml",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(
+            :@users,
+            { 10 => employee.id, 20 => customer.id, 30 => claimed_customer.id },
+          )
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      def claims_for(user)
+        user.associated_groups.reload.order(:provider_id).pluck(:provider_name, :provider_id)
+      end
+
+      before do
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: internal_claim)
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: employee_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: customer_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: saml_claim)
+
+        [employee_group, customer_group, unlinked_group].each do |group|
+          group.group_users.delete_all
+        end
+        GroupUser.create!(group: employee_group, user: employee)
+        GroupUser.create!(group: customer_group, user: customer)
+        GroupUser.create!(group: unlinked_group, user: customer)
+        GroupUser.create!(group: customer_group, user: claimed_customer)
+        GroupUser.create!(group: customer_group, user: manual_customer)
+        UserAssociatedGroup.create!(user: claimed_customer, associated_group: customer_claim)
+
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: true)],
+        )
+      end
+
+      it "seeds every claim linked to an imported member's groups, once" do
+        expect { importer.import_user_associated_groups }.to change {
+          UserAssociatedGroup.count
+        }.by(3)
+
+        expect(claims_for(employee)).to eq(
+          [%w[oidc SailPoint\ Employee], %w[oidc SailPoint\ Internal]],
+        )
+        expect(claims_for(customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(claimed_customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(manual_customer)).to be_empty
+        expect(saml_claim.reload.users).to be_empty
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "marks the seeded associated groups as used and leaves the others alone" do
+        importer.import_user_associated_groups
+
+        expect(internal_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(employee_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(customer_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(saml_claim.reload.last_used).to be_within(1.minute).of(2.weeks.ago)
+      end
+
+      it "reconciles seeded memberships with the claims returned by subsequent logins" do
+        GroupUser.create!(group: unlinked_group, user: employee)
+        importer.import_user_associated_groups
+
+        result = Auth::Result.new
+        result.user = employee
+        result.authenticator_name = "oidc"
+        result.extra_data = { provider: "oidc" }
+        result.associated_groups = [{ id: employee_claim.provider_id, name: employee_claim.name }]
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to contain_exactly(employee_claim)
+        expect(employee.groups.reload).to include(employee_group, unlinked_group)
+
+        result.associated_groups = []
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to be_empty
+        expect(employee.groups.reload).not_to include(employee_group)
+        expect(employee.groups).to include(unlinked_group)
+      end
+
+      it "does nothing when no enabled authenticator provides group claims" do
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: false)],
+        )
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "does nothing when the provider's associated groups grant no Discourse group" do
+        GroupAssociatedGroup.where.not(associated_group: saml_claim).delete_all
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+    end
   end
 
   RSpec.describe BulkImport::Base do
@@ -1622,8 +1884,8 @@ if generic_import_dependencies_available
     end
 
     describe "#process_user" do
-      def build_user_importer
-        importer = described_class.allocate
+      def build_user_importer(importer_class = described_class)
+        importer = importer_class.allocate
         importer.instance_variable_set(:@usernames_lower, Set.new)
         importer.instance_variable_set(:@last_user_id, 0)
         importer.instance_variable_set(
@@ -1674,6 +1936,186 @@ if generic_import_dependencies_available
         user = importer.process_user(imported_id: 1, username: long_name)
 
         expect(user[:username]).to eq("#{"风" * 58}_1")
+      end
+
+      describe "reserving valid usernames" do
+        def import_usernames(importer, rows)
+          importer.reserve_valid_usernames(rows)
+          rows.map do |row|
+            external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+            importer.process_user(
+              imported_id: row["id"],
+              username: row["username"],
+              email: row["email"],
+              external_id: external_id,
+            )
+          end
+        end
+
+        it "suffixes a sanitized username instead of a later valid one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "a_a_" }, { "id" => 2, "username" => "A_A" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[a_a_1 A_A])
+        end
+
+        it "skips suffixes that later valid usernames reserve" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Alex_R_" },
+                { "id" => 2, "username" => "Alex_R" },
+                { "id" => 3, "username" => "Alex_R_1" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alex_R_2 Alex_R Alex_R_1])
+        end
+
+        it "reserves unicode usernames that are valid under the unicode setting" do
+          SiteSetting.unicode_usernames = true
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michał_1 Michał])
+        end
+
+        it "does not reserve unicode usernames that the ASCII setting transliterates" do
+          SiteSetting.unicode_usernames = false
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michal Michal_1])
+        end
+
+        it "keeps the lowest source ID for valid usernames that differ only in case" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "manuel" }, { "id" => 2, "username" => "Manuel" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[manuel Manuel_1])
+        end
+
+        it "reserves nothing for rows that map onto an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@emails, { "existing@example.com" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Bob_" },
+                { "id" => 2, "username" => "Bob", "email" => "existing@example.com" },
+                { "id" => 3, "username" => "Carol_", "email" => "shared@example.com" },
+                { "id" => 4, "username" => "Carol", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Bob Bob Carol Carol])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, true])
+        end
+
+        it "keeps an email available when an external ID maps an earlier row to an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@external_ids, { "existing-id" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Existing",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "existing-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Existing Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([true, nil, nil])
+        end
+
+        it "keeps an email available when an external ID duplicates an earlier source row" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "First",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                {
+                  "id" => 2,
+                  "username" => "Duplicate",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                { "id" => 3, "username" => "Bob_" },
+                { "id" => 4, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[First Duplicate Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, nil])
+        end
+
+        it "reserves usernames for users without SSO records after a user with one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Alice",
+                  "sso_record" => { external_id: "alice-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alice Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, nil, nil])
+        end
+
+        it "does not let a reservation displace an existing site user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_get(:@usernames_lower) << "dana"
+
+          users = import_usernames(importer, [{ "id" => 1, "username" => "Dana" }])
+
+          expect(users.first[:username]).to eq("Dana_1")
+        end
       end
     end
 

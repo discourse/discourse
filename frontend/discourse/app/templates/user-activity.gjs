@@ -13,26 +13,26 @@ export default <template>
     <div class="user-navigation user-navigation-secondary">
       <DHorizontalOverflowNav @ariaLabel="User secondary - activity">
         <DNavigationItem
-          @route="userActivity.index"
-          @ariaCurrentContext="subNav"
           class="user-nav__activity-all"
+          @ariaCurrentContext="subNav"
+          @route="userActivity.index"
         >
           {{dIcon "bars-staggered"}}
           <span>{{i18n "user.filters.all"}}</span>
         </DNavigationItem>
 
         <DNavigationItem
-          @route="userActivity.topics"
-          @ariaCurrentContext="subNav"
           class="user-nav__activity-topics"
+          @ariaCurrentContext="subNav"
+          @route="userActivity.topics"
         >
           {{dIcon "list-ul"}}
           <span>{{i18n "user_action_groups.4"}}</span>
         </DNavigationItem>
         <DNavigationItem
-          @route="userActivity.replies"
-          @ariaCurrentContext="subNav"
           class="user-nav__activity-replies"
+          @ariaCurrentContext="subNav"
+          @route="userActivity.replies"
         >
           {{dIcon "reply"}}
           <span>{{i18n "user_action_groups.5"}}</span>
@@ -40,10 +40,10 @@ export default <template>
 
         {{#if @controller.user.showRead}}
           <DNavigationItem
-            @route="userActivity.read"
-            @ariaCurrentContext="subNav"
             class="user-nav__activity-read"
             title={{i18n "user.read_help"}}
+            @ariaCurrentContext="subNav"
+            @route="userActivity.read"
           >
             {{dIcon "clock-rotate-left"}}
             <span>{{i18n "user.read"}}</span>
@@ -52,9 +52,9 @@ export default <template>
 
         {{#if @controller.user.showDrafts}}
           <DNavigationItem
-            @route="userActivity.drafts"
-            @ariaCurrentContext="subNav"
             class="user-nav__activity-drafts"
+            @ariaCurrentContext="subNav"
+            @route="userActivity.drafts"
           >
             {{dIcon "pencil"}}
             <span>{{@controller.draftLabel}}</span>
@@ -63,9 +63,9 @@ export default <template>
 
         {{#if (gt @controller.model.pending_posts_count 0)}}
           <DNavigationItem
-            @route="userActivity.pending"
-            @ariaCurrentContext="subNav"
             class="user-nav__activity-pending"
+            @ariaCurrentContext="subNav"
+            @route="userActivity.pending"
           >
             {{dIcon "clock"}}
             <span>{{@controller.pendingLabel}}</span>
@@ -73,9 +73,9 @@ export default <template>
         {{/if}}
 
         <DNavigationItem
-          @route="userActivity.likesGiven"
-          @ariaCurrentContext="subNav"
           class="user-nav__activity-likes"
+          @ariaCurrentContext="subNav"
+          @route="userActivity.likesGiven"
         >
           {{dIcon "heart"}}
           <span>{{i18n "user_action_groups.1"}}</span>
@@ -83,9 +83,9 @@ export default <template>
 
         {{#if @controller.user.showBookmarks}}
           <DNavigationItem
-            @route="userActivity.bookmarks"
-            @ariaCurrentContext="subNav"
             class="user-nav__activity-bookmarks"
+            @ariaCurrentContext="subNav"
+            @route="userActivity.bookmarks"
           >
             {{dIcon "bookmark"}}
             <span>{{i18n "user_action_groups.3"}}</span>
@@ -93,8 +93,8 @@ export default <template>
         {{/if}}
 
         <PluginOutlet
-          @name="user-activity-bottom"
           @connectorTagName="li"
+          @name="user-activity-bottom"
           @outletArgs={{lazyHash model=@controller.model}}
         />
       </DHorizontalOverflowNav>

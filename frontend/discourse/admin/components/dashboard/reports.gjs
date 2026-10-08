@@ -435,16 +435,16 @@ export default class DashboardReports extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.reports.title"}}
-      @description={{i18n "admin.dashboard.reports_section.description"}}
+      ...attributes
       @bordered={{false}}
-      @layout="grid"
+      @description={{i18n "admin.dashboard.reports_section.description"}}
+      @endDate={{@endDate}}
+      @headerAction={{if this.canEdit this.openReportsConfig}}
       @headerActionIcon={{if this.canEdit "gear"}}
       @headerActionLabel="admin.dashboard.reports_section.header_action"
-      @headerAction={{if this.canEdit this.openReportsConfig}}
+      @layout="grid"
       @startDate={{@startDate}}
-      @endDate={{@endDate}}
-      ...attributes
+      @title={{i18n "admin.dashboard.sections.reports.title"}}
     >
       {{#if @fetchError}}
         <div class="db-section__error" role="alert">
@@ -458,7 +458,6 @@ export default class DashboardReports extends Component {
           {{#each this.effectiveCards key="key" as |card|}}
             {{#if (eq card.key this.freeFollow.key)}}
               <div
-                {{AnimateReflow this.resizeSignature}}
                 class={{dConcatClass
                   "db-report__card"
                   "--resize-placeholder"
@@ -466,25 +465,26 @@ export default class DashboardReports extends Component {
                   (if (gt card.rows 1) (concat "--rows-" card.rows))
                 }}
                 data-column={{this.columnFor card.key}}
+                {{AnimateReflow this.resizeSignature}}
               ></div>
             {{/if}}
             <div
-              {{FollowPointer (this.followRectFor card.key)}}
-              {{AnimateReflow
-                this.resizeSignature
-                disabled=(eq card.key this.freeFollow.key)
-              }}
               class={{dConcatClass
                 "db-report__card"
                 (if (gt card.cols 1) "--wide")
                 (if (gt card.rows 1) (concat "--rows-" card.rows))
                 (if (eq card.key this.freeFollow.key) "--floating")
               }}
-              data-identifier={{card.key}}
               data-column={{this.columnFor card.key}}
+              data-identifier={{card.key}}
+              {{FollowPointer (this.followRectFor card.key)}}
+              {{AnimateReflow
+                this.resizeSignature
+                disabled=(eq card.key this.freeFollow.key)
+              }}
             >
               <div class="db-report__header">
-                <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+                <a class="db-report__name" href={{card.url}}>{{card.title}}</a>
                 {{#if card.label}}
                   <div
                     class={{dConcatClass
@@ -511,12 +511,12 @@ export default class DashboardReports extends Component {
                     }}
                       {{#if Renderer}}
                         <Renderer
-                          @item={{card}}
-                          @payload={{card.payload}}
                           @filters={{hash
                             startDate=@startDate
                             endDate=@endDate
                           }}
+                          @item={{card}}
+                          @payload={{card.payload}}
                         />
                       {{/if}}
                     {{/let}}
@@ -526,14 +526,14 @@ export default class DashboardReports extends Component {
               {{#if (this.canResize card)}}
                 <DResizeHandles
                   @directions={{this.handleDirectionsFor card}}
-                  @handleClass="db-report__resize-handle"
                   @draggingClass="--resizing"
-                  @threshold={{8}}
+                  @handleClass="db-report__resize-handle"
                   @measure={{this.measureCard}}
-                  @onResizeStart={{fn this.onCardResizeStart card}}
                   @onResize={{fn this.onCardResize card}}
-                  @onResizeEnd={{fn this.onCardResizeEnd card}}
                   @onResizeCancel={{fn this.onCardResizeCancel card}}
+                  @onResizeEnd={{fn this.onCardResizeEnd card}}
+                  @onResizeStart={{fn this.onCardResizeStart card}}
+                  @threshold={{8}}
                 />
               {{/if}}
             </div>
@@ -541,10 +541,10 @@ export default class DashboardReports extends Component {
 
           {{#if this.addTileVisible}}
             <button
-              {{AnimateReflow this.resizeSignature}}
-              type="button"
-              class="db-report__add-report"
               aria-label={{i18n "admin.dashboard.reports_section.add"}}
+              class="db-report__add-report"
+              type="button"
+              {{AnimateReflow this.resizeSignature}}
               {{on "click" this.openReportsConfig}}
             >
               <span>{{dIcon "plus"}}

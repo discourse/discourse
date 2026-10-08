@@ -93,31 +93,6 @@ export default class LocalDatesCreate extends Component {
     return !deepEqual(this.currentUserTimezone, this.options?.timezone);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.send("focusFrom");
-  }
-
-  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
-  configChanged() {
-    this._renderPreview();
-  }
-
-  @debounce(INPUT_DELAY)
-  async _renderPreview() {
-    if (this.markup) {
-      const result = await cook(this.markup);
-      this.set("currentPreview", result);
-
-      schedule("afterRender", () => {
-        applyLocalDates(
-          document.querySelectorAll(".preview .discourse-local-date"),
-          this.siteSettings
-        );
-      });
-    }
-  }
-
   @computed("date", "toDate", "toTime")
   get isRange() {
     return this.date && (this.toDate || this.toTime);
@@ -319,10 +294,6 @@ export default class LocalDatesCreate extends Component {
     ];
   }
 
-  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
-    return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
-  }
-
   @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
   get markup() {
     let text;
@@ -358,12 +329,6 @@ export default class LocalDatesCreate extends Component {
       : i18n("discourse_local_dates.create.form.until");
   }
 
-  @action
-  updateFormat(format, event) {
-    event?.preventDefault();
-    this.set("format", format);
-  }
-
   @computed("fromSelected", "toSelected")
   get selectedDate() {
     return this.fromSelected ? this.date : this.toDate;
@@ -372,6 +337,22 @@ export default class LocalDatesCreate extends Component {
   @computed("fromSelected", "toSelected")
   get selectedTime() {
     return this.fromSelected ? this.time : this.toTime;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.send("focusFrom");
+  }
+
+  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  configChanged() {
+    this._renderPreview();
+  }
+
+  @action
+  updateFormat(format, event) {
+    event?.preventDefault();
+    this.set("format", format);
   }
 
   @action
@@ -439,15 +420,34 @@ export default class LocalDatesCreate extends Component {
     this.closeModal();
   }
 
+  @debounce(INPUT_DELAY)
+  async _renderPreview() {
+    if (this.markup) {
+      const result = await cook(this.markup);
+      this.set("currentPreview", result);
+
+      schedule("afterRender", () => {
+        applyLocalDates(
+          document.querySelectorAll(".preview .discourse-local-date"),
+          this.siteSettings
+        );
+      });
+    }
+  }
+
+  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
+    return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
+  }
+
   <template>
     <DModal
+      class="discourse-local-dates-create-modal --large"
+      @closeModal={{@closeModal}}
       @title={{if
         this.isEditing
         (i18n "discourse_local_dates.edit")
         (i18n "discourse_local_dates.title")
       }}
-      @closeModal={{@closeModal}}
-      class="discourse-local-dates-create-modal --large"
     >
       <:body>
         <div class="form">
@@ -476,11 +476,11 @@ export default class LocalDatesCreate extends Component {
               >
                 {{dIcon "calendar-days"}}
                 <DButton
+                  autofocus
+                  class="date-time"
+                  id="from-date-time"
                   @action={{this.focusFrom}}
                   @translatedLabel={{this.formattedFrom}}
-                  id="from-date-time"
-                  class="date-time"
-                  autofocus
                 />
               </div>
 
@@ -491,46 +491,46 @@ export default class LocalDatesCreate extends Component {
               >
                 {{dIcon "calendar-days"}}
                 <DButton
+                  class="date-time"
                   @action={{this.focusTo}}
                   @translatedLabel={{this.formattedTo}}
-                  class="date-time"
                 />
                 {{#if this.toFilled}}
                   <DButton
+                    class="delete-to-date"
                     @action={{this.eraseToDateTime}}
                     @icon="xmark"
-                    class="delete-to-date"
                   />
                 {{/if}}
               </div>
 
               {{#if this.site.desktopView}}
                 <TimezoneInput
+                  @onChange={{fn (mut this.timezone)}}
                   @options={{hash icon="globe"}}
                   @value={{this.timezone}}
-                  @onChange={{fn (mut this.timezone)}}
                 />
               {{/if}}
             </div>
 
             <div class="picker-panel">
               <DCalendarDateTimeInput
-                @datePickerId="local-date-create-form"
                 @date={{this.selectedDate}}
-                @time={{this.selectedTime}}
-                @minDate={{this.minDate}}
-                @timeFormat={{this.timeFormat}}
                 @dateFormat={{this.dateFormat}}
+                @datePickerId="local-date-create-form"
+                @minDate={{this.minDate}}
                 @onChangeDate={{this.changeSelectedDate}}
                 @onChangeTime={{this.changeSelectedTime}}
+                @time={{this.selectedTime}}
+                @timeFormat={{this.timeFormat}}
               />
             </div>
 
             {{#if this.site.mobileView}}
               <TimezoneInput
-                @value={{this.timezone}}
-                @options={{hash icon="globe"}}
                 @onChange={{fn (mut this.timezone)}}
+                @options={{hash icon="globe"}}
+                @value={{this.timezone}}
               />
             {{/if}}
           </div>
@@ -549,13 +549,13 @@ export default class LocalDatesCreate extends Component {
                     }}</p>
                   <div class="controls">
                     <ComboBox
+                      class="recurrence-input"
                       @content={{this.recurringOptions}}
-                      @value={{this.recurring}}
                       @onChange={{fn (mut this.recurring)}}
                       @options={{hash
                         none="discourse_local_dates.create.form.recurring_none"
                       }}
-                      class="recurrence-input"
+                      @value={{this.recurring}}
                     />
                   </div>
                 </div>
@@ -570,12 +570,12 @@ export default class LocalDatesCreate extends Component {
                   }}</p>
                 <div class="controls">
                   <MultiSelect
-                    @valueProperty={{null}}
-                    @nameProperty={{null}}
-                    @content={{this.allTimezones}}
-                    @value={{this.timezones}}
-                    @options={{hash allowAny=false maximum=5}}
                     class="timezones-input"
+                    @content={{this.allTimezones}}
+                    @nameProperty={{null}}
+                    @options={{hash allowAny=false maximum=5}}
+                    @value={{this.timezones}}
+                    @valueProperty={{null}}
                   />
                 </div>
               </div>
@@ -589,15 +589,15 @@ export default class LocalDatesCreate extends Component {
                     "discourse_local_dates.create.form.format_description"
                   }}
                   <a
-                    target="_blank"
                     href="https://momentjs.com/docs/#/parsing/string-format/"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     {{dIcon "circle-question"}}
                   </a>
                 </p>
                 <div class="controls">
-                  <DTextField @value={{this.format}} class="format-input" />
+                  <DTextField class="format-input" @value={{this.format}} />
                 </div>
               </div>
               <div class="control-group">
@@ -630,20 +630,20 @@ export default class LocalDatesCreate extends Component {
 
         {{#if this.isValid}}
           <DButton
+            class="btn-primary"
             @action={{this.save}}
             @label={{if
               this.isEditing
               "discourse_local_dates.create.form.save"
               "discourse_local_dates.create.form.insert"
             }}
-            class="btn-primary"
           />
         {{/if}}
 
         <DButton
+          class="btn-flat"
           @action={{this.cancel}}
           @translatedLabel={{i18n "cancel"}}
-          class="btn-flat"
         />
 
         <AdvancedModeToggle

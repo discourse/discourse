@@ -277,6 +277,7 @@ export default class CategoryRow extends Component {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <div
+      aria-checked={{this.isSelected}}
       class={{dConcatClass
         "category-row"
         "select-kit-row"
@@ -284,20 +285,19 @@ export default class CategoryRow extends Component {
         (if this.isHighlighted "is-highlighted")
         (if this.isNone "is-none")
       }}
-      role="menuitemradio"
+      data-guid={{this.guid}}
       data-index={{@index}}
       data-name={{this.rowName}}
-      data-value={{this.rowValue}}
       data-title={{this.title}}
+      data-value={{this.rowValue}}
+      role="menuitemradio"
+      tabindex="-1"
       title={{this.title}}
-      data-guid={{this.guid}}
       {{on "focusin" this.handleFocusIn}}
       {{on "mousedown" this.handleMouseDown}}
       {{on "mouseenter" this.handleMouseEnter passive=true}}
       {{on "click" this.handleClick}}
       {{on "keydown" this.handleKeyDown}}
-      aria-checked={{this.isSelected}}
-      tabindex="-1"
     >
 
       {{#if this.category}}
@@ -306,7 +306,7 @@ export default class CategoryRow extends Component {
         </div>
 
         {{#if this.shouldDisplayDescription}}
-          <div class="category-desc" aria-hidden="true">
+          <div aria-hidden="true" class="category-desc">
             {{dDirSpan this.descriptionText htmlSafe="true"}}
           </div>
         {{/if}}

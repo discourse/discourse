@@ -84,9 +84,9 @@ export default class VoiceMeshPrivacyWarningModal extends Component {
 
   <template>
     <DModal
+      class="voice-mesh-privacy-warning-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.mesh_privacy_warning.title"}}
-      class="voice-mesh-privacy-warning-modal"
     >
       <:body>
         <p class="voice-mesh-privacy-warning-modal__body">
@@ -94,8 +94,8 @@ export default class VoiceMeshPrivacyWarningModal extends Component {
         </p>
         <label class="voice-mesh-privacy-warning-modal__dont-show-again">
           <input
-            type="checkbox"
             checked={{this.dontShowAgain}}
+            type="checkbox"
             {{on "change" this.updateDontShowAgain}}
           />
           {{i18n "voice.mesh_privacy_warning.dont_show_again"}}
@@ -103,15 +103,15 @@ export default class VoiceMeshPrivacyWarningModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary voice-mesh-privacy-warning-modal__join"
           @action={{this.join}}
           @icon="phone"
           @label="voice.mesh_privacy_warning.join"
-          class="btn-primary voice-mesh-privacy-warning-modal__join"
         />
         <DButton
+          class="btn-flat voice-mesh-privacy-warning-modal__cancel"
           @action={{@closeModal}}
           @label="voice.mesh_privacy_warning.cancel"
-          class="btn-flat voice-mesh-privacy-warning-modal__cancel"
         />
       </:footer>
     </DModal>

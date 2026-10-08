@@ -5,17 +5,17 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <Categories
     @canSee={{@controller.canSee}}
-    @model={{@controller.model}}
-    @selectedCategories={{@controller.selectedCategories}}
     @hideMutedTags={{@controller.hideMutedTags}}
+    @model={{@controller.model}}
     @save={{@controller.save}}
+    @selectedCategories={{@controller.selectedCategories}}
     @siteSettings={{@controller.siteSettings}}
   />
 
   {{#if @controller.canSave}}
     <DSaveControls
-      @model={{@controller.model}}
       @action={{@controller.save}}
+      @model={{@controller.model}}
       @saved={{@controller.saved}}
     />
   {{else}}

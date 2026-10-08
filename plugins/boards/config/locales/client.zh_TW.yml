@@ -6,7 +6,23 @@
 
 zh_TW:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "標題"
+        icon: "圖標"
+        color: "顏色"
+        tag_name: "標簽"
+        default_sort_priority: "優先級"
+      create_board:
+        name: "名稱"
+        slug: "縮寫"
+        tag_names: "標簽"
+        category_ids: "分類"
     boards:
+      status:
+        all: "所有"
+        open: "開放"
+        archived: "已歸檔"
       board:
         remove_card: "移除"
         new_topic: "新主題..."

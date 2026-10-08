@@ -16,9 +16,6 @@ register_asset "stylesheets/patreon.scss"
 register_svg_icon "fab-patreon"
 register_svg_icon "patreon-new"
 
-# Site setting validators must be loaded before initialize
-require_relative "lib/validators/patreon_login_enabled_validator"
-
 module ::Patreon
   PLUGIN_NAME = "discourse-patreon"
 end
@@ -113,7 +110,8 @@ class ::OmniAuth::Strategies::Patreon < ::OmniAuth::Strategies::OAuth2
   option :client_options,
          site: "https://www.patreon.com",
          authorize_url: "https://www.patreon.com/oauth2/authorize",
-         token_url: "https://api.patreon.com/oauth2/token"
+         token_url: "https://api.patreon.com/oauth2/token",
+         auth_scheme: :request_body
 
   option :authorize_params, response_type: "code"
 
@@ -194,8 +192,12 @@ class Auth::PatreonAuthenticator < Auth::ManagedAuthenticator
     result
   end
 
-  def enabled?
-    SiteSetting.patreon_login_enabled
+  def enable_setting
+    :patreon_login_enabled
+  end
+
+  def required_settings
+    %i[patreon_client_id patreon_client_secret patreon_creator_discourse_username]
   end
 
   def primary_email_verified?(auth_token)

@@ -16,6 +16,15 @@ export default class DDatePicker extends Component {
   maxDate = null;
   _picker = null;
 
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || i18n("dates.placeholder");
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
+
   @computed("site.mobileView")
   get inputType() {
     return this.site?.mobileView ? "date" : "text";
@@ -95,27 +104,18 @@ export default class DDatePicker extends Component {
     }
   }
 
-  @computed("_placeholder")
-  get placeholder() {
-    return this._placeholder || i18n("dates.placeholder");
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
-  }
-
   _opts() {
     return null;
   }
 
   <template>
     <Input
-      @type={{this.inputType}}
+      autocomplete="off"
       class="date-picker"
       placeholder={{this.placeholder}}
-      @value={{this.value}}
-      autocomplete="off"
       ...attributes
+      @type={{this.inputType}}
+      @value={{this.value}}
     />
   </template>
 }

@@ -23,10 +23,10 @@ export default class RewindCallout extends Component {
     {{#if this.showCallout}}
       <div class="rewind-callout__container">
         <DButton
-          @action={{this.openRewind}}
           class="rewind-callout btn-transparent"
+          @action={{this.openRewind}}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 515.48 76.72">
+          <svg viewBox="0 0 515.48 76.72" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 0h515.48v76.72H0z" style="fill:#faf7e4" />
             <path
               d="M42.27 12.67c-12.8 0-23.58 10.38-23.58 23.18v24l23.57-.02c12.8 0 23.18-10.78 23.18-23.58S55.05 12.67 42.26 12.67z"
@@ -70,19 +70,19 @@ export default class RewindCallout extends Component {
             />
 
             <text
-              x="108"
-              y="22"
-              text-anchor="middle"
               dominant-baseline="middle"
               style="font-size: 20px; transform: skewX(15deg); fill: #010101; letter-spacing: .025em;"
+              text-anchor="middle"
+              x="108"
+              y="22"
             >{{i18n "discourse_rewind.title"}}</text>
 
             <text
-              x="115"
-              y="50"
-              text-anchor="middle"
               dominant-baseline="middle"
               style="font-size: 32px; font-weight: bold; fill: #010101;"
+              text-anchor="middle"
+              x="115"
+              y="50"
             >{{this.rewind.fetchRewindYear}}</text>
 
           </svg>

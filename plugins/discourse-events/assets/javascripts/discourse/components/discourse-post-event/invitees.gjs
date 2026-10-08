@@ -10,17 +10,6 @@ import Invitee from "./invitee";
 export default class DiscoursePostEventInvitees extends Component {
   @service modal;
 
-  @action
-  showInvitees() {
-    this.modal.show(PostEventInvitees, {
-      model: {
-        event: this.args.event,
-        title: this.args.event.title,
-        extraClass: this.args.event.extraClass,
-      },
-    });
-  }
-
   get hasAttendees() {
     return this.args.event.stats.going > 0;
   }
@@ -32,6 +21,17 @@ export default class DiscoursePostEventInvitees extends Component {
   get inviteesTitle() {
     return i18n("discourse_post_event.models.invitee.status.going_count", {
       count: this.args.event.stats.going,
+    });
+  }
+
+  @action
+  showInvitees() {
+    this.modal.show(PostEventInvitees, {
+      model: {
+        event: this.args.event,
+        title: this.args.event.title,
+        extraClass: this.args.event.extraClass,
+      },
     });
   }
 

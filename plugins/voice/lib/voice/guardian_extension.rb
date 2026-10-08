@@ -91,6 +91,18 @@ module Voice
       room.public? || can_manage_voice_room?(room)
     end
 
+    # Room-independent half of can_invite_voice_agent?, so the client can learn
+    # whether to offer the action before any room is chosen.
+    def can_invite_voice_agents?
+      return false unless can_access_voice?
+      user.in_any_groups?(SiteSetting.voice_livekit_agent_invite_allowed_groups_map)
+    end
+
+    def can_invite_voice_agent?(room)
+      can_invite_voice_agents? && can_join_voice_room?(room) && room.public? &&
+        Voice::AgentBot.available?
+    end
+
     def ensure_can_invite_to_voice_room!(room)
       unless can_invite_to_voice_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("voice.errors.not_authorized"))

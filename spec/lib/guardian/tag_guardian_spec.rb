@@ -10,6 +10,10 @@ RSpec.describe TagGuardian do
   fab!(:trust_level_3)
 
   describe "#can_see_tag?" do
+    it "returns false when the tag is missing" do
+      expect(Guardian.new(nil).can_see_tag?(nil)).to be_falsey
+    end
+
     it "returns false when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 

@@ -106,13 +106,6 @@ export default class HumanActivityTracker extends Service {
     this.#scheduleNextFlush();
   }
 
-  #scheduleNextFlush() {
-    this.#flushTimer = this.scheduleFlush(() => {
-      this.#flush();
-      this.#scheduleNextFlush();
-    });
-  }
-
   stop() {
     if (this.#flushTimer) {
       cancel(this.#flushTimer);
@@ -137,6 +130,13 @@ export default class HumanActivityTracker extends Service {
       window.removeEventListener("pagehide", this.#pagehideListener);
       this.#pagehideListener = null;
     }
+  }
+
+  #scheduleNextFlush() {
+    this.#flushTimer = this.scheduleFlush(() => {
+      this.#flush();
+      this.#scheduleNextFlush();
+    });
   }
 
   #handleActivity(event) {

@@ -20,7 +20,7 @@ class UserEmail < ActiveRecord::Base
   scope :secondary, -> { where(primary: false) }
 
   before_save -> { destroy_email_tokens(email_was) }, if: :will_save_change_to_email?
-
+  after_update -> { destroy_email_tokens(email) }, if: :saved_change_to_primary?
   after_destroy { destroy_email_tokens(email) }
   def self.ensure_consistency!
     user_ids_without_primary_email = DB.query_single <<~SQL

@@ -23,9 +23,9 @@ module(
       await render(
         <template>
           <RagDocumentSourcesModal
-            @model={{this.model}}
             @closeModal={{this.closeModal}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -55,9 +55,9 @@ module(
       await render(
         <template>
           <RagDocumentSourcesModal
-            @model={{this.model}}
             @closeModal={{this.closeModal}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );

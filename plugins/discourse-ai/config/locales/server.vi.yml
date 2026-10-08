@@ -25,6 +25,23 @@ vi:
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      navigation:
+        settings:
+          title: "Cài đặt trang web"
+        users:
+          title: "Thành viên"
+        groups:
+          title: "Nhóm"
+        review:
+          title: "Hàng đợi xem lại"
+        categories:
+          title: "Danh mục"
+        tags:
+          title: "Thẻ"
+        themes:
+          title: "Themes"
+        backups:
+          title: "Bản sao lưu"
       read_post:
         unknown_post: "tút"
       agents:

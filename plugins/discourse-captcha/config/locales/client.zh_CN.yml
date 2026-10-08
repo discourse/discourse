@@ -7,6 +7,8 @@
 zh_CN:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "测试"
       missing_token: "请完成人机验证。"
       verification_failed: "人机验证失败，请重试。"
       placeholder: 占位符

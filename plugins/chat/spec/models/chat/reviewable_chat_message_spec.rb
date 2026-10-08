@@ -168,6 +168,12 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(I18n.t(action.completed_message)).to eq("Author unsilenced.")
       end
 
+      it "is set apart from the actions that resolve the flag" do
+        secondary_bundles = reviewable.actions_for(moderator.guardian).bundles.select(&:secondary)
+
+        expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
+      end
+
       it "is not offered to a user who cannot unsilence the author" do
         expect(unsilence_action(Fabricate(:user).guardian)).to eq(nil)
       end

@@ -8,6 +8,10 @@ ca:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Fallits"
         reports:
           filters:
             sort_by:

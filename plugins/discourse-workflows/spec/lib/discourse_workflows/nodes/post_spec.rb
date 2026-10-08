@@ -843,7 +843,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
           },
           item: item,
         )
-      end.to raise_error(DiscourseWorkflows::NodeError, /Invalid post filter fragment/)
+      end.to raise_error(DiscourseWorkflows::NodeError, /Invalid post filter/)
     end
   end
 end

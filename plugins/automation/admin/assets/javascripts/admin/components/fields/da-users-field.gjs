@@ -19,17 +19,17 @@ export default class UsersField extends BaseField {
   <template>
     <section class="field users-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <UserChooser
-            @value={{@field.metadata.value}}
             @onChange={{this.onChangeUsers}}
             @options={{hash
               excludeCurrentUser=false
               disabled=@field.isDisabled
               allowEmails=true
             }}
+            @value={{@field.metadata.value}}
           />
 
           {{#if @field.metadata.allowsAutomation}}

@@ -182,21 +182,21 @@ export default class AiFeatures extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-features"
       @label={{i18n "discourse_ai.features.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-features"
     />
     <section class="ai-features admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.features.short_title"}}
         @descriptionLabel={{i18n "discourse_ai.features.description"}}
         @learnMoreUrl="todo"
+        @titleLabel={{i18n "discourse_ai.features.short_title"}}
       />
 
       <div class="ai-features__controls">
         <DNativeSelect
-          @value={{this.selectedFeatureGroup}}
           @includeNone={{false}}
           @onChange={{this.onFeatureGroupChange}}
+          @value={{this.selectedFeatureGroup}}
           as |select|
         >
           {{#each this.featureGroupOptions as |option|}}
@@ -207,11 +207,11 @@ export default class AiFeatures extends Component {
         </DNativeSelect>
 
         <DFilterInput
+          class="admin-filter__input"
           placeholder={{i18n "discourse_ai.features.filters.text"}}
           @filterAction={{this.onFilterChange}}
-          @value={{this.filterValue}}
-          class="admin-filter__input"
           @icons={{hash left="magnifying-glass"}}
+          @value={{this.filterValue}}
         />
       </div>
 
@@ -223,10 +223,10 @@ export default class AiFeatures extends Component {
         <div class="ai-features__no-results">
           <h3>{{i18n "discourse_ai.features.filters.no_results"}}</h3>
           <DButton
+            class="btn-default"
+            @action={{this.resetAndFocus}}
             @icon="arrow-rotate-left"
             @label="discourse_ai.features.filters.reset"
-            @action={{this.resetAndFocus}}
-            class="btn-default"
           />
         </div>
       {{/if}}

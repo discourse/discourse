@@ -4,8 +4,8 @@ import DEmptyState from "discourse/ui-kit/d-empty-state";
 export default <template>
   {{#if @controller.model.stream.noContent}}
     <DEmptyState
-      @title={{@controller.model.emptyState.title}}
       @body={{@controller.model.emptyState.body}}
+      @title={{@controller.model.emptyState.title}}
     />
   {{else}}
     <UserStream @stream={{@controller.model.stream}} />

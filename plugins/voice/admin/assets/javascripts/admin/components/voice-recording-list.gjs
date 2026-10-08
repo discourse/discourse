@@ -5,6 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -69,9 +70,20 @@ export default class VoiceRecordingList extends Component {
   <template>
     <section class="voice-recordings">
       <DPageSubheader
-        @titleLabel={{i18n "voice.admin.recordings_title"}}
         @descriptionLabel={{i18n "voice.admin.recordings.description"}}
+        @titleLabel={{i18n "voice.admin.recordings_title"}}
       />
+
+      {{#unless @model.last_webhook_at}}
+        <DFlashMessage
+          class="voice-recordings__webhook-note"
+          @flash={{i18n
+            "voice.admin.recordings.webhook_config_hint"
+            webhook_url=@model.webhook_url
+          }}
+          @type="info"
+        />
+      {{/unless}}
 
       {{#if this.recordings.length}}
         <table class="d-admin-table voice-recordings__table">
@@ -148,9 +160,9 @@ export default class VoiceRecordingList extends Component {
         <DConditionalLoadingSpinner @condition={{this.loadingMore}}>
           {{#if this.hasMore}}
             <DButton
+              class="btn-default voice-recordings__load-more"
               @action={{this.loadMore}}
               @label="voice.admin.recordings.load_more"
-              class="btn-default voice-recordings__load-more"
             />
           {{/if}}
         </DConditionalLoadingSpinner>

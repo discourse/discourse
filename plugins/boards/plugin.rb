@@ -25,6 +25,19 @@ end
 require_relative "lib/boards/engine"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/create_board/v1"
+      require_relative "lib/discourse_workflows/nodes/create_board_column/v1"
+      require_relative "lib/discourse_workflows/nodes/card_moved/v1"
+      [
+        DiscourseWorkflows::Nodes::CreateBoard::V1,
+        DiscourseWorkflows::Nodes::CreateBoardColumn::V1,
+        DiscourseWorkflows::Nodes::CardMoved::V1,
+      ]
+    end
+  end
+
   # Keep queued jobs from the standalone plugin executable across the deploy.
   legacy_jobs =
     if Jobs.const_defined?(:DiscourseKanban, false)
@@ -52,7 +65,7 @@ after_initialize do
   add_to_serializer(:current_user, :can_manage_boards) { scope.can_manage_boards? }
 
   add_to_serializer(:current_user, :can_edit_any_boards) do
-    scope.target_ids_with_any_acl_permissions(Boards::Board, %w[edit manage]).any?
+    Boards::Board.open.with_any_acl_permissions(scope, %w[edit manage]).exists?
   end
 
   add_to_class(:topic, :board_cards_map) { @board_cards_map }

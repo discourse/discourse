@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import LivekitRoomSession from "./livekit-session";
 
 // Owns the livekit sessions for SFU-transport rooms: connecting on join,
@@ -115,10 +116,8 @@ export default class LivekitCoordinator {
       try {
         await session.connect(livekit.url, livekit.token);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to connect to the media server for room ${room.id}`,
-          error
+        voiceLog.warn(
+          `[voice-livekit] failed to connect to the media server for room ${room.id}`
         );
         failureMessage = error?.unsupportedBrowser
           ? "voice.livekit.browser_unsupported"
@@ -159,6 +158,86 @@ export default class LivekitCoordinator {
     return true;
   }
 
+  // Mesh gets participant cleanup for free by destroying peers on the roster
+  // diff. The SFU doesn't consult our roster, so a participant expelled from
+  // it (heartbeat TTL expiry, kick with a failed server-side eviction) would
+  // stay audible forever — voice-canvas plays every stream in
+  // `remoteStreams`. Drop registry entries and subscriptions for identities
+  // absent from the roster, and derive the join/leave sounds mesh derives
+  // from peer churn.
+  syncRoster(roomId, participants) {
+    const currentUserId = this.#getCurrentUserId();
+    const known = this.#rosterIds.get(roomId) || new Set();
+    const next = new Set();
+    let hasNewPeer = false;
+    let hasPeerLeft = false;
+
+    for (const participant of participants) {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId === currentUserId) {
+        continue;
+      }
+
+      next.add(participantId);
+
+      // Mirror the mesh rule: the initial roster processed while the join is
+      // still connecting represents people already there, not arrivals.
+      if (
+        !known.has(participantId) &&
+        (known.size > 0 || !this.#isConnectingRoom(roomId))
+      ) {
+        hasNewPeer = true;
+      }
+    }
+
+    for (const knownId of known) {
+      if (!next.has(knownId)) {
+        hasPeerLeft = true;
+      }
+    }
+
+    this.#rosterIds.set(roomId, next);
+
+    const session = this.#sessions.get(roomId);
+    session?.syncAgentIdentities(participants);
+    for (const participant of participants) {
+      const userId = Number(participant.id);
+      if (userId >= 0) {
+        continue;
+      }
+      if (participant.role !== "speaker") {
+        session?.dropParticipant(userId);
+        this.#removeRemoteStream(roomId, userId);
+      } else if (!this.#getRemoteUserIds(roomId).includes(userId)) {
+        session?.restoreParticipant(userId);
+      }
+    }
+    for (const entryUserId of this.#getRemoteUserIds(roomId)) {
+      if (
+        entryUserId &&
+        entryUserId !== currentUserId &&
+        !next.has(entryUserId)
+      ) {
+        session?.dropParticipant(entryUserId);
+        this.#removeRemoteStream(roomId, entryUserId);
+      }
+    }
+
+    return { hasNewPeer, hasPeerLeft };
+  }
+
+  async replaceAudioTrack(newTrack) {
+    for (const [roomId, session] of this.#sessions) {
+      try {
+        await session.replaceAudioTrack(newTrack);
+      } catch {
+        voiceLog.warn(
+          `[voice-livekit] failed to replace the published audio track for room ${roomId}`
+        );
+      }
+    }
+  }
+
   #buildSession(roomId) {
     return new LivekitRoomSession({
       roomId,
@@ -196,8 +275,7 @@ export default class LivekitCoordinator {
       return;
     }
 
-    // eslint-disable-next-line no-console
-    console.warn(
+    voiceLog.warn(
       `[voice-livekit] disconnected from the media server for room ${roomId} (${reason})`
     );
 
@@ -226,78 +304,5 @@ export default class LivekitCoordinator {
       this.#showError("voice.livekit.reconnect_failed");
     }
     // "aborted": the session was torn down (leave, new join) mid-ladder.
-  }
-
-  // Mesh gets participant cleanup for free by destroying peers on the roster
-  // diff. The SFU doesn't consult our roster, so a participant expelled from
-  // it (heartbeat TTL expiry, kick with a failed server-side eviction) would
-  // stay audible forever — voice-canvas plays every stream in
-  // `remoteStreams`. Drop registry entries and subscriptions for identities
-  // absent from the roster, and derive the join/leave sounds mesh derives
-  // from peer churn.
-  syncRoster(roomId, participants) {
-    const currentUserId = this.#getCurrentUserId();
-    const known = this.#rosterIds.get(roomId) || new Set();
-    const next = new Set();
-    let hasNewPeer = false;
-    let hasPeerLeft = false;
-
-    for (const participant of participants) {
-      const participantId = Number(participant?.id);
-      if (
-        !participantId ||
-        participantId <= 0 ||
-        participantId === currentUserId
-      ) {
-        continue;
-      }
-
-      next.add(participantId);
-
-      // Mirror the mesh rule: the initial roster processed while the join is
-      // still connecting represents people already there, not arrivals.
-      if (
-        !known.has(participantId) &&
-        (known.size > 0 || !this.#isConnectingRoom(roomId))
-      ) {
-        hasNewPeer = true;
-      }
-    }
-
-    for (const knownId of known) {
-      if (!next.has(knownId)) {
-        hasPeerLeft = true;
-      }
-    }
-
-    this.#rosterIds.set(roomId, next);
-
-    const session = this.#sessions.get(roomId);
-    for (const entryUserId of this.#getRemoteUserIds(roomId)) {
-      if (
-        entryUserId &&
-        entryUserId !== currentUserId &&
-        !next.has(entryUserId)
-      ) {
-        session?.dropParticipant(entryUserId);
-        this.#removeRemoteStream(roomId, entryUserId);
-      }
-    }
-
-    return { hasNewPeer, hasPeerLeft };
-  }
-
-  async replaceAudioTrack(newTrack) {
-    for (const [roomId, session] of this.#sessions) {
-      try {
-        await session.replaceAudioTrack(newTrack);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to replace the published audio track for room ${roomId}`,
-          error
-        );
-      }
-    }
   }
 }

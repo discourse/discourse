@@ -119,6 +119,7 @@ class DiscoursePluginRegistry
   define_filtered_register :user_destroyer_on_content_deletion_callbacks
 
   define_filtered_register :hashtag_autocomplete_data_sources
+  define_filtered_register :hashtag_content_stores
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
@@ -145,6 +146,8 @@ class DiscoursePluginRegistry
   define_filtered_register :calendar_subscription_feeds
 
   define_filtered_register :homepage_options
+
+  define_filtered_register :navigation_destinations
 
   define_filtered_register :custom_filter_mappings
 
@@ -264,15 +267,14 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
-    "moment-timezone.js" =>
-      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+    "moment.js" => "moment/moment.js",
+    "moment-timezone.js" => "moment-timezone/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
     raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
-    asset
+    "#{VendoredAssets.path(asset)}"
   end
 
   def self.clear_modifiers!

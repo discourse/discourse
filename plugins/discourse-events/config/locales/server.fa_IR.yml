@@ -17,10 +17,15 @@ fa_IR:
     triggerables:
       event_started:
         title: رویداد شروع شد
+  system_messages:
+    discourse_post_event_reminder:
+      title: "یادآور رویداد"
   site_settings:
     events_calendar_categories: "نمایش رویدادهای تقویم در بالای دسته‌بندی"
     sidebar_show_upcoming_events: "پیوند رویدادهای آینده را در نوار کناری زیر «بیشتر» نمایش دهید."
   discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "روز"

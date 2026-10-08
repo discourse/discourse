@@ -34,6 +34,10 @@ es:
     discourse_events:
       title: "Eventos"
       preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ninguna"
         all_events_description: "Todos los eventos del foro"
         my_events_description: "Eventos a los que vas a asistir o que te interesan"
       on_holiday: "De vacaciones"

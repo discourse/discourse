@@ -64,11 +64,11 @@ export default class PostMenuFlagButton extends Component {
         }}
         ...attributes
         @action={{@buttonActions.showFlags}}
+        @ariaLabel={{this.title}}
+        @disabled={{this.isFlagButtonDisabled}}
         @icon="flag"
         @label={{if @showLabel "post.controls.flag_action"}}
         @title={{this.title}}
-        @ariaLabel={{this.title}}
-        @disabled={{this.isFlagButtonDisabled}}
       />
     </div>
   </template>

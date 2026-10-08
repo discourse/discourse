@@ -1,4 +1,5 @@
 import { performEmojiUnescape } from "pretty-text/emoji";
+import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
 // NOTE: When updating this file you also must consider the ProseMirror rich editor extension
@@ -65,7 +66,7 @@ const chatTranscriptRule = {
 
       channelToken.content = i18n("chat.quote.original_channel", {
         channel: unescapedChannelName,
-        channelLink,
+        channelLink: channelLink && escape(channelLink),
       });
       state.push("div_chat_transcript_meta_close", "div", -1);
     }

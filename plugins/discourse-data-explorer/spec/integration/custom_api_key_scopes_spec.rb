@@ -77,6 +77,9 @@ describe "API keys scoped to query#run" do
            headers: {
              "Api-Key" => single_query_api_key.key,
              "Api-Username" => admin.username,
+           },
+           params: {
+             id: query1.id,
            }
     }.not_to change { query2.reload.last_run_at }
     expect(response.status).to eq(403)

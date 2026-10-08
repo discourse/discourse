@@ -10,7 +10,7 @@ RSpec.describe SystemMessage do
 
     before { SiteSetting.site_contact_username = admin.username }
 
-    it "should create a post correctly" do
+    it "creates the expected post" do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)
       topic = post.topic

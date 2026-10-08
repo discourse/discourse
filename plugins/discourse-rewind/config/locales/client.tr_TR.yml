@@ -12,7 +12,6 @@ tr_TR:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Ağ oluşturma eğrileri..."
       viewing_other_user: "<strong>%{username}'nin</strong> Discourse Rewind raporunu görüntülüyorsunuz."
@@ -92,18 +91,14 @@ tr_TR:
             one: "%{username}'nin en iyi gönderisi"
             other: "%{username}'ın %{count} en iyi gönderisi"
         ai_usage:
-          title: Yapay Zeka Kullanımı
           total_requests: Toplam istek sayısı
           total_tokens: Toplam token sayısı
           success_rate: Başarı Oranı
-          favorite_features: En Çok Kullanılan Özellikler
-          favorite_models: En Çok Kullanılan AI Modelleri
           wake_up: "Uyan, %{username}..."
           system_title: "YAPAY ZEKA KULLANIMI ALGILANDI"
           section_features: "EN ÖNEMLİ ÖZELLİKLER"
           section_models: "EN İYİ MODELLER"
         assignments:
-          title: Görevler
           total_assigned: Bana atanan
           total_assigned_others: "%{username} Adlı gruba atandı"
           completed: Tamamlanan görevler
@@ -112,13 +107,6 @@ tr_TR:
           completion_rate: Tamamlanma oranı
         chat_usage:
           title: Sohbet Etkinliği
-          total_messages: Toplam Mesajlar
-          dm_messages: Doğrudan Mesajlar
-          unique_dm_channels: Doğrudan Mesaj Sohbetleri
-          reactions_received: Alınan Tepkiler
-          avg_message_length: Ortalama Mesaj Uzunluğu
-          favorite_channels: Favori Kanallar
-          messages: i̇letiler
           bot_name: XxRewindBotxX
           author: Siz
           author_others: "%{username}"
@@ -144,28 +132,7 @@ tr_TR:
           message_4: "Ortalama mesaj uzunluğunuz <strong>%{length}</strong> karakterdi."
           message_5: "En sevdiğiniz kanallar:"
           dancing_baby_alt: "Dans eden bebek"
-        favorite_gifs:
-          title:
-            one: En sevdiğiniz GIF
-            other: En sevdiğiniz %{count} GIF
-          title_others:
-            one: "%{username}'in favori GIF'i"
-            other: "%{username}'in favorisi %{count} GIF"
-          total_usage:
-            one: '%{count} kez kullanıldı'
-            other: '%{count} kez kullanıldı'
         invites:
-          title: Davetler
-          total_invites: Gönderilen Toplam Davet Sayısı
-          redeemed: Kabul Edilen Davetler
-          redemption_rate: Kabul Oranı
-          avg_trust_level: Ortalama Güven Seviyesi
-          invitee_impact: Davetlilerinizin Etkisi
-          invitee_impact_others: "%{username}'nin davetlerinin etkisi"
-          invitee_posts: Oluşturulan Gönderiler
-          invitee_topics: Başlatılan Konular
-          invitee_likes: Yapılan Beğenilenler
-          most_active_invitee: En Aktif Davetli
           guest_book_title: Ziyaretçi Defteri
           guest_book_subtitle: Topluluğunuzun Davetiyeleri
           guest_book_subtitle_others: "%{username}'nin Topluluk Davetleri"
@@ -178,22 +145,9 @@ tr_TR:
           label_likes_given: "Verilen beğeniler:"
           section_most_active: En Aktif Misafir
         new_user_interactions:
-          title: Yeni Kullanıcılara Mentorluk Yapmak
-          subtitle:
-            one: Bu yıl %{count} yeni kullanıcıya yardım ettiniz.
-            other: Bu yıl %{count} yeni kullanıcıya yardım ettiniz.
-          subtitle_others:
-            one: "%{username} bu yıl %{count} yeni kullanıcıya yardım etti"
-            other: "%{username} bu yıl %{count} yeni kullanıcıya yardım etti"
           new_member:
             one: "%{count} yeni üye"
             other: "%{count} yeni üye"
-          total_interactions: Toplam Etkileşimler
-          unique_new_users: Benzersiz Yeni Kullanıcı
-          likes_given: Yapılan Beğenilenler
-          replies: Gönderilere Yanıtlar
-          mentions: Bahsetmeler
-          topics_with_new_users: Yeni Kullanıcılarla İlgili Konular
           contributions_helped: katkılarınız yardımcı oldu
           contributions_helped_others: "%{username}'nin katkıları yardımcı oldu"
         time_of_day_activity:

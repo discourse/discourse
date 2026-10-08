@@ -234,7 +234,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events shown in local time" do
       describe "with local time enabled" do
         it "displays multiple occurrences with correct local time",
            timezone: "Australia/Brisbane",
@@ -367,7 +367,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events with an end date" do
       it "displays recurring events until the specified end date",
          time: Time.utc(2025, 6, 2, 19, 00) do
         post =

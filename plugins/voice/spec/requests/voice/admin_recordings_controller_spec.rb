@@ -60,6 +60,8 @@ RSpec.describe Voice::AdminRecordingsController do
       expect(response.status).to eq(200)
       payload = response.parsed_body
       expect(payload["has_more"]).to eq(false)
+      expect(payload["last_webhook_at"]).to be_nil
+      expect(payload["webhook_url"]).to eq("#{Discourse.base_url}/voice/livekit/webhook")
       expect(payload["recordings"].map { |row| row["egress_id"] }).to eq(%w[EG_2 EG_1])
 
       completed = payload["recordings"].last
@@ -68,6 +70,16 @@ RSpec.describe Voice::AdminRecordingsController do
       expect(completed["status"]).to eq("completed")
       expect(completed["location"]).to eq("https://cdn.example.com/voice/test-abc123.mp4")
       expect(completed["duration_ms"]).to eq(65_000)
+    end
+
+    it "reports received webhooks so the setup note can be hidden" do
+      freeze_time
+      Voice::Livekit.touch_last_webhook!
+      sign_in(admin)
+
+      get "/admin/plugins/voice/recordings.json"
+
+      expect(Time.iso8601(response.parsed_body["last_webhook_at"]).to_i).to eq(Time.current.to_i)
     end
 
     it "paginates past the page size" do

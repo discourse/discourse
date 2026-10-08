@@ -43,6 +43,26 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
   end
 
   describe "#output" do
+    it "exposes the editor separately from the author" do
+      editor = Fabricate(:admin)
+      events =
+        DiscourseEvent.track_events(:post_edited) do
+          first_post.revise(editor, raw: "Edited by another user")
+        end
+
+      output = described_class.new(*events.sole[:params]).output
+
+      expect(output[:editor]).to include(
+        id: editor.id,
+        username: editor.username,
+        trust_level: editor.trust_level,
+      )
+      expect(output[:user][:id]).to eq(user.id)
+      expect(output).to match_node_output_schema(described_class)
+      editor_schema = described_class.output_schemas.first.dig("properties", "editor")
+      expect(editor_schema).to include("properties" => DiscourseWorkflows::Schema::USER_PROPERTIES)
+    end
+
     it "returns post and topic data" do
       trigger = described_class.new(first_post, "<p>Cooked</p>")
       output = trigger.output
@@ -60,6 +80,8 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(output[:topic][:user_id]).to eq(topic.user_id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output).not_to have_key(:cooked)
+      expect(output).to include(editor: nil)
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 

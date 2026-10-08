@@ -77,7 +77,7 @@ da:
         confirm_channel_name: "Indtast kanalnavn"
       channels_list_popup:
         browse: "Gennemse kanaler"
-        create: "Ny kanal"
+        create: "Ny kanal..."
       close: "Luk"
       remove: "Fjern"
       deleted:
@@ -89,7 +89,6 @@ da:
       muted: "stille!"
       joined: "tilmeldt"
       empty_state:
-        direct_message_cta: "Start en personlig chat"
         title: "Ingen kanaler fundet"
       email_frequency:
         never: "Aldrig"
@@ -235,6 +234,13 @@ da:
         sort:
           relevance: "Relevans"
           latest: "Seneste"
+      direct_messages:
+        close: "Luk kanal"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omtaler"
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"
@@ -298,9 +304,6 @@ da:
         chat_mention:
           direct_html: '<span>%{username}</span> <span>nævnte dig i "%{channel}"</span>'
           other_html: '<span>%{username}</span> <span>nævnte %{identifier} i "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct_html: "<span>%{username}</span> <span>nævnte dig i personlig chat</span>"
-          other_html: "<span>%{username}</span> <span>nævnte %{identifier} i personlig chat</span>"
         chat_message: "Ny chatbesked"
         chat_quoted: "%{username} citerede din chatbesked"
     action_codes:

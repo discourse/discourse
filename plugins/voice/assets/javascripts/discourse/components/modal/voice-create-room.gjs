@@ -31,9 +31,9 @@ export default class VoiceCreateRoomModal extends Component {
 
   <template>
     <DModal
+      class="voice-create-room-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.sidebar.create"}}
-      class="voice-create-room-modal"
     >
       <:body>
         <VoiceRoomForm @onSubmit={{this.handleSubmit}} />

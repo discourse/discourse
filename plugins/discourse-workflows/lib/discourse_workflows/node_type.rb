@@ -50,6 +50,12 @@ module DiscourseWorkflows
       },
     }.freeze
 
+    def self.actor_property(allow_anonymous: true, **options)
+      property = { type: :string, required: false, default: "system", ui: { control: :actor } }
+      property[:control_options] = { allow_anonymous: false } if !allow_anonymous
+      { actor_username: property.merge(options) }
+    end
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {
@@ -246,8 +252,12 @@ module DiscourseWorkflows
     end
     private_class_method :unknown_contract?
 
-    def self.event_name
-      description[:event]&.to_sym
+    def self.event_names
+      Array.wrap(description[:event]).map(&:to_sym)
+    end
+
+    def self.from_event(_event_name, *args)
+      new(*args)
     end
 
     def self.manually_triggerable?
@@ -389,6 +399,19 @@ module DiscourseWorkflows
 
     def category_ids_parameter(trigger_ctx)
       self.class.category_ids_parameter(trigger_ctx)
+    end
+
+    def matches_changes?(trigger_ctx, change)
+      changes = Array.wrap(trigger_ctx.get_node_parameter("changes", [])).compact_blank.map(&:to_s)
+      changes.empty? || changes.include?(change)
+    end
+
+    def matches_topic_filters?(topic, trigger_ctx)
+      matches_category_ids?(
+        topic.category_id,
+        category_ids_parameter(trigger_ctx),
+        include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
+      ) && matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
     end
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)

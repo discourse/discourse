@@ -3,14 +3,16 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 
-// Directory broadcasts are serialized without a user, so fields the server
-// gates per user (chat availability, manager-only chat settings) are absent
-// from them. A broadcast replaces the whole room object; carry over what this
-// client already knows so a mid-call room update doesn't wipe its own state.
+// Shared directory broadcasts omit user-specific fields. Preserve them until
+// a response scoped to the current user supplies fresh values.
 const USER_GATED_ROOM_FIELDS = [
+  "can_manage",
+  "can_invite",
+  "membership",
   "chat_available",
   "chat_channel_id",
   "chat_idle_minutes",
+  "livekit_enabled",
 ];
 
 // Participant broadcasts arrive in arbitrary database order, so every list
@@ -84,36 +86,6 @@ export default class VoiceRoomsService extends Service {
 
   roomBySlug(slug) {
     return this.#roomsBySlug.get(slug);
-  }
-
-  async #bootstrap() {
-    const payload = await ajax("/voice/rooms.json");
-    this.canCreateRoom = payload.can_create_room ?? false;
-    this.#hydrateRooms(payload.rooms);
-
-    // Subscribing from the snapshot's message-bus position replays anything
-    // published while the payload was in flight; subscribing without one
-    // would silently drop those events.
-    this.messageBus.subscribe(
-      "/voice/rooms/index",
-      this.handleDirectoryEvent,
-      payload.index_message_bus_last_id ?? -1
-    );
-
-    return this.rooms;
-  }
-
-  #hydrateRooms(roomPayloads) {
-    this.rooms = roomPayloads;
-    this.#roomsById.clear();
-    this.#roomsBySlug.clear();
-
-    roomPayloads.forEach((room) => {
-      room.active_participants = sortParticipants(room.active_participants);
-      this.#roomsById.set(room.id, room);
-      this.#roomsBySlug.set(room.slug, room);
-      this.#ensureRoomSubscription(room.id, room.message_bus_last_id);
-    });
   }
 
   // Replaces (or adds) a room from a fresh payload — a directory broadcast or
@@ -203,35 +175,6 @@ export default class VoiceRoomsService extends Service {
     this.#forwardToRoomHandlers(payload.room_id, payload);
   }
 
-  #ensureRoomSubscription(roomId, lastId) {
-    if (this.#roomSubscriptions.has(roomId)) {
-      return;
-    }
-
-    const channel = `/voice/rooms/${roomId}`;
-    const callback = (message) => this.handleRoomBroadcast(message);
-    this.messageBus.subscribe(channel, callback, lastId ?? -1);
-    this.#roomSubscriptions.set(roomId, callback);
-  }
-
-  #teardownRoomSubscription(roomId) {
-    const callback = this.#roomSubscriptions.get(roomId);
-    if (callback) {
-      const channel = `/voice/rooms/${roomId}`;
-      this.messageBus.unsubscribe(channel, callback);
-      this.#roomSubscriptions.delete(roomId);
-    }
-    this.#roomHandlers.delete(roomId);
-  }
-
-  #forwardToRoomHandlers(roomId, payload) {
-    const handlers = this.#roomHandlers.get(roomId);
-    if (!handlers) {
-      return;
-    }
-    handlers.forEach((callback) => callback(payload));
-  }
-
   setRoomRecording(roomId, recording) {
     const room = this.#roomsById.get(roomId);
     if (!room) {
@@ -239,23 +182,6 @@ export default class VoiceRoomsService extends Service {
     }
 
     room.recording = recording ?? null;
-    this.rooms = [...this.rooms];
-  }
-
-  // Someone in an ephemeral call room started ringing `user` — record it so
-  // the room page can show a pending tile. A repeat ring for the same user
-  // replaces their entry, restarting the ring window. Entries are never
-  // pruned here; the display filters out present users and expired rings.
-  #addRinging(roomId, user, notifiedAt) {
-    const room = this.#roomsById.get(roomId);
-    if (!room || !user?.id) {
-      return;
-    }
-
-    const others = (room.ringing || []).filter(
-      (entry) => Number(entry.user?.id) !== Number(user.id)
-    );
-    room.ringing = [...others, { user, notified_at: notifiedAt }];
     this.rooms = [...this.rooms];
   }
 
@@ -311,16 +237,6 @@ export default class VoiceRoomsService extends Service {
     if (state.speaking !== !!speaking) {
       state.speaking = !!speaking;
     }
-  }
-
-  #speakingState(roomId, userId) {
-    const key = `${roomId}:${Number(userId)}`;
-    let state = this.#speakingByKey.get(key);
-    if (!state) {
-      state = new ParticipantSpeakingState();
-      this.#speakingByKey.set(key, state);
-    }
-    return state;
   }
 
   setParticipantMuted(roomId, userId, muted) {
@@ -531,6 +447,92 @@ export default class VoiceRoomsService extends Service {
     if (changed) {
       this.rooms = [...this.rooms];
     }
+  }
+
+  async #bootstrap() {
+    const payload = await ajax("/voice/rooms.json");
+    this.canCreateRoom = payload.can_create_room ?? false;
+    this.#hydrateRooms(payload.rooms);
+
+    // Subscribing from the snapshot's message-bus position replays anything
+    // published while the payload was in flight; subscribing without one
+    // would silently drop those events.
+    this.messageBus.subscribe(
+      "/voice/rooms/index",
+      this.handleDirectoryEvent,
+      payload.index_message_bus_last_id ?? -1
+    );
+
+    return this.rooms;
+  }
+
+  #hydrateRooms(roomPayloads) {
+    this.rooms = roomPayloads;
+    this.#roomsById.clear();
+    this.#roomsBySlug.clear();
+
+    roomPayloads.forEach((room) => {
+      room.active_participants = sortParticipants(room.active_participants);
+      this.#roomsById.set(room.id, room);
+      this.#roomsBySlug.set(room.slug, room);
+      this.#ensureRoomSubscription(room.id, room.message_bus_last_id);
+    });
+  }
+
+  #ensureRoomSubscription(roomId, lastId) {
+    if (this.#roomSubscriptions.has(roomId)) {
+      return;
+    }
+
+    const channel = `/voice/rooms/${roomId}`;
+    const callback = (message) => this.handleRoomBroadcast(message);
+    this.messageBus.subscribe(channel, callback, lastId ?? -1);
+    this.#roomSubscriptions.set(roomId, callback);
+  }
+
+  #teardownRoomSubscription(roomId) {
+    const callback = this.#roomSubscriptions.get(roomId);
+    if (callback) {
+      const channel = `/voice/rooms/${roomId}`;
+      this.messageBus.unsubscribe(channel, callback);
+      this.#roomSubscriptions.delete(roomId);
+    }
+    this.#roomHandlers.delete(roomId);
+  }
+
+  #forwardToRoomHandlers(roomId, payload) {
+    const handlers = this.#roomHandlers.get(roomId);
+    if (!handlers) {
+      return;
+    }
+    handlers.forEach((callback) => callback(payload));
+  }
+
+  // Someone in an ephemeral call room started ringing `user` — record it so
+  // the room page can show a pending tile. A repeat ring for the same user
+  // replaces their entry, restarting the ring window. Entries are never
+  // pruned here; the display filters out present users and expired rings.
+  #addRinging(roomId, user, notifiedAt) {
+    const room = this.#roomsById.get(roomId);
+    if (!room || !user?.id) {
+      return;
+    }
+
+    const others = (room.ringing || []).filter(
+      (entry) => Number(entry.user?.id) !== Number(user.id)
+    );
+    room.ringing = [...others, { user, notified_at: notifiedAt }];
+    this.rooms = [...this.rooms];
+  }
+
+  #speakingState(roomId, userId) {
+    const key = `${roomId}:${Number(userId)}`;
+    let state = this.#speakingByKey.get(key);
+    if (!state) {
+      state = new ParticipantSpeakingState();
+      this.#speakingByKey.set(key, state);
+    }
+    return state;
   }
 
   #setRoomParticipants(roomId, participants) {

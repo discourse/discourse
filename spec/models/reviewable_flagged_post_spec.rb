@@ -29,6 +29,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:score) { result.reviewable_score }
     let(:guardian) { Guardian.new(moderator) }
 
+    it "disagrees with flags without restoring a soft-deleted post" do
+      post.update!(hidden: true)
+      post.trash!
+
+      reviewable.perform(moderator, :disagree_and_keep_deleted)
+
+      expect(reviewable.reload).to be_rejected
+      expect(score.reload).to be_disagreed
+      expect(post.reload).to be_trashed
+      expect(post).to be_hidden
+    end
+
     describe "actions_for" do
       it "returns appropriate defaults" do
         actions = reviewable.actions_for(guardian)
@@ -125,7 +137,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:disagree_and_restore)).to eq(true)
       end
 
-      it "won't return the penalty options if the user is not regular" do
+      it "omits penalty options for a non-regular user" do
         post.user.update(moderator: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_silence)).to eq(false)
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
@@ -149,15 +161,25 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_silence)).to eq(true)
       end
 
-      it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
-        post.update!(hidden: true)
-        post.topic.trash!
+      it "offers flag resolution without visibility or delete actions for soft-deleted posts" do
+        post.update!(reply_count: 3)
         post.trash!
-        expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
-        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore)).to eq(false)
-        expect(
-          reviewable.actions_for(guardian).bundles.find { |bundle| bundle.id.include?("-ignore") },
-        ).to be_blank
+
+        [false, true].each do |hidden|
+          post.update!(hidden: hidden)
+
+          actions = reviewable.actions_for(guardian)
+
+          expect(actions.to_a.map(&:server_action)).to contain_exactly(
+            "agree_and_keep_deleted",
+            "disagree_and_keep_deleted",
+            "ignore_and_do_nothing",
+            "agree_and_silence",
+            "agree_and_suspend",
+            "delete_user",
+            "delete_user_block",
+          )
+        end
       end
 
       context "when flagged as potential_spam" do
@@ -446,7 +468,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(1)
     end
 
-    it "should reset counts when a topic is deleted" do
+    it "resets counts when a topic is deleted" do
       PostActionCreator.off_topic(user, post)
       expect(pending_count).to eq(1)
 
@@ -454,14 +476,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(0)
     end
 
-    it "should not review non-human users" do
+    it "does not review non-human users" do
       post = create_post(user: Discourse.system_user)
       reviewable = PostActionCreator.off_topic(user, post).reviewable
       expect(reviewable).to be_blank
       expect(pending_count).to eq(0)
     end
 
-    it "should ignore handled flags" do
+    it "ignores handled flags" do
       post = create_post
       reviewable = PostActionCreator.off_topic(user, post).reviewable
       expect(post.hidden).to eq(false)
@@ -558,6 +580,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       UserSilencer.silence(author, moderator, post_id: flagged_post.id)
 
       expect(reviewable.reload.actions_for(guardian).has?(:unsilence_user)).to eq(true)
+    end
+
+    it "is set apart from the actions that resolve the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      secondary_bundles = reviewable.reload.actions_for(guardian).bundles.select(&:secondary)
+
+      expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
     end
 
     it "is offered even when the silence is not linked to this post" do

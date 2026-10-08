@@ -15,6 +15,8 @@ module Voice
     def self.on_join(user, room, participants)
       return unless badges_enabled?
 
+      participants = participants.reject(&:bot?)
+
       grant("Packed House", user) if room_full?(room, participants)
       grant("Icebreaker", user) if icebreaker?(user, participants)
     end
@@ -37,17 +39,20 @@ module Voice
     # flipped in bulk, so the per-badge save callbacks that keep user badge
     # counts consistent run once here instead.
     def self.enable_all!
-      badges = voice_badges
+      badges = voice_badges.where(enabled: false)
+      return unless badges.exists?
+
+      scheduled_badge_ids = badges.where.not(query: nil).pluck(:id)
       badges.update_all(enabled: true)
       sync_user_badges!
-      badges
-        .where.not(query: nil)
-        .pluck(:id)
-        .each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
+      scheduled_badge_ids.each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
     end
 
     def self.disable_all!
-      voice_badges.update_all(enabled: false)
+      badges = voice_badges.where(enabled: true)
+      return unless badges.exists?
+
+      badges.update_all(enabled: false)
       sync_user_badges!
     end
 
@@ -55,6 +60,8 @@ module Voice
       private
 
       def grant(badge_name, user)
+        return if user.bot?
+
         badge = Badge.find_by(name: badge_name)
         BadgeGranter.grant(badge, user) if badge&.enabled?
       end
@@ -108,8 +115,8 @@ module Voice
       # Every badge here is derived from analytics sessions, so without them
       # nothing can be earned.
       def badges_enabled?
-        SiteSetting.enable_badges && SiteSetting.voice_badges_enabled &&
-          SiteSetting.voice_analytics_enabled
+        SiteSetting.enable_badges && SiteSetting.voice_enabled &&
+          SiteSetting.voice_badges_enabled && SiteSetting.voice_analytics_enabled
       end
     end
   end

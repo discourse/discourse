@@ -16,6 +16,19 @@ da:
         image_generation_custom:
           name: "Tilpasset"
     ai_bot:
+      navigation:
+        users:
+          title: "Brugere"
+        groups:
+          title: "Grupper"
+        categories:
+          title: "Kategorier"
+        tags:
+          title: "Mærker"
+        themes:
+          title: "Temaer"
+        backups:
+          title: "Sikkerhedskopier"
       read_post:
         unknown_post: "indlæg"
       tool_summary:

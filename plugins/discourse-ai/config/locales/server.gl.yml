@@ -16,6 +16,19 @@ gl:
         image_generation_custom:
           name: "Personalizado"
     ai_bot:
+      navigation:
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        categories:
+          title: "Categorías"
+        tags:
+          title: "Etiquetas"
+        themes:
+          title: "Temas"
+        backups:
+          title: "Copias de seguranza"
       read_post:
         unknown_post: "publicación"
       tool_summary:

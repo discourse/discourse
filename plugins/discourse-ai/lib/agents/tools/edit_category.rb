@@ -91,7 +91,11 @@ module DiscourseAi
         end
 
         def description_args
-          { category_id: parameters[:category_id], fields: changes.keys.join(", ") }
+          {
+            category_id: parameters[:category_id],
+            category_name: category ? "##{category.slug_ref}::category" : parameters[:category_id],
+            fields: changes.keys.map { |field| "`#{field}`" }.join(", "),
+          }
         end
 
         private

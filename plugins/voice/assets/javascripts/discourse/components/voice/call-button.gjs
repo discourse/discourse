@@ -25,8 +25,8 @@ export default class VoiceCallButton extends Component {
 
   <template>
     <button
-      type="button"
       class="btn btn-icon-text btn-primary voice-call-button__button"
+      type="button"
       {{on "click" this.call}}
     >
       {{icon "phone"}}

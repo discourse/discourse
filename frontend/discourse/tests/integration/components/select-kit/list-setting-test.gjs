@@ -17,7 +17,7 @@ module("Integration | Component | SelectKit | ListSetting", function (hooks) {
 
     await render(
       <template>
-        <ListSetting @value={{this.value}} @choices={{this.choices}} />
+        <ListSetting @choices={{this.choices}} @value={{this.value}} />
       </template>
     );
 

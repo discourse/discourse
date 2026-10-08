@@ -90,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_admin_dashboard_section(
+    id: "ask_ai",
+    enabled: -> { SiteSetting.ai_ask_ai_enabled },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseAi::AdminDashboard::AskAi.build(start_date:, end_date:, current_user:)
+  end
+
   register_modifier(:site_setting_result) do |setting_result|
     if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
       setting_result[:disabled] = true
@@ -220,7 +227,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
-  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
+  add_api_key_scope(
+    :ai,
+    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update], path_params: %i[id] } },
+  )
 
   add_api_key_scope(
     :ai,
@@ -233,6 +243,7 @@ after_initialize do
           discourse_ai/admin/ai_artifacts#update
           discourse_ai/admin/ai_artifacts#destroy
         ],
+        path_params: %i[id],
       },
     },
   )

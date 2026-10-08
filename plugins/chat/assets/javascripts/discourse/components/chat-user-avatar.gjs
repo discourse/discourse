@@ -59,10 +59,10 @@ export default class ChatUserAvatar extends Component {
     >
       {{#if this.interactive}}
         <a
-          class="chat-user-avatar__container"
-          href={{this.userPath}}
-          data-user-card={{@user.username}}
           aria-hidden={{if this.ariaHidden "true"}}
+          class="chat-user-avatar__container"
+          data-user-card={{@user.username}}
+          href={{this.userPath}}
           tabindex={{if this.ariaHidden "-1"}}
         >
           {{this.avatar}}
@@ -70,8 +70,8 @@ export default class ChatUserAvatar extends Component {
         </a>
       {{else}}
         <span
-          class="chat-user-avatar__container"
           aria-hidden={{if this.ariaHidden "true"}}
+          class="chat-user-avatar__container"
         >
           {{this.avatar}}
           <DUserAvatarFlair @user={{@user}} />

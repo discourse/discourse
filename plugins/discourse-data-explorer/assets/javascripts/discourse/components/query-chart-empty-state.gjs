@@ -22,10 +22,10 @@ export default class QueryChartEmptyState extends Component {
       {{dIcon "chart-line" class="query-chart-empty-state__icon"}}
       <p class="query-chart-empty-state__message">{{this.message}}</p>
       <DButton
-        @action={{@onViewAsTable}}
-        @label="explorer.chart_empty.view_as_table"
-        @icon="table"
         class="btn-default query-chart-empty-state__view-table"
+        @action={{@onViewAsTable}}
+        @icon="table"
+        @label="explorer.chart_empty.view_as_table"
       />
     </div>
   </template>

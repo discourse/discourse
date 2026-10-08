@@ -37,6 +37,10 @@ acceptance("Param Input", function (needs) {
       return helper.response({});
     });
 
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default"])
+    );
+
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [

@@ -27,6 +27,19 @@ lt:
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
     ai_bot:
+      navigation:
+        users:
+          title: "Vartotojai"
+        groups:
+          title: "Grupės"
+        categories:
+          title: "Kategorijos"
+        tags:
+          title: "Žymos"
+        themes:
+          title: "Temos"
+        backups:
+          title: "Atsarginės kopijos"
       read_post:
         unknown_post: "įrašai"
       agents:

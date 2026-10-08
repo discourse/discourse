@@ -539,7 +539,7 @@ RSpec.describe WebhooksController do
   end
 
   describe "#mandrill_head" do
-    it "works" do
+    it "returns 200 for a Mandrill HEAD request" do
       head "/webhooks/mandrill.json"
 
       expect(response.status).to eq(200)

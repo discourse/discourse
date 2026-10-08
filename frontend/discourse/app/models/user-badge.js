@@ -54,16 +54,6 @@ export default class UserBadge extends RestCompatModel {
 
   #wrappers = new Map();
 
-  // Consumers read class getters off these (`badge.url`, `topic.fancyTitle`,
-  // `user.statusManager`), which the cached plain objects lack. Copy before
-  // wrapping — `RestModel.create` stamps `__munge` onto its argument — and
-  // apply `@dependentKeyCompat` by hand, since `defineFieldForwarders` skips
-  // names already on the prototype.
-  @dependentKeyCompat
-  get badge() {
-    return this.#wrap("badge", (raw) => new Badge(raw));
-  }
-
   @dependentKeyCompat
   get topic() {
     return this.#wrap("topic", (raw) => Topic.create({ ...raw }));
@@ -92,16 +82,14 @@ export default class UserBadge extends RestCompatModel {
     shadow(this, "granted_by", value);
   }
 
-  // Memoized against the raw value: rebuilding per read would refire the
-  // model's `init` callbacks and hand out a new identity each render.
-  #wrap(name, build) {
-    const raw = this.__resource?.[name];
-    let cached = this.#wrappers.get(name);
-    if (!cached || cached.raw !== raw) {
-      cached = { raw, value: raw ? build(raw) : undefined };
-      this.#wrappers.set(name, cached);
-    }
-    return cached.value;
+  // Consumers read class getters off these (`badge.url`, `topic.fancyTitle`,
+  // `user.statusManager`), which the cached plain objects lack. Copy before
+  // wrapping — `RestModel.create` stamps `__munge` onto its argument — and
+  // apply `@dependentKeyCompat` by hand, since `defineFieldForwarders` skips
+  // names already on the prototype.
+  @dependentKeyCompat
+  get badge() {
+    return this.#wrap("badge", (raw) => new Badge(raw));
   }
 
   get grantedAt() {
@@ -141,6 +129,18 @@ export default class UserBadge extends RestCompatModel {
       store.push(partial(previous));
       popupAjaxError(e);
     }
+  }
+
+  // Memoized against the raw value: rebuilding per read would refire the
+  // model's `init` callbacks and hand out a new identity each render.
+  #wrap(name, build) {
+    const raw = this.__resource?.[name];
+    let cached = this.#wrappers.get(name);
+    if (!cached || cached.raw !== raw) {
+      cached = { raw, value: raw ? build(raw) : undefined };
+      this.#wrappers.set(name, cached);
+    }
+    return cached.value;
   }
 }
 

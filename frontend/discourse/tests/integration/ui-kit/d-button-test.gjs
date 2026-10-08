@@ -20,7 +20,7 @@ module("Integration | ui-kit | DButton", function (hooks) {
   setupRenderingTest(hooks);
 
   test("icon only button", async function (assert) {
-    await render(<template><DButton @icon="plus" tabindex="3" /></template>);
+    await render(<template><DButton tabindex="3" @icon="plus" /></template>);
 
     assert.dom("button.btn.btn-icon.no-text").exists("has all the classes");
     assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
@@ -383,7 +383,7 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("ellipses", async function (assert) {
     await render(
       <template>
-        <DButton @translatedLabel="test label" @ellipsis={{true}} />
+        <DButton @ellipsis={{true}} @translatedLabel="test label" />
       </template>
     );
 
@@ -393,7 +393,7 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("suffix icon", async function (assert) {
     await render(
       <template>
-        <DButton @translatedLabel="Open menu" @suffixIcon="angle-right" />
+        <DButton @suffixIcon="angle-right" @translatedLabel="Open menu" />
       </template>
     );
 

@@ -134,18 +134,6 @@ export default class DiscoursePostEvent extends Component {
     return this.isLoading && this.isPartialEvent;
   }
 
-  getDisplayTime(time) {
-    if (this.event.allDay) {
-      return moment(time, "YYYY-MM-DD");
-    } else if (this.event.showLocalTime) {
-      return moment.tz(time, this.event.timezone || "UTC");
-    } else {
-      return moment
-        .utc(time)
-        .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
-    }
-  }
-
   get clampDescription() {
     return this.args.clampDescription ?? false;
   }
@@ -197,10 +185,6 @@ export default class DiscoursePostEvent extends Component {
     return this.event.watchingInvitee?.status;
   }
 
-  get expiredAndRecurring() {
-    return this.event.isExpired && this.event.recurrence;
-  }
-
   get recurrenceLabel() {
     if (!this.event?.recurrence) {
       return null;
@@ -210,6 +194,18 @@ export default class DiscoursePostEvent extends Component {
       `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`,
       recurrenceContext(recurrenceRef(this.event))
     );
+  }
+
+  getDisplayTime(time) {
+    if (this.event.allDay) {
+      return moment(time, "YYYY-MM-DD");
+    } else if (this.event.showLocalTime) {
+      return moment.tz(time, this.event.timezone || "UTC");
+    } else {
+      return moment
+        .utc(time)
+        .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
+    }
   }
 
   async loadEvent() {
@@ -228,7 +224,6 @@ export default class DiscoursePostEvent extends Component {
       if (
         fetched.recurrence &&
         displayedStartsAt &&
-        fetched.startsAt &&
         displayedStartsAt !== fetched.startsAt
       ) {
         this.#filterForFutureOccurrence(fetched);
@@ -270,28 +265,16 @@ export default class DiscoursePostEvent extends Component {
         <div class="discourse-post-event-widget">
           {{#if event}}
             <Image
-              @imageUpload={{event.imageUpload}}
               @alt={{this.eventName}}
+              @imageUpload={{event.imageUpload}}
               @linkToPost={{@linkToPost}}
-              @postUrl={{event.post.url}}
               @post={{@post}}
+              @postUrl={{event.post.url}}
             />
             <header class="event-header" {{this.setupMessageBus}}>
               <div class="event-date">
-                <div class="month">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtMonth}}
-                  {{/if}}
-                </div>
-                <div class="day">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtDay}}
-                  {{/if}}
-                </div>
+                <div class="month">{{this.startsAtMonth}}</div>
+                <div class="day">{{this.startsAtDay}}</div>
               </div>
               <div class="event-info">
                 <span class="name">
@@ -330,19 +313,19 @@ export default class DiscoursePostEvent extends Component {
               <div class="event-header__controls">
                 {{#if event.creator}}
                   <MoreMenu
-                    @event={{event}}
-                    @isStandaloneEvent={{this.isStandaloneEvent}}
                     @composePrivateMessage={{routeAction
                       "composePrivateMessage"
                     }}
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
                   />
                 {{/if}}
 
                 {{#if @onClose}}
                   <DButton
                     class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
                     @action={{@onClose}}
+                    @icon="xmark"
                   />
                 {{/if}}
               </div>
@@ -360,9 +343,7 @@ export default class DiscoursePostEvent extends Component {
                   clamp=this.clampDescription
                 )
                 Location=(component DiscoursePostEventLocation event=event)
-                Dates=(component
-                  Dates event=event expiredAndRecurring=this.expiredAndRecurring
-                )
+                Dates=(component Dates event=event)
                 Recurrence=(component
                   InfoSection icon="arrows-rotate" class="event-recurrence"
                 )
@@ -380,12 +361,9 @@ export default class DiscoursePostEvent extends Component {
                 )
               }}
             >
-              <Dates
-                @event={{event}}
-                @expiredAndRecurring={{this.expiredAndRecurring}}
-              />
+              <Dates @event={{event}} />
               {{#if event.recurrence}}
-                <InfoSection @icon="arrows-rotate" class="event-recurrence">
+                <InfoSection class="event-recurrence" @icon="arrows-rotate">
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
@@ -401,8 +379,8 @@ export default class DiscoursePostEvent extends Component {
 
               {{#if this.withDescription}}
                 <Description
-                  @descriptionHtml={{event.descriptionHtml}}
                   @clamp={{this.clampDescription}}
+                  @descriptionHtml={{event.descriptionHtml}}
                 />
               {{/if}}
 

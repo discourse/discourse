@@ -1,8 +1,12 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import {
+  applyDeferredClassModifications,
+  deferClassModification,
+} from "discourse/lib/deferred-class-modifications";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
-import { buildResolver } from "discourse/resolver";
+import { buildResolver, expireModuleTrieCache } from "discourse/resolver";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 let resolver;
@@ -631,5 +635,82 @@ module("Unit | Ember | resolver", function (hooks) {
       resolve("component:my-second-component"),
       "my-second-component"
     );
+  });
+
+  test("addModules exposes modules which arrive after boot", function (assert) {
+    const templateModule =
+      "discourse/plugins/my-fake-plugin/discourse/templates/lazy-route";
+    const serviceModule =
+      "discourse/plugins/my-fake-plugin/discourse/services/lazy-thing";
+
+    // Build both caches first, the way a lazily-loaded route bundle finds them.
+    expireModuleTrieCache();
+    DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+    resolve("service:some-service-to-populate-the-trie");
+
+    try {
+      resolver.addModules({
+        [templateModule]: { default: "lazy-template" },
+        [serviceModule]: { default: "lazy-service" },
+      });
+
+      lookupTemplate(
+        assert,
+        "template:lazy-route",
+        "lazy-template",
+        "finds a template added after the template map was built"
+      );
+      assert.strictEqual(
+        resolve("service:lazy-thing"),
+        "lazy-service",
+        "finds a service added after the suffix trie was built"
+      );
+    } finally {
+      delete requirejs.entries[templateModule];
+      delete requirejs.entries[serviceModule];
+      expireModuleTrieCache();
+      DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+    }
+  });
+
+  test("addModules applies modifications deferred for a route bundle", function (assert) {
+    const routeModule =
+      "discourse/plugins/my-fake-plugin/discourse/routes/lazy-route";
+    const controllerModule =
+      "discourse/plugins/my-fake-plugin/discourse/controllers/lazy-route";
+
+    expireModuleTrieCache();
+    resolve("service:some-service-to-populate-the-trie");
+
+    let applied = [];
+    deferClassModification("route:lazy-route", () => applied.push("route"));
+    deferClassModification("controller:lazy-route", () =>
+      applied.push("controller")
+    );
+
+    assert.deepEqual(applied, [], "waits for the bundle");
+
+    try {
+      resolver.addModules({
+        [routeModule]: { default: "lazy-route-class" },
+        [controllerModule]: { default: "lazy-controller-class" },
+      });
+
+      assert.deepEqual(
+        applied.sort(),
+        ["controller", "route"],
+        "applies both once the bundle arrives"
+      );
+      assert.strictEqual(resolve("route:lazy-route"), "lazy-route-class");
+      assert.strictEqual(
+        resolve("controller:lazy-route"),
+        "lazy-controller-class"
+      );
+    } finally {
+      delete requirejs.entries[routeModule];
+      delete requirejs.entries[controllerModule];
+      expireModuleTrieCache();
+      applyDeferredClassModifications();
+    }
   });
 });

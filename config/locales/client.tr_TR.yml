@@ -353,6 +353,7 @@ tr_TR:
     notifications_tracking:
       tooltip: "Bildirim seviyesi: %{level}"
     back_button: "Geri"
+    confirm_button: "Onayla"
     welcome_banner:
       header:
         new_members: "Hoş geldiniz, %{preferred_display_name}!"
@@ -505,18 +506,9 @@ tr_TR:
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
         icebreakers:
-          fun_facts:
-            title: "Hakkında ilginç bilgiler nelerdir?"
-            body: "Herkese merhaba! Bu yeni topluluğu başlatmaktan dolayı çok heyecanlıyım. Başlangıç olarak, kendimizle ilgili eğlenceli bir bilgi paylaşalım. Ben başlayayım: Yürüyüş yapmayı ve yeni parkurları keşfetmeyi seviyorum! Sizinle ilgili ilginç bir şey nedir?"
-          coolest_thing_you_have_seen_today:
-            title: "Bugün gördüğün en havalı şey neydi?"
-            body: "Bugün gördüğün veya yaşadığın en havalı şey neydi? Güzel bir gün batımı ya da rastgele bir iyilik hareketi gibi herhangi bir şey olabilir. Ben başlayayım: Bir köpeğin yaşlı bir insana karşıdan karşıya geçmesine yardım ettiğini gördüm!"
           introduce_yourself:
             title: "Kendinizi tanıtın"
             body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
-          what_is_your_favorite_food:
-            title: "En sevdiğin yemek nedir?"
-            body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
     design_wizard:
       back: "Geri"
       next: "Sonraki"
@@ -1749,6 +1741,16 @@ tr_TR:
       tracked_topics_link: "Göster"
       automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır"
       apps: "Uygulamalar"
+      mcp_authorizations:
+        endpoint: "Kaynak"
+        scopes: "Kapsamlar"
+        details: "Detaylar"
+        last_used: "Son kullanılan"
+        never: "Asla"
+        status: "Durum"
+        statuses:
+          active: "Aktif"
+          revoked: "İptal edildi"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylandı:"
@@ -4683,6 +4685,7 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      latest_topics: "En son konular"
       description_updated: "Açıklama güncellendi"
       description_expand: "Daha fazla göster"
       description_collapse: "Daha az göster"
@@ -4978,6 +4981,7 @@ tr_TR:
       with_category: "%{filter} %{category} konular"
       filter:
         title: "%{filter} için filtrelenmiş sonuçlar"
+        reset: "sıfırla"
         button:
           label: "Filtrele"
       latest:
@@ -5190,16 +5194,18 @@ tr_TR:
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
     download_calendar:
-      title: "Takvimi indir"
+      title: "Takvime ekle"
+      calendar: "Takvim"
       save_ics: ".ics dosyasını indir"
       save_google: "Google takvime ekle"
       remember: "Bir daha sorma"
-      remember_explanation: "(bu tercihi kullanıcı tercihlerinizden değiştirebilirsiniz)"
       download: "İndir"
       default_calendar: "Varsayılan takvim"
       default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirleyin"
       add_to_calendar: "Takvime ekle"
       google: "Google Takvim"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Takvimi"
       ics: "ICS"
       default_title: "Planlanmış Etkinlik"
     tagging:
@@ -5915,6 +5921,75 @@ tr_TR:
         developer:
           title: "Geliştirici"
           header_description: "Güvenli modu ve diğer gelişmiş özellikleri yönetmek için geliştirici ayarları"
+        mcp:
+          title: "MCP sunucusu"
+          tabs:
+            access: "Erişim"
+            activity: "Aktivite"
+          overview:
+            status: "Durum"
+            tools: "Araçlar"
+          access:
+            title: "Erişim"
+            group: "Grup"
+            groups: "Gruplar"
+            actions: "Eylemler"
+            edit: "Düzenle"
+            delete: "Sil"
+          primitives:
+            group_by: "Gruplama ölçütü"
+            group_by_options:
+              scope: "Kapsam"
+              provider: "Sağlayıcı"
+              kind: "Tür"
+            provider: "Sağlayıcı"
+            kind: "Tür"
+            scope: "Kapsam"
+            state: "Eyalet"
+            scopes: "Kapsamlar"
+          clients:
+            actions: "Eylemler"
+            block: "Engelle"
+            use_preset: "Kur"
+            presets:
+              custom: "Özel"
+          authorizations:
+            user: "Kullanıcı"
+            scopes: "Verilen kapsamlar"
+            last_used: "Son kullanılan"
+            status: "Durum"
+            actions: "Eylemler"
+          activity:
+            outcome: "Sonuç"
+            time: "Saat"
+            user: "Kullanıcı"
+            duration: "Süre"
+          values:
+            server_status:
+              disabled: "Devre Dışı"
+            client_trust:
+              approved: "Onaylandı"
+            authorization_status:
+              active: "Aktif"
+              revoked: "İptal edildi"
+            activity_outcome:
+              success: "Başarılı"
+              error: "Hata"
+            primitive_state:
+              enabled: "Etkin mi"
+              disabled: "Devre Dışı"
+            primitive_kind:
+              all: "Bütün türler"
+              tool: "Araç"
+              resource: "Kaynak"
+            primitive_risk:
+              read: "Salt okunur"
+              moderation: "Moderasyon"
+            filter:
+              all: "Tümü"
+          never: "Asla"
+          actions:
+            revoke: "İptal Et"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
@@ -6480,6 +6555,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
@@ -8527,13 +8603,14 @@ tr_TR:
           multiselect: "Çoklu seçim"
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
-        search: "Düzenlemek istediğiniz metni arayın"
+        search_label: "Ara"
+        theme_disabled: "Devre Dışı"
+        filters: "Filtreler"
+        status:
+          invalid: "Geçersiz"
         title: "Site metinleri"
         edit: "Düzenle"
-        revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
-        go_back: "Aramaya geri dön"
-        recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"

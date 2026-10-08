@@ -27,7 +27,7 @@ export default class ChatStyleguideChatModalEditChannelDescription extends Compo
   <template>
     <StyleguideExample @title="<Chat::Modal::EditChannelDescription>">
       <Row>
-        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+        <DButton @action={{this.openModal}} @translatedLabel="Open modal" />
       </Row>
     </StyleguideExample>
   </template>

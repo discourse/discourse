@@ -104,9 +104,9 @@ export default class PollBreakdownModal extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <DModal
-      @title={{i18n "poll.breakdown.title"}}
-      @closeModal={{@closeModal}}
       class="poll-breakdown has-tabs"
+      @closeModal={{@closeModal}}
+      @title={{i18n "poll.breakdown.title"}}
     >
       <:headerBelowTitle>
         <ul class="modal-tabs">
@@ -140,14 +140,14 @@ export default class PollBreakdownModal extends Component {
           <ul class="poll-breakdown-options">
             {{#each this.model.poll.options as |option index|}}
               <PollBreakdownOption
-                @option={{option}}
-                @index={{index}}
-                @totalVotes={{this.totalVotes}}
-                @optionsCount={{this.model.poll.options.length}}
                 @displayMode={{this.displayMode}}
                 @highlightedOption={{this.highlightedOption}}
-                @onMouseOver={{fn (mut this.highlightedOption) index}}
+                @index={{index}}
                 @onMouseOut={{fn (mut this.highlightedOption) null}}
+                @onMouseOver={{fn (mut this.highlightedOption) index}}
+                @option={{option}}
+                @optionsCount={{this.model.poll.options.length}}
+                @totalVotes={{this.totalVotes}}
               />
             {{/each}}
           </ul>
@@ -160,21 +160,21 @@ export default class PollBreakdownModal extends Component {
               }}</label>
 
             <ComboBox
+              class="poll-breakdown-dropdown"
               @content={{this.groupableUserFields}}
-              @value={{this.groupedBy}}
               @nameProperty="label"
               @onChange={{this.setGrouping}}
-              class="poll-breakdown-dropdown"
+              @value={{this.groupedBy}}
             />
           </div>
 
           <div class="poll-breakdown-charts">
             {{#each this.charts as |chart|}}
               <PollBreakdownChart
-                @group={{get chart "group"}}
-                @options={{get chart "options"}}
                 @displayMode={{this.displayMode}}
+                @group={{get chart "group"}}
                 @highlightedOption={{this.highlightedOption}}
+                @options={{get chart "options"}}
                 @setHighlightedOption={{fn (mut this.highlightedOption)}}
               />
             {{/each}}

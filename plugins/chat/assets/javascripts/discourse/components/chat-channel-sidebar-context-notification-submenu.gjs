@@ -61,37 +61,37 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
     <DDropdownMenu as |dropdown|>
       <dropdown.item>
         <DButton
-          @action={{this.changePushNotifications "never"}}
-          @label="chat.notification_levels.never"
-          @title="chat.notification_levels.never"
           class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-never"
             (if (this.isItemSelected "never") "-selected")
           }}
+          @action={{this.changePushNotifications "never"}}
+          @label="chat.notification_levels.never"
+          @title="chat.notification_levels.never"
         />
       </dropdown.item>
 
       <dropdown.item>
         <DButton
-          @action={{this.changePushNotifications "mention"}}
-          @label="chat.notification_levels.mention"
-          @title="chat.notification_levels.mention"
           class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-mention"
             (if (this.isItemSelected "mention") "-selected")
           }}
+          @action={{this.changePushNotifications "mention"}}
+          @label="chat.notification_levels.mention"
+          @title="chat.notification_levels.mention"
         />
       </dropdown.item>
 
       <dropdown.item>
         <DButton
-          @action={{this.changePushNotifications "always"}}
-          @label="chat.notification_levels.always"
-          @title="chat.notification_levels.always"
           class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-always"
             (if (this.isItemSelected "always") "-selected")
           }}
+          @action={{this.changePushNotifications "always"}}
+          @label="chat.notification_levels.always"
+          @title="chat.notification_levels.always"
         />
       </dropdown.item>
 
@@ -99,6 +99,10 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
 
       <dropdown.item>
         <DButton
+          class={{dConcatClass
+            "chat-channel-sidebar-link-menu__mute-channel"
+            (if (this.isItemSelected "muted") "-selected")
+          }}
           @action={{this.toggleMuteChannel}}
           @icon={{if
             this.channel.currentUserMembership.muted
@@ -114,10 +118,6 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
             this.channel.currentUserMembership.muted
             "chat.settings.unmute"
             "chat.settings.mute"
-          }}
-          class={{dConcatClass
-            "chat-channel-sidebar-link-menu__mute-channel"
-            (if (this.isItemSelected "muted") "-selected")
           }}
         />
       </dropdown.item>

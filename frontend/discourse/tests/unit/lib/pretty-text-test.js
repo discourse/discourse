@@ -516,8 +516,8 @@ eviltrout</p>
 
     assert.cooked(
       "robin@email.host",
-      "<p>robin@email.host</p>",
-      "won't add mention class to an email address"
+      '<p><a href="mailto:robin@email.host">robin@email.host</a></p>',
+      "allows any TLD for emails"
     );
 
     assert.cooked(
@@ -1565,6 +1565,22 @@ var bar = 'bar';
       `<p><div class="onebox-placeholder-container" data-orig-src-id="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
         <span class="placeholder-icon video"></span>
       </div></p>`
+    );
+  });
+
+  test("image controls add only identifying attributes when previewing", function (assert) {
+    assert.cookedOptions(
+      "![cat|690x313](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png)",
+      { previewing: true },
+      `<p><img src="/images/transparent.png" alt="cat" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png" data-image-index="0" data-scale="100" data-image-run="1" width="690" height="313" class="resizable"></p>`
+    );
+  });
+
+  test("button tags are stripped when previewing", function (assert) {
+    assert.cookedOptions(
+      `<button class="delete-image-button">delete</button>`,
+      { previewing: true },
+      `<p>delete</p>`
     );
   });
 

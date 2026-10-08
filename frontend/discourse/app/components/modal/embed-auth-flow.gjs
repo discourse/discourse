@@ -62,9 +62,9 @@ export default class EmbedAuthFlowModal extends Component {
 
   <template>
     <DModal
+      class="embed-auth-flow-modal"
       @closeModal={{@closeModal}}
       @title={{this.title}}
-      class="embed-auth-flow-modal"
     >
       <:body>
         {{#if this.waiting}}
@@ -79,16 +79,16 @@ export default class EmbedAuthFlowModal extends Component {
       <:footer>
         {{#unless this.waiting}}
           <button
-            type="button"
             class="btn btn-primary"
+            type="button"
             {{on "click" this.handleConfirm}}
           >
             {{this.confirmLabel}}
           </button>
         {{/unless}}
         <button
-          type="button"
           class="btn btn-default"
+          type="button"
           {{on "click" this.handleCancel}}
         >
           {{i18n "embed_mode.signin_flow.cancel"}}

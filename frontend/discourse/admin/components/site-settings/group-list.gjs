@@ -79,13 +79,13 @@ export default class GroupList extends Component {
   <template>
     <div ...attributes>
       <ListSetting
-        @value={{this.settingValue}}
         @choices={{this.groupChoices}}
-        @settingName="name"
         @mandatoryValues={{this.setting.mandatory_values}}
         @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
         @onChange={{this.onChangeGroupListSetting}}
+        @settingName="name"
+        @value={{this.settingValue}}
+        @valueProperty={{this.valueProperty}}
       />
     </div>
   </template>

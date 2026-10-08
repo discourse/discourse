@@ -60,7 +60,7 @@ describe "TopicRequiredWords" do
     fab!(:post) { Fabricate(:post, topic: topic, raw: "this is quite cool #bar") }
     fab!(:destination_topic) { Fabricate(:post).topic }
 
-    it "works" do
+    it "moves the post to the destination topic" do
       expect do
         topic.move_posts(admin, [post.id], destination_topic_id: destination_topic.id)
       end.to_not raise_error

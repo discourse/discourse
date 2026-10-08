@@ -8,6 +8,10 @@ te:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "తేదీ"
+          outcomes:
+            failed: "విఫలం"
         reports:
           filters:
             sort_by:

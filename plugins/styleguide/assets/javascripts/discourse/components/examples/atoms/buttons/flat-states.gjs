@@ -1,16 +1,16 @@
 import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
-  <DButton @icon="trash-can" @translatedLabel="normal" class="btn-flat" />
+  <DButton class="btn-flat" @icon="trash-can" @translatedLabel="normal" />
   <DButton
+    class="btn-flat btn-hover"
     @icon="trash-can"
     @translatedLabel="hover"
-    class="btn-flat btn-hover"
   />
   <DButton
+    class="btn-flat"
+    @disabled={{true}}
     @icon="trash-can"
     @translatedLabel="disabled"
-    @disabled={{true}}
-    class="btn-flat"
   />
 </template>

@@ -20,6 +20,7 @@ describe "CategoryCreatedEdited" do
 
     context "when category is restricted" do
       let(:parent_category_id) { Category.first.id }
+
       before do
         automation.upsert_field!(
           "restricted_category",

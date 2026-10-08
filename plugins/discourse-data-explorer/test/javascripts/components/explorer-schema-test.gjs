@@ -65,8 +65,8 @@ module("Component | ExplorerSchema", function (hooks) {
     await render(
       <template>
         <ExplorerSchema
-          @schema={{this.schema}}
           @hideSchema={{this.hideSchema}}
+          @schema={{this.schema}}
           @updateHideSchema={{this.updateHideSchema}}
         />
       </template>

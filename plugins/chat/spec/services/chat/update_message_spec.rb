@@ -21,6 +21,7 @@ RSpec.describe Chat::UpdateMessage do
 
   describe "with validation" do
     let(:guardian) { Guardian.new(user1) }
+
     fab!(:admin1, :admin)
     fab!(:admin2, :admin)
     fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
