@@ -74,9 +74,11 @@
   }
 
   .card-content {
+    container-type: inline-size;
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
     border-radius: var(--d-border-radius);
+    border: 5px solid var(--secondary);
 
     &::after {
       content: "";
@@ -263,14 +265,18 @@
       height: var(--avatar-width);
     }
 
-    .user-card-avatar {
+    .user-card-avatar-wrapper {
       margin-top: var(--avatar-margin);
-      max-height: var(--avatar-width);
       position: relative;
 
       @include viewport.until(sm) {
         flex: 0 0 auto;
       }
+    }
+
+    .user-card-avatar {
+      max-height: var(--avatar-width);
+      position: relative;
 
       .own-avatar-pencil {
         opacity: 0;
@@ -502,10 +508,21 @@
   .user-status {
     display: flex;
     align-items: center;
-
-    @include viewport.until(sm) {
-      font-size: var(--font-down-1);
-    }
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(calc((var(--avatar-width) / 3)));
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100cqi - 50% - var(--avatar-width) / 3);
+    background: var(--primary-very-low);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 9999px;
+    border: 5px solid var(--secondary);
+    box-shadow:
+      0 0 0 1px var(--primary-low),
+      0 2px 12px rgb(0, 0, 0, 0.1);
+    font-size: var(--font-down-1);
 
     img.emoji {
       margin-right: 0.3em;
@@ -522,6 +539,7 @@
 
     &__description {
       @include ellipsis;
+      min-width: 0;
     }
   }
 }

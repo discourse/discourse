@@ -455,38 +455,50 @@ export default class UserCardContents extends CardContentsBase {
                 handleShowUser=this.handleShowUser
               }}
             >
-              <div aria-hidden="true" class="user-card-avatar">
-                {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{dBoundAvatar
-                      this.user
-                      "huge"
-                    }}</span>
-                {{else}}
-                  <a
-                    class="card-huge-avatar"
-                    href={{this.avatarUrl}}
-                    tabindex="-1"
-                  >
-                    {{dBoundAvatar this.user "huge"}}
-                    {{#if this.isOwnCard}}
-                      <span class="own-avatar-pencil">
-                        <span class="own-avatar-pencil--icon">
-                          {{dIcon "pencil"}}
+              <div class="user-card-avatar-wrapper">
+                <div aria-hidden="true" class="user-card-avatar">
+                  {{#if this.contentHidden}}
+                    <span class="card-huge-avatar">{{dBoundAvatar
+                        this.user
+                        "huge"
+                      }}</span>
+                  {{else}}
+                    <a
+                      class="card-huge-avatar"
+                      href={{this.avatarUrl}}
+                      tabindex="-1"
+                    >
+                      {{dBoundAvatar this.user "huge"}}
+                      {{#if this.isOwnCard}}
+                        <span class="own-avatar-pencil">
+                          <span class="own-avatar-pencil--icon">
+                            {{dIcon "pencil"}}
+                          </span>
                         </span>
-                      </span>
-                    {{/if}}
-                  </a>
-                {{/if}}
+                      {{/if}}
+                    </a>
+                  {{/if}}
 
-                <DUserAvatarFlair @user={{this.user}} />
+                  <DUserAvatarFlair @user={{this.user}} />
 
-                <div>
-                  <PluginOutlet
-                    @connectorTagName="div"
-                    @name="user-card-avatar-flair"
-                    @outletArgs={{lazyHash user=this.user}}
-                  />
+                  <div>
+                    <PluginOutlet
+                      @connectorTagName="div"
+                      @name="user-card-avatar-flair"
+                      @outletArgs={{lazyHash user=this.user}}
+                    />
+                  </div>
                 </div>
+
+                {{#if this.hasStatus}}
+                  <div class="user-status">
+                    {{trustHTML this.userStatusEmoji}}
+                    <span class="user-status__description">
+                      {{this.user.status.description}}
+                    </span>
+                    {{dFormatDate this.user.status.ends_at format="tiny"}}
+                  </div>
+                {{/if}}
               </div>
               <div class="names">
                 <div
@@ -550,15 +562,6 @@ export default class UserCardContents extends CardContentsBase {
                   <div class="names__secondary staged">{{i18n
                       "user.staged"
                     }}</div>
-                {{/if}}
-                {{#if this.hasStatus}}
-                  <div class="user-status">
-                    {{trustHTML this.userStatusEmoji}}
-                    <span class="user-status__description">
-                      {{this.user.status.description}}
-                    </span>
-                    {{dFormatDate this.user.status.ends_at format="tiny"}}
-                  </div>
                 {{/if}}
                 <div>
                   <PluginOutlet
