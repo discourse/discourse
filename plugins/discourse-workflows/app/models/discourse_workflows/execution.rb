@@ -297,6 +297,7 @@ end
 #  waiting_until       :datetime
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  job_id              :string
 #  trigger_node_id     :string(100)
 #  waiting_node_id     :string(100)
 #  workflow_id         :bigint           not null
@@ -304,6 +305,7 @@ end
 #
 # Indexes
 #
+#  idx_dwf_executions_on_job_id                       (job_id) UNIQUE WHERE (job_id IS NOT NULL)
 #  idx_dwf_executions_on_resume_token                 (resume_token) WHERE (resume_token IS NOT NULL)
 #  idx_dwf_executions_on_retention                    (created_at) WHERE (status = ANY (ARRAY[2, 3, 5, 6]))
 #  idx_dwf_executions_on_status_waiting_until         (status,waiting_until)
