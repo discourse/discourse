@@ -5127,6 +5127,17 @@ en:
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
+    account_associated:
+      title: "New associated account"
+      subject_template: "[%{email_prefix}] New associated account"
+      subject_template_improved: "New associated account"
+      text_body_template: |
+        A %{provider_name} account was just linked to your account at %{site_name}. It can now be used to log in.
+
+        If this was you, there’s nothing else you need to do.
+
+        If this was not you, someone may have access to your account. [Review your associated accounts](%{base_url}/my/preferences/account), [review your existing sessions](%{base_url}/my/preferences/security), and consider changing your password.
+
     digest:
       why: "A brief summary of %{site_link} since %{since}"
       since_last_visit: "Since your last visit"
