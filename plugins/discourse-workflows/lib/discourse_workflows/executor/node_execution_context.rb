@@ -68,6 +68,8 @@ module DiscourseWorkflows
       end
 
       class RuntimeState
+        MAX_ITEM_ERROR_GROUPS = 20
+
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
         def initialize
@@ -90,6 +92,17 @@ module DiscourseWorkflows
         # Per-item nodes would otherwise repeat the same hint once per item.
         def add_execution_hints(hints)
           @execution_hints |= hints.map(&:deep_stringify_keys)
+        end
+
+        def add_item_error(item_index, error)
+          groups = (@metadata["item_errors"] ||= [])
+          group = groups.find { |entry| entry["message"] == error.summary }
+
+          if group
+            group["items"] << item_index
+          elsif groups.size < MAX_ITEM_ERROR_GROUPS
+            groups << { "message" => error.summary, "items" => [item_index] }
+          end
         end
 
         def merge_metadata(metadata)
@@ -264,9 +277,34 @@ module DiscourseWorkflows
 
       def continue_on_fail
         on_error = @node_settings["onError"]
-        return %w[continueRegularOutput continueErrorOutput].include?(on_error) if on_error.present?
+        return NodeDataShape::CONTINUE_ON_ERROR_MODES.include?(on_error) if on_error.present?
 
         ActiveModel::Type::Boolean.new.cast(@node_settings["continueOnFail"]) == true
+      end
+
+      # Fails only this item when the node continues on error, so items already handled
+      # aren't reported as failed too.
+      def guard_item(item, item_index)
+        expression_error_count = expression_errors.size
+        yield
+      rescue DiscourseWorkflows::NodeError => e
+        raise if !continue_on_fail
+
+        demote_expression_errors(from: expression_error_count, item_index:)
+        @runtime_state.add_item_error(item_index, e)
+        Item.with_error(item, e, paired_item: item_index).merge(Item::FAILED_KEY => true)
+      end
+
+      def each_item
+        input_items.flat_map.with_index do |item, item_index|
+          Array
+            .wrap(guard_item(item, item_index) { yield item, item_index })
+            .map do |output|
+              next output if Item.paired_item(output)
+
+              Item.with_paired_item(output, item_index)
+            end
+        end
       end
 
       def start_job(job_type, settings, item_index)
@@ -286,10 +324,10 @@ module DiscourseWorkflows
       end
 
       def ensure_no_expression_errors!
-        error = @resolver.expression_errors.first
+        error = expression_errors.first
         return unless error
 
-        raise NodeError, "#{error[:expression]}: #{error[:error]}"
+        raise NodeError, format_expression_error(error)
       end
 
       def helpers
@@ -531,6 +569,22 @@ module DiscourseWorkflows
       end
 
       private
+
+      def expression_errors
+        @resolver&.expression_errors || []
+      end
+
+      # Any expression error fails the whole step, so a failed item's own ones become warnings.
+      # Those of an item that succeeds still fail the step.
+      def demote_expression_errors(from:, item_index:)
+        @resolver
+          &.discard_expression_errors(from:)
+          &.each { |error| log.warn("#{format_expression_error(error)} [item #{item_index}]") }
+      end
+
+      def format_expression_error(error)
+        "#{error[:expression]}: #{error[:error]}"
+      end
 
       def ensure_actor_allowed!(actor, item_index:)
         return if actor.is_a?(DiscourseWorkflows::AnonymousActor)

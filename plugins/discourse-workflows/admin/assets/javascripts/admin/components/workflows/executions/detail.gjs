@@ -201,6 +201,15 @@ function stepWarnings(step) {
     );
   }
 
+  step.metadata?.item_errors?.forEach(({ message, items }) => {
+    warnings.push(
+      i18n("discourse_workflows.executions.item_error", {
+        count: items.length,
+        message,
+      })
+    );
+  });
+
   return warnings;
 }
 
