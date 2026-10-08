@@ -28,6 +28,7 @@ import {
   isLivestreamUrl,
   livestreamSource,
   reconcileDefaultReminder,
+  showRecordingField,
 } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
@@ -55,6 +56,7 @@ export default class CompactEventEditor extends Component {
   @tracked livestream;
   @tracked minimal;
   @tracked url;
+  @tracked recording;
   @tracked image;
   @tracked allowedGroups;
   @tracked hosts;
@@ -93,6 +95,7 @@ export default class CompactEventEditor extends Component {
       livestream: this.livestream,
       minimal: this.minimal,
       url: this.url,
+      recording: this.recording,
       image: this.image,
       allowedGroups: this.allowedGroups,
       hosts: this.hosts,
@@ -229,6 +232,17 @@ export default class CompactEventEditor extends Component {
     return this.#formatTime(this.endsAt);
   }
 
+  get showRecordingRow() {
+    return showRecordingField({
+      recording: this.recording,
+      livestream: this.livestream,
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      recurrence: this.recurrence,
+      recurrenceUntil: this.recurrenceUntil,
+    });
+  }
+
   get livestreamDisabled() {
     return !this.siteSettings.chat_enabled;
   }
@@ -287,6 +301,12 @@ export default class CompactEventEditor extends Component {
     if (!this.isLivestreamUrl) {
       this.livestream = false;
     }
+    this.#emitChange();
+  }
+
+  @action
+  onRecordingInput(event) {
+    this.recording = event.target.value.trim() || null;
     this.#emitChange();
   }
 
@@ -507,6 +527,7 @@ export default class CompactEventEditor extends Component {
       starts_at: this.startsAt,
       ends_at: this.endsAt,
       url: this.url,
+      recording_url: this.recording,
       recurrence: this.recurrence,
       recurrence_until: this.recurrenceUntil,
       image_upload: this.image ? { url: this.image } : null,
@@ -538,6 +559,7 @@ export default class CompactEventEditor extends Component {
           this.recurrence = updatedEvent.recurrence || null;
           this.recurrenceUntil = updatedEvent.recurrenceUntil || null;
           this.url = updatedEvent.url || null;
+          this.recording = updatedEvent.recordingUrl || null;
           this.#startedWithUrl ||= !!this.url;
           this.allowedGroups =
             (updatedEvent.rawInvitees || []).join(",") || null;
@@ -582,6 +604,7 @@ export default class CompactEventEditor extends Component {
     this.livestream = s.livestream;
     this.minimal = s.minimal;
     this.url = s.url;
+    this.recording = s.recording;
     this.#startedWithUrl ||= !!s.url;
     this.image = s.image;
     this.allowedGroups = s.allowedGroups;
@@ -886,6 +909,22 @@ export default class CompactEventEditor extends Component {
             />
           </div>
         {{/if}}
+      </section>
+    {{/if}}
+
+    {{#if this.showRecordingRow}}
+      <section class="composer-event__recording">
+        {{dIcon "video"}}
+        <input
+          class="composer-event__recording-input"
+          placeholder={{i18n
+            "discourse_post_event.composer.recording_placeholder"
+          }}
+          type="url"
+          value={{this.recording}}
+          {{on "input" this.onRecordingInput}}
+          {{on "focus" this.handleTextInputFocus}}
+        />
       </section>
     {{/if}}
 

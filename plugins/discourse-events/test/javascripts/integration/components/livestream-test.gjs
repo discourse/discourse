@@ -6,6 +6,7 @@ import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Livestream from "../../discourse/components/discourse-post-event/livestream";
+import OneboxEmbed from "../../discourse/components/discourse-post-event/onebox-embed";
 
 const ZOOM_URL = "https://us06web.zoom.us/j/123456789?pwd=secret";
 const ZOOM_ENTRY_SELECTOR = ".discourse-calendar-livestream-zoom-entry";
@@ -56,6 +57,24 @@ module(
       await render(<template><Livestream @event={{this.event}} /></template>);
 
       assert.dom(".event-livestream").doesNotExist();
+    });
+
+    test("renders nothing once a recording supersedes the stream", async function (assert) {
+      this.event.recordingUrl = "https://youtu.be/abc";
+      this.event.isExpired = true;
+
+      await render(<template><Livestream @event={{this.event}} /></template>);
+
+      assert.dom(".event-livestream").doesNotExist();
+    });
+
+    test("keeps the stream while the event has not ended", async function (assert) {
+      this.event.recordingUrl = "https://youtu.be/abc";
+      this.event.isExpired = false;
+
+      await render(<template><Livestream @event={{this.event}} /></template>);
+
+      assert.dom(".event-livestream").exists();
     });
 
     test("renders the Zoom entry for a Zoom livestream", async function (assert) {
@@ -110,9 +129,9 @@ module(
         this.event.livestreamOnebox =
           "<div class='lazy-video-container'></div>";
 
-        sinon.stub(Livestream.prototype, "lazyVideo").get(() => FakeLazyVideo);
+        sinon.stub(OneboxEmbed.prototype, "lazyVideo").get(() => FakeLazyVideo);
         sinon
-          .stub(Livestream.prototype, "videoAttributes")
+          .stub(OneboxEmbed.prototype, "videoAttributes")
           .get(() => ({ providerName: "youtube", id: "dQw4w9WgXcQ" }));
 
         withPluginApi((api) => {

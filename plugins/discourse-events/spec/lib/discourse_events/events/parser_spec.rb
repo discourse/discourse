@@ -314,6 +314,20 @@ describe DiscourseEvents::Events::Parser do
     end
   end
 
+  describe ".valid_web_url?" do
+    it "accepts http(s) links, with or without a scheme" do
+      expect(described_class.valid_web_url?("https://youtu.be/abc")).to eq(true)
+      expect(described_class.valid_web_url?("vimeo.com/123")).to eq(true)
+      expect(described_class.valid_web_url?(nil)).to eq(true)
+    end
+
+    it "rejects other schemes" do
+      expect(described_class.valid_web_url?("mailto:someone@example.com")).to eq(false)
+      expect(described_class.valid_web_url?("javascript:alert(1)")).to eq(false)
+      expect(described_class.valid_web_url?("Room 5")).to eq(false)
+    end
+  end
+
   describe ".url_restates_location?" do
     it "ignores scheme and a trailing slash" do
       expect(described_class.url_restates_location?("https://zoom.us/j/1/", "zoom.us/j/1")).to eq(

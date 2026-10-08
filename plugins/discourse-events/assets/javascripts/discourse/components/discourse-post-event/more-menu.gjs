@@ -13,15 +13,12 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import addEventToCalendar from "../../lib/add-event-to-calendar";
-import {
-  buildParams,
-  removeEvent,
-  replaceRaw,
-} from "../../lib/raw-event-helper";
-import PostEventBuilder from "../modal/post-event-builder";
+import { buildParams, replaceRaw } from "../../lib/raw-event-helper";
+import { showPostEventEditor } from "../../lib/show-post-event-editor";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite";
 import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group";
 import PostEventInvitees from "../modal/post-event-invitees";
+import PostEventRecording from "../modal/post-event-recording";
 
 export default class DiscoursePostEventMoreMenu extends Component {
   @service currentUser;
@@ -41,10 +38,24 @@ export default class DiscoursePostEventMoreMenu extends Component {
     return this.currentUser && this.args.event.canActOnDiscoursePostEvent;
   }
 
+  // Mirrors the top-level conditions of the menu items, e.g. an anonymous
+  // visitor on an ended event has none of them.
+  get hasItems() {
+    return !!(
+      !this.expiredOrClosed ||
+      this.canSendPmToCreator ||
+      this.canSeeUpcomingEvents ||
+      this.shouldShowParticipants ||
+      this.canActOnEvent
+    );
+  }
+
   get shouldShowParticipants() {
     return applyValueTransformer(
       "discourse-calendar-event-more-menu-should-show-participants",
-      this.canActOnEvent && !this.args.isStandaloneEvent,
+      this.canActOnEvent &&
+        !this.args.isStandaloneEvent &&
+        this.args.event.stats?.invited > 0,
       {
         event: this.args.event,
       }
@@ -59,6 +70,15 @@ export default class DiscoursePostEventMoreMenu extends Component {
 
   get canSeeUpcomingEvents() {
     return !this.args.event.isClosed && this.args.event.recurrence;
+  }
+
+  get canManageRecording() {
+    const { event } = this.args;
+    return (
+      this.canActOnEvent &&
+      event.livestream &&
+      (event.isExpired || !!event.recordingUrl)
+    );
   }
 
   get canBulkInvite() {
@@ -173,51 +193,21 @@ export default class DiscoursePostEventMoreMenu extends Component {
   }
 
   @action
-  async editPostEvent() {
+  editPostEvent() {
     this.menuApi.close();
 
-    this.modal.show(PostEventBuilder, {
-      model: {
-        event: this.args.event,
-        onDelete: async (event) => {
-          const post = await this.store.find("post", event.id);
-          const raw = post.raw;
-          const newRaw = removeEvent(raw);
-
-          const props = {
-            raw: newRaw,
-            edit_reason: i18n("discourse_post_event.destroy_event"),
-          };
-
-          const cooked = await cook(newRaw);
-          props.cooked = cooked.string;
-
-          return await post.save(props);
-        },
-        onUpdate: async (startsAt, endsAt, event, siteSettings) => {
-          const post = await this.store.find("post", event.id);
-          const raw = post.raw;
-          const eventParams = buildParams(
-            startsAt,
-            endsAt,
-            event,
-            siteSettings
-          );
-          const newRaw = replaceRaw(eventParams, raw);
-          if (newRaw) {
-            const props = {
-              raw: newRaw,
-              edit_reason: i18n("discourse_post_event.edit_reason"),
-            };
-
-            const cooked = await cook(newRaw);
-            props.cooked = cooked.string;
-
-            return await post.save(props);
-          }
-        },
-      },
+    showPostEventEditor({
+      modal: this.modal,
+      store: this.store,
+      event: this.args.event,
     });
+  }
+
+  @action
+  manageRecording() {
+    this.menuApi.close();
+
+    this.modal.show(PostEventRecording, { model: { event: this.args.event } });
   }
 
   @action
@@ -274,135 +264,152 @@ export default class DiscoursePostEventMoreMenu extends Component {
   }
 
   <template>
-    <DMenu
-      @icon="ellipsis"
-      @identifier="discourse-post-event-more-menu"
-      @onRegisterApi={{this.registerMenuApi}}
-      @triggerClass={{dConcatClass
-        "more-dropdown"
-        "btn-small"
-        "btn-default"
-        (if this.isSavingEvent "--saving")
-      }}
-    >
-      <:content>
-        <DDropdownMenu as |dropdown|>
-          {{#unless this.expiredOrClosed}}
-            <dropdown.item class="add-to-calendar">
-              <DButton
-                @action={{this.addToCalendar}}
-                @icon="file"
-                @label="discourse_post_event.add_to_calendar"
-              />
-            </dropdown.item>
-          {{/unless}}
+    {{#if this.hasItems}}
+      <DMenu
+        @icon="ellipsis"
+        @identifier="discourse-post-event-more-menu"
+        @onRegisterApi={{this.registerMenuApi}}
+        @triggerClass={{dConcatClass
+          "more-dropdown"
+          "btn-small"
+          "btn-default"
+          (if this.isSavingEvent "--saving")
+        }}
+      >
+        <:content>
+          <DDropdownMenu as |dropdown|>
+            {{#unless this.expiredOrClosed}}
+              <dropdown.item class="add-to-calendar">
+                <DButton
+                  @action={{this.addToCalendar}}
+                  @icon="file"
+                  @label="discourse_post_event.add_to_calendar"
+                />
+              </dropdown.item>
+            {{/unless}}
 
-          {{#if this.canSendPmToCreator}}
-            <dropdown.item class="send-pm-to-creator">
-              <DButton
-                class="btn-transparent"
-                @action={{this.sendPMToCreator}}
-                @icon="envelope"
-                @translatedLabel={{i18n
-                  "discourse_post_event.send_pm_to_creator"
-                  (hash username=@event.creator.username)
-                }}
-              />
-            </dropdown.item>
-          {{/if}}
-
-          {{#if this.canInvite}}
-            <dropdown.item class="invite-user-or-group">
-              <DButton
-                class="btn-transparent"
-                @action={{this.inviteUserOrGroup}}
-                @icon="user-plus"
-                @translatedLabel={{i18n "discourse_post_event.invite"}}
-              />
-            </dropdown.item>
-          {{/if}}
-
-          {{#if this.canSeeUpcomingEvents}}
-            <dropdown.item class="upcoming-events">
-              <DButton
-                class="btn-transparent"
-                @action={{this.upcomingEvents}}
-                @icon="far-calendar-plus"
-                @translatedLabel={{i18n
-                  "discourse_post_event.upcoming_events.title"
-                }}
-              />
-            </dropdown.item>
-          {{/if}}
-
-          {{#if this.shouldShowParticipants}}
-            <dropdown.item class="show-all-participants">
-              <DButton
-                class="btn-transparent"
-                @action={{this.showParticipants}}
-                @icon="user-group"
-                @label="discourse_post_event.show_participants"
-              />
-            </dropdown.item>
-
-            <dropdown.divider />
-          {{/if}}
-          {{#if this.canActOnEvent}}
-            <dropdown.item class="export-event">
-              <DButton
-                class="btn-transparent"
-                @action={{this.exportPostEvent}}
-                @icon="file-csv"
-                @label="discourse_post_event.export_event"
-              />
-            </dropdown.item>
-
-            {{#if this.canBulkInvite}}
-              <dropdown.item class="bulk-invite">
+            {{#if this.canSendPmToCreator}}
+              <dropdown.item class="send-pm-to-creator">
                 <DButton
                   class="btn-transparent"
-                  @action={{this.bulkInvite}}
-                  @icon="file-arrow-up"
-                  @label="discourse_post_event.bulk_invite"
+                  @action={{this.sendPMToCreator}}
+                  @icon="envelope"
+                  @translatedLabel={{i18n
+                    "discourse_post_event.send_pm_to_creator"
+                    (hash username=@event.creator.username)
+                  }}
                 />
               </dropdown.item>
             {{/if}}
 
-            {{#if @event.isClosed}}
-              <dropdown.item class="open-event">
+            {{#if this.canInvite}}
+              <dropdown.item class="invite-user-or-group">
                 <DButton
                   class="btn-transparent"
-                  @action={{this.openEvent}}
-                  @disabled={{this.isSavingEvent}}
-                  @icon="unlock"
-                  @label="discourse_post_event.open_event"
+                  @action={{this.inviteUserOrGroup}}
+                  @icon="user-plus"
+                  @translatedLabel={{i18n "discourse_post_event.invite"}}
                 />
               </dropdown.item>
-            {{else}}
-              <dropdown.item class="edit-event">
+            {{/if}}
+
+            {{#if this.canSeeUpcomingEvents}}
+              <dropdown.item class="upcoming-events">
                 <DButton
                   class="btn-transparent"
-                  @action={{this.editPostEvent}}
-                  @icon="pencil"
-                  @label="discourse_post_event.edit_event"
+                  @action={{this.upcomingEvents}}
+                  @icon="far-calendar-plus"
+                  @translatedLabel={{i18n
+                    "discourse_post_event.upcoming_events.title"
+                  }}
+                />
+              </dropdown.item>
+            {{/if}}
+
+            {{#if this.shouldShowParticipants}}
+              <dropdown.item class="show-all-participants">
+                <DButton
+                  class="btn-transparent"
+                  @action={{this.showParticipants}}
+                  @icon="user-group"
+                  @label="discourse_post_event.show_participants"
                 />
               </dropdown.item>
 
-              {{#unless @event.isExpired}}
-                <dropdown.item class="close-event">
+              <dropdown.divider />
+            {{/if}}
+            {{#if this.canActOnEvent}}
+              <dropdown.item class="export-event">
+                <DButton
+                  class="btn-transparent"
+                  @action={{this.exportPostEvent}}
+                  @icon="file-csv"
+                  @label="discourse_post_event.export_event"
+                />
+              </dropdown.item>
+
+              {{#if this.canBulkInvite}}
+                <dropdown.item class="bulk-invite">
                   <DButton
-                    class="btn-transparent --danger"
-                    @action={{this.closeEvent}}
-                    @disabled={{this.isSavingEvent}}
-                    @icon="xmark"
-                    @label="discourse_post_event.close_event"
+                    class="btn-transparent"
+                    @action={{this.bulkInvite}}
+                    @icon="file-arrow-up"
+                    @label="discourse_post_event.bulk_invite"
                   />
                 </dropdown.item>
-              {{/unless}}
+              {{/if}}
+
+              {{#if @event.isClosed}}
+                <dropdown.item class="open-event">
+                  <DButton
+                    class="btn-transparent"
+                    @action={{this.openEvent}}
+                    @disabled={{this.isSavingEvent}}
+                    @icon="unlock"
+                    @label="discourse_post_event.open_event"
+                  />
+                </dropdown.item>
+              {{else}}
+                <dropdown.item class="edit-event">
+                  <DButton
+                    class="btn-transparent"
+                    @action={{this.editPostEvent}}
+                    @icon="pencil"
+                    @label="discourse_post_event.edit_event"
+                  />
+                </dropdown.item>
+
+                {{#unless @event.isExpired}}
+                  <dropdown.item class="close-event">
+                    <DButton
+                      class="btn-transparent --danger"
+                      @action={{this.closeEvent}}
+                      @disabled={{this.isSavingEvent}}
+                      @icon="xmark"
+                      @label="discourse_post_event.close_event"
+                    />
+                  </dropdown.item>
+                {{/unless}}
+              {{/if}}
+
+              {{#if this.canManageRecording}}
+                <dropdown.item class="manage-recording">
+                  <DButton
+                    class="btn-transparent"
+                    @action={{this.manageRecording}}
+                    @icon="video"
+                    @label={{if
+                      @event.recordingUrl
+                      "discourse_post_event.recording_modal.edit_title"
+                      "discourse_post_event.recording.add"
+                    }}
+                  />
+                </dropdown.item>
+              {{/if}}
             {{/if}}
-          {{/if}}
-        </DDropdownMenu>
-      </:content>
-    </DMenu>
+          </DDropdownMenu>
+        </:content>
+      </DMenu>
+    {{/if}}
   </template>
 }

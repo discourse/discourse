@@ -9,6 +9,7 @@ import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
@@ -23,6 +24,7 @@ import Invitees from "./invitees";
 import Livestream from "./livestream";
 import DiscoursePostEventLocation from "./location";
 import MoreMenu from "./more-menu";
+import Recording from "./recording";
 import Status from "./status";
 import Url from "./url";
 
@@ -116,6 +118,23 @@ export default class DiscoursePostEvent extends Component {
 
   get isPartialEvent() {
     return !this.args.event?.creator;
+  }
+
+  // Once the event is over and a recording exists, the stream link is stale.
+  get livestreamSuperseded() {
+    return !!(
+      this.event?.livestream &&
+      this.event.isExpired &&
+      this.event.recordingUrl
+    );
+  }
+
+  get locationSuperseded() {
+    return this.livestreamSuperseded && !!this.event.location?.trim();
+  }
+
+  get urlSuperseded() {
+    return this.livestreamSuperseded && !this.locationSuperseded;
   }
 
   get displayUrl() {
@@ -262,7 +281,12 @@ export default class DiscoursePostEvent extends Component {
   <template>
     {{#let this.event as |event|}}
       <div class="discourse-post-event">
-        <div class="discourse-post-event-widget">
+        <div
+          class={{dConcatClass
+            "discourse-post-event-widget"
+            (if event.isExpired "is-ended")
+          }}
+        >
           {{#if event}}
             <Image
               @alt={{this.eventName}}
@@ -336,13 +360,19 @@ export default class DiscoursePostEvent extends Component {
               @outletArgs={{lazyHash
                 event=event
                 Section=(component InfoSection event=event)
-                Url=(component Url url=this.displayUrl)
+                Url=(component
+                  Url url=this.displayUrl superseded=this.urlSuperseded
+                )
                 Description=(component
                   Description
                   descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component DiscoursePostEventLocation event=event)
+                Location=(component
+                  DiscoursePostEventLocation
+                  event=event
+                  superseded=this.locationSuperseded
+                )
                 Dates=(component Dates event=event)
                 Recurrence=(component
                   InfoSection icon="arrows-rotate" class="event-recurrence"
@@ -351,6 +381,7 @@ export default class DiscoursePostEvent extends Component {
                 Invitees=(component Invitees event=event)
                 Status=(component Status event=event)
                 ChatChannel=(component ChatChannel event=event)
+                Recording=(component Recording event=event post=@post)
                 Image=(component
                   Image
                   imageUpload=event.imageUpload
@@ -367,8 +398,14 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <DiscoursePostEventLocation @event={{event}} />
-              <Url @url={{this.displayUrl}} />
+              <DiscoursePostEventLocation
+                @event={{event}}
+                @superseded={{this.locationSuperseded}}
+              />
+              <Url
+                @superseded={{this.urlSuperseded}}
+                @url={{this.displayUrl}}
+              />
               <ChatChannel @event={{event}} />
 
               {{#if event.stats}}
@@ -392,6 +429,7 @@ export default class DiscoursePostEvent extends Component {
 
               {{#unless @hideLivestreamVideo}}
                 <Livestream @event={{event}} @post={{@post}} />
+                <Recording @event={{event}} @post={{@post}} />
               {{/unless}}
             </PluginOutlet>
           {{/if}}

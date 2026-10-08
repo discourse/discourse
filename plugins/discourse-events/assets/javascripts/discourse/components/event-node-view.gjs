@@ -31,6 +31,7 @@ const CLEARABLE_ATTRS = [
   "image",
   "closed",
   "hosts",
+  "recording",
 ];
 
 export default class EventNodeView extends Component {

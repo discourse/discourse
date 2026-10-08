@@ -76,6 +76,34 @@ $show-interested: inherit;
     section:last-child {
       padding-bottom: 0.75em;
     }
+
+    &.is-ended {
+      background: var(--primary-very-low);
+
+      .event-image img {
+        filter: grayscale(1);
+        opacity: 0.6;
+      }
+
+      .event-date {
+        border-color: var(--primary-low-mid);
+
+        .month,
+        .day {
+          color: var(--primary-medium);
+        }
+      }
+
+      .event-info .name,
+      .event-info .name a {
+        color: var(--primary-high);
+      }
+
+      .avatar-flair,
+      .event-invitees-icon .going {
+        background: var(--primary-very-low);
+      }
+    }
   }
 
   .event-header {
@@ -92,6 +120,10 @@ $show-interested: inherit;
       display: flex;
       gap: var(--space-2);
       margin-left: auto;
+
+      &:not(:has(*)) {
+        display: none;
+      }
     }
   }
 
@@ -129,6 +161,7 @@ $show-interested: inherit;
     flex-direction: column;
     min-width: 0;
     margin-right: 0.5rem;
+    margin-top: calc(-1 * var(--space-1));
 
     .name {
       font-size: var(--font-up-2);
@@ -411,6 +444,25 @@ $show-interested: inherit;
     }
   }
 
+  .event-location.--superseded,
+  .event-url.--superseded {
+    &,
+    a,
+    .url,
+    > .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .event-recording {
+    padding-top: 0;
+  }
+
+  .event-invitees + .event-recording {
+    padding-top: var(--space-2);
+    padding-left: var(--space-6);
+  }
+
   .cooked-date,
   .participants,
   .event-url .url {
@@ -425,6 +477,12 @@ $show-interested: inherit;
     grid-template-columns: 3em 1fr;
     column-gap: 1em;
     align-items: center;
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
   }
 
   p.no-rsvp-description {

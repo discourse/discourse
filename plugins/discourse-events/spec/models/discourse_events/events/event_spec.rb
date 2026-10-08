@@ -100,6 +100,42 @@ RSpec.describe DiscourseEvents::Events::Event do
     end
   end
 
+  describe "#warm_recording_onebox" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming when a recording is added" do
+      event = Fabricate(:event, post: post)
+
+      expect_enqueued_with(
+        job: :warm_recording_onebox,
+        args: {
+          event_id: event.id,
+          url: "https://youtu.be/abc",
+        },
+      ) { event.update!(recording_url: "youtu.be/abc") }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key("https://youtu.be/abc"),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_recording_onebox) do
+        Fabricate(:event, post: post, recording_url: "https://youtu.be/abc")
+      end
+    end
+
+    it "does not warm the onebox when an unrelated attribute changes" do
+      event = Fabricate(:event, post: post, recording_url: "https://youtu.be/abc")
+
+      expect_not_enqueued_with(job: :warm_recording_onebox) { event.update!(name: "Renamed") }
+    end
+  end
+
   describe "#livestream_url" do
     fab!(:topic) { Fabricate(:topic, category: nil) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -792,6 +828,46 @@ RSpec.describe DiscourseEvents::Events::Event do
           expect(post_event.ongoing?).to be(false)
         end
       end
+    end
+  end
+
+  describe "#livestream_chat_active?" do
+    before { Jobs.run_later! }
+
+    # Not `fab!`: the dates must be relative to the time frozen for this file.
+    let!(:event) do
+      Fabricate(
+        :event,
+        livestream: true,
+        location: "https://www.youtube.com/live/abc123",
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+    end
+
+    it "is true for an upcoming livestream" do
+      expect(event.livestream_chat_active?).to eq(true)
+    end
+
+    it "is false once the livestream has ended" do
+      freeze_time 3.hours.from_now
+
+      expect(event.livestream_chat_active?).to eq(false)
+    end
+
+    it "is false for events that aren't livestreams" do
+      event.update_columns(livestream: false)
+
+      expect(event.livestream_chat_active?).to eq(false)
+    end
+
+    it "is only true around each occurrence of a recurring livestream" do
+      event.update_columns(recurrence: "every_week")
+
+      expect(event.livestream_chat_active?).to eq(false)
+
+      freeze_time 50.minutes.from_now
+      expect(event.livestream_chat_active?).to eq(true)
     end
   end
 

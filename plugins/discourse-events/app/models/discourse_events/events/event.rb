@@ -45,6 +45,7 @@ module DiscourseEvents
       after_save :sync_hosts
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
+      after_commit :enqueue_warm_recording_onebox, on: %i[create update]
       after_commit :destroy_topic_custom_field, on: %i[destroy]
       after_commit :create_or_update_event_date, on: %i[create update]
       after_save do
@@ -63,6 +64,7 @@ module DiscourseEvents
       validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
       validates :location, length: { maximum: MAX_LOCATION_LENGTH }
       validates :url, length: { maximum: MAX_URL_LENGTH }
+      validates :recording_url, length: { maximum: MAX_URL_LENGTH }
       validates :max_attendees,
                 numericality: {
                   only_integer: true,
@@ -128,6 +130,29 @@ module DiscourseEvents
       def warm_livestream_onebox!
         return if has_cached_livestream_onebox?
         Oneboxer.onebox(livestream_url)
+        post&.publish_change_to_clients!(:revised)
+      end
+
+      # The raw allows a recording without a scheme; oneboxing needs one.
+      def recording_link
+        return if recording_url.blank?
+        recording_url.match?(%r{\Ahttps?://}i) ? recording_url : "https://#{recording_url}"
+      end
+
+      def has_cached_recording_onebox?
+        recording_link.present? && Oneboxer.cached_onebox(recording_link).present?
+      end
+
+      def enqueue_warm_recording_onebox
+        return if recording_link.blank? || !saved_change_to_recording_url?
+        return if has_cached_recording_onebox?
+        Jobs.enqueue(:warm_recording_onebox, event_id: id, url: recording_link)
+      end
+
+      # Only ever called from the background job, never during a request.
+      def warm_recording_onebox!
+        return if has_cached_recording_onebox?
+        Oneboxer.onebox(recording_link)
         post&.publish_change_to_clients!(:revised)
       end
 
@@ -224,6 +249,13 @@ module DiscourseEvents
 
       def starts_at
         current_event_date&.starts_at || original_starts_at
+      end
+
+      # Between occurrences of a recurring livestream there is nothing to chat
+      # alongside, so the chat only docks around each one.
+      def livestream_chat_active?
+        return false if !livestream? || expired?
+        !recurring? || currently_within_event_timeframe?
       end
 
       def ends_at
@@ -833,6 +865,7 @@ end
 #  original_ends_at   :datetime
 #  original_starts_at :datetime         not null
 #  raw_invitees       :string           is an Array
+#  recording_url      :string(1000)
 #  recurrence         :string
 #  recurrence_until   :datetime
 #  reminders          :string

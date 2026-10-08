@@ -12,6 +12,7 @@ module Jobs
           .find_each do |event_date|
             send_reminder(event_date)
             trigger_events(event_date)
+            open_livestream_chat(event_date)
             finish(event_date)
           end
       end
@@ -39,6 +40,25 @@ module Jobs
           event_date.update!(event_started_sent_at: DateTime.now)
           DiscourseEvent.trigger(:discourse_post_event_event_started, event_date.event)
         end
+      end
+
+      # A recurring livestream's chat only docks around each occurrence, so open
+      # pages are told to reload once the next one opens; `finish` does the
+      # same when it ends.
+      def open_livestream_chat(event_date)
+        event = event_date.event
+        return if !event.livestream? || !event.recurring?
+        return if event_date.opens_at > Time.current
+        if !Discourse.redis.set("livestream_chat_opened:#{event_date.id}", 1, nx: true, ex: 2.days)
+          return
+        end
+
+        topic = event.post.topic
+        MessageBus.publish(
+          "/topic/#{topic.id}",
+          { reload_topic: true },
+          topic.secure_audience_publish_messages,
+        )
       end
 
       def finish(event_date)

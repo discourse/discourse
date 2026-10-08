@@ -258,4 +258,57 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
       expect(job.due_reminders(valid_event.event_dates.first).length).to eq(1)
     end
   end
+
+  describe "livestream chat transcript" do
+    before do
+      Jobs.run_later!
+      SiteSetting.discourse_events_enabled = true
+      past_event.update_columns(livestream: true)
+    end
+
+    it "publishes the transcript once a livestream ends" do
+      freeze_time 8.days.after
+
+      expect_enqueued_with(
+        job: :publish_livestream_chat_transcript,
+        args: {
+          event_date_id: past_date.id,
+        },
+      ) { job.execute({}) }
+    end
+
+    it "does not publish a transcript for events that aren't livestreams" do
+      past_event.update_columns(livestream: false)
+      freeze_time 8.days.after
+
+      expect_not_enqueued_with(job: :publish_livestream_chat_transcript) { job.execute({}) }
+    end
+  end
+
+  describe "#open_livestream_chat" do
+    let(:topic) { past_event.post.topic }
+    let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { job.execute({}) } }
+
+    before { past_event.update_columns(livestream: true, recurrence: "every_week") }
+
+    it "waits until the occurrence's chat window opens" do
+      freeze_time(past_date.starts_at - 31.minutes)
+
+      expect(messages).to be_empty
+    end
+
+    it "tells open pages to reload once the window opens" do
+      freeze_time(past_date.starts_at - 29.minutes)
+
+      expect(messages.map(&:data)).to contain_exactly({ reload_topic: true })
+      expect(MessageBus.track_publish("/topic/#{topic.id}") { job.execute({}) }).to be_empty
+    end
+
+    it "leaves one-off livestreams alone, whose chat docks throughout" do
+      past_event.update_columns(recurrence: nil)
+      freeze_time(past_date.starts_at - 29.minutes)
+
+      expect(messages).to be_empty
+    end
+  end
 end

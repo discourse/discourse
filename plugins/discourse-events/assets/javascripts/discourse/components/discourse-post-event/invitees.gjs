@@ -60,6 +60,7 @@ export default class DiscoursePostEventInvitees extends Component {
       {{else}}
         {{#unless @event.isStandalone}}
           <section class="event__section event-invitees no-rsvp">
+            {{dIcon "users"}}
             <p class="no-rsvp-description">{{i18n
                 "discourse_post_event.models.invitee.status.going_count.other"
                 count="0"

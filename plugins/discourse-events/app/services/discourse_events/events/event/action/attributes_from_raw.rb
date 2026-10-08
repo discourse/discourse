@@ -26,6 +26,7 @@ module DiscourseEvents
           closed: raw_event[:closed] || false,
           chat_enabled: raw_event[:"chat-enabled"]&.downcase == "true",
           livestream: raw_event[:livestream]&.downcase == "true",
+          recording_url: raw_event[:recording],
           max_attendees: raw_event[:"max-attendees"]&.to_i,
           all_day: all_day?,
           custom_fields: custom_fields,
