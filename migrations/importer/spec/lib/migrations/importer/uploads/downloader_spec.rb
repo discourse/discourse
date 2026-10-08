@@ -10,6 +10,16 @@ RSpec.describe Migrations::Importer::Uploads::Downloader do
 
   after { FileUtils.remove_entry(cache_path) }
 
+  describe "#initialize" do
+    it "creates a missing cache directory" do
+      nested = File.join(cache_path, "nested", "downloads")
+
+      described_class.new(cache_path: nested, downloads: {})
+
+      expect(File.directory?(nested)).to be(true)
+    end
+  end
+
   describe "#download" do
     it "reuses a cached download when its filename is known" do
       id = "abc/123="
@@ -33,8 +43,8 @@ RSpec.describe Migrations::Importer::Uploads::Downloader do
       destination.define_singleton_method(:get) do |&block|
         block.call(response, "contents", URI(url))
       end
-      stub_const("FinalDestination", Class.new)
-      FinalDestination.stubs(:new).with(url).returns(destination)
+      class_double("FinalDestination").as_stubbed_const
+      allow(FinalDestination).to receive(:new).with(url).and_return(destination)
 
       _path, filename, download_record = downloader.download(url:, id: "1")
 
@@ -47,8 +57,8 @@ RSpec.describe Migrations::Importer::Uploads::Downloader do
       response = Net::HTTPNotFound.new("1.1", "404", "Not Found")
       destination = Object.new
       destination.define_singleton_method(:get) { |&block| block.call(response, nil, nil) }
-      stub_const("FinalDestination", Class.new)
-      FinalDestination.stubs(:new).with(url).returns(destination)
+      class_double("FinalDestination").as_stubbed_const
+      allow(FinalDestination).to receive(:new).with(url).and_return(destination)
 
       expect { downloader.download(url:, id: "1") }.to raise_error(
         described_class::DownloadFailedError,
