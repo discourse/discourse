@@ -1,8 +1,27 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { getURLWithCDN } from "discourse/lib/get-url";
+/** @type {import("discourse/ui-kit/d-cdn-img.gjs")} */
 import DCdnImg from "discourse/ui-kit/d-cdn-img";
 
+/**
+ * @typedef {object} LightDarkImgSource
+ * @property {string} [url]
+ * @property {number} [width]
+ * @property {number} [height]
+ */
+
+/**
+ * Renders an image that swaps between a light and (optional) dark source per the
+ * active color scheme. The consumer's `...attributes` are forwarded to the
+ * underlying image element.
+ *
+ * @extends {Component<{
+ *   Args: { lightImg?: LightDarkImgSource, darkImg?: LightDarkImgSource },
+ *   Element: HTMLImageElement,
+ * }>}
+ */
 export default class DLightDarkImg extends Component {
   @service session;
   @service interfaceColor;

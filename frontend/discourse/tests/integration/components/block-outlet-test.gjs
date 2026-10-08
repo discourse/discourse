@@ -1,10 +1,20 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { render, setupOnerror } from "@ember/test-helpers";
+import {
+  clearRender,
+  find,
+  render,
+  settled,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
-import BlockOutlet, { _getOutletLayouts } from "discourse/blocks/block-outlet";
+import BlockOutlet, {
+  _getOutletLayouts,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -22,6 +32,28 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   hooks.afterEach(function () {
     setupOnerror();
+  });
+
+  module("mounted outlet registry", function () {
+    test("the blocks service tracks a mounted outlet (even with no layout) and clears it on teardown", async function (assert) {
+      const blocks = getOwner(this).lookup("service:blocks");
+      assert.false(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "not tracked before the outlet renders"
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+      assert.true(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "tracked while mounted, despite having no layout"
+      );
+
+      await clearRender();
+      assert.false(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "untracked once the outlet is torn down"
+      );
+    });
   });
 
   module("basic rendering", function () {
@@ -49,6 +81,44 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.dom(".homepage-blocks").exists();
       assert.dom(".render-test-content").hasText("Test Content");
+    });
+
+    test("re-renders when a locked layout is added after first paint", async function (assert) {
+      @block("autotrack-seed-block")
+      class SeedBlock extends Component {
+        <template>
+          <div class="seed-content">Seed</div>
+        </template>
+      }
+
+      @block("autotrack-locked-block")
+      class LockedBlock extends Component {
+        <template>
+          <div class="locked-content">Locked</div>
+        </template>
+      }
+
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: SeedBlock }])
+      );
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+      assert.dom(".seed-content").exists("the overridable seed renders first");
+
+      // Register a locked layout AFTER the first paint. resolveLayoutRecord reads
+      // tracked record fields, so the outlet must re-resolve and re-render — this
+      // guards the autotracking of the new precedence chain.
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: LockedBlock }], {
+          overridable: false,
+        })
+      );
+      await settled();
+
+      assert.dom(".locked-content").exists("the locked layout takes over");
+      assert.dom(".seed-content").doesNotExist();
     });
 
     test("renders correct BEM class structure", async function (assert) {
@@ -1374,6 +1444,188 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         { foo: "bar" },
         "ghost receives original args"
       );
+      // The forwarded key must be the canonical `${name}:${__stableKey}` shape
+      // (no categorising prefix) so consumers can correlate the ghost back to
+      // its layout entry.
+      assert.true(
+        /^missing-optional-block:\d+$/.test(ghostBlockData.key),
+        `optional-missing key is "name:stableKey" with no prefix (got "${ghostBlockData.key}")`
+      );
+    });
+
+    test("unknown-block ghost key forwarded to BLOCK_DEBUG matches the entry's stable key (no internal prefix)", async function (assert) {
+      // A rendered ghost is correlated back to its layout entry by the
+      // forwarded `key`, which must be the same `${name}:${__stableKey}` shape
+      // resolved blocks expose — otherwise lookups (selection, removal) miss.
+      let ghostKey;
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          ghostKey = blockData.key;
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}></div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      // A truly-unregistered block only survives layout registration on the
+      // permissive session-draft layer (the in-session editing path); the
+      // strict `api.renderBlocks` path would reject it outright.
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: "totally-unregistered-block" }],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.true(
+        /^totally-unregistered-block:\d+$/.test(ghostKey),
+        `unknown-block key is "name:stableKey" with no prefix (got "${ghostKey}")`
+      );
+    });
+
+    test("unknown container forwards its children to GHOST_CHILDREN_CREATOR", async function (assert) {
+      // An unregistered container's nested blocks must stay visible (and
+      // editable) so the author can salvage them before removing the broken
+      // parent. Core kicks this off by invoking GHOST_CHILDREN_CREATOR with
+      // the entry's children, mirroring the resolved-container path.
+      let creatorArgs = null;
+      let forwardedChildren = null;
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR,
+        (...args) => {
+          creatorArgs = args;
+          return [
+            {
+              key: "child-sentinel:0",
+              Component: <template>
+                <div class="ghost-child-sentinel"></div>
+              </template>,
+            },
+          ];
+        }
+      );
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          forwardedChildren = blockData.children;
+          const kids = blockData.children ?? [];
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}>
+                {{#each kids key="key" as |child|}}
+                  <child.Component />
+                {{/each}}
+              </div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      // Unknown blocks only survive registration on the permissive
+      // session-draft layer; strict `api.renderBlocks` rejects them.
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [
+          {
+            block: "unregistered-container",
+            children: [
+              { block: "unregistered-child" },
+              { block: "unregistered-child" },
+            ],
+          },
+        ],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom('.ghost-block[data-name="unregistered-container"]')
+        .exists("the unknown container renders as a ghost");
+      assert.notStrictEqual(
+        creatorArgs,
+        null,
+        "GHOST_CHILDREN_CREATOR was invoked for the unknown container"
+      );
+      assert.strictEqual(
+        creatorArgs[0].length,
+        2,
+        "the container's two child entries are forwarded as the first arg"
+      );
+      assert.strictEqual(
+        creatorArgs[2],
+        "sidebar-blocks/unregistered-container[0]",
+        "the container path is forwarded as the third arg"
+      );
+      assert.strictEqual(
+        typeof creatorArgs[5],
+        "function",
+        "the block resolver is forwarded as the sixth arg"
+      );
+      assert.strictEqual(
+        forwardedChildren.length,
+        1,
+        "the creator's return value is forwarded as blockData.children"
+      );
+      assert
+        .dom(".ghost-child-sentinel")
+        .exists("the forwarded ghost children render inside the container");
+    });
+
+    test("unknown container renders a childless ghost when no GHOST_CHILDREN_CREATOR is registered", async function (assert) {
+      // Core-only installs (no creator registered) must degrade to the
+      // previous behaviour: the container ghost still renders, just without
+      // nested children.
+      let forwardedChildren = "unset";
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          forwardedChildren = blockData.children;
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}></div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [
+          {
+            block: "unregistered-container",
+            children: [{ block: "unregistered-child" }],
+          },
+        ],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom('.ghost-block[data-name="unregistered-container"]')
+        .exists("the unknown container still renders as a ghost");
+      assert.strictEqual(
+        forwardedChildren,
+        undefined,
+        "no children are forwarded when no creator is registered"
+      );
     });
   });
 
@@ -1762,6 +2014,378 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         layoutData.validatedLayout,
         /missing required arg "path"/,
         "validation error thrown for missing required path argument"
+      );
+    });
+  });
+
+  module("instance survival across structural edits", function () {
+    // Appends `entry` to an outlet's session-draft layer, reusing the existing
+    // wrapped entries by reference — the same identity-preserving shape a
+    // structural insert produces. `_setLayoutLayer` mints a stable key for the
+    // new entry and leaves the existing keys untouched (skipExisting), so this
+    // mirrors inserting a sibling without disturbing the rest of the tree.
+    function appendSibling(outletName, currentLayout, entry, owner) {
+      const next = [...currentLayout, entry];
+      _setLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT, next, owner, {
+        permissive: true,
+      });
+      return next;
+    }
+
+    test("a child inserted into an initially-empty container renders", async function (assert) {
+      // A container first rendered with zero children must still pick up its
+      // first child on a later edit. The cached container reads its children
+      // through a tracked holder; if the holder is only created for containers
+      // that start non-empty, an empty container freezes on its empty state and
+      // never shows anything inserted into it (the "drag the first block into an
+      // empty section" flow).
+      @block("late-child")
+      class LateChild extends Component {
+        <template>
+          <div class="late-child">Late</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      const container = { block: BlockGroup, children: [] };
+      _setLayoutLayer(
+        "main-outlet-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [container],
+        owner,
+        { permissive: true }
+      );
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+      assert
+        .dom(".late-child")
+        .doesNotExist("the empty container starts with no children");
+
+      // Insert the first child into the (previously empty) container.
+      container.children = [{ block: LateChild }];
+      _setLayoutLayer(
+        "main-outlet-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [container],
+        owner,
+        { permissive: true }
+      );
+      await settled();
+
+      assert
+        .dom(".late-child")
+        .exists("the child inserted into the empty container renders");
+    });
+
+    test("a leaf inside a container survives an unrelated sibling insert", async function (assert) {
+      // The core regression: leaf blocks are already cached, but they live
+      // inside containers. When a container is re-curried on every render, its
+      // children remount even though nothing about them changed. Inserting an
+      // unrelated sibling at the root must not tear down a leaf nested in a
+      // pre-existing container.
+      @block("survivor-leaf")
+      class SurvivorLeaf extends Component {
+        <template>
+          <div class="survivor-leaf">Leaf</div>
+        </template>
+      }
+
+      @block("late-leaf")
+      class LateLeaf extends Component {
+        <template>
+          <div class="late-leaf">Late</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      const layout = [
+        { block: BlockGroup, children: [{ block: SurvivorLeaf }] },
+      ];
+      _setLayoutLayer(
+        "hero-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        layout,
+        owner,
+        {
+          permissive: true,
+        }
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      const before = find(".survivor-leaf");
+      assert.dom(before).exists("the nested leaf renders initially");
+
+      appendSibling("hero-blocks", layout, { block: LateLeaf }, owner);
+      await settled();
+
+      assert.dom(".late-leaf").exists("the inserted sibling renders");
+      assert.strictEqual(
+        find(".survivor-leaf"),
+        before,
+        "the nested leaf keeps its DOM node (not remounted) after the insert"
+      );
+    });
+
+    test("an async-data block inside a container is built once across an unrelated insert", async function (assert) {
+      // Encodes the user-visible symptom: data-loading blocks re-fetch and
+      // shift layout when an unrelated block is inserted, because their
+      // container remounts them. Construction (where such blocks kick off their
+      // load) must happen exactly once.
+      let constructCount = 0;
+
+      @block("counting-leaf")
+      class CountingLeaf extends Component {
+        constructor() {
+          super(...arguments);
+          constructCount++;
+        }
+
+        <template>
+          <div class="counting-leaf">Counting</div>
+        </template>
+      }
+
+      @block("other-late-leaf")
+      class OtherLateLeaf extends Component {
+        <template>
+          <div class="other-late-leaf">Other</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      const layout = [
+        { block: BlockGroup, children: [{ block: CountingLeaf }] },
+      ];
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        layout,
+        owner,
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+      assert.strictEqual(constructCount, 1, "constructed once on first render");
+
+      appendSibling("sidebar-blocks", layout, { block: OtherLateLeaf }, owner);
+      await settled();
+
+      assert.strictEqual(
+        constructCount,
+        1,
+        "not reconstructed when an unrelated sibling is inserted"
+      );
+    });
+
+    test("two consecutive inserts into the same container both render", async function (assert) {
+      // Guards the load-bearing invariant: a cache hit must reuse the *same*
+      // children holder instance, so the second insert is observed too (a stale
+      // holder would freeze the container's children after the first edit).
+      @block("base-child")
+      class BaseChild extends Component {
+        <template>
+          <div class="base-child">Base</div>
+        </template>
+      }
+
+      @block("first-added")
+      class FirstAdded extends Component {
+        <template>
+          <div class="first-added">First</div>
+        </template>
+      }
+
+      @block("second-added")
+      class SecondAdded extends Component {
+        <template>
+          <div class="second-added">Second</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      // A single container whose children array we grow twice. Each republish
+      // reuses the container entry by reference (identity preserved) but swaps
+      // in a fresh children array — exactly what an "insert inside" produces.
+      const container = { block: BlockGroup, children: [{ block: BaseChild }] };
+      _setLayoutLayer(
+        "main-outlet-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [container],
+        owner,
+        { permissive: true }
+      );
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+      assert.dom(".base-child").exists("the base child renders");
+
+      // First insert into the container.
+      container.children = [...container.children, { block: FirstAdded }];
+      _setLayoutLayer(
+        "main-outlet-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [container],
+        owner,
+        { permissive: true }
+      );
+      await settled();
+      assert.dom(".first-added").exists("the first inserted child renders");
+
+      // Second insert into the same container.
+      container.children = [...container.children, { block: SecondAdded }];
+      _setLayoutLayer(
+        "main-outlet-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [container],
+        owner,
+        { permissive: true }
+      );
+      await settled();
+      assert.dom(".second-added").exists("the second inserted child renders");
+      assert
+        .dom(".first-added")
+        .exists("the first inserted child still renders");
+    });
+
+    test("editing a container's own arg still re-renders it", async function (assert) {
+      // Negative guard against over-caching: own-arg changes must still produce
+      // fresh output. We toggle a container arg and assert the rendered value
+      // updates even though the container instance may persist.
+      @block("arg-container", {
+        container: true,
+        args: { label: { type: "string" } },
+      })
+      class ArgContainer extends Component {
+        <template>
+          <div class="arg-container" data-label={{@label}}>
+            {{#each @children key="key" as |child|}}
+              <child.Component />
+            {{/each}}
+          </div>
+        </template>
+      }
+
+      @block("inert-child")
+      class InertChild extends Component {
+        <template>
+          <div class="inert-child">Child</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      const layout = [
+        {
+          block: ArgContainer,
+          args: { label: "before" },
+          children: [{ block: InertChild }],
+        },
+      ];
+      _setLayoutLayer(
+        "hero-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        layout,
+        owner,
+        {
+          permissive: true,
+        }
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+      assert.dom(".arg-container").hasAttribute("data-label", "before");
+
+      // Mutate the (tracked) entry args in place — the live arg-update path.
+      layout[0].args.label = "after";
+      await settled();
+      assert
+        .dom(".arg-container")
+        .hasAttribute("data-label", "after", "own-arg update propagates");
+    });
+
+    test("a container moved under a different parent gets a fresh hierarchy", async function (assert) {
+      // The cache is keyed by stable key, which a moved entry keeps — so the
+      // hierarchy (baked into the curry and the debug payload) must be part of
+      // the cache match, otherwise a moved container would keep a stale path.
+      @block("hierarchy-probe", { container: true })
+      class HierarchyProbe extends Component {
+        // `__hierarchy` is a reserved arg name in templates, so read it in JS.
+        get hierarchy() {
+          return this.args.__hierarchy;
+        }
+
+        <template>
+          <div class="hierarchy-probe" data-h={{this.hierarchy}}>
+            {{#each @children key="key" as |child|}}
+              <child.Component />
+            {{/each}}
+          </div>
+        </template>
+      }
+
+      @block("probe-leaf")
+      class ProbeLeaf extends Component {
+        <template>
+          <div class="probe-leaf">Leaf</div>
+        </template>
+      }
+
+      const owner = getOwner(this);
+      // `movable` is reused by reference across the republish (keeps its stable
+      // key), but it changes parent — from inside the group to the outlet root.
+      // The group keeps a filler child so it never becomes an empty container.
+      const movable = {
+        block: HierarchyProbe,
+        children: [{ block: ProbeLeaf }],
+      };
+      const group = {
+        block: BlockGroup,
+        id: "g",
+        children: [{ block: ProbeLeaf }, movable],
+      };
+      _setLayoutLayer(
+        "hero-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [group],
+        owner,
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+      assert
+        .dom(".hierarchy-probe")
+        .exists("the probe renders inside the group");
+      const hierarchyInGroup = find(".hierarchy-probe").getAttribute("data-h");
+      assert.true(
+        hierarchyInGroup.includes("group"),
+        `probe hierarchy reflects the group parent (got "${hierarchyInGroup}")`
+      );
+
+      // Move the probe out to the outlet root; the group keeps its filler.
+      group.children = [{ block: ProbeLeaf }];
+      _setLayoutLayer(
+        "hero-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [movable, group],
+        owner,
+        { permissive: true }
+      );
+      await settled();
+
+      assert
+        .dom(".hierarchy-probe")
+        .exists("the probe still renders at the root");
+      const hierarchyAtRoot = find(".hierarchy-probe").getAttribute("data-h");
+      assert.false(
+        hierarchyAtRoot.includes("group"),
+        `probe hierarchy no longer reflects the group (got "${hierarchyAtRoot}")`
+      );
+      assert.notStrictEqual(
+        hierarchyAtRoot,
+        hierarchyInGroup,
+        "the moved container's hierarchy is recomputed, not stale"
       );
     });
   });

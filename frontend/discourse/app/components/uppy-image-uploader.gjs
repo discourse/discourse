@@ -18,7 +18,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo, previewSize
 export default class UppyImageUploader extends Component {
   @service currentUser;
   @service siteSettings;
@@ -136,6 +135,15 @@ export default class UppyImageUploader extends Component {
     return this.args.imageUrl && isVideo(this.args.imageUrl);
   }
 
+  /** Calls optional `@onUploadStart` before asynchronous processing of a validated file. */
+  @action
+  registerFileInput(element) {
+    this.uppyUpload.setup(element);
+    this.uppyUpload.uppyWrapper.uppyInstance.on("file-added", () => {
+      this.args.onUploadStart?.();
+    });
+  }
+
   @action
   async toggleLightbox() {
     if (this.isVideoFile) {
@@ -242,7 +250,7 @@ export default class UppyImageUploader extends Component {
                 @acceptedFormatsOverride={{this.acceptedFormats}}
                 @fileInputDisabled={{this.disabled}}
                 @fileInputId={{this.computedId}}
-                @registerFileInput={{this.uppyUpload.setup}}
+                @registerFileInput={{this.registerFileInput}}
               />
               {{i18n "upload_selector.select_file"}}
             </label>
@@ -283,7 +291,7 @@ export default class UppyImageUploader extends Component {
               @acceptedFormatsOverride={{this.acceptedFormats}}
               @fileInputDisabled={{this.disabled}}
               @fileInputId={{this.computedId}}
-              @registerFileInput={{this.uppyUpload.setup}}
+              @registerFileInput={{this.registerFileInput}}
             />
             {{i18n "upload_selector.change"}}
           </label>

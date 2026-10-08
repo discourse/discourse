@@ -67,11 +67,11 @@ export default class StoreService extends Service {
     this._plurals[thing] = plural;
   }
 
-  findAll(type, findArgs) {
+  findAll(type, findArgs, opts) {
     const adapter = this.adapterFor(type);
 
     let store = this;
-    return adapter.findAll(this, type, findArgs).then(async (result) => {
+    return adapter.findAll(this, type, findArgs, opts).then(async (result) => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
         results = adapter.afterFindAll(results, {
@@ -86,11 +86,11 @@ export default class StoreService extends Service {
   }
 
   // Mostly for legacy, things like TopicList without ResultSets
-  findFiltered(type, findArgs) {
+  findFiltered(type, findArgs, opts) {
     const adapter = this.adapterFor(type);
     findArgs = cleanNullQueryParams(findArgs);
     return adapter
-      .find(this, type, findArgs)
+      .find(this, type, findArgs, opts)
       .then((result) => this._build(type, result))
       .then(async (result) => {
         await adapter.applyTransformations?.([result]);

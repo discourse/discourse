@@ -1,21 +1,53 @@
 import { DEBUG } from "@glimmer/env";
+import type { BlockNamespaceType } from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import { parseBlockName } from "discourse/lib/blocks/-internals/patterns";
 import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import {
+  BLOCK_OUTLETS,
+  CORE_OUTLET_METADATA,
+} from "discourse/lib/registry/block-outlets";
 import {
   assertRegistryNotFrozen,
   validateNamePattern,
   validateSourceNamespace,
 } from "./helpers";
 
+/** Fully resolved display metadata for a registered outlet. */
+export interface OutletMetadataEntry {
+  /** The full outlet identifier. */
+  name: string;
+
+  /** Human-readable label for display purposes. */
+  displayName: string | null;
+
+  /** One-line summary of where the outlet renders. */
+  description: string | null;
+
+  /** Optional sub-grouping label. */
+  category: string | null;
+
+  /** Whether the outlet is registered by core. */
+  isCore: boolean;
+
+  /** Namespace type derived from the outlet name. */
+  namespaceType: BlockNamespaceType;
+}
+
 /** Metadata recorded for a custom block outlet. */
 interface CustomOutletMetadata {
   /** The outlet name. */
   name: string;
 
+  /** Human-readable label for display purposes. */
+  displayName?: string;
+
   /** Human-readable description. */
   description?: string;
+
+  /** Optional sub-grouping label. */
+  category?: string;
 }
 
 /*
@@ -71,6 +103,42 @@ export function getCustomOutlet(
   return customOutletRegistry.get(name);
 }
 
+/** Returns resolved display metadata for a registered outlet. */
+export function getOutletMetadata(name: string): OutletMetadataEntry | null {
+  const coreMetadata = CORE_OUTLET_METADATA[name];
+  if (coreMetadata) {
+    return {
+      name,
+      displayName: coreMetadata.displayName ?? name,
+      description: coreMetadata.description ?? null,
+      category: coreMetadata.category ?? null,
+      isCore: true,
+      namespaceType: "core",
+    };
+  }
+
+  const custom = customOutletRegistry.get(name);
+  if (custom) {
+    return {
+      name,
+      displayName: custom.displayName ?? name,
+      description: custom.description ?? null,
+      category: custom.category ?? null,
+      isCore: false,
+      namespaceType: parseBlockName(name)?.type ?? "core",
+    };
+  }
+
+  return null;
+}
+
+/** Returns resolved display metadata for every registered outlet. */
+export function getAllOutletsWithMetadata(): OutletMetadataEntry[] {
+  return getAllOutlets()
+    .map((name) => getOutletMetadata(name))
+    .filter((metadata): metadata is OutletMetadataEntry => metadata !== null);
+}
+
 /*
  * Internal Functions
  */
@@ -87,8 +155,14 @@ export function _freezeOutletRegistry(): void {
 
 /** Options for {@link _registerOutlet}. */
 interface RegisterOutletOptions {
+  /** Human-readable label for display purposes. */
+  displayName?: string;
+
   /** Human-readable description. */
   description?: string;
+
+  /** Optional sub-grouping label. */
+  category?: string;
 }
 
 /**
@@ -152,7 +226,9 @@ export function _registerOutlet(
 
   customOutletRegistry.set(outletName, {
     name: outletName,
+    displayName: options.displayName,
     description: options.description,
+    category: options.category,
   });
 }
 

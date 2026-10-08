@@ -55,7 +55,10 @@ export default class UpcomingEventsList extends Component {
   }
 
   get categoryId() {
-    return this.router.currentRoute.attributes?.category?.id;
+    return (
+      this.args.params?.categoryId ??
+      this.router.currentRoute.attributes?.category?.id
+    );
   }
 
   get includeSubcategories() {

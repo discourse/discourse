@@ -717,6 +717,68 @@ module("Unit | Blocks | Condition | user", function (hooks) {
     });
   });
 
+  module("simulation (context.simulation.user)", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      // Real user is admin so it'd normally pass `admin: true` — the
+      // sim should override that.
+      this.condition.currentUser = {
+        admin: true,
+        moderator: true,
+        staff: true,
+        trust_level: 4,
+        groups: [{ name: "admins" }],
+      };
+    });
+
+    test("simulated TL2 user fails admin: true even when real user is admin", function (assert) {
+      const context = {
+        simulation: {
+          user: {
+            trust_level: 2,
+            admin: false,
+            moderator: false,
+            staff: false,
+          },
+        },
+      };
+      assert.false(this.condition.evaluate({ admin: true }, context));
+    });
+
+    test("simulated anonymous (user: null) fails loggedIn: true", function (assert) {
+      const context = { simulation: { user: null } };
+      assert.false(this.condition.evaluate({ loggedIn: true }, context));
+    });
+
+    test("simulated anonymous passes loggedIn: false", function (assert) {
+      const context = { simulation: { user: null } };
+      assert.true(this.condition.evaluate({ loggedIn: false }, context));
+    });
+
+    test("simulation without 'user' key (only viewport) falls through to real currentUser", function (assert) {
+      const context = {
+        simulation: { viewport: { viewport: {}, touch: false } },
+      };
+      assert.true(
+        this.condition.evaluate({ admin: true }, context),
+        "real admin user still wins when only viewport is simulated"
+      );
+    });
+
+    test("explicit source overrides simulation", function (assert) {
+      const sourceUser = { trust_level: 0, admin: false };
+      const context = {
+        outletArgs: { post: { user: sourceUser } },
+        simulation: { user: { trust_level: 4, admin: true } },
+      };
+      assert.false(
+        this.condition.evaluate(
+          { source: "@outletArgs.post.user", admin: true },
+          context
+        )
+      );
+    });
+  });
+
   module("static type", function () {
     test("has correct type", function (assert) {
       assert.strictEqual(BlockUserCondition.type, "user");

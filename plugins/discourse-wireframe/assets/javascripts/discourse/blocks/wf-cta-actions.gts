@@ -1,0 +1,50 @@
+import Component from "@glimmer/component";
+import { block } from "discourse/blocks";
+import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
+
+interface WFCtaActionsSignature {
+  /** Arguments supplied by the block pipeline. */
+  Args: {
+    /** Renderable composed action blocks. */
+    children?: ChildBlockResult[];
+  };
+}
+
+/**
+ * A composite block: a row of two call-to-action buttons. Declares a `parts`
+ * composition of two `button-link` blocks, so it renders from arguments alone
+ * (no children declared) and each button's args can be overridden per instance
+ * by part id (`primary`, `secondary`).
+ *
+ * The primary button's `variant` is locked: it stays the emphasized button and
+ * can't be changed in place — only by detaching the composition.
+ */
+@block("wf:cta-actions", {
+  paletteHidden: true,
+  displayName: "CTA actions",
+  category: "actions",
+  icon: "arrows-left-right",
+  description: "A row of primary and secondary call-to-action buttons.",
+  parts: [
+    {
+      id: "primary",
+      block: "button-link",
+      args: { label: "Get started", href: "#", variant: "primary" },
+      lock: ["variant"],
+    },
+    {
+      id: "secondary",
+      block: "button-link",
+      args: { label: "Learn more", href: "#", variant: "default" },
+    },
+  ],
+})
+export default class WFCtaActions extends Component<WFCtaActionsSignature> {
+  <template>
+    <div class="wf-cta-actions">
+      {{#each @children key="key" as |child|}}
+        <child.Component />
+      {{/each}}
+    </div>
+  </template>
+}

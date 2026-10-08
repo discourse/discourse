@@ -13,6 +13,7 @@ import {
 import { module, test } from "qunit";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -683,5 +684,34 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     assert
       .dom("#custom-tooltip-portal .fk-d-tooltip__content")
       .exists("tooltip renders in custom portal outlet");
+  });
+
+  // A service tooltip can be re-anchored while open by assigning a new trigger; the
+  // host must keep rendering the same float rather than tearing it down and mounting
+  // a fresh one, or the move replays the open animation and drops any transition.
+  test("re-anchoring a service tooltip keeps its element", async function (assert) {
+    await render(
+      <template>
+        <DTooltips />
+        <span id="first">first</span>
+        <span id="second">second</span>
+      </template>
+    );
+    const tooltip = getOwner(this).lookup("service:tooltip");
+
+    const instance = await tooltip.show(document.querySelector("#first"), {
+      content: "moving",
+    });
+    const before = document.querySelector(".fk-d-tooltip__content");
+    assert.dom(before).exists();
+
+    instance.trigger = document.querySelector("#second");
+    await settled();
+
+    assert.strictEqual(
+      document.querySelector(".fk-d-tooltip__content"),
+      before,
+      "the float element survives the move"
+    );
   });
 });

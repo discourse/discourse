@@ -60,6 +60,14 @@ class TopicList
     @tags = Tag.where(id: @opts[:tag_ids]).all if @opts[:tag_ids].present?
 
     @publish_read_state = !!@opts[:publish_read_state]
+
+    # Cast rather than test for truthiness: the option arrives straight from a
+    # query param, so "false" would otherwise read as opted in.
+    @include_excerpts = !!ActiveModel::Type::Boolean.new.cast(@opts[:include_excerpts])
+  end
+
+  def include_excerpts?
+    @include_excerpts
   end
 
   def top_tags

@@ -1,0 +1,97 @@
+/* Wireframe — editor-scaffold styles
+ *
+ * The starter blocks and their reader-page styles now ship from core
+ * (`app/assets/stylesheets/common/blocks`). What remains here is the
+ * DOM that only exists while editing: the inline rich-text scaffold the
+ * editor swaps in, and the ghost placeholder for entries that don't
+ * render. Everything else editor-related — chrome, drag-and-drop, the
+ * inspector, palette, drop previews — lives in `admin/wireframe-chrome.scss`.
+ *
+ * NOTE: the split is organizational only. Both files currently ship to
+ * every user; per-asset staff gating isn't supported by Discourse's
+ * plugin stylesheet pipeline today. See
+ * `plugins/discourse-wireframe/docs/REVISIT.md` for the follow-up. */
+
+.wf-rich-text__content {
+  display: inline;
+}
+
+/* The surrounding chrome wrapper already paints the ghost's dashed border and
+   error color; adding a border here too would double up. */
+
+.wf-ghost-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(0 0 0 / 0.015),
+    rgb(0 0 0 / 0.015) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  color: var(--primary-medium);
+  min-height: 3rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-medium);
+  }
+
+  &__name {
+    color: var(--primary);
+  }
+
+  &__id {
+    opacity: 0.65;
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+    font-size: var(--font-down-2);
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__children {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--primary-low);
+  }
+
+  /* Error modifier (UNKNOWN_BLOCK — an authoring mistake, distinct from an
+     intentionally condition-gated block). Border color comes from the
+     surrounding chrome's `--error` modifier, not here. */
+
+  &.--error {
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgb(var(--danger-rgb), 0.04),
+        rgb(var(--danger-rgb), 0.04) 6px,
+        transparent 6px,
+        transparent 12px
+      ),
+      var(--danger-low);
+    color: var(--danger);
+
+    .wf-ghost-block__icon,
+    .wf-ghost-block__name,
+    .wf-ghost-block__hint {
+      color: var(--danger);
+    }
+  }
+}

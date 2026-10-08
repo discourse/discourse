@@ -43,7 +43,7 @@ module ThemeScreenshotMarker
   # full search menu is desktop-only). The orchestrator parses this kwarg
   # from the source to also skip the surrounding example on the wrong leg —
   # this in-method check is a belt-and-braces fallback.
-  def screenshot_marker(label:, only: nil)
+  def screenshot_marker(label:, only: nil, preserve_viewport: false)
     return unless ENV["TAKE_SCREENSHOTS"] == "1"
 
     device = ENV["SCREENSHOTS_DEVICE"] || "desktop"
@@ -69,8 +69,26 @@ module ThemeScreenshotMarker
     filename = File.join(raw_dir, "#{device}-#{theme_name}-#{mode}-#{label}.png")
 
     page.driver.with_playwright_page do |pw_page|
-      pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1200)
-      pw_page.screenshot(path: filename)
+      if preserve_viewport
+        # Capture directly so emulated pixel density is preserved.
+        client = pw_page.context.new_cdp_session(pw_page)
+        begin
+          result =
+            client.send_message(
+              "Page.captureScreenshot",
+              params: {
+                format: "png",
+                captureBeyondViewport: false,
+              },
+            )
+          File.binwrite(filename, Base64.strict_decode64(result.fetch("data")))
+        ensure
+          client.detach
+        end
+      else
+        pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1200)
+        pw_page.screenshot(path: filename)
+      end
     end
 
     puts "📸 #{filename}"

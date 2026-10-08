@@ -23,6 +23,12 @@ interface GroupedBlocksSignature {
 @block("group", {
   container: true,
   description: "Groups multiple children blocks together",
+  // Infrastructure block: excluded from the list of directly-insertable
+  // blocks so authors don't drop it raw. User-facing grouping is meant to
+  // go through a higher-level layout block (stack / row / grid modes);
+  // `group` stays the low-level container the rendering pipeline assembles
+  // when building children arrays.
+  paletteHidden: true,
 })
 export default class GroupedBlocks extends Component<GroupedBlocksSignature> {
   <template>

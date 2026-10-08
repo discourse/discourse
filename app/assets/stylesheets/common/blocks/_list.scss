@@ -1,0 +1,11 @@
+/* Ordered / unordered list block. Keeps the browser's native list styling
+   (markers, indentation); only the spacing is normalised. */
+
+.d-block-list {
+  margin: 0;
+  padding-inline-start: 1.5rem;
+}
+
+.d-block-list__item {
+  margin-block: 0.25rem;
+}

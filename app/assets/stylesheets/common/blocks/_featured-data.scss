@@ -1,0 +1,34 @@
+/* Data-driven sidebar blocks: featured tags, top contributors, tag banner. */
+.d-block-featured-tags__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.d-block-featured-users__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.d-block-featured-users__item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.d-block-tag-banner {
+  padding: 1rem;
+}
+
+.d-block-tag-banner__title {
+  margin: 0;
+}
+
+.d-block-tag-banner__description {
+  margin: 0.25rem 0 0;
+  color: var(--primary-medium);
+}

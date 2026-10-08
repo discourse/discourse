@@ -19,6 +19,9 @@ class TopicListSerializer < ApplicationSerializer
   def initialize(object, options = {})
     super
     options[:filter] = object.filter
+    # Propagated to the item serializers, which decide whether to serialize
+    # excerpts.
+    options[:include_excerpts] = object.include_excerpts?
   end
 
   def can_create_topic
