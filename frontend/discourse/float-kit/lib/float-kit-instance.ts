@@ -163,7 +163,7 @@ export default abstract class FloatKitInstance {
   /** Drops any pending grace-period close, so the float stays open. */
   @action
   cancelHoverClose() {
-    cancel(this.#hoverCloseTimer);
+    cancel(this.#hoverCloseTimer ?? undefined);
     this.#hoverCloseTimer = null;
   }
 

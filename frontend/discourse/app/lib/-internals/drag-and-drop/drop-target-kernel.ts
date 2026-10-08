@@ -130,8 +130,10 @@ type LibraryEventArgs<Payload> = {
 };
 
 /**
- * What the kernel hands an adapter's `register` function, shaped so the
- * library's registrars accept it without a cast.
+ * What the kernel hands an adapter's `register` function, shaped after the
+ * library's registrars. `getDropEffect` may return `undefined`, which the library
+ * handles at runtime but its type does not admit, so each adapter casts its
+ * registrar to {@link DropTargetRegistrar}.
  */
 export type DropTargetRegistrationArgs<Payload> = {
   element: Element;
@@ -150,6 +152,11 @@ export type DropTargetRegistrationArgs<Payload> = {
   onDrop: (args: LibraryEventArgs<Payload>) => void;
 };
 
+/** Registers the kernel's callbacks with a library adapter. */
+export type DropTargetRegistrar<Payload> = (
+  args: DropTargetRegistrationArgs<Payload>
+) => CleanupFn;
+
 /** Adapter-specific configuration for the shared drop-target state machine. */
 export interface DropTargetKernelConfig<Payload, Source> {
   /** The element to register as a drop target. */
@@ -159,7 +166,7 @@ export interface DropTargetKernelConfig<Payload, Source> {
   attribute: "data-drop-target" | "data-drop-target-external";
 
   /** Registers the callbacks with the adapter. */
-  register: (args: DropTargetRegistrationArgs<Payload>) => CleanupFn;
+  register: DropTargetRegistrar<Payload>;
 
   /** Converts the adapter payload to the consumer-facing source. */
   decorateSource: (payload: Payload) => Source;
