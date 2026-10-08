@@ -537,6 +537,63 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#import_category_topic_voting" do
+      fab!(:voting_category, :category)
+      fab!(:other_category, :category)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@categories,
+            { 1 => voting_category.id, 2 => other_category.id },
+          )
+        end
+      end
+
+      after { source_db.close }
+
+      context "when the topic voting plugin is installed" do
+        before do
+          skip "requires the topic voting plugin" unless defined?(DiscourseTopicVoting)
+          SiteSetting.topic_voting_enabled = true
+        end
+
+        it "enables voting only on flagged categories, also when run again" do
+          source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+          source_db.execute("INSERT INTO categories VALUES (1, 1), (2, NULL), (3, 1)")
+
+          importer.import_category_topic_voting
+          importer.import_category_topic_voting
+
+          expect(DiscourseTopicVoting::CategorySetting.pluck(:category_id)).to contain_exactly(
+            voting_category.id,
+          )
+          expect(Category.can_vote?(voting_category.id)).to eq(true)
+          expect(Category.can_vote?(other_category.id)).to eq(false)
+        end
+
+        it "skips intermediate databases without a topic_voting column" do
+          source_db.execute("CREATE TABLE categories (id INTEGER)")
+          source_db.execute("INSERT INTO categories VALUES (1)")
+
+          expect { importer.import_category_topic_voting }.not_to raise_error
+          expect(DiscourseTopicVoting::CategorySetting.count).to eq(0)
+        end
+      end
+
+      it "skips categories when the plugin is missing" do
+        hide_const("DiscourseTopicVoting")
+        source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+        source_db.execute("INSERT INTO categories VALUES (1, 1)")
+
+        expect { importer.import_category_topic_voting }.to output(
+          /plugin is not installed/,
+        ).to_stdout
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)
