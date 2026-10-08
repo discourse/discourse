@@ -237,7 +237,7 @@ module DiscourseAi
           content << [nil, "[/details]"]
           content << [
             :preview,
-            "### Preview\n\n<div class=\"ai-artifact\" data-ai-artifact-version=\"#{new_version.version_number}\" data-ai-artifact-id=\"#{artifact.id}\"></div>",
+            "### Preview\n\n[ai-artifact id=\"#{artifact.id}\" version=\"#{new_version.version_number}\"]",
           ]
 
           self.custom_raw = content.map { |c| c[1] }.join("\n\n")
