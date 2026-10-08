@@ -30,7 +30,7 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       "Use workflow_ai_agent_catalog before adding action:ai_agent nodes",
       "parameters.runner_username",
       "parameters.upload_ids",
-      "Use search_chat_channels before asking the admin to choose a chat channel",
+      'With action:send_chat_message target "user" or "group", set target_usernames to an array of usernames or an expression',
       "Use search_chat_integration_channels before asking the admin to choose an external chat integration channel",
       "call workflow_validate_script with the exact mode and code",
       "Do not add a Code node only to copy trigger fields forward",
