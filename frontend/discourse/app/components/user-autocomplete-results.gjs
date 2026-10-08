@@ -28,21 +28,13 @@ import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
 
-  static RESULT_TYPE_CONFIG = {
-    isUser: {
-      titleKey: "name",
-      hasCustomClasses: true,
-    },
-    isEmail: {
-      titleKey: "username",
-    },
-    isGroup: {
-      titleKey: "full_name",
-    },
-  };
-
   @tracked isInitialRender = true;
 
+  /**
+   * @param {UserEmailGroupResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -61,38 +53,40 @@ export default class UserAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;
   }
 
+  /** @param {number} index */
   @action
   shouldSelect(index) {
     return index === this.args.selectedIndex;
   }
 
-  getResultConfig(result) {
-    for (const [key, config] of Object.entries(
-      UserAutocompleteResults.RESULT_TYPE_CONFIG
-    )) {
-      if (result[key]) {
-        return config;
-      }
-    }
-  }
-
+  /** @param {UserEmailGroupResult} result */
   @action
   getTitle(result) {
-    const config = this.getResultConfig(result);
-    return result[config.titleKey];
+    if (result.isUser === true) {
+      return result.name;
+    }
+    if (result.isEmail === true) {
+      return result.username;
+    }
+    return result.full_name;
   }
 
+  /**
+   * @param {UserEmailGroupResult} result
+   * @param {number} index
+   */
   @action
   getItemLinkClasses(result, index) {
-    const config = this.getResultConfig(result);
     let classes = "";
 
-    if (config.hasCustomClasses && result.cssClasses) {
+    // Only users carry custom classes.
+    if (result.isUser === true && result.cssClasses) {
       classes = result.cssClasses;
     }
 
