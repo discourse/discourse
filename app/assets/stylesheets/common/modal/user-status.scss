@@ -40,6 +40,12 @@
   .emoji-picker-trigger {
     font-size: var(--font-up-1-rem);
 
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        transform 0.15s ease-out,
+        filter 0.15s ease-out;
+    }
+
     &:hover,
     &.-expanded {
       transform: scale(1.2);
