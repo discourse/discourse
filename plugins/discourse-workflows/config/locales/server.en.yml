@@ -83,6 +83,13 @@ en:
       unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
+        not_found: "No user found with username '%{username}'."
+        id_not_found: "No user found with ID %{id}."
+        restricted:
+          staged: "The user '%{username}' is a staged user and can't perform actions."
+          silenced: "The user '%{username}' is silenced."
+          suspended: "The user '%{username}' is suspended."
+          inactive: "The user '%{username}' hasn't activated their account."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
