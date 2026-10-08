@@ -33,6 +33,16 @@ describe GroupSelfMembership do
       expect { described_class.join(Guardian.new, group) }.to raise_error(Discourse::NotLoggedIn)
     end
 
+    it "refuses an automatic group even when it allows public admission" do
+      automatic = Group.find(Group::AUTO_GROUPS[:admins])
+      automatic.update_columns(public_admission: true)
+
+      expect { described_class.join(user.guardian, automatic) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+      expect(automatic.reload.users).not_to include(user)
+    end
+
     it "rate limits a regular user" do
       RateLimiter.enable
       RateLimiter.any_instance.stubs(:rate_unlimited?).returns(false)
@@ -70,6 +80,17 @@ describe GroupSelfMembership do
 
     it "reports no change when the user is not a member" do
       expect(described_class.leave(Fabricate(:user).guardian, group)).to eq(false)
+    end
+
+    it "refuses an automatic group even when it allows public exit" do
+      automatic = Group.find(Group::AUTO_GROUPS[:admins])
+      automatic.update_columns(public_exit: true)
+      automatic.add(user)
+
+      expect { described_class.leave(user.guardian, automatic) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+      expect(automatic.reload.users).to include(user)
     end
   end
 end

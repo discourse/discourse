@@ -5,6 +5,7 @@ class GroupSelfMembership
   def self.join(guardian, group)
     user = acting_user(guardian)
     rate_limit!(user)
+    raise Discourse::InvalidAccess if group.automatic
     raise Discourse::InvalidAccess if !group.public_admission
     return false if group.users.exists?(id: user.id)
 
@@ -16,6 +17,7 @@ class GroupSelfMembership
   def self.leave(guardian, group)
     user = acting_user(guardian)
     rate_limit!(user)
+    raise Discourse::InvalidAccess if group.automatic
     raise Discourse::InvalidAccess if !group.public_exit
     return false if !group.remove(user)
 
