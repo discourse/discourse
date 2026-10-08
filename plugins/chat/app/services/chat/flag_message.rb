@@ -40,7 +40,7 @@ module Chat
       validates :channel_id, presence: true
       validates :flag_type_id,
                 inclusion: {
-                  in: -> { Flag.enabled.where("'Chat::Message' = ANY(applies_to)").ids },
+                  in: -> { Flag.enabled.applicable_to("Chat::Message").ids },
                 }
     end
 
