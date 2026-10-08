@@ -231,6 +231,100 @@ RSpec.describe UserNotifications do
       end
     end
 
+    context "with a content modifier" do
+      let(:plugin) { Plugin::Instance.new }
+
+      it "skips sending when a modifier removes all content" do
+        Fabricate(:topic, user: Fabricate(:admin))
+        modifier = proc { |content| content.merge(topics: [], posts: []) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        expect(email.to).to be_blank
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders selected topics and replies with the standard digest preparation" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        user.update!(locale: "ja")
+        topic = Fabricate(:topic, locale: "en")
+        first_post = Fabricate(:post, topic: topic, locale: "en")
+        reply = Fabricate(:post, topic: topic, locale: "en", post_number: 2)
+        topic_translation = Fabricate(:topic_localization, topic: topic)
+        post_translation = Fabricate(:post_localization, post: first_post)
+        reply_translation = Fabricate(:post_localization, post: reply)
+        modifier =
+          proc { |content| content.merge(topics: [topic], posts: Post.where(id: reply.id)) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user)
+
+        [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+          expect(body).to include(topic_translation.title, reply_translation.raw)
+        end
+        expect(mail.html_part.body.to_s).to include(post_translation.raw)
+        expect(mail.header["X-Discourse-Topic-Ids"].to_s).to eq(topic.id.to_s)
+        expect(mail.header["X-Discourse-Post-Ids"].to_s).to eq(first_post.id.to_s)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders replies without new topics" do
+        reply = Fabricate(:post, post_number: 2, raw: "A reply for the digest")
+        modifier = proc { |content| content.merge(topics: Topic.none, posts: [reply]) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user)
+
+        expect(mail.to).to eq([user.email])
+        expect(mail.html_part.body.to_s).to include(reply.raw)
+        expect(mail.text_part.body.to_s).to include(reply.raw)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders custom content in both formats with the digest envelope" do
+        require "action_view/testing/resolvers"
+        original_view_paths = UserNotifications.view_paths
+        UserNotifications.prepend_view_path(
+          ActionView::FixtureResolver.new(
+            "custom_digest.html.erb" => "<p><%= message %></p>",
+            "custom_digest.text.erb" => "<%= message %>",
+          ),
+        )
+        message = "Additional digest content"
+        modifier =
+          proc do |content, recipient, since|
+            content.merge(
+              topics: [],
+              posts: [],
+              template: "custom_digest",
+              template_locals: {
+                message: "#{message} for #{recipient.username} since #{since.to_date}",
+              },
+              subject_key: "user_notifications.digest.new_topics",
+              has_custom_content: true,
+            )
+          end
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user, since: 1.day.ago)
+
+        expect(mail.to).to eq([user.email])
+        expect(mail.subject).to eq(I18n.t("user_notifications.digest.new_topics"))
+        [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+          expect(body).to include("#{message} for #{user.username} since #{1.day.ago.to_date}")
+        end
+        expect(mail.header["List-Unsubscribe"].to_s).to match(%r{/email/unsubscribe/\h{64}})
+        expect(mail.header["List-Unsubscribe-Post"].to_s).to eq("List-Unsubscribe=One-Click")
+        expect(mail.header["X-Discourse-Topic-Ids"]).to be_nil
+      ensure
+        UserNotifications.view_paths = original_view_paths
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+    end
+
     context "with topics only from new users" do
       let!(:new_today) do
         Fabricate(
