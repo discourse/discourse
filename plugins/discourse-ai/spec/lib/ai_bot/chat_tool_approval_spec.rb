@@ -138,7 +138,7 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
 
   describe ".pending_blocks" do
     it "truncates oversized preview values to the schema limit" do
-      limit = Chat::Schemas::CONFIRMATION_VALUE_MAX_LENGTH
+      limit = Chat::Schemas::Confirmation::VALUE_MAX_LENGTH
       long = "x" * (limit + 10)
       blocks =
         described_class.pending_blocks(

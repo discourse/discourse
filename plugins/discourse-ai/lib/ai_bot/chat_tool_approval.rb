@@ -46,7 +46,7 @@ module DiscourseAi
       end
 
       def self.truncate_value(value)
-        value.to_s.truncate(Chat::Schemas::CONFIRMATION_VALUE_MAX_LENGTH)
+        value.to_s.truncate(Chat::Schemas::Confirmation::VALUE_MAX_LENGTH)
       end
 
       # Plain-text rendering of a card for consumers that only read the message
