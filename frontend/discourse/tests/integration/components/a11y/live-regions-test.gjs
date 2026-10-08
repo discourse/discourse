@@ -7,6 +7,7 @@ import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 
 const REGIONS = [
   { type: "polite", selector: "#a11y-announcements-polite" },
@@ -96,6 +97,130 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
     assert
       .dom("#a11y-announcements-polite")
       .hasText("Test polite message", "displays polite message");
+  });
+
+  test("composes same-type announcements made in one flush instead of clobbering", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two polite announcements in the same synchronous flush — e.g. an "item added"
+    // message immediately followed by a re-filtered result count. The one-message-per-type
+    // live region can only show one, so without composition the second deterministically
+    // clobbers the first and "Added Foo" is never announced.
+    a11y.announce("Added Foo", "polite", 500);
+    a11y.announce("12 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Added Foo. 12 results",
+        "both same-flush messages are composed into one atomic announcement"
+      );
+  });
+
+  test("dedupes identical same-type announcements made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two independent callers announcing the same phrase in one flush (e.g. two
+    // subscribers both reporting the same result count). Repeating the identical
+    // text in one atomic announcement is pure redundancy for a screen reader.
+    a11y.announce("3 results", "polite", 500);
+    a11y.announce("3 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "3 results",
+        "the repeated message is announced once, not composed with itself"
+      );
+  });
+
+  test("keeps polite and assertive announcements separate when made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    a11y.announce("Polite one", "polite", 500);
+    a11y.announce("Assertive one", "assertive", 500);
+    a11y.announce("Polite two", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Polite one. Polite two",
+        "polite messages compose among themselves"
+      );
+    assert
+      .dom("#a11y-announcements-assertive")
+      .hasText(
+        "Assertive one",
+        "the assertive message is not folded in with the polite ones"
+      );
+  });
+
+  test("joins composed announcements with the locale's sentence break", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const translations = I18n.translations[I18n.locale].js;
+    const original = translations.a11y_announcement_separator;
+    // Chinese and Japanese end a sentence with a full-width stop and no following space.
+    translations.a11y_announcement_separator = "。";
+
+    try {
+      const a11y = getOwner(this).lookup("service:a11y");
+      a11y.announce("Added Foo", "polite", 500);
+      a11y.announce("12 results", "polite", 500);
+
+      await render(<template><A11yLiveRegions /></template>);
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText("Added Foo。12 results", "the translated separator is used");
+    } finally {
+      translations.a11y_announcement_separator = original;
+    }
+  });
+
+  // A caller re-asserting what the region already says would otherwise be read out ahead of
+  // the news it arrived with. Alone, a repeat is still delivered (see the repeat tests below).
+  test("drops a restated message when the same flush carries something new", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    await render(<template><A11yLiveRegions /></template>);
+
+    a11y.announce("3 results", "polite", 500);
+    await settled();
+
+    a11y.announce("3 results", "polite", 500);
+    a11y.announce("Added Foo", "polite", 500);
+    await settled();
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText("Added Foo", "only the new message is announced");
+  });
+
+  test("an empty announcement discards the messages queued before it in the flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    await render(<template><A11yLiveRegions /></template>);
+
+    a11y.announce("Stale", "polite", 500);
+    a11y.announce("", "polite", 500);
+    a11y.announce("Fresh", "polite", 500);
+    await settled();
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText("Fresh", "what came after the clear is announced on its own");
   });
 
   test("announce called during render does not trigger a backtracking assertion", async function (assert) {

@@ -397,6 +397,7 @@ en:
     skip_to_last_reply: "Skip to last reply"
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
+    a11y_announcement_separator: ". "
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
@@ -3480,6 +3481,45 @@ en:
       favorites: "Favorites"
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
+
+    d_select:
+      placeholder: "Select…"
+      add_placeholder: "Add…"
+      search_placeholder: "Search…"
+      no_results: "No results found"
+      label: "Options"
+      label_with_value: "%{label}, %{value}"
+      footer_label: "Actions"
+      clear: "Clear selection"
+      selection_cleared: "Selection cleared"
+      clear_all: "Clear all"
+      min_chars:
+        one: "Keep typing %{count} more character…"
+        other: "Keep typing %{count} more characters…"
+      max_reached:
+        one: "You can only select %{count} item. Remove one to add another."
+        other: "You can only select %{count} items. Remove one to add another."
+      min_not_reached:
+        one: "Select at least %{count} item."
+        other: "Select at least %{count} items."
+      remove_hint: "Press Backspace or Delete to remove"
+      selected_items: "Selected items"
+      chips_hint: "Press Left arrow to reach selected items."
+      item_added: "Added %{item}"
+      item_removed: "Removed %{item}"
+      expand: "Show options"
+      load_error: "Couldn't load results."
+      retry: "Retry"
+      unresolved_value: "Unknown item (%{value})"
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
+      results_loaded:
+        one: "%{count} result loaded"
+        other: "%{count} results loaded"
+      filter_to_narrow: "Showing the first results only. Keep typing to narrow them down."
+      loading_more: "Loading more results…"
+      loading_complete: "More results loaded"
 
     shared_drafts:
       title: "Shared Drafts"

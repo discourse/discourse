@@ -26,6 +26,7 @@ import overflowControls from "../components/sections/molecules/overflow-controls
 import postMenu from "../components/sections/molecules/post-menu";
 import rovingFocus from "../components/sections/molecules/roving-focus";
 import segmentedControl from "../components/sections/molecules/segmented-control";
+import select from "../components/sections/molecules/select";
 import signupCta from "../components/sections/molecules/signup-cta";
 import tabs from "../components/sections/molecules/tabs";
 import toasts from "../components/sections/molecules/toasts";
@@ -91,6 +92,7 @@ const SECTIONS = [
   },
   { component: postMenu, category: "molecules", id: "post-menu" },
   { component: rovingFocus, category: "molecules", id: "roving-focus" },
+  { component: select, category: "molecules", id: "select" },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
   { component: contextMenu, category: "molecules", id: "context-menu" },
