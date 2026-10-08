@@ -74,6 +74,27 @@ module DiscourseMcp
         group or raise ToolError, I18n.t("mcp.errors.group_not_found")
       end
 
+      def find_managed!(group_id, guardian)
+        group = Group.visible_groups(guardian.user).find_by(id: group_id)
+        group or raise ToolError, I18n.t("mcp.errors.group_not_found")
+      end
+
+      def user_selectors!(arguments)
+        selectors = {
+          usernames: arguments["usernames"],
+          user_ids: arguments["user_ids"],
+          user_emails: arguments["user_emails"],
+        }.compact_blank
+        raise ToolError, I18n.t("mcp.errors.group_member_selector_required") if selectors.size != 1
+
+        limit = ManageGroupMembers::MAX_SELECTED_USERS
+        if GroupMutations.split_values(selectors.values.first).size > limit
+          raise ToolError, I18n.t("mcp.errors.group_user_limit", count: limit)
+        end
+
+        selectors.merge(require_all: true)
+      end
+
       def group_json(group, guardian, membership:, can_see_members:)
         is_group_owner = membership&.owner? || false
         can_admin_group = guardian.can_admin_group?(group, is_group_owner:)
@@ -285,6 +306,304 @@ module DiscourseMcp
             total:,
             has_more: offset + limit < total,
           },
+        )
+      end
+    end
+
+    class CreateGroup
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      # The MCP registry is built before app models are loadable, so these
+      # mirror Group.visibility_levels, Group::ALIAS_LEVELS and
+      # GroupUser.notification_levels. A spec guards them against drift.
+      VISIBILITY_LEVELS = [0, 1, 2, 3, 4].freeze
+      ALIAS_LEVELS = [0, 1, 2, 3, 4, 99].freeze
+      NOTIFICATION_LEVELS = [0, 1, 2, 3, 4].freeze
+      MAX_NAME_LENGTH = 100
+      MAX_BIO_LENGTH = 3_000
+      MAX_TEMPLATE_LENGTH = 1_000
+      MAX_INITIAL_USERNAMES = 100
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          name: OutputSchema::STRING,
+          full_name: OutputSchema::STRING_OR_NULL,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        created = nil
+        message = nil
+
+        Groups::Create.call(guardian:, params: arguments.symbolize_keys) do
+          on_success { |group:| created = group }
+          on_failed_policy(:can_create_group) { raise Discourse::InvalidAccess }
+          on_failed_policy(:can_request_access) do
+            message = I18n.t("groups.errors.cant_allow_membership_requests")
+          end
+          on_failed_contract { |contract| message = contract.errors.full_messages.to_sentence }
+          on_model_errors(:group) { |group:| message = group.errors.full_messages.to_sentence }
+        end
+
+        if created.nil?
+          raise ToolError, message.presence || I18n.t("mcp.errors.group_create_failed")
+        end
+
+        ToolHelpers.text_and_structured(
+          id: created.id,
+          name: created.name,
+          full_name: created.full_name,
+        )
+      end
+    end
+
+    class UpdateGroup
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      MAX_NAME_LENGTH = CreateGroup::MAX_NAME_LENGTH
+      MAX_BIO_LENGTH = CreateGroup::MAX_BIO_LENGTH
+      MAX_TEMPLATE_LENGTH = CreateGroup::MAX_TEMPLATE_LENGTH
+      OUTPUT_SCHEMA = OutputSchema.object(group: OutputSchema::OBJECT)
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        attributes = arguments.slice(*GroupUpdater.permitted_names(guardian, group:))
+        raise ToolError, I18n.t("mcp.errors.group_update_required") if attributes.empty?
+
+        updated =
+          GroupUpdater.update(
+            guardian,
+            group,
+            attributes,
+            update_existing_users: arguments["update_existing_users"],
+          )
+        if !updated
+          raise ToolError,
+                group.errors.full_messages.to_sentence.presence ||
+                  I18n.t("mcp.errors.group_update_failed")
+        end
+
+        ToolHelpers.text_and_structured(
+          group: GroupSupport.group_detail_json(group.reload, guardian),
+        )
+      rescue GroupUpdater::ExistingUsersConfirmationRequired => error
+        raise ToolError,
+              I18n.t("mcp.errors.group_update_existing_users_required", count: error.user_count)
+      end
+    end
+
+    class DeleteGroup
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(deleted: OutputSchema::BOOLEAN, group_id: OutputSchema::INTEGER)
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        GroupDestroyer.ensure_allowed!(guardian, group)
+
+        if arguments["confirm"] != true
+          raise ToolError, I18n.t("mcp.errors.group_delete_confirmation_required")
+        end
+        if arguments.fetch("expected_name") != group.name
+          raise ToolError, I18n.t("mcp.errors.group_delete_name_mismatch")
+        end
+
+        group_id = group.id
+        GroupDestroyer.destroy(guardian, group)
+        ToolHelpers.text_and_structured(deleted: true, group_id:)
+      rescue GroupMutations::AutomaticGroup => error
+        raise ToolError, error.message
+      end
+    end
+
+    class ManageGroupMembers
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      ACTIONS = %w[add remove].freeze
+      MAX_SELECTED_USERS = 100
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          action: OutputSchema::STRING,
+          group_id: OutputSchema::INTEGER,
+          usernames: OutputSchema::STRING_ARRAY,
+          skipped_usernames: OutputSchema::STRING_ARRAY,
+          user_count: OutputSchema::INTEGER,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        selectors = GroupSupport.user_selectors!(arguments)
+        action = arguments.fetch("action")
+
+        result =
+          if action == "add"
+            GroupMemberAdder.add(
+              guardian,
+              group,
+              notify_users: arguments["notify_users"],
+              **selectors,
+            )
+          else
+            GroupMemberRemover.remove(guardian, group, **selectors)
+          end
+
+        ToolHelpers.text_and_structured(
+          action:,
+          group_id: group.id,
+          usernames: action == "add" ? result[:added_usernames] : result[:usernames],
+          skipped_usernames: result[:skipped_usernames] || [],
+          user_count: group.reload.user_count,
+        )
+      rescue GroupMemberAdder::EmailsNotAllowed,
+             GroupMemberAdder::TooManyUsers,
+             GroupMemberAdder::AlreadyMembers,
+             GroupMutations::UnknownUsers => error
+        raise ToolError, error.message
+      end
+    end
+
+    class InviteGroupMembers
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      MAX_EMAILS = 50
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          group_id: OutputSchema::INTEGER,
+          usernames: OutputSchema::STRING_ARRAY,
+          emails: OutputSchema::STRING_ARRAY,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+
+        result =
+          GroupMemberAdder.add(
+            guardian,
+            group,
+            emails: arguments.fetch("emails"),
+            skip_email: arguments.fetch("skip_email", false),
+          )
+
+        ToolHelpers.text_and_structured(
+          group_id: group.id,
+          usernames: result[:usernames],
+          emails: result[:emails],
+        )
+      rescue GroupMemberAdder::EmailsNotAllowed, GroupMemberAdder::AlreadyMembers => error
+        raise ToolError, error.message
+      end
+    end
+
+    class ManageGroupOwners
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      ACTIONS = %w[add remove].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          action: OutputSchema::STRING,
+          group_id: OutputSchema::INTEGER,
+          usernames: OutputSchema::STRING_ARRAY,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        selectors = GroupSupport.user_selectors!(arguments)
+        action = arguments.fetch("action")
+
+        result =
+          if action == "add"
+            GroupOwnerManager.add(
+              guardian,
+              group,
+              notify_users: arguments.fetch("notify_users", false),
+              **selectors,
+            )
+          else
+            GroupOwnerManager.remove(guardian, group, **selectors)
+          end
+
+        ToolHelpers.text_and_structured(action:, group_id: group.id, usernames: result[:usernames])
+      rescue GroupMutations::AutomaticGroup, GroupMutations::UnknownUsers => error
+        raise ToolError, error.message
+      end
+    end
+
+    class ManageGroupMembership
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      ACTIONS = %w[join leave request].freeze
+      MAX_REASON_LENGTH = 1_000
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          action: OutputSchema::STRING,
+          group_id: OutputSchema::INTEGER,
+          changed: OutputSchema::BOOLEAN,
+          member: OutputSchema::BOOLEAN,
+          topic_id: OutputSchema::INTEGER_OR_NULL,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        action = arguments.fetch("action")
+        topic_id = nil
+
+        changed =
+          case action
+          when "join"
+            GroupSelfMembership.join(guardian, group)
+          when "leave"
+            GroupSelfMembership.leave(guardian, group)
+          else
+            reason = arguments["reason"].to_s.strip
+            raise ToolError, I18n.t("mcp.errors.group_request_reason_required") if reason.blank?
+
+            topic_id = GroupMembershipRequester.request(guardian, group, reason).topic_id
+            true
+          end
+
+        ToolHelpers.text_and_structured(
+          action:,
+          group_id: group.id,
+          changed:,
+          member: group.users.exists?(id: request_context.user_id),
+          topic_id:,
+        )
+      rescue GroupMembershipRequester::AlreadyRequested => error
+        raise ToolError, error.message
+      end
+    end
+
+    class HandleGroupMembershipRequest
+      REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      ACTIONS = %w[approve deny].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          group_id: OutputSchema::INTEGER,
+          username: OutputSchema::STRING,
+          action: OutputSchema::STRING,
+          accepted: OutputSchema::BOOLEAN,
+        )
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        guardian.ensure_can_edit!(group)
+
+        user = User.find_by_username(arguments.fetch("username"))
+        raise ToolError, I18n.t("mcp.errors.user_not_found") if user.blank?
+        if !GroupRequest.exists?(group_id: group.id, user_id: user.id)
+          raise ToolError, I18n.t("mcp.errors.group_membership_request_not_found")
+        end
+
+        action = arguments.fetch("action")
+        accepted = action == "approve"
+        GroupMembershipRequestHandler.handle(guardian, group, user, accept: accepted)
+
+        ToolHelpers.text_and_structured(
+          group_id: group.id,
+          username: user.username,
+          action:,
+          accepted:,
         )
       end
     end
