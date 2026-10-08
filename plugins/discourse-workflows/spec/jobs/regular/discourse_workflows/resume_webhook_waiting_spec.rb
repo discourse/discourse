@@ -3,14 +3,19 @@
 RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, published: true) }
   fab!(:execution) do
-    Fabricate(:discourse_workflows_execution, workflow: workflow, status: :waiting)
+    Fabricate(
+      :discourse_workflows_execution,
+      workflow: workflow,
+      status: :waiting,
+      resume_token: "wait-token",
+    )
   end
 
   it "leaves the execution waiting when the plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
     before_updated_at = execution.updated_at
 
-    described_class.new.execute(execution_id: execution.id)
+    described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
     execution.reload
     expect(execution.status).to eq("waiting")
@@ -21,7 +26,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
     allow(::DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
     before_updated_at = execution.updated_at
 
-    described_class.new.execute(execution_id: execution.id)
+    described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
     execution.reload
     expect(execution.status).to eq("waiting")
