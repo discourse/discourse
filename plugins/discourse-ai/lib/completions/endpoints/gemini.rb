@@ -596,6 +596,7 @@ module DiscourseAi
             if prompt_token_count = usage[:promptTokenCount]
               @prompt_token_count = prompt_token_count
             end
+            @thought_token_count = usage[:thoughtsTokenCount] if usage.key?(:thoughtsTokenCount)
             if candidate_token_count = usage[:candidatesTokenCount]
               @candidate_token_count = candidate_token_count
             end
@@ -604,7 +605,9 @@ module DiscourseAi
 
         def final_log_update(log)
           log.request_tokens = @prompt_token_count if @prompt_token_count
-          log.response_tokens = @candidate_token_count if @candidate_token_count
+          log.response_tokens =
+            @candidate_token_count.to_i + @thought_token_count.to_i if @candidate_token_count ||
+            @thought_token_count
         end
 
         def streaming_decoder

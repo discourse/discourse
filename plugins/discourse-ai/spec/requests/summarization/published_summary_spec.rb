@@ -2,6 +2,10 @@
 
 describe TopicsController do
   fab!(:topic)
+  fab!(:llm_model, :fake_model)
+  fab!(:summarization_agent) do
+    Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+  end
   fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }
 
   let(:summary_phrase) { "concise overview" }
@@ -11,8 +15,8 @@ describe TopicsController do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_default_llm_model)
-    assign_agent_to(:ai_summarization_agent, [Group::AUTO_GROUPS[:admins]])
+    SiteSetting.ai_default_llm_model = llm_model.id
+    SiteSetting.ai_summarization_agent = summarization_agent.id
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.enable_markdown_endpoints = true
     SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 10
@@ -356,7 +360,7 @@ describe TopicsController do
       end
 
       it "omits summaries from later pages and single-post responses" do
-        Fabricate.times(TopicView.chunk_size, :post, topic:)
+        Fabricate.times(TopicView.chunk_size, :post, topic: topic, user: first_post.user)
         topic.update!(highest_post_number: TopicView.chunk_size + 1)
         create_summary
 

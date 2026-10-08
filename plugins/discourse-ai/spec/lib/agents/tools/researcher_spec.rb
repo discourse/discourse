@@ -24,6 +24,25 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
     SiteSetting.ai_bot_enabled = true
   end
 
+  it "keeps fresh research wrapper metadata but excludes already generated findings from evidence" do
+    tool =
+      described_class.new(
+        {},
+        bot_user: bot_user,
+        llm: llm,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+    result = {
+      dry_run: false,
+      goals: "Find facts",
+      filter: "topic:1",
+      results: ["Generated finding"],
+    }
+    expect(JSON.parse(tool.work_evidence(result))).to eq(result.merge(results: []).as_json)
+    failure = { error: "Research unavailable" }
+    expect(tool.work_evidence(failure)).to eq(failure.to_json)
+  end
+
   it "uses custom researcher_llm and applies token limits correctly" do
     # Create a second LLM model to test the researcher_llm option
     secondary_llm_model = Fabricate(:llm_model, name: "secondary_model")

@@ -325,7 +325,12 @@ module DiscourseAi
         end
 
         def provider_model_params(model_params)
-          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
+          model_params.except(
+            :thinking_effort,
+            :reserved_output_tokens,
+            :provider_output_tokens,
+            :max_tokens_is_total,
+          )
         end
 
         def prepare_request(_payload)
@@ -448,6 +453,7 @@ module DiscourseAi
 
             # Needed to response token calculations. Cannot rely on response_data due to function buffering.
             partials_raw = +""
+            attempt_output = GeneratedOutput.new
             structured_output = build_structured_output(model_params)
 
             request = prepare_request(request_body)
@@ -543,6 +549,7 @@ module DiscourseAi
                         structured_output: structured_output,
                         cancelled: -> { cancelled },
                         on_output_started: -> { response_output_started = true },
+                        attempt_output: attempt_output,
                       )
                     call_status = :success
                     return response_data
@@ -553,7 +560,7 @@ module DiscourseAi
                   Rails.logger.warn(
                     "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
                   )
-                  if response_output_started
+                  if generation_started?(response_output_started, log)
                     retrying = false
                     raise CompletionFailed, e.message
                   end
@@ -575,6 +582,10 @@ module DiscourseAi
               Rails.logger.warn(
                 "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
               )
+              if generation_started?(response_output_started, log)
+                retrying = false
+                raise CompletionFailed, e.message
+              end
               retry_status = NETWORK_ERROR_RETRY_STATUS
               retry_delay =
                 retry_delay_for_network_error(retry_count_transient: retry_count_transient)
@@ -610,7 +621,14 @@ module DiscourseAi
 
               raise
             ensure
-              should_log = log && call_status != :cancelled && !retrying
+              if execution_context&.generated_output &&
+                   (
+                     call_status != :success ||
+                       execution_context.generated_output.size(tokenizer).zero?
+                   ) && attempt_output.size(tokenizer) > 0
+                execution_context.generated_output = attempt_output
+              end
+              should_log = log && !retrying && (call_status != :cancelled || partials_raw.present?)
 
               if should_log
                 if retried
@@ -652,6 +670,13 @@ module DiscourseAi
           end
         rescue IOError, StandardError
           raise if !cancelled
+        end
+
+        def generation_started?(decoded_output_started, log)
+          return true if decoded_output_started
+          return false if !log || log.response_status != 200
+          final_log_update(log)
+          log.response_tokens.to_i > 0
         end
 
         def start_completion_log(
@@ -754,7 +779,8 @@ module DiscourseAi
           response_raw:,
           structured_output:,
           cancelled:,
-          on_output_started:
+          on_output_started:,
+          attempt_output: nil
         )
           response_data = +""
 
@@ -765,6 +791,9 @@ module DiscourseAi
 
             decode_chunk(chunk).each do |partial|
               break if cancelled.call
+              # Even output buffered before a complete tool/XML block is generated work.
+              on_output_started.call
+              attempt_output&.<<(partial)
               partials_raw << partial.to_s
               response_data << partial if partial.is_a?(String)
               partials = [partial]
@@ -772,10 +801,7 @@ module DiscourseAi
                 partials = (xml_tool_processor << partial)
                 break if xml_tool_processor.should_cancel?
               end
-              partials.each do |inner_partial|
-                on_output_started.call
-                blk.call(inner_partial)
-              end
+              partials.each { |inner_partial| blk.call(inner_partial) }
             end
           end
 
@@ -840,6 +866,11 @@ module DiscourseAi
           log.raw_response_payload = response_raw
           log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
+          execution_context&.settle_generation(
+            tokens: log.response_tokens,
+            tokenizer: tokenizer,
+            complete: call_status == :success,
+          )
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
           log.estimated_cost = estimated_cost_for(log)
@@ -849,7 +880,10 @@ module DiscourseAi
           log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
 
-          execution_context&.token_usage_tracker&.add_from_audit_log(log)
+          execution_context&.token_usage_tracker&.add_from_audit_log(
+            log,
+            preparation: feature_name == "context_compression",
+          )
 
           AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
           LlmQuota.log_usage(

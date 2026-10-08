@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::AiBot::EntryPoint do
-  before { enable_current_plugin }
-
   describe "#inject_into" do
     describe "registers conversations as a homepage option" do
       fab!(:user)
@@ -18,8 +16,7 @@ describe DiscourseAi::AiBot::EntryPoint do
       end
 
       before do
-        toggle_enabled_bots(bots: [llm_model])
-        SiteSetting.ai_bot_enabled = true
+        prepare_ai_bot_fixtures(bots: [llm_model])
         SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id.to_s
         SiteSetting.top_menu = "latest|new|top|categories"
         SiteSetting.default_homepage = "ai-conversations"
@@ -83,8 +80,7 @@ describe DiscourseAi::AiBot::EntryPoint do
       end
 
       before do
-        toggle_enabled_bots(bots: [gpt_4, claude_2])
-        SiteSetting.ai_bot_enabled = true
+        prepare_ai_bot_fixtures(bots: [gpt_4, claude_2])
         SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id
         bot_allowed_group.add(admin)
       end
@@ -266,6 +262,7 @@ describe DiscourseAi::AiBot::EntryPoint do
     end
 
     it "includes ai_search_discoveries in user_option if the discover agent is enabled" do
+      enable_current_plugin
       user = Fabricate(:user)
       group = Fabricate(:group)
       group.add(user)
@@ -282,6 +279,7 @@ describe DiscourseAi::AiBot::EntryPoint do
     end
 
     it "allows Ask AI independently of the deprecated Discoveries preference" do
+      enable_current_plugin
       user = Fabricate(:user)
       group = Fabricate(:group)
       group.add(user)

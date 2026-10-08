@@ -204,6 +204,10 @@ module DiscourseAi
           max_invocations.positive?
         end
 
+        def work_evidence(result)
+          result.to_json
+        end
+
         def chain_next_response?
           true
         end

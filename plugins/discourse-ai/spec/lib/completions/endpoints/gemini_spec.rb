@@ -139,6 +139,30 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  it "includes invisible thoughts once with candidate output in work settlement" do
+    response = {
+      candidates: [
+        { content: { parts: [{ text: "Answer" }], role: "model" }, finishReason: "STOP" },
+      ],
+      usageMetadata: {
+        promptTokenCount: 1000,
+        candidatesTokenCount: 5,
+        thoughtsTokenCount: 95,
+        totalTokenCount: 1100,
+      },
+    }
+    stub_request(:post, "#{model.url}:generateContent?key=#{model.api_key}").to_return(
+      body: response.to_json,
+    )
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
+    model.to_llm.generate("Input", user: user, execution_context: execution)
+    expect(execution.work_budget.used).to eq(100)
+    expect(AiApiAuditLog.last.response_tokens).to eq(100)
+  end
+
   def minimal_pdf_content
     <<~PDF
       %PDF-1.4

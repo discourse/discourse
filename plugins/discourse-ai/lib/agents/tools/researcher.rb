@@ -87,6 +87,14 @@ module DiscourseAi
           end
         end
 
+        def work_evidence(result)
+          if result.is_a?(Hash) && result[:results].is_a?(Array)
+            result.merge(results: []).to_json
+          else
+            super
+          end
+        end
+
         def invoke(&blk)
           max_results = options[:max_results] || 1000
 
@@ -222,6 +230,7 @@ module DiscourseAi
             user: post.user,
             feature_name: context.feature_name,
             cancel_manager: context.cancel_manager,
+            execution_context: context.execution_context,
           ) { |partial| results << partial if partial.is_a?(String) }
 
           @progress_dots ||= 0

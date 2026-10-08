@@ -443,7 +443,71 @@ module DiscourseAi
         Discourse.warn_exception(e, message: "Discourse AI: Unable to generate title")
       end
 
-      def reply_to_chat_message(
+      def reply_to_chat_message(message, channel, context_post_ids, **options)
+        ReplyLock.synchronize(
+          "discourse_ai:reply:chat:#{channel.id}:#{message.thread_id || "channel"}",
+        ) { reply_to_chat_message_unlocked(message, channel, context_post_ids, **options) }
+      end
+
+      # Posts the queued tool action as its own chat message carrying the
+      # Approve/Reject blocks, in the same thread as the bot's reply so it sits
+      # with the conversation. It must be a fresh message (not an edit of the
+      # reply): the chat client only renders blocks present at message creation.
+      # Scoped to bot direct-message channels; elsewhere the reviewable is still
+      # created and remains actionable from /review.
+      def post_chat_tool_approval(info, channel:, guardian:, thread_id:, fallback_in_reply_to_id:)
+        return if !channel.direct_message_channel?
+
+        ChatSDK::Message.create(
+          raw: info[:details],
+          channel_id: channel.id,
+          guardian: guardian,
+          thread_id: thread_id,
+          in_reply_to_id: thread_id ? nil : fallback_in_reply_to_id,
+          force_thread: thread_id.blank?,
+          enforce_membership: !channel.direct_message_channel?,
+          blocks:
+            DiscourseAi::AiBot::ChatToolApproval.pending_blocks(info[:reviewable_id], info: info),
+        )
+      end
+
+      def reply_to(post, **options, &block)
+        ReplyLock.synchronize("discourse_ai:reply:topic:#{post.topic_id}") do
+          reply_to_unlocked(post, **options, &block)
+        end
+      end
+
+      def available_bot_usernames
+        @bot_usernames ||=
+          AiAgent
+            .joins(:user)
+            .pluck(:username)
+            .concat(available_bot_users.map(&:username))
+            .push(bot.bot_user.username)
+            .uniq
+      end
+
+      def available_bot_user_ids
+        @bot_ids ||=
+          AiAgent
+            .joins(:user)
+            .pluck("users.id")
+            .concat(available_bot_users.map(&:id))
+            .push(bot.bot_user.id)
+            .uniq
+      end
+
+      def include_image_uploads?
+        bot.agent.class.vision_enabled
+      end
+
+      def include_document_uploads?
+        bot.model.allowed_attachment_types.present?
+      end
+
+      private
+
+      def reply_to_chat_message_unlocked(
         message,
         channel,
         context_post_ids,
@@ -462,6 +526,12 @@ module DiscourseAi
         end
 
         context_llm = bot.llm
+        history_snapshot =
+          DiscourseAi::Completions::HistorySnapshot.chat(
+            message,
+            guardian: message.user.guardian,
+            bot_user_ids: available_bot_user_ids,
+          )
         context =
           DiscourseAi::Agents::BotContext.new(
             participants: participants,
@@ -478,7 +548,7 @@ module DiscourseAi
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
                 max_messages: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
-                context_token_budget: context_token_budget(context_llm),
+                history_snapshot: history_snapshot,
                 tokenizer: context_llm.tokenizer,
                 bot_user_ids: available_bot_user_ids,
                 instruction_message: instruction_message,
@@ -488,6 +558,9 @@ module DiscourseAi
             cancel_manager: DiscourseAi::Completions::CancelManager.new,
           )
 
+        context.user_turn_count = history_snapshot.user_turn_count
+        context.protected_message_count = additional_messages.length + 1
+        context.history_snapshot = history_snapshot
         context.messages.concat(additional_messages)
 
         reply = nil
@@ -528,9 +601,6 @@ module DiscourseAi
           reply.save_custom_fields
         end
         if new_prompts.length > 1 && reply
-          # Note: messages_from_chat does not read these back, so compressed
-          # context checkpoints only persist across turns for post-based
-          # replies; chat rebuilds context from the raw messages each turn.
           ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: new_prompts)
         end
 
@@ -550,6 +620,46 @@ module DiscourseAi
         end
 
         reply
+      rescue DiscourseAi::Completions::ContextPreparation::Error,
+             LlmQuotaUsage::QuotaExceededError => error
+        if error.is_a?(DiscourseAi::Completions::ContextPreparation::Error) &&
+             error.reason == "cancelled"
+          return
+        end
+        partial_context = context&.partial_raw_context
+        if streamer
+          streamer << error.message
+          reply = streamer.reply
+          if reply && partial_context.present?
+            preserved = partial_context
+            if preserved.last && [nil, "model"].include?(preserved.last[2])
+              preserved.last[0] = "#{preserved.last[0]}\n\n#{error.message}"
+            else
+              preserved << [
+                error.message,
+                agent_user.username,
+                nil,
+                nil,
+                nil,
+                nil,
+                nil,
+                partial_context.first[7],
+              ]
+            end
+            ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: preserved)
+          end
+        else
+          ChatSDK::Message.create(
+            raw: error.message,
+            channel_id: channel.id,
+            guardian: agent_user.guardian,
+            thread_id: message.thread_id,
+            in_reply_to_id: channel.direct_message_channel? ? message.id : nil,
+            force_thread: message.thread_id.nil? && channel.direct_message_channel?,
+            enforce_membership: !channel.direct_message_channel?,
+          )
+        end
+        nil
       rescue LlmCreditAllocation::CreditLimitExceeded => e
         if streamer && streamer.instance_variable_get(:@client_id)
           ChatSDK::Channel.stop_reply(
@@ -569,44 +679,28 @@ module DiscourseAi
         error_message =
           error_message.gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
 
-        ChatSDK::Message.create(
-          raw: error_message,
-          channel_id: channel.id,
-          guardian: guardian,
-          thread_id: message.thread_id,
-          in_reply_to_id: in_reply_to_id,
-          force_thread: force_thread,
-          enforce_membership: !channel.direct_message_channel?,
-        )
+        error_reply =
+          ChatSDK::Message.create(
+            raw: error_message,
+            channel_id: channel.id,
+            guardian: guardian,
+            thread_id: message.thread_id,
+            in_reply_to_id: in_reply_to_id,
+            force_thread: force_thread,
+            enforce_membership: !channel.direct_message_channel?,
+          )
 
+        if context&.partial_raw_context.present?
+          entries = context.partial_raw_context
+          entries << [error_message, agent_user.username, nil, nil, nil, nil, nil, entries.first[7]]
+          ChatMessageCustomPrompt.create!(message_id: error_reply.id, custom_prompt: entries)
+        end
         nil
       ensure
         streamer.done if streamer
       end
 
-      # Posts the queued tool action as its own chat message carrying the
-      # Approve/Reject blocks, in the same thread as the bot's reply so it sits
-      # with the conversation. It must be a fresh message (not an edit of the
-      # reply): the chat client only renders blocks present at message creation.
-      # Scoped to bot direct-message channels; elsewhere the reviewable is still
-      # created and remains actionable from /review.
-      def post_chat_tool_approval(info, channel:, guardian:, thread_id:, fallback_in_reply_to_id:)
-        return if !channel.direct_message_channel?
-
-        ChatSDK::Message.create(
-          raw: info[:details],
-          channel_id: channel.id,
-          guardian: guardian,
-          thread_id: thread_id,
-          in_reply_to_id: thread_id ? nil : fallback_in_reply_to_id,
-          force_thread: thread_id.blank?,
-          enforce_membership: !channel.direct_message_channel?,
-          blocks:
-            DiscourseAi::AiBot::ChatToolApproval.pending_blocks(info[:reviewable_id], info: info),
-        )
-      end
-
-      def reply_to(
+      def reply_to_unlocked(
         post,
         custom_instructions: nil,
         additional_messages: [],
@@ -651,14 +745,20 @@ module DiscourseAi
           )
 
         context_llm = bot.llm
-        visibility_guardian = Guardian.new(visibility_user)
+        visibility_guardian = visibility_user.guardian
+        history_snapshot =
+          DiscourseAi::Completions::HistorySnapshot.post(
+            post,
+            guardian: visibility_guardian,
+            bot_usernames: available_bot_usernames,
+          )
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
             user: attributed_user,
             guardian: visibility_guardian,
             custom_instructions: custom_instructions,
-            feature_name: feature_name,
+            feature_name: feature_name.presence || "bot",
             feature_context: feature_context,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
@@ -666,7 +766,7 @@ module DiscourseAi
                 guardian: visibility_guardian,
                 style: context_style,
                 max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
-                context_token_budget: context_token_budget(context_llm),
+                history_snapshot: history_snapshot,
                 tokenizer: context_llm.tokenizer,
                 include_image_uploads: include_image_uploads?,
                 include_document_uploads: include_document_uploads?,
@@ -675,6 +775,9 @@ module DiscourseAi
               ),
           )
 
+        context.user_turn_count = history_snapshot.user_turn_count
+        context.protected_message_count = additional_messages.length + 1
+        context.history_snapshot = history_snapshot
         context.messages.concat(additional_messages)
 
         reply_user = bot.bot_user
@@ -682,6 +785,7 @@ module DiscourseAi
           reply_user = User.find_by(id: bot.agent.class.user_id) || reply_user
         end
 
+        original_reply_raw = existing_reply_post&.raw
         if existing_reply_post
           if existing_reply_post.topic_id != post.topic_id ||
                !EntryPoint.ai_response?(existing_reply_post)
@@ -708,12 +812,7 @@ module DiscourseAi
         if stream_reply
           reply_post = existing_reply_post
 
-          if reply_post
-            if !append_to_existing_reply
-              reply_post.update_columns(raw: "", cooked: "")
-              reply_post.post_custom_prompt = nil
-            end
-          else
+          if !reply_post
             reply_post =
               PostCreator.create!(
                 reply_user,
@@ -829,7 +928,6 @@ module DiscourseAi
           )
         elsif existing_reply_post
           reply_post = existing_reply_post
-          reply_post.post_custom_prompt = nil if !append_to_existing_reply
           reply_post.revise(
             bot.bot_user,
             { raw: reply },
@@ -856,13 +954,42 @@ module DiscourseAi
 
         if previous_custom_prompts || is_thinking || new_custom_prompts.length > 1
           reply_post.post_custom_prompt ||= reply_post.build_post_custom_prompt(custom_prompt: [])
-          prompt =
-            (previous_custom_prompts || reply_post.post_custom_prompt.custom_prompt || []).dup
+          prompt = (previous_custom_prompts || []).dup
           prompt.concat(new_custom_prompts)
           reply_post.post_custom_prompt.update!(custom_prompt: prompt)
+        elsif !append_to_existing_reply
+          reply_post.post_custom_prompt&.destroy!
         end
 
+        reply_completed = true
         reply_post
+      rescue DiscourseAi::Completions::ContextPreparation::Error => error
+        return if silent_mode || error.reason == "cancelled"
+        failure_reply =
+          "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{error.message}".strip
+        failure_reply = "#{original_reply_raw}\n\n#{error.message}" if existing_reply_post &&
+          reply.blank?
+        if reply_post
+          reply_post.revise(
+            bot.bot_user,
+            { raw: failure_reply },
+            skip_validations: true,
+            skip_revision: true,
+          )
+        else
+          reply_post =
+            PostCreator.create!(
+              bot.bot_user,
+              topic_id: post.topic_id,
+              raw: failure_reply,
+              skip_validations: true,
+              skip_guardian: true,
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
+            )
+        end
+        persist_failure_evidence(reply_post, error.raw_context, previous_custom_prompts)
+        blk&.call(error.message)
+        nil
       rescue LlmCreditAllocation::CreditLimitExceeded => e
         return if silent_mode
 
@@ -872,6 +999,7 @@ module DiscourseAi
           I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)
 
         if reply_post
+          reply = original_reply_raw if existing_reply_post && reply.blank?
           reply = "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{error_message}"
           reply_post.revise(
             bot.bot_user,
@@ -880,19 +1008,36 @@ module DiscourseAi
             skip_revision: true,
           )
         else
-          PostCreator.create!(
-            bot.bot_user,
-            topic_id: post.topic_id,
-            raw: error_message,
-            skip_validations: true,
-            skip_guardian: true,
-            custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
-          )
+          reply_post =
+            PostCreator.create!(
+              bot.bot_user,
+              topic_id: post.topic_id,
+              raw: error_message,
+              skip_validations: true,
+              skip_guardian: true,
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
+            )
         end
 
+        persist_failure_evidence(reply_post, context&.partial_raw_context, previous_custom_prompts)
         nil
       rescue => e
+        if !reply_post && context&.partial_raw_context.present?
+          details = e.message.to_s
+          failure_reply =
+            "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{I18n.t("discourse_ai.ai_bot.reply_error", details: details)}"
+          reply_post =
+            PostCreator.create!(
+              bot.bot_user,
+              topic_id: post.topic_id,
+              raw: failure_reply,
+              skip_validations: true,
+              skip_guardian: true,
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
+            )
+        end
         if reply_post
+          reply = original_reply_raw if existing_reply_post && reply.blank?
           details = e.message.to_s
           reply =
             "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{I18n.t("discourse_ai.ai_bot.reply_error", details: details)}"
@@ -903,6 +1048,7 @@ module DiscourseAi
             skip_revision: true,
           )
         end
+        persist_failure_evidence(reply_post, context&.partial_raw_context, previous_custom_prompts)
         raise e
       ensure
         context.cancel_manager.stop_monitor if context&.cancel_manager
@@ -917,32 +1063,32 @@ module DiscourseAi
         if stream_reply
           publish_final_update(reply_post, user_ids: stream_user_ids, group_ids: stream_group_ids)
         end
-        if reply_post && post.post_number == 1 && post.topic.private_message? && auto_set_title
+        if reply_completed && reply_post && post.post_number == 1 && post.topic.private_message? &&
+             auto_set_title && !context.cancel_manager&.cancelled?
           title_playground(reply_post, post.user)
         end
       end
 
-      def context_token_budget(llm)
-        DiscourseAi::Agents::Bot.context_token_budget(llm, bot.agent.class.max_turn_tokens)
+      def persist_failure_evidence(reply_post, entries, previous_custom_prompts = nil)
+        return if !reply_post || entries.blank?
+        preserved = (previous_custom_prompts || []).dup + entries
+        if preserved.last && [nil, "model"].include?(preserved.last[2])
+          preserved.last[0] = "#{preserved.last[0]}\n\n#{reply_post.raw}"
+        else
+          preserved << [
+            reply_post.raw,
+            bot.bot_user.username,
+            nil,
+            nil,
+            nil,
+            nil,
+            nil,
+            entries.first[7],
+          ]
+        end
+        record = reply_post.post_custom_prompt || reply_post.build_post_custom_prompt
+        record.update!(custom_prompt: preserved)
       end
-
-      def available_bot_usernames
-        @bot_usernames ||= available_bot_users.pluck(:username)
-      end
-
-      def available_bot_user_ids
-        @bot_ids ||= available_bot_users.pluck(:id)
-      end
-
-      def include_image_uploads?
-        bot.agent.class.vision_enabled
-      end
-
-      def include_document_uploads?
-        bot.model.allowed_attachment_types.present?
-      end
-
-      private
 
       def ai_custom_fields(authorization_user_id: nil)
         fields = {

@@ -6,16 +6,11 @@ RSpec.describe DiscourseAi::Agents::Bot do
   fab!(:admin)
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   fab!(:fake) { Fabricate(:llm_model, name: "fake", provider: "fake") }
-
-  before do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [gpt_4])
-    SiteSetting.ai_bot_enabled = true
-  end
+  fab!(:user)
 
   let(:bot_user) { admin }
 
-  let!(:user) { Fabricate(:user) }
+  before { prepare_ai_bot_fixtures(bots: [gpt_4]) }
 
   let(:function_call) { <<~TEXT }
     Let me try using a function to get more info:<function_calls>
@@ -28,6 +23,31 @@ RSpec.describe DiscourseAi::Agents::Bot do
   let(:response) { "As expected, your forum has multiple tags" }
 
   let(:llm_responses) { [function_call, response] }
+
+  describe ".effective_max_turn_tokens" do
+    it "defaults to the model context window while keeping explicit allowances exact" do
+      [4096, 200_000, nil].each do |context_window|
+        model = instance_double(DiscourseAi::Completions::Llm, max_prompt_tokens: context_window)
+        default = context_window || described_class::FALLBACK_MAX_TURN_TOKENS
+        expect(described_class.effective_max_turn_tokens(model, 8000)).to eq(8000)
+        expect(described_class.effective_max_turn_tokens(model, 60_000)).to eq(60_000)
+        expect(described_class.effective_max_turn_tokens(model, 10)).to eq(10)
+        expect(described_class.default_max_turn_tokens(model)).to eq(default)
+        expect(
+          described_class.effective_max_turn_tokens(
+            model,
+            4000,
+            compression_threshold: 50,
+            max_tokens: 1,
+            thinking_effort: "high",
+          ),
+        ).to eq(4000)
+        expect(described_class.default_max_turn_tokens(model, compression_threshold: 50)).to eq(
+          default,
+        )
+      end
+    end
+  end
 
   describe "#reply" do
     it "sets top_p, temperature, and thinking_effort params" do
@@ -171,7 +191,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
         expect(prompts.first.tool_choice).to eq(:none)
         expect(prompts.first.messages.last[:content]).to eq(
-          described_class::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+          described_class::COMPLETION_LIMIT_FINAL_ANSWER_HINT,
         )
       end
     end
@@ -317,40 +337,237 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       let(:agent_class) { agent_record.class_instance }
 
-      it "requests a final answer after the token budget is exhausted" do
-        tool_call =
-          DiscourseAi::Completions::ToolCall.new(id: "call_1", name: "categories", parameters: {})
-
-        responses = [tool_call, "Final answer"]
-        call_count = 0
-
-        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
+      %i[text tools final].each do |mode|
+        it "prepares tight-window #{mode} calls with their admitted output instead of the model ceiling" do
+          gpt_4.update!(max_prompt_tokens: 16_000, max_output_tokens: 12_000)
+          agent_record.update!(
+            max_turn_tokens: 4000,
+            tools: mode == :tools ? [["ListCategories", nil, false]] : [],
+          )
+          execution =
+            DiscourseAi::Completions::ExecutionContext.new(
+              work_budget:
+                DiscourseAi::Completions::TurnWorkBudget.new(
+                  limit: 4000,
+                  used: mode == :final ? 4000 : 0,
+                ),
+            )
           context =
             DiscourseAi::Agents::BotContext.new(
-              messages: [{ type: :user, content: "List categories" }],
+              user: user,
+              messages: [{ type: :user, content: "input " * 8000 }],
             )
-
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
-            :generate,
-          ).and_wrap_original do |original, *args, **kwargs, &blk|
-            call_count += 1
-            result = original.call(*args, **kwargs, &blk)
-            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
-              tracker.add_effective(request: 5000, response: 1000)
-            end
-            result
+          DiscourseAi::Completions::Llm.with_prepared_responses(
+            ["Fitting answer"],
+          ) do |_, _, prompts, options|
+            agent_bot =
+              described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+            expect(agent_bot.reply(context, execution_context: execution).last.first).to eq(
+              "Fitting answer",
+            )
+            expect(options.map { |option| option[:max_tokens] }).to eq(
+              [mode == :tools ? 2000 : mode == :final ? 2048 : 4000],
+            )
+            expect(options.map { |option| option[:feature_name] }).to eq(["bot"])
+            expect(prompts.first.tool_choice).to eq(mode == :final ? :none : nil)
+            expect(context.execution_context.work_budget.limit).to eq(4000)
+            expect(context.execution_context.work_budget.used).to eq(
+              (mode == :final ? 4000 : 0) + agent_bot.llm.tokenizer.size("Fitting answer"),
+            )
+            expect(
+              DiscourseAi::Completions::PromptMessagesBuilder.message_text(
+                prompts.first.messages[1],
+              ),
+            ).to include(context.messages.first[:content])
+            expect(execution.work_budget.limit).to eq(4000)
           end
-
-          bot.reply(context) { |_partial| }
         end
-
-        # The first call exceeds the budget after its tool runs, then the second
-        # call provides the final answer with tools disabled.
-        expect(call_count).to eq(2)
       end
 
-      it "requests a final answer when the token budget is consumed" do
+      it "starts fresh work for a second root reply while retaining the actual usage tracker" do
+        agent_record.update!(max_turn_tokens: 4000, tools: [])
+        execution = DiscourseAi::Completions::ExecutionContext.new
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Answer" }],
+          )
+        agent_bot =
+          described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[First Second Third]) do
+          agent_bot.reply(context, execution_context: execution)
+          first_work = context.execution_context.work_budget
+          first_work.debit(5000, event_id: "exhausted previous turn")
+          tracker = context.execution_context.token_usage_tracker
+          tracker.add_effective(request: 10, response: 20)
+          agent_bot.reply(context, execution_context: execution)
+          expect(context.execution_context.work_budget.used).to eq(
+            agent_bot.llm.tokenizer.size("Second"),
+          )
+          expect(context.execution_context.work_budget.limit).to eq(4000)
+          expect(context.execution_context.token_usage_tracker).to eq(tracker)
+          expect(tracker.total).to eq(30)
+          agent_bot.reply(context)
+          expect(context.execution_context.work_budget.used).to eq(
+            agent_bot.llm.tokenizer.size("Third"),
+          )
+          expect(first_work.used).to be > 4000
+        end
+      end
+
+      it "keeps the final claim available when the provider cannot honor the final output ceiling" do
+        execution =
+          DiscourseAi::Completions::ExecutionContext.new(
+            work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000, used: 4000),
+          )
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Answer" }],
+          )
+        # Simulate a provider whose mandatory reasoning cannot be disabled for finalization.
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :prompt_capacity,
+        ).and_return([100, 20_000, 4096])
+        DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
+          expect {
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4).reply(
+              context,
+              execution_context: execution,
+            )
+          }.to raise_error(
+            DiscourseAi::Completions::ContextPreparation::Error,
+            /final_output_limit/,
+          )
+          expect(canned.completions).to eq(0)
+        end
+        expect(execution.work_budget.snapshot[:final_answer_claimed]).to eq(false)
+        expect(execution.work_budget.remaining).to eq(0)
+      end
+
+      it "excludes imported history from work and counts two fresh identical reads" do
+        gpt_4.update!(max_prompt_tokens: 200_000, max_output_tokens: 50_000)
+        agent_record.update!(max_turn_tokens: 4000, compression_threshold: 50)
+        history = "Earlier evidence " * 1000
+        calls =
+          2.times.map do |index|
+            DiscourseAi::Completions::ToolCall.new(
+              id: "read-#{index}",
+              name: "categories",
+              parameters: {
+              },
+            )
+          end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [*calls, "Final answer"],
+        ) do |canned, _, prompts|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          context =
+            DiscourseAi::Agents::BotContext.new(
+              user: user,
+              messages: [
+                { type: :user, content: "Earlier request" },
+                { type: :model, content: history },
+                { type: :user, content: "Read twice" },
+              ],
+            )
+          raw = agent_bot.reply(context)
+          evidence = raw.select { |entry| entry[2] == "tool" }.map(&:first)
+          expect(evidence.size).to eq(2)
+          expect(evidence.first).to eq(evidence.second)
+          tokenizer = agent_bot.llm.tokenizer
+          generations =
+            [*calls, "Final answer"].sum do |part|
+              output = DiscourseAi::Completions::GeneratedOutput.new
+              output << part
+              output.size(tokenizer)
+            end
+          expect(context.execution_context.work_budget.used).to eq(
+            generations + evidence.sum { |text| tokenizer.size(text) },
+          )
+          expect(context.execution_context.work_budget.limit).to eq(4000)
+          expect(canned.completions).to eq(3)
+          expect(prompts.map(&:tool_choice)).to eq([nil, nil, nil])
+        end
+        expect(agent_record.reload.max_turn_tokens).to eq(4000)
+      end
+
+      it "admits a huge tool result once and then gives only one bounded final answer" do
+        result = { evidence: "External record QUARTZ-OTTER-731 " * 3000 }
+        allow_any_instance_of(DiscourseAi::Agents::Tools::ListCategories).to receive(
+          :invoke,
+        ).and_return(result)
+        gpt_4.update!(max_prompt_tokens: 200_000)
+        call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "huge-read",
+            name: "categories",
+            parameters: {
+            },
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [call, "Bounded final"],
+        ) do |canned, _, prompts, options|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          context =
+            DiscourseAi::Agents::BotContext.new(
+              user: user,
+              messages: [{ type: :user, content: "Read the evidence" }],
+            )
+          raw = agent_bot.reply(context)
+          expect(raw.select { |entry| entry[2] == "tool" }.map(&:first)).to eq([result.to_json])
+          expect(context.execution_context.work_budget.used).to be > 5000
+          expect(prompts.last.tool_choice).to eq(:none)
+          expect(options.last[:max_tokens]).to be <= described_class::MAX_FINAL_ANSWER_TOKENS
+          expect(options.last[:thinking_effort]).to eq("none")
+          expect(canned.completions).to eq(2)
+          expect(context.execution_context.work_budget.snapshot[:final_answer_claimed]).to eq(true)
+        end
+      end
+
+      it "bounds parallel execution even when a model emits more tools than an admitted batch" do
+        calls =
+          52.times.map do |index|
+            DiscourseAi::Completions::ToolCall.new(
+              id: "batch-#{index}",
+              name: "categories",
+              parameters: {
+              },
+            )
+          end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [calls, "Batch summary"],
+        ) do |_, _, prompts|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          context =
+            DiscourseAi::Agents::BotContext.new(
+              user: user,
+              messages: [{ type: :user, content: "List many times" }],
+            )
+          raw = agent_bot.reply(context)
+          results =
+            raw.select { |entry| entry[2] == "tool" }.map { |entry| JSON.parse(entry.first) }
+          expect(results.count { |result| result.key?("rows") }).to eq(50)
+          expect(results.count { |result| result.key?("error") }).to eq(2)
+          expect(prompts.last.tool_choice).to eq(:none)
+          generation = DiscourseAi::Completions::GeneratedOutput.new
+          calls.each { |call| generation << call }
+          generation << "Batch summary"
+          evidence =
+            raw
+              .select { |entry| entry[2] == "tool" }
+              .sum { |entry| agent_bot.llm.tokenizer.size(entry.first) }
+          expect(context.execution_context.work_budget.used).to eq(
+            generation.size(agent_bot.llm.tokenizer) + evidence,
+          )
+        end
+      end
+
+      it "requests a final answer when the effective token budget is consumed" do
+        gpt_4.update!(max_prompt_tokens: 9000)
         # budget=10000, first call adds 10000 tokens → reaches the threshold
         # and asks the second call to provide the final answer with tools disabled
         big_budget_agent =
@@ -386,6 +603,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
             result = original.call(*args, **kwargs, &blk)
             if (tracker = kwargs[:execution_context]&.token_usage_tracker)
               tracker.add_effective(request: 8000, response: 2000)
+              kwargs[:execution_context].work_budget.debit(10_000, event_id: SecureRandom.uuid)
             end
             result
           end
@@ -410,9 +628,15 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       it "allows a final response when the tracker starts at the token budget" do
         tracker =
-          DiscourseAi::Completions::TokenUsageTracker.new(base_request: 5000, base_response: 0)
+          DiscourseAi::Completions::TokenUsageTracker.new(
+            base_request: described_class.effective_max_turn_tokens(bot.llm, 5000),
+            base_response: 0,
+          )
         execution_context =
-          DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+          DiscourseAi::Completions::ExecutionContext.new(
+            token_usage_tracker: tracker,
+            work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 5000, used: 5000),
+          )
         final_prompt = nil
         call_count = 0
 
@@ -440,7 +664,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         )
       end
 
-      it "defaults the turn budget to half the context window without max_turn_tokens" do
+      it "defaults the work allowance to the model context window" do
         no_budget_agent =
           Fabricate(
             :ai_agent,
@@ -451,8 +675,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
         klass = no_budget_agent.class_instance
 
-        # gpt_4 has max_prompt_tokens 131_072, so the default budget is 65_536.
-        expect(DiscourseAi::Agents::Bot.default_max_turn_tokens(bot.send(:llm))).to eq(65_536)
+        expect(described_class.default_max_turn_tokens(bot.llm)).to eq(gpt_4.max_prompt_tokens)
 
         tool_call =
           DiscourseAi::Completions::ToolCall.new(id: "call_1", name: "categories", parameters: {})
@@ -470,10 +693,13 @@ RSpec.describe DiscourseAi::Agents::Bot do
           ).and_wrap_original do |original, *args, **kwargs, &blk|
             call_count += 1
             result = original.call(*args, **kwargs, &blk)
-            # 70_000 tokens per call exceeds the 65_536 default budget after the
-            # first call, so the loop stops on the token budget.
+            # New generation consumes the default work allowance.
             if (tracker = kwargs[:execution_context]&.token_usage_tracker)
-              tracker.add_effective(request: 40_000, response: 30_000)
+              tracker.add_effective(request: 90_000, response: 30_000)
+              kwargs[:execution_context].work_budget.debit(
+                gpt_4.max_prompt_tokens,
+                event_id: SecureRandom.uuid,
+              )
             end
             result
           end
@@ -484,130 +710,131 @@ RSpec.describe DiscourseAi::Agents::Bot do
         expect(call_count).to eq(2)
       end
 
-      it "uses conservative default budget and keeps trimming for models without a context window" do
-        no_budget_agent =
-          Fabricate(
-            :ai_agent,
-            max_turn_tokens: nil,
-            compression_threshold: 80,
-            tools: [["ListCategories", nil, false]],
-          )
-
-        captured_skip_trim = nil
-
-        DiscourseAi::Completions::Llm.with_prepared_responses(["Final answer"]) do
-          agent_bot =
-            described_class.as(bot_user, agent: no_budget_agent.class_instance.new, model: gpt_4)
+      it "rejects unknown capacity rather than trimming history" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Final answer"]) do |canned|
+          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
-
           allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
             :max_prompt_tokens,
           ).and_return(0)
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
-            :generate,
-          ).and_wrap_original do |original, *args, **kwargs, &blk|
-            captured_skip_trim = args.first.skip_trim
-            original.call(*args, **kwargs, &blk)
-          end
 
-          agent_bot.reply(context) { |_partial| }
+          expect { agent_bot.reply(context) }.to raise_error(
+            DiscourseAi::Completions::ContextPreparation::Error,
+            /unknown_capacity/,
+          )
+          expect(canned.completions).to eq(0)
         end
-
         expect(described_class.default_max_turn_tokens(nil)).to eq(
-          described_class::DEFAULT_MAX_TURN_TOKENS,
+          described_class::FALLBACK_MAX_TURN_TOKENS,
         )
-        expect(captured_skip_trim).to be_falsey
       end
 
-      it "uses explicit max_turn_tokens to size the initial context budget" do
-        llm = bot.send(:llm)
+      it "retains a tool-heavy previous turn despite a small work allowance" do
+        gpt_4.update!(max_prompt_tokens: 200_000)
+        agent_record.update!(max_turn_tokens: 4000, compression_threshold: 50)
+        large_result = "Record: amber inventory item checked. " * 2000
+        messages = [
+          { type: :user, content: "Remember QUARTZ-OTTER-731" },
+          { type: :tool_call, id: "read", name: "read", content: '{"arguments":{}}' },
+          { type: :tool, id: "read", name: "read", content: large_result },
+          { type: :model, content: "DATA READ" },
+          { type: :user, content: "What codeword?" },
+        ]
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["QUARTZ-OTTER-731"],
+        ) do |canned, _, prompts, options|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          agent_bot.reply(DiscourseAi::Agents::BotContext.new(messages: messages))
 
-        expect(described_class.context_token_budget(llm, 5000)).to eq(2500)
-      end
-
-      it "defaults context budget to half of the default turn budget" do
-        llm = bot.send(:llm)
-
-        expect(described_class.context_token_budget(llm)).to eq(32_768)
-      end
-
-      it "re-enables dialect trimming when compression fails" do
-        large_messages = [{ type: :user, content: "Start" }]
-        10.times do |index|
-          large_messages << { type: :model, content: "Response #{index} " * 200 }
-          large_messages << { type: :user, content: "Message #{index} " * 200 }
+          expect(canned.completions).to eq(1)
+          expect(options.first[:feature_name]).to eq("bot")
+          expect(prompts.first.messages.drop(1)).to eq(messages)
+          expect(prompts.first.skip_trim).to eq(true)
         end
-
-        main_generate_skip_trim_values = []
-
-        DiscourseAi::Completions::Llm.with_prepared_responses(["Done"]) do
-          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-          context = DiscourseAi::Agents::BotContext.new(messages: large_messages)
-
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
-            :max_prompt_tokens,
-          ).and_return(2000)
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(:tokenizer).and_return(
-            DiscourseAi::Tokenizer::OpenAiTokenizer,
-          )
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
-            :generate,
-          ).and_wrap_original do |original, *args, **kwargs, &blk|
-            if kwargs[:feature_name] == "context_compression"
-              raise RuntimeError, "compression failed"
-            end
-
-            main_generate_skip_trim_values << args.first.skip_trim
-            original.call(*args, **kwargs, &blk)
-          end
-
-          agent_bot.reply(context) { |_partial| }
-        end
-
-        expect(main_generate_skip_trim_values).to eq([false])
       end
 
-      it "re-enables dialect trimming when compression still leaves the prompt over threshold" do
-        large_messages = [{ type: :user, content: "Start" }]
-        10.times do |index|
-          large_messages << { type: :model, content: "Response #{index} " * 200 }
-          large_messages << { type: :user, content: "Message #{index} " * 200 }
-        end
-        large_messages << { type: :model, content: "Latest oversized response " * 1000 }
-
-        main_generate_skip_trim_values = []
-
-        DiscourseAi::Completions::Llm.with_prepared_responses(["Done"]) do
-          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-          context = DiscourseAi::Agents::BotContext.new(messages: large_messages)
-
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
-            :max_prompt_tokens,
-          ).and_return(2000)
-          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(:tokenizer).and_return(
-            DiscourseAi::Tokenizer::OpenAiTokenizer,
-          )
+      it "prepares a completed turn before answering and persists the checkpoint and current request" do
+        gpt_4.update!(max_prompt_tokens: 16_000)
+        agent_record.update!(max_turn_tokens: 4000, compression_threshold: 50)
+        large_result = "Record: amber inventory item checked. " * 1600
+        latest_request = "What codeword?"
+        messages = [
+          { type: :user, content: "Remember QUARTZ-OTTER-731" },
+          { type: :tool_call, id: "read", name: "read", content: '{"arguments":{}}' },
+          { type: :tool, id: "read", name: "read", content: large_result },
+          { type: :model, content: "DATA READ" },
+          { type: :user, content: latest_request },
+        ]
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["The user asked to remember QUARTZ-OTTER-731; the read succeeded.", "QUARTZ-OTTER-731"],
+        ) do |_, _, prompts, options|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          context = DiscourseAi::Agents::BotContext.new(messages: messages, user: user)
           allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
             :generate,
-          ).and_wrap_original do |original, *args, **kwargs, &blk|
-            if kwargs[:feature_name] == "context_compression"
-              "Summary of the conversation."
-            else
-              main_generate_skip_trim_values << args.first.skip_trim
-              original.call(*args, **kwargs, &blk)
-            end
+          ).and_wrap_original do |original, *args, **kwargs, &block|
+            tracker = kwargs[:execution_context]&.token_usage_tracker
+            maintenance = kwargs[:feature_name] == "context_compression"
+            tracker&.add_effective(
+              request: maintenance ? 10_000 : 3000,
+              response: maintenance ? 200 : 100,
+              preparation: maintenance,
+            )
+            original.call(*args, **kwargs, &block)
           end
+          raw = agent_bot.reply(context)
 
-          agent_bot.reply(context) { |_partial| }
+          expect(options.map { |option| option[:feature_name] }).to eq(%w[context_compression bot])
+          expect(options.first[:user]).to eq(user)
+          expect(context.execution_context.token_usage_tracker.total).to eq(13_300)
+          expect(prompts.last.tool_choice).not_to eq(:none)
+          evidence = prompts.first.messages.last[:content]
+          expect(evidence).to include("QUARTZ-OTTER-731", large_result)
+          expect(evidence).not_to include(latest_request)
+          expect(prompts.map(&:skip_trim)).to eq([true, true])
+          expect(prompts.last.messages.last[:content]).to eq(latest_request)
+          expect(raw.first[0]).to include("<compressed_context>")
+          expect(raw.map(&:first)).to include(latest_request, "QUARTZ-OTTER-731")
         end
+      end
 
-        expect(main_generate_skip_trim_values).to eq([false])
+      it "admits large current input without inflating the requested work allowance" do
+        gpt_4.update!(max_prompt_tokens: 50_000)
+        agent_record.update!(max_turn_tokens: 8000, compression_threshold: 50)
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            messages: [
+              { type: :user, content: "Earlier request" },
+              { type: :model, content: "Earlier evidence" },
+              { type: :user, content: "input " * 30_000 },
+            ],
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["", "Answer using the full request"],
+        ) do |_, _, prompts, options|
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+          agent_bot.reply(context)
+          llm = agent_bot.llm
+          input, _, output = llm.prompt_capacity(prompts.last)
+          baseline = described_class.effective_max_turn_tokens(llm, 8000)
+
+          expect(options.map { |option| option[:feature_name] }).to eq(%w[context_compression bot])
+          expect(prompts.last.tool_choice).not_to eq(:none)
+          expect(input + output).to be > baseline
+          expect(context.subagent_execution_state.root_token_budget).to eq(8000)
+          expect(context.execution_context.work_budget.used).to eq(
+            agent_bot.llm.tokenizer.size("Answer using the full request"),
+          )
+          expect(agent_record.reload.max_turn_tokens).to eq(8000)
+        end
       end
 
       it "forces a final text-only call after jumping past the token budget" do
-        # budget=2000, first call adds 3000 tokens
-        # The model gets one more tool_choice=:none call to provide the final answer.
+        gpt_4.update!(max_prompt_tokens: 6000)
         small_budget_agent =
           Fabricate(
             :ai_agent,
@@ -642,7 +869,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
             prompt_messages << prompt_arg.messages.map(&:dup)
             result = original.call(*args, **kwargs, &blk)
             if (tracker = kwargs[:execution_context]&.token_usage_tracker)
-              tracker.add_effective(request: 2500, response: 500)
+              tracker.add_effective(request: 8500, response: 500)
+              kwargs[:execution_context].work_budget.debit(2500, event_id: SecureRandom.uuid)
             end
             result
           end
@@ -663,7 +891,10 @@ RSpec.describe DiscourseAi::Agents::Bot do
         responses = [RuntimeError.new("boom")]
         tracker = DiscourseAi::Completions::TokenUsageTracker.new
         execution_context =
-          DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+          DiscourseAi::Completions::ExecutionContext.new(
+            token_usage_tracker: tracker,
+            work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 5000, used: 5000),
+          )
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
           bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
@@ -676,384 +907,6 @@ RSpec.describe DiscourseAi::Agents::Bot do
           )
           expect(execution_context.token_usage_tracker).to eq(tracker)
         end
-      end
-    end
-
-    describe "#maybe_compress_context" do
-      fab!(:agent_record) do
-        Fabricate(
-          :ai_agent,
-          max_turn_tokens: 500_000,
-          compression_threshold: 75,
-          tools: [["ListCategories", nil, false]],
-        )
-      end
-
-      let(:agent_class) { agent_record.class_instance }
-
-      it "compresses context when prompt exceeds default threshold of max_prompt_tokens" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        20.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        compression_response = "Summary of the conversation."
-
-        allow(llm).to receive(:generate).and_return(compression_response)
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.first[:type]).to eq(:system)
-        expect(prompt.messages[1][:type]).to eq(:user)
-        expect(prompt.messages[1][:content]).to include("<compressed_context>")
-        expect(prompt.messages[1][:content]).to include("Summary of the conversation.")
-        expect(prompt.messages[2][:type]).to eq(:model)
-        expect(prompt.messages[2][:content]).to eq("Understood, I have the context.")
-        expect(prompt.messages.length).to be < 41
-      end
-
-      it "compacts raw context so compressed checkpoints persist to later turns" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        raw_context = []
-        20.times do |index|
-          user_message = { type: :user, content: "Message #{index} " * 200, id: user.username }
-          model_message = { type: :model, content: "Response #{index} " * 200 }
-          messages << user_message
-          messages << model_message
-          raw_context << [user_message[:content], user_message[:id], "user"]
-          raw_context << [model_message[:content], nil, "model"]
-        end
-        hints = described_class::TRANSIENT_TOKEN_BUDGET_HINTS
-        hints.each do |hint|
-          messages << { type: :user, content: hint }
-          raw_context << [hint, nil, "user"]
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-        compression_prompt_messages = nil
-        allow(llm).to receive(:generate) do |compression_prompt|
-          compression_prompt_messages = compression_prompt.messages
-          "Summary of the conversation."
-        end
-
-        bot.send(:maybe_compress_context, prompt, llm, raw_context: raw_context)
-
-        expect(raw_context.first).to eq(
-          ["<compressed_context>Summary of the conversation.</compressed_context>", nil, "user"],
-        )
-        expect(raw_context.second).to eq(
-          ["Understood, I have the context.", nil, "model", nil, nil],
-        )
-        expect(raw_context.flatten.join).not_to include("Message 0")
-        expect(compression_prompt_messages.map { |message| message[:content] }).not_to include(
-          *hints,
-        )
-        expect(prompt.messages.map { |message| message[:content] }).to include(*hints)
-        expect(raw_context.flatten).not_to include(*hints)
-      end
-
-      it "skips compression when under threshold" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [
-          { type: :system, content: "You are a bot" },
-          { type: :user, content: "Hello" },
-          { type: :model, content: "Hi there" },
-        ]
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(100_000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.length).to eq(3)
-      end
-
-      it "keeps the latest message even when it exceeds the tail budget" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        10.times do |index|
-          messages << { type: :user, content: "Message #{index} " * 200 }
-          messages << { type: :model, content: "Response #{index} " * 200 }
-        end
-        messages << { type: :user, content: "Latest request " * 1000 }
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-        allow(llm).to receive(:generate).and_return("Summary of the conversation.")
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.last[:content]).to include("Latest request")
-        expect(prompt.messages[1][:content]).to include("<compressed_context>")
-      end
-
-      it "uses agent compression_threshold to control when compression triggers" do
-        agent_record.update!(compression_threshold: 50)
-        agent_class_with_threshold = agent_record.class_instance
-        bot = described_class.as(bot_user, agent: agent_class_with_threshold.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        20.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        # set max_prompt_tokens high enough that 75% wouldn't trigger but 50% does
-        allow(llm).to receive(:max_prompt_tokens).and_return(20_000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        compression_response = "Compressed summary."
-
-        allow(llm).to receive(:generate).and_return(compression_response)
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages[1][:content]).to include("<compressed_context>")
-      end
-
-      it "keeps tool_call/tool pairs together in the tail" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        # build enough middle messages to trigger compression
-        6.times do |i|
-          messages << { type: :user, content: "Question #{i} " * 200 }
-          messages << { type: :model, content: "Answer #{i} " * 200 }
-        end
-        # add a tool_call/tool pair at the end so the pair must be retained as the tail
-        messages << {
-          type: :tool_call,
-          id: "call_1",
-          content: '{"arguments":{}}',
-          name: "categories",
-        }
-        messages << { type: :tool, id: "call_1", content: "tool result", name: "categories" }
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        compression_response = "Compressed summary."
-
-        allow(llm).to receive(:generate).and_return(compression_response)
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        # verify tool_call and tool messages are both in the tail (not split)
-        types = prompt.messages.map { |m| m[:type] }
-        tool_call_idx = types.index(:tool_call)
-        tool_idx = types.index(:tool)
-
-        expect(tool_call_idx).to be_present
-        expect(tool_idx).to eq(tool_call_idx + 1)
-
-        # verify compression happened
-        expect(prompt.messages[1][:content]).to include("<compressed_context>")
-      end
-
-      it "skips compression when removing a legacy hint makes the compression prompt invalid" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-        messages = [{ type: :system, content: "You are a bot" }]
-        10.times do |index|
-          content =
-            if index == 3
-              described_class::LEGACY_BUDGET_EXHAUSTED_HINT
-            else
-              "Message #{index} " * 200
-            end
-          messages << { type: :user, content: content }
-          messages << { type: :model, content: "Response #{index} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        expect(bot.send(:maybe_compress_context, prompt, llm)).to eq(:skipped)
-      end
-
-      it "skips compression when summarization returns blank" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        20.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        original_length = prompt.messages.length
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        allow(llm).to receive(:generate).and_return("")
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.length).to eq(original_length)
-      end
-
-      it "skips compression when summarization raises an error" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        20.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        original_length = prompt.messages.length
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        allow(llm).to receive(:generate).and_raise(RuntimeError, "API timeout")
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.length).to eq(original_length)
-      end
-
-      it "skips compression when fewer than 6 middle messages" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        2.times do |i|
-          messages << { type: :user, content: "Msg #{i} " * 200 }
-          messages << { type: :model, content: "Reply #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(500)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        original_length = prompt.messages.length
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.length).to eq(original_length)
-      end
-
-      it "skips compression when summary is larger than the original middle messages" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        # use short messages so middle section is small
-        10.times do |i|
-          messages << { type: :user, content: "Message #{i} short" }
-          messages << { type: :model, content: "Response #{i} short" }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-        original_length = prompt.messages.length
-
-        llm = bot.send(:llm)
-        # set threshold low enough to trigger compression on short messages
-        allow(llm).to receive(:max_prompt_tokens).and_return(50)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        inflated_summary = "Very long inflated summary output " * 500
-        allow(llm).to receive(:generate).and_return(inflated_summary)
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(prompt.messages.length).to eq(original_length)
-      end
-
-      it "includes merge instruction when prior compressed context exists" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [
-          { type: :system, content: "You are a bot" },
-          { type: :user, content: "<compressed_context>Previous summary</compressed_context>" },
-          { type: :model, content: "Understood, I have the context." },
-        ]
-        10.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        compression_response = "Merged summary."
-        compression_prompt_content = nil
-
-        allow(llm).to receive(:generate) do |compression_prompt, **_kwargs|
-          compression_prompt_content = compression_prompt.messages.last[:content]
-          compression_response
-        end
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(compression_prompt_content).to include("Merge the previous summary")
-        expect(compression_prompt_content).to include(
-          "Do not discard information from the previous summary",
-        )
-        expect(prompt.messages[1][:content]).to include("<compressed_context>")
-        expect(prompt.messages[1][:content]).to include("Merged summary.")
-      end
-
-      it "does not include merge instruction when no prior compressed context exists" do
-        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
-
-        messages = [{ type: :system, content: "You are a bot" }]
-        20.times do |i|
-          messages << { type: :user, content: "Message #{i} " * 200 }
-          messages << { type: :model, content: "Response #{i} " * 200 }
-        end
-
-        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
-
-        llm = bot.send(:llm)
-        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
-        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
-
-        compression_prompt_content = nil
-
-        allow(llm).to receive(:generate) do |compression_prompt, **_kwargs|
-          compression_prompt_content = compression_prompt.messages.last[:content]
-          "Summary."
-        end
-
-        bot.send(:maybe_compress_context, prompt, llm)
-
-        expect(compression_prompt_content).not_to include("Merge the previous summary")
       end
     end
   end

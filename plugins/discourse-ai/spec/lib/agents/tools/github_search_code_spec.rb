@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Agents::Tools::GithubSearchCode do
-  let(:bot_user) { Fabricate(:user) }
+  fab!(:bot_user, :user)
   fab!(:llm_model)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:tool) { described_class.new({ repo: repo, query: query }, bot_user: bot_user, llm: llm) }

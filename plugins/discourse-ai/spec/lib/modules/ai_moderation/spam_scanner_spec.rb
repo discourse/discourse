@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AiModeration::SpamScanner do
+  fab!(:flagging_user) do
+    described_class.ensure_flagging_user!
+    described_class.flagging_user
+  end
   fab!(:moderator)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:topic)
@@ -17,6 +21,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   end
 
   before do
+    SiteSetting.ai_spam_detection_user_id = flagging_user.id
     enable_current_plugin
     SiteSetting.ai_spam_detection_enabled = true
   end

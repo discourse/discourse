@@ -205,7 +205,7 @@ module DiscourseAi
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
-            should_log = log && call_status != :cancelled
+            should_log = log && (call_status != :cancelled || partials_raw.present?)
 
             if should_log
               log.raw_response_payload = raw_response if raw_response.present?
@@ -215,6 +215,11 @@ module DiscourseAi
                 processor.cache_read_input_tokens if processor.cache_read_input_tokens
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
+              execution_context&.settle_generation(
+                tokens: log.response_tokens,
+                tokenizer: tokenizer,
+                complete: call_status == :success,
+              )
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
               log.response_status ||= 200 if call_status == :success
               log.estimated_cost = estimated_cost_for(log)
@@ -224,7 +229,10 @@ module DiscourseAi
               log.time_to_first_token_msecs = time_to_first_token_msecs
               log.save!
 
-              execution_context&.token_usage_tracker&.add_from_audit_log(log)
+              execution_context&.token_usage_tracker&.add_from_audit_log(
+                log,
+                preparation: feature_name == "context_compression",
+              )
 
               AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
               LlmQuota.log_usage(
