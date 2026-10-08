@@ -244,6 +244,10 @@ module DiscourseWorkflows
         )
       end
 
+      def nearest_upstream_metadata(key, item_index: 0)
+        NodeOutputProxy.new(@resolver_context).nearest_upstream_metadata(key, item_index:)
+      end
+
       def get_input_data(input_index = 0, _connection_type = nil)
         input_items(input_index)
       end

@@ -399,6 +399,7 @@ module DiscourseWorkflows
           inputs: input_groups_for_storage(input_groups),
           outputs: output_arrays,
           input_sources: input_sources_for_storage(input_sources, input_groups),
+          metadata: runtime_state.metadata,
         )
         route_downstream(node, output_arrays)
       rescue ExecutionPaused

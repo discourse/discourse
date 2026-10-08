@@ -121,7 +121,7 @@ module DiscourseWorkflows
             )
           context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
           score_added = add_review_score(reviewable, actor, context)
-          add_provenance_note(exec_ctx, reviewable, actor, config["reason"])
+          add_provenance_note(exec_ctx, reviewable, actor, config["reason"], item_index)
 
           output(
             user,
@@ -175,12 +175,9 @@ module DiscourseWorkflows
           true
         end
 
-        def add_provenance_note(exec_ctx, reviewable, actor, custom_reason)
+        def add_provenance_note(exec_ctx, reviewable, actor, custom_reason, item_index)
           parts = [
-            I18n.t(
-              "discourse_workflows.flag_user.flagged_by_workflow",
-              workflow_name: exec_ctx.get_workflow.name,
-            ),
+            DiscourseWorkflows.review_attribution(exec_ctx, item_index:, flag_type: :flag_user),
           ]
           custom_reason = custom_reason.to_s.strip
           parts << custom_reason if custom_reason.present?
