@@ -264,7 +264,8 @@ en:
       chat_approval:
         channel_not_found: "Chat message failed: channel %{channel_id} not found."
         invalid_params: "Chat message failed: %{errors}"
-        failed: "Chat message failed: %{steps}"
+        channel_blocked: "Chat message failed: can't post in channel %{channel_id}: %{reason}"
+        failed_step: "Chat message failed (failed step: %{step})."
         timeout_must_be_positive: "Timeout minutes must be greater than 0."
         invalid_timeout_action: "Invalid timeout action: %{action}."
         buttons_required: "At least one chat approval button is required."
