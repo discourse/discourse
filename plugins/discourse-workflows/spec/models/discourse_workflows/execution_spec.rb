@@ -6,7 +6,7 @@ RSpec.describe DiscourseWorkflows::Execution do
     fab!(:execution) do
       Fabricate(
         :discourse_workflows_execution,
-        workflow: workflow,
+        workflow:,
         status: :waiting,
         resume_token: "tok-abc",
       )
@@ -36,9 +36,7 @@ RSpec.describe DiscourseWorkflows::Execution do
 
   describe ".claim_pending" do
     fab!(:workflow, :discourse_workflows_workflow)
-    fab!(:execution) do
-      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :pending)
-    end
+    fab!(:execution) { Fabricate(:discourse_workflows_execution, workflow:, status: :pending) }
 
     it "starts a pending execution once" do
       claimed = described_class.claim_pending(execution)
@@ -56,7 +54,7 @@ RSpec.describe DiscourseWorkflows::Execution do
     fab!(:execution) do
       Fabricate(
         :discourse_workflows_execution,
-        workflow: workflow,
+        workflow:,
         status: :waiting,
         waiting_node_id: "node-1",
         waiting_until: 1.minute.ago,
@@ -134,11 +132,11 @@ RSpec.describe DiscourseWorkflows::Execution do
     def build_step(node_type: "action:code", started_at: nil, finished_at: nil)
       node = Struct.new(:id, :name, :type).new(SecureRandom.uuid, "Node", node_type)
       DiscourseWorkflows::Executor::Step.build(
-        node: node,
+        node:,
         position: 0,
         input: [],
-        started_at: started_at,
-        finished_at: finished_at,
+        started_at:,
+        finished_at:,
       )
     end
 
@@ -203,9 +201,9 @@ RSpec.describe DiscourseWorkflows::Execution do
     before { SiteSetting.workflow_executions_retention_days = 30 }
 
     def fabricate_at(status, created_at)
-      execution = Fabricate(:discourse_workflows_execution, workflow: workflow, status: status)
-      Fabricate(:discourse_workflows_execution_data, execution: execution)
-      described_class.where(id: execution.id).update_all(created_at: created_at)
+      execution = Fabricate(:discourse_workflows_execution, workflow:, status:)
+      Fabricate(:discourse_workflows_execution_data, execution:)
+      described_class.where(id: execution.id).update_all(created_at:)
       execution
     end
 
@@ -257,7 +255,7 @@ RSpec.describe DiscourseWorkflows::Execution do
 
         described_class.purge_old
 
-        expect(described_class.where(workflow: workflow, status: :success)).to be_empty
+        expect(described_class.where(workflow:, status: :success)).to be_empty
       end
     end
   end
