@@ -3977,7 +3977,7 @@ class BulkImport::Generic < BulkImport::Base
       intermediate_group_ids = []
       if row["tag_group_ids"] && !row["tag_group_ids"].empty?
         intermediate_group_ids = JSON.parse(row["tag_group_ids"])
-      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+      elsif row["tag_group_id"].present?
         # Support old single tag_group_id
         intermediate_group_ids = [row["tag_group_id"]]
       end
