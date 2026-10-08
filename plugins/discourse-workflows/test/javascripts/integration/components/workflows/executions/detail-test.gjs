@@ -179,6 +179,25 @@ module(
         );
     });
 
+    test("explains why an execution was rate limited", async function (assert) {
+      const error =
+        "This workflow wasn't run because it already started 10 executions in the last minute.";
+      this.execution = {
+        ...executionWithOutput([]),
+        status: "rate_limited",
+        error,
+        steps: [],
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__error.alert-warning")
+        .hasText(error, "the rate limit explanation is shown as a warning");
+    });
+
     test("renders execution errors that no step already shows", async function (assert) {
       this.execution = {
         ...executionWithOutput([{ json: { value: 1 } }]),

@@ -48,6 +48,13 @@ en:
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
       approval_timed_out: "Approval timed out"
+      rate_limited:
+        global:
+          one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+          other: "This workflow wasn't run because %{count} workflow executions already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+        per_workflow:
+          one: "This workflow wasn't run because it already started %{count} execution in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
+          other: "This workflow wasn't run because it already started %{count} executions in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
       step_execution:
         not_executable: "This node cannot be executed as a single step."
         waiting_not_supported: "Nodes that wait for a response cannot run during a step execution. Run the workflow or pin data past them first."
