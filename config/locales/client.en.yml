@@ -967,6 +967,54 @@ en:
         placeholder: "type the message title, url or id here"
 
     review:
+      dsa:
+        title: "DSA classification"
+        community_rule: "Community rule"
+        category: "Category"
+        choose_rule: "Choose the rule this content breaks"
+        choose_category: "Choose a category"
+        save: "Save classification"
+        saved: "Classification saved"
+        edit: "Edit classification"
+        retry: "Retry submission"
+        retry_saved: "Submission queued"
+        rules:
+          personal_attacks: "No personal attacks"
+          abusive_content: "No abusive content"
+          hate_speech: "No hate speech"
+          harassment: "No harassment"
+          obscene_content: "No obscene content"
+          sexually_explicit_content: "No sexually explicit content"
+          impersonation: "No impersonation"
+          private_information: "Respect other people’s privacy"
+          spam: "No spam"
+          vandalism: "No vandalism"
+          wrong_category: "Use the right category"
+          duplicate_content: "No duplicate content"
+          empty_reply: "Meaningful replies"
+          off_topic: "Stay on topic"
+          signatures: "No post signatures"
+          unauthorized_material: "Only share material with permission"
+          intellectual_property_theft: "No intellectual property theft"
+          malicious_code: "No malicious code"
+          unsolicited_advertising: "No unsolicited advertising"
+        categories:
+          STATEMENT_CATEGORY_ANIMAL_WELFARE: "Animal welfare"
+          STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Consumer information"
+          STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyber violence"
+          STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyber violence against women"
+          STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Data protection and privacy violations"
+          STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Illegal or harmful speech"
+          STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intellectual property infringements"
+          STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negative effects on civic discourse or elections"
+          STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Not specified in the notice"
+          STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Other violation of terms and conditions"
+          STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Protection of minors"
+          STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Risk for public security"
+          STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Scams and/or fraud"
+          STATEMENT_CATEGORY_SELF_HARM: "Self harm"
+          STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Unsafe and prohibited products"
+          STATEMENT_CATEGORY_VIOLENCE: "Violence"
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
@@ -1148,6 +1196,10 @@ en:
         reviewed_timestamp: "Review date"
 
       statuses:
+        dsa_classification:
+          title: "Needs DSA classification"
+        dsa_failed:
+          title: "Submission failed"
         pending:
           title: "Pending"
         approved:
@@ -5720,6 +5772,8 @@ en:
       description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
 
     flagging:
+      illegal_reporting: "To report potentially illegal content, use %{form}."
+      illegal_reporting_form: "this form"
       title: "Thanks for keeping our community civil!"
       review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"

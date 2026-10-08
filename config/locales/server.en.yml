@@ -1,4 +1,12 @@
 en:
+  dsa:
+    classification_note: "DSA classification: %{rule}. Category: %{category}."
+    errors:
+      submission: "The statement could not be submitted. Review the classification and retry."
+      configuration: "Configure the DSA API token in site settings, then retry submission."
+      authentication: "The DSA API rejected the credentials. Update the API token in site settings, then retry submission."
+      validation: "The DSA API rejected this statement. Review the classification and retry."
+      metadata: "Required content information is missing. This statement needs administrator review."
   markdown_endpoints:
     latest: "Latest"
     categories: "Categories"
@@ -2691,8 +2699,10 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
-    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
-    email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
+    illegal_content_reporting_url: "Link to your illegal content reporting form, shown below the ordinary flag choices. Leave blank to hide the link."
+    dsa_reporting_enabled: "Record restrictions applied through the review queue for submission to the EU DSA transparency database. Staff must classify each decision. Enable only after confirming that the supplied community rule mappings match your published policies."
+    dsa_api_token: "Private API token for the EU DSA transparency database. Never share this token. Used when {{setting:dsa_reporting_enabled}} is enabled."
+    dsa_api_environment: "Submit statements to the sandbox for testing or to the production EU DSA transparency database. Used when {{setting:dsa_reporting_enabled}} is enabled."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after {{setting:editing_grace_period}}?"
 

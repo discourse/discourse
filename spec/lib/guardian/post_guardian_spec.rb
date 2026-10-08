@@ -149,14 +149,9 @@ RSpec.describe PostGuardian do
       Flag.reset_flag_settings!
     end
 
-    it "return true for illegal if tl0 and allow_all_users_to_flag_illegal_content" do
-      SiteSetting.flag_post_allowed_groups = ""
-      user.trust_level = TrustLevel[0]
+    it "rejects illegal flags for members and staff" do
       expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
-
-      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
-      SiteSetting.allow_all_users_to_flag_illegal_content = true
-      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+      expect(Guardian.new(admin).post_can_act?(post, :illegal)).to be false
     end
 
     it "works as expected for silenced users" do

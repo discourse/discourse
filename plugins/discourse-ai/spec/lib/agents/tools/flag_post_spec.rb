@@ -28,6 +28,21 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
 
   let(:context) { DiscourseAi::Agents::BotContext.new(post: post) }
 
+  describe "#invoke" do
+    it "retains AI detection independently of the moderator's later decision" do
+      SiteSetting.dsa_reporting_enabled = true
+      tool(flag_post: true, reason: "Clear spam").invoke
+      reviewable = ReviewablePost.find_by!(target: post)
+
+      reviewable.perform(Fabricate(:admin), :reject_and_delete)
+
+      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+        "automated_detection" => "Yes",
+        "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+      )
+    end
+  end
+
   it "flags the post when flag_post is true" do
     result = nil
 

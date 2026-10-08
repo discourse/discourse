@@ -97,7 +97,7 @@ class ReviewableFlaggedPost < Reviewable
       suspend: :agree_and_suspend,
     )
 
-    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
+    if potential_spam? && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions, agree_bundle)
     end
 
@@ -408,7 +408,6 @@ end
 #  latest_score            :datetime
 #  payload                 :json
 #  potential_spam          :boolean          default(FALSE), not null
-#  potentially_illegal     :boolean          default(FALSE)
 #  reject_reason           :text
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  score                   :float            default(0.0), not null

@@ -14,6 +14,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
@@ -27,7 +28,6 @@ export default class Flag extends Component {
 
   @tracked selected;
   @tracked message;
-  @tracked isConfirmed = false;
   @tracked spammerDetails;
 
   constructor() {
@@ -98,7 +98,7 @@ export default class Flag extends Component {
   get flagsAvailable() {
     return this.args.model.flagTarget
       .flagsAvailable(this)
-      .filter((flag) => flag.enabled);
+      .filter((flag) => flag.enabled && flag.name_key !== "illegal");
   }
 
   get staffFlagsAvailable() {
@@ -112,10 +112,6 @@ export default class Flag extends Component {
 
     if (!this.selected.require_message) {
       return true;
-    }
-
-    if (this.selected.isIllegal && !this.isConfirmed) {
-      return false;
     }
 
     const len = this.message?.length || 0;
@@ -250,7 +246,6 @@ export default class Flag extends Component {
             <FlagActionType
               @changePostActionType={{this.changePostActionType}}
               @flag={{f}}
-              @isConfirmed={{this.isConfirmed}}
               @message={{this.message}}
               @selectedFlag={{this.selected}}
               @staffFlagsAvailable={{this.staffFlagsAvailable}}
@@ -265,6 +260,22 @@ export default class Flag extends Component {
         />
       </:body>
       <:footer>
+        {{#if this.siteSettings.illegal_content_reporting_url}}
+          <p class="flag-modal__illegal-reporting">
+            <DInterpolatedTranslation
+              @key="flagging.illegal_reporting"
+              as |Placeholder|
+            >
+              <Placeholder @name="form">
+                <a
+                  href={{this.siteSettings.illegal_content_reporting_url}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >{{i18n "flagging.illegal_reporting_form"}}</a>
+              </Placeholder>
+            </DInterpolatedTranslation>
+          </p>
+        {{/if}}
         <DButton
           class="btn-primary flag-modal__create-flag"
           @action={{this.createFlag}}

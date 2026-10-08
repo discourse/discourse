@@ -90,12 +90,14 @@ module DiscourseAi
 
           begin
             result =
-              reviewable.perform(
-                acting_user,
-                action_id,
-                version: reviewable.version,
-                guardian: guardian,
-              )
+              DsaModeration.with_automated_decision do
+                reviewable.perform(
+                  acting_user,
+                  action_id,
+                  version: reviewable.version,
+                  guardian: guardian,
+                )
+              end
           rescue Reviewable::InvalidAction
             return(
               error_response(

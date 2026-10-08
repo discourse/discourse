@@ -38,6 +38,13 @@ RSpec.describe Chat::FlagMessage do
 
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
+    context "when an illegal flag is requested" do
+      fab!(:current_user, :admin)
+      let(:flag_type_id) { ReviewableScore.types[:illegal] }
+
+      it { is_expected.to fail_a_policy(:can_flag_message_in_channel) }
+    end
+
     context "when all steps pass" do
       fab!(:current_user, :admin)
 

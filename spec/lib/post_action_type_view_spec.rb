@@ -42,7 +42,7 @@ RSpec.describe PostActionTypeView do
     )
 
     flag = Fabricate(:flag, name: "flag", enabled: false)
-    expect(PostActionTypeView.new.disabled_flag_types).to eq({ custom_flag: flag.id })
+    expect(PostActionTypeView.new.disabled_flag_types).to eq({ illegal: 10, custom_flag: flag.id })
     flag.destroy!
   end
 

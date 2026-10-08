@@ -91,7 +91,7 @@ export default class ReviewIndexController extends Controller {
 
   @computed
   get statuses() {
-    return [
+    const statuses = [
       "pending",
       "approved",
       "rejected",
@@ -99,7 +99,14 @@ export default class ReviewIndexController extends Controller {
       "ignored",
       "reviewed",
       "all",
-    ].map((id) => {
+    ];
+    if (this.siteSettings.dsa_reporting_enabled) {
+      statuses.push("dsa_classification");
+      if (this.currentUser.admin) {
+        statuses.push("dsa_failed");
+      }
+    }
+    return statuses.map((id) => {
       return { id, name: i18n(`review.statuses.${id}.title`) };
     });
   }

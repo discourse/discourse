@@ -9,6 +9,20 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
 
   before { enable_current_plugin }
 
+  describe "#perform" do
+    it "records an AI detected message restriction approved by human staff" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "automated_detection" => "Yes",
+        "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+      )
+    end
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the message" do
     reviewable.perform(moderator, :agree_and_keep_message)
 

@@ -26,42 +26,12 @@ class UserSilencer
   end
 
   def silence
-    return false if @user.staff?
-    hide_posts unless @opts[:keep_posts]
-    return false if @user.silenced_till.present?
-    @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
-    if @user.save
-      message_type = @opts[:message] || :silenced_by_staff
-
-      details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
-
-      context = "#{message_type}: #{@opts[:reason]}"
-
-      if @by_user
-        log_params = { context: context, details: details, reviewable_id: @opts[:reviewable_id] }
-        log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
-
-        @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
-      end
-
-      silence_message_params = {}
-      DiscourseEvent.trigger(
-        :user_silenced,
-        user: @user,
-        silenced_by: @by_user,
-        reason: @opts[:reason],
-        message: @opts[:message_body],
-        user_history: @user_history,
-        post_id: @opts[:post_id],
-        silenced_till: @user.silenced_till,
-        silenced_at: DateTime.now,
-        silence_message_params: silence_message_params,
-      )
-
-      silence_message_params.merge!(post_alert_options: { skip_send_email: true })
-      SystemMessage.create(@user, message_type, silence_message_params)
-      true
-    end
+    DsaModeration.capture_penalty(
+      reviewable_id: @opts[:reviewable_id],
+      actor: @by_user,
+      user: @user,
+      action_name: "silence_user",
+    ) { apply_silence }
   end
 
   def auto_silence
@@ -113,6 +83,45 @@ class UserSilencer
   end
 
   private
+
+  def apply_silence
+    return false if @user.staff?
+    hide_posts unless @opts[:keep_posts]
+    return false if @user.silenced_till.present?
+    @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
+    if @user.save
+      message_type = @opts[:message] || :silenced_by_staff
+
+      details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
+
+      context = "#{message_type}: #{@opts[:reason]}"
+
+      if @by_user
+        log_params = { context: context, details: details, reviewable_id: @opts[:reviewable_id] }
+        log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
+
+        @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
+      end
+
+      silence_message_params = {}
+      DiscourseEvent.trigger(
+        :user_silenced,
+        user: @user,
+        silenced_by: @by_user,
+        reason: @opts[:reason],
+        message: @opts[:message_body],
+        user_history: @user_history,
+        post_id: @opts[:post_id],
+        silenced_till: @user.silenced_till,
+        silenced_at: DateTime.now,
+        silence_message_params: silence_message_params,
+      )
+
+      silence_message_params.merge!(post_alert_options: { skip_send_email: true })
+      SystemMessage.create(@user, message_type, silence_message_params)
+      true
+    end
+  end
 
   def notify_moderators
     return if !SiteSetting.notify_mods_when_user_silenced

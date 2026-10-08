@@ -429,14 +429,26 @@ class PostDestroyer
 
     return unless @post.reviewable_flag
     return unless SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-    return if @post.reviewable_flag.potentially_illegal?
+    if @post
+         .reviewable_flag
+         .reviewable_scores
+         .where(reviewable_score_type: PostActionType.types[:illegal])
+         .exists?
+      return
+    end
 
     ignore(@post.reviewable_flag)
   end
 
   def handle_post_reviewable_flag
     return ignore(@post.reviewable_flag) if @opts[:defer_flags]
-    return if @post.reviewable_flag.potentially_illegal?
+    if @post
+         .reviewable_flag
+         .reviewable_scores
+         .where(reviewable_score_type: PostActionType.types[:illegal])
+         .exists?
+      return
+    end
 
     agree(@post.reviewable_flag)
   end

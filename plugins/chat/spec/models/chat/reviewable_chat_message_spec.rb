@@ -141,6 +141,25 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
     end
   end
 
+  describe "#perform" do
+    it "retains the message restriction and marks it reversed when restored" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfReason.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => chat_message.created_at.to_date.iso8601,
+      )
+      reviewable.update!(status: :pending)
+      reviewable.perform(moderator, :disagree_and_restore)
+      expect(statement.reload.reversed_at).to be_present
+      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id).count).to eq(1)
+    end
+  end
+
   describe "#perform_unsilence_user" do
     def unsilence_action(guardian = moderator.guardian)
       reviewable.actions_for(guardian).to_a.find { |a| a.server_action == "unsilence_user" }

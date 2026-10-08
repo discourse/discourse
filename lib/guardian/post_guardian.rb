@@ -32,6 +32,8 @@ module PostGuardian
       return false
     end
 
+    return false if action_key == :illegal
+
     taken = opts[:taken_actions].try(:keys).to_a
     post_action_type_view = opts[:post_action_type_view] || PostActionTypeView.new
     is_flag =
@@ -94,7 +96,7 @@ module PostGuardian
               @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
-        ) || (action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content) ||
+        ) ||
           # not a flagging action, and haven't done it already
           not(is_flag || already_taken_this_action) &&
             # nothing except flagging on archived topics

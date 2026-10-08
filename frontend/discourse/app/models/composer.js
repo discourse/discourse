@@ -1140,6 +1140,7 @@ export default class Composer extends RestModel {
     let props = {
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
+      reviewable_id: this.metaData?.reviewable_id,
     };
 
     this.serialize(_update_serializer, props);

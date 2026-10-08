@@ -52,6 +52,28 @@ RSpec.describe ReviewableVoiceUser do
   end
 
   describe "#perform" do
+    it "records only an applied penalty using the voice session date" do
+      SiteSetting.dsa_reporting_enabled = true
+      session.update!(joined_at: 2.days.ago)
+      reviewable.perform(moderator, :agree_and_suspend)
+      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id)).to be_empty
+
+      UserSuspender.new(
+        flagged_user,
+        by_user: moderator,
+        reason: "Disruptive voice content",
+        suspended_till: 1.day.from_now,
+        reviewable_id: reviewable.id,
+      ).suspend
+
+      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+        "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+        "content_type" => ["CONTENT_TYPE_AUDIO"],
+        "content_date" => session.joined_at.to_date.iso8601,
+        "source_type" => "SOURCE_TYPE_OTHER_NOTIFICATION",
+      )
+    end
+
     it "approves the reviewable and agrees with the flag on agree_and_keep" do
       reviewable.perform(moderator, :agree_and_keep)
 

@@ -272,7 +272,11 @@ class PostsController < ApplicationController
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
     revisor = PostRevisor.new(post, topic)
-    revisor.revise!(current_user, changes, opts)
+    DsaModeration.capture_edit(
+      reviewable_id: params[:post][:reviewable_id],
+      actor: current_user,
+      post: post,
+    ) { revisor.revise!(current_user, changes, opts) }
 
     return render_json_error(post) if post.errors.present?
     return render_json_error(topic) if topic.errors.present?

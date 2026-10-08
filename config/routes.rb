@@ -631,6 +631,14 @@ Discourse::Application.routes.draw do
          :constraints => {
            reviewable_id: /\d+/,
          }
+    post "review/:reviewable_id/dsa-classification" => "dsa_statements#classify",
+         :constraints => {
+           reviewable_id: /\d+/,
+         }
+    post "review/:reviewable_id/dsa-retry" => "dsa_statements#retry_submission",
+         :constraints => {
+           reviewable_id: /\d+/,
+         }
     delete "review/:reviewable_id" => "reviewables#destroy",
            :constraints => {
              reviewable_id: /\d+/,

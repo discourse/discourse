@@ -42,6 +42,48 @@ RSpec.describe ReviewableAiToolAction do
     reviewable
   end
 
+  describe "#perform" do
+    it "records topic interaction and visibility restrictions applied by an approved tool" do
+      SiteSetting.dsa_reporting_enabled = true
+      post = Fabricate(:post, topic: topic)
+      reviewable = create_reviewable(create_tool_action)
+
+      reviewable.perform(admin, :approve)
+
+      statement = DsaStatementOfReason.find_by!(reviewable_id: reviewable.id, target_id: post.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => post.created_at.to_date.iso8601,
+        "automated_detection" => "No",
+        "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+      )
+      unlist_reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "unlist_topic",
+            params: {
+              topic_id: topic.id,
+              unlisted: true,
+              reason: "Off-topic",
+            },
+          ),
+        )
+      unlist_reviewable.perform(admin, :approve)
+      expect(
+        DsaStatementOfReason.find_by!(
+          reviewable_id: unlist_reviewable.id,
+          target_id: post.id,
+        ).payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_DEMOTED"])
+      rejected = create_reviewable(create_tool_action)
+      rejected.perform(admin, :reject)
+      expect(DsaStatementOfReason.where(reviewable_id: rejected.id)).to be_empty
+    end
+  end
+
   describe "#created_new!" do
     fab!(:private_category_group, :group)
     fab!(:private_category) { Fabricate(:private_category, group: private_category_group) }

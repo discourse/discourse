@@ -17,6 +17,25 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     Fabricate(:reviewable_post_voting_comment, target: comment, created_by: moderator)
   end
 
+  describe "#perform" do
+    it "retains the comment restriction and marks it reversed when restored" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfReason.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => comment.created_at.to_date.iso8601,
+      )
+      reviewable.update!(status: :pending)
+      reviewable.perform(moderator, :disagree_and_restore)
+      expect(statement.reload.reversed_at).to be_present
+      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id).count).to eq(1)
+    end
+  end
+
   describe "#post" do
     it "returns the post that the comment belongs to" do
       expect(reviewable.post).to eq(post)

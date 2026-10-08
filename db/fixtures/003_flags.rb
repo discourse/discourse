@@ -39,6 +39,7 @@ end
 Flag.seed do |s|
   s.id = 10
   s.name = "illegal"
+  s.enabled = false
   s.notify_type = true
   s.auto_action_type = false
   s.require_message = true

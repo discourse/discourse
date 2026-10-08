@@ -16,11 +16,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 
-  it "sets `potentially_illegal` when an illegal flag is added" do
+  it "rejects new illegal flags while preserving ordinary flags" do
     reviewable = PostActionCreator.off_topic(user, post).reviewable
-    expect(reviewable.potentially_illegal?).to eq(false)
-    PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post)
-    expect(reviewable.reload.potentially_illegal?).to eq(true)
+
+    result = PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post)
+
+    expect(result.success?).to eq(false)
+    expect(reviewable.reload.reviewable_scores.pluck(:reviewable_score_type)).to eq(
+      [PostActionType.types[:off_topic]],
+    )
   end
 
   describe "actions" do
@@ -183,26 +187,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       context "when flagged as potential_spam" do
-        before { reviewable.update!(potential_spam: true, potentially_illegal: false) }
-
-        it "excludes delete action if the reviewer cannot delete the user" do
-          post.user.user_stat.update!(
-            first_post_created_at: 1.year.ago,
-            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1,
-          )
-
-          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be false
-          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be false
-        end
-
-        it "includes delete actions if the reviewer can delete the user" do
-          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be true
-          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
-        end
-      end
-
-      context "when flagged as illegal" do
-        before { reviewable.update(potential_spam: false, potentially_illegal: true) }
+        before { reviewable.update!(potential_spam: true) }
 
         it "excludes delete action if the reviewer cannot delete the user" do
           post.user.user_stat.update!(
