@@ -9,6 +9,7 @@
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
+    border-radius: var(--d-border-radius-large);
   }
 
   @include viewport.until(sm) {
@@ -61,11 +62,11 @@
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  position: unset !important;
-  margin: 0 !important;
-  border-radius: var(--d-border-radius) !important;
-  box-shadow: unset !important;
-  z-index: unset !important;
+  position: unset;
+  margin: 0;
+  border-radius: var(--d-border-radius-large);
+  box-shadow: unset;
+  z-index: unset;
 
   @include viewport.until(sm) {
     box-sizing: border-box;
@@ -77,7 +78,7 @@
     container-type: inline-size;
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-border-radius-large);
     border: 5px solid var(--secondary);
 
     &::after {

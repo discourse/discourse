@@ -373,6 +373,7 @@ export default class UserCardContents extends CardContentsBase {
 
     this.modal.show(UserStatusModal, {
       model: {
+        user: this.user,
         status: this.currentUser.status,
         pauseNotifications: this.currentUser.isInDoNotDisturb(),
         saveAction: (status, pauseNotifications) =>
@@ -538,7 +539,7 @@ export default class UserCardContents extends CardContentsBase {
                     >
                       {{dIcon "circle-plus"}}
                       <span class="user-status__description">
-                        {{i18n "user_status.placeholder"}}
+                        {{i18n "user_status.what_are_you_doing"}}
                       </span>
                     </button>
                   {{/if}}

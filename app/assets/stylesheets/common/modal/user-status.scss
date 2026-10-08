@@ -1,4 +1,4 @@
-.user-status.d-modal {
+.modal-user-status {
   .d-modal {
     &__footer {
       .delete-status {
@@ -22,6 +22,37 @@
 
       .tap-tile:last-child {
         border: 0;
+      }
+    }
+  }
+
+  .user-card {
+    width: 80%;
+    margin: var(--space-8) auto;
+    border-radius: var(--d-border-radius-large);
+  }
+
+  .card-content {
+    border: 1px solid var(--content-border-color);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .emoji-picker-trigger {
+    font-size: var(--font-up-1-rem);
+
+    &:hover,
+    &.-expanded {
+      transform: scale(1.2);
+    }
+  }
+
+  &.--default-emoji {
+    .emoji-picker-trigger {
+      filter: grayscale(1);
+
+      &:hover,
+      &.-expanded {
+        filter: none;
       }
     }
   }

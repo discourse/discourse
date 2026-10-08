@@ -1,32 +1,89 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getURLWithCDN } from "discourse/lib/get-url";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { emojiUnescape } from "discourse/lib/text";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import { escapeExpression } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class UserStatusModal extends Component {
   @service currentUser;
   @service dialog;
+  @service siteSettings;
 
-  status = trackedObject({ ...this.args.model.status });
+  @tracked emojiChosen = false;
+  @tracked loadedUser;
+
+  status = trackedObject({
+    emoji: "slightly_smiling_face",
+    ...this.args.model.status,
+  });
   timeShortcuts = this.#buildTimeShortcuts();
   _itsatrap = new ItsATrap();
+
+  constructor() {
+    super(...arguments);
+
+    if (!this.args.model.user) {
+      this.#loadPreviewUser();
+    }
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this._itsatrap.destroy();
+  }
+
+  get user() {
+    return this.args.model.user ?? this.loadedUser ?? this.currentUser;
+  }
+
+  get cardBackgroundStyle() {
+    const url = this.user.card_background_upload_url;
+
+    if (!url || !this.siteSettings.allow_profile_backgrounds) {
+      return;
+    }
+
+    return trustHTML(`background-image: url(${getURLWithCDN(url)})`);
+  }
+
+  get nameFirst() {
+    return prioritizeNameInUx(this.user.name);
+  }
+
+  get statusEmoji() {
+    return emojiUnescape(escapeExpression(`:${this.status.emoji}:`));
+  }
+
+  get statusEndsAt() {
+    return this.status.endsAt !== undefined
+      ? this.status.endsAt
+      : this.status.ends_at;
+  }
+
+  get isDefaultEmoji() {
+    return !this.args.model.status?.emoji && !this.emojiChosen;
   }
 
   get showDeleteButton() {
@@ -52,6 +109,11 @@ export default class UserStatusModal extends Component {
   }
 
   @action
+  onEmojiSelected() {
+    this.emojiChosen = true;
+  }
+
+  @action
   onTimeSelected(_, time) {
     this.status.endsAt = time;
   }
@@ -70,7 +132,7 @@ export default class UserStatusModal extends Component {
   async saveAndClose() {
     const newStatus = {
       description: this.status.description,
-      emoji: this.status.emoji,
+      emoji: this.isDefaultEmoji ? "speech_balloon" : this.status.emoji,
       ends_at: this.status.endsAt?.toISOString(),
     };
 
@@ -83,6 +145,12 @@ export default class UserStatusModal extends Component {
     } catch (e) {
       this.#handleError(e);
     }
+  }
+
+  async #loadPreviewUser() {
+    this.loadedUser = await User.findByUsername(this.currentUser.username, {
+      forCard: true,
+    }).catch(() => null);
   }
 
   #buildTimeShortcuts() {
@@ -100,13 +168,74 @@ export default class UserStatusModal extends Component {
 
   <template>
     <DModal
-      class="user-status"
+      class={{dConcatClass
+        "modal-user-status"
+        (if this.isDefaultEmoji "--default-emoji")
+      }}
       @closeModal={{@closeModal}}
       @title={{i18n "user_status.set_custom_status"}}
     >
       <:body>
+        <div
+          aria-hidden="true"
+          class="user-card --preview"
+          style={{this.cardBackgroundStyle}}
+        >
+          <div class="card-content">
+            <div class="card-row first-row">
+              <div class="user-card-avatar-wrapper">
+                <div class="user-card-avatar">
+                  <span class="card-huge-avatar">
+                    {{dBoundAvatar this.user "large"}}
+                  </span>
+                </div>
+
+                {{#if this.status.description}}
+                  <div class="user-status">
+                    {{#unless this.isDefaultEmoji}}
+                      {{trustHTML this.statusEmoji}}
+                    {{/unless}}
+                    <span class="user-status__description">
+                      {{this.status.description}}
+                    </span>
+                    {{dFormatDate this.statusEndsAt format="tiny"}}
+                  </div>
+                {{else}}
+                  <div class="user-status --empty">
+                    {{#unless this.isDefaultEmoji}}
+                      {{trustHTML this.statusEmoji}}
+                    {{/unless}}
+                    <span class="user-status__description">
+                      {{i18n "user_status.what_are_you_doing"}}
+                    </span>
+                  </div>
+                {{/if}}
+              </div>
+              <div class="names">
+                <div class="names__primary">
+                  <span class="name-username-wrapper">
+                    {{if this.nameFirst this.user.name this.user.username}}
+                  </span>
+                </div>
+                {{#if this.nameFirst}}
+                  <div class="names__secondary username">
+                    {{this.user.username}}
+                  </div>
+                {{else if this.user.name}}
+                  <div class="names__secondary full-name">
+                    {{this.user.name}}
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="control-group">
-          <UserStatusPicker @status={{this.status}} />
+          <UserStatusPicker
+            @onEmojiSelected={{this.onEmojiSelected}}
+            @status={{this.status}}
+          />
         </div>
 
         {{#unless @model.hidePauseNotifications}}
