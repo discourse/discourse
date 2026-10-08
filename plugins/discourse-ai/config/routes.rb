@@ -106,7 +106,7 @@ Discourse::Application.routes.draw do
         :format => :json
 
     resources :ask_ai_reports,
-              only: %i[index create],
+              only: %i[index show create],
               path: "ask-ai-reports",
               controller: "discourse_ai/admin/ask_ai_reports",
               defaults: {

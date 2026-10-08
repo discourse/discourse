@@ -102,16 +102,13 @@ module DiscourseAi
                    subject["name"].length.between?(1, 100) &&
                    subject["description"].is_a?(String) &&
                    subject["description"].length.between?(1, 1000) &&
-                   subject["ask_ids"].is_a?(Array) && subject["ask_ids"].present? &&
-                   subject["ask_ids"].all? { |id| id.is_a?(Integer) } &&
-                   subject["ask_ids"].uniq.size == subject["ask_ids"].size
+                   subject["ask_ids"].is_a?(Array) &&
+                   subject["ask_ids"].all? { |id| id.is_a?(Integer) }
             raise InvalidAnalysis
           end
+          subject["ask_ids"] &= ids
         end
         validate_insights!(result["insights"], ids)
-        assigned = subjects.flat_map { |subject| subject["ask_ids"] }
-        unknown = assigned - ids
-        raise InvalidAnalysis, "Unknown IDs: #{unknown}" if unknown.present?
       end
 
       def validate_insights!(insights, ids)

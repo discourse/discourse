@@ -280,9 +280,15 @@ module DiscourseDataExplorer
         },
         "ask-ai-report-questions": {
           id: -47,
-          name: "Ask AI - What users are asking",
+          name: "Ask AI - Questions included in this report",
           description:
             "Questions included in a particular Ask AI report, with their subjects and logged answers. Questions assigned to multiple subjects appear once per subject. Requires Discourse AI.",
+        },
+        "ask-ai-questions": {
+          id: -48,
+          name: "Ask AI - What users are asking",
+          description:
+            "All Ask AI questions between start_date and end_date, inclusive (UTC), with logged answers. Includes groups excluded from generated reports and is not limited by the report sample size. Requires Discourse AI.",
         },
       }.with_indifferent_access
 
@@ -1686,6 +1692,30 @@ module DiscourseDataExplorer
       JOIN ask_ai_logs logs ON logs.id = memberships.ask_ai_log_id
       WHERE reports.id = :report_id
       ORDER BY subjects.position, subjects.id, logs.asked_at DESC, logs.id DESC
+      SQL
+
+      queries["ask-ai-questions"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        user_id,
+        TO_CHAR(asked_at, 'Mon DD HH24:MI "UTC"') AS asked_at,
+        query,
+        answer_title,
+        answer,
+        CASE ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+      ORDER BY ask_ai_logs.asked_at DESC, id DESC
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.

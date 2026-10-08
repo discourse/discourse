@@ -3,6 +3,8 @@ import { module, test } from "qunit";
 import ModalContainer from "discourse/components/modal-container";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import { i18n } from "discourse-i18n";
 import AskAiReports from "discourse/plugins/discourse-ai/admin/components/dashboard/ask-ai-reports";
 
 const endpoint = "/admin/plugins/discourse-ai/ask-ai-reports";
@@ -10,35 +12,83 @@ const endpoint = "/admin/plugins/discourse-ai/ask-ai-reports";
 module("Integration | Component | AskAiReports", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(() => {
+  hooks.beforeEach(function () {
+    this.observations = stubIntersectionObserver();
     pretender.get(endpoint, () =>
       response({
         reports: [],
         data_explorer_query_id: -47,
+        period_query_id: -48,
         recipient_groups: ["admins", "community_team"],
       })
     );
   });
 
-  test("links to the selected report rather than the dashboard period", async function (assert) {
+  test("links separately to the dashboard period and the selected report", async function (assert) {
     pretender.get(endpoint, () =>
       response({
         data_explorer_query_id: -47,
+        period_query_id: -48,
         reports: [11, 10].map((id) => ({
           id,
           start_date: "2026-08-01",
           end_date: "2026-08-31",
           report_status: "completed",
-          subjects: [],
         })),
       })
     );
+    const requestedIds = [];
+    pretender.get(`${endpoint}/:id`, (request) => {
+      requestedIds.push(request.params.id);
+      return response({
+        report: {
+          id: Number(request.params.id),
+          report_status: "completed",
+          reported_ask_count: 10,
+          total_ask_count: 20,
+          subjects: [
+            {
+              id: 1,
+              name: "Email",
+              description: "Email questions",
+              ask_count: 10,
+            },
+          ],
+        },
+      });
+    });
     await render(
       <template>
         <AskAiReports @endDate="2026-09-16" @startDate="2026-09-01" />
       </template>
     );
-    const link = ".ask-ai-reports .db-section__row-block-title a";
+    const periodLink = ".ask-ai-reports .db-section__row-block-title a";
+    const periodUrl =
+      "/admin/plugins/discourse-data-explorer/queries/-48?params=" +
+      encodeURIComponent(
+        JSON.stringify({ start_date: "2026-09-01", end_date: "2026-09-16" })
+      );
+    assert.dom(periodLink).hasAttribute("href", periodUrl);
+    const link = ".ask-ai-report-subjects__coverage-link";
+    assert.deepEqual(
+      requestedIds,
+      [],
+      "does not fetch report details on dashboard load"
+    );
+    assert.dom(link).doesNotExist();
+    assert.dom(".ask-ai-reports__view").doesNotExist();
+    await this.observations[0].trigger({ isIntersecting: false });
+    assert.deepEqual(requestedIds, []);
+    await this.observations[0].trigger();
+    assert.deepEqual(requestedIds, ["11"]);
+    await this.observations[0].trigger();
+    assert.deepEqual(requestedIds, ["11"], "loads once when entering view");
+    assert.dom(link).hasText(
+      i18n("admin.dashboard.ask_ai.reports.coverage", {
+        count: 10,
+        total: 20,
+      })
+    );
     assert
       .dom(link)
       .hasAttribute(
@@ -47,6 +97,8 @@ module("Integration | Component | AskAiReports", function (hooks) {
           encodeURIComponent(JSON.stringify({ report_id: 11 }))
       );
     await fillIn(".ask-ai-reports__period-picker select", "10");
+    assert.deepEqual(requestedIds, ["11", "10"]);
+    assert.dom(periodLink).hasAttribute("href", periodUrl);
     assert
       .dom(link)
       .hasAttribute(
@@ -84,7 +136,6 @@ module("Integration | Component | AskAiReports", function (hooks) {
     assert
       .dom(".ask-ai-reports__generate")
       .isNotDisabled("allows manual generation after failure or expiry");
-    assert.dom(".ask-ai-reports .db-section__row-block-title a").doesNotExist();
     assert
       .dom(".ask-ai-reports__report-header")
       .includesText("If this keeps happening, consider reducing max asks.");
@@ -96,6 +147,63 @@ module("Integration | Component | AskAiReports", function (hooks) {
         "/admin/site_settings/category/all_results?filter=ai_ask_ai_report_max_asks"
       )
       .hasAttribute("target", "_blank");
+  });
+
+  test("retries a report detail failure without reloading the history", async function (assert) {
+    let historyRequests = 0;
+    let detailRequests = 0;
+    pretender.get(endpoint, () => {
+      historyRequests++;
+      return response({
+        reports: [
+          {
+            id: 1,
+            start_date: "2026-09-01",
+            end_date: "2026-09-09",
+            report_status: "completed",
+          },
+        ],
+      });
+    });
+    pretender.get(`${endpoint}/1`, () => {
+      detailRequests++;
+      return detailRequests === 1
+        ? [500, {}, "{}"]
+        : response({
+            report: {
+              id: 1,
+              report_status: "completed",
+              summary: "Questions about 猫",
+              reported_ask_count: 1,
+              total_ask_count: 1,
+              subjects: [
+                {
+                  id: 1,
+                  name: "Cats",
+                  description: "Cat questions",
+                  ask_count: 1,
+                },
+              ],
+            },
+          });
+    });
+    await render(
+      <template>
+        <AskAiReports @endDate="2026-09-09" @startDate="2026-09-01" />
+      </template>
+    );
+    assert.strictEqual(detailRequests, 0);
+    await this.observations[0].trigger();
+    assert
+      .dom(".ask-ai-reports [role=alert]")
+      .hasText(i18n("admin.dashboard.ask_ai.reports.load_failed"));
+    await click(".ask-ai-reports__retry-report");
+    assert
+      .dom(".ask-ai-report-subjects__summary")
+      .hasText("Questions about 猫");
+    assert.dom(".ask-ai-reports [role=alert]").doesNotExist();
+    assert.strictEqual(historyRequests, 1);
+    assert.strictEqual(detailRequests, 2);
   });
 
   test("shows the first-report empty state", async function (assert) {
@@ -111,7 +219,15 @@ module("Integration | Component | AskAiReports", function (hooks) {
     assert
       .dom(".ask-ai-reports")
       .includesText("No reports generated yet.", "explains the empty history");
-    assert.dom(".ask-ai-reports .db-section__row-block-title a").doesNotExist();
+    assert
+      .dom(".ask-ai-reports .db-section__row-block-title a")
+      .hasAttribute(
+        "href",
+        "/admin/plugins/discourse-data-explorer/queries/-48?params=" +
+          encodeURIComponent(
+            JSON.stringify({ start_date: "2026-09-01", end_date: "2026-09-09" })
+          )
+      );
     assert
       .dom(".ask-ai-reports__period-picker")
       .doesNotExist("has no period selector before the first report");
@@ -211,6 +327,25 @@ module("Integration | Component | AskAiReports", function (hooks) {
   });
 
   test("shows stored subjects and the PM for a previous period", async function (assert) {
+    pretender.get(`${endpoint}/1`, () =>
+      response({
+        report: {
+          id: 1,
+          report_status: "completed",
+          reported_ask_count: 200,
+          total_ask_count: 300,
+          subjects: [
+            {
+              id: 9,
+              name: "Email",
+              description: "Setting up email.",
+              ask_count: 200,
+            },
+          ],
+          topic_url: "/t/report/123",
+        },
+      })
+    );
     pretender.get(endpoint, () =>
       response({
         reports: [
@@ -219,17 +354,6 @@ module("Integration | Component | AskAiReports", function (hooks) {
             start_date: "2026-08-01",
             end_date: "2026-08-31",
             report_status: "completed",
-            reported_ask_count: 200,
-            total_ask_count: 300,
-            subjects: [
-              {
-                id: 9,
-                name: "Email",
-                description: "Setting up email.",
-                ask_count: 200,
-              },
-            ],
-            topic_url: "/t/report/123",
           },
         ],
       })
@@ -244,10 +368,7 @@ module("Integration | Component | AskAiReports", function (hooks) {
         />
       </template>
     );
-    assert
-      .dom(".ask-ai-reports__report")
-      .includesText("200 of 300", "shows sampling coverage");
-    assert.dom(".ask-ai-reports__report").includesText("Subjects may overlap");
+    await this.observations[0].trigger();
     assert
       .dom(".ask-ai-report-subject__toggle")
       .includesText("Email", "shows saved subject");
@@ -260,12 +381,6 @@ module("Integration | Component | AskAiReports", function (hooks) {
     assert
       .dom(".db-section__row-block")
       .exists({ count: 1 }, "keeps reports in one section");
-    assert
-      .dom(".ask-ai-reports__report")
-      .includesText(
-        "Setting up email.",
-        "shows the selected subject description"
-      );
     assert
       .dom(".ask-ai-reports__generate")
       .isDisabled("does not request an empty period");
