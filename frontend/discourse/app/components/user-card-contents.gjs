@@ -369,11 +369,12 @@ export default class UserCardContents extends CardContentsBase {
 
   @action
   editUserStatus() {
+    const user = this.user;
     this._close();
 
     this.modal.show(UserStatusModal, {
       model: {
-        user: this.user,
+        user,
         status: this.currentUser.status,
         pauseNotifications: this.currentUser.isInDoNotDisturb(),
         saveAction: (status, pauseNotifications) =>

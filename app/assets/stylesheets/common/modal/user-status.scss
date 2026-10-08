@@ -53,6 +53,12 @@
   }
 
   &.--default-emoji {
+    .user-status.--empty {
+      .emoji {
+        filter: grayscale(1);
+      }
+    }
+
     .emoji-picker-trigger {
       filter: grayscale(1);
 

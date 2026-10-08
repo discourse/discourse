@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import UserStatusPicker from "discourse/components/user-status-picker";
+import formatUsername from "discourse/helpers/format-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -35,7 +36,7 @@ export default class UserStatusModal extends Component {
   @tracked loadedUser;
 
   status = trackedObject({
-    emoji: "slightly_smiling_face",
+    emoji: "speech_balloon",
     ...this.args.model.status,
   });
   timeShortcuts = this.#buildTimeShortcuts();
@@ -132,7 +133,7 @@ export default class UserStatusModal extends Component {
   async saveAndClose() {
     const newStatus = {
       description: this.status.description,
-      emoji: this.isDefaultEmoji ? "speech_balloon" : this.status.emoji,
+      emoji: this.status.emoji,
       ends_at: this.status.endsAt?.toISOString(),
     };
 
@@ -186,15 +187,13 @@ export default class UserStatusModal extends Component {
               <div class="user-card-avatar-wrapper">
                 <div class="user-card-avatar">
                   <span class="card-huge-avatar">
-                    {{dBoundAvatar this.user "large"}}
+                    {{dBoundAvatar this.user "huge"}}
                   </span>
                 </div>
 
                 {{#if this.status.description}}
                   <div class="user-status">
-                    {{#unless this.isDefaultEmoji}}
-                      {{trustHTML this.statusEmoji}}
-                    {{/unless}}
+                    {{trustHTML this.statusEmoji}}
                     <span class="user-status__description">
                       {{this.status.description}}
                     </span>
@@ -202,9 +201,7 @@ export default class UserStatusModal extends Component {
                   </div>
                 {{else}}
                   <div class="user-status --empty">
-                    {{#unless this.isDefaultEmoji}}
-                      {{trustHTML this.statusEmoji}}
-                    {{/unless}}
+                    {{trustHTML this.statusEmoji}}
                     <span class="user-status__description">
                       {{i18n "user_status.what_are_you_doing"}}
                     </span>
@@ -214,7 +211,11 @@ export default class UserStatusModal extends Component {
               <div class="names">
                 <div class="names__primary">
                   <span class="name-username-wrapper">
-                    {{if this.nameFirst this.user.name this.user.username}}
+                    {{if
+                      this.nameFirst
+                      this.user.name
+                      (formatUsername this.user.username)
+                    }}
                   </span>
                 </div>
                 {{#if this.nameFirst}}
