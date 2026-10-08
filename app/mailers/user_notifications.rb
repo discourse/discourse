@@ -303,6 +303,8 @@ class UserNotifications < ActionMailer::Base
           []
         end
 
+      # Replacement topics/posts must be authorized and bounded before Core prepares them.
+      # Custom templates receive template_locals in both HTML and text formats.
       content =
         DiscoursePluginRegistry.apply_modifier(
           :user_digest_content,
