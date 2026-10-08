@@ -43,75 +43,107 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
     SiteSetting.tagging_enabled = true
   end
 
+  it "responds synchronously to the same topic while its reply lock is held" do
+    model = Fabricate(:fake_model)
+    agent =
+      Fabricate(
+        :ai_agent,
+        name: "Nested reply agent",
+        default_llm_id: model.id,
+        force_default_llm: true,
+        tools: [],
+      )
+    agent.create_user!
+    SiteSetting.ai_bot_enabled = true
+    script = <<~JS
+      function invoke() {
+        return discourse.getAgent("Nested reply agent").respondTo({ instructions: "Reply briefly" });
+      }
+    JS
+    nested_tool = create_tool(script: script)
+    context = DiscourseAi::Agents::BotContext.new(post: post, user: post.user)
+    runner = nested_tool.runner({}, llm: nil, bot_user: bot_user, context: context)
+    DistributedMutex
+      .any_instance
+      .stubs(:sleep)
+      .raises("Nested reply attempted to wait for its own lock")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["Nested response"]) do
+      result =
+        DiscourseAi::AiBot::ReplyLock.synchronize("discourse_ai:reply:topic:#{topic.id}") do
+          runner.invoke
+        end
+      expect(result["success"]).to eq(true)
+      expect(Post.find(result["post_id"]).raw).to eq("Nested response")
+    end
+  end
+
+  it "responds synchronously to the same chat thread while its reply lock is held" do
+    model = Fabricate(:fake_model)
+    agent =
+      Fabricate(
+        :ai_agent,
+        name: "Nested chat agent",
+        default_llm_id: model.id,
+        force_default_llm: true,
+        tools: [],
+      )
+    agent.create_user!
+    SiteSetting.ai_bot_enabled = true
+    channel = Fabricate(:category_channel, threading_enabled: true)
+    original = Fabricate(:chat_message, chat_channel: channel, user: user)
+    thread = Fabricate(:chat_thread, channel: channel, original_message: original)
+    original.update!(thread: thread)
+    nested_tool =
+      create_tool(
+        script:
+          'function invoke() { return discourse.getAgent("Nested chat agent").respondTo({}); }',
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        message_id: original.id,
+        channel_id: channel.id,
+        user: user,
+      )
+    runner = nested_tool.runner({}, llm: nil, bot_user: bot_user, context: context)
+    DistributedMutex
+      .any_instance
+      .stubs(:sleep)
+      .raises("Nested chat reply attempted to wait for its own lock")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["Nested chat response"]) do
+      result =
+        DiscourseAi::AiBot::ReplyLock.synchronize(
+          "discourse_ai:reply:chat:#{channel.id}:#{thread.id}",
+        ) { runner.invoke }
+      expect(result["success"]).to eq(true)
+      expect(Chat::Message.find(result["message_id"]).message).to eq("Nested chat response")
+    end
+  end
+
   describe "Discourse operations" do
     context "when using the topic API" do
-      it "can fetch topic details" do
-        script = <<~JS
-          function invoke(params) {
-            return discourse.getTopic(params.topic_id);
-          }
-        JS
-
-        tool = create_tool(script: script)
+      it "fetches topic details, tags, first post and category information" do
+        topic.update!(category: category)
+        topic.tags << tag1
+        tool.update!(
+          script: "function invoke(params) { return discourse.getTopic(params.topic_id); }",
+        )
         runner = tool.runner({ "topic_id" => topic.id }, llm: nil, bot_user: nil)
 
         result = runner.invoke
 
-        expect(result["id"]).to eq(topic.id)
-        expect(result["title"]).to eq(topic.title)
-        expect(result["archetype"]).to eq("regular")
-        expect(result["posts_count"]).to eq(1)
-      end
-
-      it "can get a topic with tags and first_post_id" do
-        tag = Fabricate(:tag, name: "test_tag")
-        topic_with_category = Fabricate(:topic, category: category)
-        Fabricate(:post, topic: topic_with_category)
-        topic_with_category.tags << tag
-
-        tool.update!(
-          script:
-            "function invoke(params) { const t = discourse.getTopic(params.topic_id); return { tags: t.tags, first_post_id: t.first_post_id }; }",
+        expect(result).to include(
+          "id" => topic.id,
+          "title" => topic.title,
+          "archetype" => "regular",
+          "posts_count" => 1,
+          "first_post_id" => post.id,
+          "category_id" => category.id,
+          "category_name" => category.name,
+          "category_slug" => category.slug,
         )
-        runner =
-          described_class.new(
-            parameters: {
-              topic_id: topic_with_category.id,
-            },
-            llm: llm,
-            bot_user: bot_user,
-            tool: tool,
-          )
-        result = runner.invoke
-        expect(result["tags"]).to contain_exactly("test_tag")
-        expect(result["first_post_id"]).to eq(topic_with_category.first_post.id)
-      end
-
-      it "can get a topic with category info" do
-        topic_with_category = Fabricate(:topic, category: category)
-        tool.update!(script: <<~JS)
-            function invoke(params) {
-              const t = discourse.getTopic(params.topic_id);
-              return {
-                category_id: t.category_id,
-                category_name: t.category_name,
-                category_slug: t.category_slug
-              };
-            }
-          JS
-        runner =
-          described_class.new(
-            parameters: {
-              topic_id: topic_with_category.id,
-            },
-            llm: llm,
-            bot_user: bot_user,
-            tool: tool,
-          )
-        result = runner.invoke
-        expect(result["category_id"]).to eq(category.id)
-        expect(result["category_name"]).to eq("Test Category")
-        expect(result["category_slug"]).to eq("test-category")
+        expect(result["tags"]).to eq([tag1.name])
       end
     end
 

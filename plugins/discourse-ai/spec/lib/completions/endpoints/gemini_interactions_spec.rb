@@ -96,6 +96,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
           end,
       ).to_return(status: 200, body: response.to_json)
 
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
     result =
       llm.generate(
         DiscourseAi::Completions::Prompt.new(
@@ -107,6 +111,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
         top_p: 0.8,
         max_tokens: 100,
         stop_sequences: ["STOP"],
+        execution_context: execution,
       )
 
     expect(result).to eq(
@@ -143,6 +148,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(log.request_tokens).to eq(100)
     expect(log.cache_read_tokens).to eq(20)
     expect(log.response_tokens).to eq(12)
+    expect(execution.work_budget.used).to eq(12)
   end
 
   it "maps Gemini 2.5 thinking efforts to supported Interactions API levels" do

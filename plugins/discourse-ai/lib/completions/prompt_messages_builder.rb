@@ -6,11 +6,13 @@ module DiscourseAi
       MAX_CHAT_UPLOADS = 5
       MAX_TOPIC_UPLOADS = 5
       MAX_CONTEXT_MESSAGES = 1000
+      MAX_RECOVERY_BYTES = 32.megabytes
+      PUBLIC_CONTEXT_MESSAGES = 40
       COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
       COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
       COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
       attr_reader :chat_context_posts
-      attr_accessor :topic
+      attr_accessor :topic, :preserve_history
 
       def self.messages_from_chat(
         message,
@@ -24,7 +26,8 @@ module DiscourseAi
         include_document_uploads: nil,
         allowed_attachment_types: nil,
         bot_user_ids:,
-        instruction_message: nil
+        instruction_message: nil,
+        history_snapshot: nil
       )
         include_image_uploads, include_document_uploads =
           normalize_upload_inclusion(
@@ -35,33 +38,67 @@ module DiscourseAi
         include_thread_titles = !channel.direct_message_channel? && !message.thread_id
 
         current_id = message.id
+        public_context = !channel.direct_message_channel? && !message.thread_id
+        load_limit = max_messages
+        load_limit = [max_messages, PUBLIC_CONTEXT_MESSAGES].min if public_context &&
+          history_snapshot
         messages = nil
+        coverage_boundary = nil
 
         if !message.thread_id && channel.direct_message_channel?
-          messages = [message]
+          messages =
+            if history_snapshot
+              recovered, coverage_boundary =
+                recover_chat_messages(
+                  Chat::Message.where(chat_channel_id: channel.id).where("id <= ?", current_id),
+                  history_snapshot,
+                )
+              recovered
+            else
+              [message]
+            end
         elsif !channel.direct_message_channel? && !message.thread_id
           messages =
             Chat::Message
               .includes(:user, :uploads, :thread)
               .joins("left join chat_threads on chat_threads.id = chat_messages.thread_id")
               .where(chat_channel_id: channel.id)
+              .where("chat_messages.id <= ?", current_id)
               .where(
                 "chat_messages.thread_id IS NULL OR chat_threads.original_message_id = chat_messages.id",
               )
               .order(id: :desc)
-              .limit(max_messages)
+              .limit(load_limit + (history_snapshot && !public_context ? 1 : 0))
               .to_a
               .reverse
         end
 
+        if !messages && history_snapshot
+          thread = message.thread
+          message.user.guardian.ensure_can_preview_chat_channel!(channel)
+          if !thread || thread.channel_id != channel.id ||
+               !(channel.threading_enabled || thread.force) ||
+               !message.user.guardian.can_join_chat_channel?(channel)
+            raise ContextPreparation::Error.new("history_changed")
+          end
+          messages, coverage_boundary =
+            recover_chat_messages(
+              Chat::Message.where(chat_channel_id: channel.id, thread_id: thread.id).where(
+                "id <= ?",
+                current_id,
+              ),
+              history_snapshot,
+            )
+        end
         messages ||=
           ChatSDK::Thread.last_messages(
             thread_id: message.thread_id,
-            guardian: Discourse.system_user.guardian,
-            page_size: max_messages,
+            guardian: message.user.guardian,
+            page_size: load_limit,
           )
 
         builder = new
+        builder.preserve_history = history_snapshot.present?
 
         guardian = Guardian.new(message.user)
         if context_post_ids
@@ -74,15 +111,85 @@ module DiscourseAi
           )
         end
 
+        custom_prompts =
+          if history_snapshot
+            ChatMessageCustomPrompt
+              .where(message_id: messages.map(&:id))
+              .pluck(:message_id, :custom_prompt)
+              .to_h
+          else
+            {}
+          end
+        if history_snapshot
+          requester_id = nil
+          messages.each do |entry|
+            if !bot_user_ids.include?(entry.user_id)
+              requester_id = entry.user_id
+            else
+              custom_prompts[entry.id] = history_snapshot.filter_evidence(
+                custom_prompts[entry.id],
+                requester_id: requester_id,
+              )
+            end
+          end
+          carrier =
+            !public_context &&
+              messages.reverse.find do |entry|
+                usable_checkpoint(
+                  custom_prompts[entry.id],
+                  history_snapshot,
+                  entry.id,
+                  minimum_coverage: coverage_boundary,
+                )
+              end
+          raise ContextPreparation::Error.new("history_changed") if coverage_boundary && !carrier
+          if carrier
+            prefix, remainder, boundary =
+              checkpoint_parts(custom_prompts[carrier.id], history_snapshot)
+            messages = messages.select { |entry| entry.id > boundary }
+            custom_prompts[carrier.id] = remainder
+            push_checkpoint_prefix(
+              builder,
+              prefix,
+              guardian: guardian,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+            )
+          end
+          custom_prompts.transform_values! { |entries| without_checkpoint(entries) }
+        end
+
         messages.each do |m|
           # restore stripped message
           m.message = instruction_message if m.id == current_id && instruction_message
 
           if bot_user_ids.include?(m.user_id)
-            builder.push(
-              type: :model,
-              content: DiscourseAi::AiBot::ChatToolApproval.transcript_text(m),
-            )
+            if custom_prompts[m.id].present?
+              custom_prompts[m.id].each do |entry|
+                next if entry[2] == "function"
+                builder.push(
+                  type: entry[2].present? ? entry[2].to_sym : :model,
+                  content:
+                    filtered_custom_prompt_content(
+                      entry[0],
+                      include_image_uploads: include_image_uploads,
+                      include_document_uploads: include_document_uploads,
+                      allowed_attachment_types: allowed_attachment_types,
+                      guardian: guardian,
+                    ),
+                  id: entry[1],
+                  name: entry[3],
+                  thinking: entry[4],
+                  provider_data: entry[5],
+                )
+              end
+            else
+              builder.push(
+                type: :model,
+                content: DiscourseAi::AiBot::ChatToolApproval.transcript_text(m),
+              )
+            end
           else
             upload_ids =
               filtered_upload_ids_from_uploads(
@@ -113,10 +220,18 @@ module DiscourseAi
         end
 
         builder.trim_to_token_budget!(context_token_budget, tokenizer:)
+        builder.prepend_scope_notice!(load_limit) if public_context && history_snapshot
 
         builder.to_a(
-          limit: max_messages,
-          style: channel.direct_message_channel? ? :chat_with_context : :chat,
+          limit: history_snapshot ? nil : max_messages,
+          style:
+            (
+              if channel.direct_message_channel? || (history_snapshot && message.thread_id)
+                :chat_with_context
+              else
+                :chat
+              end
+            ),
         )
       end
 
@@ -131,7 +246,8 @@ module DiscourseAi
         include_uploads: nil,
         include_image_uploads: nil,
         include_document_uploads: nil,
-        allowed_attachment_types: nil
+        allowed_attachment_types: nil,
+        history_snapshot: nil
       )
         include_image_uploads, include_document_uploads =
           normalize_upload_inclusion(
@@ -156,26 +272,96 @@ module DiscourseAi
             .where("post_number <= ?", post.post_number)
             .where("post_type in (?)", post_types)
 
-        context =
-          guardian
-            .filter_hidden_posts(context_query, category: post.topic.category)
-            .order("post_number desc")
-            .limit(max_posts)
-            .pluck(
-              "posts.raw",
-              "users.username",
-              "post_custom_prompts.custom_prompt",
-              "(
-                  SELECT array_agg(ref.upload_id)
-                  FROM upload_references ref
-                  JOIN uploads u ON u.id = ref.upload_id
-                  WHERE ref.target_type = 'Post' AND ref.target_id = posts.id
-               ) as upload_ids",
-              "posts.created_at",
-            )
+        public_context = !post.topic.private_message?
+        load_limit = max_posts
+        load_limit = [max_posts, PUBLIC_CONTEXT_MESSAGES].min if public_context && history_snapshot
+        columns = [
+          "posts.raw",
+          "users.username",
+          "post_custom_prompts.custom_prompt",
+          "(SELECT array_agg(ref.upload_id) FROM upload_references ref JOIN uploads u ON u.id = ref.upload_id WHERE ref.target_type = 'Post' AND ref.target_id = posts.id) as upload_ids",
+          "posts.created_at",
+          "posts.user_id",
+          "posts.post_number",
+        ]
+        visible_query = guardian.filter_hidden_posts(context_query, category: post.topic.category)
+        if history_snapshot && !public_context
+          context = []
+          bytes = 0
+          coverage_boundary = nil
+          loop do
+            page =
+              visible_query.order(post_number: :desc).limit(MAX_CONTEXT_MESSAGES).pluck(*columns)
+            break if page.empty?
+            if !coverage_boundary
+              carrier =
+                page.find do |row|
+                  history_snapshot.authorized_evidence?(row[2]) &&
+                    usable_checkpoint(row[2], history_snapshot, row[6])
+                end
+              coverage_boundary =
+                history_snapshot.covered_position(checkpoint_entry(carrier[2])[6]) if carrier
+            end
+            page = page.select { |row| row[6] > coverage_boundary } if coverage_boundary
+            bytes += page.to_json.bytesize
+            if bytes > MAX_RECOVERY_BYTES
+              raise ContextPreparation::Error.new("history_recovery_limit")
+            end
+            context.concat(page)
+            break if coverage_boundary && (page.empty? || page.last[6] <= coverage_boundary + 1)
+            break if page.length < MAX_CONTEXT_MESSAGES
+            visible_query = visible_query.where("posts.post_number < ?", page.last[6])
+          end
+        else
+          context = visible_query.order(post_number: :desc).limit(load_limit).pluck(*columns)
+        end
 
+        evidence_snapshot =
+          history_snapshot ||
+            HistorySnapshot.post(
+              post,
+              guardian: guardian,
+              bot_usernames: bot_usernames,
+              capture_metadata: false,
+            )
+        requester_id = nil
+        context.reverse_each do |row|
+          if !bot_usernames.include?(row[1])
+            requester_id = row[5]
+          else
+            row[2] = evidence_snapshot.filter_evidence(row[2], requester_id: requester_id)
+          end
+        end
         builder = new
+        builder.preserve_history = history_snapshot.present?
         builder.topic = post.topic
+        if history_snapshot
+          carrier =
+            !public_context &&
+              context.find do |row|
+                usable_checkpoint(
+                  row[2],
+                  history_snapshot,
+                  row[6],
+                  minimum_coverage: coverage_boundary,
+                )
+              end
+          raise ContextPreparation::Error.new("history_changed") if coverage_boundary && !carrier
+          if carrier
+            prefix, remainder, boundary = checkpoint_parts(carrier[2], history_snapshot)
+            context = context.select { |row| row[6] > boundary }
+            carrier[2] = remainder
+            push_checkpoint_prefix(
+              builder,
+              prefix,
+              guardian: guardian,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+            )
+          end
+          context.each { |row| row[2] = without_checkpoint(row[2]) if row[2] }
+        end
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           filtered_upload_ids =
@@ -248,7 +434,111 @@ module DiscourseAi
 
         builder.trim_to_token_budget!(context_token_budget, tokenizer:)
 
+        builder.prepend_scope_notice!(load_limit) if public_context && history_snapshot
         builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
+      end
+
+      def self.recover_chat_messages(query, snapshot)
+        messages = []
+        bytes = 0
+        coverage_boundary = nil
+        loop do
+          page =
+            query
+              .includes(:user, :uploads, :thread)
+              .order(id: :desc)
+              .limit(MAX_CONTEXT_MESSAGES)
+              .to_a
+          break if page.empty?
+          prompts =
+            ChatMessageCustomPrompt
+              .where(message_id: page.map(&:id))
+              .pluck(:message_id, :custom_prompt)
+              .to_h
+          if !coverage_boundary
+            carrier =
+              page.find do |entry|
+                snapshot.authorized_evidence?(prompts[entry.id]) &&
+                  usable_checkpoint(prompts[entry.id], snapshot, entry.id)
+              end
+            coverage_boundary =
+              snapshot.covered_position(checkpoint_entry(prompts[carrier.id])[6]) if carrier
+          end
+          page = page.select { |entry| entry.id > coverage_boundary } if coverage_boundary
+          prompts.slice!(*page.map(&:id)) if coverage_boundary
+          bytes += page.sum { |entry| entry.message.to_s.bytesize } + prompts.to_json.bytesize
+          if bytes > MAX_RECOVERY_BYTES
+            raise ContextPreparation::Error.new("history_recovery_limit")
+          end
+          messages.concat(page)
+          break if coverage_boundary && (page.empty? || page.last.id <= coverage_boundary + 1)
+          break if page.length < MAX_CONTEXT_MESSAGES
+          query = query.where("chat_messages.id < ?", page.last.id)
+        end
+        [messages.reverse, coverage_boundary]
+      end
+
+      def self.usable_checkpoint(entries, snapshot, carrier_position, minimum_coverage: nil)
+        checkpoint = checkpoint_entry(entries)
+        return false if !checkpoint || !snapshot.validate_checkpoint!(checkpoint[6])
+        boundary = snapshot.covered_position(checkpoint[6])
+        boundary < carrier_position && (!minimum_coverage || boundary >= minimum_coverage)
+      end
+
+      def self.checkpoint_parts(entries, snapshot)
+        checkpoint = checkpoint_entry(entries)
+        index = entries.index(checkpoint)
+        prefix = entries[index, 2] + entries[0...index]
+        remainder = entries.drop(index + 2)
+        prefix << remainder.shift while remainder.first&.dig(2) == "user"
+        [prefix, remainder, snapshot.covered_position(checkpoint[6])]
+      end
+
+      def self.push_checkpoint_prefix(builder, entries, **options)
+        entries.each do |entry|
+          next if entry[2] == "function"
+          type = entry[2].present? ? entry[2].to_sym : :model
+          builder.push(
+            type: type,
+            content: filtered_custom_prompt_content(entry[0], **options),
+            id: type == :model ? nil : entry[1],
+            name: entry[3],
+            thinking: entry[4],
+            provider_data: entry[5],
+          )
+        end
+      end
+
+      def self.without_checkpoint(entries)
+        entries = Array(entries).dup
+        while (checkpoint = checkpoint_entry(entries))
+          index = entries.index(checkpoint)
+          entries.slice!(index, 2)
+        end
+        entries
+      end
+
+      def prepend_scope_notice!(limit)
+        return if @raw_messages.empty?
+        content = @raw_messages.first[:content]
+        @raw_messages.first[:content] = [
+          "Public context is scoped to the latest #{limit} visible source messages. Earlier public history is not included.\n",
+          *Array(content),
+        ]
+      end
+
+      def self.checkpoint_entry(raw_context)
+        Array(raw_context)
+          .each_cons(2)
+          .to_a
+          .reverse_each do |entry, acknowledgement|
+            if entry[2] == "user" && entry[1].blank? &&
+                 entry[0].to_s.start_with?(COMPRESSED_CONTEXT_PREFIX) &&
+                 acknowledgement[0] == COMPRESSED_CONTEXT_ACK
+              return entry
+            end
+          end
+        nil
       end
 
       def self.message_text(value)
@@ -598,7 +888,47 @@ module DiscourseAi
         compression_index ? messages[compression_index..] : messages
       end
 
+      def represent_incomplete_batches(messages)
+        result = []
+        index = 0
+        while index < messages.length
+          message = messages[index]
+          if !%i[tool_call tool].include?(message[:type])
+            result << message
+            index += 1
+            next
+          end
+          finish = index
+          finish += 1 while finish < messages.length &&
+            %i[tool_call tool].include?(messages[finish][:type])
+          batch = messages[index...finish]
+          calls = batch.select { |entry| entry[:type] == :tool_call }.map { |entry| entry[:id] }
+          outputs = batch.select { |entry| entry[:type] == :tool }.map { |entry| entry[:id] }
+          complete =
+            calls.present? && calls.none?(&:blank?) && outputs.none?(&:blank?) &&
+              calls.uniq.length == calls.length && outputs.uniq.length == outputs.length &&
+              calls.map(&:to_s).sort == outputs.map(&:to_s).sort && batch.first[:type] == :tool_call
+          if complete
+            result.concat(batch)
+          else
+            batch.each do |entry|
+              details = entry.except(:content).to_json
+              result << {
+                type: :model,
+                content: [
+                  "Incomplete historical tool evidence (not executable): #{details}\n",
+                  *Array(entry[:content]),
+                ],
+              }
+            end
+          end
+          index = finish
+        end
+        result
+      end
+
       def valid_messages_array(messages)
+        messages = represent_incomplete_batches(messages) if preserve_history
         result = []
 
         # this will create a "valid" messages array
@@ -611,16 +941,31 @@ module DiscourseAi
             message[:content] = "Reply cancelled by user."
           end
 
-          next if !last_type && message[:type] != :user
+          if !last_type && message[:type] != :user
+            if preserve_history
+              result << {
+                type: :user,
+                content:
+                  "The following is retained conversation history; earlier user context is unavailable.",
+              }
+              last_type = :user
+            else
+              next
+            end
+          end
 
-          if last_type == :tool_call && message[:type] != :tool
+          if last_type == :tool_call && !%i[tool tool_call].include?(message[:type])
+            raise ContextPreparation::Error.new("incomplete_tool_batch") if preserve_history
             result.pop
             last_type = result.length > 0 ? result[-1][:type] : nil
           end
 
-          next if message[:type] == :tool && last_type != :tool_call
+          if message[:type] == :tool && !%i[tool_call tool].include?(last_type)
+            raise ContextPreparation::Error.new("incomplete_tool_batch") if preserve_history
+            next
+          end
 
-          if message[:type] == last_type
+          if message[:type] == last_type && !%i[tool_call tool].include?(last_type)
             # merge the message for :user message
             # replace the message for other messages
             last_message = result[-1]
@@ -640,6 +985,24 @@ module DiscourseAi
               compressed =
                 compress_messages_buffer(last_message[:content], max_uploads: MAX_TOPIC_UPLOADS)
               last_message[:content] = compressed
+            elsif preserve_history
+              if last_message[:thinking_provider_info].present? ||
+                   message[:thinking_provider_info].present? ||
+                   last_message[:provider_data].present? || message[:provider_data].present?
+                result << {
+                  type: :user,
+                  content: "Continuation of the assistant response follows.",
+                }
+                result << message
+                last_type = message[:type]
+                next
+              end
+              last_message[:content] = compress_messages_buffer(
+                [last_message[:content], "\n", message[:content]].flatten,
+                max_uploads: MAX_TOPIC_UPLOADS,
+              )
+              thinking = [last_message[:thinking], message[:thinking]].compact.join("\n")
+              last_message[:thinking] = thinking if thinking.present?
             else
               last_message[:content] = message[:content]
             end
@@ -870,7 +1233,7 @@ module DiscourseAi
 
         compressed << current_text if current_text.present?
 
-        if upload_count > max_uploads
+        if !preserve_history && upload_count > max_uploads
           to_remove = upload_count - max_uploads
           removed = 0
           compressed.delete_if { |item| item.is_a?(Hash) && (removed += 1) <= to_remove }

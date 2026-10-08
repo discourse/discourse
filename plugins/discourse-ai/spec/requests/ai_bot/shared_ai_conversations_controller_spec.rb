@@ -2,9 +2,7 @@
 
 RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   before do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
+    prepare_ai_bot_fixtures(bots: [claude_2])
     SiteSetting.ai_bot_allowed_groups = "10"
     SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
   end

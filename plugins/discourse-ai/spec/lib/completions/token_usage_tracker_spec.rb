@@ -56,7 +56,23 @@ RSpec.describe DiscourseAi::Completions::TokenUsageTracker do
     expect(tracker.total).to eq(12)
   end
 
-  it "supports starting from a previous total budget" do
+  it "reports maintenance separately from ordinary actual usage" do
+    tracker = described_class.new(base_request: 20, base_response: 10, base_preparation: 5)
+    log =
+      Struct.new(:request_tokens, :cache_write_tokens, :cache_read_tokens, :response_tokens).new(
+        100,
+        0,
+        0,
+        15,
+      )
+    tracker.add_from_audit_log(log, preparation: true)
+    tracker.add_effective(request: 12, response: 3)
+
+    expect(tracker.total).to eq(160)
+    expect(tracker.preparation_tokens).to eq(120)
+  end
+
+  it "supports starting from previous actual usage" do
     tracker = described_class.new(base_total: 101)
 
     expect(tracker.request).to eq(50)

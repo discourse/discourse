@@ -6,6 +6,17 @@ module DiscourseAi::ChatBotHelper
     SiteSetting.ai_bot_enabled_llms = bots.map(&:id).join("|")
   end
 
+  def prepare_ai_bot_fixtures(bots:)
+    SiteSetting.provider.save(:discourse_ai_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(:ai_bot_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(
+      :ai_bot_enabled_llms,
+      bots.map(&:id).join("|"),
+      SiteSetting.types[:list],
+    )
+    SiteSetting.refresh!
+  end
+
   def assign_fake_provider_to(setting_name)
     Fabricate(:fake_model).tap do |fake_llm|
       SiteSetting.public_send("#{setting_name}=", "#{fake_llm.id}")

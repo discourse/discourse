@@ -3,11 +3,7 @@
 RSpec.describe SharedAiConversation, type: :model do
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2", display_name: "Claude-2") }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [claude_2])
-  end
+  before { prepare_ai_bot_fixtures(bots: [claude_2]) }
 
   fab!(:user)
   fab!(:agent) { Fabricate(:ai_agent, default_llm: claude_2).tap(&:ensure_user!) }

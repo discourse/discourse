@@ -109,9 +109,9 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
   end
 
   describe "#find_candidate_topics" do
-    let!(:good_topic) { Fabricate(:topic, posts_count: 6, views: 150, like_count: 12) }
-    let!(:bad_topic) { Fabricate(:topic, posts_count: 2, views: 50, like_count: 2) }
-    let!(:topic_with_concepts) do
+    fab!(:good_topic) { Fabricate(:topic, posts_count: 6, views: 150, like_count: 12) }
+    fab!(:bad_topic) { Fabricate(:topic, posts_count: 2, views: 50, like_count: 2) }
+    fab!(:topic_with_concepts) do
       t = Fabricate(:topic, posts_count: 8, views: 200, like_count: 20)
       t.inferred_concepts << concept1
       t
@@ -158,10 +158,10 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
   end
 
   describe "#find_candidate_posts" do
-    let!(:good_post) { Fabricate(:post, like_count: 8, post_number: 2) }
-    let!(:bad_post) { Fabricate(:post, like_count: 2, post_number: 2) }
-    let!(:first_post) { Fabricate(:post, like_count: 10, post_number: 1) }
-    let!(:post_with_concepts) do
+    fab!(:good_post) { Fabricate(:post, like_count: 8, post_number: 2) }
+    fab!(:bad_post) { Fabricate(:post, like_count: 2, post_number: 2) }
+    fab!(:first_post) { Fabricate(:post, like_count: 10, post_number: 1) }
+    fab!(:post_with_concepts) do
       p = Fabricate(:post, like_count: 15, post_number: 3)
       p.inferred_concepts << concept1
       p

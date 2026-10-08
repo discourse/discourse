@@ -84,6 +84,154 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
   before { enable_current_plugin }
 
+  it "settles pending cancelled reasoning without final output usage" do
+    thinking =
+      "Consider each independent source carefully before deciding what the evidence actually supports."
+    events = [
+      {
+        type: "message_start",
+        message: {
+          role: "assistant",
+          content: [],
+          usage: {
+            input_tokens: 10,
+            output_tokens: 1,
+          },
+        },
+      },
+      { type: "content_block_start", index: 0, content_block: { type: "thinking", thinking: "" } },
+      {
+        type: "content_block_delta",
+        index: 0,
+        delta: {
+          type: "thinking_delta",
+          thinking: thinking,
+        },
+      },
+    ]
+    stub_request(:post, url).to_return(
+      body: events.map { |event| "event: #{event[:type]}\ndata: #{event.to_json}\n\n" }.join,
+    )
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
+    cancel = DiscourseAi::Completions::CancelManager.new
+    llm.generate(
+      prompt,
+      user: Discourse.system_user,
+      execution_context: execution,
+      cancel_manager: cancel,
+      output_thinking: true,
+      max_tokens: 2000,
+    ) do |partial|
+      if partial.is_a?(DiscourseAi::Completions::Thinking) && partial.message.present?
+        cancel.cancel!
+      end
+    end
+    expect(execution.work_budget.used).to eq(llm.tokenizer.size(thinking))
+    expect(execution.token_usage_tracker.response).to be > 0
+    expect(AiApiAuditLog.last.raw_response_payload).to include(thinking)
+  end
+
+  it "sends a reasoning-inclusive work ceiling for helpers without changing legacy visible-output requests" do
+    model.update!(
+      max_output_tokens: 64_000,
+      provider_params: {
+        enable_reasoning: true,
+        reasoning_tokens: 32_768,
+      },
+    )
+    bodies = []
+    request =
+      stub_request(:post, url).with(
+        body:
+          proc do |body|
+            bodies << JSON.parse(body)
+            true
+          end,
+      ).to_return(
+        body: {
+          id: "msg_work",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "Helper evidence" }],
+          usage: {
+            input_tokens: 100,
+            output_tokens: 50,
+          },
+        }.to_json,
+      )
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+      )
+    DiscourseAi::Agents::SubagentExecutionState.new(
+      execution_context: execution,
+      root_token_budget: 32_000,
+    )
+    parent_reservation = execution.work_budget.reserve_output(16_000)
+    expect(
+      llm.generate(
+        "Helper",
+        user: Discourse.system_user,
+        execution_context: execution,
+        thinking_effort: "high",
+      ),
+    ).to eq("Helper evidence")
+    expect(bodies.last["max_tokens"]).to eq(16_000)
+    expect(bodies.last["thinking"]).to eq("type" => "enabled", "budget_tokens" => 14_976)
+    expect(bodies.last).not_to have_key("max_tokens_is_total")
+    expect(execution.work_budget.used).to eq(50)
+    expect(execution.work_budget.remaining).to eq(15_950)
+    expect(execution.work_budget.limit).to eq(32_000)
+    llm.generate("Legacy", user: Discourse.system_user, max_tokens: 16_000, thinking_effort: "high")
+    expect(bodies.last["max_tokens"]).to eq(64_000)
+    expect(bodies.last["thinking"]["budget_tokens"]).to eq(48_000)
+    expect(request).to have_been_requested.twice
+  ensure
+    execution&.work_budget&.release_output(parent_reservation)
+  end
+
+  it "disables optional budget thinking when a total-work request cannot fit its minimum" do
+    model.update!(max_output_tokens: 64_000, provider_params: { enable_reasoning: true })
+    body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |request|
+          body = JSON.parse(request)
+          true
+        end,
+    ).to_return(
+      body: {
+        id: "msg_small",
+        type: "message",
+        role: "assistant",
+        content: [{ type: "text", text: "Small" }],
+        usage: {
+          input_tokens: 1,
+          output_tokens: 1,
+        },
+      }.to_json,
+    )
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 1000),
+      )
+    llm.generate(
+      "Small allocation",
+      user: Discourse.system_user,
+      execution_context: execution,
+      max_tokens: 1000,
+      thinking_effort: "high",
+    )
+    expect(body["max_tokens"]).to eq(1000)
+    expect(body).not_to have_key("thinking")
+    expect(execution.work_budget.limit).to eq(1000)
+    expect(execution.work_budget.used).to eq(1)
+  end
+
   it "does not eat spaces with tool calls" do
     body = <<~STRING
     event: message_start
@@ -1121,12 +1269,17 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       },
     ).to_return(status: 200, body: body)
 
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
     result =
       llm.generate(
         "hello",
         user: Discourse.system_user,
         feature_name: "testing",
         output_thinking: true,
+        execution_context: execution,
       )
 
     # Result should be an array with both thinking and text content
@@ -1149,6 +1302,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
     expect(log.feature_name).to eq("testing")
     expect(log.response_tokens).to eq(40)
+    expect(execution.work_budget.used).to eq(40)
   end
 
   it "can stream a response with thinking blocks" do

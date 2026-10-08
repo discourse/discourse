@@ -430,8 +430,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#retry_response" do
     fab!(:bot_user, :user)
-    let!(:llm_model) { Fabricate(:llm_model) }
-    let!(:ai_agent) do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
       Fabricate(
         :ai_agent,
         user: bot_user,
@@ -442,11 +442,13 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     let(:agent) { ai_agent.class_instance.new }
     let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: llm_model) }
 
-    let!(:prompt_post) do
+    fab!(:prompt_post) do
       Fabricate(:post, topic: pm_topic, user: user, raw: "Hello @#{bot_user.username}")
     end
 
-    let!(:reply_post) do
+    fab!(:reply_post) do
+      prepare_ai_bot_fixtures(bots: [llm_model])
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new)
       DiscourseAi::Completions::Llm.with_prepared_responses(["first try"]) do
         DiscourseAi::AiBot::Playground.new(bot).reply_to(prompt_post)
       end
@@ -455,8 +457,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     before do
+      prepare_ai_bot_fixtures(bots: [llm_model])
       Group.refresh_automatic_groups!
-      SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
       AiAgent.agent_cache.flush!
 

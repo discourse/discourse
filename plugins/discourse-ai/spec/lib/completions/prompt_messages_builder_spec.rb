@@ -7,6 +7,157 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:bot_user, :user)
   fab!(:other_user, :user)
 
+  it "represents orphan tool calls and results as retained non-executable evidence" do
+    builder.preserve_history = true
+    builder.push(
+      type: :tool,
+      id: "orphan",
+      name: "read",
+      content: "Orphan result evidence",
+      upload_ids: [123],
+    )
+    builder.push(type: :user, content: "Next request")
+    builder.push(
+      type: :tool_call,
+      id: "unfinished",
+      name: "read",
+      content: '{"arguments":{"topic_id":42}}',
+    )
+    builder.push(type: :model, content: "Partial answer")
+    builder.push(type: :user, content: "Continue")
+
+    messages = builder.to_a
+    expect(messages.map { |message| message[:type] }).to eq(%i[user model user model user])
+    expect(messages.to_s).to include(
+      "Orphan result evidence",
+      "unfinished",
+      "topic_id",
+      "Partial answer",
+      "not executable",
+    )
+    expect(messages[1][:content]).to include({ upload_id: 123 })
+    expect { DiscourseAi::Completions::Prompt.new("System", messages: messages) }.not_to raise_error
+  end
+
+  it "preserves merged model history and all eligible upload references in preservation mode" do
+    builder.preserve_history = true
+    builder.push(type: :user, content: "First request", upload_ids: [1, 2, 3])
+    builder.push(type: :user, content: "Latest request", upload_ids: [4, 5, 6, 7])
+    builder.push(type: :model, content: "First assistant evidence")
+    builder.push(type: :model, content: "Second assistant evidence")
+    builder.push(type: :user, content: "Follow-up")
+
+    messages = builder.to_a
+    expect(messages.first[:content].grep(Hash).map { |part| part[:upload_id] }).to eq((1..7).to_a)
+    expect(messages.second[:content]).to eq("First assistant evidence\nSecond assistant evidence")
+  end
+
+  it "preserves distinct signed model responses across append boundaries" do
+    builder.preserve_history = true
+    builder.push(type: :user, content: "Request")
+    signatures = %w[original-signature appended-signature]
+    signatures.each_with_index do |signature, index|
+      builder.push(
+        type: :model,
+        content: "Response #{index}",
+        thinking: {
+          message: "Reasoning #{index}",
+          provider_info: {
+            anthropic: {
+              signature: signature,
+            },
+          },
+        },
+      )
+    end
+    builder.push(type: :user, content: "Follow-up request")
+    messages = builder.to_a
+    models = messages.select { |message| message[:type] == :model }
+    expect(
+      models.map { |message| message.dig(:thinking_provider_info, :anthropic, :signature) },
+    ).to eq(signatures)
+    expect(models.map { |message| message[:content] }).to eq(["Response 0", "Response 1"])
+    expect { DiscourseAi::Completions::Prompt.new("System", messages: messages) }.not_to raise_error
+  end
+
+  describe ".messages_from_post with preservation" do
+    it "recovers original history beyond the nominal page without omitting posts" do
+      source = Fabricate(:private_message_post, user: user)
+      Fabricate(:post, topic: source.topic, user: bot_user)
+      latest = Fabricate(:post, topic: source.topic, user: user, raw: "Latest request")
+      snapshot =
+        DiscourseAi::Completions::HistorySnapshot.post(
+          latest,
+          guardian: user.guardian,
+          bot_usernames: [bot_user.username],
+        )
+      messages =
+        described_class.messages_from_post(
+          latest,
+          max_posts: 2,
+          bot_usernames: [bot_user.username],
+          history_snapshot: snapshot,
+        )
+      expect(messages.map { |message| message[:content] }).to include(source.raw, latest.raw)
+    end
+
+    it "rebuilds legacy checkpoints from original posts" do
+      source = Fabricate(:private_message_post, user: user)
+      reply = Fabricate(:post, topic: source.topic, user: bot_user)
+      PostCustomPrompt.create!(
+        post_id: reply.id,
+        custom_prompt: [
+          ["<compressed_context>Unverified evidence</compressed_context>", nil, "user"],
+          ["Understood, I have the context.", nil, "model"],
+        ],
+      )
+      latest = Fabricate(:post, topic: source.topic, user: user)
+      snapshot =
+        DiscourseAi::Completions::HistorySnapshot.post(
+          latest,
+          guardian: user.guardian,
+          bot_usernames: [bot_user.username],
+        )
+      messages =
+        described_class.messages_from_post(
+          latest,
+          max_posts: 3,
+          bot_usernames: [bot_user.username],
+          history_snapshot: snapshot,
+        )
+      expect(messages.map { |entry| entry[:content] }).to include(source.raw, reply.raw, latest.raw)
+      expect(messages.to_s).not_to include("Unverified evidence")
+    end
+
+    it "restores parallel calls and results with provider metadata as a complete batch" do
+      source = Fabricate(:private_message_post, user: user, recipient: bot_user)
+      reply = Fabricate(:post, topic: source.topic, user: bot_user)
+      provider_data = { "vllm" => { "tool_batch_id" => "batch-1" } }
+      PostCustomPrompt.create!(
+        post_id: reply.id,
+        custom_prompt: [
+          ['{"arguments":{}}', "one", "tool_call", "read", nil, provider_data],
+          ['{"arguments":{}}', "two", "tool_call", "read", nil, provider_data],
+          ["First result", "one", "tool", "read"],
+          ["Second result", "two", "tool", "read"],
+          ["Done", bot_user.username],
+        ],
+      )
+      latest = Fabricate(:post, topic: source.topic, user: user)
+      messages =
+        described_class.messages_from_post(latest, max_posts: 3, bot_usernames: [bot_user.username])
+      expect(messages.map { |message| message[:type] }).to eq(
+        %i[user tool_call tool_call tool tool model user],
+      )
+      expect(messages[1..2].map { |message| message[:provider_data] }).to eq(
+        [provider_data.deep_symbolize_keys] * 2,
+      )
+      expect(
+        DiscourseAi::Completions::Prompt.new("Instructions", messages: messages).messages.drop(1),
+      ).to eq(messages)
+    end
+  end
+
   describe ".filtered_upload_ids_for_prompt" do
     def filter(upload_ids, guardian)
       described_class.filtered_upload_ids_for_prompt(
@@ -284,6 +435,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "replays approval cards as text with their outcome" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+      Group.refresh_automatic_groups_for_user!(user)
       public_channel.update!(threading_enabled: true)
       card =
         Fabricate(

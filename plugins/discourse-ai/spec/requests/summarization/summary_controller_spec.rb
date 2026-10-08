@@ -329,8 +329,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_gist", params: { topic_ids: topic_ids }
 
@@ -422,8 +421,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_summary", params: { topic_ids: topic_ids }
 

@@ -184,12 +184,15 @@ module DiscourseAi
           end
 
           finish_chunks(io)
-        rescue DiscourseAi::AiBot::StreamReplyCustomToolsSession::ProtocolError => e
+        rescue DiscourseAi::AiBot::StreamReplyCustomToolsSession::ProtocolError,
+               DiscourseAi::Completions::ContextPreparation::Error => e
           Discourse.warn_exception(
             e,
             message: "Discourse AI: Stream reply custom tool protocol error",
           )
-          write_chunk(io, { event: "error", error: e.message })
+          payload = { event: "error", error: e.message }
+          payload[:reason] = e.reason if e.respond_to?(:reason)
+          write_chunk(io, payload)
           finish_chunks(io)
         rescue StandardError => e
           # Headers were already sent. Emit an error frame and chunk terminator so clients can

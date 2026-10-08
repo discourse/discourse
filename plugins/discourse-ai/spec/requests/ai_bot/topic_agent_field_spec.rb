@@ -15,8 +15,7 @@ RSpec.describe "AI agent topic custom field" do
   let(:bot_user) { agent.user }
 
   before do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [llm_model])
+    prepare_ai_bot_fixtures(bots: [llm_model])
     SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
     sign_in(current_user)
