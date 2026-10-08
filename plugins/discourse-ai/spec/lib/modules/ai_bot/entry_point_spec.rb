@@ -8,6 +8,14 @@ describe DiscourseAi::AiBot::EntryPoint do
       fab!(:user)
       fab!(:bot_allowed_group, :group)
       fab!(:llm_model)
+      fab!(:conversation_agent) do
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [bot_allowed_group.id],
+          allow_personal_messages: true,
+          default_llm: llm_model,
+        ).tap(&:ensure_user!)
+      end
 
       before do
         toggle_enabled_bots(bots: [llm_model])

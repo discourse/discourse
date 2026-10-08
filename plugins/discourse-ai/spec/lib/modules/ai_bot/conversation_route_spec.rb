@@ -35,6 +35,15 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
     expect(route.model_source).to eq(:request)
   end
 
+  it "does not require a discussion permission when retrying a reply" do
+    agent.update!(allow_personal_messages: false, allow_topic_mentions: false)
+
+    route = described_class.resolve(authorization_user: user, modality: :retry, agent_id: agent.id)
+
+    expect(route.speaker).to eq(agent.user)
+    expect(route.model).to eq(first_model)
+  end
+
   it "uses and validates a topic model default" do
     topic = Fabricate(:private_message_topic, user: user, recipient: agent.user)
     topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id

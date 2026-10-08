@@ -271,12 +271,10 @@ module DiscourseAi
             agent_id:,
             llm_model_id:,
             topic: post.topic,
+            speaker: user,
             selection_source: :snapshot,
             allow_general_fallback: false,
           )
-        if user.present? && user.id != route.speaker.id
-          raise Discourse::InvalidParameters.new(:user)
-        end
 
         playground =
           new(

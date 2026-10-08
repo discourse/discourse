@@ -37,7 +37,15 @@ module Jobs
       legacy_speaker = User.find_by(id: args[:bot_user_id])
       model_id = args[:llm_model_id].presence
       model_id ||= LlmModel.where(user_id: legacy_speaker.id).pick(:id) if legacy_speaker
-      modality = post.topic.private_message? ? :personal_message : :topic_mention
+      modality =
+        if reply_post
+          # the original reply already passed modality checks; it may come from automation
+          :retry
+        elsif post.topic.private_message?
+          :personal_message
+        else
+          :topic_mention
+        end
       route =
         DiscourseAi::AiBot::ConversationRoute.resolve(
           authorization_user:,

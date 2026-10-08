@@ -2031,17 +2031,18 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe ".reply_to_post" do
-    it "rejects a speaker override that does not match the selected agent" do
+    it "replies as the given user when the agent has no user" do
       post = Fabricate(:post, user: user)
+      speaker = Fabricate(:user)
+      agent_without_user = Fabricate(:ai_agent, default_llm: claude_2, user_id: nil)
 
-      expect {
-        described_class.reply_to_post(
-          post:,
-          user: user,
-          agent_id: general_agent.id,
-          llm_model_id: claude_2.id,
-        )
-      }.to raise_error(Discourse::InvalidParameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Reply from override"]) do
+        described_class.reply_to_post(post:, user: speaker, agent_id: agent_without_user.id)
+      end
+
+      reply = post.topic.reload.posts.order(:post_number).last
+      expect(reply.raw).to eq("Reply from override")
+      expect(reply.user).to eq(speaker)
     end
   end
 

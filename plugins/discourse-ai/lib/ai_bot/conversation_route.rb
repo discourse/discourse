@@ -39,6 +39,7 @@ module DiscourseAi
           llm_model_id: nil,
           topic: nil,
           recipient_user: nil,
+          speaker: nil,
           selection_source: :request,
           allow_general_fallback: true
         )
@@ -49,6 +50,7 @@ module DiscourseAi
             llm_model_id:,
             topic:,
             recipient_user:,
+            speaker:,
             selection_source:,
             allow_general_fallback:,
           ).resolve
@@ -62,6 +64,7 @@ module DiscourseAi
         llm_model_id:,
         topic:,
         recipient_user:,
+        speaker:,
         selection_source:,
         allow_general_fallback:
       )
@@ -71,6 +74,7 @@ module DiscourseAi
         @llm_model_id = llm_model_id
         @topic = topic
         @recipient_user = recipient_user
+        @speaker = speaker
         @selection_source = selection_source.to_sym
         @allow_general_fallback = allow_general_fallback
       end
@@ -80,8 +84,10 @@ module DiscourseAi
         agent_class = resolve_agent_class
         validate_modality!(agent_class)
         agent_record = AiAgent.find_by(id: agent_class.id)
-        speaker = agent_record&.user
-        raise_error(:ai_agent_id, "no_user_for_agent") if speaker.blank? || !speaker.active?
+        speaker = @speaker || agent_record&.user
+        if speaker.blank? || (@speaker.blank? && !speaker.active?)
+          raise_error(:ai_agent_id, "no_user_for_agent")
+        end
 
         validate_recipient!(agent_record)
         model, model_source = resolve_model(agent_record, agent_class)
@@ -174,7 +180,7 @@ module DiscourseAi
             agent.allow_chat_direct_messages
           when :chat_channel_mention
             agent.allow_chat_channel_mentions
-          when :automation, :streaming
+          when :automation, :streaming, :retry
             true
           else
             false

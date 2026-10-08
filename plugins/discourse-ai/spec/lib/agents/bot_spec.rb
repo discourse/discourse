@@ -1187,8 +1187,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           tools: %w[SuspendUser SilenceUser ChangeSiteSetting],
         )
       agent_class = mandatory_approval_agent.class_instance
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      bot = described_class.as(admin, agent: agent_class.new, model: fake)
       context = DiscourseAi::Agents::BotContext.new(user: admin)
       tools = [
         DiscourseAi::Agents::Tools::SuspendUser.new(

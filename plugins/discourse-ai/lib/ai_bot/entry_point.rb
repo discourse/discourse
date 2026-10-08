@@ -54,42 +54,34 @@ module DiscourseAi
         Bot.new(bot_user.id, bot_user.username_lower, model.name)
       end
 
-      def self.find_user_from_model(model_name)
-        # Hack(Roman): Added this because Command R Plus had a different in the bot settings.
-        # Will eventually amend it with a data migration.
-        name = model_name
-        name = "command-r-plus" if name == "cohere-command-r-plus"
-
-        LlmModel.joins(:user).where(name: name).last&.user
-      end
-
       def self.available_agents(user)
-        classes_by_id = DiscourseAi::Agents::Agent.all(user: user).index_by(&:id)
-        agent_users = AiAgent.agent_users(user: user)
+        agent_users = AiAgent.agent_users(user: user).index_by { |agent| agent[:id] }
         model_names =
           LlmModel
-            .where(id: agent_users.filter_map { |agent| agent[:default_llm_id] })
+            .where(id: agent_users.values.filter_map { |agent| agent[:default_llm_id] })
             .pluck(:id, :display_name)
             .to_h
 
-        agent_users.filter_map do |agent_user|
-          agent = classes_by_id[agent_user[:id]]
-          next if agent.blank? || agent_user[:username].blank?
+        DiscourseAi::Agents::Agent
+          .all(user: user)
+          .filter_map do |agent|
+            agent_user = agent_users[agent.id]
+            next if agent_user.blank? || agent_user[:username].blank?
 
-          {
-            id: agent.id,
-            user_id: agent_user[:user_id],
-            name: agent.name,
-            description: agent.description,
-            default_llm_id: agent_user[:default_llm_id],
-            default_llm_name: model_names[agent_user[:default_llm_id]],
-            has_default_llm:
-              agent_user[:default_llm_id].present? || SiteSetting.ai_default_llm_model.present?,
-            force_default_llm: agent_user[:force_default_llm],
-            username: agent_user[:username],
-            allow_personal_messages: agent_user[:allow_personal_messages],
-          }
-        end
+            {
+              id: agent.id,
+              user_id: agent_user[:user_id],
+              name: agent.name,
+              description: agent.description,
+              default_llm_id: agent_user[:default_llm_id],
+              default_llm_name: model_names[agent_user[:default_llm_id]],
+              has_default_llm:
+                agent_user[:default_llm_id].present? || SiteSetting.ai_default_llm_model.present?,
+              force_default_llm: agent_user[:force_default_llm],
+              username: agent_user[:username],
+              allow_personal_messages: agent_user[:allow_personal_messages],
+            }
+          end
       end
 
       def self.available_llm_models
