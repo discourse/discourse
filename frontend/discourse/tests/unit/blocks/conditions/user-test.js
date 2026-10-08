@@ -352,6 +352,34 @@ module("Unit | Blocks | Condition | user", function (hooks) {
             this.condition.evaluate({ minTrustLevel: 3, maxTrustLevel: 4 })
           );
         });
+
+        // The loosest bounds (0 and 4) also catch an unknown level being treated as some
+        // real level, such as TL0.
+        test("an unknown trust level (undefined) satisfies no bound", function (assert) {
+          this.condition.currentUser.trust_level = undefined;
+
+          assert.false(
+            this.condition.evaluate({ minTrustLevel: 0 }),
+            "fails the loosest minimum"
+          );
+          assert.false(
+            this.condition.evaluate({ maxTrustLevel: 4 }),
+            "fails the loosest maximum"
+          );
+        });
+
+        test("an unknown trust level (null) satisfies no bound", function (assert) {
+          this.condition.currentUser.trust_level = null;
+
+          assert.false(
+            this.condition.evaluate({ minTrustLevel: 0 }),
+            "fails the loosest minimum"
+          );
+          assert.false(
+            this.condition.evaluate({ maxTrustLevel: 4 }),
+            "fails the loosest maximum"
+          );
+        });
       });
 
       module("group conditions", function () {
