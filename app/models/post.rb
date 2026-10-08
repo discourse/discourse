@@ -1340,6 +1340,7 @@ end
 #
 #  idx_posts_created_at_topic_id                          (created_at,topic_id) WHERE (deleted_at IS NULL)
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_search_covering                              (id) WHERE ((deleted_at IS NULL) AND (NOT hidden))
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
