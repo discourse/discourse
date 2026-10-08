@@ -288,6 +288,10 @@ class Notification < ActiveRecord::Base
   end
 
   def url
+    if notification_type == Notification.types[:mentioned] && data_hash[:reviewable_id].present?
+      return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}"
+    end
+
     return if topic.blank?
     return consolidated_nested_replied_url if consolidated_nested_replied?
 

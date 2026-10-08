@@ -11,6 +11,11 @@ module Chat
       Chat::ReviewableMessageSerializer
     end
 
+    def title_for_notification(user)
+      channel = chat_message&.chat_channel
+      channel&.name || channel&.title(user) || super
+    end
+
     def self.action_aliases
       {
         agree_and_keep_hidden: :agree_and_delete,

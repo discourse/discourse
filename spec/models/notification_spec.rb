@@ -308,6 +308,34 @@ RSpec.describe Notification do
       fab!(:topic)
       fab!(:post) { Fabricate(:post, topic: topic, post_number: 5) }
 
+      it "returns the reviewable URL for a note mention without a topic" do
+        notification =
+          Fabricate(
+            :notification,
+            notification_type: Notification.types[:mentioned],
+            topic: nil,
+            data: { reviewable_id: 123, reviewable_note_id: 456 }.to_json,
+          )
+
+        expect(notification.url).to eq("/review/123")
+
+        set_subfolder("/forum")
+
+        expect(notification.url).to eq("/forum/review/123")
+      end
+
+      it "returns the relative topic URL for a regular mention" do
+        notification =
+          Fabricate(
+            :notification,
+            notification_type: Notification.types[:mentioned],
+            topic: topic,
+            post_number: post.post_number,
+          )
+
+        expect(notification.url).to eq(topic.relative_url(post.post_number))
+      end
+
       it "returns the relative topic url for a regular reply notification" do
         notification =
           Fabricate(
