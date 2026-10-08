@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Type-checks core and every bundled plugin and theme under `strict`, emitting
+# nothing. The regular `pnpm lint:types` build stays non-strict because it
+# publishes declarations inferred from JavaScript, which `strict` would change.
+#
+# Core is checked with frontend/discourse/tsconfig.strict.json. Plugins and
+# themes extend a config that third-party code extends too, so they get
+# `--strict` on the command line instead. The project list is the root
+# tsconfig.json's references, the same one `pnpm lint:types` builds.
+#
+# Usage:
+#   script/check_strict_types
+
+set -u -o pipefail
+
+cd "$(dirname "$0")/.."
+
+export NODE_OPTIONS=--max-old-space-size=8192
+
+failed=()
+
+check() {
+  local project=$1
+  shift
+  echo "[check_strict_types] $project"
+  if ! pnpm exec ember-tsc "$@" --pretty false; then
+    failed+=("$project")
+  fi
+}
+
+check frontend/discourse -p frontend/discourse/tsconfig.strict.json
+
+projects=$(node -e '
+  for (const { path } of require("./tsconfig.json").references) {
+    if (/^(plugins|themes)\//.test(path)) {
+      console.log(path);
+    }
+  }
+')
+
+for project in $projects; do
+  check "$project" -p "$project/tsconfig.json" --strict --noEmit
+done
+
+if ((${#failed[@]})); then
+  echo "[check_strict_types] Strict type errors in: ${failed[*]}" >&2
+  exit 1
+fi
