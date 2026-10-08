@@ -174,6 +174,7 @@ module Chat
       ActiveModel::ArraySerializer.new(
         object.blocks || [],
         each_serializer: Chat::BlockSerializer,
+        user_id: object.user_id,
         scope:,
         root: false,
       ).as_json

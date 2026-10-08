@@ -482,18 +482,16 @@ module DiscourseAi
       def post_chat_tool_approval(info, channel:, guardian:, thread_id:, fallback_in_reply_to_id:)
         return if !channel.direct_message_channel?
 
-        raw = +"**#{info[:summary]}**\n#{info[:details]}".strip
-        raw << "\n\n_#{I18n.t("discourse_ai.ai_bot.tool_pending_approval")}_"
-
         ChatSDK::Message.create(
-          raw: raw,
+          raw: info[:details],
           channel_id: channel.id,
           guardian: guardian,
           thread_id: thread_id,
           in_reply_to_id: thread_id ? nil : fallback_in_reply_to_id,
           force_thread: thread_id.blank?,
           enforce_membership: !channel.direct_message_channel?,
-          blocks: DiscourseAi::AiBot::ChatToolApproval.pending_blocks(info[:reviewable_id]),
+          blocks:
+            DiscourseAi::AiBot::ChatToolApproval.pending_blocks(info[:reviewable_id], info: info),
         )
       end
 

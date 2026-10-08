@@ -18,6 +18,25 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
   end
 
+  it "puts the name in the heading and omits the body for name-only creation" do
+    category_tool = tool(name: "Cool stuff", reason: "Setup")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(category_tool.approval_title))
+    expect(title.at_css("code").text).to eq("Cool stuff")
+    expect(category_tool.approval_question).to eq("Do you want to create this category?")
+    expect(category_tool.approval_show_description?).to eq(false)
+    expect(category_tool.approval_parameters).to be_empty
+  end
+
+  it "previews valid color parameters without treating arbitrary values as colors" do
+    category_tool =
+      tool(name: "Cool stuff", color: "#4CBB17", text_color: "invalid", reason: "Setup")
+
+    expect(category_tool.approval_parameters).to include(
+      { label: "color", value: "#4CBB17", color: "4CBB17" },
+      { label: "text_color", value: "invalid" },
+    )
+  end
+
   it "creates a category with a description and returns its id and url" do
     result =
       tool(name: "What we do", description: "All about our mission", reason: "Site setup").invoke
