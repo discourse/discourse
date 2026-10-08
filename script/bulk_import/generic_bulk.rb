@@ -2504,7 +2504,7 @@ class BulkImport::Generic < BulkImport::Base
          WHERE id = :event_id
       SQL
 
-      raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
+      raw.gsub!(event["placeholder"], event_bbcode(event_details).to_s) if event_details
     end
 
     if (quotes = placeholders&.fetch("quotes", nil))
@@ -2684,6 +2684,7 @@ class BulkImport::Generic < BulkImport::Base
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
+    timezone = event_timezone(event)
     status = DiscourseEvents::Events::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
@@ -2695,9 +2696,10 @@ class BulkImport::Generic < BulkImport::Base
     custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
 
     text = +"[event"
-    text << %{ start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"} if starts_at
-    text << %{ end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}"} if ends_at
-    text << %{ timezone="UTC"}
+    # The plugin reads start and end as local times in the event's timezone.
+    text << %{ start="#{format_event_time(starts_at, timezone)}"} if starts_at
+    text << %{ end="#{format_event_time(ends_at, timezone)}"} if ends_at
+    text << %{ timezone="#{timezone}"}
     text << %{ status="#{status}"} if status
     text << %{ name="#{name}"} if name
     text << %{ url="#{url}"} if url
@@ -2705,6 +2707,15 @@ class BulkImport::Generic < BulkImport::Base
     text << "]\n"
     text << "[/event]\n"
     text
+  end
+
+  def event_timezone(event)
+    timezone = event["timezone"].presence
+    timezone && ActiveSupport::TimeZone[timezone] ? timezone : "UTC"
+  end
+
+  def format_event_time(time, timezone)
+    time.in_time_zone(timezone).strftime("%Y-%m-%d %H:%M")
   end
 
   def import_post_custom_fields
@@ -4304,7 +4315,6 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     default_custom_fields = "{}"
-    timezone = "UTC"
     public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
@@ -4314,6 +4324,14 @@ class BulkImport::Generic < BulkImport::Base
       post_id = post_id_from_imported_id(row["post_id"])
       next if !post_id || existing_events.include?(post_id)
 
+      timezone = event_timezone(row)
+      if row["timezone"].present? && timezone != row["timezone"]
+        log_import_issue(
+          "invalid event timezone, using UTC",
+          "#{row["timezone"]} (event #{row["id"]})",
+        )
+      end
+
       {
         id: post_id,
         status: row["status"],
@@ -4322,7 +4340,7 @@ class BulkImport::Generic < BulkImport::Base
         name: row["name"],
         url: row["url"] ? row["url"][0..999] : nil,
         custom_fields: row["custom_fields"] || default_custom_fields,
-        timezone: timezone,
+        timezone:,
         raw_invitees:
           (
             if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
