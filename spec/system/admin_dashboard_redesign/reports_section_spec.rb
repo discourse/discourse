@@ -38,8 +38,14 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_drag_controls
   end
 
-  it "disables the reorder arrows at the ends of the enabled list on mobile", mobile: true do
-    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+  it "lets admins reorder reports on mobile while keeping their sizes", mobile: true do
+    AdminDashboardReport.create!(
+      source: "core_report",
+      identifier: "signups",
+      position: 0,
+      rows: 3,
+      cols: 2,
+    )
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
     page.visit("/admin")
@@ -50,11 +56,27 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_enabled_move_down("core_report:signups")
     expect(modal).to have_enabled_move_up("core_report:topics")
     expect(modal).to have_disabled_move_down("core_report:topics")
+
+    modal.move_up("core_report:topics")
+    expect(modal.enabled_identifiers).to eq(%w[core_report:topics core_report:signups])
+    modal.apply
+    expect(modal).to have_closed
+
+    page.refresh
+    expect(dashboard.card_identifiers).to eq(%w[core_report:topics core_report:signups])
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 1)
   end
 
   it "lets admins customize the reports section via the manage-reports modal" do
-    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
-    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+    AdminDashboardReport.create!(
+      source: "core_report",
+      identifier: "signups",
+      position: 0,
+      rows: 3,
+      cols: 2,
+    )
+    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1, cols: 2)
 
     page.visit("/admin")
     expect(dashboard).to have_section
@@ -87,6 +109,10 @@ describe "Admin Dashboard Redesign | Reports section" do
       "core_report:topics",
       "core_report:admin_logins",
     )
+
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
+    expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
 
     dashboard.open_manage_reports_via_tile
     expect(modal).to have_open

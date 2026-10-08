@@ -17,6 +17,13 @@ module PageObjects
         has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
 
+      def has_card_size?(identifier, rows:, cols:)
+        selector = "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']"
+        selector += cols > 1 ? ".--wide" : ":not(.--wide)"
+        selector += rows > 1 ? ".--rows-#{rows}" : ":not([class*='--rows-'])"
+        has_css?(selector)
+      end
+
       def has_default_report?
         has_card?(default_report_identifier)
       end

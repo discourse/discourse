@@ -67,6 +67,11 @@ module PageObjects
         self
       end
 
+      def move_up(identifier)
+        find("#{@modal} #{ROW}[data-identifier='#{identifier}'] .d-icon-arrow-up").click
+        self
+      end
+
       def has_disabled_move_up?(identifier)
         has_css?(
           "#{@modal} #{ROW}[data-identifier='#{identifier}'] button.manageable-row-list__arrow[disabled] .d-icon-arrow-up",
