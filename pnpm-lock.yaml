@@ -135,7 +135,7 @@ importers:
         version: 4.0.0
       content-tag:
         specifier: ^4.0.0
-        version: 4.2.0
+        version: 4.2.1
       core-js:
         specifier: ^3.50.0
         version: 3.50.0
@@ -568,7 +568,7 @@ importers:
         version: 4.0.0
       content-tag:
         specifier: ^4.0.0
-        version: 4.2.0
+        version: 4.2.1
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
@@ -3961,9 +3961,6 @@ packages:
   content-disposition@1.1.0:
     resolution: {integrity: sha512-5jRCH9Z/+DRP7rkvY83B+yGIGX96OYdJmzngqnw2SBSxqCFPd0w2km3s5iawpGX8krnwSGmF0FW5Nhr0Hfai3g==}
     engines: {node: '>=18'}
-
-  content-tag@4.2.0:
-    resolution: {integrity: sha512-f/o+F3qSa4gg23I7RWy6cMDxP2nPo99YWusxw2bjne7ZC6Acqqf4uB/+87AekOq1ehTocHH7b7nMd2X4S3NHVw==}
 
   content-tag@4.2.1:
     resolution: {integrity: sha512-DZwqYmBVGfCrybcMpXv5y5wkbicXZ5zlktIy4hH4EE3q/Sk3W2SRENJa3re+Ak8aegoKgOPCGZSuFmbQQ+h+GQ==}
@@ -9531,7 +9528,7 @@ snapshots:
       browserslist: 4.28.9
       browserslist-to-esbuild: 2.1.1(browserslist@4.28.9)
       chalk: 5.6.2
-      content-tag: 4.2.0
+      content-tag: 4.2.1
       debug: 4.4.3
       fast-glob: 3.3.3
       fs-extra: 10.1.0
@@ -11680,8 +11677,6 @@ snapshots:
 
   content-disposition@1.1.0: {}
 
-  content-tag@4.2.0: {}
-
   content-tag@4.2.1: {}
 
   content-type@1.0.5: {}
@@ -12074,7 +12069,7 @@ snapshots:
       compression: 1.8.1
       configstore: 8.0.0
       console-ui: 3.1.2
-      content-tag: 4.2.0
+      content-tag: 4.2.1
       core-object: 3.1.5
       dag-map: 2.0.2
       diff: 8.0.4
@@ -12199,7 +12194,7 @@ snapshots:
     dependencies:
       '@glimmer/syntax': 0.95.0
       '@typescript-eslint/tsconfig-utils': 8.63.0(typescript@6.0.3)
-      content-tag: 4.2.0
+      content-tag: 4.2.1
       ember-estree: 0.6.11
       eslint-scope: 9.1.2
       html-tags: 5.1.0
@@ -12310,7 +12305,7 @@ snapshots:
   ember-template-imports@4.4.0:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 4.2.0
+      content-tag: 4.2.1
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
@@ -14846,7 +14841,7 @@ snapshots:
   prettier-plugin-ember-template-tag@2.1.7(prettier@3.8.1):
     dependencies:
       '@babel/traverse': 7.29.8
-      content-tag: 4.2.0
+      content-tag: 4.2.1
       prettier: 3.8.1
     transitivePeerDependencies:
       - supports-color
