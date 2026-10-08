@@ -22,7 +22,7 @@ class ReviewableNote < ActiveRecord::Base
   def mentioned_usernames
     if @analyzed_content != content
       @analyzed_content = content.dup
-      @mentioned_usernames = PostAnalyzer.new(content, nil).raw_mentions
+      @mentioned_usernames = PlaintextMentions.new(content).usernames
     end
     @mentioned_usernames || []
   end
@@ -46,7 +46,8 @@ class ReviewableNote < ActiveRecord::Base
     usernames = mentioned_usernames
     return if usernames.empty?
 
-    mentioned_users = User.where(username_lower: usernames).where.not(id: user_id).to_a
+    mentioned_users =
+      User.where(username_lower: usernames, staged: false).where.not(id: user_id).to_a
     screener = UserCommScreener.new(acting_user: user, target_user_ids: mentioned_users.map(&:id))
 
     mentioned_users.each do |mentioned_user|

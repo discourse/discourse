@@ -27,6 +27,11 @@ module DiscourseMcp
             request_context.guardian,
             notifications,
           )
+        notifications =
+          Notification.filter_inaccessible_reviewable_notifications(
+            request_context.guardian,
+            notifications,
+          )
         notifications = Notification.filter_disabled_badge_notifications(notifications)
         notifications = Notification.populate_acting_user(notifications)
         serialized =

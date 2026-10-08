@@ -88,6 +88,32 @@ module("Integration | Component | Reviewable | NoteForm", function (hooks) {
     assert.dom("textarea").hasValue("", "clears the saved note");
   });
 
+  test("autocompletes mentions inside literal code syntax", async function (assert) {
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [{ username: "alex", avatar_template: "/images/avatar.png" }],
+      })
+    );
+
+    await render(
+      <template>
+        <ReviewableNoteForm @reviewable={{this.reviewable}} />
+        <DMenus />
+      </template>
+    );
+
+    await form().field("content").fillIn("```\n@alex");
+    await triggerKeyEvent("textarea", "keyup", 88);
+    assert
+      .dom(".ac-user .username")
+      .hasText("alex", "offers mentions in plaintext code syntax");
+
+    await triggerKeyEvent("textarea", "keydown", "Enter");
+    assert
+      .dom("textarea")
+      .hasValue("```\n@alex ", "inserts the completed mention");
+  });
+
   test("does not autocomplete when mentions are disabled", async function (assert) {
     this.siteSettings.enable_mentions = false;
     await render(

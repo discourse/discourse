@@ -252,6 +252,35 @@ class Notification < ActiveRecord::Base
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
+  def self.filter_inaccessible_reviewable_notifications(guardian, notifications)
+    reviewable_ids =
+      notifications
+        .filter_map do |notification|
+          if notification.notification_type == types[:mentioned]
+            notification.data_hash[:reviewable_id]
+          end
+        end
+        .uniq
+    return notifications if reviewable_ids.empty?
+
+    accessible_ids =
+      if guardian.can_see_review_queue?
+        Reviewable
+          .viewable_by(guardian.user, preload: false)
+          .where(id: reviewable_ids)
+          .pluck(:id)
+          .to_set
+      else
+        Set.new
+      end
+
+    notifications.reject do |notification|
+      notification.notification_type == types[:mentioned] &&
+        notification.data_hash[:reviewable_id].present? &&
+        !accessible_ids.include?(notification.data_hash[:reviewable_id].to_i)
+    end
+  end
+
   def self.filter_disabled_badge_notifications(notifications)
     return notifications if notifications.blank?
 

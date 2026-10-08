@@ -310,7 +310,7 @@ RSpec.describe ReviewableNote do
       expect(note.unnotified_usernames).to eq([moderator.username])
     end
 
-    it "ignores mentions inside code, quotes, and nonexistent usernames" do
+    it "notifies plaintext mentions inside literal code and quote syntax" do
       note =
         ReviewableNote.create!(
           reviewable: reviewable,
@@ -319,7 +319,28 @@ RSpec.describe ReviewableNote do
             "`@#{moderator.username}`\n\n[quote]\n@#{user.username}\n[/quote]\n\n@nonexistent_reviewer",
         )
 
-      expect(Notification.where(notification_type: Notification.types[:mentioned])).to be_empty
+      expect(
+        Notification.where(notification_type: Notification.types[:mentioned]).pluck(:user_id),
+      ).to contain_exactly(moderator.id)
+      expect(note.unnotified_usernames).to eq([user.username])
+    end
+
+    it "uses the same individual mentions for links and notifications" do
+      other_admin = Fabricate(:admin)
+      group = Fabricate(:group)
+      content =
+        "(@#{moderator.username.upcase}), <b>@#{other_admin.username}</b> person@#{user.username}.com @#{group.name} @nonexistent_reviewer"
+      note = ReviewableNote.create!(reviewable: reviewable, user: admin, content: content)
+      cooked =
+        Nokogiri::HTML5.fragment(ReviewableNoteSerializer.new(note, root: false).as_json[:cooked])
+
+      expect(cooked.text).to eq(content)
+      expect(
+        cooked.css("a.mention").map { |mention| mention.text[1..].downcase },
+      ).to contain_exactly(moderator.username_lower, other_admin.username_lower)
+      expect(
+        Notification.where(notification_type: Notification.types[:mentioned]).pluck(:user_id),
+      ).to contain_exactly(moderator.id, other_admin.id)
       expect(note.unnotified_usernames).to be_empty
     end
 

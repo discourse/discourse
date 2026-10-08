@@ -53,7 +53,6 @@ export default class ReviewableNoteForm extends Component {
         afterComplete: () => {
           textarea.focus({ preventScroll: true });
         },
-        triggerRule: async () => !(await textHandler.inCodeBlock()),
       }
     );
 
