@@ -107,5 +107,22 @@ describe GroupMutations do
         described_class.resolve_users(guardian: admin.guardian, user_emails: "nobody@example.com")
       }.to raise_error(Discourse::InvalidParameters)
     end
+
+    it "refuses the email selector for a user who may not view email addresses" do
+      expect {
+        described_class.resolve_users(guardian: user.guardian, user_emails: user_1.email)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "allows the email selector for a moderator once email viewing is enabled" do
+      moderator = Fabricate(:moderator)
+      SiteSetting.moderators_view_emails = true
+
+      expect(
+        described_class.resolve_users(guardian: moderator.guardian, user_emails: user.email).pluck(
+          :id,
+        ),
+      ).to eq([user.id])
+    end
   end
 end

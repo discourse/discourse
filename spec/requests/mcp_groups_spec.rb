@@ -1007,18 +1007,6 @@ describe "MCP group tools" do
     describe "discourse_manage_group_members" do
       before { make_owner(group, user) }
 
-      it "refuses email lookups even with write scope when the owner cannot view emails" do
-        authorize("mcp:groups:write")
-        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
-          [member.email, "missing@example.com"].each do |email|
-            call_tool(tool, { group_id: group.id, action: "add", user_emails: [email] })
-            expect(response.status).to eq(403)
-            expect(response.body).not_to include(email, member.username)
-          end
-        end
-        expect(group.users).not_to include(member)
-      end
-
       it "rejects conflicting selectors without changing members or owners" do
         authorize("mcp:groups:write")
         %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
@@ -1039,9 +1027,8 @@ describe "MCP group tools" do
         end
       end
 
-      it "resolves mixed-case account emails" do
-        admin = Fabricate(:admin)
-        authorize("mcp:groups:write", auth_user: admin)
+      it "resolves mixed-case account emails for a user who may view emails" do
+        authorize("mcp:groups:write", auth_user: Fabricate(:admin, refresh_auto_groups: true))
         call_tool(
           "discourse_manage_group_members",
           { group_id: group.id, action: "add", user_emails: [member.email.upcase] },
@@ -1051,26 +1038,18 @@ describe "MCP group tools" do
         expect(group.users).to include(member)
       end
 
-      it "requires moderator email permission independently of group ownership and write scope" do
-        moderator = Fabricate(:moderator)
-        make_owner(group, moderator)
-        authorize("mcp:groups:write", auth_user: moderator)
-        SiteSetting.moderators_view_emails = false
+      it "refuses the email selector for an owner who may not view emails" do
+        authorize("mcp:groups:write")
+        expect(user.guardian.can_see_emails?).to eq(false)
 
-        call_tool(
-          "discourse_manage_group_members",
-          { group_id: group.id, action: "add", user_emails: [member.email] },
-        )
-        expect(response.status).to eq(403)
-        expect(group.users).not_to include(member)
-
-        SiteSetting.moderators_view_emails = true
-        call_tool(
-          "discourse_manage_group_members",
-          { group_id: group.id, action: "add", user_emails: [member.email] },
-        )
-        expect(response.status).to eq(200)
-        expect(group.reload.users).to include(member)
+        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
+          [member.email, "missing@example.com"].each do |email|
+            call_tool(tool, { group_id: group.id, action: "add", user_emails: [email] })
+            expect(response.status).to eq(403)
+            expect(response.body).not_to include(email, member.username)
+          end
+        end
+        expect(group.reload.users).not_to include(member)
       end
 
       it "rejects more than 100 parsed usernames before changing members or owners" do
@@ -1235,19 +1214,6 @@ describe "MCP group tools" do
     end
 
     describe "discourse_invite_group_members" do
-      it "refuses email invitations without revealing existing accounts to group owners" do
-        make_owner(group, user)
-        authorize("mcp:groups:write")
-        [member.email, "missing@example.com"].each do |email|
-          expect do
-            call_tool("discourse_invite_group_members", { group_id: group.id, emails: [email] })
-          end.not_to change { Invite.count }
-          expect(response.status).to eq(403)
-          expect(response.body).not_to include(email, member.username)
-        end
-        expect(group.users).not_to include(member)
-      end
-
       it "adds known addresses and invites the rest" do
         admin = Fabricate(:admin, refresh_auto_groups: true)
         authorize("mcp:groups:write", auth_user: admin)
@@ -1264,18 +1230,23 @@ describe "MCP group tools" do
         expect(Invite.last.groups).to eq([group])
       end
 
-      it "refuses when the user may edit the group but cannot invite to the forum" do
-        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
-        make_owner(group, user)
-        authorize("mcp:groups:write")
+      it "refuses a TL2 group owner who may invite but may not view emails" do
+        owner = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        make_owner(group, owner)
+        authorize("mcp:groups:write", auth_user: owner)
+        expect(owner.guardian.can_invite_to_forum?([group])).to eq(true)
+        expect(owner.guardian.can_see_emails?).to eq(false)
 
-        call_tool(
-          "discourse_invite_group_members",
-          { group_id: group.id, emails: ["newcomer@example.com"] },
-        )
+        expect do
+          call_tool(
+            "discourse_invite_group_members",
+            { group_id: group.id, emails: [member.email, "newcomer@example.com"] },
+          )
+        end.not_to change { Invite.count }
 
         expect(response.status).to eq(403)
-        expect(Invite.where(email: "newcomer@example.com")).to be_empty
+        expect(response.body).not_to include(member.email, member.username)
+        expect(group.reload.users).not_to include(member)
       end
     end
 

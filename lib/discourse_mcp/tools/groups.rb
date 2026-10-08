@@ -475,6 +475,9 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        # GroupMutations guards the user_emails selector, but this tool passes
+        # addresses as `emails`, and the response names the accounts they matched.
+        guardian.ensure_can_see_emails!
 
         result =
           GroupMemberAdder.add(

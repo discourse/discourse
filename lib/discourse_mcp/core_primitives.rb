@@ -2133,7 +2133,8 @@ module DiscourseMcp
         title: "Manage group members",
         description:
           "Adds or removes members of a group the authenticated user may manage. " \
-            "Provide exactly one of usernames, user_ids, or user_emails.",
+            "Provide exactly one of usernames, user_ids, or user_emails. " \
+            "The user_emails selector requires permission to view email addresses.",
         implementation: Tools::ManageGroupMembers,
         input_schema:
           object_schema(
@@ -2159,7 +2160,7 @@ module DiscourseMcp
         title: "Invite group members by email",
         description:
           "Adds existing accounts that match an address and invites the rest to the forum " \
-            "with the group preassigned.",
+            "with the group preassigned. Requires permission to view email addresses.",
         implementation: Tools::InviteGroupMembers,
         input_schema:
           object_schema(

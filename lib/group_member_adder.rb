@@ -45,7 +45,7 @@ class GroupMemberAdder
 
   def add
     guardian.ensure_can_edit!(group)
-    guardian.ensure_can_see_emails! if emails.present?
+    raise EmailsNotAllowed if emails.present? && !guardian.can_invite_to_forum?([group])
 
     users = GroupMutations.resolve_users(guardian:, **selectors).to_a
     invite_emails = []
@@ -55,7 +55,6 @@ class GroupMemberAdder
       existing_user ? users << existing_user : invite_emails << email
     end
 
-    raise EmailsNotAllowed if invite_emails.present? && !guardian.can_invite_to_forum?([group])
     if users.empty? && invite_emails.empty?
       raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
     end

@@ -2168,16 +2168,14 @@ RSpec.describe GroupsController do
   end
 
   describe "membership edits" do
-    it "refuses existing and missing email selections from group owners without changing membership" do
+    it "refuses the email selector from a group owner who may not view emails" do
       group.add_owner(user)
       sign_in(user)
 
       [other_user.email, "missing@example.com"].each do |email|
-        %i[user_emails emails].each do |selector|
-          put "/groups/#{group.id}/members.json", params: { selector => email }
-          expect(response.status).to eq(403)
-          expect(response.body).not_to include(email, other_user.username)
-        end
+        put "/groups/#{group.id}/members.json", params: { user_emails: email }
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(email, other_user.username)
 
         delete "/groups/#{group.id}/members.json", params: { user_emails: email }
         expect(response.status).to eq(403)
@@ -2189,6 +2187,25 @@ RSpec.describe GroupsController do
 
     describe "#add_members" do
       before { sign_in(admin) }
+
+      it "lets a TL2 owner add a username and invite an email without email visibility" do
+        owner = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        group.add_owner(owner)
+        sign_in(owner)
+        expect(owner.guardian.can_invite_to_forum?([group])).to eq(true)
+        expect(owner.guardian.can_see_emails?).to eq(false)
+
+        put "/groups/#{group.id}/members.json",
+            params: {
+              usernames: other_user.username,
+              emails: "newcomer@example.com",
+            }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.users).to include(other_user)
+        invite = Invite.find_by!(email: "newcomer@example.com", invited_by: owner)
+        expect(invite.groups).to eq([group])
+      end
 
       it "can make incremental adds" do
         expect do
@@ -2246,15 +2263,18 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "refuses email selection when the group owner cannot view emails" do
+      it "refuses email invitations when the group owner cannot invite" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
         put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       it "rejects emails even when valid usernames are also submitted by owner without invite permission" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
@@ -2266,7 +2286,8 @@ RSpec.describe GroupsController do
               }
         }.not_to change { group.users.count }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       context "when is able to add several members to a group" do

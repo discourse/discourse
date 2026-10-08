@@ -85,12 +85,16 @@ describe GroupMemberAdder do
       expect(invite.groups).to eq([group])
     end
 
-    it "refuses unknown email addresses when the user cannot invite" do
+    it "refuses email invitations before adding users when the owner cannot invite" do
       SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
 
-      expect {
-        described_class.add(owner.guardian, group, emails: "newcomer@example.com")
-      }.to raise_error(Discourse::InvalidAccess)
+      [user.email, "newcomer@example.com"].each do |email|
+        expect do
+          described_class.add(owner.guardian, group, usernames: user.username, emails: email)
+        end.to raise_error(GroupMemberAdder::EmailsNotAllowed)
+      end
+      expect(group.users).not_to include(user)
+      expect(Invite.where(invited_by: owner)).to be_empty
     end
   end
 end

@@ -29,6 +29,8 @@ module GroupMutations
     user_emails: nil,
     require_all: false
   )
+    # Resolving an address reveals whether it has an account, so this follows the
+    # staff-only rule core applies elsewhere via hide_email_address_taken.
     guardian.ensure_can_see_emails! if split_values(user_emails).present?
 
     if (values = split_values(usernames)).present?
