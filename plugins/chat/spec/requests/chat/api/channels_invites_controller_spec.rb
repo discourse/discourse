@@ -27,6 +27,54 @@ RSpec.describe Chat::Api::ChannelsInvitesController do
 
         expect(response.status).to eq(200)
       end
+
+      it "skips users who mute or ignore a nonstaff inviter without skipping other eligible users" do
+        Fabricate(:muted_user, user: user_1, muted_user: current_user)
+        Fabricate(:ignored_user, user: user_2, ignored_user: current_user)
+        unblocked_user = Fabricate(:user)
+        pm_restricted_user = Fabricate(:user)
+        pm_restricted_user.user_option.update!(allow_private_messages: false)
+        recipient_ids = [user_1.id, user_2.id, unblocked_user.id, pm_restricted_user.id]
+
+        expect {
+          post "/chat/api/channels/#{channel_1.id}/invites?user_ids=#{recipient_ids.join(",")}"
+        }.to change {
+          Notification.where(
+            notification_type: Notification.types[:chat_invitation],
+            user_id: recipient_ids,
+          ).count
+        }.by(2)
+
+        expect(
+          Notification.where(
+            notification_type: Notification.types[:chat_invitation],
+            user_id: recipient_ids,
+          ).pluck(:user_id),
+        ).to contain_exactly(unblocked_user.id, pm_restricted_user.id)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to eq("success" => "OK")
+      end
+
+      context "when the inviter is staff" do
+        fab!(:current_user, :admin)
+
+        it "notifies users who mute or ignore the inviter" do
+          Fabricate(:muted_user, user: user_1, muted_user: current_user)
+          Fabricate(:ignored_user, user: user_2, ignored_user: current_user)
+
+          expect {
+            post "/chat/api/channels/#{channel_1.id}/invites?user_ids=#{user_1.id},#{user_2.id}"
+          }.to change {
+            Notification.where(
+              notification_type: Notification.types[:chat_invitation],
+              user_id: [user_1.id, user_2.id],
+            ).count
+          }.by(2)
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body).to eq("success" => "OK")
+        end
+      end
     end
 
     describe "missing user_ids" do

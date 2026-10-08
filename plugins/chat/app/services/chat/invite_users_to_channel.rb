@@ -41,13 +41,19 @@ module Chat
       guardian.can_join_chat_channel?(channel)
     end
 
-    def fetch_users(params:)
-      ::User
-        .joins(:user_option)
-        .where(user_options: { chat_enabled: true })
-        .not_suspended
-        .where(id: params.user_ids)
-        .limit(50)
+    def fetch_users(params:, guardian:)
+      users =
+        ::User
+          .joins(:user_option)
+          .where(user_options: { chat_enabled: true })
+          .not_suspended
+          .where(id: params.user_ids)
+          .limit(50)
+
+      user_ids = users.ids
+      screener = UserCommScreener.new(acting_user: guardian.user, target_user_ids: user_ids)
+
+      users.where.not(id: user_ids.select { |user_id| screener.ignoring_or_muting_actor?(user_id) })
     end
 
     def send_invite_notifications(channel:, guardian:, users:, params:)
