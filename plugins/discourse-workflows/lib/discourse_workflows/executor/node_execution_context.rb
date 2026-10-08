@@ -87,8 +87,9 @@ module DiscourseWorkflows
           @condition_step_details.concat(details)
         end
 
+        # Per-item nodes would otherwise repeat the same hint once per item.
         def add_execution_hints(hints)
-          @execution_hints.concat(hints.map(&:deep_stringify_keys))
+          @execution_hints |= hints.map(&:deep_stringify_keys)
         end
 
         def merge_metadata(metadata)

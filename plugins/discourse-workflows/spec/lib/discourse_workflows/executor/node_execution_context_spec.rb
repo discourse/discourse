@@ -295,6 +295,20 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#add_execution_hints" do
+    it "keeps a repeated hint only once" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      ctx.add_execution_hints({ message: "Same", location: "outputPane" })
+      ctx.add_execution_hints(
+        { message: "Same", location: "outputPane" },
+        { message: "Other", location: "outputPane" },
+      )
+
+      expect(ctx.execution_hints.map { |hint| hint["message"] }).to eq(%w[Same Other])
+    end
+  end
+
   describe "#set_metadata" do
     it "merges execution metadata with string keys" do
       ctx = described_class.new(input_items: [], resolver: nil)
