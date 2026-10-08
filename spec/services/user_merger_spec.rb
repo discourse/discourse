@@ -476,11 +476,14 @@ RSpec.describe UserMerger do
     it "updates post action counts" do
       posts = {}
 
-      PostActionType.types.each do |type_name, type_id|
-        posts[type_name] = post = Fabricate(:post, user: walter)
-        PostActionCreator.new(source_user, post, type_id).perform
-        PostActionCreator.new(target_user, post, type_id).perform
-      end
+      PostActionType
+        .types
+        .except(:illegal)
+        .each do |type_name, type_id|
+          posts[type_name] = post = Fabricate(:post, user: walter)
+          PostActionCreator.new(source_user, post, type_id).perform
+          PostActionCreator.new(target_user, post, type_id).perform
+        end
 
       merge_users!
 

@@ -26,13 +26,16 @@ RSpec.describe DsaModeration do
         "puid" => statement.puid,
       )
       expect(Reviewable.list_for(admin, preload: false).pluck(:id)).to include(reviewable.id)
-      reviewable.destroy!
+      UserDestroyer.new(admin).destroy(flagger)
       post.destroy!
+      expect(Reviewable.exists?(reviewable.id)).to eq(true)
       expect(statement.reload.payload["content_date"]).to eq(post.created_at.to_date.iso8601)
     end
 
     it "records each deleted topic item once, including replies from other authors" do
       reply = Fabricate(:post, topic: post.topic, post_number: 2)
+      Fabricate(:post, topic: post.topic, post_number: 3, post_type: Post.types[:small_action])
+      PostActionCreator.like(admin, post)
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
       reviewable.perform(admin, :delete_and_agree)
@@ -43,6 +46,20 @@ RSpec.describe DsaModeration do
         ["Post", reply.id, reply.user_id],
       )
       expect(statements.pluck(:decision_key).uniq.size).to eq(1)
+    end
+
+    it "marks every restored topic item without creating another restriction" do
+      reply = Fabricate(:post, topic: post.topic, post_number: 2)
+      reviewable = ReviewablePost.queue_for_review(post)
+      reviewable.perform(admin, :reject_and_delete)
+      reviewable.update!(status: :pending)
+
+      reviewable.perform(admin, :approve_and_restore)
+
+      expect(
+        DsaStatementOfReason.where(reviewable_id: reviewable.id).pluck(:target_id),
+      ).to contain_exactly(post.id, reply.id)
+      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id, reversed_at: nil)).to be_empty
     end
 
     it "keeps distinct handling decisions and records a restoration without a new restriction" do
@@ -107,6 +124,22 @@ RSpec.describe DsaModeration do
 
       expect(User.exists?(post.user_id)).to eq(true)
       expect(DsaStatementOfReason.where(reviewable_id: existing_author.id)).to be_empty
+    end
+
+    it "records a nested queued post rejection when deleting an author as a spammer" do
+      queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
+      reviewable = PostActionCreator.spam(flagger, post).reviewable
+
+      reviewable.perform(admin, :delete_user)
+
+      expect(queued.reload).to be_rejected
+      statements = DsaStatementOfReason.where(reviewable_id: reviewable.id)
+      expect(
+        statements.where(target_type: "ReviewableQueuedPost", target_id: queued.id).sole.payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_DISABLED"])
+      expect(statements.pluck(:decision_key).uniq.size).to eq(1)
     end
 
     it "captures media from the restricted content before removal" do
@@ -177,6 +210,36 @@ RSpec.describe DsaModeration do
         "content_date" => post.created_at.to_date.iso8601,
       )
       expect(statement.target_id).to eq(post.user_id)
+    end
+
+    it "records the suspension dialog post deletion and finite duration in the same decision" do
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.perform(admin, :agree_and_suspend)
+      suspend_until = 1.day.from_now
+
+      result =
+        User::Suspend.call(
+          guardian: admin.guardian,
+          params: {
+            user_id: post.user_id,
+            reason: "Personal attacks",
+            suspend_until: suspend_until,
+            post_id: post.id,
+            post_action: "delete",
+            reviewable_id: reviewable.id,
+          },
+        )
+
+      expect(result).to be_success
+      statements = DsaStatementOfReason.where(reviewable_id: reviewable.id)
+      expect(statements.pluck(:target_type, :target_id)).to contain_exactly(
+        ["User", post.user_id],
+        ["Post", post.id],
+      )
+      expect(statements.pluck(:decision_key).uniq.size).to eq(1)
+      expect(
+        statements.find_by!(target_type: "User").payload["end_date_account_restriction"],
+      ).to eq(suspend_until.to_date.iso8601)
     end
 
     it "records silence and all posts actually hidden, excluding unrelated direct penalties" do

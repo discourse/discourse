@@ -18,16 +18,6 @@ class DsaStatementOfReason < ActiveRecord::Base
     can_classify = failed? && actor.admin? || pending? && classified_at.nil? && attempts.zero?
     raise Discourse::InvalidAccess unless can_classify
 
-    mapping = DsaStatementRules.fetch(community_rule)
-    if target_type == "Post" &&
-         (reviewable.target_type != "Post" || reviewable.target_id != target_id)
-      mapping[
-        "decision_facts"
-      ] = "This item was restricted as part of moderating related content. The moderator identified the following issue in that content: #{mapping["decision_facts"]}"
-      mapping[
-        "incompatible_content_explanation"
-      ] = "The restriction on this item follows from moderation of the related content. #{mapping["incompatible_content_explanation"]}"
-    end
     if DsaStatementRules.categories.exclude?(category)
       raise Discourse::InvalidParameters.new(:category)
     end
@@ -39,8 +29,23 @@ class DsaStatementOfReason < ActiveRecord::Base
       status: :pending,
       error_code: "",
       next_attempt_at: nil,
-      payload: payload.merge(mapping).merge("category" => category),
+      payload:
+        payload.merge(classification_payload(community_rule: community_rule, category: category)),
     )
+  end
+
+  def classification_payload(community_rule:, category:)
+    mapping = DsaStatementRules.fetch(community_rule)
+    if target_type == "Post" &&
+         (reviewable.target_type != "Post" || reviewable.target_id != target_id)
+      mapping[
+        "decision_facts"
+      ] = "This item was restricted as part of moderating related content. The moderator identified the following issue in that content: #{mapping["decision_facts"]}"
+      mapping[
+        "incompatible_content_explanation"
+      ] = "The restriction on this item follows from moderation of the related content. #{mapping["incompatible_content_explanation"]}"
+    end
+    mapping.merge("category" => category)
   end
 
   def retry!
@@ -75,7 +80,13 @@ class DsaStatementOfReason < ActiveRecord::Base
   end
 
   def reverse!
-    update!(reversed_at: Time.zone.now)
+    attributes = { reversed_at: Time.zone.now }
+    if attempts.zero? && payload["decision_visibility"]
+      attributes[:payload] = payload.merge(
+        "end_date_visibility_restriction" => Time.zone.today.iso8601,
+      )
+    end
+    update!(attributes)
   end
 
   def submission_metadata_complete?

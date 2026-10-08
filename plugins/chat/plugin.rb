@@ -638,7 +638,13 @@ after_initialize do
   }
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new { |user| Jobs.enqueue(Jobs::Chat::DeleteUserMessages, user_id: user.id) },
+    Proc.new do |user|
+      Jobs.enqueue(
+        Jobs::Chat::DeleteUserMessages,
+        user_id: user.id,
+        dsa_decision_key: DsaModeration.deferred_decision_key,
+      )
+    end,
   )
 
   register_notification_consolidation_plan(

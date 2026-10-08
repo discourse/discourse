@@ -29,9 +29,8 @@ class User::Suspend
   policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
   model :users
   policy :can_suspend_all_users
-  step :suspend
   model :post, optional: true
-  step :perform_post_action
+  step :apply_penalty
 
   private
 
@@ -47,15 +46,19 @@ class User::Suspend
     users.all? { guardian.can_suspend?(it) }
   end
 
-  def suspend(guardian:, users:, params:)
-    context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, params:)
+  def apply_penalty(guardian:, users:, user:, post:, params:)
+    DsaModeration.capture_penalty(
+      reviewable_id: params.reviewable_id,
+      actor: guardian.user,
+      user: user,
+      action_name: "suspend_user",
+    ) do
+      context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, params:)
+      User::Action::TriggerPostAction.call(guardian:, post:, params:)
+    end
   end
 
   def fetch_post(params:)
     Post.find_by(id: params.post_id)
-  end
-
-  def perform_post_action(guardian:, post:, params:)
-    User::Action::TriggerPostAction.call(guardian:, post:, params:)
   end
 end

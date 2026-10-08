@@ -22,6 +22,7 @@ RSpec.describe DsaStatementsController do
       expect(response.status).to eq(403)
       expect(statement.reload.classified_at).to be_nil
       sign_in(moderator)
+      UserDestroyer.new(admin).destroy(member)
       post "/review/#{reviewable.id}/dsa-classification.json",
            params: params.merge(community_rule: "unknown")
       expect(response.status).to eq(422)

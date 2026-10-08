@@ -35,6 +35,13 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+  scope :for_cleanup,
+        -> do
+          where
+            .not(id: DsaStatementOfReason.select(:reviewable_id))
+            .where.not(id: DsaModeration.active_reviewable_ids)
+        end
+
   has_many :dsa_statements, class_name: "DsaStatementOfReason"
   has_many :unfinished_dsa_statements,
            -> { where(status: 0, classified_at: nil).or(where(status: 2)).order(:id) },
@@ -441,7 +448,8 @@ class Reviewable < ActiveRecord::Base
     end
 
     # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
-    result.remove_reviewable_ids -= [id] if pending?
+    result.remove_reviewable_ids -= [id] if pending? ||
+      SiteSetting.dsa_reporting_enabled && unfinished_dsa_statements.exists?
 
     if update_count || result.remove_reviewable_ids.present?
       Jobs.enqueue(

@@ -262,12 +262,14 @@ after_initialize do
 
   register_user_destroyer_on_content_deletion_callback(
     Proc.new do |user|
-      post_voting_comment_ids = PostVotingComment.where(user_id: user.id).pluck(:id)
+      comments = PostVotingComment.where(user_id: user.id).to_a
+      post_voting_comment_ids = comments.map(&:id)
       PostVotingComment.where(id: post_voting_comment_ids).delete_all
-      ReviewablePostVotingComment.where(
-        target_id: post_voting_comment_ids,
-        target_type: "PostVotingComment",
-      ).delete_all
+      comments.each { |comment| DsaModeration.record_removal(comment) }
+      ReviewablePostVotingComment
+        .for_cleanup
+        .where(target_id: post_voting_comment_ids, target_type: "PostVotingComment")
+        .delete_all
       PostVoting::VoteManager.bulk_remove_votes_by(user)
     end,
   )

@@ -1395,9 +1395,9 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    reviewable_ids = Reviewable.for_cleanup.where(created_by_id: id).select(:id)
     ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-    Reviewable.where(created_by_id: id).delete_all
+    Reviewable.for_cleanup.where(created_by_id: id).delete_all
 
     posts
       .order("post_number desc")

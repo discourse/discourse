@@ -109,7 +109,6 @@ describe "Admin Flags Page" do
       "It's Inappropriate",
       "Something Else",
       "flag edited",
-      "It's Illegal",
       "flag2",
       "flag4",
     )
@@ -126,8 +125,10 @@ describe "Admin Flags Page" do
     expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
       [
         "flag post allowed groups",
-        "allow all users to flag illegal content",
-        "email address to report illegal content",
+        "illegal content reporting url",
+        "dsa reporting enabled",
+        "dsa api token",
+        "dsa api environment",
         "silence new user sensitivity",
         "num users to silence new user",
         "flag sockpuppets",

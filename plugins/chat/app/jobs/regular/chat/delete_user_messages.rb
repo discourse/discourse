@@ -6,9 +6,11 @@ module Jobs
       def execute(args)
         return if args[:user_id].nil?
 
-        ::Chat::MessageDestroyer.new.destroy_in_batches(
-          ::Chat::Message.with_deleted.where(user_id: args[:user_id]),
-        )
+        DsaModeration.resume(decision_key: args[:dsa_decision_key]) do
+          ::Chat::MessageDestroyer.new.destroy_in_batches(
+            ::Chat::Message.with_deleted.where(user_id: args[:user_id]),
+          )
+        end
       end
     end
   end

@@ -18,6 +18,28 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
   end
 
   describe "#perform" do
+    it "records related comments removed when a flagged author is deleted" do
+      SiteSetting.dsa_reporting_enabled = true
+      author_id = comment_poster.id
+      comment_id = comment.id
+      flagged_post = Fabricate(:post, user: comment_poster)
+      staff_reviewable = PostActionCreator.spam(flagger, flagged_post).reviewable
+
+      staff_reviewable.perform(admin, :delete_user)
+
+      statement =
+        DsaStatementOfReason.find_by!(
+          reviewable_id: staff_reviewable.id,
+          target_type: "PostVotingComment",
+          target_id: comment_id,
+        )
+      expect(statement.recipient_id).to eq(author_id)
+      expect(statement.payload["decision_visibility"]).to eq(
+        ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+      )
+      expect(PostVotingComment.with_deleted.exists?(comment_id)).to eq(false)
+    end
+
     it "retains the comment restriction and marks it reversed when restored" do
       SiteSetting.dsa_reporting_enabled = true
 

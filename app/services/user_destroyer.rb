@@ -29,9 +29,9 @@ class UserDestroyer
       UserSecurityKey.where(user_id: user.id).delete_all
       Bookmark.where(user_id: user.id).delete_all
       Draft.where(user_id: user.id).delete_all
-      reviewable_ids = Reviewable.where(created_by_id: user.id).select(:id)
+      reviewable_ids = Reviewable.for_cleanup.where(created_by_id: user.id).select(:id)
       ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-      Reviewable.where(created_by_id: user.id).delete_all
+      Reviewable.for_cleanup.where(created_by_id: user.id).delete_all
       ReviewableClaimedTopic.where(user_id: user.id).delete_all
 
       category_topic_ids = Category.where.not(topic_id: nil).pluck(:topic_id)

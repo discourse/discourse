@@ -15,10 +15,10 @@ class DsaStatementOfReason::Classify
 
   policy :reporting_enabled
   model :reviewable
-  model :statements
-  policy :can_correct_classification
 
   transaction do
+    model :statements
+    policy :can_correct_classification
     step :classify
     step :record_classification_note
   end
@@ -36,6 +36,7 @@ class DsaStatementOfReason::Classify
   end
 
   def fetch_statements(params:, reviewable:)
+    reviewable.lock!
     DsaStatementOfReason
       .where(reviewable_id: reviewable.id, decision_key: params.decision_key)
       .where(status: :failed)
@@ -47,6 +48,8 @@ class DsaStatementOfReason::Classify
           classified_at: nil,
         ),
       )
+      .lock
+      .to_a
   end
 
   def can_correct_classification(statements:, guardian:)
@@ -56,7 +59,7 @@ class DsaStatementOfReason::Classify
   end
 
   def classify(statements:, params:, guardian:)
-    statements.reload.lock.each do |statement|
+    statements.each do |statement|
       statement.classify!(
         community_rule: params.community_rule,
         category: params.category,

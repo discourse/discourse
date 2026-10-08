@@ -41,13 +41,14 @@ class DsaModeration
 
   def self.capture(reviewable:, actor:, action_name:)
     return yield unless SiteSetting.dsa_reporting_enabled
-    return yield if Context.recorder
-
     recorder = new(reviewable: reviewable, actor: actor, action_name: action_name)
     Context.set(recorder: recorder) do
       before = recorder.snapshot
       result = yield
-      recorder.record_changes(before: before) if !result.respond_to?(:success?) || result.success?
+      if !result.respond_to?(:success?) || result.success?
+        recorder.record_changes(before: before)
+        recorder.flush unless recorder.nested?
+      end
       result
     end
   end
@@ -86,13 +87,76 @@ class DsaModeration
   end
 
   def self.record_removal(target)
-    return if target.is_a?(Topic)
+    recordable =
+      target.is_a?(Post) && target.post_type == Post.types[:regular] || target.is_a?(Upload) ||
+        target.class.name.in?(%w[Chat::Message PostVotingComment])
+    return unless recordable
+
     Context.recorder&.record_restriction(
       target: target,
       restriction: {
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
       },
     )
+  end
+
+  def self.active_reviewable_ids
+    Context.recorder ? [Context.recorder.reviewable_id] : []
+  end
+
+  def self.flush
+    Context.recorder&.flush
+  end
+
+  def self.deferred_decision_key
+    Context.recorder&.decision_key
+  end
+
+  def self.resume(decision_key:)
+    statement = DsaStatementOfReason.find_by(decision_key: decision_key) if decision_key
+    raise Discourse::NotFound if decision_key && !statement
+    return yield unless statement
+
+    recorder =
+      new(
+        reviewable: statement.reviewable,
+        actor: statement.actor,
+        action_name: statement.action_name,
+      )
+    recorder.resume!(statement)
+    Context.set(recorder: recorder) do
+      result = yield
+      recorder.flush
+      result
+    end
+  end
+
+  def resume!(statement)
+    @decision_key = statement.decision_key
+    @source_type = statement.payload["source_type"]
+    @automated_detection = statement.payload["automated_detection"] == "Yes"
+    @automated_decision = statement.payload["automated_decision"]
+    @application_date = statement.payload["application_date"]
+    @resumed_statement = statement
+  end
+
+  def self.record_topic_restoration(topic)
+    Context.recorder&.reverse_topic_restrictions(
+      topic: topic,
+      visibility: "DECISION_VISIBILITY_CONTENT_REMOVED",
+    )
+  end
+
+  def reverse_topic_restrictions(topic:, visibility:)
+    DsaStatementOfReason
+      .where(
+        reviewable_id: reviewable_id,
+        target_type: "Post",
+        target_id: Post.where(topic_id: topic.id).select(:id),
+        reversed_at: nil,
+      )
+      .where("payload->'decision_visibility' ? :visibility", visibility: visibility)
+      .find_each(&:reverse!)
   end
 
   def self.record_edit(post:, changes:)
@@ -114,7 +178,7 @@ class DsaModeration
 
     Post
       .with_deleted
-      .where(topic_id: topic.id, deleted_at: nil)
+      .where(topic_id: topic.id, deleted_at: nil, post_type: Post.types[:regular])
       .find_each { |post| record_removal(post) }
   end
 
@@ -127,6 +191,12 @@ class DsaModeration
       elsif status == "visible" && !enabled
         "DECISION_VISIBILITY_CONTENT_DEMOTED"
       end
+    if status == "visible" && enabled
+      Context.recorder.reverse_topic_restrictions(
+        topic: topic,
+        visibility: "DECISION_VISIBILITY_CONTENT_DEMOTED",
+      )
+    end
     return unless visibility
 
     Post
@@ -146,10 +216,12 @@ class DsaModeration
   end
 
   def initialize(reviewable:, actor:, action_name:)
+    @parent = Context.recorder
+    @records = @parent ? @parent.records : {}
     @reviewable = reviewable
     @actor = actor
     @action_name = action_name.to_s
-    @decision_key = SecureRandom.uuid
+    @decision_key = Context.recorder&.decision_key || SecureRandom.uuid
     @automated_decision =
       if Context.automated_decision || actor&.bot?
         "AUTOMATED_DECISION_FULLY"
@@ -160,8 +232,54 @@ class DsaModeration
       end
     @content = content_snapshot
     @recipient_id = @content[:recipient_id] || @reviewable.target_created_by_id
-    @source_type = source_type
+    @source_type = detect_source_type
     @automated_detection = automated_detection?
+    if @parent
+      @source_type = @parent.source_type
+      @automated_detection = @parent.automated_detection
+      @automated_decision = @parent.automated_decision
+    end
+  end
+
+  attr_reader :decision_key, :records, :source_type, :automated_detection, :automated_decision
+
+  def nested?
+    @parent.present?
+  end
+
+  def flush
+    DsaStatementOfReason.transaction do
+      Reviewable.where(id: reviewable_id).lock.pick(:id)
+      @resumed_statement&.reload
+      classification = @resumed_statement if @resumed_statement&.classified_at
+      @records
+        .values
+        .each_slice(200) do |batch|
+          if classification
+            batch.each do |attributes|
+              statement = DsaStatementOfReason.new(attributes)
+              attributes[:payload] = attributes[:payload].merge(
+                statement.classification_payload(
+                  community_rule: classification.community_rule,
+                  category: classification.payload["category"],
+                ),
+              )
+              attributes[:community_rule] = classification.community_rule
+              attributes[:classified_at] = classification.classified_at
+              attributes[:classified_by_id] = classification.classified_by_id
+            end
+          end
+          DsaStatementOfReason.insert_all(
+            batch,
+            unique_by: :index_dsa_statements_on_decision_and_target,
+          )
+        end
+      @records.clear
+    end
+  end
+
+  def reviewable_id
+    @parent ? @parent.reviewable_id : @reviewable.id
   end
 
   def snapshot
@@ -174,6 +292,7 @@ class DsaModeration
           target.respond_to?(:user_deleted?) && target.user_deleted?,
       hidden: target.respond_to?(:hidden?) && target.hidden?,
       raw: target.respond_to?(:raw) ? target.raw : nil,
+      reviewable_status: @reviewable.status,
       avatar: user&.uploaded_avatar,
       account_exists: user.present?,
       suspended_till: user&.suspended_till,
@@ -210,7 +329,11 @@ class DsaModeration
       visibility << "DECISION_VISIBILITY_CONTENT_DISABLED" if after[:hidden] && !after[:deleted]
     end
 
-    if @reviewable.is_a?(ReviewableQueuedPost) && @reviewable.rejected?
+    if @reviewable.is_a?(ReviewableQueuedPost) &&
+         (
+           @reviewable.rejected? ||
+             @reviewable.deleted? && before[:reviewable_status].to_sym == :pending
+         )
       visibility << "DECISION_VISIBILITY_CONTENT_DISABLED"
     end
 
@@ -235,7 +358,12 @@ class DsaModeration
     if before[:account_exists] && !after[:account_exists]
       record_account(restriction: { "decision_account" => "DECISION_ACCOUNT_TERMINATED" })
     elsif after[:suspended_till] && before[:suspended_till] != after[:suspended_till]
-      record_account(restriction: { "decision_account" => "DECISION_ACCOUNT_SUSPENDED" })
+      record_account(
+        restriction: {
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => after[:suspended_till].to_date.iso8601,
+        },
+      )
     elsif after[:silenced_till] && before[:silenced_till] != after[:silenced_till]
       record_account(
         restriction: {
@@ -285,6 +413,12 @@ class DsaModeration
   end
 
   def record_account_restriction(user:, restriction:)
+    restriction = restriction.dup
+    if restriction["decision_account"] == "DECISION_ACCOUNT_SUSPENDED" && user.suspended_till
+      restriction["end_date_account_restriction"] = user.suspended_till.to_date.iso8601
+    elsif restriction["decision_provision"] && user.silenced_till
+      restriction["end_date_service_restriction"] = user.silenced_till.to_date.iso8601
+    end
     content = user.id == @recipient_id ? @content : describe_content(user)
     record_snapshot(
       content: content.merge(target_type: "User", target_id: user.id, recipient_id: user.id),
@@ -364,45 +498,48 @@ class DsaModeration
   end
 
   def record_snapshot(content:, restriction:)
-    attributes = {
-      decision_key: @decision_key,
-      target_type: content[:target_type],
-      target_id: content[:target_id],
-    }
-    statement = DsaStatementOfReason.find_or_initialize_by(attributes)
-    payload = statement.payload.merge(restriction)
-    payload["decision_visibility"] = (
-      statement.payload.fetch("decision_visibility", []) +
-        restriction.fetch("decision_visibility", [])
-    ).uniq if restriction["decision_visibility"]
-    if statement.new_record?
-      puid = SecureRandom.uuid
-      payload.merge!(
+    key = [content[:target_type], content[:target_id]]
+    statement = @records[key]
+    if statement
+      payload = statement[:payload].merge(restriction)
+      if restriction["decision_visibility"]
+        payload["decision_visibility"] = (
+          statement[:payload].fetch("decision_visibility", []) + restriction["decision_visibility"]
+        ).uniq
+      end
+      statement[:payload] = payload
+      return
+    end
+
+    puid = SecureRandom.uuid
+    payload =
+      restriction.merge(
         "puid" => puid,
         "content_type" => content[:content_type],
         "content_date" => content[:content_date],
-        "application_date" => Time.zone.today.iso8601,
+        "application_date" => @application_date || Time.zone.today.iso8601,
         "territorial_scope" => TERRITORIES,
         "source_type" => @source_type,
         "automated_detection" => @automated_detection ? "Yes" : "No",
         "automated_decision" => @automated_decision,
       )
-      if content[:content_type].include?("CONTENT_TYPE_OTHER")
-        payload["content_type_other"] = content[:content_type_other]
-      end
-      statement.assign_attributes(
-        puid: puid,
-        reviewable_id: @reviewable.id,
-        actor_id: @actor&.id,
-        recipient_id: content[:recipient_id] || @recipient_id,
-        action_name: @action_name,
-      )
+    if content[:content_type].include?("CONTENT_TYPE_OTHER")
+      payload["content_type_other"] = content[:content_type_other]
     end
-    statement.payload = payload
-    statement.save!
+    @records[key] = {
+      decision_key: @decision_key,
+      target_type: content[:target_type],
+      target_id: content[:target_id],
+      puid: puid,
+      reviewable_id: @parent ? @parent.reviewable_id : @reviewable.id,
+      actor_id: @actor&.id,
+      recipient_id: content[:recipient_id] || @recipient_id,
+      action_name: @action_name,
+      payload: payload,
+    }
   end
 
-  def source_type
+  def detect_source_type
     member_ids = @reviewable.reviewable_scores.map(&:user_id)
     if User.where(id: member_ids, admin: false, moderator: false).where("id > 0").exists?
       "SOURCE_TYPE_OTHER_NOTIFICATION"

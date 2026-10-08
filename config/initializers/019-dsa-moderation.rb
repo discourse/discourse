@@ -3,6 +3,9 @@ DiscourseEvent.on(:model_trashed) { |target| DsaModeration.record_removal(target
 DiscourseEvent.on(:post_destroyed) do |post, _options, _actor|
   DsaModeration.record_removal(post) if post.deleted_at.present?
 end
+DiscourseEvent.on(:topic_recovered) do |topic, _actor|
+  DsaModeration.record_topic_restoration(topic)
+end
 DiscourseEvent.on(:topic_destroyed) { |topic, _actor| DsaModeration.record_topic_removal(topic) }
 DiscourseEvent.on(:user_suspended) do |options|
   DsaModeration.record_account_restriction(

@@ -17,7 +17,7 @@ RSpec.describe "Classify a reviewable DSA statement" do
     expect(settings_page.bool_setting_checkbox("dsa_reporting_enabled")).not_to be_checked
     settings_page.toggle_bool_setting("dsa_reporting_enabled")
 
-    review_page.visit_reviewable(reviewable)
+    page.visit("/review")
     review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
 
     expect(review_page).to have_reviewable_with_approved_status(reviewable)

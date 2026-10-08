@@ -68,7 +68,12 @@ class Post < ActiveRecord::Base
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
-  has_many :reviewables, as: :target, dependent: :destroy
+  has_many :reviewables, as: :target
+  has_many :reviewables_for_cleanup,
+           -> { for_cleanup },
+           class_name: "Reviewable",
+           as: :target,
+           dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
   MAX_EDIT_REASON_LENGTH = 1000
