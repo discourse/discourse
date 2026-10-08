@@ -43,6 +43,7 @@ DiscourseAi::Engine.routes.draw do
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
+    get "/" => "shared_ai_conversations#index"
     post "/" => "shared_ai_conversations#create"
     delete "/:share_key" => "shared_ai_conversations#destroy"
     get "/:share_key" => "shared_ai_conversations#show"
@@ -56,7 +57,27 @@ DiscourseAi::Engine.routes.draw do
     put "/:topic_id/starred" => "conversations#update_starred"
   end
 
+  scope module: :ai_bot, path: "/ai-bot/artifact-shares" do
+    get "/" => "artifact_shares#index"
+    get "/eligibility/:id" => "artifact_shares#eligibility"
+    post "/:id" => "artifact_shares#create"
+    put "/:share_key" => "artifact_shares#update"
+    delete "/:share_key" => "artifact_shares#destroy"
+    get "/:share_key/metadata" => "artifacts#shared_metadata", :defaults => { format: :json }
+    get "/:share_key/forum" => "artifacts#forum"
+    get "/:share_key" => "artifacts#shared"
+  end
+
+  scope module: :ai_bot, path: "/ai-bot/artifact-share-key-values/:share_key" do
+    get "/" => "artifact_share_key_values#index"
+    post "/" => "artifact_share_key_values#set"
+    delete "/" => "artifact_share_key_values#destroy"
+  end
+
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
+    get "/:id/metadata" => "artifacts#metadata", :defaults => { format: :json }
+    get "/:id/embed" => "artifacts#embed"
+    get "/:id/:version/embed" => "artifacts#embed"
     get "/:id" => "artifacts#show"
     get "/:id/:version" => "artifacts#show"
   end

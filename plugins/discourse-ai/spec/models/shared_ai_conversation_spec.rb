@@ -245,6 +245,122 @@ RSpec.describe SharedAiConversation, type: :model do
     end
   end
 
+  describe "#publicly_visible?" do
+    let(:visibility_topic) { Fabricate(:private_message_topic, user: user, recipient: agent.user) }
+    let!(:visibility_post) { Fabricate(:post, topic: visibility_topic, user: user) }
+    let(:conversation) { described_class.share_conversation(user, visibility_topic) }
+
+    before do
+      group = Fabricate(:group)
+      group.add(user)
+      user.reload
+      SiteSetting.ai_bot_public_sharing_allowed_groups = group.id.to_s
+    end
+
+    it "accepts matching preloaded topics and posts while rejecting unrelated preloads" do
+      expect(conversation.publicly_visible?).to eq(true)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => visibility_post,
+          },
+        ),
+      ).to eq(true)
+
+      other_topic = Fabricate(:private_message_topic, user: user, recipient: agent.user)
+      other_post = Fabricate(:post, topic: other_topic, user: user)
+      expect(
+        conversation.publicly_visible?(
+          topic: other_topic,
+          posts_by_id: {
+            visibility_post.id => visibility_post,
+          },
+        ),
+      ).to eq(false)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => other_post,
+          },
+        ),
+      ).to eq(false)
+      same_topic_post = Fabricate(:post, topic: visibility_topic, user: user)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => same_topic_post,
+          },
+        ),
+      ).to eq(false)
+    end
+
+    it "rejects hidden context posts the source user cannot see" do
+      conversation
+      visibility_post.update_columns(user_id: agent.user.id, hidden: true)
+      expect(user.guardian.can_share_ai_bot_conversation?(visibility_topic)).to eq(true)
+      expect(user.guardian.can_see?(visibility_post.reload)).to eq(false)
+
+      expect(conversation.publicly_visible?).to eq(false)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => visibility_post,
+          },
+        ),
+      ).to eq(false)
+    end
+
+    it "rejects trashed context posts even when supplied as preloaded records" do
+      conversation
+      visibility_post.trash!
+
+      expect(conversation.publicly_visible?).to eq(false)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => visibility_post,
+          },
+        ),
+      ).to eq(false)
+    end
+
+    it "rejects context posts belonging to another topic" do
+      other_topic = Fabricate(:private_message_topic, user: user, recipient: agent.user)
+      other_post = Fabricate(:post, topic: other_topic, user: user)
+      conversation.update!(context: [{ id: other_post.id, cooked: other_post.cooked }])
+
+      expect(conversation.publicly_visible?).to eq(false)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            other_post.id => other_post,
+          },
+        ),
+      ).to eq(false)
+    end
+
+    it "rejects a trashed topic even when the topic was preloaded before deletion" do
+      conversation
+      visibility_topic.trash!
+
+      expect(conversation.publicly_visible?).to eq(false)
+      expect(
+        conversation.publicly_visible?(
+          topic: visibility_topic,
+          posts_by_id: {
+            visibility_post.id => visibility_post,
+          },
+        ),
+      ).to eq(false)
+    end
+  end
+
   describe "#onebox" do
     it "escapes title and username" do
       malicious_username = %(user"><img src=x onerror=alert(1)>)
