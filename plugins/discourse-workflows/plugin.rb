@@ -16,6 +16,18 @@ module ::DiscourseWorkflows
   def self.reviewable_score_context(workflow_id)
     "discourse_workflows:workflow:#{workflow_id}" if workflow_id.present?
   end
+
+  def self.review_attribution(exec_ctx, item_index:, flag_type:, escape: false)
+    agents = exec_ctx.nearest_upstream_metadata("review_agent", item_index:)
+    values = { workflow_name: exec_ctx.get_workflow.name }
+    key = "discourse_workflows.#{flag_type}.flagged_by_workflow"
+    if agents&.one?
+      key = "discourse_workflows.#{flag_type}.flagged_by_agent"
+      values[:agent_name] = agents.first.fetch("name")
+    end
+    values.transform_values! { |value| ERB::Util.html_escape(value) } if escape
+    I18n.t(key, **values)
+  end
 end
 
 require_relative "lib/discourse_workflows/engine"

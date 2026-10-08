@@ -353,11 +353,13 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       execution_context.store_context("node_a", "data_a")
       node = OpenStruct.new(id: "1", name: "Node A", type: "action:code", typeVersion: "1.0")
       output_groups = [[{ "json" => { "saved" => true } }]]
+      metadata = { "review_agent" => { "id" => 1, "name" => "Content review" } }
       execution_context.store_node_run(
         node,
         inputs: [[{ "json" => { "input" => true } }]],
         outputs: output_groups,
         input_sources: [{ "node_name" => "Trigger", "output_index" => 0 }],
+        metadata: metadata,
       )
       steps = [
         DiscourseWorkflows::Executor::Step.build(
@@ -394,6 +396,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       expect(
         restored_context.context.dig("__node_runs", "Node A", 0, "outputs", 0, 0, "json"),
       ).to eq("saved" => true)
+      expect(restored_context.context.dig("__node_runs", "Node A", 0, "metadata")).to eq(metadata)
       expect(restored_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a"))).to eq(
         "counter" => 1,
       )

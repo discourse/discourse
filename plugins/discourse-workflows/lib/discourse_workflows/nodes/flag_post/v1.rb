@@ -121,7 +121,7 @@ module DiscourseWorkflows
           end
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
-          reason = score_reason_for(exec_ctx, config["reason"])
+          reason = score_reason_for(exec_ctx, config["reason"], item_index)
           context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
 
           reviewable =
@@ -133,7 +133,7 @@ module DiscourseWorkflows
                 actor,
                 flag_type,
                 reason,
-                attribution_for(exec_ctx),
+                attribution_for(exec_ctx, item_index),
                 context,
               )
             end
@@ -141,14 +141,17 @@ module DiscourseWorkflows
           output(post, flag_type, reviewable)
         end
 
-        def attribution_for(exec_ctx, escape: false)
-          workflow_name = exec_ctx.get_workflow.name
-          workflow_name = ERB::Util.html_escape(workflow_name) if escape
-          I18n.t("discourse_workflows.flag_post.flagged_by_workflow", workflow_name: workflow_name)
+        def attribution_for(exec_ctx, item_index, escape: false)
+          DiscourseWorkflows.review_attribution(
+            exec_ctx,
+            item_index:,
+            flag_type: :flag_post,
+            escape:,
+          )
         end
 
-        def score_reason_for(exec_ctx, custom_reason)
-          parts = [attribution_for(exec_ctx, escape: true)]
+        def score_reason_for(exec_ctx, custom_reason, item_index)
+          parts = [attribution_for(exec_ctx, item_index, escape: true)]
           custom_reason = custom_reason.to_s.strip
           parts << custom_reason if custom_reason.present?
           parts.join("<br>")
