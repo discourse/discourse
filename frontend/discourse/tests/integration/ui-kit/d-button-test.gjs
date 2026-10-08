@@ -320,7 +320,7 @@ module("Integration | ui-kit | DButton", function (hooks) {
     const handler = () => (ran = true);
 
     await render(
-      <template><DButton @immediate={{true}} @action={{handler}} /></template>
+      <template><DButton @action={{handler}} @immediate={{true}} /></template>
     );
 
     assert.false(ran, "has not run before anything was dispatched");
@@ -344,9 +344,9 @@ module("Integration | ui-kit | DButton", function (hooks) {
     await render(
       <template>
         <DButton
-          @immediate={{true}}
-          @forwardEvent={{true}}
           @action={{handler}}
+          @forwardEvent={{true}}
+          @immediate={{true}}
         />
       </template>
     );

@@ -26,7 +26,7 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
 
   test("@icon renders an icon in place of an illustration", async function (assert) {
     await render(
-      <template><DEmptyState @title="title" @icon="table-columns" /></template>
+      <template><DEmptyState @icon="table-columns" @title="title" /></template>
     );
 
     assert.dom(".empty-state__image.--icon .d-icon-table-columns").exists();
@@ -38,7 +38,7 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
   test("@svgContent wins over @icon", async function (assert) {
     await render(
       <template>
-        <DEmptyState @title="title" @icon="table-columns" @svgContent="art" />
+        <DEmptyState @icon="table-columns" @svgContent="art" @title="title" />
       </template>
     );
 
@@ -51,7 +51,7 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
   test("attributes reach the container", async function (assert) {
     await render(
       <template>
-        <DEmptyState @title="title" class="extra" data-test-thing="yes" />
+        <DEmptyState class="extra" data-test-thing="yes" @title="title" />
       </template>
     );
 

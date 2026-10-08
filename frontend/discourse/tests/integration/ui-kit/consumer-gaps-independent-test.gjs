@@ -193,9 +193,9 @@ module("Integration | ui-kit | ConsumerGapsIndependent", function (hooks) {
     await render(
       <template>
         <Heading
-          id="independent-heading"
-          class="consumer-heading"
           aria-label="Accessible title"
+          class="consumer-heading"
+          id="independent-heading"
         >Body</Heading>
       </template>
     );

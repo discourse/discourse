@@ -27,7 +27,7 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
   test("@titleHeadingLevel picks the heading element", async function (assert) {
     await render(
       <template>
-        <DPageSubheader @titleLabel="Title" @titleHeadingLevel={{3}} />
+        <DPageSubheader @titleHeadingLevel={{3}} @titleLabel="Title" />
       </template>
     );
 
