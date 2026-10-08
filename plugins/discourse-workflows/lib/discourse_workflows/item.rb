@@ -3,6 +3,9 @@
 module DiscourseWorkflows
   module Item
     PAIRED_ITEM_KEY = "pairedItem"
+    ERROR_KEY = "error"
+    # Set by NodeExecutionContext#guard_item; the executor reads and removes it after every node run.
+    FAILED_KEY = "__failed"
     INCONSISTENT_ITEM_FORMAT_MESSAGE = "Every returned item must use the same format."
 
     class InconsistentItemFormatError < ArgumentError
@@ -49,6 +52,15 @@ module DiscourseWorkflows
 
     def self.with_paired_item(item, paired_item)
       item.except(PAIRED_ITEM_KEY).merge(PAIRED_ITEM_KEY => normalize_paired_item(paired_item))
+    end
+
+    def self.error_metadata(error)
+      { "message" => error.message, "name" => error.class.name }
+    end
+
+    def self.with_error(item, error, paired_item:)
+      failed = item.deep_dup.merge(ERROR_KEY => error_metadata(error))
+      paired_item.nil? ? failed : with_paired_item(failed, paired_item)
     end
 
     def self.normalize_paired_item(paired_item)

@@ -179,6 +179,32 @@ module(
         );
     });
 
+    test("renders the errors of items that failed individually", async function (assert) {
+      this.execution = executionWithOutput([{ json: { value: 1 } }]);
+      this.execution.steps[0].metadata = {
+        item_errors: [
+          { message: "Boom", items: [1, 2] },
+          { message: "Bang", items: [3] },
+        ],
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      const warnings = [
+        ...document.querySelectorAll(
+          ".workflows-execution-detail__step-warning.alert-warning"
+        ),
+      ].map((warning) => warning.textContent.trim());
+
+      assert.deepEqual(warnings, [
+        "2 items failed but the workflow continued because of its error settings: Boom",
+        "An item failed but the workflow continued because of its error settings: Bang",
+      ]);
+      assert.dom(".workflows-execution-detail__hint").doesNotExist();
+    });
+
     test("explains why an execution was rate limited", async function (assert) {
       const error =
         "This workflow wasn't run because it already started 10 executions in the last minute.";
@@ -236,6 +262,7 @@ module(
       this.execution.steps[0].metadata = {
         hints: [{ message: "First hint" }],
         handled_error: { message: "Boom" },
+        item_errors: [{ message: "Item boom", items: [0] }],
       };
       const createObjectURL = sinon
         .stub(URL, "createObjectURL")
@@ -256,6 +283,12 @@ module(
             "  Warning: The node failed but the workflow continued because of its error settings: Boom"
           ),
           "the handled error is exported"
+        );
+        assert.true(
+          text.includes(
+            "  Warning: An item failed but the workflow continued because of its error settings: Item boom"
+          ),
+          "the item error is exported"
         );
         assert.true(
           text.includes("  Hint: First hint"),

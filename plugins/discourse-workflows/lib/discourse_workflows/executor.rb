@@ -161,7 +161,7 @@ module DiscourseWorkflows
         if (handled_outputs = continued_error_outputs(waiting_node, input_groups, error))
           handled_outputs = enforce_node_output_budget(handled_outputs, nil)
           all_items = handled_outputs.flatten(1)
-          step&.add_metadata("handled_error", error_metadata(error))
+          step&.add_metadata("handled_error", Item.error_metadata(error))
           step&.succeed!(output: all_items)
           step&.apply_updates!("error" => nil)
           @store.publish_progress(step:) if step
@@ -380,6 +380,7 @@ module DiscourseWorkflows
         ports = node_type_class.ports(node.parameters)
         output_arrays = normalize_result(result, node, ports, input_groups)
         output_arrays = apply_always_output_data(output_arrays, node, input_groups)
+        output_arrays = route_failed_items(output_arrays, node, ports)
         output_arrays = enforce_node_output_budget(output_arrays, step_log)
         attach_step_log(step, step_log)
         all_items = output_arrays.flatten(1)
@@ -410,7 +411,7 @@ module DiscourseWorkflows
           step_log = collect_step_log(exec_ctx, resolver)
           handled_outputs = enforce_node_output_budget(handled_outputs, step_log)
           attach_step_log(step, step_log)
-          step.add_metadata("handled_error", error_metadata(e))
+          step.add_metadata("handled_error", Item.error_metadata(e))
           all_items = handled_outputs.flatten(1)
           step.succeed!(output: all_items)
           step.apply_updates!("error" => nil)
@@ -706,9 +707,28 @@ module DiscourseWorkflows
       end
     end
 
+    def route_failed_items(output_arrays, node, ports)
+      if output_arrays.none? { |items| items.any? { |item| failed_item?(item) } }
+        return output_arrays
+      end
+
+      if ports.one? && node_error_mode(node) == "continueErrorOutput"
+        failed, succeeded = output_arrays[0].partition { |item| failed_item?(item) }
+        return succeeded, failed.map { |item| item.except(Item::FAILED_KEY) }
+      end
+
+      output_arrays.map do |items|
+        items.map { |item| failed_item?(item) ? item.except(Item::FAILED_KEY) : item }
+      end
+    end
+
+    def failed_item?(item)
+      item.key?(Item::FAILED_KEY)
+    end
+
     def node_error_mode(node)
       on_error = DiscourseWorkflows::NodeData.read(node, "onError").presence
-      return on_error if %w[continueRegularOutput continueErrorOutput].include?(on_error)
+      return on_error if NodeDataShape::CONTINUE_ON_ERROR_MODES.include?(on_error)
       return "stopWorkflow" if on_error == "stopWorkflow"
       return if on_error.present?
 
@@ -720,16 +740,11 @@ module DiscourseWorkflows
     end
 
     def error_output_items(input_items, error)
-      metadata = error_metadata(error)
-      return [{ "json" => {}, "error" => metadata }] if input_items.empty?
+      return [Item.with_error({ "json" => {} }, error, paired_item: nil)] if input_items.empty?
 
       input_items.map.with_index do |item, index|
-        item.deep_dup.merge("error" => metadata, "pairedItem" => pair_for(input: 0, item: index))
+        Item.with_error(item, error, paired_item: pair_for(input: 0, item: index))
       end
-    end
-
-    def error_metadata(error)
-      { "message" => error.message, "name" => error.class.name }
     end
 
     def route_downstream(node, output_arrays)

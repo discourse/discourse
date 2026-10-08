@@ -309,6 +309,120 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#guard_item" do
+    let(:item) { { "json" => { "id" => 1 } } }
+    let(:error) { DiscourseWorkflows::NodeError.new("Boom [item 0]", summary: "Boom") }
+
+    def continuing_context(**args)
+      described_class.new(
+        input_items: [item],
+        resolver: nil,
+        node_settings: {
+          "onError" => "continueRegularOutput",
+        },
+        **args,
+      )
+    end
+
+    it "re-raises node errors when the node stops on error" do
+      ctx = described_class.new(input_items: [item], resolver: nil)
+
+      expect { ctx.guard_item(item, 0) { raise error } }.to raise_error(error)
+    end
+
+    it "lets other errors through even when continuing" do
+      expect { continuing_context.guard_item(item, 0) { raise ArgumentError } }.to raise_error(
+        ArgumentError,
+      )
+    end
+
+    it "turns a node error into a marked failed item when continuing", :aggregate_failures do
+      ctx = continuing_context
+
+      failed = ctx.guard_item(item, 3) { raise error }
+
+      expect(failed).to eq(
+        "json" => {
+          "id" => 1,
+        },
+        "error" => {
+          "message" => "Boom [item 0]",
+          "name" => "DiscourseWorkflows::NodeError",
+        },
+        "pairedItem" => {
+          "item" => 3,
+        },
+        DiscourseWorkflows::Item::FAILED_KEY => true,
+      )
+      expect(item).not_to have_key("error")
+      expect(ctx.metadata["item_errors"]).to eq([{ "message" => "Boom", "items" => [3] }])
+    end
+
+    it "groups item errors by summary, up to a limit" do
+      ctx = continuing_context
+      other_error = DiscourseWorkflows::NodeError.new("Bang [item 2]", summary: "Bang")
+      ignored_error = DiscourseWorkflows::NodeError.new("Ignored")
+
+      stub_const(described_class::RuntimeState, :MAX_ITEM_ERROR_GROUPS, 2) do
+        ctx.guard_item(item, 0) { raise error }
+        ctx.guard_item(item, 1) { raise error }
+        ctx.guard_item(item, 2) { raise other_error }
+        ctx.guard_item(item, 3) { raise ignored_error }
+      end
+
+      expect(ctx.metadata["item_errors"]).to eq(
+        [{ "message" => "Boom", "items" => [0, 1] }, { "message" => "Bang", "items" => [2] }],
+      )
+    end
+
+    it "keeps a failed item's expression errors from failing the whole step", :aggregate_failures do
+      ctx, resolver, sandbox =
+        build_parameter_context(
+          { "recipient" => "={{ $json.missing.name }}" },
+          node_settings: {
+            "onError" => "continueRegularOutput",
+          },
+        )
+
+      ctx.guard_item(ctx.input_items.first, 0) do
+        ctx.get_node_parameter("recipient", 0)
+        raise error
+      end
+
+      expect(resolver.expression_errors).to be_empty
+      expect(ctx.log.errors?).to eq(false)
+      expect(ctx.log.entries.sole).to include(
+        "level" => "warn",
+        "message" => a_string_including("$json.missing.name", "[item 0]"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+  end
+
+  describe "#each_item" do
+    it "pairs the outputs of each item with it unless already paired", :aggregate_failures do
+      items = [{ "json" => { "id" => 1 } }, { "json" => { "id" => 2 } }]
+      ctx = described_class.new(input_items: items, resolver: nil)
+
+      output =
+        ctx.each_item do |item, index|
+          next { "json" => { "sent" => item["json"]["id"] } } if index == 0
+
+          [{ "json" => {}, "pairedItem" => { "item" => 0 } }, { "json" => {} }]
+        end
+
+      expect(output).to eq(
+        [
+          { "json" => { "sent" => 1 }, "pairedItem" => { "item" => 0 } },
+          { "json" => {}, "pairedItem" => { "item" => 0 } },
+          { "json" => {}, "pairedItem" => { "item" => 1 } },
+        ],
+      )
+    end
+  end
+
   describe "#set_metadata" do
     it "merges execution metadata with string keys" do
       ctx = described_class.new(input_items: [], resolver: nil)
@@ -1153,6 +1267,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     parameters = nil,
     schema: {},
     input_items: [{ "json" => {} }],
+    node_settings: {},
     **keyword_parameters
   )
     parameters ||= keyword_parameters
@@ -1165,6 +1280,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         parameters: parameters,
         property_schema: schema,
         resolver: resolver,
+        node_settings: node_settings,
       )
     [ctx, resolver, sandbox]
   end
