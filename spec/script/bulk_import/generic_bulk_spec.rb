@@ -594,6 +594,33 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#import_tags" do
+      fab!(:tag_group)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@tag_group_mapping, { 7 => tag_group.id })
+        end
+      end
+
+      after { source_db.close }
+
+      it "adds tags to the group from the single tag_group_id column" do
+        source_db.execute(<<~SQL)
+          CREATE TABLE tags (
+            id INTEGER, name TEXT, description TEXT, tag_group_ids TEXT, tag_group_id INTEGER
+          )
+        SQL
+        source_db.execute("INSERT INTO tags (id, name, tag_group_id) VALUES (1, 'grouped', 7)")
+
+        importer.import_tags
+
+        expect(tag_group.reload.tags.pluck(:name)).to contain_exactly("grouped")
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)
