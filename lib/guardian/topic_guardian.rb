@@ -172,14 +172,16 @@ module TopicGuardian
     return false if !SiteSetting.can_permanently_delete
     return false if !topic
 
-    # Ensure that all posts (including small actions) are at least soft
-    # deleted.
-    return false if topic.posts_count > 0
+    if !topic.bulk_permanent_deletion_enabled_for?(@user)
+      # Ensure that all posts (including small actions) are at least soft
+      # deleted.
+      return false if topic.posts_count > 0
 
-    # All other posts that were deleted still must be permanently deleted
-    # before the topic can be deleted with the exception of small action
-    # posts that will be deleted right before the topic is.
-    return false if topic.deletable_posts_count > 1
+      # All other posts that were deleted still must be permanently deleted
+      # before the topic can be deleted with the exception of small action
+      # posts that will be deleted right before the topic is.
+      return false if topic.deletable_posts_count > 1
+    end
 
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at

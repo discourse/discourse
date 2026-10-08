@@ -893,6 +893,9 @@
                 "type": "string"
               }
             },
+            "bulk_permanent_topic_deletion": {
+              "type": "boolean"
+            },
             "show_original_content": {
               "type": "boolean"
             },
@@ -944,7 +947,8 @@
             "send_shortcut",
             "automatically_translate",
             "understood_languages",
-            "hidden_composer_toolbar_buttons"
+            "hidden_composer_toolbar_buttons",
+            "bulk_permanent_topic_deletion"
           ]
         }
       },

@@ -510,6 +510,30 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "log_bulk_permanent_topic_deletion_preference_change" do
+    fab!(:target_admin, :admin)
+
+    it "creates a custom staff UserHistory record" do
+      logged = logger.log_bulk_permanent_topic_deletion_preference_change(target_admin, false, true)
+
+      aggregate_failures do
+        expect(logged.action).to eq(UserHistory.actions[:custom_staff])
+        expect(logged.custom_type).to eq("change_bulk_permanent_topic_deletion_preference")
+        expect(logged.acting_user_id).to eq(admin.id)
+        expect(logged.target_user_id).to eq(target_admin.id)
+        expect(logged.subject).to eq("bulk_permanent_topic_deletion")
+        expect(logged.previous_value).to eq("false")
+        expect(logged.new_value).to eq("true")
+      end
+    end
+
+    it "raises an error when the user is missing" do
+      expect {
+        logger.log_bulk_permanent_topic_deletion_preference_change(nil, false, true)
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
   describe "log_custom" do
     it "raises an error when `custom_type` is missing" do
       expect { logger.log_custom(nil) }.to raise_error(Discourse::InvalidParameters)
