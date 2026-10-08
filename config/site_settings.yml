@@ -1425,6 +1425,7 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
