@@ -149,6 +149,8 @@ module("Unit | Service | ai-bot-docked-submit", function (hooks) {
 
     const result = await service.submitReply({
       topicId: 42,
+      agentId: -7,
+      llmModelId: 99,
       raw: "Long enough message body",
       uploads: [],
       inProgressUploadsCount: 0,
@@ -157,6 +159,14 @@ module("Unit | Service | ai-bot-docked-submit", function (hooks) {
     assert.strictEqual(result.id, 999);
     assert.true(submittedBody.includes("topic_id=42"));
     assert.true(submittedBody.includes("nested_post=true"));
+    const params = new URLSearchParams(submittedBody);
+    assert.strictEqual(params.get("ai_agent_id"), "-7");
+    assert.strictEqual(params.get("ai_llm_model_id"), "99");
+    assert.strictEqual(params.get("topic_custom_fields[ai_agent_id]"), "-7");
+    assert.strictEqual(
+      params.get("topic_custom_fields[ai_llm_model_id]"),
+      "99"
+    );
   });
 
   test("appends upload markdown to raw content", async function (assert) {

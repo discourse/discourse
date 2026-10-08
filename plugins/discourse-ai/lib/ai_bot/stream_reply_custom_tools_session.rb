@@ -28,6 +28,7 @@ module DiscourseAi
 
       def initialize(
         agent:,
+        llm_model:,
         user:,
         topic:,
         query:,
@@ -38,6 +39,7 @@ module DiscourseAi
         tool_results:
       )
         @agent = agent
+        @llm_model = llm_model
         @user = user
         @topic = topic
         @query = query
@@ -63,7 +65,12 @@ module DiscourseAi
 
         event_blk.call(
           :context,
-          { topic_id: @topic.id, bot_user_id: @reply_user.id, agent_id: @agent.id },
+          {
+            topic_id: @topic.id,
+            bot_user_id: @reply_user.id,
+            agent_id: @agent.id,
+            llm_model_id: @llm_model_id,
+          },
         )
 
         run_single_completion_round!(&event_blk)
@@ -90,6 +97,12 @@ module DiscourseAi
           post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
           post_params[:archetype] = Archetype.private_message
           post_params[:target_usernames] = "#{@user.username},#{@agent.user.username}"
+          post_params[:topic_opts] = {
+            custom_fields: {
+              TOPIC_AI_AGENT_ID_FIELD => @agent.id,
+              TOPIC_AI_LLM_MODEL_ID_FIELD => @llm_model.id,
+            },
+          }
         end
 
         @source_post = PostCreator.create!(@user, post_params)
@@ -99,9 +112,9 @@ module DiscourseAi
         agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
         raise ProtocolError, I18n.t("discourse_ai.errors.agent_not_found") if agent_class.nil?
 
-        @bot = DiscourseAi::Agents::Bot.as(@agent.user, agent: agent_class.new)
+        @bot = DiscourseAi::Agents::Bot.as(@agent.user, agent: agent_class.new, model: @llm_model)
         @reply_user = @bot.bot_user
-        @llm_model_id = @bot.model.id
+        @llm_model_id = @llm_model.id
 
         context_llm = @bot.llm
         context =
@@ -150,11 +163,30 @@ module DiscourseAi
           raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
         end
 
-        @agent = AiAgent.find(payload["agent_id"])
         @user = User.find(payload["user_id"])
         @topic = Topic.find(payload["topic_id"])
-        @reply_user = User.find(payload["reply_user_id"])
+        saved_reply_user_id = payload["reply_user_id"]
         @llm_model_id = payload["llm_model_id"]
+        route =
+          ConversationRoute.resolve(
+            authorization_user: @current_user,
+            modality: :streaming,
+            agent_id: payload["agent_id"],
+            llm_model_id: @llm_model_id,
+            topic: @topic,
+            selection_source: :snapshot,
+            allow_general_fallback: false,
+          )
+        if saved_reply_user_id.to_i != route.speaker.id
+          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
+        end
+        if !@topic.topic_allowed_users.exists?(user_id: @user.id)
+          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
+        end
+
+        @agent = route.agent_record
+        @llm_model = route.model
+        @reply_user = route.speaker
         @source_post_number = payload["source_post_number"]
         @temperature = payload["temperature"]
         @top_p = payload["top_p"]
@@ -173,7 +205,7 @@ module DiscourseAi
         end
 
         @prompt = prompt_from_payload(payload.fetch("prompt"))
-      rescue ActiveRecord::RecordNotFound
+      rescue ActiveRecord::RecordNotFound, ConversationRoute::Error
         raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
       end
 
@@ -501,13 +533,12 @@ module DiscourseAi
       end
 
       def available_bot_usernames
-        @available_bot_usernames ||=
-          AiAgent.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
+        @available_bot_usernames ||= available_bot_users.pluck(:username)
       end
 
       def available_bot_users
         @available_bot_users ||=
-          User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
+          User.where(id: DiscourseAi::AiBot::EntryPoint.historical_bot_user_ids)
       end
 
       def resolve_agent_record
@@ -524,7 +555,6 @@ module DiscourseAi
       end
 
       def persist_reply_post!
-        llm_model = LlmModel.find(@llm_model_id)
         reply_post =
           PostCreator.create!(
             @reply_user,
@@ -533,16 +563,18 @@ module DiscourseAi
             skip_validations: true,
             skip_guardian: true,
             custom_fields: {
-              DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => llm_model.display_name,
+              DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => @llm_model.display_name,
               DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => @llm_model_id,
               DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => @agent.id,
+              DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD => @current_user.id,
             },
           )
 
         if @source_post_number == 1 && @topic.private_message?
           agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
           if agent_class
-            bot = DiscourseAi::Agents::Bot.as(@reply_user, agent: agent_class.new, model: llm_model)
+            bot =
+              DiscourseAi::Agents::Bot.as(@reply_user, agent: agent_class.new, model: @llm_model)
             DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
           end
         end

@@ -525,6 +525,48 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       end
     end
 
+    context "when asking an agent to respond" do
+      let(:script) { <<~JS }
+          function invoke(params) {
+            return discourse.getAgent("Responder").respondTo({});
+          }
+        JS
+
+      fab!(:responder) { Fabricate(:ai_agent, name: "Responder", default_llm: llm_model) }
+
+      def respond_to_post
+        tool = create_tool(script: script)
+        runner =
+          tool.runner(
+            {},
+            llm: nil,
+            bot_user: bot_user,
+            context: DiscourseAi::Agents::BotContext.new(post: post),
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Agent response"]) { runner.invoke }
+        topic.reload.posts.order(:post_number).last
+      end
+
+      it "replies as the agent user" do
+        agent_user = responder.ensure_user!
+
+        reply = respond_to_post
+
+        expect(reply.raw).to eq("Agent response")
+        expect(reply.user).to eq(agent_user)
+      end
+
+      it "replies as the calling bot user when the agent has no user" do
+        responder.update!(user_id: nil)
+
+        reply = respond_to_post
+
+        expect(reply.raw).to eq("Agent response")
+        expect(reply.user).to eq(bot_user)
+      end
+    end
+
     context "when creating staged users" do
       it "can create a staged user" do
         script = <<~JS
