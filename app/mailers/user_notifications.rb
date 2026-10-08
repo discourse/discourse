@@ -247,6 +247,16 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def account_associated(user, opts = {})
+    build_email(
+      user.email,
+      template: "user_notifications.account_associated",
+      locale: user_locale(user),
+      provider_name: opts[:provider_name],
+      recipient_user: user,
+    )
+  end
+
   def account_second_factor_disabled(user, opts = {})
     build_email(
       user.email,

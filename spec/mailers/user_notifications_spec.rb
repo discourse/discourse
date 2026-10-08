@@ -2434,6 +2434,18 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".account_associated" do
+    it "names the provider the account was linked to" do
+      mail = UserNotifications.account_associated(user, provider_name: "Google")
+
+      expect(mail.to).to contain_exactly(user.email)
+      expect(mail.subject).to include(
+        I18n.t("user_notifications.account_associated.title", locale: :en),
+      )
+      expect(mail.body.encoded).to include("A Google account was just linked")
+    end
+  end
+
   describe ".account_suspended" do
     fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
 
