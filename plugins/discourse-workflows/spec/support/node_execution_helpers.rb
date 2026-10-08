@@ -54,6 +54,11 @@ module NodeExecutionHelpers
     result.first.first["json"]
   end
 
+  def node_error_message(key, scope:, item_index: nil, **args)
+    message = I18n.t("discourse_workflows.errors.#{scope}.#{key}", **args)
+    item_index.nil? ? message : "#{message} [item #{item_index}]"
+  end
+
   def trigger_context(parameters)
     DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters.deep_stringify_keys })
   end

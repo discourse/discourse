@@ -609,7 +609,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.find_user(username: "nonexistent_user") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 
@@ -618,7 +618,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.find_user(id: -999) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User with id -999 not found",
+        node_error_message(:id_not_found, scope: :actor, id: -999),
       )
     end
 
@@ -636,15 +636,51 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#actor_from" do
+    it "suffixes an unknown actor with the item index" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect { ctx.actor_from(username: "ghost", item_index: 1) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(:not_found, scope: :actor, item_index: 1, username: "ghost"),
+      )
+    end
+
+    it "rejects actors with restricted account states with a reason" do
+      staged_user = Fabricate(:user, staged: true, active: false)
+      silenced_user = Fabricate(:user, silenced_till: 1.year.from_now)
+      suspended_user = Fabricate(:user, suspended_till: 1.year.from_now)
+      inactive_user = Fabricate(:user, active: false)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      aggregate_failures do
+        {
+          staged: staged_user,
+          silenced: silenced_user,
+          suspended: suspended_user,
+          inactive: inactive_user,
+        }.each do |reason, actor|
+          expect { ctx.actor_from(username: actor.username, item_index: 2) }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            node_error_message(
+              "restricted.#{reason}",
+              scope: :actor,
+              item_index: 2,
+              username: actor.username,
+            ),
+          )
+        end
+      end
+    end
+  end
+
   describe "#actor_from_parameter" do
     fab!(:user)
 
-    it "resolves actor fields through the central actor policy" do
+    it "resolves the actor from the parameter" do
       resolver_context = { "$json" => { "actor" => user.username } }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
-      policy = instance_spy(DiscourseWorkflows::Executor::ActorPolicy)
-      allow(DiscourseWorkflows::Executor::ActorPolicy).to receive(:new).and_return(policy)
       ctx =
         described_class.new(
           input_items: [{ "json" => { "actor" => user.username } }],
@@ -656,39 +692,9 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         )
 
       expect(ctx.actor_from_parameter("actor_username")).to eq(user)
-      expect(policy).to have_received(:ensure_allowed!).with(
-        user,
-        field: "actor_username",
-        item_index: 0,
-        source: :expression,
-        purpose: "action:post",
-      )
     ensure
       resolver&.dispose
       sandbox&.dispose
-    end
-
-    it "rejects actors with restricted account states" do
-      staged_user = Fabricate(:user, staged: true)
-      silenced_user = Fabricate(:user, silenced_till: 1.year.from_now)
-      suspended_user = Fabricate(:user, suspended_till: 1.year.from_now)
-      inactive_user = Fabricate(:user, active: false)
-      ctx = described_class.new(input_items: [], resolver: nil)
-
-      aggregate_failures do
-        expect { ctx.actor_from(username: staged_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: silenced_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: suspended_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: inactive_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-      end
     end
 
     it "defaults to the system user when the actor field is not configured" do
@@ -718,7 +724,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+        node_error_message(:blank, scope: :actor, item_index: 0, field: "actor_username"),
       )
     ensure
       resolver&.dispose
@@ -740,7 +746,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+        node_error_message(:blank, scope: :actor, item_index: 0, field: "actor_username"),
       )
     ensure
       resolver&.dispose

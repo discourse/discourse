@@ -3,6 +3,8 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      include NodeErrorHandling
+
       BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
       WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
@@ -307,38 +309,41 @@ module DiscourseWorkflows
         username = get_node_parameter(path, item_index, default: default)
 
         if username.blank?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s)
+          raise_node_error!(
+            I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s),
+            item_index:,
+          )
         end
 
-        actor_from(username: username, field: path.to_s, item_index: item_index)
+        actor_from(username: username, item_index: item_index)
       end
 
-      def actor_from(username: nil, id: nil, field: nil, item_index: nil)
+      def actor_from(username: nil, id: nil, item_index: nil)
         actor =
           if username == DiscourseWorkflows::AnonymousActor::USERNAME
             DiscourseWorkflows::AnonymousActor.new
           else
-            find_user(username: username.presence, id: id)
+            find_user(username: username.presence, id: id, item_index: item_index)
           end
-        ensure_actor_allowed!(actor, field: field, item_index: item_index)
+        ensure_actor_allowed!(actor, item_index:)
         actor
       end
 
-      def find_user(username: nil, id: nil)
+      def find_user(username: nil, id: nil, item_index: nil)
         if username.present? == id.present?
           raise ArgumentError, "Provide exactly one of username or id"
         end
 
-        if username.present?
-          user = User.find_by_username(username)
-          raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
-        else
-          user = User.find_by(id: id)
-          raise DiscourseWorkflows::NodeError, "User with id #{id} not found" if user.nil?
-        end
+        user = username.present? ? User.find_by_username(username) : User.find_by(id:)
+        return user if user
 
-        user
+        message =
+          if username.present?
+            I18n.t("discourse_workflows.errors.actor.not_found", username:)
+          else
+            I18n.t("discourse_workflows.errors.actor.id_not_found", id:)
+          end
+        raise_node_error!(message, item_index:)
       end
 
       def http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
@@ -526,6 +531,27 @@ module DiscourseWorkflows
 
       private
 
+      def ensure_actor_allowed!(actor, item_index:)
+        return if actor.is_a?(DiscourseWorkflows::AnonymousActor)
+
+        reason =
+          if actor.staged?
+            :staged
+          elsif actor.silenced?
+            :silenced
+          elsif actor.suspended?
+            :suspended
+          elsif !actor.active?
+            :inactive
+          end
+        return if reason.nil?
+
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.actor.restricted.#{reason}", username: actor.username),
+          item_index:,
+        )
+      end
+
       def post_destroyer(user, post)
         PostDestroyer.new(
           user,
@@ -558,30 +584,6 @@ module DiscourseWorkflows
         end
 
         with_item_index(item_index) { @resolver.resolve_hash(credential.data || {}) }
-      end
-
-      def ensure_actor_allowed!(actor, field:, item_index:)
-        actor_policy.ensure_allowed!(
-          actor,
-          field: field,
-          item_index: item_index,
-          source: actor_source(field, item_index),
-          purpose: @node_identifier,
-        )
-      end
-
-      def actor_policy
-        @actor_policy ||= ActorPolicy.new(self)
-      end
-
-      def actor_source(field, item_index)
-        return :direct if field.blank?
-
-        raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
-        return :default if raw_value.nil?
-        return :expression if Schema.expression_value?(raw_value)
-
-        :static_config
       end
 
       def current_snapshot_node
