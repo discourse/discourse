@@ -677,6 +677,7 @@ class BulkImport::Generic < BulkImport::Base
     import_engagement
     import_post_voting_votes
     import_topic_voting_votes
+    import_category_topic_voting
     import_answers
     import_gamification_scores
     import_post_events
@@ -4161,6 +4162,30 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  # Runs after the votes are imported because creating a CategorySetting unarchives
+  # votes of the category's existing open topics.
+  def import_category_topic_voting
+    unless defined?(DiscourseTopicVoting)
+      puts "", "Skipping topic voting categories, because the topic voting plugin is not installed."
+      return
+    end
+
+    return if table_column_names("categories").exclude?("topic_voting")
+
+    puts "", "Enabling topic voting on categories..."
+
+    rows = query("SELECT id FROM categories WHERE topic_voting = 1 ORDER BY id")
+
+    rows.each do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next unless category_id
+
+      DiscourseTopicVoting::CategorySetting.find_or_create_by!(category_id:)
+    end
+
+    rows.close
   end
 
   def import_answers
