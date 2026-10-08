@@ -298,6 +298,7 @@ export { debugHooks };
  * assert.strictEqual(capturedGhosts[0].name, "my-block");
  */
 export function setupGhostCapture({ enabled = true } = {}) {
+  /** @type {Array<{name: string, failureType: string, failureReason: string|undefined}>} */
   const capturedGhosts = [];
 
   debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => enabled);
