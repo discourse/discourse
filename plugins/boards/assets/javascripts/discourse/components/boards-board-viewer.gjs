@@ -1453,9 +1453,9 @@ export default class BoardsBoardViewer extends Component {
           {{#if this.board.canManage}}
             <DButton
               class="btn-flat discourse-boards-board-container__add-column"
+              @action={{this.openAddColumnModal}}
               @icon="plus"
               @title="boards.board.add_column"
-              @action={{this.openAddColumnModal}}
               {{matchLastColumnHeight}}
             />
           {{/if}}
@@ -1463,13 +1463,19 @@ export default class BoardsBoardViewer extends Component {
       {{else}}
         <div class="discourse-boards-board-viewer__empty">
           <DEmptyState
-            @identifier="boards-board"
-            @icon="table-columns"
-            @title={{i18n "boards.board.empty_board"}}
-            @body={{if this.board.canManage (i18n "boards.board.empty_board_cta")}}
-            @ctaLabel={{if this.board.canManage (i18n "boards.board.add_column")}}
+            @body={{if
+              this.board.canManage
+              (i18n "boards.board.empty_board_cta")
+            }}
             @ctaAction={{this.openAddColumnModal}}
             @ctaIcon="plus"
+            @ctaLabel={{if
+              this.board.canManage
+              (i18n "boards.board.add_column")
+            }}
+            @icon="table-columns"
+            @identifier="boards-board"
+            @title={{i18n "boards.board.empty_board"}}
           />
         </div>
       {{/if}}

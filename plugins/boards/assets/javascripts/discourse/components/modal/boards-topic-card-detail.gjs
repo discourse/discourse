@@ -41,8 +41,6 @@ export default class BoardsTopicCardDetail extends Component {
     return Topic.create(this.topic).lastUnreadUrl;
   }
 
-  }
-
   get allAssignedUsers() {
     if (this.topic?.all_assigned_users?.length) {
       return this.topic.all_assigned_users;

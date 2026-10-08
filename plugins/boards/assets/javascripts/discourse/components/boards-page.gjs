@@ -197,13 +197,13 @@ export default class BoardsPage extends Component {
         <:customEmptyState>
           <DEmptyState
             class="discourse-boards-boards-empty"
-            @identifier="boards-list"
-            @icon="table-columns"
-            @title={{i18n "boards.manage.empty_title"}}
             @body={{if @canManageBoards (i18n "boards.manage.get_started")}}
-            @ctaLabel={{if @canManageBoards (i18n "boards.manage.new")}}
             @ctaAction={{this.openNewBoardModal}}
             @ctaIcon="plus"
+            @ctaLabel={{if @canManageBoards (i18n "boards.manage.new")}}
+            @icon="table-columns"
+            @identifier="boards-list"
+            @title={{i18n "boards.manage.empty_title"}}
           />
         </:customEmptyState>
       </DFilterControls>

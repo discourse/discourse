@@ -11,15 +11,6 @@ const DRAG_SCROLL_VELOCITY_WINDOW_MS = 80;
 const DRAG_SCROLL_MS_PER_FRAME = 1000 / 60;
 const DRAG_SCROLL_THRESHOLD = 4;
 
-/**
- * Grab-to-pan the board: press on empty background, drag, and the board scrolls
- * with the pointer.
- *
- * `registerPointerDrag` owns the pointer lifecycle — capture, the primary-button
- * gate, pointer identity, the movement threshold and cancellation. What stays
- * here is what the gesture engine has no opinion about: which presses count,
- * and the velocity sampling and coast that make the release feel like a flick.
- */
 export const dragToScroll = modifier((element) => {
   let startX = 0;
   let startScrollLeft = 0;
@@ -77,9 +68,7 @@ export const dragToScroll = modifier((element) => {
     const step = () => {
       const previous = element.scrollLeft;
       element.scrollLeft = previous + velocity;
-      // The read-back is the limit test; it holds because this container does
-      // not use `scroll-behavior: smooth`, under which the write would not be
-      // observable synchronously.
+      // Limit detection requires synchronous scrolling, without smooth behavior.
       if (element.scrollLeft === previous) {
         momentumFrame = null;
         return;
@@ -104,20 +93,14 @@ export const dragToScroll = modifier((element) => {
   };
 
   const releaseGesture = registerPointerDrag(element, () => ({
-    // A large scroll surface, so native panning and pinch-zoom stay with the
-    // browser; the default would suppress both.
+    // Preserve native touch scrolling and pinch zoom.
     touchAction: "manipulation",
-    // Left at 0 so the latch below can measure HORIZONTAL travel. The engine's
-    // own threshold is a straight-line distance, which a vertical drag would
-    // cross without ever meaning to pan sideways.
+    // Apply a horizontal threshold below; the engine measures travel in both axes.
     threshold: 0,
 
     onDragStart: (event) => {
       cancelMomentum();
 
-      // Touch scrolling is the browser's, and a press on anything interactive
-      // belongs to that element. Refusing here releases the capture the engine
-      // has already taken, so the click underneath still lands.
       if (
         event.pointerType === "touch" ||
         event.target.closest(DRAG_SCROLL_SKIP_SELECTOR) ||
@@ -136,10 +119,7 @@ export const dragToScroll = modifier((element) => {
         if (Math.abs(event.clientX - startX) < DRAG_SCROLL_THRESHOLD) {
           return;
         }
-        // Applied here rather than through `draggingClass`. The engine puts
-        // that on when its own threshold engages, which at 0 means the press,
-        // and this class suppresses pointer events on descendants, so a plain
-        // click must never see it.
+        // This class suppresses descendant pointer events, so wait for an actual pan.
         panning = true;
         element.classList.add(
           "discourse-boards-board-container--drag-scrolling"
@@ -150,8 +130,6 @@ export const dragToScroll = modifier((element) => {
       velocitySamples.push({ time: event.timeStamp, x: event.clientX });
       pruneVelocitySamples(event.timeStamp);
 
-      // Coalesced into a frame rather than written per event, as before the
-      // gesture engine took over the lifecycle.
       if (pendingMoveFrame === null) {
         pendingMoveFrame = requestAnimationFrame(() => {
           pendingMoveFrame = null;
@@ -176,13 +154,10 @@ export const dragToScroll = modifier((element) => {
     },
   }));
 
-  // Beside the gesture, not through it: a coast has to die on any press, and
-  // the engine returns before its callbacks for a non-primary button.
+  /** Non-primary presses bypass the gesture callbacks but must stop momentum. */
   const onAnyPointerDown = () => cancelMomentum();
   const onWheel = () => cancelMomentum();
 
-  // The engine does not suppress the click that follows a release, so a pan
-  // would otherwise also activate whatever sat under the pointer.
   const onClickCapture = (event) => {
     if (panning) {
       event.stopPropagation();

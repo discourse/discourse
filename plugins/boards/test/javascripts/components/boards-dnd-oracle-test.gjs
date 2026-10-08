@@ -99,7 +99,6 @@ module(
         return card;
       });
       this.calls = [];
-      this.canWrite = true;
       this.handler = (...args) => this.calls.push(args);
       this.onDragStart = (data) => this.set("dragData", data);
       this.onDragEnd = () => this.set("dragData", null);
@@ -110,7 +109,6 @@ module(
             <div class="discourse-boards-board">
               <BoardsColumn
                 @board={{this.board}}
-                @canWrite={{this.canWrite}}
                 @column={{this.sourceColumn}}
                 @dragData={{this.dragData}}
                 @onDragEnd={{this.onDragEnd}}
@@ -120,7 +118,6 @@ module(
               />
               <BoardsColumn
                 @board={{this.board}}
-                @canWrite={{this.canWrite}}
                 @column={{this.column}}
                 @dragData={{this.dragData}}
                 @onDragEnd={{this.onDragEnd}}
@@ -338,7 +335,7 @@ module(
     });
 
     for (const finish of ["drop", "leave"]) {
-      test(`boards-dnd-oracle: empty message restores after ${finish}`, async function (assert) {
+      test(`boards-dnd-oracle: empty column handles ${finish}`, async function (assert) {
         this.column.cards = [];
         await this.renderBoard();
         assert.dom(emptySelector).isVisible("empty message starts visible");
@@ -369,7 +366,15 @@ module(
           });
         }
         assert.dom(indicatorSelector).doesNotExist("indicator is removed");
-        assert.dom(emptySelector).isVisible("empty message is restored");
+        if (finish === "leave") {
+          assert.dom(emptySelector).isVisible("empty message is restored");
+        } else {
+          assert
+            .dom(emptySelector)
+            .isNotVisible(
+              "the board viewer owns restoration after a drop settles"
+            );
+        }
         await dragEvent(cardSelector(101), "dragend", {
           dataTransfer,
           ...coordinates,
@@ -511,7 +516,7 @@ module(
           "",
           "writable card is a registered drag source"
         );
-      this.set("canWrite", false);
+      this.board.can_write = false;
       await settled();
       assert
         .dom(cardSelector(101))
@@ -519,7 +524,7 @@ module(
           "data-drag-source",
           "read-only card is not a registered drag source"
         );
-      this.set("canWrite", true);
+      this.board.can_write = true;
       await settled();
       assert
         .dom(cardSelector(101))

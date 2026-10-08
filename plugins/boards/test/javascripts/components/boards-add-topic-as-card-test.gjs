@@ -60,9 +60,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -77,9 +77,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -97,9 +97,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -122,9 +122,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -145,9 +145,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -169,9 +169,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -191,9 +191,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -212,9 +212,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
@@ -231,9 +231,9 @@ module("Integration | Component | BoardsAddTopicAsCard", function (hooks) {
     await render(
       <template>
         <BoardsAddTopicAsCard
-          @model={{this.model}}
           @closeModal={{this.closeModal}}
           @inline={{true}}
+          @model={{this.model}}
         />
       </template>
     );
