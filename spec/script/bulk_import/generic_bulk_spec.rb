@@ -621,6 +621,41 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "badges without a group" do
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@badge_mapping, {})
+        end
+      end
+
+      before do
+        source_db.execute("CREATE TABLE badges (id INTEGER, name TEXT, badge_group TEXT)")
+        source_db.execute(
+          "INSERT INTO badges (id, name, badge_group) VALUES (1, 'Grouped', 'Imported'), (2, 'Ungrouped', NULL)",
+        )
+      end
+
+      after { source_db.close }
+
+      it "puts them into the Other grouping" do
+        badges = []
+        allow(importer).to receive(:create_badges) do |rows, &block|
+          badges = rows.filter_map(&block)
+        end
+
+        importer.import_badge_groupings
+        importer.import_badges
+
+        imported_grouping = BadgeGrouping.find_by!(name: "Imported")
+        expect(badges.map { |badge| badge.slice(:name, :badge_grouping_id) }).to contain_exactly(
+          { name: "Grouped", badge_grouping_id: imported_grouping.id },
+          { name: "Ungrouped", badge_grouping_id: BadgeGrouping::Other },
+        )
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)

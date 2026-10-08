@@ -4438,6 +4438,7 @@ class BulkImport::Generic < BulkImport::Base
     rows = query(<<~SQL)
       SELECT DISTINCT badge_group
         FROM badges
+       WHERE badge_group IS NOT NULL
        ORDER BY badge_group
     SQL
 
@@ -4480,7 +4481,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]] || BadgeGrouping::Other,
         long_description: row["long_description"],
         image_upload_id:
           (
