@@ -48,6 +48,7 @@ module Chat
         .where(user_options: { chat_enabled: true })
         .not_suspended
         .where(id: params.user_ids)
+        .order(:id)
         .limit(50)
     end
 

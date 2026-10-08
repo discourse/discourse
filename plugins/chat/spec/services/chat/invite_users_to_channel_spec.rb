@@ -107,9 +107,9 @@ RSpec.describe Chat::InviteUsersToChannel do
       end
 
       it "skips them when more users are invited than are fetched" do
-        muting_users = Fabricate.times(51, :user)
-        muting_users.each { Fabricate(:muted_user, user: it, muted_user: current_user) }
-        params[:user_ids] = muting_users.map(&:id)
+        params[:user_ids] = Fabricate.times(51, :muted_user, muted_user: current_user).map(
+          &:user_id
+        )
 
         result
 
