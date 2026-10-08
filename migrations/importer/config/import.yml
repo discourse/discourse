@@ -4,3 +4,7 @@ files_db: "/shared/import/files.db"
 
 # if false, allows reserved usernames only for admins
 always_allow_reserved_usernames: true
+
+# hosts that served the source site's uploads, for example its CDN. Only an
+# upload URL on one of these hosts is rewritten to the imported upload.
+trusted_upload_hosts: []

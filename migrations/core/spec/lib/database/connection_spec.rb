@@ -125,6 +125,19 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#query_column" do
+    it "returns single-column results without row containers" do
+      create_connection do |connection|
+        connection.execute("CREATE TABLE foo (id INTEGER)")
+        connection.execute("INSERT INTO foo (id) VALUES (1), (2), (3)")
+
+        expect(
+          connection.query_column("SELECT id FROM foo WHERE id > :minimum_id", minimum_id: 1),
+        ).to eq([2, 3])
+      end
+    end
+  end
+
   describe "#attach_database" do
     it "commits pending inserts and safely quotes the database name" do
       create_connection do |connection|
@@ -141,6 +154,18 @@ RSpec.describe Migrations::Database::Connection do
             'source"db',
           ),
         ).to eq(1)
+      end
+    end
+  end
+
+  describe "#attached?" do
+    it "tells whether a database is attached under that name" do
+      create_connection do |connection|
+        expect(connection.attached?("files")).to be false
+
+        connection.attach_database(":memory:", name: "files")
+
+        expect(connection.attached?("files")).to be true
       end
     end
   end

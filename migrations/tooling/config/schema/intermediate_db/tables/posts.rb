@@ -2,6 +2,7 @@
 
 Migrations::Tooling::Schema.table :posts do
   index :topic_id, :post_number
+  index :created_at
 
   # `raw` holds the body with placeholders, `original_raw` the untouched
   # source body.

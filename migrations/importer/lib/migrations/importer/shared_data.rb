@@ -73,6 +73,10 @@ module Migrations
           end
         end
       end
+
+      def []=(type, value)
+        @cache[type] = value
+      end
     end
   end
 end
