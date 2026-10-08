@@ -1,28 +1,60 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import type RouterService from "@ember/routing/router-service";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-type DButtonActionCallback = (...args: unknown[]) => void;
+/** A handler for `@action`, called with the given parameters. */
+type DButtonCallback<Params extends unknown[]> = (...params: Params) => void;
 
-interface DButtonActionObject {
-  value: DButtonActionCallback;
+/** `@action` as a function, or as an object holding one under `value`. */
+type DButtonAction<Params extends unknown[]> =
+  | DButtonCallback<Params>
+  | { value: DButtonCallback<Params> };
+
+/**
+ * `@action` together with `@forwardEvent`. The event reaches the handler only when
+ * `@forwardEvent` is true, so a handler that needs it requires the flag. `NoInfer`
+ * makes `P` come from `@actionParam` alone, so a handler cannot widen it to a
+ * parameter the button never supplies.
+ */
+type DButtonActionArgs<P> =
+  | {
+      /** Called on click with `@actionParam`. */
+      action?: DButtonAction<[param: NoInfer<P>]>;
+      /** Whether `@action` also receives the triggering event. */
+      forwardEvent?: false;
+    }
+  | {
+      /** Called on click with `@actionParam` and the triggering event. */
+      action?: DButtonAction<[param: NoInfer<P>, event: Event]>;
+      /** Whether `@action` also receives the triggering event. */
+      forwardEvent: true;
+    };
+
+/**
+ * Whether the button passes the event to `@action`. Truthiness rather than `=== true`,
+ * because callers pass values such as the string `"true"`.
+ */
+function forwardsEvent<Args extends { forwardEvent?: boolean }>(
+  args: Args
+): args is Extract<Args, { forwardEvent: true }> {
+  return Boolean(args.forwardEvent);
 }
-
-type DButtonAction = DButtonActionCallback | DButtonActionObject;
 
 type RouteModel = string | number | object;
 
-export interface DButtonSignature {
-  Args: {
+export interface DButtonSignature<P = undefined> {
+  Args: DButtonActionArgs<P> & {
     // Text
     title?: string;
     translatedTitle?: string;
@@ -30,9 +62,8 @@ export interface DButtonSignature {
     translatedLabel?: string;
 
     // Actions / events
-    action?: DButtonAction;
-    actionParam?: unknown;
-    forwardEvent?: boolean;
+    /** Passed to `@action` as its first argument. */
+    actionParam?: P;
     onKeyDown?: (event: KeyboardEvent) => void;
 
     // Navigation
@@ -77,9 +108,11 @@ export interface DButtonSignature {
   };
 }
 
-export default class DButton extends Component<DButtonSignature> {
-  @service router;
-  @service capabilities;
+export default class DButton<P = undefined> extends Component<
+  DButtonSignature<P>
+> {
+  @service declare router: RouterService;
+  @service declare capabilities: CapabilitiesService;
 
   @computed("args.icon")
   get btnIcon() {
@@ -177,47 +210,51 @@ export default class DButton extends Component<DButtonSignature> {
     }
   }
 
+  /**
+   * Binds `@action` to this click: `@actionParam`, plus the event when
+   * `@forwardEvent` is set. Returns nothing when `@action` holds no handler.
+   */
+  #bindAction(event: Event): (() => void) | undefined {
+    const args = this.args;
+    // Optional only so it can be omitted, which leaves `P` as `undefined`.
+    const param = args.actionParam as P;
+
+    if (forwardsEvent(args)) {
+      const handler = args.action;
+      if (typeof handler === "object" && handler.value) {
+        return () => handler.value(param, event);
+      }
+      if (typeof handler === "function") {
+        return () => handler(param, event);
+      }
+      return;
+    }
+
+    const handler = args.action;
+    if (typeof handler === "object" && handler.value) {
+      return () => handler.value(param);
+    }
+    if (typeof handler === "function") {
+      return () => handler(param);
+    }
+  }
+
   _triggerAction(event: Event) {
     const { action: actionVal, route, routeModels } = this.args;
     const isIOS = this.capabilities?.isIOS;
 
     if (actionVal || route) {
       if (actionVal) {
-        const { actionParam, forwardEvent } = this.args;
+        const invoke = this.#bindAction(event);
 
-        if (typeof actionVal === "object" && actionVal.value) {
+        if (invoke) {
           if (isIOS) {
             // Don't optimise INP in iOS
             // it results in focus events not being triggered
-            if (forwardEvent) {
-              actionVal.value(actionParam, event);
-            } else {
-              actionVal.value(actionParam);
-            }
+            invoke();
           } else {
             // Using `next()` to optimise INP
-            next(() =>
-              forwardEvent
-                ? actionVal.value(actionParam, event)
-                : actionVal.value(actionParam)
-            );
-          }
-        } else if (typeof actionVal === "function") {
-          if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
-            if (forwardEvent) {
-              actionVal(actionParam, event);
-            } else {
-              actionVal(actionParam);
-            }
-          } else {
-            // Using `next()` to optimise INP
-            next(() =>
-              forwardEvent
-                ? actionVal(actionParam, event)
-                : actionVal(actionParam)
-            );
+            next(invoke);
           }
         }
       } else if (route) {

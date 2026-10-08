@@ -19,7 +19,7 @@ interface DFilterInputSignature {
     filterAction?: (event: Event) => void;
 
     /** Handler fired when the clear button is clicked. */
-    onClearInput?: (event: Event) => void;
+    onClearInput?: () => void;
 
     /** Icons displayed inside the input. */
     icons?: {
@@ -69,8 +69,8 @@ export default class DFilterInput extends Component<DFilterInputSignature> {
   #input?: HTMLInputElement;
 
   @action
-  onClearInput(event: Event) {
-    this.args.onClearInput?.(event);
+  onClearInput() {
+    this.args.onClearInput?.();
     this.#input?.focus();
   }
 
