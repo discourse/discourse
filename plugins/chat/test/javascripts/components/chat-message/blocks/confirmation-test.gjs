@@ -13,7 +13,7 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
       cooked_question: "<p>Do you want to make this change?</p>",
       parameters: [
         { label: "value", value: "<script>alert('test')</script>" },
-        { label: "color", value: "4CBB17" },
+        { label: "color", value: "4CBB17", color: "4CBB17" },
       ],
       elements: [
         { type: "button", action_id: "approve", text: { text: "Yes" } },

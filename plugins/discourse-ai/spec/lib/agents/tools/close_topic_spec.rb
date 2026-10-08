@@ -37,6 +37,21 @@ RSpec.describe DiscourseAi::Agents::Tools::CloseTopic do
     )
   end
 
+  it "falls back to the generic preview when the requester cannot see the topic" do
+    private_topic = Fabricate(:topic, category: Fabricate(:private_category, group: Group[:staff]))
+    requester_context = DiscourseAi::Agents::BotContext.new(user: Fabricate(:user))
+    action_tool =
+      described_class.new(
+        { topic_id: private_topic.id, closed: true, reason: "Testing" },
+        bot_user: bot_user,
+        llm: llm,
+        context: requester_context,
+      )
+
+    expect(action_tool.approval_title).to eq(action_tool.summary)
+    expect(action_tool.approval_changes).to be_empty
+  end
+
   it "closes the topic when closed is true" do
     result = tool(topic_id: topic.id, closed: true, reason: "Off-topic discussion").invoke
 

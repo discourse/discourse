@@ -197,6 +197,30 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     expect(category_tool.approval_details).to be_empty
   end
 
+  it "previews the description's Markdown source rather than its cooked HTML" do
+    category_with_topic = Fabricate(:category_with_definition)
+    category_with_topic.update!(description: "Old **description**")
+    expect(category_with_topic.reload.description).to include("Old <strong>description</strong>")
+
+    category_tool =
+      tool(
+        category_id: category_with_topic.id,
+        description: "New description",
+        reason: "Rebranding",
+      )
+    expect(category_tool.approval_changes).to eq(
+      [{ label: "Changing description:", before: "Old **description**", after: "New description" }],
+    )
+
+    repeat_tool =
+      tool(
+        category_id: category_with_topic.id,
+        description: "Old **description**",
+        reason: "Repeat request",
+      )
+    expect(repeat_tool.validation_error).to include(status: "error")
+  end
+
   it "returns an error when reason is blank" do
     result = tool(category_id: category.id, name: "New name", reason: " ").invoke
 

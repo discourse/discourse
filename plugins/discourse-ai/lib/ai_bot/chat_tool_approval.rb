@@ -45,6 +45,33 @@ module DiscourseAi
         "[#{title}](#{url})"
       end
 
+      def self.truncate_value(value)
+        value.to_s.truncate(Chat::Schemas::CONFIRMATION_VALUE_MAX_LENGTH)
+      end
+
+      # Plain-text rendering of a card for consumers that only read the message
+      # body (model replay, transcripts), so the proposal and its outcome are
+      # not lost once they live in the block.
+      def self.transcript_text(message)
+        card = message.blocks&.find { |block| block["type"] == "confirmation" }
+        return message.message if card.blank?
+
+        lines = [card["title"]]
+        if card["changes"].present?
+          card["changes"].each do |change|
+            lines << "#{change["label"]} #{change["before"]} → #{change["after"]}"
+          end
+        elsif card.fetch("show_description", true) && message.message.present?
+          lines << [card["description_label"], message.message].compact.join(" ")
+        end
+        card["parameters"].to_a.each do |parameter|
+          lines << "#{parameter["label"]}: #{parameter["value"]}"
+        end
+        lines << card["error"] if card["error"].present?
+        lines << (card["status"].presence || I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
+        lines.join("\n")
+      end
+
       def self.pending_blocks(reviewable_id, info: nil)
         [
           {
@@ -59,8 +86,17 @@ module DiscourseAi
                   ),
                   show_description: info.fetch(:show_description, true),
                   question: info[:question],
-                  parameters: info[:parameters],
-                  changes: info[:changes] || [],
+                  parameters:
+                    (info[:parameters] || []).map do |parameter|
+                      parameter.merge(value: truncate_value(parameter[:value]))
+                    end,
+                  changes:
+                    (info[:changes] || []).map do |change|
+                      change.merge(
+                        before: truncate_value(change[:before]),
+                        after: truncate_value(change[:after]),
+                      )
+                    end,
                 }
               else
                 {}
@@ -121,7 +157,7 @@ module DiscourseAi
           resolve_message!(
             message,
             I18n.t("discourse_ai.ai_bot.chat_tool_approval.#{status_key}", username: user.username),
-            title: parsed[:action] == "approve" ? resolved_title(reviewable) : nil,
+            title: parsed[:action] == "approve" ? reviewable.approval_resolved_title : nil,
           )
         rescue => e
           # The reviewable stays pending; keep the buttons for a retry and
@@ -149,17 +185,6 @@ module DiscourseAi
         I18n.t("discourse_ai.ai_bot.chat_tool_approval.unexpected_error")
       end
 
-      def self.resolved_title(reviewable)
-        action = reviewable.target
-        return if action.tool_name != "edit_tag" || action.tool_parameters["new_name"].blank?
-
-        name = DiscourseTagging.clean_tag(action.tool_parameters["new_name"].to_s)
-        tag = Tag.where_name(name).first
-        return if tag.blank?
-
-        I18n.t("discourse_ai.ai_bot.chat_tool_approval.tag_title", tag: "##{tag.name}::tag")
-      end
-
       def self.resolve_message!(message, status_text, title: nil)
         return if message.blank?
 
@@ -168,7 +193,6 @@ module DiscourseAi
           card.delete("error")
           card["status"] = status_text
           card["elements"] = []
-          card["parameters"].reject! { |parameter| parameter["label"] == "reason" }
         else
           message.message = "#{message.message}\n\n#{status_text}"
           message.blocks = nil

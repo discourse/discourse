@@ -90,7 +90,72 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
     end
   end
 
+  describe ".transcript_text" do
+    it "renders the proposal, and later its outcome, from the card" do
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: bot_user,
+          message: "Changing a setting",
+        )
+      message.update!(
+        blocks:
+          described_class.pending_blocks(
+            7,
+            info: {
+              summary: "Changing site setting: title",
+              changes: [{ label: "Changing value:", before: "Old", after: "New" }],
+              details: message.message,
+              question: "Do you want to make this change?",
+              parameters: [],
+            },
+          ),
+      )
+
+      expect(described_class.transcript_text(message)).to eq(
+        [
+          "Changing site setting: title",
+          "Changing value: Old → New",
+          I18n.t("discourse_ai.ai_bot.tool_pending_approval"),
+        ].join("\n"),
+      )
+
+      described_class.resolve_message!(message, "Approved by @#{admin.username}.")
+
+      expect(described_class.transcript_text(message.reload)).to eq(
+        [
+          "Changing site setting: title",
+          "Changing value: Old → New",
+          "Approved by @#{admin.username}.",
+        ].join("\n"),
+      )
+      expect(
+        described_class.transcript_text(Fabricate(:chat_message, message: "plain reply")),
+      ).to eq("plain reply")
+    end
+  end
+
   describe ".pending_blocks" do
+    it "truncates oversized preview values to the schema limit" do
+      limit = Chat::Schemas::CONFIRMATION_VALUE_MAX_LENGTH
+      long = "x" * (limit + 10)
+      blocks =
+        described_class.pending_blocks(
+          7,
+          info: {
+            summary: "Editing post",
+            question: "Do you want to make this change?",
+            parameters: [{ label: "raw", value: long }],
+            changes: [{ label: "Changing content:", before: long, after: "short" }],
+          },
+        )
+
+      expect(JSONSchemer.schema(Chat::Schemas::MessageBlocks).valid?(blocks.as_json)).to eq(true)
+      expect(blocks.first[:changes].first[:before].length).to eq(limit)
+      expect(blocks.first[:parameters].first[:value]).to end_with("...")
+    end
+
     it "builds a confirmation card with Yes and No actions" do
       blocks =
         described_class.pending_blocks(

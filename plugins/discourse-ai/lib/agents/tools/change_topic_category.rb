@@ -84,7 +84,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if topic.blank?
+          return super if !previewable?(topic)
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.topic_title",
@@ -93,7 +93,7 @@ module DiscourseAi
         end
 
         def approval_changes
-          return [] if topic.blank? || category.blank?
+          return [] if !previewable?(topic) || !previewable?(category)
 
           change = {
             label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_category_label"),

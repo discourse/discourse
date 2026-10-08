@@ -283,6 +283,60 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
+    it "replays approval cards as text with their outcome" do
+      public_channel.update!(threading_enabled: true)
+      card =
+        Fabricate(
+          :chat_message,
+          chat_channel: public_channel,
+          user: bot_user,
+          thread: thread,
+          message: "Changing a setting",
+        )
+      card.update!(
+        blocks:
+          DiscourseAi::AiBot::ChatToolApproval.pending_blocks(
+            7,
+            info: {
+              summary: "Changing site setting: title",
+              changes: [{ label: "Changing value:", before: "Old", after: "New" }],
+              details: card.message,
+              question: "Do you want to make this change?",
+              parameters: [],
+            },
+          ),
+      )
+      DiscourseAi::AiBot::ChatToolApproval.resolve_message!(card, "Rejected by @#{user.username}.")
+      reply =
+        Fabricate(
+          :chat_message,
+          chat_channel: public_channel,
+          user: user,
+          thread: thread,
+          message: "Thanks",
+        )
+      thread.update!(last_message_id: reply.id)
+
+      context =
+        described_class.messages_from_chat(
+          reply,
+          channel: public_channel,
+          context_post_ids: nil,
+          max_messages: 10,
+          include_uploads: false,
+          bot_user_ids: [bot_user.id],
+          instruction_message: nil,
+        )
+
+      expect(context.sole[:content]).to include(
+        [
+          "Bot: Changing site setting: title",
+          "Changing value: Old → New",
+          "Rejected by @#{user.username}.",
+        ].join("\n"),
+      )
+    end
+
     it "processes messages from direct message channels" do
       context =
         described_class.messages_from_chat(

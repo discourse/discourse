@@ -2,17 +2,6 @@ import categoryColorVariable from "discourse/helpers/category-color-variable";
 import ChatMessageText from "../../chat-message-text";
 import Actions from "./actions";
 
-function parameterColor(parameter) {
-  const color =
-    parameter.color ??
-    (["color", "text_color"].includes(parameter.label)
-      ? parameter.value
-      : null);
-  return typeof color === "string" && /^#?[0-9a-fA-F]{6}$/.test(color)
-    ? color.replace(/^#/, "")
-    : null;
-}
-
 function showBody(definition) {
   return definition.show_description !== false;
 }
@@ -27,7 +16,7 @@ function showDescription(definition) {
 }
 
 const Confirmation = <template>
-  <section aria-label={{@definition.title}} class="chat-confirmation">
+  <section class="chat-confirmation">
     <div class="chat-confirmation__title">
       {{#if @definition.cooked_title}}
         <ChatMessageText
@@ -96,15 +85,13 @@ const Confirmation = <template>
             {{#each @definition.parameters as |parameter|}}
               <dt><code>{{parameter.label}}</code></dt>
               <dd>
-                {{#let (parameterColor parameter) as |color|}}
-                  {{#if color}}
-                    <span
-                      aria-hidden="true"
-                      class="chat-confirmation__color"
-                      style={{categoryColorVariable color}}
-                    ></span>
-                  {{/if}}
-                {{/let}}
+                {{#if parameter.color}}
+                  <span
+                    aria-hidden="true"
+                    class="chat-confirmation__color"
+                    style={{categoryColorVariable parameter.color}}
+                  ></span>
+                {{/if}}
                 <span
                   class="chat-confirmation__parameter-value"
                 >{{parameter.value}}</span>

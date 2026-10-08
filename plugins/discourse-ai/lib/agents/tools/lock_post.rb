@@ -63,8 +63,7 @@ module DiscourseAi
         end
 
         def approval_title
-          post = Post.find_by(id: parameters[:post_id])
-          return super if post.blank?
+          return super if !previewable?(post)
 
           label =
             I18n.t(
@@ -79,8 +78,7 @@ module DiscourseAi
         end
 
         def approval_changes
-          post = Post.find_by(id: parameters[:post_id])
-          return [] if post.blank?
+          return [] if !previewable?(post)
 
           [
             {
@@ -103,6 +101,12 @@ module DiscourseAi
 
         def description_args
           { post_id: parameters[:post_id], locked: parameters[:locked] }
+        end
+
+        private
+
+        def post
+          @post ||= Post.find_by(id: parameters[:post_id])
         end
       end
     end

@@ -112,7 +112,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if category.blank?
+          return super if !previewable?(category)
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.category_title",
@@ -121,14 +121,14 @@ module DiscourseAi
         end
 
         def approval_changes
-          return [] if category.blank?
+          return [] if !previewable?(category)
 
           changes.map do |field, value|
             change = {
               label:
                 I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_change_label.#{field}"),
               before:
-                category.public_send(field).to_s.presence ||
+                current_value(field).presence ||
                   I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
               after:
                 value.to_s.presence || I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
@@ -142,15 +142,14 @@ module DiscourseAi
         end
 
         def approval_details
-          return super if category.blank?
+          return super if !previewable?(category)
 
           changes
             .map do |field, value|
               I18n.t(
                 "discourse_ai.ai_bot.chat_tool_approval.category_change",
-                field: field,
-                before:
-                  DiscourseAi::AiBot::ChatToolApproval.format_value(category.public_send(field)),
+                field: I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_fields.#{field}"),
+                before: DiscourseAi::AiBot::ChatToolApproval.format_value(current_value(field)),
                 after: DiscourseAi::AiBot::ChatToolApproval.format_value(value),
               )
             end
@@ -167,6 +166,18 @@ module DiscourseAi
           @category ||= Category.find_by(id: parameters[:category_id])
         end
 
+        def current_value(field)
+          field == :description ? current_description : category.public_send(field).to_s
+        end
+
+        # `description` stores cooked HTML; the editable source is the
+        # definition topic's first post, which this tool replaces wholesale.
+        def current_description
+          return "" if category.description.blank?
+
+          category.topic&.first_post&.raw.presence || category.plain_text_description.to_s
+        end
+
         def changes
           @changes ||=
             EDITABLE_PARAMS
@@ -179,12 +190,7 @@ module DiscourseAi
                   next if value.blank?
                 end
                 value = value.to_s.delete_prefix("#") if %i[color text_color].include?(param)
-                next if category && category.public_send(param).to_s == value.to_s
-                if param == :description && category &&
-                     PrettyText.cook(category.description.to_s).strip ==
-                       PrettyText.cook(value).strip
-                  next
-                end
+                next if category && current_value(param).strip == value.to_s.strip
 
                 [param, value]
               end

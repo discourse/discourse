@@ -209,7 +209,7 @@ module DiscourseAi
             {
               label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.setting_change_label"),
               before: SiteSetting.public_send(setting_name).to_s.presence || empty,
-              after: new_value.presence || empty,
+              after: coerced_value.to_s.presence || empty,
             },
           ]
         end
@@ -247,20 +247,22 @@ module DiscourseAi
           plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
         end
 
-        # Runs the same coercion + validation the SiteSetting::Update service
-        # applies at write time, without writing anything.
-        def invalid_value_message
-          coerced =
-            case setting_type
-            when :integer
-              new_value.tr("^-0-9", "").to_i
-            when :file_size_restriction
-              new_value.tr("^0-9", "").to_i
-            else
-              new_value
-            end
+        # The same coercion the SiteSetting::Update service applies at write
+        # time, so the preview shows the value that would actually be saved.
+        def coerced_value
+          case setting_type
+          when :integer
+            new_value.tr("^-0-9", "").to_i
+          when :file_size_restriction
+            new_value.tr("^0-9", "").to_i
+          else
+            new_value
+          end
+        end
 
-          SiteSetting.type_supervisor.to_db_value(setting_sym, coerced)
+        # Runs the write-time validation without writing anything.
+        def invalid_value_message
+          SiteSetting.type_supervisor.to_db_value(setting_sym, coerced_value)
           nil
         rescue Discourse::InvalidParameters => e
           e.message

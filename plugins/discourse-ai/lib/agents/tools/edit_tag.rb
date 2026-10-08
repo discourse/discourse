@@ -94,6 +94,16 @@ module DiscourseAi
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.tag_title", tag: "##{tag.name}::tag")
         end
 
+        # After a rename the pending heading's hashtag no longer resolves.
+        def approval_resolved_title
+          return if parameters[:new_name].blank?
+
+          renamed = Tag.where_name(clean_new_name).first
+          return if renamed.blank?
+
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.tag_title", tag: "##{renamed.name}::tag")
+        end
+
         def approval_changes
           return [] if tag.blank?
 
