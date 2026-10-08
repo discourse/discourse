@@ -1334,6 +1334,13 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
   progressComplete(file: UppyFile): void {
     const placeholderData = this.#placeholders[file.id]!;
+
+    // A preprocessor can complete a file without reporting progress for it, in
+    // which case no processing placeholder was ever shown.
+    if (placeholderData.processingPlaceholder === undefined) {
+      return;
+    }
+
     this.textManipulation.replaceText(
       placeholderData.processingPlaceholder,
       placeholderData.uploadPlaceholder
