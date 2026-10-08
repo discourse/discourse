@@ -435,6 +435,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "replays approval cards as text with their outcome" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+      Group.refresh_automatic_groups_for_user!(user)
       public_channel.update!(threading_enabled: true)
       card =
         Fabricate(

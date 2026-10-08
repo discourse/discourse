@@ -241,10 +241,6 @@ module DiscourseAi
         if saved_reply_user_id.to_i != route.speaker.id
           raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
         end
-        if !@topic.topic_allowed_users.exists?(user_id: @user.id)
-          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
-        end
-
         @agent = route.agent_record
         @llm_model = route.model
         @reply_user = route.speaker
@@ -267,11 +263,7 @@ module DiscourseAi
 
         @prompt = prompt_from_payload(payload.fetch("prompt"))
         @bot =
-          DiscourseAi::Agents::Bot.as(
-            @reply_user,
-            agent: route.agent_class.new,
-            model: @llm_model,
-          )
+          DiscourseAi::Agents::Bot.as(@reply_user, agent: route.agent_class.new, model: @llm_model)
         @source_post = @topic.posts.find_by(post_number: @source_post_number)
         @initial_prompt_message_count = payload["initial_prompt_message_count"].to_i
         @protected_user_index =
@@ -292,7 +284,7 @@ module DiscourseAi
         @resume_evidence_scope = payload["evidence_scope"]
         # A failed accepted round is immutable: retries cannot replace evidence under its event IDs.
         @tool_results = payload["failed_tool_results"] if payload["failed_tool_results"]
-        if !@source_post
+        if !@source_post || !@topic.topic_allowed_users.exists?(user_id: @user.id)
           raise DiscourseAi::Completions::ContextPreparation::Error.new("history_changed")
         end
         @history_snapshot =

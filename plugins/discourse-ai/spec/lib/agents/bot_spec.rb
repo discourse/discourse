@@ -431,10 +431,11 @@ RSpec.describe DiscourseAi::Agents::Bot do
         ).and_return([100, 20_000, 4096])
         DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
           expect {
-            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4).reply(
-              context,
-              execution_context: execution,
-            )
+            described_class.as(
+              bot_user,
+              agent: agent_record.class_instance.new,
+              model: gpt_4,
+            ).reply(context, execution_context: execution)
           }.to raise_error(
             DiscourseAi::Completions::ContextPreparation::Error,
             /final_output_limit/,

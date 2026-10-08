@@ -430,7 +430,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#retry_response" do
     fab!(:bot_user, :user)
-    fab!(:llm_model) { Fabricate(:llm_model) }
+    fab!(:llm_model)
     fab!(:ai_agent) do
       Fabricate(
         :ai_agent,
