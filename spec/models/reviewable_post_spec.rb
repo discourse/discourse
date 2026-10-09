@@ -96,7 +96,15 @@ RSpec.describe ReviewablePost do
 
     describe "#perform_reject_and_suspend" do
       it "transitions to the rejected state" do
-        result = reviewable.perform admin, :reject_and_suspend
+        result =
+          reviewable.perform(
+            admin,
+            :reject_and_suspend,
+            penalty: {
+              reason: "spam",
+              suspend_until: 2.days.from_now,
+            },
+          )
 
         expect(result.transition_to).to eq :rejected
       end

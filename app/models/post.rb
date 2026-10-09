@@ -242,8 +242,10 @@ class Post < ActiveRecord::Base
     message[:username] = user&.username if type == :created
     message.merge!(opts)
 
-    publish_message!("/topic/#{topic_id}", message)
-    Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
+    DB.after_commit do
+      publish_message!("/topic/#{topic_id}", message)
+      Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
+    end
   end
 
   def publish_message!(channel, message, opts = {})

@@ -44,22 +44,24 @@ class UserSilencer
         @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
       end
 
-      silence_message_params = {}
-      DiscourseEvent.trigger(
-        :user_silenced,
-        user: @user,
-        silenced_by: @by_user,
-        reason: @opts[:reason],
-        message: @opts[:message_body],
-        user_history: @user_history,
-        post_id: @opts[:post_id],
-        silenced_till: @user.silenced_till,
-        silenced_at: DateTime.now,
-        silence_message_params: silence_message_params,
-      )
+      DB.after_commit do
+        silence_message_params = {}
+        DiscourseEvent.trigger(
+          :user_silenced,
+          user: @user,
+          silenced_by: @by_user,
+          reason: @opts[:reason],
+          message: @opts[:message_body],
+          user_history: @user_history,
+          post_id: @opts[:post_id],
+          silenced_till: @user.silenced_till,
+          silenced_at: DateTime.now,
+          silence_message_params: silence_message_params,
+        )
 
-      silence_message_params.merge!(post_alert_options: { skip_send_email: true })
-      SystemMessage.create(@user, message_type, silence_message_params)
+        silence_message_params.merge!(post_alert_options: { skip_send_email: true })
+        SystemMessage.create(@user, message_type, silence_message_params)
+      end
       true
     end
   end

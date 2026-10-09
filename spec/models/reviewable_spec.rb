@@ -634,6 +634,86 @@ RSpec.describe Reviewable, type: :model do
       expect(reviewable.reload).to be_ignored
     end
 
+    it "rolls back a suspension and its notifications when the reviewable action fails" do
+      reviewable = Fabricate(:reviewable_queued_post)
+      author = reviewable.target_created_by
+      reviewable.stubs(:perform_reject_post).returns(
+        Reviewable::PerformResult.new(reviewable, :failure),
+      )
+      result = nil
+
+      messages =
+        MessageBus.track_publish("/logout/#{author.id}") do
+          result =
+            reviewable.perform(
+              moderator,
+              :reject_and_suspend,
+              penalty: {
+                reason: "spam",
+                suspend_until: 2.days.from_now,
+              },
+            )
+        end
+
+      expect(result).not_to be_success
+      expect(author.reload).not_to be_suspended
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.version).to eq(0)
+      expect(
+        UserHistory.where(target_user: author, action: UserHistory.actions[:suspend_user]),
+      ).to be_empty
+      expect(messages).to be_empty
+    end
+
+    it "rolls back the penalty when the selected post operation is forbidden" do
+      reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      SiteSetting.tos_topic_id = post.topic_id
+
+      messages =
+        MessageBus.track_publish("/logout/#{post.user_id}") do
+          expect do
+            reviewable.perform(
+              moderator,
+              :agree_and_suspend,
+              penalty: {
+                reason: "spam",
+                suspend_until: 2.days.from_now,
+                post_action: "delete",
+              },
+            )
+          end.to raise_error(Discourse::InvalidAccess)
+        end
+
+      expect(post.user.reload).not_to be_suspended
+      expect(post.reload).not_to be_trashed
+      expect(reviewable.reload).to be_pending
+      expect(messages).to be_empty
+    end
+
+    it "rolls back every silence when a related user cannot be silenced" do
+      reviewable = Fabricate(:reviewable_queued_post)
+      author = reviewable.target_created_by
+      related_user = Fabricate(:user, silenced_till: 1.day.ago)
+
+      expect do
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          penalty: {
+            reason: "spam",
+            silenced_till: 2.days.from_now,
+            other_user_ids: [related_user.id],
+          },
+        )
+      end.to raise_error(Discourse::InvalidParameters)
+
+      expect(author.reload).not_to be_silenced
+      expect(reviewable.reload).to be_pending
+      expect(
+        UserHistory.where(target_user: author, action: UserHistory.actions[:silence_user]),
+      ).to be_empty
+    end
+
     it "rolls back the transaction when the action fails" do
       reviewable = Fabricate(:reviewable_queued_post)
 

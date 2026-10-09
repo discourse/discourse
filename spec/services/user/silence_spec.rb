@@ -61,8 +61,6 @@ RSpec.describe User::Silence do
     end
 
     context "when everything's ok" do
-      before { allow(User::Action::TriggerPostAction).to receive(:call) }
-
       it "silences all provided users" do
         result
         expect([user, other_user].map(&:reload)).to all be_silenced
@@ -76,13 +74,13 @@ RSpec.describe User::Silence do
         expect(result[:full_reason]).to eq("spam\n\nit was spam")
       end
 
-      it "triggers a post action" do
+      it "deletes the selected post" do
+        post = Fabricate(:post, user:)
+        params.merge!(post_id: post.id, post_action: "delete")
+
         result
-        expect(User::Action::TriggerPostAction).to have_received(:call).with(
-          guardian:,
-          post: nil,
-          params: result[:params],
-        )
+
+        expect(post.reload).to be_trashed
       end
     end
   end

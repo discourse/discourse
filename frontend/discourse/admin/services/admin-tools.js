@@ -118,6 +118,7 @@ export default class AdminToolsService extends Service {
         reviewableId: opts.reviewableId,
         user: loadedUser,
         before: opts.before,
+        perform: opts.perform,
         successCallback: async (result) => {
           if (originalSuccessCallback) {
             await originalSuccessCallback(result);

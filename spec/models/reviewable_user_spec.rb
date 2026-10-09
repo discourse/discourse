@@ -447,23 +447,39 @@ RSpec.describe ReviewableUser, type: :model do
     context "when suspending or silencing" do
       fab!(:reviewable, :suspect_user_reviewable)
 
-      it "rejects the reviewable and keeps the user, letting the client apply the suspension" do
-        result = reviewable.perform(moderator, :suspend_user)
+      it "rejects the reviewable and suspends the user" do
+        result =
+          reviewable.perform(
+            moderator,
+            :suspend_user,
+            penalty: {
+              reason: "spam",
+              suspend_until: 2.days.from_now,
+            },
+          )
         expect(result.success?).to eq(true)
 
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.reload.target).to be_present
         expect(reviewable.target.approved).to eq(false)
-        expect(reviewable.target.suspended?).to eq(false)
+        expect(reviewable.target).to be_suspended
       end
 
-      it "rejects the reviewable and keeps the user, letting the client apply the silencing" do
-        result = reviewable.perform(moderator, :silence_user)
+      it "rejects the reviewable and silences the user" do
+        result =
+          reviewable.perform(
+            moderator,
+            :silence_user,
+            penalty: {
+              reason: "spam",
+              silenced_till: 2.days.from_now,
+            },
+          )
         expect(result.success?).to eq(true)
 
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.reload.target).to be_present
-        expect(reviewable.target.silenced?).to eq(false)
+        expect(reviewable.target).to be_silenced
       end
     end
   end

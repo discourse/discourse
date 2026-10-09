@@ -25,6 +25,8 @@ class User::Silence
               allow_blank: true
   end
 
+  options { attribute :raise_on_failure, :boolean, default: false }
+
   model :user
   policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
   model :users
@@ -47,15 +49,25 @@ class User::Silence
     users.all? { guardian.can_silence_user?(it) }
   end
 
-  def silence(guardian:, users:, params:)
-    context[:full_reason] = User::Action::SilenceAll.call(users:, actor: guardian.user, params:)
+  def silence(guardian:, users:, params:, options:)
+    context[:full_reason] = User::Action::SilenceAll.call(
+      users:,
+      actor: guardian.user,
+      params:,
+      raise_on_failure: options.raise_on_failure,
+    )
   end
 
   def fetch_post(params:)
     Post.find_by(id: params.post_id)
   end
 
-  def perform_post_action(guardian:, post:, params:)
-    User::Action::TriggerPostAction.call(guardian:, post:, params:)
+  def perform_post_action(guardian:, post:, params:, options:)
+    User::Action::TriggerPostAction.call(
+      guardian:,
+      post:,
+      params:,
+      raise_on_failure: options.raise_on_failure,
+    )
   end
 end

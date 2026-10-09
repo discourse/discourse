@@ -75,7 +75,7 @@ export default class AdminPenaltyReason extends Component {
         {{#if this.isCustomReason}}
           <DTextField
             class="suspend-reason"
-            @onChange={{this.setCustomReason}}
+            @onChangeImmediate={{this.setCustomReason}}
             @value={{this.customReason}}
           />
         {{/if}}
@@ -93,7 +93,7 @@ export default class AdminPenaltyReason extends Component {
         {{#if this.isCustomReason}}
           <DTextField
             class="silence-reason"
-            @onChange={{this.setCustomReason}}
+            @onChangeImmediate={{this.setCustomReason}}
             @placeholderKey="admin.user.silence_reason_placeholder"
             @value={{this.customReason}}
           />
