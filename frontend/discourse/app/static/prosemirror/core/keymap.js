@@ -9,6 +9,7 @@ import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
 import { splitListItem } from "prosemirror-schema-list";
 import { atBlockStart, inNode } from "../lib/plugin-utils";
+import { insertTableBreak } from "../lib/table/commands";
 
 const BACKSPACE_UNSET_NODES = ["heading", "code_block"];
 
@@ -83,6 +84,11 @@ export function buildKeymap(
   }
 
   const schema = params.schema;
+
+  // Cells contain inline text, so splitting their textblock splits the cell.
+  keys.Enter = keys.Enter
+    ? chainCommands(insertTableBreak, keys.Enter)
+    : insertTableBreak;
 
   chainWithExisting("Shift-Enter", exitCode, (state, dispatch) => {
     if (dispatch) {

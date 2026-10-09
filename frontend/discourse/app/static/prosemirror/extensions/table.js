@@ -58,6 +58,7 @@ const extension = {
     table_header_cell: {
       content: "inline*",
       tableRole: "header_cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -82,6 +83,7 @@ const extension = {
     table_cell: {
       content: "inline*",
       tableRole: "cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {

@@ -1032,6 +1032,49 @@ module(
       );
     });
 
+    test("deleting trailing rows through the menu preserves columns", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE, {
+        withMenus: true,
+      });
+      const { view } = editor;
+
+      for (const row of [2, 1]) {
+        await selectCell(view, row, 2);
+        await pressKey(view, "Enter", { altKey: true });
+        await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
+        await click(".composer-table-menu__delete-row");
+        assert.deepEqual(
+          locateTable(view).grid.rows.map((tableRow) => tableRow.cells.length),
+          Array(row).fill(3),
+          "the row menu removes only the final row"
+        );
+      }
+    });
+
+    test("dragging the bottom control inward preserves columns", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const original = editor.value;
+
+      for (let iteration = 0; iteration < 3; iteration++) {
+        await dragAppend(find(".composer-table__append.--row"), 400);
+        assert.true(
+          locateTable(editor.view).grid.height > 3,
+          "dragging out adds empty rows"
+        );
+        await dragAppend(find(".composer-table__append.--row"), -600);
+        assert.strictEqual(
+          editor.value,
+          original,
+          "dragging inward removes only the empty trailing rows"
+        );
+        assert.deepEqual(
+          locateTable(editor.view).grid.rows.map((row) => row.cells.length),
+          [3, 3, 3],
+          "repeated row removal does not create columns"
+        );
+      }
+    });
+
     test("dragging an append bar back removes empty rows or columns", async function (assert) {
       const [editor] = await setupRichEditor(
         assert,
@@ -1328,6 +1371,261 @@ module(
         .doesNotExist("no spreadsheet-style selection is introduced");
     });
 
+    for (const row of [0, 1, 2]) {
+      for (const offset of [1, 2, 3]) {
+        test(`Enter inserts a break inside row ${row} at offset ${offset}`, async function (assert) {
+          const [editor] = await setupRichEditor(assert, TABLE);
+          const { view } = editor;
+          const pos = cellPos(view, row, 2) + offset;
+          view.dispatch(
+            view.state.tr.setSelection(
+              TextSelection.create(view.state.doc, pos)
+            )
+          );
+
+          await pressKey(view, "Enter");
+
+          const { grid } = locateTable(view);
+          assert.deepEqual(
+            grid.rows.map((tableRow) => tableRow.cells.length),
+            [3, 3, 3],
+            "Enter preserves the table dimensions"
+          );
+          assert.strictEqual(
+            view.state.doc.nodeAt(pos).type.name,
+            "hard_break",
+            "a line break is inserted at the cursor"
+          );
+          await apply(view, undo);
+          assert.strictEqual(
+            locateTable(view).grid.rows[row].cells[2].node.textContent,
+            ["h3", "a3", "b3"][row],
+            "undo restores the cell content"
+          );
+        });
+      }
+    }
+
+    for (const [name, markdown, selector] of [
+      ["paragraphs", "abcd", ".ProseMirror > p"],
+      ["lists", "* abcd", ".ProseMirror li"],
+      ["inline HTML", "<kbd>abcd</kbd>", ".ProseMirror > p"],
+    ]) {
+      test(`Enter outside a table still splits ${name}`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, markdown);
+        const { view } = editor;
+        let pos;
+        view.state.doc.descendants((node, at) => {
+          if (node.isText && node.text === "abcd") {
+            pos = at + 2;
+          }
+        });
+        view.dispatch(
+          view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+        );
+        await pressKey(view, "Enter", { keyCode: 13 });
+        const blocks = findAll(selector);
+        assert
+          .dom(blocks[0])
+          .hasText("ab", "the prefix stays in the first block");
+        assert.dom(blocks[1]).hasText("cd", "the suffix moves to a new block");
+        assert
+          .dom(".ProseMirror table")
+          .doesNotExist("no table handling leaks into ordinary text");
+      });
+    }
+
+    test("Enter outside a table keeps a newline inside code", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "```\nabcd\n```");
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+      );
+      await pressKey(view, "Enter", { keyCode: 13 });
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        "ab\ncd",
+        "Enter keeps the code block intact"
+      );
+      assert
+        .dom(".ProseMirror pre")
+        .exists({ count: 1 }, "the code stays in one block");
+    });
+
+    test("Enter yields to autocomplete inside a table", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      await selectCell(view, 1, 1);
+      const original = view.state.doc;
+      const popup = document.createElement("div");
+      popup.className = "autocomplete";
+      view.dom.parentElement.appendChild(popup);
+
+      try {
+        await pressKey(view, "Enter");
+        assert.true(
+          view.state.doc.eq(original),
+          "autocomplete owns Enter without changing the table"
+        );
+      } finally {
+        popup.remove();
+      }
+    });
+
+    test("Enter during composition does not split a cell", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      await selectCell(view, 1, 1);
+      const original = view.state.doc;
+      view.dom.dispatchEvent(
+        new CompositionEvent("compositionstart", { bubbles: true })
+      );
+      try {
+        await pressKey(view, "Enter", { keyCode: 229, isComposing: true });
+        assert.true(
+          view.state.doc.eq(original),
+          "composition confirmation leaves the table unchanged"
+        );
+      } finally {
+        view.dom.dispatchEvent(
+          new CompositionEvent("compositionend", { bubbles: true })
+        );
+        await settled();
+      }
+    });
+
+    test("synthetic Enter uses the table command and survives Markdown round-tripping", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      const pos = cellPos(view, 1, 1) + 2;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+      );
+      const handled = view.someProp("handleKeyDown", (handler) =>
+        handler(
+          view,
+          new KeyboardEvent("keydown", { key: "Enter", keyCode: 13 })
+        )
+      );
+      await settled();
+      assert.true(
+        handled,
+        "the synthesized mobile key event reaches the table command"
+      );
+      const expected = `| h1 | h2 | h3 |\n|----|----|----|\n| a1 | a<br>2 | a3 |\n| b1 | b2 | b3 |\n\n`;
+      assert.strictEqual(
+        editor.value,
+        expected,
+        "the break serializes inside its cell"
+      );
+      await click(".composer-toggle-switch");
+      await click(".composer-toggle-switch");
+      assert
+        .dom(".ProseMirror tbody tr:first-child td:nth-child(2) br")
+        .exists("the break survives parsing Markdown");
+      assert.strictEqual(
+        locateTable(editor.view).grid.width,
+        3,
+        "the column count survives the round trip"
+      );
+    });
+
+    for (const key of ["Backspace", "Delete"]) {
+      test(`${key} at cell boundaries preserves rows and columns`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, TABLE);
+        const { view } = editor;
+        const original = view.state.doc;
+
+        for (const row of [0, 1, 2]) {
+          for (const col of [0, 1, 2]) {
+            const pos = cellPos(view, row, col) + (key === "Backspace" ? 1 : 3);
+            view.dispatch(
+              view.state.tr.setSelection(
+                TextSelection.create(view.state.doc, pos)
+              )
+            );
+            await pressKey(view, key, {
+              keyCode: key === "Backspace" ? 8 : 46,
+            });
+            assert.true(
+              view.state.doc.eq(original),
+              `the boundary of cell ${row}, ${col} cannot be joined`
+            );
+          }
+        }
+      });
+    }
+
+    for (const key of ["Backspace", "Delete"]) {
+      for (const modifiers of [
+        {},
+        { altKey: true },
+        { ctrlKey: true },
+        { metaKey: true },
+      ]) {
+        test(`${key} ${JSON.stringify(modifiers)} preserves empty cells on repeated presses`, async function (assert) {
+          const [editor] = await setupRichEditor(
+            assert,
+            `| h1 | | h3 |\n| --- | --- | --- |\n| a1 | | a3 |\n| | | |`
+          );
+          const { view } = editor;
+          const original = view.state.doc;
+          for (const [row, col] of [
+            [0, 1],
+            [1, 1],
+            [2, 0],
+            [2, 1],
+            [2, 2],
+          ]) {
+            await selectCell(view, row, col);
+            for (let press = 0; press < 3; press++) {
+              const event = await pressKey(view, key, {
+                keyCode: key === "Backspace" ? 8 : 46,
+                ...modifiers,
+              });
+              assert.true(
+                event.defaultPrevented,
+                "native deletion is blocked at the cell boundary"
+              );
+            }
+            assert.true(
+              view.state.doc.eq(original),
+              `empty cell ${row}, ${col} and its neighbors survive`
+            );
+          }
+        });
+      }
+
+      test(`${key} removes selected text inside a cell and remains undoable`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, TABLE);
+        const { view } = editor;
+        const original = editor.value;
+        const from = cellPos(view, 1, 1) + 1;
+        view.dispatch(
+          view.state.tr.setSelection(
+            TextSelection.create(view.state.doc, from, from + 1)
+          )
+        );
+        await pressKey(view, key, { keyCode: key === "Backspace" ? 8 : 46 });
+        assert.strictEqual(
+          locateTable(view).grid.rows[1].cells[1].node.textContent,
+          "2",
+          "normal selected text deletion still works"
+        );
+        assert.deepEqual(
+          locateTable(view).grid.rows.map((row) => row.cells.length),
+          [3, 3, 3],
+          "deletion preserves the grid"
+        );
+        await apply(view, undo);
+        assert.strictEqual(
+          editor.value,
+          original,
+          "undo restores the cell text"
+        );
+      });
+    }
+
     test("Delete across cells preserves their boundaries", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1396,51 +1694,53 @@ module(
     });
 
     for (const backwards of [false, true]) {
-      test(`Shift+Enter across rows preserves cells (${backwards ? "backward" : "forward"})`, async function (assert) {
-        const [editor] = await setupRichEditor(assert, TABLE);
-        const { view } = editor;
-        const from = cellPos(view, 1, 0) + 2;
-        const to = cellPos(view, 2, 0) + 2;
-        view.dispatch(
-          view.state.tr.setSelection(
-            TextSelection.create(
-              view.state.doc,
-              backwards ? to : from,
-              backwards ? from : to
+      for (const shiftKey of [false, true]) {
+        test(`${shiftKey ? "Shift+Enter" : "Enter"} across rows preserves cells (${backwards ? "backward" : "forward"})`, async function (assert) {
+          const [editor] = await setupRichEditor(assert, TABLE);
+          const { view } = editor;
+          const from = cellPos(view, 1, 0) + 2;
+          const to = cellPos(view, 2, 0) + 2;
+          view.dispatch(
+            view.state.tr.setSelection(
+              TextSelection.create(
+                view.state.doc,
+                backwards ? to : from,
+                backwards ? from : to
+              )
             )
-          )
-        );
-        await pressKey(view, "Enter", { shiftKey: true });
-        const { grid } = locateTable(view);
-        assert.strictEqual(grid.height, 3, "all rows survive");
-        assert.deepEqual(
-          grid.rows.map((row) => row.cells.length),
-          [3, 3, 3],
-          "all cells survive"
-        );
-        assert.strictEqual(
-          grid.rows[1].cells[0].node.lastChild.type.name,
-          "hard_break",
-          "the break lands in the first selected cell"
-        );
-        assert.strictEqual(
-          grid.rows[2].cells[0].node.textContent,
-          "1",
-          "the unselected suffix survives"
-        );
-        await apply(view, undo);
-        assert.strictEqual(
-          locateTable(view).grid.rows[1].cells[0].node.textContent,
-          "a1",
-          "undo restores the selected content"
-        );
-        view.dispatch(view.state.tr.insertText("X"));
-        assert.strictEqual(
-          locateTable(view).grid.height,
-          3,
-          "the restored selection remains safe to replace"
-        );
-      });
+          );
+          await pressKey(view, "Enter", { shiftKey });
+          const { grid } = locateTable(view);
+          assert.strictEqual(grid.height, 3, "all rows survive");
+          assert.deepEqual(
+            grid.rows.map((row) => row.cells.length),
+            [3, 3, 3],
+            "all cells survive"
+          );
+          assert.strictEqual(
+            grid.rows[1].cells[0].node.lastChild.type.name,
+            "hard_break",
+            "the break lands in the first selected cell"
+          );
+          assert.strictEqual(
+            grid.rows[2].cells[0].node.textContent,
+            "1",
+            "the unselected suffix survives"
+          );
+          await apply(view, undo);
+          assert.strictEqual(
+            locateTable(view).grid.rows[1].cells[0].node.textContent,
+            "a1",
+            "undo restores the selected content"
+          );
+          view.dispatch(view.state.tr.insertText("X"));
+          assert.strictEqual(
+            locateTable(view).grid.height,
+            3,
+            "the restored selection remains safe to replace"
+          );
+        });
+      }
     }
 
     test("editing a trailing cell cancels an append-removal drag", async function (assert) {
