@@ -158,6 +158,14 @@ RSpec.describe DsaModeration do
 
     it "records a nested queued post rejection when deleting an author as a spammer" do
       queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
+      Fabricate(
+        :post,
+        user: post.user,
+        topic: post.topic,
+        post_number: 2,
+        post_type: Post.types[:small_action],
+        created_at: 3.days.ago,
+      )
       reviewable = PostActionCreator.spam(flagger, post).reviewable
 
       reviewable.perform(admin, :delete_user)
@@ -247,6 +255,49 @@ RSpec.describe DsaModeration do
         "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
         "content_date" => post.created_at.to_date.iso8601,
       )
+    end
+
+    it "records replies deleted by a later suspension request" do
+      flagged_reply =
+        Fabricate(
+          :reply,
+          user: post.user,
+          topic: post.topic,
+          reply_to_post_number: post.post_number,
+        )
+      nested_reply =
+        Fabricate(
+          :reply,
+          user: Fabricate(:user),
+          topic: post.topic,
+          reply_to_post_number: flagged_reply.post_number,
+        )
+      flagged_reply.replies << nested_reply
+      reviewable = PostActionCreator.inappropriate(flagger, flagged_reply).reviewable
+      reviewable.perform(admin, :agree_and_suspend)
+
+      result =
+        User::Suspend.call(
+          guardian: admin.guardian,
+          params: {
+            user_id: flagged_reply.user_id,
+            reason: "Personal attacks",
+            suspend_until: 1.day.from_now,
+            post_id: flagged_reply.id,
+            post_action: "delete_replies",
+            reviewable_id: reviewable.id,
+          },
+        )
+
+      expect(result).to be_success
+      expect(nested_reply.reload).to be_trashed
+      expect(
+        UserHistory
+          .where(action: UserHistory.actions[:delete_post], post_id: nested_reply.id)
+          .sole
+          .reviewable_id,
+      ).to eq(reviewable.id)
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(3)
     end
 
     it "links the suspension dialog restrictions and finite duration to the same reviewable" do

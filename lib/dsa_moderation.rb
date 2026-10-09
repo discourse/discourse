@@ -42,8 +42,7 @@ class DsaModeration
 
   def self.capture(reviewable:, actor:, action_name:)
     return yield unless SiteSetting.dsa_reporting_enabled
-    if Context.skip_recording || reviewable.reviewable_histories.transitioned.exists? ||
-         DsaStatementOfRecord.exists?(reviewable_id: reviewable.id)
+    if Context.skip_recording || reviewable.reviewable_histories.transitioned.exists?
       return Context.set(recorder: nil, skip_recording: true) { yield }
     end
     recorder = new(reviewable: reviewable, actor: actor, action_name: action_name)
@@ -307,7 +306,7 @@ class DsaModeration
     case action
     when :delete_post
       post = Post.with_deleted.find_by(id: history.post_id)
-      if post&.trashed?
+      if post&.trashed? && post.post_type == Post.types[:regular]
         record_restriction(
           target: post,
           restriction: {

@@ -291,9 +291,17 @@ class PostRevisor
     @fields = fields.with_indifferent_access
     @opts = opts
     if @opts[:reviewable_id]
-      reviewable = Reviewable.viewable_by(editor).find_by(id: @opts[:reviewable_id], target: @post)
-      raise Discourse::InvalidAccess unless reviewable
-      @opts = @opts.merge(force_new_version: true, skip_revision: false)
+      reviewable = Reviewable.viewable_by(editor).find_by(id: @opts[:reviewable_id])
+      matches_post =
+        reviewable &&
+          (reviewable.target == @post || reviewable.respond_to?(:post) && reviewable.post == @post)
+      raise Discourse::InvalidAccess unless matches_post
+      @opts =
+        @opts.merge(
+          force_new_version: true,
+          skip_revision: false,
+          hidden: @opts[:hidden] || @opts[:skip_revision],
+        )
     end
 
     @topic_changes = TopicChanges.new(@topic, editor)

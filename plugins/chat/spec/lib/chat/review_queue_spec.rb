@@ -405,7 +405,8 @@ describe Chat::ReviewQueue do
         expect(message_poster.reload.silenced?).to eq(true)
       end
 
-      it "attributes the silence to the reviewable it came from" do
+      it "records automatic silence and the first moderator removal separately" do
+        SiteSetting.dsa_reporting_enabled = true
         SiteSetting.chat_auto_silence_from_flags_duration = 1
         flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
 
@@ -418,6 +419,24 @@ describe Chat::ReviewQueue do
           )
 
         expect(history.reviewable_id).to eq(Chat::ReviewableMessage.find_by(target: message).id)
+
+        reviewable = Chat::ReviewableMessage.find_by!(target: message)
+        expect(reviewable).to be_pending
+        reviewable.perform(admin, :agree_and_delete)
+
+        payloads = DsaStatementOfRecord.where(reviewable_id: reviewable.id).pluck(:payload)
+        expect(payloads).to include(
+          hash_including(
+            "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+            "automated_decision" => "AUTOMATED_DECISION_FULLY",
+          ),
+        )
+        expect(payloads).to include(
+          hash_including(
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+            "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          ),
+        )
       end
 
       it "lifts the silence when a moderator disagrees with the flag" do

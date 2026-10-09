@@ -95,6 +95,25 @@ RSpec.describe User::Action::TriggerPostAction do
         end
 
         context "when user can edit a post" do
+          it "keeps removed text private when the edit is linked to a reviewable" do
+            SiteSetting.dsa_reporting_enabled = false
+            reviewable = PostActionCreator.inappropriate(admin, post).reviewable
+            original_raw = post.raw
+            linked_params =
+              User::Suspend::Contract.new(
+                post_action: "edit",
+                post_edit: "Removed private information.",
+                reviewable_id: reviewable.id,
+              )
+
+            described_class.call(guardian: admin.guardian, post: post, params: linked_params)
+
+            expect(post.reload.raw).to eq("Removed private information.")
+            expect(post.revisions.last).to be_hidden
+            expect(post.revisions.last.modifications["raw"].first).to eq(original_raw)
+            expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+          end
+
           it "edits the post with what the moderator wrote" do
             expect { action }.to change { post.reload.raw }.to eq("blabla")
           end
