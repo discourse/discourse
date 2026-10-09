@@ -291,11 +291,34 @@ module("Unit | Service | chat-channel-list-preferences", function (hooks) {
       "each preference saves without blocking the others"
     );
 
+    for (const section of ["channels", "dms"]) {
+      preferences.showAllChannels(section);
+      assert.strictEqual(
+        preferences.effectiveFilterFor(section),
+        "all",
+        `the ${section} filter can be bypassed while saving`
+      );
+    }
+
     pendingSaves.forEach(({ resolve }) => resolve());
     assert.true(await channelsFilterSave, "the channels filter completes");
     assert.true(await dmsFilterSave, "the dms filter completes");
     assert.true(await channelsSave, "the channels sort completes");
     assert.true(await starredSave, "the starred sort completes");
+    for (const section of ["channels", "dms"]) {
+      assert.strictEqual(
+        preferences.effectiveFilterFor(section),
+        "all",
+        `the ${section} bypass survives the save`
+      );
+      preferences.toggleFilter(section);
+      assert.strictEqual(
+        preferences.effectiveFilterFor(section),
+        preferences.filterFor(section),
+        `the ${section} toggle restores the saved preference`
+      );
+    }
+
     ["channels", "starred", "dms"].forEach((section) => {
       assert.false(
         preferences.isSavingFilterFor(section),
