@@ -5,9 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import renderTags from "discourse/lib/render-tags";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import Topic from "discourse/models/topic";
 import { or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
@@ -16,8 +13,10 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DModal from "discourse/ui-kit/d-modal";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import { loadCategory } from "../../lib/boards-categories";
 import { columnColorVariable } from "../../lib/boards-column-helpers";
@@ -40,12 +39,6 @@ export default class BoardsTopicCardDetail extends Component {
 
   get topicUrl() {
     return Topic.create(this.topic).lastUnreadUrl;
-  }
-
-  get topicTitle() {
-    return trustHTML(
-      emojiUnescape(escapeExpression(this.args.model.card.fancyTitle || ""))
-    );
   }
 
   get allAssignedUsers() {
@@ -77,13 +70,6 @@ export default class BoardsTopicCardDetail extends Component {
       return null;
     }
     return { title: columnTitle, icon: columnIcon, color: columnColor };
-  }
-
-  get tagsHtml() {
-    if (!this.topic?.tags?.length) {
-      return null;
-    }
-    return renderTags(null, { tags: this.topic.tags });
   }
 
   async loadFirstPost() {
@@ -118,7 +104,7 @@ export default class BoardsTopicCardDetail extends Component {
     <DModal
       class="discourse-boards-topic-card-detail-modal"
       @closeModal={{@closeModal}}
-      @title={{this.topicTitle}}
+      @title={{dReplaceEmoji @model.card.fancyTitle}}
       {{didInsert this.viewCard}}
     >
       <:body>
@@ -142,9 +128,9 @@ export default class BoardsTopicCardDetail extends Component {
                 </:content>
               </DAsyncContent>
             {{/if}}
-            {{#if this.tagsHtml}}
+            {{#if this.topic.tags.length}}
               <span class="discourse-boards-topic-card-detail__tags">
-                {{trustHTML this.tagsHtml}}
+                {{dDiscourseTags null tags=this.topic.tags}}
               </span>
             {{/if}}
             {{#if this.allAssignedUsers.length}}

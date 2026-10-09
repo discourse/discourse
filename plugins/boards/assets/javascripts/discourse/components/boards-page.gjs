@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DButton from "discourse/ui-kit/d-button";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -195,19 +195,16 @@ export default class BoardsPage extends Component {
           </div>
         </:content>
         <:customEmptyState>
-          <div class="discourse-boards-boards-empty">
-            {{dIcon "table-columns"}}
-            <h3>{{i18n "boards.manage.empty_title"}}</h3>
-            {{#if @canManageBoards}}
-              <p>{{i18n "boards.manage.get_started"}}</p>
-              <DButton
-                class="btn-primary"
-                @action={{this.openNewBoardModal}}
-                @icon="plus"
-                @label="boards.manage.new"
-              />
-            {{/if}}
-          </div>
+          <DEmptyState
+            class="discourse-boards-boards-empty"
+            @body={{if @canManageBoards (i18n "boards.manage.get_started")}}
+            @ctaAction={{this.openNewBoardModal}}
+            @ctaIcon="plus"
+            @ctaLabel={{if @canManageBoards (i18n "boards.manage.new")}}
+            @icon="table-columns"
+            @identifier="boards-list"
+            @title={{i18n "boards.manage.empty_title"}}
+          />
         </:customEmptyState>
       </DFilterControls>
     </div>

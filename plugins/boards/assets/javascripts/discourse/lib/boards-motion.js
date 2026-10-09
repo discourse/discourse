@@ -1,3 +1,5 @@
+import { prefersReducedMotion } from "discourse/lib/utilities";
+
 const REORDER_ANIMATION = Symbol("boards-reorder-animation");
 
 // Keep in sync with the matching CSS vars in boards-board.scss.
@@ -5,11 +7,7 @@ export const KANBAN_REORDER_DURATION = 180;
 export const KANBAN_MOTION_EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
 
 export function boardsMotionEnabled() {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
-  return !window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  return !prefersReducedMotion();
 }
 
 export function captureCardRects(container, { skipCardIds = [] } = {}) {

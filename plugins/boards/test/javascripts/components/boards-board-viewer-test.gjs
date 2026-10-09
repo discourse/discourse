@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
@@ -91,6 +97,7 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     this.dragDataTransfer = null;
     this.dragCard = async (cardId) => {
       this.dragDataTransfer = new DataTransfer();
+      this.dragSource = find(cardSelector(cardId));
       await startDrag(cardSelector(cardId), {
         dataTransfer: this.dragDataTransfer,
       });
@@ -98,13 +105,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
 
     this.dropOnColumn = async (columnId, { clientY } = {}) => {
       const target = columnSelector(columnId);
-      const coordinates = clientY === undefined ? {} : { clientY };
+      const coordinates = centerOf(target);
+      if (clientY !== undefined) {
+        coordinates.clientY = clientY;
+      }
       const dataTransfer = this.dragDataTransfer;
-
       await dragOver(target, { dataTransfer, coordinates });
-      await dragEvent(target, "drop", {
+      await dragEvent(target, "drop", { dataTransfer, ...coordinates });
+      await dragEvent(this.dragSource, "dragend", {
         dataTransfer,
-        ...centerOf(target),
         ...coordinates,
       });
       await settled();
@@ -146,6 +155,53 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
   hooks.afterEach(function () {
     this.messageBus.clientId = this.originalClientId;
     sinon.restore();
+  });
+
+  test("canceling a pending drop restores an empty column", async function (assert) {
+    const card = this.makeCard({ id: 101, columnId: 10 });
+    await this.renderBoard(
+      [
+        this.makeColumn({ id: 10, title: "Todo", cards: [card] }),
+        this.makeColumn({ id: 20, title: "Done" }),
+      ],
+      { require_confirmation: true }
+    );
+
+    const emptySelector = `${columnSelector(20)} .discourse-boards-column__empty`;
+    const dialog = getOwner(this).lookup("service:dialog");
+    sinon.stub(dialog, "yesNoConfirm").callsFake(({ didCancel }) => {
+      assert
+        .dom(emptySelector)
+        .isNotVisible("the pending drop hides the message");
+      assert
+        .dom(`${columnSelector(20)} .discourse-boards-column__drop-indicator`)
+        .exists("the pending drop keeps its placeholder");
+      didCancel();
+    });
+
+    await this.dragCard(101);
+    await this.dropOnColumn(20);
+
+    assert.true(
+      dialog.yesNoConfirm.calledOnce,
+      "the move requires confirmation"
+    );
+    assert.dom(emptySelector).isVisible("canceling restores the empty message");
+    assert
+      .dom(".discourse-boards-column__drop-indicator")
+      .doesNotExist("canceling removes the placeholder");
+    assert
+      .dom(cardSelector(101))
+      .doesNotHaveClass(
+        "discourse-boards-card--dragging",
+        "the source is visible"
+      );
+    assert.deepEqual(
+      columnCardIds(10),
+      [101],
+      "the card stays in its source column"
+    );
+    assert.deepEqual(columnCardIds(20), [], "the target column stays empty");
   });
 
   test("completes a priority drop with the source column from drag start", async function (assert) {

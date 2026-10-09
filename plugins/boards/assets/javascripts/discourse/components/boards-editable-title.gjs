@@ -2,12 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 
 class BoardsEditableTitleUi extends Component {
@@ -17,12 +15,8 @@ class BoardsEditableTitleUi extends Component {
     return !isEmpty(this.args.field.value);
   }
 
-  get displayText() {
-    return trustHTML(
-      emojiUnescape(
-        escapeExpression(this.args.field.value || this.args.placeholder)
-      )
-    );
+  get displayValue() {
+    return this.args.field.value || this.args.placeholder;
   }
 
   @action
@@ -73,14 +67,13 @@ class BoardsEditableTitleUi extends Component {
         {{on "keydown" this.handleKeydown}}
       />
     {{else}}
-      {{! eslint-disable ember/template-no-invalid-interactive }}
-      <div
+      <DButton
         class={{dConcatClass
-          "discourse-boards-editable-title__text"
+          "btn-flat discourse-boards-editable-title__text"
           (unless this.hasValue "--empty")
         }}
-        {{on "click" this.startEditing}}
-      >{{this.displayText}}</div>
+        @action={{this.startEditing}}
+      >{{dReplaceEmoji this.displayValue}}</DButton>
     {{/if}}
     {{#if @showClose}}
       <DButton
