@@ -5,6 +5,12 @@ import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
+import {
+  isSttModel,
+  preferredSttModel,
+  setPreferredSttModel,
+  sttModelUrl,
+} from "./stt-models";
 import SubtitlesManager from "./subtitles";
 import TranscriptDraftSync from "./transcript-draft-sync";
 import { transcriptToMarkdown } from "./transcript-markdown";
@@ -20,6 +26,7 @@ export default class TranscriptionCoordinator {
   @tracked progress = null;
   @tracked captions = [];
   @tracked revision = 0;
+  @tracked sttModel = preferredSttModel();
 
   #subtitles;
   #transcript;
@@ -119,7 +126,10 @@ export default class TranscriptionCoordinator {
   }
 
   get #modelBaseUrl() {
-    return this.#siteSettings.voice_stt_model_base_url || null;
+    return sttModelUrl(
+      this.sttModel,
+      this.#siteSettings.voice_stt_model_base_url
+    );
   }
 
   get recording() {
@@ -155,6 +165,15 @@ export default class TranscriptionCoordinator {
   toggle() {
     this.enabled = !this.enabled;
     this.#subtitles.setPreference(this.enabled);
+    this.#syncSttEngine();
+  }
+
+  setSttModel(model) {
+    if (!isSttModel(model) || model === this.sttModel) {
+      return;
+    }
+    this.sttModel = model;
+    setPreferredSttModel(model);
     this.#syncSttEngine();
   }
 

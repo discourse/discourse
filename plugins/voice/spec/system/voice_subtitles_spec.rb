@@ -69,4 +69,20 @@ describe "Voice subtitles" do
     find(".modal-close").click
     expect(page).to have_css(".voice-captions", visible: :all)
   end
+
+  it "lets the user pick the smaller subtitles model" do
+    SiteSetting.voice_subtitles_enabled = true
+    stub_webgpu
+    join_room
+    open_voice_settings
+
+    select = PageObjects::Components::SelectKit.new(".voice-voice-settings__subtitles-model-select")
+    expect(select).to have_selected_name(I18n.t("js.voice.voice_settings.subtitles_models.ultra"))
+
+    select.expand
+    select.select_row_by_value("redux")
+
+    expect(select).to have_selected_name(I18n.t("js.voice.voice_settings.subtitles_models.redux"))
+    expect(page.evaluate_script("localStorage.getItem('voice:stt-model')")).to eq("redux")
+  end
 end

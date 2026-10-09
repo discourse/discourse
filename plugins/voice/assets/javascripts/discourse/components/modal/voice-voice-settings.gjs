@@ -24,6 +24,7 @@ import {
   engineForMode,
   noiseSuppressionModeLabel,
 } from "../../lib/voice/ns-engines";
+import { STT_MODELS, sttModelLabel } from "../../lib/voice/stt-models";
 
 const METER_INTERVAL_MS = 50;
 
@@ -89,6 +90,13 @@ export default class VoiceVoiceSettingsModal extends Component {
     return NOISE_SUPPRESSION_MODES.map((mode) => ({
       id: mode,
       name: noiseSuppressionModeLabel(mode),
+    }));
+  }
+
+  get sttModelOptions() {
+    return Object.keys(STT_MODELS).map((model) => ({
+      id: model,
+      name: sttModelLabel(model),
     }));
   }
 
@@ -454,6 +462,22 @@ export default class VoiceVoiceSettingsModal extends Component {
               />
               <p class="voice-voice-settings__hint">
                 {{i18n "voice.voice_settings.subtitles_hint"}}
+              </p>
+            </div>
+
+            <div class="voice-voice-settings__field">
+              <label class="voice-voice-settings__label">
+                {{i18n "voice.voice_settings.subtitles_model"}}
+              </label>
+              <ComboBox
+                class="voice-voice-settings__subtitles-model-select"
+                @content={{this.sttModelOptions}}
+                @onChange={{this.voiceWebrtc.setSttModel}}
+                @options={{hash none=false}}
+                @value={{this.voiceWebrtc.sttModel}}
+              />
+              <p class="voice-voice-settings__hint">
+                {{i18n "voice.voice_settings.subtitles_model_hint"}}
               </p>
             </div>
           {{/if}}
