@@ -49,6 +49,17 @@
     @include viewport.until(sm) {
       margin-top: 8vh;
     }
+
+    // Sized as a glyph, overriding the illustration width above.
+    &.--icon svg {
+      width: 3rem;
+      height: 3rem;
+      color: var(--primary-low-mid);
+
+      @include viewport.until(sm) {
+        width: 3rem;
+      }
+    }
   }
 
   &__cta {
