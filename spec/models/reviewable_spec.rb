@@ -614,6 +614,282 @@ RSpec.describe Reviewable, type: :model do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
+    context "with DSA reporting enabled" do
+      fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+      let(:reviewable) { PostActionCreator.spam(flagger, post).reviewable }
+
+      before { SiteSetting.dsa_reporting_enabled = true }
+
+      it "records only the primary hide restriction and survives reviewable cleanup" do
+        reviewable.perform(moderator, :agree_and_hide)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "puid" => statement.id,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+        )
+        expect(post.reload).to be_hidden
+        reviewable_id = reviewable.id
+
+        reviewable.destroy!
+
+        expect(statement.reload.reviewable_id).to eq(reviewable_id)
+        expect(statement.payload["puid"]).to eq(statement.id)
+      end
+
+      it "combines explicit post deletion and suspension in one pending statement" do
+        expiry = 2.days.from_now.change(usec: 0)
+        other_user = Fabricate(:user, created_at: post.created_at)
+
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          penalty: {
+            reason: "spam",
+            suspend_until: expiry,
+            post_action: "delete",
+            other_user_ids: [other_user.id],
+          },
+        )
+
+        statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+        expect(statements.size).to eq(1)
+        expect(statements.first.payload).to include(
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => expiry.to_date.iso8601,
+          "content_date" => post.created_at.to_date.iso8601,
+        )
+        expect(post.reload).to be_trashed
+        expect(post.user.reload).to be_suspended
+        expect(other_user.reload).to be_suspended
+      end
+
+      it "splits deleted replies only when their required content dates differ" do
+        post.update!(created_at: 3.days.ago)
+        reply =
+          PostCreator.create(
+            Fabricate(:user),
+            raw: "A reply to the flagged content.",
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+          )
+        nested_reviewable = PostActionCreator.spam(flagger, reply).reviewable
+        post.reload
+
+        reviewable.perform(moderator, :delete_and_agree_replies)
+
+        statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+        expect(statements.count).to eq(2)
+        expect(statements.map { |statement| statement.payload["content_date"] }).to match_array(
+          [post.created_at, reply.created_at].map { |date| date.to_date.iso8601 },
+        )
+        expect(statements.map { |statement| statement.payload["decision_visibility"] }).to eq(
+          [["DECISION_VISIBILITY_CONTENT_REMOVED"], ["DECISION_VISIBILITY_CONTENT_REMOVED"]],
+        )
+        expect(post.reload).to be_trashed
+        expect(reply.reload).to be_trashed
+        expect(DsaStatementOfRecord.where(reviewable_id: nested_reviewable.id)).to be_empty
+      end
+
+      it "records known language and actual media types without inventing classification fields" do
+        post.update!(
+          locale: "zh_CN",
+          cooked:
+            '<p>Texte <img src="/image.png"><video src="/video.mp4"></video><audio src="/audio.mp3"></audio></p>',
+        )
+
+        reviewable.perform(moderator, :agree_and_hide)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement.payload).to eq(
+          "puid" => statement.id,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+          "content_type" => %w[
+            CONTENT_TYPE_IMAGE
+            CONTENT_TYPE_VIDEO
+            CONTENT_TYPE_AUDIO
+            CONTENT_TYPE_TEXT
+          ],
+          "content_language" => "ZH",
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+        )
+      end
+
+      it "leaves no statement or restriction when the transition fails" do
+        failed_reviewable = reviewable
+        fail_transition = ->(status, transitioned_reviewable) do
+          transitioned_reviewable.errors.add(:base, "Transition rejected")
+          raise ActiveRecord::RecordInvalid.new(transitioned_reviewable)
+        end
+        DiscourseEvent.on(:reviewable_transitioned_to, &fail_transition)
+
+        expect { failed_reviewable.perform(moderator, :agree_and_hide) }.to raise_error(
+          ActiveRecord::RecordInvalid,
+        )
+
+        expect(failed_reviewable.reload).to be_pending
+        expect(post.reload).not_to be_hidden
+        expect(DsaStatementOfRecord.where(reviewable_id: failed_reviewable.id)).to be_empty
+      ensure
+        DiscourseEvent.off(:reviewable_transitioned_to, &fail_transition)
+      end
+
+      it "records silence without incidental visibility restrictions" do
+        expiry = 3.days.from_now.change(usec: 0)
+
+        reviewable.perform(
+          moderator,
+          :agree_and_silence,
+          penalty: {
+            reason: "spam",
+            silenced_till: expiry,
+          },
+        )
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement.payload).to eq(
+          "puid" => statement.id,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => expiry.to_date.iso8601,
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+        )
+        expect(post.user.reload).to be_silenced
+      end
+
+      it "records a completed content edit without its automatic lock" do
+        reviewable.perform(moderator, :agree_and_edit, edit: { raw: "Content corrected by staff." })
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement.payload).to include(
+          "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+          "decision_visibility_other" => "Content edited",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+        )
+        expect(post.reload.raw).to eq("Content corrected by staff.")
+        expect(reviewable.reload).to be_approved
+      end
+
+      it "keeps an unchanged edit free of restriction statements" do
+        reviewable.perform(moderator, :agree_and_edit, edit: { raw: post.raw })
+
+        expect(reviewable.reload).to be_approved
+        expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+      end
+
+      it "records account termination without statements for nested content cleanup" do
+        user = post.user
+        other_post = Fabricate(:post, user:)
+        other_flag = PostActionCreator.spam(flagger, other_post).reviewable
+        held_post = Fabricate(:post, user:)
+        held_review =
+          ReviewablePost.needs_review!(
+            target: held_post,
+            created_by: flagger,
+            reviewable_by_moderator: true,
+          )
+        queued = Fabricate(:reviewable_queued_post, target_created_by: user, created_by: user)
+        account_date = user.created_at.to_date.iso8601
+
+        reviewable.perform(moderator, :delete_user)
+
+        expect(User.exists?(user.id)).to eq(false)
+        expect(DsaStatementOfRecord.count).to eq(1)
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement.payload).to eq(
+          "puid" => statement.id,
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => account_date,
+          "application_date" => Date.current.iso8601,
+        )
+        expect(Reviewable.pending.where(id: [other_flag.id, held_review.id, queued.id])).to be_empty
+      end
+
+      it "preserves known automatic detection without inferring it from a human moderator" do
+        automatic_review =
+          PostActionCreator.create(
+            Discourse.system_user,
+            post,
+            :inappropriate,
+            reason: :watched_word,
+          ).reviewable
+
+        automatic_review.perform(moderator, :agree_and_hide)
+
+        payload = DsaStatementOfRecord.find_by!(reviewable_id: automatic_review.id).payload
+        expect(payload["automated_detection"]).to eq("Yes")
+        expect(payload).not_to have_key("automated_decision")
+      end
+
+      it "combines bulk account restrictions unless required creation dates differ" do
+        post.user.update!(created_at: 4.days.ago)
+        same_date_user = Fabricate(:user, created_at: post.user.created_at)
+        other_date_user = Fabricate(:user, created_at: 2.days.ago)
+
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          penalty: {
+            reason: "Related accounts",
+            suspend_until: 2.days.from_now,
+            other_user_ids: [same_date_user.id, other_date_user.id],
+          },
+        )
+
+        statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+        expect(statements.count).to eq(2)
+        expect(statements.map { |statement| statement.payload["content_date"] }).to match_array(
+          [post.user.created_at, other_date_user.created_at].map { |date| date.to_date.iso8601 },
+        )
+        expect(
+          [post.user, same_date_user, other_date_user].map { |user| user.reload.suspended? },
+        ).to eq([true, true, true])
+      end
+
+      it "records rejected queued content but not its preparatory edit" do
+        queued = Fabricate(:reviewable_queued_post_topic)
+        queued.update_fields({ payload: { raw: "Prepared content for moderation." } }, moderator)
+        expect(DsaStatementOfRecord.where(reviewable_id: queued.id)).to be_empty
+
+        queued.perform(moderator, :reject_post)
+
+        expect(queued.reload).to be_rejected
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: queued.id)
+        expect(statement.payload).to include(
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => queued.created_at.to_date.iso8601,
+        )
+      end
+
+      it "does not record an unrestricted approval" do
+        reviewable.perform(moderator, :agree_and_keep)
+
+        expect(reviewable.reload).to be_approved
+        expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+      end
+
+      it "completes moderation without recording when the setting is off" do
+        SiteSetting.dsa_reporting_enabled = false
+
+        reviewable.perform(moderator, :agree_and_hide)
+
+        expect(post.reload).to be_hidden
+        expect(reviewable.reload).to be_approved
+        expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+      end
+    end
+
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
       private_category = Fabricate(:private_category, group: Fabricate(:group))

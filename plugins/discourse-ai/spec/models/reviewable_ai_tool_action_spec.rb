@@ -120,6 +120,196 @@ RSpec.describe ReviewableAiToolAction do
     end
   end
 
+  describe "#perform" do
+    before { SiteSetting.dsa_reporting_enabled = true }
+
+    it "records explicit locking even when already locked and omits unlocking" do
+      post = Fabricate(:post, topic:)
+      statement_ids = []
+
+      [true, true, false].each do |locked|
+        reviewable =
+          create_reviewable(
+            create_tool_action(
+              tool_name: "lock_post",
+              params: {
+                post_id: post.id,
+                locked:,
+                reason: "Review decision",
+              },
+            ),
+          )
+        reviewable.perform(admin, :approve)
+
+        expect(post.reload.locked?).to eq(locked)
+        statement = DsaStatementOfRecord.find_by(reviewable_id: reviewable.id)
+        if locked
+          expect(statement.payload).to include(
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+            "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+            "content_date" => post.created_at.to_date.iso8601,
+          )
+          statement_ids << statement.id
+        else
+          expect(statement).to be_nil
+        end
+      end
+      expect(DsaStatementOfRecord.pluck(:id)).to match_array(statement_ids)
+    end
+
+    it "records direct unlisting but no restriction when listing the topic again" do
+      post = Fabricate(:post, topic:)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "unlist_topic",
+            params: {
+              topic_id: topic.id,
+              unlisted: true,
+              reason: "Review decision",
+            },
+          ),
+        )
+
+      reviewable.perform(admin, :approve)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DEMOTED"],
+        "content_date" => post.created_at.to_date.iso8601,
+      )
+      expect(topic.reload.visible?).to eq(false)
+      listing =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "unlist_topic",
+            params: {
+              topic_id: topic.id,
+              unlisted: false,
+              reason: "Visible again",
+            },
+          ),
+        )
+
+      listing.perform(admin, :approve)
+
+      expect(topic.reload.visible?).to eq(true)
+      expect(DsaStatementOfRecord.where(reviewable_id: listing.id)).to be_empty
+    end
+
+    it "records a category move only when readers lose access" do
+      post = Fabricate(:post, topic:)
+      members = Fabricate.times(20, :user)
+      readers = Fabricate(:group, users: members)
+      private_category = Fabricate(:private_category, group: readers)
+      same_readers = Fabricate(:private_category, group: Fabricate(:group, users: members))
+      narrower =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: private_category.id,
+              reason: "Restrict audience",
+            },
+          ),
+        )
+
+      narrower.perform(admin, :approve)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: narrower.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+        "decision_visibility_other" => "Content audience restricted",
+        "content_date" => post.created_at.to_date.iso8601,
+      )
+      equivalent =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: same_readers.id,
+              reason: "Reorganize category",
+            },
+          ),
+        )
+
+      SiteSetting.dsa_reporting_enabled = false
+      result = nil
+      queries = track_sql_queries { result = equivalent.perform(admin, :approve) }
+
+      expect(queries.grep(/SELECT DISTINCT "categories"."id".*"category_groups"/).size).to be <= 2
+      expect(result.restrictions).to be_empty
+      expect(topic.reload.category).to eq(same_readers)
+      expect(DsaStatementOfRecord.where(reviewable_id: equivalent.id)).to be_empty
+    end
+
+    it "records a private message move when an original recipient loses access" do
+      reader = Fabricate(:user)
+      source = Fabricate(:private_message_topic, user: admin, recipient: reader)
+      destination = Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user))
+      Fabricate(:post, topic: source, user: admin)
+      post = Fabricate(:post, topic: source, user: admin)
+      Fabricate(:post, topic: destination, user: admin)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: source.id,
+              post_ids: [post.id],
+              destination_topic_id: destination.id,
+              reason: "Narrower recipients",
+            },
+          ),
+        )
+      expect(reader.guardian.can_see_topic?(source)).to eq(true)
+
+      reviewable.perform(admin, :approve)
+
+      expect(post.reload.topic_id).to eq(destination.id)
+      expect(reader.guardian.can_see_topic?(destination.reload)).to eq(false)
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+        "decision_visibility_other" => "Content audience restricted",
+      )
+    end
+
+    it "records the actual moved first post using its original content date" do
+      post = Fabricate(:post, topic:, created_at: 3.days.ago)
+      group = Fabricate(:group)
+      destination = Fabricate(:topic, category: Fabricate(:private_category, group:))
+      Fabricate(:post, topic: destination)
+      unrelated = Fabricate(:post)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: topic.id,
+              post_ids: [post.id, unrelated.id],
+              destination_topic_id: destination.id,
+              reason: "Restrict audience",
+            },
+          ),
+        )
+
+      reviewable.perform(admin, :approve)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+        "decision_visibility_other" => "Content audience restricted",
+        "content_date" => post.created_at.to_date.iso8601,
+      )
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(1)
+      expect(MovedPost.where(old_post_id: post.id, new_topic_id: destination.id)).to be_present
+      expect(unrelated.reload.topic_id).not_to eq(destination.id)
+    end
+  end
+
   describe "#perform_approve" do
     it "rebuilds a tool supplied by a plugin for approval" do
       tool_class =

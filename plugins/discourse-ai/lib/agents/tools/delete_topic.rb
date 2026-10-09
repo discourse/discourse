@@ -66,6 +66,9 @@ module DiscourseAi
 
           if !!parameters[:deleted]
             PostDestroyer.new(acting_user, first_post, context: reason).destroy
+            if first_post.trashed?
+              @restrictions << Reviewable::Restriction.new(kind: :removed, target: first_post)
+            end
           else
             PostDestroyer.new(acting_user, first_post, context: reason).recover
           end

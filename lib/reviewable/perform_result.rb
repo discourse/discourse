@@ -14,6 +14,9 @@ class Reviewable < ActiveRecord::Base
       :update_flag_stats,
       :after_commit,
       :updated_post,
+      :restrictions,
+      :decision_automation,
+      :automated_detection,
     )
 
     def initialize(reviewable, status)
@@ -21,6 +24,7 @@ class Reviewable < ActiveRecord::Base
       @reviewable = reviewable
       @remove_reviewable_ids = success? ? [reviewable.id] : []
       @affected_reviewable_ids = []
+      @restrictions = []
     end
 
     def created_post=(created_post)

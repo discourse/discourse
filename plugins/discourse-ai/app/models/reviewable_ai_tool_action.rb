@@ -59,7 +59,10 @@ class ReviewableAiToolAction < Reviewable
 
     ensure_tool_succeeded!(result)
 
-    resolution_result(:approved, args, tool_result: result)
+    resolution_result(:approved, args, tool_result: result).tap do |performed|
+      performed.restrictions = tool.restrictions
+      performed.decision_automation = :partial
+    end
   end
 
   def perform_reject(performed_by, args)

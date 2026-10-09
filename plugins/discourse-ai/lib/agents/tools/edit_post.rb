@@ -70,10 +70,12 @@ module DiscourseAi
           fields[:raw] = raw if raw.present?
           fields[:title] = title if title.present?
 
+          restriction = Reviewable::Restriction.new(kind: :edited, target: post)
           revisor = PostRevisor.new(post, post.topic)
           result = revisor.revise!(acting_user, fields)
 
           if result
+            @restrictions << restriction if revisor.reviewable_content_changed?
             { status: "success", message: I18n.t("discourse_ai.ai_bot.edit_post.success") }
           else
             error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.revision_failed"))

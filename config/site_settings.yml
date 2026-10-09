@@ -4883,6 +4883,10 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_reporting_enabled:
+    default: false
+    hidden: true
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true

@@ -87,26 +87,42 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    user = target_user
+    restriction = Reviewable::Restriction.new(kind: :terminated, target: user) if user
+    delete_user(user, delete_opts, performed_by) if user
+    result = create_result(:success, :rejected, [], false, &)
+    result.restrictions << restriction if user&.destroyed?
+    result
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    user = target_user
+    restriction = Reviewable::Restriction.new(kind: :terminated, target: user) if user
+    delete_user(user, delete_options, performed_by) if user
+    result = create_result(:success, :rejected, [], false, &)
+    result.restrictions << restriction if user&.destroyed?
+    result
   end
 
   def perform_delete_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post, reviewable_id: id).destroy
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false) do |result|
+      if target_post.trashed?
+        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: target_post)
+      end
+    end
   end
 
   def perform_hide_post(performed_by, _args)
     target_post.hide!(PostActionType.types[:inappropriate])
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false) do |result|
+      if target_post.hidden?
+        result.restrictions << Reviewable::Restriction.new(kind: :disabled, target: target_post)
+      end
+    end
   end
 
   def perform_unhide_post(performed_by, _args)

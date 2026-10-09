@@ -5834,6 +5834,20 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 
 --
+-- Name: dsa_statement_of_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_statement_of_records (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    reviewable_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    payload jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: email_change_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -17449,6 +17463,14 @@ ALTER TABLE ONLY public.drafts
 
 
 --
+-- Name: dsa_statement_of_records dsa_statement_of_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_statement_of_records
+    ADD CONSTRAINT dsa_statement_of_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_change_requests email_change_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -21731,6 +21753,13 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
+-- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dsa_statement_of_records_on_reviewable_id ON public.dsa_statement_of_records USING btree (reviewable_id);
+
+
+--
 -- Name: index_email_change_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25583,6 +25612,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261009113440'),
 ('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),

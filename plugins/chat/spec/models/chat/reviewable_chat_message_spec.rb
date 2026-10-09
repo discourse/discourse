@@ -13,7 +13,38 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
   it { is_expected.to validate_length_of(:target_type).is_at_most(100) }
 
   describe "#perform" do
+    it "records separately stored attachments with their known media types" do
+      SiteSetting.dsa_reporting_enabled = true
+      SiteSetting.authorized_extensions = "jpg|jpeg|png|gif|mp4"
+      image =
+        Fabricate(:upload, original_filename: "cat.gif", extension: "gif", width: 400, height: 300)
+      video = Fabricate(:upload, original_filename: "clip.mp4", extension: "mp4")
+      chat_message.update!(message: "", cooked: "", uploads: [image, video])
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      payload = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload
+      expect(payload["content_type"]).to match_array(%w[CONTENT_TYPE_IMAGE CONTENT_TYPE_VIDEO])
+      expect(payload).not_to have_key("content_type_other")
+    end
+
+    it "records the actual deleted chat message" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => chat_message.created_at.to_date.iso8601,
+      )
+      expect(statement.payload).not_to have_key("automated_detection")
+      expect(chat_message.reload).to be_trashed
+    end
+
     it "suspends the author and completes the deletion alias together" do
+      SiteSetting.dsa_reporting_enabled = true
       reviewable.update!(target_created_by: user)
 
       result =
@@ -30,6 +61,9 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
       expect(user.reload).to be_suspended
       expect(chat_message.reload.deleted_at).to be_present
       expect(reviewable.reload).to be_approved
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["decision_account"]).to eq("DECISION_ACCOUNT_SUSPENDED")
+      expect(statement.payload).not_to have_key("decision_visibility")
     end
 
     it "keeps the content and reviewable unchanged when silence details are invalid" do

@@ -146,6 +146,17 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
 
+  register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    automated || reviewable.is_a?(ReviewableAiPost) || reviewable.is_a?(ReviewableAiChatMessage) ||
+      reviewable
+        .reviewable_scores
+        .where(
+          "context LIKE ?",
+          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+        )
+        .exists?
+  end
+
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
   register_reviewable_type ReviewableAiToolAction

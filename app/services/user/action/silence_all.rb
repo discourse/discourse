@@ -8,7 +8,10 @@ class User::Action::SilenceAll < Service::ActionBase
 
   delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
+  attr_reader :restrictions
+
   def call
+    @restrictions = []
     silenced_users.first.try(:user_history).try(:details)
   end
 
@@ -34,6 +37,11 @@ class User::Action::SilenceAll < Service::ActionBase
             raise ActiveRecord::RecordInvalid.new(user) if raise_on_failure
             next
           end
+          @restrictions << Reviewable::Restriction.new(
+            kind: :silenced,
+            target: user,
+            expires_at: user.silenced_till,
+          )
           Jobs.enqueue(
             :critical_user_email,
             type: "account_silenced",

@@ -84,7 +84,9 @@ class ReviewablePost < Reviewable
   end
 
   def perform_reject_and_keep_deleted(performed_by, _args)
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false) do |result|
+      result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
+    end
   end
 
   def perform_approve_and_restore(performed_by, _args)
@@ -103,7 +105,9 @@ class ReviewablePost < Reviewable
   def perform_reject_and_delete(performed_by, _args)
     PostDestroyer.new(performed_by, post, reviewable_id: id).destroy
 
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(:success, :rejected, [created_by_id], false) do |result|
+      result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
+    end
   end
 
   def perform_reject_and_suspend(performed_by, _args)

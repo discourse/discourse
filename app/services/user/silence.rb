@@ -50,12 +50,15 @@ class User::Silence
   end
 
   def silence(guardian:, users:, params:, options:)
-    context[:full_reason] = User::Action::SilenceAll.call(
-      users:,
-      actor: guardian.user,
-      params:,
-      raise_on_failure: options.raise_on_failure,
-    )
+    action =
+      User::Action::SilenceAll.new(
+        users:,
+        actor: guardian.user,
+        params:,
+        raise_on_failure: options.raise_on_failure,
+      )
+    context[:full_reason] = action.call
+    context[:restrictions] = action.restrictions
   end
 
   def fetch_post(params:)
@@ -63,11 +66,13 @@ class User::Silence
   end
 
   def perform_post_action(guardian:, post:, params:, options:)
-    User::Action::TriggerPostAction.call(
-      guardian:,
-      post:,
-      params:,
-      raise_on_failure: options.raise_on_failure,
+    context[:restrictions].concat(
+      User::Action::TriggerPostAction.call(
+        guardian:,
+        post:,
+        params:,
+        raise_on_failure: options.raise_on_failure,
+      ),
     )
   end
 end

@@ -89,10 +89,31 @@ module DiscourseAi
             opts[:category_id] = parameters[:category_id] if parameters[:category_id].present?
           end
 
+          audience = Reviewable::Audience.new(topic)
+          candidates = topic.posts.where(id: post_ids).index_by(&:id)
+          last_movement_id = MovedPost.where(old_topic_id: topic.id).maximum(:id) || 0
           destination_topic =
             topic.move_posts(acting_user, post_ids, opts.merge(guardian: guardian))
 
           if destination_topic.present?
+            if audience.restricted_by?(destination_topic)
+              moved_ids =
+                MovedPost
+                  .where(
+                    old_topic_id: topic.id,
+                    new_topic_id: destination_topic.id,
+                    user_id: acting_user.id,
+                  )
+                  .where("id > ?", last_movement_id)
+                  .pluck(:old_post_id)
+              @restrictions =
+                moved_ids.uniq.filter_map do |post_id|
+                  original = candidates[post_id]
+                  if original
+                    Reviewable::Restriction.new(kind: :audience_restricted, target: original)
+                  end
+                end
+            end
             {
               status: "success",
               message: I18n.t("discourse_ai.ai_bot.move_posts.success"),

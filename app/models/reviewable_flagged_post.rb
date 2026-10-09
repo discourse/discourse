@@ -251,21 +251,35 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_keep(performed_by, args)
-    agree(performed_by, args)
+    agree(performed_by, args).tap do |result|
+      if post&.trashed? || post&.hidden?
+        result.restrictions << Restriction.new(
+          kind: post.trashed? ? :removed : :disabled,
+          target: post,
+        )
+      end
+    end
   end
 
   def perform_delete_user(performed_by, args)
-    super
-    agree(performed_by, args)
+    deletion = super
+    agree(performed_by, args).tap { |result| result.restrictions = deletion.restrictions }
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    super
-    agree(performed_by, args)
+    deletion = super
+    agree(performed_by, args).tap { |result| result.restrictions = deletion.restrictions }
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    restriction = nil
+    result =
+      agree(performed_by, args) do |pa|
+        post.hide!(pa.post_action_type_id)
+        restriction = Restriction.new(kind: :disabled, target: post) if post.hidden?
+      end
+    result.restrictions << restriction if restriction
+    result
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -322,12 +336,16 @@ class ReviewableFlaggedPost < Reviewable
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
     destroyer(performed_by, post).destroy
+    result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    result.restrictions =
+      PostDestroyer
+        .delete_with_replies(performed_by, post, id)
+        .map { |deleted_post| Restriction.new(kind: :removed, target: deleted_post) }
 
     result
   end
@@ -335,12 +353,16 @@ class ReviewableFlaggedPost < Reviewable
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
     destroyer(performed_by, post).destroy
+    result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    result.restrictions =
+      PostDestroyer
+        .delete_with_replies(performed_by, post, id)
+        .map { |deleted_post| Restriction.new(kind: :removed, target: deleted_post) }
     result
   end
 

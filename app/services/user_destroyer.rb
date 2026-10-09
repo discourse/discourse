@@ -149,7 +149,7 @@ class UserDestroyer
         actions = reviewable.actions_for(@guardian)
 
         if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
-          reviewable.perform(@actor, :agree_and_keep)
+          reviewable.perform(@actor, :agree_and_keep, resolution_cause: :account_deleted)
         end
       end
 
@@ -157,7 +157,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
-          reviewable.perform(@actor, :reject_and_delete)
+          reviewable.perform(@actor, :reject_and_delete, resolution_cause: :account_deleted)
         end
       end
 
@@ -165,7 +165,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_post)
-          reviewable.perform(@actor, :reject_post)
+          reviewable.perform(@actor, :reject_post, resolution_cause: :account_deleted)
         end
       end
   end
