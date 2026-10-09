@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::Google do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
   let(:search) { described_class.new({ query: "some search term" }, bot_user: bot_user, llm: llm) }

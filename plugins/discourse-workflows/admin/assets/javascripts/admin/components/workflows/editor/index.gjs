@@ -680,6 +680,7 @@ export default class WorkflowsEditor extends Component {
       position,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
         configOverrides,
       }
     );
@@ -790,6 +791,7 @@ export default class WorkflowsEditor extends Component {
       null,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
       }
     );
 
@@ -1372,6 +1374,7 @@ export default class WorkflowsEditor extends Component {
       position,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
         configOverrides,
       }
     );

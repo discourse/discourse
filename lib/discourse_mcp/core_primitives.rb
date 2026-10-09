@@ -1906,6 +1906,366 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
       )
+      group_id = { type: "integer", minimum: 1 }
+      user_selectors = {
+        usernames: {
+          type: "array",
+          items: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_ids: {
+          type: "array",
+          items: {
+            type: "integer",
+            minimum: 1,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_emails: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "email",
+            minLength: 3,
+            maxLength: 513,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+      }
+      group_settings = {
+        full_name: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        title: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        bio_raw: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_BIO_LENGTH,
+        },
+        visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        members_visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        mentionable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        messageable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        default_notification_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::NOTIFICATION_LEVELS,
+        },
+        public_admission: {
+          type: "boolean",
+        },
+        public_exit: {
+          type: "boolean",
+        },
+        allow_membership_requests: {
+          type: "boolean",
+        },
+        membership_request_template: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_TEMPLATE_LENGTH,
+        },
+        primary_group: {
+          type: "boolean",
+        },
+        publish_read_state: {
+          type: "boolean",
+        },
+        grant_trust_level: {
+          type: %w[integer null],
+          minimum: 0,
+          maximum: 4,
+        },
+        automatic_membership_email_domains: {
+          type: %w[string null],
+          maxLength: 1_000,
+        },
+        flair_icon: {
+          type: %w[string null],
+          maxLength: 100,
+        },
+        flair_bg_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+        flair_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+      }
+      notification_defaults =
+        GroupUpdater::NOTIFICATION_DEFAULT_LEVELS.each_with_object({}) do |level, schema|
+          schema[:"#{level}_category_ids"] = {
+            type: "array",
+            items: {
+              type: "integer",
+              minimum: 1,
+            },
+            maxItems: 100,
+          }
+          schema[:"#{level}_tags"] = {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            maxItems: 100,
+          }
+        end
+
+      register_tool(
+        registry,
+        "discourse_create_group",
+        title: "Create group",
+        description: "Creates a group and returns its ID and name. Requires group creation rights.",
+        implementation: Tools::CreateGroup,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              owner_usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+              usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_group",
+        title: "Update group",
+        description:
+          "Updates the group settings the authenticated user may change. " \
+            "Fields the user cannot change are ignored.",
+        implementation: Tools::UpdateGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              **notification_defaults,
+              update_existing_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_group",
+        title: "Delete group",
+        description:
+          "Deletes a group after confirming its current name. Administrators only. " \
+            "Automatic groups cannot be deleted.",
+        implementation: Tools::DeleteGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_members",
+        title: "Manage group members",
+        description:
+          "Adds or removes members of a group the authenticated user may manage. " \
+            "Provide exactly one of usernames, user_ids, or user_emails. " \
+            "The user_emails selector requires permission to view email addresses.",
+        implementation: Tools::ManageGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembers::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_invite_group_members",
+        title: "Invite group members by email",
+        description:
+          "Adds existing accounts that match an address and invites the rest to the forum " \
+            "with the group preassigned. Requires permission to view email addresses.",
+        implementation: Tools::InviteGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              emails: {
+                type: "array",
+                items: {
+                  type: "string",
+                  format: "email",
+                  minLength: 3,
+                  maxLength: 513,
+                },
+                minItems: 1,
+                maxItems: Tools::InviteGroupMembers::MAX_EMAILS,
+              },
+              skip_email: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id emails],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :external_side_effect,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_owners",
+        title: "Manage group owners",
+        description:
+          "Grants or revokes group ownership. Adding an owner also adds them as a member. " \
+            "Automatic groups cannot be changed.",
+        implementation: Tools::ManageGroupOwners,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupOwners::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_membership",
+        title: "Manage own group membership",
+        description:
+          "Joins a group that allows public admission, leaves a group that allows public exit, " \
+            "or requests membership with a reason.",
+        implementation: Tools::ManageGroupMembership,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembership::ACTIONS,
+              },
+              reason: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::ManageGroupMembership::MAX_REASON_LENGTH,
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :write,
+      )
+      register_tool(
+        registry,
+        "discourse_handle_group_membership_request",
+        title: "Handle group membership request",
+        description:
+          "Approves or denies one pending membership request for a group the authenticated " \
+            "user may manage. Approving adds the requester to the group.",
+        implementation: Tools::HandleGroupMembershipRequest,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::HandleGroupMembershipRequest::ACTIONS,
+              },
+            },
+            required: %w[group_id username action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
       register_tool(
         registry,
         "discourse_list_group_posts",

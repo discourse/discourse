@@ -220,7 +220,11 @@ export default class DMenu<Data = unknown> extends Component<
     // does not declare but honors at runtime, so the result is cast to a component type
     // describing that passthrough.
     return (this.args.triggerComponent ||
-      curryComponent(DButton, baseArguments, getOwner(this))) as ComponentLike<{
+      curryComponent(
+        DButton,
+        baseArguments,
+        getOwner(this)!
+      )) as ComponentLike<{
       Element: HTMLElement;
       Args: { componentArgs?: DMenuComponentArgs<Data> };
       Blocks: { default: [] };

@@ -122,12 +122,12 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
 
     it "hides artifacts and future versions when their conversation share is invalidated" do
       llm_model = Fabricate(:llm_model, name: "artifact-sharing-model")
+      bot_user = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
       toggle_enabled_bots(bots: [llm_model])
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
       Group.user_trust_level_change!(user.id, user.trust_level)
 
-      bot_user = llm_model.reload.user
       topic.topic_allowed_users.where.not(user_id: user.id).delete_all
       topic.topic_allowed_users.create!(user: bot_user)
       post.update_columns(

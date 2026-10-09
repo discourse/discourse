@@ -162,7 +162,23 @@ module DiscourseAi
           requested_visible_output_tokens = model_params[:max_tokens].presence&.to_i
           output_token_limit = llm_model.max_output_tokens.to_i
 
-          if output_token_limit.positive?
+          if model_params[:max_tokens_is_total] && requested_visible_output_tokens&.positive?
+            provider_output_tokens = requested_visible_output_tokens
+            if output_token_limit.positive?
+              provider_output_tokens = [provider_output_tokens, output_token_limit].min
+            end
+            # Budget thinking needs at least 1024 reasoning tokens and some visible output.
+            # Small work allocations disable optional thinking instead of inflating the request.
+            if provider_output_tokens <= MIN_THINKING_BUDGET
+              return DiscourseAi::Completions::ThinkingConfig.explicit_none
+            end
+            visible_floor = [
+              MIN_VISIBLE_OUTPUT_TOKENS,
+              provider_output_tokens - MIN_THINKING_BUDGET,
+            ].min
+            budget = [budget, provider_output_tokens - visible_floor].min
+            visible_output_tokens = provider_output_tokens - budget
+          elsif output_token_limit.positive?
             provider_output_tokens = output_token_limit
             return if provider_output_tokens <= MIN_THINKING_BUDGET
 

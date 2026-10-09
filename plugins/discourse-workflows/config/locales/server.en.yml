@@ -48,6 +48,13 @@ en:
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
       approval_timed_out: "Approval timed out"
+      rate_limited:
+        global:
+          one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+          other: "This workflow wasn't run because %{count} workflow executions already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+        per_workflow:
+          one: "This workflow wasn't run because it already started %{count} execution in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
+          other: "This workflow wasn't run because it already started %{count} executions in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
       step_execution:
         not_executable: "This node cannot be executed as a single step."
         waiting_not_supported: "Nodes that wait for a response cannot run during a step execution. Run the workflow or pin data past them first."
@@ -83,6 +90,13 @@ en:
       unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
+        not_found: "No user found with username '%{username}'."
+        id_not_found: "No user found with ID %{id}."
+        restricted:
+          staged: "The user '%{username}' is a staged user and can't perform actions."
+          silenced: "The user '%{username}' is silenced."
+          suspended: "The user '%{username}' is suspended."
+          inactive: "The user '%{username}' hasn't activated their account."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
@@ -92,6 +106,7 @@ en:
         invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+        whisper_not_allowed: "%{username} cannot whisper. Check the whispers allowed groups site setting."
         edit_failed: "Failed to edit post."
         invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
@@ -202,10 +217,12 @@ en:
       destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     user:
       check_email_context: "Workflow user node"
     flag_user:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."

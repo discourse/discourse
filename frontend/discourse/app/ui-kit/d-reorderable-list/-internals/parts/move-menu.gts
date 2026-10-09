@@ -91,7 +91,13 @@ interface MoveMenuData {
 
 interface MoveMenuSignature {
   Args: {
-    data?: MoveMenuData;
+    /**
+     * The list's `MoveMenuData` for the row the menu was opened from. Typed
+     * `unknown` because the menu service delivers `@data` untyped.
+     */
+    data?: unknown;
+
+    /** Closes the menu, supplied by the menu service. */
     close?: () => void;
   };
 }
@@ -112,7 +118,7 @@ interface MoveMenuSignature {
  */
 export default class MoveMenu extends Component<MoveMenuSignature> {
   get row(): Row<unknown> | undefined {
-    return this.args.data?.list.rowFor(this.args.data.key);
+    return this.#data?.list.rowFor(this.#data.key);
   }
 
   /**
@@ -134,7 +140,18 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
   }
 
   get siblings(): { listId: string; listLabel: string }[] {
-    return this.args.data?.list.siblings() ?? [];
+    return this.#data?.list.siblings() ?? [];
+  }
+
+  /**
+   * `@data`, narrowed to what the list passes.
+   *
+   * TODO(typescript-pending): the menu service types a content component's
+   * `@data` as `unknown`, so a component that needs a narrower type cannot say
+   * so. Drop this cast once that option is generic over its data.
+   */
+  get #data(): MoveMenuData | undefined {
+    return this.args.data as MoveMenuData | undefined;
   }
 
   /**
@@ -151,7 +168,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
       return;
     }
     const target = CHORD_TARGETS[event.key];
-    const { data } = this.args;
+    const data = this.#data;
     if (!target || !data) {
       return;
     }
@@ -162,13 +179,14 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
 
   @action
   move(target: MoveTarget) {
-    const { data } = this.args;
+    const data = this.#data;
     data?.list.onMenuMove(data.key, target);
   }
 
   @action
   moveToList(listId: string) {
-    const { data, close } = this.args;
+    const data = this.#data;
+    const { close } = this.args;
     data?.list.onMenuMoveToList(data.key, listId, close ?? (() => {}));
   }
 
@@ -178,7 +196,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
    * @param target - The step being considered.
    */
   #canSpill(target: MoveTarget): boolean {
-    return this.args.data?.list.canSpill(target) ?? false;
+    return this.#data?.list.canSpill(target) ?? false;
   }
 
   <template>

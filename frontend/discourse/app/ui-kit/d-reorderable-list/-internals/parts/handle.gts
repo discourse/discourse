@@ -2,11 +2,13 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import type { ModifierLike } from "@glint/template";
 import DButton from "discourse/ui-kit/d-button";
+import { HANDLE_ICON } from "discourse/ui-kit/d-reorderable-list/-internals/constants";
 import type { Row } from "discourse/ui-kit/d-reorderable-list/types";
 import { i18n } from "discourse-i18n";
 
 interface HandlePartSignature {
   Args: {
+    /** The row this handle moves. */
     row: Row<unknown>;
 
     /** Opens the list's shared menu against this row. */
@@ -14,7 +16,15 @@ interface HandlePartSignature {
 
     /** Whether the shared menu is currently open on this row. */
     isOpen: boolean;
-    register: ModifierLike<{ Args: { Positional: [string] } }>;
+
+    /**
+     * Records the handle's element against the row's key, so the list can
+     * find the row's one control wherever it was placed.
+     */
+    register: ModifierLike<{
+      Element: Element;
+      Args: { Positional: [string] };
+    }>;
   };
   Element: HTMLElement;
 }
@@ -47,7 +57,7 @@ export default class HandlePart extends Component<HandlePartSignature> {
       ...attributes
       @action={{this.open}}
       @ariaExpanded={{if @row.hasDestinations @isOpen}}
-      @icon="grip-vertical"
+      @icon={{HANDLE_ICON}}
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
       {{@register @row.key}}

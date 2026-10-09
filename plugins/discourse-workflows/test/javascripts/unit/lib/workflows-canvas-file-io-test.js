@@ -39,15 +39,13 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       versionCounter: 3,
     });
 
-    assert.strictEqual(payload.id, "42");
-    assert.strictEqual(payload.name, "Imported workflow");
-    assert.deepEqual(payload.settings, { executionOrder: "v1" });
-    assert.deepEqual(payload.staticData, { "node:Send request": { count: 1 } });
-    assert.deepEqual(payload.pinData, { "node-1": [{ json: { ok: true } }] });
-    assert.strictEqual(payload.versionId, "version-1");
-    assert.strictEqual(payload.activeVersionId, "version-1");
-    assert.strictEqual(payload.versionCounter, 3);
-    assert.deepEqual(payload.connections, {});
+    assert.deepEqual(payload, {
+      name: "Imported workflow",
+      nodes: payload.nodes,
+      connections: {},
+      settings: { executionOrder: "v1" },
+      staticData: { "node:Send request": { count: 1 } },
+    });
     assert.deepEqual(payload.nodes[0].credentials, {
       auth: {
         id: "42",

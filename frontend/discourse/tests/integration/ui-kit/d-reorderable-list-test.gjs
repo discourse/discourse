@@ -312,6 +312,99 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 
+  test("a row without a handle lines its content up with rows that have one", async function (assert) {
+    const items = objectItems().slice(0, 3);
+    const movable = (item) => item.id !== items[2].id;
+    const contentLeft = (item) =>
+      find(`[data-test-item="${item.id}"]`).getBoundingClientRect().left;
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{items}}
+          @key="id"
+          @label={{label}}
+          @movable={{movable}}
+          @onMove={{noop}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    assert
+      .dom(handleSelector(items[2].id))
+      .doesNotExist("the frozen row renders no handle");
+    assert.strictEqual(
+      contentLeft(items[2]),
+      contentLeft(items[0]),
+      "the frozen row's content starts where a handled row's content does"
+    );
+    assert
+      .dom(`${rowSelector(items[2].id)} :is(button, [tabindex])`)
+      .doesNotExist("the reserved space adds nothing to the tab sequence");
+  });
+
+  test("rows reserve no handle space when no row in the list has a handle", async function (assert) {
+    const items = objectItems().slice(0, 2);
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @disabled={{true}}
+          @items={{items}}
+          @key="id"
+          @label={{label}}
+          @onMove={{noop}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    assert.strictEqual(
+      find(`[data-test-item="${items[0].id}"]`).getBoundingClientRect().left,
+      find(rowSelector(items[0].id)).getBoundingClientRect().left,
+      "the content starts at the row's own edge"
+    );
+  });
+
+  test("a manual list leaves handle spacing to the consumer", async function (assert) {
+    const items = objectItems().slice(0, 3);
+    const movable = (item) => item.id !== items[2].id;
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @controls="manual"
+          @items={{items}}
+          @key="id"
+          @label={{label}}
+          @movable={{movable}}
+          @onMove={{noop}}
+        >
+          <:row as |item controls|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+            {{#if controls.handle}}<controls.handle />{{/if}}
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    assert.strictEqual(
+      find(`[data-test-item="${items[2].id}"]`).getBoundingClientRect().left,
+      find(rowSelector(items[2].id)).getBoundingClientRect().left,
+      "the frozen manual row's content starts at the row's own edge"
+    );
+  });
+
   test("a manual row places its own handle wherever it belongs", async function (assert) {
     const items = objectItems().slice(0, 2);
 
@@ -1812,6 +1905,46 @@ module(
         onCreate.callCount,
         1,
         "clicking create for whitespace adds no callback"
+      );
+    });
+
+    test("the default create input shares its add button's centre line", async function (assert) {
+      const items = objectItems().slice(0, 2);
+      const centreY = (selector) => {
+        const rect = find(selector).getBoundingClientRect();
+        return rect.top + rect.height / 2;
+      };
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @allowCreate={{true}}
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onCreate={{noop}}
+            @onMove={{noop}}
+          >
+            <:row as |item|><span
+                data-test-item={{item.id}}
+              >{{item.name}}</span></:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.strictEqual(
+        getComputedStyle(find(".d-reorderable-list__create-input"))
+          .marginBottom,
+        "0px",
+        "the input carries no bottom margin into the row"
+      );
+      assert.true(
+        Math.abs(
+          centreY(".d-reorderable-list__create-input") -
+            centreY(".d-reorderable-list__create-button")
+        ) < 1,
+        "the input and the add button are centred on one line"
       );
     });
 

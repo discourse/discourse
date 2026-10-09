@@ -16,6 +16,39 @@ module ::DiscourseWorkflows
   def self.reviewable_score_context(workflow_id)
     "discourse_workflows:workflow:#{workflow_id}" if workflow_id.present?
   end
+
+  def self.review_agent(exec_ctx, item_index:)
+    agents = exec_ctx.nearest_upstream_metadata("review_agent", item_index:)
+    agents.first if agents&.one?
+  end
+
+  def self.record_review_agent(reviewable, exec_ctx, item_index:)
+    agent = review_agent(exec_ctx, item_index:)
+    return if !agent
+
+    reviewable.with_lock do
+      payload = reviewable.payload || {}
+      agent_ids = Array(payload["workflow_review_agent_ids"])
+      agent_id = agent.fetch("id").to_s
+      next if agent_ids.include?(agent_id)
+
+      reviewable.update!(
+        payload: payload.merge("workflow_review_agent_ids" => agent_ids + [agent_id]),
+      )
+    end
+  end
+
+  def self.review_attribution(exec_ctx, item_index:, flag_type:, escape: false)
+    agent = review_agent(exec_ctx, item_index:)
+    values = { workflow_name: exec_ctx.get_workflow.name }
+    key = "discourse_workflows.#{flag_type}.flagged_by_workflow"
+    if agent
+      key = "discourse_workflows.#{flag_type}.flagged_by_agent"
+      values[:agent_name] = agent.fetch("name")
+    end
+    values.transform_values! { |value| ERB::Util.html_escape(value) } if escape
+    I18n.t(key, **values)
+  end
 end
 
 require_relative "lib/discourse_workflows/engine"
@@ -101,6 +134,36 @@ after_initialize do
         .order(:name)
         .pluck(:id, :name)
         .map { |id, name| { id: "discourse_workflows:workflow:#{id}", name:, value: id } }
+    end,
+  )
+
+  add_custom_reviewable_filter(
+    [
+      :workflow_review_agent_id,
+      proc do |results, value|
+        agent_id = value.to_s[/\A[1-9]\d*\z/]
+        next results if !agent_id
+
+        results.where(
+          "(reviewables.payload::jsonb -> 'workflow_review_agent_ids') ? :agent_id",
+          agent_id:,
+        )
+      end,
+    ],
+    reason_filters: -> do
+      next [] if !defined?(AiAgent)
+
+      AiAgent
+        .where(<<~SQL)
+          id IN (
+            SELECT json_array_elements_text(payload -> 'workflow_review_agent_ids')::bigint
+            FROM reviewables
+            WHERE payload -> 'workflow_review_agent_ids' IS NOT NULL
+          )
+        SQL
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "discourse_workflows:agent:#{id}", name:, value: id } }
     end,
   )
 

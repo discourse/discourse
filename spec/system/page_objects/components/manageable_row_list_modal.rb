@@ -29,6 +29,15 @@ module PageObjects
         all("#{@modal} #{ENABLED_ROW}").map { |el| row_key(el) }
       end
 
+      def has_enabled_rows_in_order?(identifiers)
+        has_css?("#{@modal} #{ENABLED_ROW}", count: identifiers.size) &&
+          identifiers.each_with_index.all? do |identifier, index|
+            has_css?(
+              "#{@modal} #{ENABLED_ROW}:nth-child(#{index + 1})[data-identifier='#{identifier}']",
+            )
+          end
+      end
+
       def has_all_row?(identifier)
         has_css?(
           "#{@modal} #{ROW}[data-identifier='#{identifier}'], #{@modal} #{ROW}[data-reorderable-key='#{identifier}']",
@@ -75,6 +84,11 @@ module PageObjects
 
       def close
         find("#{@modal} .d-modal__header .modal-close").click
+        self
+      end
+
+      def move_up(identifier)
+        find("#{@modal} #{ROW}[data-identifier='#{identifier}'] .d-icon-arrow-up").click
         self
       end
 

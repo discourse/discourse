@@ -343,15 +343,16 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(history.subject).to eq(valid_attrs[:display_name]) # Verify subject is set to display_name
       end
 
-      it "creates a companion user when LLM is in ai_bot_enabled_llms setting" do
-        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
+      it "creates an LLM without a user while bot conversations are configured" do
+        selectable_model = Fabricate(:llm_model)
+        SiteSetting.ai_bot_enabled = true
+        SiteSetting.ai_bot_enabled_llms = selectable_model.id.to_s
 
-        created_model = LlmModel.last
+        expect do
+          post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
+        end.not_to change { User.count }
 
-        SiteSetting.ai_bot_enabled_llms = created_model.id.to_s
-        created_model.toggle_companion_user
-
-        expect(created_model.reload.user_id).to be_present
+        expect(LlmModel.last.user_id).to be_nil
       end
 
       it "stores provider-specific config params" do
@@ -827,22 +828,22 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(response.status).to eq(404)
       end
 
-      it "creates a companion user when LLM is added to ai_bot_enabled_llms setting" do
+      it "does not create a user when an LLM becomes selectable" do
         SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
 
-        put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
-            params: {
-              ai_llm: update_attrs,
-            }
+        expect do
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: update_attrs,
+              }
+        end.not_to change { User.count }
 
-        expect(llm_model.reload.user_id).to be_present
+        expect(llm_model.reload.user_id).to be_nil
       end
 
-      it "removes the companion user when LLM is removed from ai_bot_enabled_llms setting" do
-        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
-        llm_model.toggle_companion_user
-        expect(llm_model.reload.user_id).to be_present
-
+      it "preserves a legacy user when an LLM is no longer selectable" do
+        legacy_user = Fabricate(:user)
+        llm_model.update_columns(user_id: legacy_user.id)
         SiteSetting.ai_bot_enabled_llms = ""
 
         put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
@@ -850,7 +851,8 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
               ai_llm: update_attrs,
             }
 
-        expect(llm_model.reload.user_id).to be_nil
+        expect(llm_model.reload.user_id).to eq(legacy_user.id)
+        expect(legacy_user.reload).to be_active
       end
     end
 
@@ -1047,14 +1049,14 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       end
     end
 
-    it "cleans up companion users before deleting the model" do
-      SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
-      llm_model.toggle_companion_user
-      companion_user = llm_model.user
+    it "preserves a legacy user when deleting the model" do
+      legacy_user = Fabricate(:user)
+      llm_model.update_columns(user_id: legacy_user.id)
 
       delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"
 
-      expect { companion_user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(response).to have_http_status(:no_content)
+      expect(legacy_user.reload).to be_present
     end
   end
 end

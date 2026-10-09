@@ -3,7 +3,7 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
-      DEFAULT_OUTPUT_TOKEN_BUDGET = 4096
+      DEFAULT_OUTPUT_TOKEN_BUDGET = 2500
       TRANSLATION_EXPANSION_FACTOR = 2
       PROMPT_TOKEN_RESERVE = 256
 
@@ -39,7 +39,7 @@ module DiscourseAi
         bot = DiscourseAi::Agents::Bot.as(translation_user, agent:, model:)
         tokenizer = model.tokenizer_class
         payload_overhead = tokenizer.size(formatted_content(""))
-        output_tokens = output_token_budget(model, agent, payload_overhead)
+        output_tokens = output_token_budget(bot, translation_user)
         chunk_size = output_tokens / TRANSLATION_EXPANSION_FACTOR
         chunks =
           ContentSplitter.split(content: @text, chunk_size:) do |text|
@@ -48,7 +48,7 @@ module DiscourseAi
 
         translated =
           chunks
-            .map { |text| get_translation(text:, bot:, translation_user:, model:, output_tokens:) }
+            .map { |text| get_translation(text:, bot:, translation_user:, output_tokens:) }
             .join("")
 
         strip_control_characters(translated)
@@ -56,20 +56,47 @@ module DiscourseAi
 
       private
 
-      def output_token_budget(model, agent, payload_overhead)
-        prompt_tokens =
-          [
-            agent.system_prompt,
-            JSON.generate(agent.response_format),
-            *Array(agent.examples).flatten,
-          ].sum { |text| model.tokenizer_class.size(text) }
-        available_tokens =
-          model.max_prompt_tokens - prompt_tokens - payload_overhead - PROMPT_TOKEN_RESERVE
-
-        [
-          model.max_output_tokens || DEFAULT_OUTPUT_TOKEN_BUDGET,
-          available_tokens * TRANSLATION_EXPANSION_FACTOR / (TRANSLATION_EXPANSION_FACTOR + 1),
+      def output_token_budget(bot, translation_user)
+        llm = bot.llm
+        agent = bot.agent
+        context = translation_context(text: "", translation_user:)
+        prompt = agent.craft_prompt(context, llm:)
+        response_format =
+          if agent.response_format.present?
+            DiscourseAi::Agents::Bot.build_json_schema(agent.response_format)
+          end
+        size, capacity =
+          llm.prompt_capacity(
+            prompt,
+            max_tokens: 1,
+            max_tokens_is_total: true,
+            thinking_effort: agent.thinking_effort,
+            response_format:,
+          )
+        threshold = (agent.class.compression_threshold || 80).to_i.clamp(1, 100)
+        available_tokens = capacity * threshold / 100 - size - PROMPT_TOKEN_RESERVE
+        work_budget =
+          DiscourseAi::Completions::TurnWorkBudget.new(
+            limit: DiscourseAi::Agents::Bot.effective_max_turn_tokens(agent.class.max_turn_tokens),
+          )
+        output_limit =
+          work_budget.generation_options(
+            {},
+            maximum: bot.model.max_output_tokens || DEFAULT_OUTPUT_TOKEN_BUDGET,
+            tools: prompt.tools.present?,
+          )[
+            :max_tokens
+          ]
+        # Fixed examples must fit without triggering context compression.
+        output_tokens = [
+          output_limit,
+          available_tokens * TRANSLATION_EXPANSION_FACTOR * 100 /
+            (100 + threshold * TRANSLATION_EXPANSION_FACTOR),
         ].min
+        if output_tokens <= 0
+          raise DiscourseAi::Completions::ContextPreparation::Error.new("hard_overflow")
+        end
+        output_tokens
       end
 
       def formatted_content(content)
@@ -88,17 +115,9 @@ module DiscourseAi
         text.gsub(/[\u0000-\u0008\u000B-\u001F\u007F\u0080-\u009F]/, "")
       end
 
-      def get_translation(text:, bot:, translation_user:, model:, output_tokens:)
-        context =
-          DiscourseAi::Agents::BotContext.new(
-            user: translation_user,
-            skip_show_thinking: true,
-            feature_name: "translation",
-            messages: [{ type: :user, content: formatted_content(text) }],
-            topic: @topic,
-            post: @post,
-          )
-        llm_args = { max_tokens: model.max_output_tokens && output_tokens }
+      def get_translation(text:, bot:, translation_user:, output_tokens:)
+        context = translation_context(text:, translation_user:)
+        llm_args = { max_tokens: output_tokens }
 
         structured_output = nil
         result = +""
@@ -110,6 +129,17 @@ module DiscourseAi
           end
         end
         structured_output&.read_buffered_property(:output) || result
+      end
+
+      def translation_context(text:, translation_user:)
+        DiscourseAi::Agents::BotContext.new(
+          user: translation_user,
+          skip_show_thinking: true,
+          feature_name: "translation",
+          messages: [{ type: :user, content: formatted_content(text) }],
+          topic: @topic,
+          post: @post,
+        )
       end
 
       def agent_setting

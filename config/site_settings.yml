@@ -1425,6 +1425,7 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
@@ -4825,15 +4826,6 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
-  enable_new_post_reactions_menu:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "permanent"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/389820"
   enable_new_reordering_controls:
     default: false
     client: true
@@ -4854,6 +4846,16 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_main_outlet_grid_layout_change:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
   enable_composer_toolbar_customization:
     default: false
     client: true

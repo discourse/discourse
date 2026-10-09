@@ -43,9 +43,11 @@ interface DAsyncContentSignature<T> {
      * - a `Promise` that resolves to the value;
      * - an already-constructed `TrackedAsyncData`, when the caller manages the
      *   async state itself;
-     * - an `AsyncDataFn` that produces the value on demand.
+     * - an `AsyncDataFn` that produces the value on demand;
+     * - `undefined`, when there is nothing to load yet; it renders like a value
+     *   that resolved empty.
      */
-    asyncData: Promise<T> | TrackedAsyncData<T> | AsyncDataFn<T>;
+    asyncData: Promise<T> | TrackedAsyncData<T> | AsyncDataFn<T> | undefined;
 
     /**
      * A value forwarded to the function form of `@asyncData`. It is tracked, so
@@ -94,8 +96,11 @@ interface DAsyncContentSignature<T> {
 
     /** Rendered once the data resolves. */
     content: [
-      /** The resolved value. */
-      value: T,
+      /**
+       * The resolved value. `undefined` when the data resolved empty and no
+       * `:empty` block was provided.
+       */
+      value: T | undefined,
     ];
 
     /** Rendered in place of `content` when the resolved value is falsy. */
@@ -252,9 +257,10 @@ export default class DAsyncContent<T> extends Component<
     // a source renders content with no pending/loading phase; a promise resolves
     // asynchronously as usual.
     //
-    // The branch analysis above is exhaustive for the supported `@asyncData`
-    // shapes, so `value` is always assigned; the cast drops the never-hit
-    // `Promise<void>`/`undefined` members and pins the resolved type to `T`.
+    // An `undefined` `@asyncData` matches neither branch above, so `value` stays
+    // `undefined` and resolves at once, rendering the empty state like any other
+    // falsy value. The cast drops the never-hit `Promise<void>` member and pins the
+    // resolved type to `T`.
     return new TrackedAsyncData(value as T | Promise<T>);
   }
 

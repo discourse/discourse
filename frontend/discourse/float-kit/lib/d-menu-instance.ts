@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -50,7 +51,7 @@ export default class DMenuInstance extends FloatKitInstance {
   @tracked options: MenuOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger: FloatKitTrigger;
+  @tracked _trigger?: FloatKitTrigger;
 
   constructor(owner: Owner, options: Partial<MenuOptions> = {}) {
     super();
@@ -70,8 +71,14 @@ export default class DMenuInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get trigger() {
-    return this._trigger;
+  /**
+   * Set when the trigger registers, which comes before the float can show or
+   * hand out its API. A read before then is a bug, so it asserts.
+   */
+  get trigger(): FloatKitTrigger {
+    const trigger = this._trigger;
+    assert("DMenuInstance: the trigger is read before it registered", trigger);
+    return trigger;
   }
 
   set trigger(element: FloatKitTrigger) {

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -190,7 +191,7 @@ export default class DModal extends Component<DModalSignature> {
 
   @tracked animating = false;
   registerModalContainer = modifierFn((el: HTMLElement) => {
-    this.#modalContainer = el;
+    this.#modalContainerElement = el;
   });
   setupModalBody = modifierFn((el: HTMLElement) => {
     if (this.site.desktopView) {
@@ -222,9 +223,16 @@ export default class DModal extends Component<DModalSignature> {
       }
     };
   });
-  #modalContainer: HTMLElement;
+  #modalContainerElement?: HTMLElement;
   #lockedScrollY?: number;
   @tracked _wrapperElement?: HTMLElement;
+
+  /** Registered on insert; every reader runs after the modal has rendered. */
+  get #modalContainer(): HTMLElement {
+    const element = this.#modalContainerElement;
+    assert("DModal: the container is read before it was registered", element);
+    return element;
+  }
 
   get autofocus() {
     return this.args.autofocus ?? true;

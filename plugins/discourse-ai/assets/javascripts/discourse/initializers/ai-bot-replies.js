@@ -1,13 +1,14 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiBotDockedComposer from "../components/ai-bot-docked-composer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
+import AiChatModelLabel from "../components/ai-chat-model-label";
 import AiAgentFlair from "../components/post/ai-agent-flair";
 import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot } from "../lib/ai-bot-helper";
+import { isGPTBot, isPostFromAiBot } from "../lib/ai-bot-helper";
 import {
   cleanupStreamingData,
   streamPostText,
@@ -183,7 +184,7 @@ function initializeAIBotReplies(api) {
 }
 
 function initializeAgentDecorator(api) {
-  api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiAgentFlair);
+  api.renderInOutlet("post-meta-data-poster-name", AiAgentFlair);
 }
 
 function initializePauseButton(api) {
@@ -191,7 +192,7 @@ function initializePauseButton(api) {
   api.registerValueTransformer(
     "post-menu-buttons",
     ({ value: dag, context: { post, firstButtonKey } }) => {
-      if (isGPTBot(post.user)) {
+      if (isPostFromAiBot(post, api.getCurrentUser())) {
         dag.add("ai-cancel-gpt", AiCancelStreamingButton, {
           before: firstButtonKey,
           after: ["ai-share", "ai-debug"],
@@ -229,7 +230,7 @@ function initializeRetryButton(api) {
 
 function initializeDebugButton(api) {
   const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.ai_enabled_chat_bots || !allowDebug) {
+  if (!currentUser || !currentUser.ai_enabled_agents || !allowDebug) {
     return;
   }
 
@@ -248,7 +249,7 @@ function initializeDebugButton(api) {
 
 function initializeShareButton(api) {
   const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.ai_enabled_chat_bots) {
+  if (!currentUser || !currentUser.ai_enabled_agents) {
     return;
   }
 
@@ -286,18 +287,23 @@ export default {
   initialize(container) {
     const user = container.lookup("service:current-user");
 
-    if (user?.ai_enabled_chat_bots) {
-      allowDebug = user.can_debug_ai_bot_conversations;
+    withPluginApi((api) => {
+      initializeAgentDecorator(api);
 
-      withPluginApi((api) => {
-        attachHeaderIcon(api);
-        initializeAIBotReplies(api);
-        initializeAgentDecorator(api);
-        initializeDebugButton(api, container);
-        initializeShareButton(api, container);
-        initializeFooterButtonsVisibility(api);
-        initializeRetryButton(api);
-      });
-    }
+      if (!user?.ai_enabled_agents) {
+        return;
+      }
+
+      allowDebug = user.can_debug_ai_bot_conversations;
+      api.serializeOnCreate("ai_agent_id", "aiAgentId");
+      api.serializeOnCreate("ai_llm_model_id", "aiLlmModelId");
+      attachHeaderIcon(api);
+      initializeAIBotReplies(api);
+      api.renderInOutlet("chat-message-after", AiChatModelLabel);
+      initializeDebugButton(api, container);
+      initializeShareButton(api, container);
+      initializeFooterButtonsVisibility(api);
+      initializeRetryButton(api);
+    });
   },
 };

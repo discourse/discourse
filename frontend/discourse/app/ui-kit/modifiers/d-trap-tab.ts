@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { service } from "@ember/service";
@@ -127,10 +128,14 @@ export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
       return;
     }
 
+    // The listener is attached in `modify`, after the element is set.
+    const trapElement = this.#element;
+    assert("dTrapTab: Tab was trapped before `modify`", trapElement);
+
     const focusableElements = FOCUSABLE_ELEMENTS + ", button:enabled";
 
     const filteredFocusableElements = Array.from(
-      this.#element.querySelectorAll<HTMLElement>(focusableElements)
+      trapElement.querySelectorAll<HTMLElement>(focusableElements)
     ).filter((element) => {
       const tabindex = element.getAttribute("tabindex");
       return tabindex !== "-1" && canHoldFocus(element);
@@ -149,7 +154,7 @@ export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
       if (document.activeElement === lastFocusableElement) {
         event.preventDefault();
         (
-          this.#element.querySelector<HTMLElement>(".modal-close") ||
+          trapElement.querySelector<HTMLElement>(".modal-close") ||
           firstFocusableElement
         )?.focus({ preventScroll: this.#preventScroll });
       }

@@ -44,7 +44,7 @@ export interface ArgErrorContext {
  * only known at runtime.
  */
 interface ModelRegistryOwner {
-  factoryFor?: (fullName: string) => { class?: unknown } | undefined;
+  factoryFor?: (fullName: `model:${string}`) => { class?: unknown } | undefined;
 }
 
 /** Options accepted by `validateArgValue` and `validateArgsAgainstSchema`. */

@@ -932,15 +932,24 @@ en:
         "action:chat_approval": "Chat approval"
         "trigger:chat_message_created": "Chat message created"
       node_descriptions:
-        "action:send_chat_message": "Send a message to a chat channel"
+        "action:send_chat_message": "Send a message to a chat channel, or a direct message to one or more users"
         "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
         "trigger:chat_message_created": "Fires when a new chat message is created"
       chat_message_created:
         channel_id: "Channel"
         channel_id_description: "Leave blank to trigger for all chat channels."
       send_chat_message:
+        target: "Send to"
+        targets:
+          channel: "Channel"
+          user: "Users (a direct message each)"
+          group: "Group (one direct message with everyone)"
         channel_id: "Channel"
+        target_usernames: "Recipients"
+        target_usernames_description: "Users to message. Use an expression such as $trigger.user.username to pick them from each item."
         message: "Message"
+        actor_username: "Sender"
+        actor_username_description: "Direct messages are sent as this user, and recipients see them as written by them."
       chat_approval:
         message: "Message"
         buttons: "Buttons"

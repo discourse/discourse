@@ -16,7 +16,7 @@ import type {
 
 /** The arguments the menu reads, resolved per call rather than captured. */
 interface MoveMenuArgs {
-  group?: ReorderableGroupApi;
+  group?: Pick<ReorderableGroupApi, "lookupMember">;
 }
 
 interface MoveMenuCoordinatorOptions {

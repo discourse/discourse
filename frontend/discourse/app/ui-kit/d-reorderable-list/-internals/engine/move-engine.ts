@@ -11,7 +11,7 @@ import type {
 interface MoveEngineArgs<T> {
   items: readonly T[];
   disabled?: boolean;
-  group?: ReorderableGroupApi;
+  group?: ReorderableGroupApi<T>;
   onMove?: (move: ReorderableMove<T>) => void | false;
   listLabel?: string;
   spill?: boolean;

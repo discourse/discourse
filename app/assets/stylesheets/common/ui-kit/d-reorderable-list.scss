@@ -39,9 +39,12 @@
 
   /* Sized to the grip rather than to a button, so the handle never drives a
      dense row's height. Chained with `.btn` to outrank the base button rules
-     it would otherwise tie with on source order alone. */
+     it would otherwise tie with on source order alone. The slot that holds a
+     handle's place in a row without one shares the box, so the two always
+     measure the same. */
 
-  &__handle.btn {
+  &__handle.btn,
+  &__handle-slot {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -52,15 +55,21 @@
     min-width: 24px;
     min-height: 24px;
     padding: 0;
-    border: 0;
-    background: none;
     font-size: inherit;
     line-height: inherit;
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  &__handle.btn {
+    border: 0;
+    background: none;
     color: var(--primary-low-mid);
     cursor: grab;
 
     .d-icon {
-      margin: 0;
       color: var(--primary-low-mid);
     }
 
@@ -72,6 +81,10 @@
       outline-offset: -1px;
       border-radius: var(--d-border-radius);
     }
+  }
+
+  &__handle-slot {
+    visibility: hidden;
   }
 
   /* Sized to match the handle, so the two controls the list places read as
@@ -115,6 +128,13 @@
     display: flex;
     align-items: center;
     gap: 0.25em;
+  }
+
+  /* Two classes to outrank the global text input rule, whose bottom margin
+     would lift the input off the add button's centre line. */
+
+  &__create &__create-input {
+    margin-bottom: 0;
   }
 }
 

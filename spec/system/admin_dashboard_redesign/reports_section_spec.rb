@@ -162,6 +162,41 @@ describe "Admin Dashboard Redesign | Reports section" do
     )
   end
 
+  it "keeps existing report sizes when admins add another report" do
+    Fabricate(:tall_admin_dashboard_report, position: 0)
+    Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    modal.toggle("core_report:admin_logins")
+    modal.apply
+    expect(modal).to have_closed
+
+    page.refresh
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
+    expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
+  end
+
+  it "keeps report sizes when admins reorder reports on mobile", mobile: true do
+    Fabricate(:tall_admin_dashboard_report, position: 0)
+    Fabricate(:admin_dashboard_report, identifier: "topics", position: 1)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    modal.move_up("core_report:topics")
+    expect(modal).to have_enabled_rows_in_order(%w[core_report:topics core_report:signups])
+    modal.apply
+    expect(modal).to have_closed
+
+    page.refresh
+    expect(dashboard).to have_cards_in_order(%w[core_report:topics core_report:signups])
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 1)
+  end
+
   it "hides the Add Report tile when the cap is reached" do
     identifiers =
       Reports::ListQuery

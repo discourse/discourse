@@ -4,7 +4,7 @@ describe DiscourseDataExplorer::Tools::SubmitQuery do
   fab!(:llm_model)
   fab!(:admin)
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
 

@@ -20,6 +20,42 @@ describe Chat::MessageSerializer do
   end
 
   describe "#blocks" do
+    it "serializes confirmation cards and cooks the question using the message author's permissions" do
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      message_1.update!(
+        user: Fabricate(:admin),
+        blocks: [
+          {
+            type: "confirmation",
+            title: "Editing category: ##{private_category.slug_ref}::category",
+            description_label: "Duration:",
+            question: "Change ##{private_category.slug_ref}::category?",
+            parameters: [{ label: "name", value: "<new name>" }],
+            elements: [{ type: "button", text: { type: "plain_text", text: "Yes" } }],
+          },
+        ],
+      )
+
+      card = serializer.as_json[:blocks].first
+
+      title = Nokogiri::HTML5.fragment(card[:cooked_title])
+      expect(title.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+      expect(card[:description_label]).to eq("Duration:")
+      expect(card[:parameters]).to eq([{ "label" => "name", "value" => "<new name>" }])
+      question = Nokogiri::HTML5.fragment(card[:cooked_question])
+      expect(question.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+
+      message_1.blocks.first["status"] = "Approved by @#{message_1.user.username}."
+      message_1.blocks.first["elements"] = []
+      message_1.save!
+      resolved =
+        Chat::MessageSerializer.new(message_1, scope: guardian, root: false).as_json[:blocks].first
+
+      expect(resolved[:elements]).to be_empty
+      status = Nokogiri::HTML5.fragment(resolved[:cooked_status])
+      expect(status.at_css("a.mention").text).to eq("@#{message_1.user.username}")
+    end
+
     it "serializes button presentation without its private value" do
       message_1.update!(
         blocks: [

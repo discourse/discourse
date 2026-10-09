@@ -7,13 +7,18 @@ module DiscourseAi
       class MissingToolOutput < StandardError
       end
 
-      def initialize(bot, strategy, persist_summaries: true)
-        @bot = bot
+      # the bot is built on first use, so reading a stored summary doesn't load the agent or llm
+      def initialize(strategy, persist_summaries: true, &build_bot)
         @strategy = strategy
         @persist_summaries = persist_summaries
+        @build_bot = build_bot
       end
 
-      attr_reader :bot, :strategy
+      attr_reader :strategy
+
+      def bot
+        @bot ||= @build_bot.call
+      end
 
       # @param user { User } - User object used for auditing usage.
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
@@ -38,14 +43,15 @@ module DiscourseAi
       # Finds a summary matching the target and strategy. Marks it as outdated if the strategy found newer content
       def existing_summary
         if !defined?(@existing_summary)
-          summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type)
-          summary = summaries.find_by(locale: strategy.locale)
+          summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type).to_a
+          summary = summaries.find { |candidate| candidate.locale == strategy.locale }
 
           if summary.blank? && strategy.locale.present?
             summary =
-              summaries
-                .where.not(locale: nil)
-                .find { |candidate| LocaleNormalizer.is_same?(candidate.locale, strategy.locale) }
+              summaries.find do |candidate|
+                candidate.locale.present? &&
+                  LocaleNormalizer.is_same?(candidate.locale, strategy.locale)
+              end
           end
 
           if summary
@@ -122,8 +128,30 @@ module DiscourseAi
       #
       # @returns { String } - Resulting summary.
       def fold(items, user, &on_partial_blk)
-        tokenizer = llm_model.tokenizer_class
-        tokens_left = available_tokens
+        llm = bot.llm
+        tokenizer = llm.tokenizer
+        empty_context = summary_context([], user)
+        empty_prompt = bot.agent.craft_prompt(empty_context, llm:)
+        size, capacity = prompt_capacity(llm, empty_prompt, max_tokens: 1)
+        work_budget =
+          DiscourseAi::Completions::TurnWorkBudget.new(
+            limit:
+              DiscourseAi::Agents::Bot.effective_max_turn_tokens(bot.agent.class.max_turn_tokens),
+          )
+        output_limit =
+          work_budget.generation_options(
+            {},
+            maximum: llm.llm_model.max_output_tokens || 2500,
+            tools: empty_prompt.tools.present?,
+          )[
+            :max_tokens
+          ]
+        max_tokens = [output_limit, (capacity - size) / 2].min
+        if max_tokens <= 0
+          raise DiscourseAi::Completions::ContextPreparation::Error.new("hard_overflow")
+        end
+        _, capacity = prompt_capacity(llm, empty_prompt, max_tokens:)
+        tokens_left = capacity - size
         content_in_window = []
 
         items.each do |item|
@@ -141,15 +169,15 @@ module DiscourseAi
           end
         end
 
-        context =
-          DiscourseAi::Agents::BotContext.new(
-            user: user,
-            skip_show_thinking: true,
-            feature_name: strategy.feature,
-            resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
-            messages: strategy.as_llm_messages(content_in_window),
-            bypass_response_format: strategy.output_tool.present?,
-          )
+        context = summary_context(content_in_window, user)
+        prompt = bot.agent.craft_prompt(context, llm:)
+        size, capacity = prompt_capacity(llm, prompt, max_tokens:)
+        if size > capacity
+          max_tokens -= size - capacity
+          if max_tokens <= 0
+            raise DiscourseAi::Completions::ContextPreparation::Error.new("hard_overflow")
+          end
+        end
 
         summary = +""
         tool_output = strategy.output_tool.present?
@@ -176,7 +204,7 @@ module DiscourseAi
             end
           end
 
-        bot.reply(context, &buffer_blk)
+        bot.reply(context, llm_args: { max_tokens: }, &buffer_blk)
 
         if tool_output && summary.blank?
           raise MissingToolOutput, "The model did not set a topic summary"
@@ -185,12 +213,29 @@ module DiscourseAi
         summary
       end
 
-      def available_tokens
-        # Reserve tokens for the response and the base prompt
-        # ~500 words
-        reserved_tokens = 700
+      def summary_context(items, user)
+        DiscourseAi::Agents::BotContext.new(
+          user:,
+          skip_show_thinking: true,
+          feature_name: strategy.feature,
+          resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
+          messages: strategy.as_llm_messages(items),
+          bypass_response_format: strategy.output_tool.present?,
+        )
+      end
 
-        llm_model.max_prompt_tokens - reserved_tokens
+      def prompt_capacity(llm, prompt, max_tokens:)
+        response_format =
+          if strategy.output_tool.blank? && bot.agent.response_format.present?
+            DiscourseAi::Agents::Bot.build_json_schema(bot.agent.response_format)
+          end
+        llm.prompt_capacity(
+          prompt,
+          max_tokens:,
+          max_tokens_is_total: true,
+          thinking_effort: bot.agent.thinking_effort,
+          response_format:,
+        )
       end
     end
   end
