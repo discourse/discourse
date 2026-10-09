@@ -152,7 +152,8 @@ class DsaModeration
       recorder.record_edit(
         post: post,
         original_cooked:
-          changes.dig("cooked", 0) || PrettyText.cook(changes.dig("raw", 0) || post.raw),
+          changes.dig("cooked", 0) ||
+            (changes["raw"] ? PrettyText.cook(changes["raw"].first) : post.cooked),
       )
     end
     if restricted_category

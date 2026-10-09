@@ -253,6 +253,30 @@ RSpec.describe DsaModeration do
       expect(flagger.guardian.can_see_post?(post.reload)).to eq(false)
     end
 
+    it "retains rendered previews when a linked title edit also restricts the category" do
+      category = Fabricate(:private_category, group: Group[:staff])
+      post.update!(raw: "Text and https://example.test/article")
+      post.update!(cooked: '<p>Text</p><aside class="onebox"><img src="/image.png"></aside>')
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      PostRevisor.new(post, post.topic).revise!(
+        admin,
+        { title: "A neutral replacement title", category_id: category.id },
+        reviewable_id: reviewable.id,
+      )
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["content_type"]).to contain_exactly(
+        "CONTENT_TYPE_TEXT",
+        "CONTENT_TYPE_IMAGE",
+      )
+      expect(statement.payload["decision_visibility"]).to contain_exactly(
+        "DECISION_VISIBILITY_CONTENT_REMOVED",
+        "DECISION_VISIBILITY_CONTENT_DISABLED",
+      )
+      expect(flagger.guardian.can_see_post?(post.reload)).to eq(false)
+    end
+
     it "retains the original media when a queue edit removes an image" do
       post.update!(cooked: '<p>Original text</p><img src="/image.png">')
       original_raw = post.raw
