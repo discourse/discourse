@@ -23,7 +23,7 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
   describe "Reviewable#perform" do
     fab!(:admin)
 
-    it "rolls back the penalty when removing an assigned answer fails" do
+    it "rolls back the penalty and assignment changes when a solution callback fails" do
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: admin.guardian)
       topic_assignment =
         Fabricate(
@@ -33,10 +33,10 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
           assigned_to: admin,
           status: "Done",
         )
-      post_assignment =
-        Fabricate(:post_assignment, target: post, topic: topic, assigned_to: admin, status: "Done")
       reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
       author = post.user
+      callback = ->(_post) { raise Discourse::InvalidParameters }
+      DiscourseEvent.on(:unaccepted_solution, &callback)
 
       messages =
         MessageBus.track_publish do
@@ -58,11 +58,12 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       expect(post.reload).not_to be_trashed
       expect(DiscourseSolved::TopicAnswer.exists?(answer_post_id: post.id)).to eq(true)
       expect(topic_assignment.reload.status).to eq("Done")
-      expect(post_assignment.reload).to be_active
       expect(messages.map(&:channel)).not_to include(
         "/staff/topic-assignment",
         "/topic/#{topic.id}",
       )
+    ensure
+      DiscourseEvent.off(:unaccepted_solution, &callback) if callback
     end
   end
 
