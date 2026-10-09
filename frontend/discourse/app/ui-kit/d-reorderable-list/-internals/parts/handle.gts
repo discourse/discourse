@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import type { ModifierLike } from "@glint/template";
 import DButton from "discourse/ui-kit/d-button";
+import { HANDLE_ICON } from "discourse/ui-kit/d-reorderable-list/-internals/constants";
 import type { Row } from "discourse/ui-kit/d-reorderable-list/types";
 import { i18n } from "discourse-i18n";
 
@@ -47,7 +48,7 @@ export default class HandlePart extends Component<HandlePartSignature> {
       ...attributes
       @action={{this.open}}
       @ariaExpanded={{if @row.hasDestinations @isOpen}}
-      @icon="grip-vertical"
+      @icon={{HANDLE_ICON}}
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
       {{@register @row.key}}

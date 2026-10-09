@@ -7,6 +7,12 @@ import type { MoveTarget } from "discourse/ui-kit/d-reorderable-list/types";
  */
 export const RUN_SETTLE_MS = 400;
 
+/**
+ * The handle's grip. Shared with the slot a handle-less row reserves, which is
+ * sized by the same icon so the two stay the same width.
+ */
+export const HANDLE_ICON = "grip-vertical";
+
 /** A table create row spans every real column without measuring the table. */
 export const TABLE_CREATE_COLSPAN = 1000;
 

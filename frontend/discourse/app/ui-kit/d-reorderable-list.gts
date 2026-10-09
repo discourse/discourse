@@ -27,6 +27,7 @@ import ReorderAnnouncer from "discourse/ui-kit/d-reorderable-list/-internals/coo
 import MoveEngine from "discourse/ui-kit/d-reorderable-list/-internals/engine/move-engine";
 import CreateRow from "discourse/ui-kit/d-reorderable-list/-internals/parts/create-row";
 import HandlePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle";
+import HandleSlotPart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle-slot";
 import RemovePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/remove";
 import type {
   DReorderableListSignature,
@@ -640,6 +641,15 @@ export default class DReorderableList<T> extends Component<
     return this.args.controls === "manual";
   }
 
+  /**
+   * Whether a row without a handle keeps the handle's space, so every row's
+   * content starts at the same edge. Only when the list places the handles
+   * and at least one row has one; a manual layout spaces its own rows.
+   */
+  get reservesHandleSlot(): boolean {
+    return !this.isManual && this.rows.some((row) => row.rendersHandle);
+  }
+
   /** This list's move-payload identity: its group listId, or `"default"`. */
   get listIdOrDefault(): string {
     return this.args.listId ?? "default";
@@ -1034,7 +1044,10 @@ export default class DReorderableList<T> extends Component<
         {{yield to="hint"}}
         {{yield to="header"}}
         {{#if this.rows.length}}
-          {{#let (dElement this.itemTag) as |Item|}}
+          {{#let
+            (dElement this.itemTag) this.reservesHandleSlot
+            as |Item reservesHandleSlot|
+          }}
             {{#each this.rows key="key" as |row|}}
               {{! Two whole-row branches rather than a conditionally curried
                   modifier: that is re-created on every rows recompute, and
@@ -1071,6 +1084,8 @@ export default class DReorderableList<T> extends Component<
                       @register={{this.registerHandle}}
                       @row={{row}}
                     />
+                  {{else if reservesHandleSlot}}
+                    <HandleSlotPart />
                   {{/if}}
                   {{yield
                     row.item
@@ -1125,6 +1140,9 @@ export default class DReorderableList<T> extends Component<
                   role={{@itemRole}}
                   tabindex="-1"
                 >
+                  {{#if reservesHandleSlot}}
+                    <HandleSlotPart />
+                  {{/if}}
                   {{yield
                     row.item
                     (hash

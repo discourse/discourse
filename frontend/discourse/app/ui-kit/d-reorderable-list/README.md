@@ -20,7 +20,7 @@ proposed order into its own store.
 | `-internals/engine/move-engine.ts` | The move algebra. Every input method funnels into `commitSeqMove`, so one place calls the consumer back and one place announces. Also `removalProjection`, which a sibling list resolves a cross-list drop against. |
 | `-internals/coordinators/reorder-announcer.ts` | Everything the list says out loud, including the chord-run state and its settle timer. |
 | `-internals/coordinators/move-menu-coordinator.ts` | The single menu instance, re-anchored per row, and the moves made from it. |
-| `-internals/parts/` | The rendering subcomponents: `handle`, `remove`, `create-row` and `move-menu`. |
+| `-internals/parts/` | The rendering subcomponents: `handle`, `handle-slot`, `remove`, `create-row` and `move-menu`. |
 | `-internals/constants.ts` | Values that more than one file must agree on. |
 
 ## Invariants that cross these files
