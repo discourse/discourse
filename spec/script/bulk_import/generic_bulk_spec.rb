@@ -537,6 +537,134 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "event timezones" do
+      fab!(:vienna_post, :post)
+      fab!(:untimed_post, :post)
+      fab!(:invalid_post, :post)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@posts,
+            { 1 => vienna_post.id, 2 => untimed_post.id, 3 => invalid_post.id },
+          )
+          instance.instance_variable_set(
+            :@topic_id_by_post_id,
+            [vienna_post, untimed_post, invalid_post].to_h { |post| [post.id, post.topic_id] },
+          )
+          instance.instance_variable_set(
+            :@import_issue_log_path,
+            File.join(Dir.mktmpdir, "issues.log"),
+          )
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before { skip "requires the events plugin" unless defined?(DiscourseEvents::Events) }
+
+      after { source_db.close }
+
+      def create_events_table(with_timezone: true)
+        source_db.execute(<<~SQL)
+          CREATE TABLE events (
+            id INTEGER, post_id INTEGER, status INTEGER, starts_at DATETIME, ends_at DATETIME,
+            name TEXT, url TEXT, custom_fields JSON_TEXT #{", timezone TEXT" if with_timezone}
+          )
+        SQL
+      end
+
+      def insert_event(id, timezone = nil)
+        columns = %w[id post_id status starts_at ends_at]
+        values = [id, id, 0, "2026-07-01T08:00:00Z", "2026-07-01T09:30:00Z"]
+        if timezone
+          columns << "timezone"
+          values << timezone
+        end
+        source_db.execute(
+          "INSERT INTO events (#{columns.join(", ")}) VALUES (#{(["?"] * values.size).join(", ")})",
+          values,
+        )
+      end
+
+      def event_row(id)
+        source_db.get_first_row("SELECT * FROM events WHERE id = ?", id)
+      end
+
+      describe "#event_bbcode" do
+        it "writes start and end as local times in the event's timezone" do
+          create_events_table
+          insert_event(1, "Europe/Vienna")
+
+          bbcode = importer.event_bbcode(event_row(1))
+
+          expect(bbcode).to include(
+            'start="2026-07-01 10:00" end="2026-07-01 11:30" timezone="Europe/Vienna"',
+          )
+          expect(ActiveSupport::TimeZone["Europe/Vienna"].parse("2026-07-01 10:00")).to eq(
+            Time.utc(2026, 7, 1, 8),
+          )
+        end
+
+        it "falls back to UTC for missing and invalid timezones" do
+          create_events_table
+          insert_event(2)
+          insert_event(3, "+01:00")
+
+          [2, 3].each do |id|
+            expect(importer.event_bbcode(event_row(id))).to include(
+              'start="2026-07-01 08:00" end="2026-07-01 09:30" timezone="UTC"',
+            )
+          end
+        end
+
+        it "uses UTC when the events table has no timezone column" do
+          create_events_table(with_timezone: false)
+          insert_event(1)
+
+          expect(importer.event_bbcode(event_row(1))).to include('timezone="UTC"')
+        end
+      end
+
+      describe "#import_post_events" do
+        it "imports valid timezones and logs invalid ones" do
+          create_events_table
+          insert_event(1, "Europe/Vienna")
+          insert_event(2)
+          insert_event(3, "+01:00")
+
+          importer.import_post_events
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :timezone),
+          ).to contain_exactly(
+            [vienna_post.id, "Europe/Vienna"],
+            [untimed_post.id, "UTC"],
+            [invalid_post.id, "UTC"],
+          )
+          expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to eq(
+            "[invalid event timezone, using UTC] +01:00 (event 3)\n",
+          )
+        end
+
+        it "imports events from intermediate databases without a timezone column" do
+          create_events_table(with_timezone: false)
+          insert_event(1)
+
+          importer.import_post_events
+
+          expect(DiscourseEvents::Events::Event.find(vienna_post.id).timezone).to eq("UTC")
+        end
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)
