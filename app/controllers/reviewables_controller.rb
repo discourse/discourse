@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewablesController < ApplicationController
+  include TagParamLimit
+
   requires_login
 
   PER_PAGE = 10
@@ -254,6 +256,54 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    if params[:edit]
+      %i[tags original_tags].each do |key|
+        tags = params[:edit][key]
+        next if tags.nil?
+        valid =
+          tags.is_a?(Array) &&
+            tags.all? do |tag|
+              tag.is_a?(ActionController::Parameters) &&
+                (
+                  tag[:id].nil? || (tag[:id].is_a?(Integer) && tag[:id].positive?) ||
+                    (tag[:id].is_a?(String) && tag[:id].match?(/\A[1-9]\d*\z/))
+                ) && (tag[:name].nil? || tag[:name].is_a?(String)) &&
+                (tag[:id].present? || tag[:name].present?)
+            end
+        raise Discourse::InvalidParameters.new(key) unless valid
+      end
+      return if reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
+
+      args[:edit] = params
+        .require(:edit)
+        .permit(
+          :raw,
+          :original_text,
+          :edit_reason,
+          :locale,
+          :title,
+          :original_title,
+          :category_id,
+          :featured_link,
+          :archetype,
+          :reply_to_post_number,
+          :bypass_bump,
+          tags: %i[id name],
+          original_tags: %i[id name],
+          image_sizes: {
+          },
+        )
+        .to_h
+        .deep_symbolize_keys
+      args[:edit].merge!(
+        params[:edit]
+          .slice(*Post.plugin_permitted_update_params.keys, *PostRevisor.tracked_topic_fields.keys)
+          .except(:title, :category_id, :tags, :featured_link, :archetype)
+          .permit!
+          .to_h
+          .deep_symbolize_keys,
+      )
+    end
     if params[:penalty]
       args[:penalty] = params
         .require(:penalty)
@@ -300,11 +350,23 @@ class ReviewablesController < ApplicationController
         raise Discourse::InvalidAccess.new(e.message)
       end
     rescue Reviewable::UpdateConflict
-      return render_json_error(I18n.t("reviewables.conflict"), status: 409)
+      return(
+        render_json_error(I18n.t("reviewables.conflict"), status: 409, type: "reviewable_conflict")
+      )
+    rescue Reviewable::EditConflict
+      return render_json_error(I18n.t("edit_conflict"), status: 409, type: "edit_conflict")
     end
 
     if result.success?
-      render_serialized(result, ReviewablePerformResultSerializer)
+      json = serialize_data(result, ReviewablePerformResultSerializer)
+      if post = result.updated_post
+        serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
+        serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
+        link_counts = TopicLink.counts_for(guardian, post.topic, [post])
+        serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
+        json[:post] = serializer.as_json
+      end
+      render_json_dump(json)
     else
       render_json_error(result)
     end

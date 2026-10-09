@@ -13,6 +13,7 @@ class Reviewable < ActiveRecord::Base
       :recalculate_score,
       :update_flag_stats,
       :after_commit,
+      :updated_post,
     )
 
     def initialize(reviewable, status)

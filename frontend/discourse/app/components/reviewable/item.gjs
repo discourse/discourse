@@ -333,7 +333,7 @@ export default class ReviewableItem extends Component {
     return this._penalize("showSilenceModal", reviewable, performAction);
   }
 
-  async clientEdit(reviewable, performAction) {
+  async clientEdit(reviewable, _performAction, performableAction, data) {
     if (!this.currentUser) {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
@@ -353,7 +353,18 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      onSaved: () => performAction().catch(popupAjaxError),
+      reviewableAction: {
+        id: reviewable.id,
+        action: performableAction.server_action,
+        version: reviewable.version,
+        data,
+      },
+      onSaved: (result) =>
+        this._performResult(
+          result.responseJson.reviewable_perform_result,
+          performableAction,
+          reviewable
+        ),
     });
   }
 
@@ -615,6 +626,17 @@ export default class ReviewableItem extends Component {
   @bind
   async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.args.reviewable;
+    const data = {
+      send_email: reviewable.sendEmail,
+      reject_reason: reviewable.rejectReason,
+      ...additionalData,
+    };
+
+    (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
+      if (reviewable[param]) {
+        data[param] = reviewable[param];
+      }
+    });
 
     let performAction = async (actionData = {}) => {
       this.disabled = true;
@@ -622,25 +644,12 @@ export default class ReviewableItem extends Component {
       let version = reviewable.version;
       this.updating = true;
 
-      const data = {
-        send_email: reviewable.sendEmail,
-        reject_reason: reviewable.rejectReason,
-        ...additionalData,
-        ...actionData,
-      };
-
-      (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
-        if (reviewable[param]) {
-          data[param] = reviewable[param];
-        }
-      });
-
       return ajax(
         `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
         {
           type: "PUT",
           dataType: "json",
-          data,
+          data: { ...data, ...actionData },
         }
       )
         .then((result) =>
@@ -662,7 +671,13 @@ export default class ReviewableItem extends Component {
           this[`client${classify(performableAction.client_action)}`];
         if (actionMethod) {
           if (await this.#claimReviewable()) {
-            await actionMethod.call(this, reviewable, performAction);
+            await actionMethod.call(
+              this,
+              reviewable,
+              performAction,
+              performableAction,
+              data
+            );
           }
         } else {
           // eslint-disable-next-line no-console

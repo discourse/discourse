@@ -14,6 +14,9 @@ class Reviewable < ActiveRecord::Base
   class UpdateConflict < StandardError
   end
 
+  class EditConflict < StandardError
+  end
+
   class InvalidAction < StandardError
     def initialize(action_id, klass)
       @action_id, @klass = action_id, klass
@@ -421,6 +424,7 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
+      edited_post = perform_edit(guardian:, params: args[:edit]) if action&.client_action == "edit"
       if %w[suspend silence].include?(action&.client_action)
         result =
           perform_penalty(guardian:, penalty_type: action.client_action, params: args[:penalty])
@@ -428,6 +432,8 @@ class Reviewable < ActiveRecord::Base
       result ||= public_send(perform_method, performed_by, args)
 
       raise ActiveRecord::Rollback unless result.success?
+
+      result.updated_post = edited_post if edited_post
 
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
@@ -1035,6 +1041,102 @@ class Reviewable < ActiveRecord::Base
 
   def aliases
     self.class.action_aliases
+  end
+
+  def perform_edit(guardian:, params:)
+    raise Discourse::InvalidParameters.new(:edit) unless params&.key?(:raw)
+    raise Discourse::InvalidAccess unless target_type == "Post"
+
+    params = params.with_indifferent_access
+    post = Post.with_deleted.lock.find(target_id)
+    guardian.ensure_can_edit!(post)
+    topic = Topic.with_deleted.lock.find(post.topic_id)
+
+    raise EditConflict if params[:original_text].present? && params[:original_text] != post.raw
+
+    changes =
+      params.slice(
+        :raw,
+        :edit_reason,
+        :locale,
+        :reply_to_post_number,
+        *Post.plugin_permitted_update_params.keys,
+      )
+    category_changed = false
+    if post.is_first_post?
+      if params[:original_title].present? && params[:original_title] != topic.title
+        raise EditConflict
+      end
+      original_tag_ids = params[:original_tags]&.map { |tag| tag[:id].to_i }&.sort
+      if original_tag_ids.present? && original_tag_ids != topic.tags.pluck(:id).sort
+        raise EditConflict
+      end
+
+      topic_changes = params.slice(*PostRevisor.tracked_topic_fields.keys)
+      topic_changes.delete(:title) if topic_changes[:title] == topic.title
+      if topic_changes[:category_id].to_i == topic.category_id.to_i
+        topic_changes.delete(:category_id)
+      end
+      if topic_changes.key?(:tags) && PostRevisor.tag_change_noop?(topic, topic_changes[:tags])
+        topic_changes.delete(:tags)
+      end
+      guardian.ensure_can_edit_topic!(topic) if topic_changes.except(:tags).present?
+      guardian.ensure_can_edit_tags!(topic) if topic_changes.key?(:tags)
+
+      category_changed = topic_changes.key?(:category_id)
+      if category_changed
+        tag_names =
+          if topic_changes.key?(:tags)
+            incoming = topic_changes[:tags] || []
+            ids = incoming.filter_map { |tag| tag[:id]&.to_i }
+            incoming.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
+              Tag.visible(guardian).where(id: ids).pluck(:name)
+          else
+            topic.tags.pluck(:name)
+          end
+        validation =
+          TopicCategoryChangeValidator.call(
+            topic:,
+            category_id: topic_changes[:category_id],
+            guardian:,
+            tag_names:,
+            tags_changed: topic_changes.key?(:tags),
+          )
+        if !validation.success?
+          raise Discourse::InvalidAccess if validation.status == :forbidden
+          topic.errors.add(:base, validation.error)
+          raise ActiveRecord::RecordInvalid.new(topic)
+        end
+        if topic.shared_draft
+          topic.shared_draft.update!(category_id: topic_changes.delete(:category_id))
+        end
+      end
+      changes.merge!(topic_changes)
+    end
+
+    post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
+    options = {}
+    options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&
+      guardian.is_staff?
+    if params.key?(:bypass_bump) && guardian.can_update_bumped_at?
+      options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(params[:bypass_bump])
+    end
+    revisor = PostRevisor.new(post, topic)
+    revisor.revise!(guardian.user, changes, options)
+    raise ActiveRecord::RecordInvalid.new(post) if post.errors.present?
+    if topic.errors.present?
+      errors =
+        TopicCategoryChangeValidator.safe_revision_errors(topic:, guardian:, category_changed:)
+      topic.errors.clear
+      errors.each { |error| topic.errors.add(:base, error) }
+      raise ActiveRecord::RecordInvalid.new(topic)
+    end
+    if revisor.successfully_saved_post_and_topic == false
+      topic.errors.add(:base, :unable_to_update)
+      raise ActiveRecord::RecordInvalid.new(topic)
+    end
+
+    post
   end
 
   def perform_penalty(guardian:, penalty_type:, params:)
