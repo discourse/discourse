@@ -315,6 +315,8 @@ RSpec.describe SessionController do
       end
 
       context "when timezone param is provided" do
+        let(:user) { Fabricate(:user, timezone: nil) }
+
         it "sets the user_option timezone for the user" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
@@ -3504,6 +3506,8 @@ RSpec.describe SessionController do
         end
 
         context "when timezone param is provided" do
+          let(:user) { Fabricate(:user, timezone: nil) }
+
           it "sets the user_option timezone for the user" do
             post "/session.json",
                  params: {
