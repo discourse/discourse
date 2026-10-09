@@ -50,7 +50,7 @@ RSpec.describe ReviewableAiToolAction do
 
       reviewable.perform(admin, :approve)
 
-      statement = DsaStatementOfReason.find_by!(reviewable_id: reviewable.id, target_id: post.id)
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id, target_id: post.id)
       expect(statement.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
         "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -71,7 +71,7 @@ RSpec.describe ReviewableAiToolAction do
         )
       unlist_reviewable.perform(admin, :approve)
       expect(
-        DsaStatementOfReason.find_by!(
+        DsaStatementOfRecord.find_by!(
           reviewable_id: unlist_reviewable.id,
           target_id: post.id,
         ).payload[
@@ -80,7 +80,7 @@ RSpec.describe ReviewableAiToolAction do
       ).to eq(["DECISION_VISIBILITY_CONTENT_DEMOTED"])
       rejected = create_reviewable(create_tool_action)
       rejected.perform(admin, :reject)
-      expect(DsaStatementOfReason.where(reviewable_id: rejected.id)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: rejected.id)).to be_empty
     end
   end
 

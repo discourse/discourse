@@ -166,9 +166,7 @@ module DiscourseAi
         end
 
         def automation_score_context
-          DiscourseAi::Automation.triage_automation_score_context(
-            feature_context[:automation_id],
-          ) || "discourse_ai:agent"
+          DiscourseAi::Automation.triage_automation_score_context(feature_context[:automation_id])
         end
 
         def spam_score_reason

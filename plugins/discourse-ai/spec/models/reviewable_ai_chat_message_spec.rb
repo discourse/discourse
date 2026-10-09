@@ -15,7 +15,7 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
 
       reviewable.perform(moderator, :agree_and_delete)
 
-      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+      expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         "automated_detection" => "Yes",
         "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",

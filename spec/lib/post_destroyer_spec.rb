@@ -978,8 +978,8 @@ RSpec.describe PostDestroyer do
       it "triggers a extensibility event" do
         events = DiscourseEvent.track_events { destroyer }
 
-        event = events.find { |tracked| tracked[:event_name] == :post_destroyed }
-        expect(event[:params].first).to eq(post)
+        expect(events[0][:event_name]).to eq(:post_destroyed)
+        expect(events[0][:params].first).to eq(post)
       end
     end
   end
@@ -1160,11 +1160,7 @@ RSpec.describe PostDestroyer do
     end
 
     context "when the flagged post is potentially illegal" do
-      before do
-        ReviewableFlaggedPost.pending.find_each do |reviewable|
-          reviewable.add_score(Fabricate(:user), PostActionType.types[:illegal])
-        end
-      end
+      before { ReviewableFlaggedPost.pending.update_all(potentially_illegal: true) }
 
       it "does not automatically mark it as ignored or approved" do
         expect { PostDestroyer.new(moderator, second_post).destroy }.not_to change {

@@ -138,7 +138,7 @@ describe ReviewableAiPost do
 
       reviewable.perform(Fabricate(:admin), :delete_and_agree)
 
-      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+      expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         "automated_detection" => "Yes",
         "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",

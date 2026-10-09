@@ -773,10 +773,7 @@ RSpec.describe PostAction do
 
   # flags are already being tested
   all_types_except_flags =
-    PostActionType.types.except(
-      :illegal,
-      *PostActionType.flag_types_without_additional_message.keys,
-    )
+    PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
   all_types_except_flags.values.each do |action|
     it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success

@@ -147,7 +147,7 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
 
       reviewable.perform(moderator, :agree_and_delete)
 
-      statement = DsaStatementOfReason.find_by!(reviewable_id: reviewable.id)
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
       expect(statement.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -156,7 +156,7 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
       reviewable.update!(status: :pending)
       reviewable.perform(moderator, :disagree_and_restore)
       expect(statement.reload.reversed_at).to be_present
-      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id).count).to eq(1)
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(1)
     end
   end
 

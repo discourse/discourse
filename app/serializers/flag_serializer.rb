@@ -37,10 +37,6 @@ class FlagSerializer < ApplicationSerializer
     I18n.t("#{i18n_prefix}.short_description", base_path: Discourse.base_path, default: "")
   end
 
-  def enabled
-    object.enabled && object.name_key != "illegal"
-  end
-
   def is_flag
     !object.score_type && object.id != PostActionType::LIKE_POST_ACTION_ID
   end

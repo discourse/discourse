@@ -1,36 +1,16 @@
 ---
-title: Review queue statements of reasons
+title: Review queue moderation records
 id: reviewable-dsa-statements
 ---
 
-Enable `dsa_reporting_enabled` to record restrictions applied through the review queue. Reporting starts when enabled and does not backfill earlier decisions. Configure the API token and sandbox or production environment separately. API credentials are never serialized to the browser.
+Enable `dsa_reporting_enabled` to retain restrictions applied through the review queue. It is disabled by default. Moderators use the existing workflow; handling and queue visibility remain unchanged. No classification form, timeline note or API submission is added.
 
-## Moderator workflow
+The `dsa_statement_of_records` table stores one pending row per affected item and decision. Restrictions on the same item in one decision share a row. Related items share `decision_key` and `reviewable_id`. These links allow a future single classification form per reviewable to cover its affected records. Reopening and handling a reviewable creates another decision. Restoration retains the original record and sets `reversed_at`.
 
-Moderation takes effect immediately. A handled reviewable remains visible until staff select a community rule and EU category. Saving records a timeline note and queues its statements for delivery. The normal reviewable status does not change during classification.
+`Reviewable#perform` establishes the recording context. Existing content, topic and account events capture actual effects. Later suspension and silence requests use their existing reviewable reference. Queue edits carry the reference through their existing save. Actions outside the review queue, unrestricted approvals, failed actions and author withdrawals are excluded.
 
-The rule mappings describe Discourse's default guidelines and terms. Operators must ensure their published rules match these mappings before enabling reporting. Selecting a rule asserts that its description accurately explains the decision. The category remains a separate moderator choice.
+`payload` retains programmatically known SoR API attributes: stable PUID, actual restrictions, dates, content types, territorial scope, initiating source and separate detection and decision automation. `content` retains affected text and title for later assessment, independently of content deletion. Content snapshots are private database evidence and must not be copied into public API payloads without review. Associated reviewable records are retained to preserve moderation context.
 
-Illegal content reports use `illegal_content_reporting_url` in the flag modal. Historical illegal flags remain readable. New illegal flags are rejected for posts and chat messages.
+These payloads are incomplete. Later classification must supply `decision_facts`, `decision_ground`, `category` and the conditional legal or terms grounds and explanation. No legal conclusion is inferred from a flag. There are no delivery states, credentials, jobs or automatic submissions in this phase. Future delivery must separately validate the full [Commission API schema](https://transparency.dsa.ec.europa.eu/page/api-documentation).
 
-## Recording boundary
-
-`Reviewable#perform` establishes a recording context around the moderation transaction. Shared deletion, edit, topic status and account penalty events record actual effects within that context. Later suspension and silence requests use their existing reviewable reference. Queue edits carry that reference through the composer save. Cancelled penalties and approvals without restrictions produce no statement.
-
-The separate `dsa_statement_of_reasons` table retains affected item metadata, decision identity, classification, payload and delivery state. Each affected item has its own statement; statements from one decision share classification. Reopening a reviewable creates a distinct decision. Reporting rows survive deletion of their source records.
-
-Post and topic deletion map to removal; hiding maps to disabling access; unlisting maps to demotion; closing maps to restricting interaction. Account suspension and termination have account restrictions. Silence partially suspends service provision. Avatar removal records an image restriction. Rejected publication disables access to the submitted content.
-
-Content dates come from the affected item, or the voice session's joining time. Queued content uses its submission time. Media types come from stored markup; embeds without a known media type use `CONTENT_TYPE_OTHER`. This does not detect whether media was synthetically generated. Account registration decisions use the account creation date. Global restrictions include all EU and EEA territories.
-
-Ordinary member flags use `SOURCE_TYPE_OTHER_NOTIFICATION`. Staff or system initiative uses `SOURCE_VOLUNTARY`. Automated detection and decision making are separate. Staff API and MCP actions remain human decisions; AI execution establishes explicit automation provenance. An approved AI tool proposal records a partially automated decision.
-
-## Delivery and recovery
-
-Sidekiq submits at most 100 classified statements per request. A tenant lock prevents overlapping workers. Each attempt leases rows for 30 minutes. Temporary errors retry with bounded delay. Stable PUIDs and reconciliation prevent an uncertain delivery from being submitted twice. A statement retains its first delivery environment when settings change.
-
-Administrators find permanent failures through the existing queue's Submission failed filter. They can correct classification or retry after repairing credentials. Unknown required metadata remains a visible failure. Submitted payloads cannot be reclassified.
-
-The scope covers review queue restrictions. Dedicated illegal notices, authority orders, complaints, appeals, moderation outside this queue, and annual spreadsheet generation require separate workflows. These records alone do not establish complete DSA compliance.
-
-The payload follows the [Commission API schema](https://transparency.dsa.ec.europa.eu/page/api-documentation) and [attribute explanations](https://transparency.dsa.ec.europa.eu/page/additional-explanation-for-statement-attributes).
+This phase covers review queue restrictions only. Illegal notice intake, authority orders, appeals, moderation outside the queue and annual report generation remain separate work.

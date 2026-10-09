@@ -224,7 +224,6 @@ module Chat
     end
 
     def can_flag_message_as?(chat_message, flag_type_id, opts)
-      return false if flag_type_id == ReviewableScore.types[:illegal]
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
       if flag_type_id == ReviewableScore.types[:notify_user]

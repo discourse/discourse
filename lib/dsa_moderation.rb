@@ -113,7 +113,7 @@ class DsaModeration
   end
 
   def self.resume(decision_key:)
-    statement = DsaStatementOfReason.find_by(decision_key: decision_key) if decision_key
+    statement = DsaStatementOfRecord.find_by(decision_key: decision_key) if decision_key
     raise Discourse::NotFound if decision_key && !statement
     return yield unless statement
 
@@ -133,11 +133,11 @@ class DsaModeration
 
   def resume!(statement)
     @decision_key = statement.decision_key
+    @actor_id = statement.actor_id
     @source_type = statement.payload["source_type"]
     @automated_detection = statement.payload["automated_detection"] == "Yes"
     @automated_decision = statement.payload["automated_decision"]
     @application_date = statement.payload["application_date"]
-    @resumed_statement = statement
   end
 
   def self.record_topic_restoration(topic)
@@ -148,7 +148,7 @@ class DsaModeration
   end
 
   def reverse_topic_restrictions(topic:, visibility:)
-    DsaStatementOfReason
+    DsaStatementOfRecord
       .where(
         reviewable_id: reviewable_id,
         target_type: "Post",
@@ -169,7 +169,12 @@ class DsaModeration
     original_cooked =
       changes.dig("cooked", 0) ||
         (changes["raw"] ? PrettyText.cook(changes["raw"].first) : post.cooked)
-    Context.recorder&.record_edit(post: post, original_cooked: original_cooked)
+    Context.recorder&.record_edit(
+      post: post,
+      original_cooked: original_cooked,
+      original_raw: changes.dig("raw", 0),
+      original_title: changes.dig("title", 0),
+    )
   end
 
   def self.record_topic_removal(topic)
@@ -220,6 +225,7 @@ class DsaModeration
     @records = @parent ? @parent.records : {}
     @reviewable = reviewable
     @actor = actor
+    @actor_id = actor&.id
     @action_name = action_name.to_s
     @decision_key = Context.recorder&.decision_key || SecureRandom.uuid
     @automated_decision =
@@ -248,30 +254,14 @@ class DsaModeration
   end
 
   def flush
-    DsaStatementOfReason.transaction do
+    DsaStatementOfRecord.transaction do
       Reviewable.where(id: reviewable_id).lock.pick(:id)
-      @resumed_statement&.reload
-      classification = @resumed_statement if @resumed_statement&.classified_at
       @records
         .values
         .each_slice(200) do |batch|
-          if classification
-            batch.each do |attributes|
-              statement = DsaStatementOfReason.new(attributes)
-              attributes[:payload] = attributes[:payload].merge(
-                statement.classification_payload(
-                  community_rule: classification.community_rule,
-                  category: classification.payload["category"],
-                ),
-              )
-              attributes[:community_rule] = classification.community_rule
-              attributes[:classified_at] = classification.classified_at
-              attributes[:classified_by_id] = classification.classified_by_id
-            end
-          end
-          DsaStatementOfReason.insert_all(
+          DsaStatementOfRecord.insert_all(
             batch,
-            unique_by: :index_dsa_statements_on_decision_and_target,
+            unique_by: :index_dsa_records_on_decision_and_target,
           )
         end
       @records.clear
@@ -400,8 +390,13 @@ class DsaModeration
     record_snapshot(content: describe_content(target), restriction: restriction)
   end
 
-  def record_edit(post:, original_cooked:)
+  def record_edit(post:, original_cooked:, original_raw:, original_title:)
     content = describe_content(post).merge(content_type: media_types(original_cooked))
+    content[:evidence] = content[:evidence].merge(
+      raw: original_raw || post.raw,
+      cooked: original_cooked,
+      title: original_title || post.topic&.title,
+    ).compact
     content[:content_type_other] = "Embedded content" if content[:content_type].include?(
       "CONTENT_TYPE_OTHER",
     )
@@ -440,6 +435,7 @@ class DsaModeration
           content_type: media_types(PrettyText.cook(@reviewable.payload["raw"].to_s)),
           content_type_other: "Embedded content",
           recipient_id: @reviewable.target_created_by_id,
+          evidence: @reviewable.payload.slice("raw", "title"),
         }
       )
     end
@@ -458,6 +454,11 @@ class DsaModeration
       target_type: target&.class&.name || @reviewable.target_type || @reviewable.type,
       target_id: target&.id || @reviewable.target_id || @reviewable.id,
       content_date: target&.created_at&.to_date&.iso8601,
+      evidence: {
+        raw: target.respond_to?(:raw) ? target.raw : nil,
+        cooked: target.respond_to?(:cooked) ? target.cooked : nil,
+        title: target.is_a?(Post) ? target.topic&.title : nil,
+      }.compact,
       recipient_id:
         target.respond_to?(:user_id) ? target.user_id : @reviewable.target_created_by_id,
     }
@@ -533,10 +534,11 @@ class DsaModeration
       target_id: content[:target_id],
       puid: puid,
       reviewable_id: @parent ? @parent.reviewable_id : @reviewable.id,
-      actor_id: @actor&.id,
+      actor_id: @actor_id,
       recipient_id: content[:recipient_id] || @recipient_id,
       action_name: @action_name,
       payload: payload,
+      content: content[:evidence] || {},
     }
   end
 
@@ -560,7 +562,7 @@ class DsaModeration
   end
 
   def reverse_restrictions(target_type:, target_id:)
-    DsaStatementOfReason.where(
+    DsaStatementOfRecord.where(
       reviewable_id: @reviewable.id,
       target_type: target_type,
       target_id: target_id,

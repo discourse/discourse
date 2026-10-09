@@ -70,10 +70,8 @@ RSpec.describe Admin::Config::SiteSettingsController do
         expect(response.parsed_body["site_settings"].map { |s| s["setting"] }).to match_array(
           %w[
             flag_post_allowed_groups
-            illegal_content_reporting_url
-            dsa_reporting_enabled
-            dsa_api_token
-            dsa_api_environment
+            allow_all_users_to_flag_illegal_content
+            email_address_to_report_illegal_content
             silence_new_user_sensitivity
             num_users_to_silence_new_user
             flag_sockpuppets

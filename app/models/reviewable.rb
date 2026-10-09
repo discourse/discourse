@@ -10,7 +10,6 @@ class Reviewable < ActiveRecord::Base
   UNKNOWN_TYPE_SOURCE = "unknown"
 
   self.ignored_columns = [:reviewable_by_group_id]
-  self.ignored_columns += [:potentially_illegal]
 
   class UpdateConflict < StandardError
   end
@@ -35,17 +34,13 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+
   scope :for_cleanup,
         -> do
           where
-            .not(id: DsaStatementOfReason.select(:reviewable_id))
+            .not(id: DsaStatementOfRecord.select(:reviewable_id))
             .where.not(id: DsaModeration.active_reviewable_ids)
         end
-
-  has_many :dsa_statements, class_name: "DsaStatementOfReason"
-  has_many :unfinished_dsa_statements,
-           -> { where(status: 0, classified_at: nil).or(where(status: 2)).order(:id) },
-           class_name: "DsaStatementOfReason"
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -180,6 +175,7 @@ class Reviewable < ActiveRecord::Base
     payload: nil,
     reviewable_by_moderator: false,
     potential_spam: true,
+    potentially_illegal: false,
     target_created_by: nil
   )
     reviewable =
@@ -190,6 +186,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        potentially_illegal: potentially_illegal,
         target_created_by: target_created_by,
       )
     reviewable.created_new!
@@ -214,12 +211,14 @@ class Reviewable < ActiveRecord::Base
         target_type: target.class.polymorphic_name,
         reviewable_type: reviewable.type,
         potential_spam: potential_spam == true ? true : nil,
+        potentially_illegal: potentially_illegal == true ? true : nil,
       }
 
       row = DB.query_single(<<~SQL, update_args)
         UPDATE reviewables
         SET status = :status,
-          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam),
+          potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
           AND reviewables.target_type = :target_type
@@ -448,8 +447,7 @@ class Reviewable < ActiveRecord::Base
     end
 
     # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
-    result.remove_reviewable_ids -= [id] if pending? ||
-      SiteSetting.dsa_reporting_enabled && unfinished_dsa_statements.exists?
+    result.remove_reviewable_ids -= [id] if pending?
 
     if update_count || result.remove_reviewable_ids.present?
       Jobs.enqueue(
@@ -539,7 +537,6 @@ class Reviewable < ActiveRecord::Base
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
           .includes(reviewable_notes: { user: :user_stat })
-      result = result.includes(:unfinished_dsa_statements) if SiteSetting.dsa_reporting_enabled
     end
     return result if user.admin?
 
@@ -708,16 +705,8 @@ class Reviewable < ActiveRecord::Base
     min_score = min_score_for_priority(priority)
 
     if min_score > 0 && status == :pending
-      visible = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
-      result =
-        (
-          if SiteSetting.dsa_reporting_enabled
-            visible.or(result.where(id: DsaStatementOfReason.unclassified.select(:reviewable_id)))
-          else
-            visible
-          end
-        )
-    elsif min_score > 0 && !status.in?(%i[dsa_classification dsa_failed])
+      result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
+    elsif min_score > 0
       result = result.where("reviewables.score >= ?", min_score)
     end
 
@@ -986,20 +975,6 @@ class Reviewable < ActiveRecord::Base
   def self.by_status(partial_result, status)
     return partial_result if status == :all
 
-    if SiteSetting.dsa_reporting_enabled
-      if status == :dsa_classification
-        return partial_result.where(id: DsaStatementOfReason.unclassified.select(:reviewable_id))
-      elsif status == :dsa_failed
-        return partial_result.where(id: DsaStatementOfReason.failed.select(:reviewable_id))
-      elsif status == :pending
-        return(
-          partial_result.where(status: statuses[:pending]).or(
-            partial_result.where(id: DsaStatementOfReason.unclassified.select(:reviewable_id)),
-          )
-        )
-      end
-    end
-
     if status == :reviewed
       partial_result.where(status: statuses.except(:pending).values)
     else
@@ -1111,6 +1086,7 @@ end
 #  latest_score            :datetime
 #  payload                 :json
 #  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
 #  reject_reason           :text
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  score                   :float            default(0.0), not null

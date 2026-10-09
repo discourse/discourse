@@ -5833,10 +5833,10 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 
 --
--- Name: dsa_statement_of_reasons; Type: TABLE; Schema: public; Owner: -
+-- Name: dsa_statement_of_records; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.dsa_statement_of_reasons (
+CREATE TABLE public.dsa_statement_of_records (
     id bigint NOT NULL,
     reviewable_id bigint NOT NULL,
     decision_key character varying NOT NULL,
@@ -5848,15 +5848,7 @@ CREATE TABLE public.dsa_statement_of_reasons (
     status integer DEFAULT 0 NOT NULL,
     puid character varying NOT NULL,
     payload jsonb DEFAULT '{}'::jsonb NOT NULL,
-    community_rule character varying DEFAULT ''::character varying NOT NULL,
-    classified_by_id integer,
-    classified_at timestamp(6) without time zone,
-    api_environment character varying DEFAULT ''::character varying NOT NULL,
-    attempts integer DEFAULT 0 NOT NULL,
-    next_attempt_at timestamp(6) without time zone,
-    error_code character varying DEFAULT ''::character varying NOT NULL,
-    submitted_at timestamp(6) without time zone,
-    submission_uuid character varying DEFAULT ''::character varying NOT NULL,
+    content jsonb DEFAULT '{}'::jsonb NOT NULL,
     reversed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -5864,10 +5856,10 @@ CREATE TABLE public.dsa_statement_of_reasons (
 
 
 --
--- Name: dsa_statement_of_reasons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: dsa_statement_of_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.dsa_statement_of_reasons_id_seq
+CREATE SEQUENCE public.dsa_statement_of_records_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5876,10 +5868,10 @@ CREATE SEQUENCE public.dsa_statement_of_reasons_id_seq
 
 
 --
--- Name: dsa_statement_of_reasons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: dsa_statement_of_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.dsa_statement_of_reasons_id_seq OWNED BY public.dsa_statement_of_reasons.id;
+ALTER SEQUENCE public.dsa_statement_of_records_id_seq OWNED BY public.dsa_statement_of_records.id;
 
 
 --
@@ -9601,6 +9593,7 @@ CREATE TABLE public.reviewables (
     updated_at timestamp without time zone NOT NULL,
     force_review boolean DEFAULT false NOT NULL,
     reject_reason text,
+    potentially_illegal boolean DEFAULT false,
     type_source character varying DEFAULT 'unknown'::character varying NOT NULL
 );
 
@@ -14834,10 +14827,10 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 
 
 --
--- Name: dsa_statement_of_reasons id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: dsa_statement_of_records id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.dsa_statement_of_reasons ALTER COLUMN id SET DEFAULT nextval('public.dsa_statement_of_reasons_id_seq'::regclass);
+ALTER TABLE ONLY public.dsa_statement_of_records ALTER COLUMN id SET DEFAULT nextval('public.dsa_statement_of_records_id_seq'::regclass);
 
 
 --
@@ -17504,11 +17497,11 @@ ALTER TABLE ONLY public.drafts
 
 
 --
--- Name: dsa_statement_of_reasons dsa_statement_of_reasons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: dsa_statement_of_records dsa_statement_of_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.dsa_statement_of_reasons
-    ADD CONSTRAINT dsa_statement_of_reasons_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.dsa_statement_of_records
+    ADD CONSTRAINT dsa_statement_of_records_pkey PRIMARY KEY (id);
 
 
 --
@@ -20051,10 +20044,10 @@ CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_au
 
 
 --
--- Name: idx_on_reviewable_id_decision_key_c27ab9a587; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_reviewable_id_decision_key_08233caf4d; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_reviewable_id_decision_key_c27ab9a587 ON public.dsa_statement_of_reasons USING btree (reviewable_id, decision_key);
+CREATE INDEX idx_on_reviewable_id_decision_key_08233caf4d ON public.dsa_statement_of_records USING btree (reviewable_id, decision_key);
 
 
 --
@@ -21794,31 +21787,17 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
--- Name: index_dsa_statement_of_reasons_on_puid; Type: INDEX; Schema: public; Owner: -
+-- Name: index_dsa_records_on_decision_and_target; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_dsa_statement_of_reasons_on_puid ON public.dsa_statement_of_reasons USING btree (puid);
-
-
---
--- Name: index_dsa_statements_on_decision_and_target; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_dsa_statements_on_decision_and_target ON public.dsa_statement_of_reasons USING btree (decision_key, target_type, target_id);
+CREATE UNIQUE INDEX index_dsa_records_on_decision_and_target ON public.dsa_statement_of_records USING btree (decision_key, target_type, target_id);
 
 
 --
--- Name: index_dsa_statements_pending_delivery; Type: INDEX; Schema: public; Owner: -
+-- Name: index_dsa_statement_of_records_on_puid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dsa_statements_pending_delivery ON public.dsa_statement_of_reasons USING btree (next_attempt_at, id) WHERE ((status = 0) AND (classified_at IS NOT NULL));
-
-
---
--- Name: index_dsa_statements_unfinished; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_dsa_statements_unfinished ON public.dsa_statement_of_reasons USING btree (reviewable_id) WHERE (((status = 0) AND (classified_at IS NULL)) OR (status = 2));
+CREATE UNIQUE INDEX index_dsa_statement_of_records_on_puid ON public.dsa_statement_of_records USING btree (puid);
 
 
 --
@@ -25674,9 +25653,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20261008075311'),
-('20261008075240'),
-('20261008073735'),
+('20261009003929'),
 ('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),

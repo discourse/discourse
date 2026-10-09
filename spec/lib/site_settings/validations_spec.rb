@@ -441,6 +441,19 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
+  describe "#validate_allow_all_users_to_flag_illegal_content" do
+    it "does not allow to enable when no contact email is provided" do
+      expect { validations.validate_allow_all_users_to_flag_illegal_content("t") }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.tl0_and_anonymous_flag"),
+      )
+      SiteSetting.contact_email = "illegal@example.com"
+      expect {
+        validations.validate_allow_all_users_to_flag_illegal_content("t")
+      }.not_to raise_error
+    end
+  end
+
   describe "#validate_allow_likes_in_anonymous_mode" do
     it "doesn't allow the setting to be enabled if the allow_anonymous_mode setting is disabled" do
       SiteSetting.allow_anonymous_mode = false

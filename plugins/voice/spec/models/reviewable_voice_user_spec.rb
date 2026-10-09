@@ -56,7 +56,7 @@ RSpec.describe ReviewableVoiceUser do
       SiteSetting.dsa_reporting_enabled = true
       session.update!(joined_at: 2.days.ago)
       reviewable.perform(moderator, :agree_and_suspend)
-      expect(DsaStatementOfReason.where(reviewable_id: reviewable.id)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
 
       UserSuspender.new(
         flagged_user,
@@ -66,7 +66,7 @@ RSpec.describe ReviewableVoiceUser do
         reviewable_id: reviewable.id,
       ).suspend
 
-      expect(DsaStatementOfReason.find_by!(reviewable_id: reviewable.id).payload).to include(
+      expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload).to include(
         "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
         "content_type" => ["CONTENT_TYPE_AUDIO"],
         "content_date" => session.joined_at.to_date.iso8601,

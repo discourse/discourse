@@ -338,13 +338,7 @@ class ReviewablesController < ApplicationController
   end
 
   def allowed_statuses
-    @allowed_statuses ||=
-      begin
-        statuses = %i[reviewed all] + Reviewable.statuses.symbolize_keys.keys
-        statuses << :dsa_classification if SiteSetting.dsa_reporting_enabled
-        statuses << :dsa_failed if SiteSetting.dsa_reporting_enabled && current_user.admin?
-        statuses
-      end
+    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.symbolize_keys.keys)
   end
 
   def version_required

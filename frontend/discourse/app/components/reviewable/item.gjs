@@ -10,7 +10,6 @@ import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
-import DsaClassification from "discourse/components/reviewable/dsa-classification";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable/help-resources";
 import ReviewableInsights from "discourse/components/reviewable/insights";
@@ -48,7 +47,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 const PENALTY_TOAST_KEY = "reviewable-author-penalty";
@@ -112,7 +110,6 @@ export default class ReviewableItem extends Component {
   @service messageBus;
   @optionalService adminTools;
 
-  @tracked focusTimeline = false;
   @tracked disabled = false;
   @tracked updating = false;
 
@@ -148,10 +145,7 @@ export default class ReviewableItem extends Component {
     const { reviewable } = this.args;
     let classes = dasherize(reviewable?.type);
 
-    if (
-      reviewable?.last_performing_username &&
-      !reviewable.dsa_classifications?.length
-    ) {
+    if (reviewable?.last_performing_username) {
       classes = `${classes} reviewable-stale`;
     }
 
@@ -477,13 +471,6 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  @action
-  async refreshDsaClassification() {
-    await this.store.find("reviewable", this.args.reviewable.id);
-    this.state.activeTab = "timeline";
-    this.focusTimeline = !this.args.reviewable.dsa_classifications?.length;
-  }
-
   #showCompletedToast(performableAction, reviewable) {
     const penalty = survivingPenalty(
       performableAction,
@@ -731,7 +718,6 @@ export default class ReviewableItem extends Component {
       postEdit: reviewable.raw ?? reviewable.payload?.raw,
       reviewableId: reviewable.id,
       before: performAction,
-      successCallback: this.refreshDsaClassification,
     });
   }
 
@@ -825,7 +811,6 @@ export default class ReviewableItem extends Component {
                     class={{if (eq this.state.activeTab "timeline") "active"}}
                     href="#"
                     {{on "click" (fn this.switchTab "timeline")}}
-                    {{(if this.focusTimeline dAutoFocus)}}
                   >
                     {{i18n "review.timeline_and_notes"}}
                   </a>
@@ -862,18 +847,6 @@ export default class ReviewableItem extends Component {
         </div>
 
         <div class="review-item__aside">
-
-          {{#each
-            @reviewable.dsa_classifications key="decision_key"
-            as |classification|
-          }}
-            <DsaClassification
-              @classification={{classification}}
-              @onSaved={{this.refreshDsaClassification}}
-              @options={{@reviewable.dsa_classification_options}}
-              @reviewableId={{@reviewable.id}}
-            />
-          {{/each}}
 
           {{#unless @reviewable.last_performing_username}}
             {{#if this.canPerform}}
@@ -960,7 +933,7 @@ export default class ReviewableItem extends Component {
             </div>
           {{/if}}
 
-          {{#if (and @showHelp (not @reviewable.dsa_classifications.length))}}
+          {{#if @showHelp}}
             <ReviewableHelpResources />
           {{/if}}
         </div>

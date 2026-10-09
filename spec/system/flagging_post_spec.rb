@@ -60,6 +60,27 @@ describe "Flagging post" do
     end
   end
 
+  describe "As Illegal" do
+    before { sign_in(current_user) }
+
+    it do
+      topic_page.visit_topic(topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.click_post_action_button(post_to_flag, :flag)
+      flag_modal.choose_type(:illegal)
+
+      expect(flag_modal).to have_css(".illegal .description")
+      expect(flag_modal).to have_css(".flag-confirmation")
+
+      flag_modal.fill_message("This looks totally illegal to me.")
+      flag_modal.check_confirmation
+
+      flag_modal.confirm_flag
+
+      expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+    end
+  end
+
   describe "As send a message to user" do
     before do
       SiteSetting.allow_user_locale = true
@@ -89,6 +110,16 @@ describe "Flagging post" do
       topic_page.visit_topic(topic)
       expect(topic_page).to have_no_flag_button
     end
+
+    it "allows to mark posts as illegal when allow_all_users_to_flag_illegal_content setting is enabled" do
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      topic_page.visit_topic(topic).open_flag_topic_modal
+      expect(flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
+      )
+      expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
+    end
   end
 
   context "when anonymous" do
@@ -99,16 +130,37 @@ describe "Flagging post" do
       expect(topic_page).to have_no_post_more_actions(post_to_flag)
     end
 
-    it "opens the configured reporting form without creating a flag" do
-      SiteSetting.illegal_content_reporting_url = "https://example.com/report"
+    it "allows to mark posts as illegal when allow_all_users_to_flag_illegal_content setting is enabled" do
+      SiteSetting.contact_email = "contact@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+
       topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
-      expect(anonymous_flag_modal.body).to have_link(
-        "this form",
-        href: SiteSetting.illegal_content_reporting_url,
+      expect(anonymous_flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
       )
-      expect(PostAction.where(post: post_to_flag)).to be_empty
+      expect(anonymous_flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(
+          I18n.t(
+            "js.anonymous_flagging.description",
+            { email: "contact@example.com", topic_title: topic.title, url: current_url },
+          ),
+        ),
+      )
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      topic_page.visit_topic(topic)
+      topic_page.find_post_action_button(post_to_flag, :flag).click
+
+      expect(anonymous_flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(
+          I18n.t(
+            "js.anonymous_flagging.description",
+            { email: "illegal@example.com", topic_title: topic.title, url: current_url },
+          ),
+        ),
+      )
     end
   end
 end

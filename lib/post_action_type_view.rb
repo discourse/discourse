@@ -24,11 +24,7 @@ class PostActionTypeView
             .unscoped
             .order(:position)
             .pluck(ATTRIBUTE_NAMES)
-            .map do |attributes|
-              flag = ATTRIBUTE_NAMES.zip(attributes).to_h
-              flag[:enabled] = false if flag[:name_key] == "illegal"
-              flag
-            end
+            .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
         end
   end
 

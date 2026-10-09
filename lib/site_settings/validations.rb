@@ -263,6 +263,16 @@ module SiteSettings::Validations
     validate_error :x_summary_large_image_no_svg
   end
 
+  def validate_allow_all_users_to_flag_illegal_content(new_val)
+    return if new_val == "f"
+    if SiteSetting.contact_email.present? ||
+         SiteSetting.email_address_to_report_illegal_content.present?
+      return
+    end
+
+    validate_error :tl0_and_anonymous_flag
+  end
+
   def validate_allow_likes_in_anonymous_mode(new_val)
     return if new_val == "f"
     return if SiteSetting.allow_anonymous_mode

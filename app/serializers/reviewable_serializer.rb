@@ -25,46 +25,6 @@ class ReviewableSerializer < ApplicationSerializer
   )
 
   attribute :status_for_database, key: :status
-  attributes :dsa_classifications, :dsa_classification_options
-
-  def include_dsa_classifications?
-    SiteSetting.dsa_reporting_enabled
-  end
-
-  def include_dsa_classification_options?
-    include_dsa_classifications? && dsa_classifications.present?
-  end
-
-  def dsa_classifications
-    object
-      .unfinished_dsa_statements
-      .select { |statement| statement.classified_at.nil? || scope.is_admin? }
-      .group_by(&:decision_key)
-      .map do |decision_key, statements|
-        statement = statements.first
-        {
-          decision_key: decision_key,
-          status: statement.status,
-          community_rule: statement.community_rule,
-          category: statement.payload["category"],
-          error:
-            (
-              if statement.failed?
-                I18n.t(
-                  "dsa.errors.#{statement.error_code}",
-                  default: I18n.t("dsa.errors.submission"),
-                )
-              else
-                nil
-              end
-            ),
-        }
-      end
-  end
-
-  def dsa_classification_options
-    { rules: DsaStatementRules.rule_names, categories: DsaStatementRules.categories }
-  end
 
   has_one :target_created_by, root: "users"
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"

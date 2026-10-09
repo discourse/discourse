@@ -2932,26 +2932,17 @@ trust:
     refresh: true
     disallowed_groups: "4"
     area: "flags|group_permissions"
-  illegal_content_reporting_url:
-    default: ""
-    area: "flags"
-    client: true
-    regex: "^$|^https?://"
   dsa_reporting_enabled:
     default: false
     area: "flags"
+  allow_all_users_to_flag_illegal_content:
+    default: false
+    area: "flags"
     client: true
-  dsa_api_token:
+  email_address_to_report_illegal_content:
     default: ""
-    secret: true
     area: "flags"
-  dsa_api_environment:
-    default: "sandbox"
-    type: enum
-    choices:
-      - sandbox
-      - production
-    area: "flags"
+    client: true
   post_links_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
