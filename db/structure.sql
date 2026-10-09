@@ -642,6 +642,79 @@ ALTER SEQUENCE public.ai_artifact_key_values_id_seq OWNED BY public.ai_artifact_
 
 
 --
+-- Name: ai_artifact_share_key_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_share_key_values (
+    id bigint NOT NULL,
+    ai_artifact_share_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    key character varying(50) NOT NULL,
+    value character varying(20000) NOT NULL,
+    public boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_share_key_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_share_key_values_id_seq OWNED BY public.ai_artifact_share_key_values.id;
+
+
+--
+-- Name: ai_artifact_shares; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_shares (
+    id bigint NOT NULL,
+    ai_artifact_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    share_key character varying NOT NULL,
+    name character varying NOT NULL,
+    version_number integer DEFAULT 0 NOT NULL,
+    html character varying(65535),
+    css character varying(65535),
+    js character varying(65535),
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_shares_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_shares_id_seq OWNED BY public.ai_artifact_shares.id;
+
+
+--
 -- Name: ai_artifact_versions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13855,6 +13928,20 @@ ALTER TABLE ONLY public.ai_artifact_key_values ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_artifact_share_key_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_share_key_values_id_seq'::regclass);
+
+
+--
+-- Name: ai_artifact_shares id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_shares_id_seq'::regclass);
+
+
+--
 -- Name: ai_artifact_versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16334,6 +16421,22 @@ ALTER TABLE ONLY public.ai_api_request_stats
 
 ALTER TABLE ONLY public.ai_artifact_key_values
     ADD CONSTRAINT ai_artifact_key_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_artifact_share_key_values ai_artifact_share_key_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values
+    ADD CONSTRAINT ai_artifact_share_key_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_artifact_shares ai_artifact_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares
+    ADD CONSTRAINT ai_artifact_shares_pkey PRIMARY KEY (id);
 
 
 --
@@ -20552,6 +20655,48 @@ CREATE INDEX index_ai_api_request_stats_on_created_at_and_user_id ON public.ai_a
 --
 
 CREATE UNIQUE INDEX index_ai_artifact_kv_unique ON public.ai_artifact_key_values USING btree (ai_artifact_id, user_id, key);
+
+
+--
+-- Name: index_ai_artifact_share_key_values_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_share_key_values_on_user_id ON public.ai_artifact_share_key_values USING btree (user_id);
+
+
+--
+-- Name: index_ai_artifact_share_kv_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_share_kv_unique ON public.ai_artifact_share_key_values USING btree (ai_artifact_share_id, user_id, key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_ai_artifact_id ON public.ai_artifact_shares USING btree (ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_share_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_share_key ON public.ai_artifact_shares USING btree (share_key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_user_id_and_ai_artifact_id ON public.ai_artifact_shares USING btree (user_id, ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_user_id_and_created_at ON public.ai_artifact_shares USING btree (user_id, created_at);
 
 
 --
@@ -25583,6 +25728,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261008005940'),
 ('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),
@@ -25595,6 +25741,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),
+('20260922233925'),
 ('20260922233816'),
 ('20260921120000'),
 ('20260921081150'),

@@ -4,11 +4,20 @@ module DiscourseAi
   module AiBot
     class SharedAiConversationsController < ::ApplicationController
       requires_plugin PLUGIN_NAME
-      requires_login only: %i[create destroy preview]
+      requires_login only: %i[index create destroy preview]
       before_action :require_site_settings!
 
       skip_before_action :preload_json, :check_xhr, only: %i[show asset]
       skip_before_action :redirect_to_login_if_required, :verify_authenticity_token, only: %i[asset]
+
+      def index
+        render json:
+                 SharedConversationsQuery.new(
+                   user: current_user,
+                   order: params[:order],
+                   cursor: params[:cursor],
+                 ).call
+      end
 
       def create
         ensure_allowed_create!
@@ -89,9 +98,10 @@ module DiscourseAi
       private
 
       def require_site_settings!
-        if !SiteSetting.discourse_ai_enabled ||
-             !SiteSetting.ai_bot_public_sharing_allowed_groups_map.any? ||
-             !SiteSetting.ai_bot_enabled
+        raise Discourse::NotFound if !SiteSetting.discourse_ai_enabled
+        return if action_name.in?(%w[index destroy])
+
+        if !SiteSetting.ai_bot_public_sharing_allowed_groups_map.any? || !SiteSetting.ai_bot_enabled
           raise Discourse::NotFound
         end
       end

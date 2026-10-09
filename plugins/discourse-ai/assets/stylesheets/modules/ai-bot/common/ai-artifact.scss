@@ -1,3 +1,5 @@
+@use "lib/container";
+
 @keyframes artifact-remove {
   to {
     height: 0;
@@ -145,7 +147,225 @@ html.ai-artifact-expanded {
 
 .ai-share-full-topic-modal__body {
   .ai-artifact-controls {
+    display: none;
+  }
+}
+
+.ai-artifact-share-modal {
+  &__link {
+    overflow-wrap: anywhere;
+  }
+
+  &__actions {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+}
+
+.shared-artifacts,
+.shared-conversations {
+  container-type: inline-size;
+  container-name: ai-shares;
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.75em;
+    margin-block-end: 1em;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125em;
+    padding: 0.25em;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+
+    [aria-pressed="true"] {
+      background: var(--secondary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__card {
+    display: grid;
+    gap: 1em;
+    padding: 1.25em;
+
+    & + & {
+      border-block-start: 1px solid var(--primary-low);
+    }
+
+    @include container.from(lg, ai-shares) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+  }
+
+  &__details {
+    min-width: 0;
+
+    h3 {
+      margin: 0 0 0.35em;
+      font-size: var(--font-up-1);
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em 0.75em;
+    color: var(--primary-medium);
+  }
+
+  &__unavailable {
+    margin: 0.5em 0 0;
+    color: var(--danger);
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0.5em;
+
+    .btn {
+      min-height: 2.75rem;
+      white-space: normal;
+
+      @include container.until(sm, ai-shares) {
+        padding-inline: 0.5em;
+        font-size: var(--font-down-1);
+      }
+    }
+
+    @include container.from(sm, ai-shares) {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr);
+    }
+
+    @include container.from(lg, ai-shares) {
+      grid-template-columns: max-content max-content max-content 16em;
+    }
+  }
+
+  &__revoke {
+    --d-button-danger-text-color: var(--danger);
+    --d-button-danger-icon-color: var(--danger);
+    --d-button-danger-bg-color: transparent;
+    --d-button-danger-text-color--hover: var(--danger);
+    --d-button-danger-icon-color--hover: var(--danger);
+    --d-button-danger-bg-color--hover: var(--danger-low);
+
+    &:only-child {
+      grid-column: 1 / -1;
+    }
+
+    @include container.from(sm, ai-shares) {
+      &,
+      &:only-child {
+        grid-column: 4;
+      }
+    }
+
+    @include container.from(lg, ai-shares) {
+      justify-content: flex-start;
+    }
+  }
+
+  &__empty {
+    padding: 1.25em;
+    color: var(--primary-medium);
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+  }
+}
+
+.shared-conversations {
+  &__controls {
+    justify-content: flex-end;
+  }
+
+  &__card {
+    @include container.from(md, ai-shares) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+  }
+
+  &__actions {
+    @include container.from(sm, ai-shares) {
+      grid-template-columns: max-content 16em;
+    }
+  }
+
+  &__revoke {
+    @include container.from(sm, ai-shares) {
+      &,
+      &:only-child {
+        grid-column: 2;
+      }
+    }
+  }
+}
+
+.composer-ai-artifact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75em;
+  min-width: 0;
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--token-color-border-default);
+  border-radius: var(--d-border-radius);
+  background: var(--token-color-surface);
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    overflow: hidden;
+    color: var(--token-color-text-default);
+    font-weight: var(--token-font-weight-semibold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .d-icon {
+      margin-inline-end: 0.4em;
+    }
+  }
+
+  &__options {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1em;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__edit {
+    flex-shrink: 0;
   }
 }

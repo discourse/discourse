@@ -43,6 +43,207 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
     I18n.t("discourse_ai.share_ai.errors.#{key}")
   end
 
+  describe "GET index" do
+    it "lists only the owner's conversations without requiring artifact cards or exposing context" do
+      sign_in(user)
+      conversation = shared_conversation
+      other_conversation =
+        SharedAiConversation.share_conversation(
+          attacker,
+          Fabricate(:private_message_topic, user: attacker, recipient: bot_user),
+        )
+      conversation.update_columns(
+        excerpt: "Private excerpt",
+        context: [{ id: user_pm_share.posts.first.id, cooked: "Private context" }],
+      )
+
+      get "#{path}.json"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(
+        "items" => [
+          {
+            "id" => conversation.id,
+            "share_key" => conversation.share_key,
+            "title" => conversation.title,
+            "url" => conversation.url,
+            "created_at" => conversation.created_at.as_json,
+            "available" => true,
+          },
+        ],
+        "has_more" => false,
+        "next_cursor" => nil,
+      )
+      expect(response.body).not_to include(
+        conversation.excerpt,
+        conversation.context.first["cooked"],
+        other_conversation.share_key,
+      )
+    end
+
+    it "returns unavailable snapshots for deleted posts, deleted topics, and revoked sharing groups" do
+      sign_in(user)
+      conversation = shared_conversation
+      post = user_pm_share.posts.first
+      post.trash!
+      get "#{path}.json"
+      expect(response.parsed_body["items"].sole["available"]).to eq(false)
+
+      post.recover!
+      user_pm_share.trash!
+      get "#{path}.json"
+      expect(response.parsed_body["items"].sole["available"]).to eq(false)
+
+      user_pm_share.recover!
+      SiteSetting.ai_bot_enabled = false
+      get "#{path}.json"
+      expect(response.parsed_body["items"].sole["available"]).to eq(false)
+
+      SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_public_sharing_allowed_groups = ""
+      get "#{path}.json"
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["items"].sole["available"]).to eq(false)
+      delete "#{path}/#{conversation.share_key}.json"
+      expect(response).to have_http_status(:ok)
+      expect(SharedAiConversation.exists?(conversation.id)).to eq(false)
+    end
+
+    it "retains a snapshot when its source topic or context post no longer exists" do
+      sign_in(user)
+      conversation = shared_conversation
+      Post.where(id: conversation.context.first["id"]).delete_all
+      get "#{path}.json"
+      expect(response.parsed_body["items"].sole.slice("id", "available")).to eq(
+        "id" => conversation.id,
+        "available" => false,
+      )
+
+      Topic.where(id: conversation.target_id).delete_all
+      get "#{path}.json"
+      expect(response.parsed_body["items"].sole.slice("id", "available")).to eq(
+        "id" => conversation.id,
+        "available" => false,
+      )
+      delete "#{path}/#{conversation.share_key}.json"
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not mark context posts from another topic available" do
+      sign_in(user)
+      conversation = shared_conversation
+      other_post = Fabricate(:post, topic: user_pm, user: user)
+      conversation.update_columns(context: [{ id: other_post.id, cooked: other_post.cooked }])
+
+      get "#{path}.json"
+
+      expect(response.parsed_body["items"].sole["available"]).to eq(false)
+    end
+
+    it "paginates 20 rows in both directions without skipping tied timestamps or deleted rows" do
+      sign_in(user)
+      conversations =
+        22.times.map do |index|
+          pm_topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+          post = Fabricate(:post, topic: pm_topic, user: user)
+          SharedAiConversation.create!(
+            user: user,
+            target: pm_topic,
+            title: "Conversation #{index}",
+            llm_name: "Bot",
+            excerpt: "Snapshot",
+            context: [{ id: post.id, cooked: post.cooked }],
+          )
+        end
+      timestamp = Time.utc(2026, 1, 1, 12, 0, 0, 123_456)
+      SharedAiConversation.where(id: conversations.map(&:id)).update_all(created_at: timestamp)
+
+      %w[newest oldest].each do |order|
+        get "#{path}.json", params: { order: order }
+        first_page = response.parsed_body
+        expect(first_page["items"].size).to eq(20)
+        expect(first_page["has_more"]).to eq(true)
+        expect(first_page["next_cursor"].keys.sort).to eq(%w[created_at id order])
+        expected_ids = first_page["items"].map { |item| item["id"] }
+        remaining_ids =
+          SharedAiConversation.where(user: user).where.not(id: expected_ids).pluck(:id)
+        SharedAiConversation.find(expected_ids.last).destroy!
+        get "#{path}.json", params: { order: order, cursor: first_page["next_cursor"].to_json }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["items"].map { |item| item["id"] }).to eq(
+          order == "newest" ? remaining_ids.sort.reverse : remaining_ids.sort,
+        )
+        expect(response.parsed_body["has_more"]).to eq(false)
+        expect(response.parsed_body["next_cursor"]).to be_nil
+      end
+    end
+
+    it "rejects malformed, oversized, and order-mismatched cursors and invalid orders" do
+      sign_in(user)
+      get "#{path}.json", params: { order: "reverse" }
+      expect(response).not_to have_http_status(:success)
+
+      [
+        "no json",
+        "x" * 513,
+        { order: "oldest", created_at: Time.now.utc.iso8601(6), id: 1 }.to_json,
+        { order: "newest", created_at: "tomorrow", id: 1 }.to_json,
+        { order: "newest", created_at: Time.now.utc.iso8601(6), id: 0 }.to_json,
+      ].each do |cursor|
+        get "#{path}.json", params: { cursor: cursor }
+        expect(response).not_to have_http_status(:success)
+      end
+    end
+
+    it "bounds queries when listing many conversations" do
+      sign_in(user)
+      21.times do
+        pm_topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+        post = Fabricate(:post, topic: pm_topic, user: user)
+        SharedAiConversation.create!(
+          user: user,
+          target: pm_topic,
+          title: pm_topic.title,
+          llm_name: "Bot",
+          excerpt: "Snapshot",
+          context: [{ id: post.id, cooked: post.cooked }],
+        )
+      end
+
+      queries = track_sql_queries { get "#{path}.json" }
+      expect(response.parsed_body["items"].size).to eq(20)
+      expect(queries.size).to be <= 230
+    end
+
+    it "does not list another owner's snapshots, even for an admin" do
+      shared_conversation
+      sign_in(attacker)
+      get "#{path}.json"
+      expect(response.parsed_body["items"]).to eq([])
+
+      sign_in(Fabricate(:admin))
+      get "#{path}.json"
+      expect(response.parsed_body["items"]).to eq([])
+    end
+
+    it "requires login" do
+      conversation = shared_conversation
+      get "#{path}.json"
+      expect(response).not_to have_http_status(:success)
+      expect(response.body).not_to include(conversation.share_key)
+    end
+
+    it "requires the AI plugin setting for listing and revoking" do
+      sign_in(user)
+      conversation = shared_conversation
+      SiteSetting.discourse_ai_enabled = false
+      get "#{path}.json"
+      expect(response).to have_http_status(:not_found)
+      delete "#{path}/#{conversation.share_key}.json"
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "POST create" do
     context "when logged in" do
       before { sign_in(user) }
