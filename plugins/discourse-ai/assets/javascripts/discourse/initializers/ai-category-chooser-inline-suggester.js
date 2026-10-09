@@ -50,7 +50,7 @@ async function applyBestSuggestion(component, selectKit, context) {
       { method: "POST", data }
     );
 
-    if (component.isDestroying || component.isDestroyed) {
+    if (component.isDestroying) {
       return;
     }
 
@@ -68,7 +68,7 @@ async function applyBestSuggestion(component, selectKit, context) {
     popupAjaxError(error);
   } finally {
     state.loading = false;
-    if (!component.isDestroying && !component.isDestroyed) {
+    if (!component.isDestroying) {
       selectKit.set("isLoading", false);
     }
   }
@@ -112,7 +112,7 @@ function initInlineCategorySuggester(api) {
       return;
     }
 
-    if (!stateFor(component).loading && context.available) {
+    if (!stateFor(component).loading && context.categoryAvailable) {
       return triggerRow(component, context);
     }
   });

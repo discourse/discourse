@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
   end
 
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
 
@@ -126,7 +126,7 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
       <p>
         <b>
           Triggered by the
-          <a href="/admin/plugins/automation/123">#{CGI.escapeHTML(automation_name)}</a>
+          <a href="/admin/plugins/automation/automation/123">#{CGI.escapeHTML(automation_name)}</a>
           rule.
         </b>
       </p>

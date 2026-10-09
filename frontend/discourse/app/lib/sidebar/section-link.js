@@ -1,8 +1,4 @@
-import { tracked } from "@glimmer/tracking";
-
 export default class SectionLink {
-  @tracked linkDragCss;
-
   constructor({ external, icon, id, name, value }, section) {
     this.external = external;
     this.prefixValue = icon;

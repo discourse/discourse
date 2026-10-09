@@ -102,8 +102,6 @@ module Jobs
             next
           end
 
-          cook_method = feed_item.is_youtube? ? Post.cook_methods[:regular] : nil
-
           updated_tags = discourse_tags
           updated_tags = nil if already_imported&.key?(feed_item)
 
@@ -113,10 +111,11 @@ module Jobs
                 author,
                 feed_item.url,
                 feed_item.title,
-                CGI.unescapeHTML(feed_item.content),
+                feed_item.decoded_content,
                 category_id: discourse_category_id,
                 tags: updated_tags,
-                cook_method: cook_method,
+                cook_method: feed_item.cook_method,
+                truncate: feed_item.truncate_content?,
               )
             rescue => e
               outcomes << feed_item.outcome(status: :failed, reason: e.message.to_s.truncate(200))
@@ -130,7 +129,7 @@ module Jobs
             next
           end
 
-          new_post = post.created_at == post.updated_at
+          new_post = post.previously_new_record?
           item_status = new_post ? :imported : :updated
           outcomes << feed_item.outcome(status: item_status, topic_url: post.topic&.relative_url)
 

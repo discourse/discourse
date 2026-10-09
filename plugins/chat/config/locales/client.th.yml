@@ -110,6 +110,9 @@ th:
         sort:
           relevance: "เกี่ยวข้อง"
           latest: "ล่าสุด"
+      channel_list:
+        filter:
+          mentions: "กล่าวถึง"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"
@@ -178,6 +181,10 @@ th:
         message: "ข้อความ"
       chat_approval:
         message: "ข้อความ"
+        value: "ค่า"
+        style_default: "ค่าเริ่มต้น"
+        style_success: "สำเร็จ"
+        icon: "ไอคอน"
         approve_label: "อนุมัติป้ายกำกับปุ่ม"
         approve_label_description: "หากเว้นว่างไว้ ระบบจะแสดงคำว่า \"อนุมัติ\" เป็นค่าเริ่มต้น"
         deny_label: "ปฏิเสธป้ายกำกับปุ่ม"

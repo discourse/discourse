@@ -16,20 +16,6 @@ export default class AdminToolsService extends Service {
   @service modal;
   @service router;
 
-  showActionLogs(target, filters) {
-    this.router.transitionTo("adminLogs.staffActionLogs", {
-      queryParams: { filters, force_refresh: true },
-    });
-  }
-
-  checkSpammer(userId) {
-    return AdminUser.find(userId).then((au) => this.spammerDetails(au));
-  }
-
-  deleteUser(id, formData) {
-    return AdminUser.find(id).then((user) => user.destroy(formData));
-  }
-
   get deleteUserOptions() {
     return [
       {
@@ -53,6 +39,20 @@ export default class AdminToolsService extends Service {
         blockFlags: { block_email: true, block_urls: true, block_ip: true },
       },
     ];
+  }
+
+  showActionLogs(target, filters) {
+    this.router.transitionTo("adminLogs.staffActionLogs", {
+      queryParams: { filters, force_refresh: true },
+    });
+  }
+
+  checkSpammer(userId) {
+    return AdminUser.find(userId).then((au) => this.spammerDetails(au));
+  }
+
+  deleteUser(id, formData) {
+    return AdminUser.find(id).then((user) => user.destroy(formData));
   }
 
   showDeleteUserModal(
@@ -139,6 +139,34 @@ export default class AdminToolsService extends Service {
     return this.showControlModal("suspend", user, opts);
   }
 
+  async deletePostsDecider(user) {
+    const response = await ajax(
+      `/admin/users/${user.id}/delete_posts_decider`,
+      {
+        type: "POST",
+      }
+    );
+
+    if (response.job_enqueued) {
+      this.dialog.alert(
+        i18n("admin.user.delete_posts.all_enqueued", {
+          username: user.username,
+        })
+      );
+      this.modal.close();
+      return;
+    }
+
+    this.modal.show(DeleteUserPostsProgressModal, {
+      model: {
+        user,
+        updateUserPostCount(count) {
+          user.set("post_count", count);
+        },
+      },
+    });
+  }
+
   _deleteSpammer(adminUser) {
     // Try loading the email if the site supports it
     let tryEmail = this.siteSettings.moderators_view_emails
@@ -191,34 +219,6 @@ export default class AdminToolsService extends Service {
           },
         });
       });
-    });
-  }
-
-  async deletePostsDecider(user) {
-    const response = await ajax(
-      `/admin/users/${user.id}/delete_posts_decider`,
-      {
-        type: "POST",
-      }
-    );
-
-    if (response.job_enqueued) {
-      this.dialog.alert(
-        i18n("admin.user.delete_posts.all_enqueued", {
-          username: user.username,
-        })
-      );
-      this.modal.close();
-      return;
-    }
-
-    this.modal.show(DeleteUserPostsProgressModal, {
-      model: {
-        user,
-        updateUserPostCount(count) {
-          user.set("post_count", count);
-        },
-      },
     });
   }
 }

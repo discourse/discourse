@@ -129,7 +129,7 @@ module Jobs
         if ::DiscourseWorkflows::Ai::Tools::SearchChatChannels.available?
           context_tools[
             :search_chat_channels
-          ] = "Call this before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Use returned matches; never invent channel names or IDs."
+          ] = "Call this before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id with target \"channel\". Use returned matches; never invent channel names or IDs. Not needed for target \"user\", which takes usernames or expressions in target_usernames."
         end
         if ::DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels.available?
           context_tools[

@@ -64,6 +64,7 @@ module Chat
     end
 
     model :channel
+    policy :can_post_in_channel
     step :enforce_membership
     model :membership
     policy :channel_allows_message_creation, class_name: Chat::Channel::Policy::MessageCreation
@@ -100,6 +101,10 @@ module Chat
 
     def no_silenced_user(guardian:)
       !guardian.is_silenced?
+    end
+
+    def can_post_in_channel(guardian:, channel:)
+      guardian.can_post_in_chatable?(channel.chatable)
     end
 
     def fetch_channel(params:)

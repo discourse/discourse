@@ -48,4 +48,15 @@ lt:
       nodes:
         "trigger:assigned": "Priskirta"
       assign_topic:
+        resource: "Ištekliai"
+        resources:
+          topic: "Tema"
+          post: "Įrašai"
         topic_id: "Temos ID"
+        post_id: "Įrašo ID"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Įrašai"
+        topic_id: "Temos ID"
+        post_id: "Įrašo ID"

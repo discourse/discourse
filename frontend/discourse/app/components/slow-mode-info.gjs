@@ -42,9 +42,9 @@ export default class SlowModeInfo extends Component {
 
           {{#if this.user.canManageTopic}}
             <DButton
+              class="slow-mode-remove"
               @action={{this.disableSlowMode}}
               @icon="trash-can"
-              class="slow-mode-remove"
             />
           {{/if}}
         </h3>

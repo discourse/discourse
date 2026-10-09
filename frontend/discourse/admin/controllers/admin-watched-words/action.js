@@ -6,6 +6,8 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import WatchedWordTestingModal from "discourse/admin/components/modal/watched-word-testing";
 import { ajax } from "discourse/lib/ajax";
+import downloadBlob from "discourse/lib/download-blob";
+import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import { i18n } from "discourse-i18n";
 
 export default class AdminWatchedWordsActionController extends Controller {
@@ -74,6 +76,12 @@ export default class AdminWatchedWordsActionController extends Controller {
     );
   }
 
+  get downloadAction() {
+    return attachmentDownloadStrategy() === "native"
+      ? undefined
+      : this.download;
+  }
+
   @action
   recordAdded(arg) {
     const currentAction = this.currentAction;
@@ -117,6 +125,15 @@ export default class AdminWatchedWordsActionController extends Controller {
   @action
   async uploadComplete() {
     return this.adminWatchedWords.updateAllWords();
+  }
+
+  @action
+  async download() {
+    try {
+      await downloadBlob(this.downloadLink);
+    } catch {
+      this.dialog.alert(i18n("generic_error"));
+    }
   }
 
   @action

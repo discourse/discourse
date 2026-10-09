@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -16,6 +16,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service siteSettings;
 
   titleToken() {
     return i18n("chat.title_capitalized");
@@ -31,7 +32,7 @@ export default class ChatRoute extends DiscourseRoute {
     }
 
     if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
-      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(discoveryHomepageRoute());
     }
 
     // Check if user prefers drawer mode and the route can be handled in drawer
@@ -68,8 +69,7 @@ export default class ChatRoute extends DiscourseRoute {
       // navigate to a non-chat page first before opening the drawer
       if (fullPageReload) {
         const appURL =
-          this.chatStateManager.lastKnownAppURL ||
-          `discovery.${defaultHomepage()}`;
+          this.chatStateManager.lastKnownAppURL || discoveryHomepageRoute();
         return this.router.transitionTo(appURL).then(() => {
           this.appEvents.trigger("chat:open-url", url);
         });
@@ -92,12 +92,9 @@ export default class ChatRoute extends DiscourseRoute {
     withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 
-      if (!this.currentUser) {
-        return;
-      }
-
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
+        this.siteSettings
       );
 
       if (chatSeparateSidebarMode.never) {

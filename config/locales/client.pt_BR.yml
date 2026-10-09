@@ -357,6 +357,7 @@ pt_BR:
     notifications_tracking:
       tooltip: "Nível de notificação: %{level}"
     back_button: "Voltar"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}"
@@ -490,22 +491,12 @@ pt_BR:
       pill: "Sugestões"
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
-      select_theme:
-        action: "Selecionar tema"
-        modal_title: "Escolha um tema"
-        use_theme: "Usar tema selecionado"
-        enabled: "Selecionado(a)"
-        applying_theme: "Aplicando tema..."
-        browse_all: "Gerenciar temas"
       invite_collaborators:
         title: "Convidar colaboradores"
-        description: "Os primeiros membros ajudam a dar vida à sua comunidade."
         action: "Criar convite"
       start_posting:
         title: "Comece a postar"
-        description: "Dê às pessoas algo sobre o que conversar."
         action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
@@ -514,18 +505,31 @@ pt_BR:
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
         icebreakers:
-          fun_facts:
-            title: "Quais são algumas curiosidades interessantes sobre você?"
-            body: "Olá a todos! Estou animada para começar esta nova comunidade. Para começar, que tal cada um de nós compartilhar uma curiosidade sobre si? Eu começo: adoro caminhar na natureza e descobrir novas trilhas! E você? Conte algo interessante sobre você!"
-          coolest_thing_you_have_seen_today:
-            title: "Qual foi a coisa mais legal que você viu hoje?"
-            body: "Qual foi a coisa mais legal que você viu ou vivenciou hoje? Pode ser qualquer coisa, desde um lindo pôr do sol até um ato aleatório de bondade. Eu começo: vi um cachorro ajudando uma pessoa idosa a atravessar a rua!"
           introduce_yourself:
             title: "Apresente-se"
             body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
-          what_is_your_favorite_food:
-            title: "Qual é a sua comida favorita?"
-            body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
+    design_wizard:
+      back: "Voltar"
+      next: "Próximo"
+      sections:
+        theme: "Tema"
+        fonts: "Fontes"
+        homepage: "Página Inicial"
+        welcome_banner: "Banner de boas-vindas"
+        search: "Pesquisar"
+      theme:
+        selected: "Selecionado(a)"
+      colors:
+        light: "Claro"
+        dark: "Escuro"
+      fonts:
+        base_font: "Fonte de base"
+        heading_font: "Fonte do cabeçalho"
+      homepage:
+        topics: "Tópicos"
+        categories: "Categorias"
+        styles:
+          boxes: "Caixas de seleção"
     about:
       edit: "Editar esta página"
       simple_title: "Sobre"
@@ -820,10 +824,6 @@ pt_BR:
       stale_help: "Este item foi resolvido por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
-        required: "Você precisa reivindicar itens antes de poder revisá-los."
-        claimed_by_you: "Você reivindicou este item e pode revisá-lo."
-        claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
       claim:
         title: "Reivindicar este tópico"
       unclaim:
@@ -1029,6 +1029,9 @@ pt_BR:
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
+      author_penalty:
+        toast:
+          undo: "Desfazer"
       notes:
         add_note_description: "Adicione uma observação para fornecer contexto a outros moderadores."
         add_note_button: "Adicionar observação"
@@ -1681,7 +1684,6 @@ pt_BR:
       admin: "%{user} é administrador(a)"
       moderator_tooltip: "Este(a) usuário(a) é moderador(a)"
       admin_tooltip: "Este(a) usuário(a) é administrador(a)"
-      silenced_tooltip: "Este(a) usuário(a) está silenciado(a)"
       suspended_notice: "Este(a) usuário(a) está suspenso(a) até %{date}."
       suspended_permanently: "Este(a) usuário(a) está suspenso(a)."
       suspended_reason: "Motivo: "
@@ -1740,6 +1742,16 @@ pt_BR:
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler"
       apps: "Aplicativos"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Escopos"
+        details: "Detalhes"
+        last_used: "Último uso"
+        never: "Nunca"
+        status: "Status"
+        statuses:
+          active: "Ativo(a)"
+          revoked: "Regovado(a)"
       revoke_access: "Revogar acesso"
       undo_revoke_access: "Desfazer revogação de acesso"
       api_approved: "Aprovada:"
@@ -2215,7 +2227,6 @@ pt_BR:
         watch_topic: "Acompanhar tópico"
         track_topic: "Monitorar tópico"
         do_nothing: "Não fazer nada"
-      topics_unread_when_closed: "Considerar tópicos não lidos ao serem fechados"
       invited:
         title: "Convites"
         pending_tab: "Pendentes"
@@ -2888,12 +2899,18 @@ pt_BR:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Opção"
+      period: "Período"
+      tab: "Tab"
+      delete: "Excluir"
+      home: "Início"
     conditional_loading_section:
       loading: Carregando…
     category_row:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2965,6 +2982,7 @@ pt_BR:
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
+      search_label: "Buscar ícones"
       search_placeholder: "Buscar ícones..."
       no_results: "Nenhum ícone encontrado"
       results_count:
@@ -3068,7 +3086,6 @@ pt_BR:
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
-      title: "Ou aperte %{modifier}Enter"
       save_and_close: "Salvar e fechar"
       discard: "Descartar"
       cancel_edit: "Cancelar edição"
@@ -3297,7 +3314,6 @@ pt_BR:
         other: "%{count} pedidos de associação abertas para \"%{group_name}\""
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - concluído(a)"
       new_features: "Novos recursos disponíveis!"
       admin_problems: "Nova recomendação no painel de controle do seu site"
       upcoming_changes:
@@ -3421,10 +3437,10 @@ pt_BR:
         search_field: "Campo de pesquisa no cabeçalho do site"
         search_icon: "Ícone de pesquisa próximo ao avatar do perfil"
       type:
-        default: "Tópicos/postagens"
+        default: "Postagens"
         users: "Usuários(as)"
         categories: "Categorias"
-        categories_and_tags: "Categorias/etiquetas"
+        categories_and_tags: "Etiquetas e categorias"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
@@ -3437,7 +3453,6 @@ pt_BR:
         in: "filtros por metadados (por exemplo: in:title, in:personal, in:pinned)"
         status: "filtros por status de tópico"
         full_search: "inicia pesquisa de pa'gina inteira"
-        full_search_key: "%{modifier} + Enter"
         me: "mostrar apenas suas publicações"
       advanced:
         title: Filtros avançados
@@ -4172,7 +4187,6 @@ pt_BR:
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão de %{postLink}:"
       follow_quote: "ir para a resposta citada"
-      show_full: "Exibir postagem completa"
       show_hidden: "Ver o conteúdo ignorado."
       deleted_by_author_simple: "(postagem excluída pelo(a) autor(a))"
       collapse: "recolher"
@@ -4557,6 +4571,7 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      latest_topics: "Últimos tópicos"
       description_updated: "Descrição atualizada"
       description_expand: "Exibir mais"
       description_collapse: "Exibir menos"
@@ -4844,6 +4859,7 @@ pt_BR:
       with_category: "%{filter} %{category} tópicos"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "redefinir"
         button:
           label: "Filtro"
       latest:
@@ -4956,12 +4972,8 @@ pt_BR:
     invalid_video_url: Este vídeo não pode ser reproduzido porque a URL é inválida ou está indisponível.
     keyboard_shortcuts_help:
       search_placeholder: "Pesquisar atalho por combinação de chaves ou descrição"
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Atalhos do teclado"
       short_title: "Atalhos"
       search_ctrl_f_tip: "Para pesquisar em todo o fórum, pressione <kbd>/</kbd>"
@@ -5060,16 +5072,18 @@ pt_BR:
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
     download_calendar:
-      title: "Baixar calendário"
+      title: "Adicionar ao calendário"
+      calendar: "Calendário"
       save_ics: "Baixar arquivo .ics"
       save_google: "Adicionar ao Google calendar"
       remember: "Não perguntar novamente"
-      remember_explanation: "(você pode alterar esta preferência nas suas preferências de usuário(a))"
       download: "Download"
       default_calendar: "Calendário padrão"
       default_calendar_instruction: "Determine qual calendário deve ser usado ao salvar datas"
       add_to_calendar: "Adicionar ao calendário"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Calendário da Apple"
       ics: "ICS"
       default_title: "Evento agendado"
     tagging:
@@ -5675,6 +5689,11 @@ pt_BR:
         group_moderation_and_security: "Moderação & Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
+        related_items:
+          users:
+            title: "Usuários(as)"
+          labels:
+            user: "Usuário(a)"
       config_sections:
         account:
           title: "Conta"
@@ -5770,6 +5789,73 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
+        mcp:
+          tabs:
+            access: "Acesso"
+            activity: "Atividade"
+          overview:
+            status: "Status"
+            tools: "Ferramentas"
+          access:
+            title: "Acesso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Ações"
+            edit: "Editar"
+            delete: "Excluir"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Escopo"
+              provider: "Provedor"
+              kind: "Tipo"
+            provider: "Provedor"
+            kind: "Tipo"
+            scope: "Escopo"
+            state: "Estado"
+            scopes: "Escopos"
+          clients:
+            actions: "Ações"
+            block: "Bloqueado(a)"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizadas"
+          authorizations:
+            user: "Usuário(a)"
+            last_used: "Último uso"
+            status: "Status"
+            actions: "Ações"
+          activity:
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuário(a)"
+            duration: "Duração"
+          values:
+            server_status:
+              disabled: "Desativados"
+            client_trust:
+              approved: "Aprovado (approved)"
+            authorization_status:
+              active: "Ativo(a)"
+              revoked: "Regovado(a)"
+            activity_outcome:
+              success: "Sucesso"
+              error: "Erro"
+            primitive_state:
+              enabled: "Ativados"
+              disabled: "Desativados"
+            primitive_kind:
+              all: "Todos os tipos"
+              tool: "Ferramenta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Somente leitura"
+              moderation: "Moderação"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"
@@ -5980,7 +6066,7 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Use isto para encontrar o que você quiser na interface da administração. Você pode filtrar os resultados abaixo e as suas preferências serão lembradas. Para abrir esta pesquisa na interface da administração, pressione %{shortcutHTML}."
+          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -6208,13 +6294,28 @@ pt_BR:
       new_features:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
+      site_traffic_explorer:
+        metric_information: "Sobre %{metric}"
+        remove_filter_value: "Remover %{value}"
+        clear_all: "Limpar tudo"
+        apply: "Aplicar"
+        view_more: "Ver mais"
+        cards:
+          pages: "Páginas"
+          visitors: "Visitantes"
+        filters:
+          country: "País"
+          browser: "Navegador"
+          language: "Idioma"
+          ip: "Endereço IP"
+        series:
+          anonymous_human: "Anônimo(a)"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
         discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Você está atualizado(a)!"
-        critical_available: "Uma atualização crítica está disponível."
         updates_available: "Atualizações estão disponíveis."
         please_update: "Atualize agora mesmo!"
         no_check_performed: "Não foi realizada nenhuma verificação de atualizações. Verifique se sidekiq esta em execução."
@@ -6282,6 +6383,9 @@ pt_BR:
               share: "Compartilhar"
             whos_posting:
               staff: "Equipe"
+              add_group: "Adicionar grupo"
+              modal:
+                apply: "Salvar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nova"
@@ -6301,6 +6405,11 @@ pt_BR:
             table:
               searches: "Pesquisas"
               status: "Status"
+          system:
+            title: "Sistema"
+            status: "Status"
+            discourse_updated: "Discourse atualizado"
+            dashboard_updated: "Painel de controle atualizado"
         reports_section:
           header_action: "Gerenciar"
           no_data: "Nenhum dado para exibir"
@@ -6314,6 +6423,7 @@ pt_BR:
           series:
             anonymous: "Anônimo(a)"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"
@@ -6354,6 +6464,14 @@ pt_BR:
           average_for_sample: "Média para amostra"
           total: "Todo o tempo total"
           no_data: "Nenhum dado para exibir."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuário(a)"
+              other: "%{count} usuários"
+            posts_count:
+              one: "%{count} postagem"
+              other: "%{count} postagens"
+            deselect: "Desmarcar %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
             disabled: 'O relatório de pesquisa de conteúdo em alta está desativado. Ative as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
@@ -8350,13 +8468,14 @@ pt_BR:
           multiselect: "Multisseleção"
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
-        search: "Pesquise o texto que você gostaria de editar"
+        search_label: "Pesquisar"
+        theme_disabled: "Desativados"
+        filters: "Filtros"
+        status:
+          invalid: "Inválido"
         title: "Textos do site"
         edit: "Editar"
-        revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter suas alterações?"
-        go_back: "Voltar para pesquisa"
-        recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
         show_overriden: "Exibir apenas substituídos"
         show_outdated: "Mostrar somente desatualizado/inválido"
         show_untranslated: "Mostrar apenas sem tradução"

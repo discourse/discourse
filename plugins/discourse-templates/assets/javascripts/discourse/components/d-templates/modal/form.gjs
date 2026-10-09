@@ -23,15 +23,15 @@ export default class Form extends Component {
 
   <template>
     <DModal
+      class="d-templates d-templates-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "templates.insert_template"}}
-      class="d-templates d-templates-modal"
     >
       <:body>
         <FilterableList
-          @textarea={{@model.textarea}}
-          @onInsertTemplate={{@model.onInsertTemplate}}
           @onAfterInsertTemplate={{@closeModal}}
+          @onInsertTemplate={{@model.onInsertTemplate}}
+          @textarea={{@model.textarea}}
         />
       </:body>
     </DModal>

@@ -10,7 +10,47 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
     SiteSetting.enable_discourse_workflows = true
   end
 
-  it "enqueues ResumeWorkflowApproval when an approve button is clicked" do
+  it "enqueues the persisted interaction id when a V2 button is clicked" do
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:manual"
+        g.node "wait-1",
+               "action:chat_approval",
+               configuration: {
+                 "message" => "Approve?",
+                 "channel_id" => channel.id.to_s,
+               }
+        g.chain "trigger-1", "wait-1"
+      end
+    graph[:nodes].find { |node| node["id"] == "wait-1" }["typeVersion"] = "2.0"
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+    publish_workflow!(workflow)
+
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    expect(execution.status).to eq("waiting")
+
+    approve_action_id = Chat::Message.last.blocks.first["elements"].first["action_id"]
+
+    interaction =
+      Fabricate(
+        :chat_message_interaction,
+        user: user,
+        message: Chat::Message.last,
+        action: {
+          "action_id" => approve_action_id,
+          "value" => "approve",
+        },
+      )
+
+    expect_enqueued_with(
+      job: Jobs::Chat::ResumeWorkflowApprovalInteraction,
+      args: {
+        interaction_id: interaction.id,
+      },
+    ) { DiscourseEvent.trigger(:chat_message_interaction, interaction) }
+  end
+
+  it "preserves the legacy job payload when a V1 button is clicked" do
     graph =
       build_workflow_graph do |g|
         g.node "trigger-1", "trigger:manual"
@@ -25,15 +65,13 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
     publish_workflow!(workflow)
 
-    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
-    expect(execution.status).to eq("waiting")
-
-    approve_action_id = Chat::Message.last.blocks.first["elements"].first["action_id"]
-
+    DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    message = Chat::Message.last
+    approve_action_id = message.blocks.first["elements"].first["action_id"]
     interaction =
       Chat::MessageInteraction.new(
         user: user,
-        message: Chat::Message.last,
+        message: message,
         action: {
           "action_id" => approve_action_id,
           "value" => "approve",
@@ -51,7 +89,8 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
 
   it "ignores interactions whose action_id does not match any waiting execution" do
     interaction =
-      Chat::MessageInteraction.new(
+      Fabricate(
+        :chat_message_interaction,
         user: user,
         message: chat_message,
         action: {
@@ -59,10 +98,12 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
         },
       )
 
-    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
-      Jobs::Chat::ResumeWorkflowApproval.jobs,
-      :size,
-    )
+    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change {
+      [
+        Jobs::Chat::ResumeWorkflowApproval.jobs.size,
+        Jobs::Chat::ResumeWorkflowApprovalInteraction.jobs.size,
+      ]
+    }
   end
 
   it "ignores interactions with an unrecognized action type" do
@@ -74,7 +115,8 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
       )
 
     interaction =
-      Chat::MessageInteraction.new(
+      Fabricate(
+        :chat_message_interaction,
         user: user,
         message: chat_message,
         action: {
@@ -82,9 +124,11 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
         },
       )
 
-    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
-      Jobs::Chat::ResumeWorkflowApproval.jobs,
-      :size,
-    )
+    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change {
+      [
+        Jobs::Chat::ResumeWorkflowApproval.jobs.size,
+        Jobs::Chat::ResumeWorkflowApprovalInteraction.jobs.size,
+      ]
+    }
   end
 end

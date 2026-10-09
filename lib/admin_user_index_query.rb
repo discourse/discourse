@@ -66,7 +66,7 @@ class AdminUserIndexQuery
       order << "users.username"
     end
 
-    query = klass.includes(:totps).order(order.reject(&:blank?).join(","))
+    query = klass.includes(:security_keys, :totps).order(order.reject(&:blank?).join(","))
 
     query = query.includes(:user_stat) unless params[:stats].present? && params[:stats] == false
 
@@ -88,6 +88,19 @@ class AdminUserIndexQuery
       @query.activated
     when "not_activated"
       @query.not_activated
+    end
+  end
+
+  def filter_by_account_type
+    return unless params[:query] == "staff"
+
+    case params[:account_type]
+    when "all"
+      @query
+    when "bot"
+      @query.bot_users
+    else
+      @query.human_users
     end
   end
 
@@ -243,6 +256,7 @@ class AdminUserIndexQuery
   def find_users_query
     append filter_by_trust
     append filter_by_query_classification
+    append filter_by_account_type
     append filter_by_activation
     append filter_by_ip
     append filter_by_same_ip_user

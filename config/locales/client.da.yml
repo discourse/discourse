@@ -317,6 +317,7 @@ da:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
     back_button: "Tilbage"
+    confirm_button: "Bekræft"
     welcome_banner:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
@@ -426,10 +427,28 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Valgt"
       start_posting:
         back: "Tilbage"
+    design_wizard:
+      back: "Tilbage"
+      next: "Næste"
+      sections:
+        theme: "Tema"
+        fonts: "Skrifttyper"
+        homepage: "Hjemmeside"
+        search: "Søg"
+      theme:
+        selected: "Valgt"
+      colors:
+        light: "Lys"
+        dark: "Mørk"
+      fonts:
+        heading_font: "Overskrifts skrifttype"
+      homepage:
+        topics: "Emner"
+        categories: "Kategorier"
+        styles:
+          boxes: "Bokse"
     about:
       edit: "Rediger denne side"
       simple_title: "Om"
@@ -653,10 +672,6 @@ da:
         optional: "valgfri"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
-        required: "Du skal kræve punkter, før du kan gennemgå dem."
-        claimed_by_you: "Du har gjort krav på dette punkt og kan gennemgå det."
-        claimed_by_other: "Dette punkt kan kun gennemgås af <b>%{username}</b> ."
-        automatically_claimed_by: "Dette element er i øjeblikket ved at blive gennemgået af <b>%{username}</b>."
       awaiting_approval: "Afventer godkendelse"
       delete: "Slet"
       settings:
@@ -823,6 +838,9 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         note_added: "Moderator note"
+      author_penalty:
+        toast:
+          undo: "Fortryd"
       notes:
         add_note_button: "Tilføj note"
         placeholder: "Skriv din note her..."
@@ -1408,7 +1426,6 @@ da:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne bruger er en moderator"
       admin_tooltip: "Denne bruger er en administrator"
-      silenced_tooltip: "Denne bruger er mådeholdt (silenced)"
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er suspenderet."
       suspended_reason: "Begrundelse: "
@@ -1464,6 +1481,15 @@ da:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Ressource"
+        scopes: "Anvendelsesområder"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Tilbagekaldt"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Fortryd Tilbagekald adgang"
       api_approved: "Godkendt:"
@@ -1811,7 +1837,6 @@ da:
         label: "Når du laver indlæg"
         track_topic: "Spor emne"
         do_nothing: "Gøre ingenting"
-      topics_unread_when_closed: "Betragt emner som ulæste, når de er lukket"
       invited:
         title: "Invitationer"
         pending_tab: "Afventende"
@@ -2319,6 +2344,10 @@ da:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Mulighed"
+      tab: "Fane"
+      delete: "Slet"
+      home: "Hjem"
     conditional_loading_section:
       loading: Indlæser…
     category_row:
@@ -2442,7 +2471,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      title: "Eller tryk på %{modifier}Enter"
       save_and_close: "Gem og luk"
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
@@ -2613,7 +2641,6 @@ da:
         other: "%{count} åbne ansøgninger om medlemskab i '%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - afsluttet"
       new_features: "Nye funktioner tilgængelige!"
       dismiss_confirmation:
         dismiss: "Ignorer Alle"
@@ -2709,10 +2736,9 @@ da:
       recent: "Seneste søgninger"
       clear_recent: "Ryd seneste søgninger"
       type:
-        default: "Emner/indlæg"
+        default: "Indlæg"
         users: "Brugere"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/tags"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
@@ -2724,7 +2750,6 @@ da:
         in: "filtrerer efter metadata (f.eks. in:title, in:personal, in:pinned)"
         status: "filtrerer efter emnestatus"
         full_search: "starter fuldsidesøgning"
-        full_search_key: "%{modifier} + Enter"
         me: "viser kun dine indlæg"
       advanced:
         title: Avancerede filtre
@@ -3298,7 +3323,6 @@ da:
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"
       follow_quote: "gå til det citerede indlæg"
-      show_full: "Vis hele emnet"
       show_hidden: "Vis ignoreret indhold."
       deleted_by_author_simple: "(indlæg slettet af forfatteren)"
       collapse: "fold sammen"
@@ -3577,6 +3601,7 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      latest_topics: "Seneste emner"
       description_expand: "Vis mere"
       description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
@@ -3786,6 +3811,7 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "nulstil"
         button:
           label: "Filter"
       latest:
@@ -3878,11 +3904,8 @@ da:
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastaturgenveje"
       short_title: "Genveje"
       description_header: "Beskrivelse"
@@ -3973,7 +3996,7 @@ da:
       favorite_max_not_reached: "Markér dette emblem som favorit"
       favorite_count: "%{count}/%{max} emblemer markeret som favoritter"
     download_calendar:
-      title: "Hent kalender"
+      title: "Føj til kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"
@@ -4383,6 +4406,11 @@ da:
         group_traffic: "Trafik"
         group_members: "Brugere"
         group_other: "Andre"
+        related_items:
+          users:
+            title: "Brugere"
+          labels:
+            user: "Bruger"
       config_sections:
         account:
           title: "Konto"
@@ -4429,6 +4457,64 @@ da:
           title: "Om dit websted"
         developer:
           title: "Udvikler"
+        mcp:
+          tabs:
+            access: "Adgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Adgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slet"
+          primitives:
+            group_by_options:
+              provider: "Udbyder"
+              kind: "Type"
+            provider: "Udbyder"
+            kind: "Type"
+            scopes: "Anvendelsesområder"
+          clients:
+            actions: "Handlinger"
+            block: "Blokér"
+            presets:
+              custom: "Tilpasset"
+          authorizations:
+            user: "Bruger"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tidspunkt"
+            user: "Bruger"
+            duration: "Varighed"
+          values:
+            server_status:
+              disabled: "Deaktiveret"
+            client_trust:
+              approved: "Godkendt"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Tilbagekaldt"
+            activity_outcome:
+              success: "Succes"
+              error: "Fejl"
+            primitive_state:
+              enabled: "Aktiveret"
+              disabled: "Deaktiveret"
+            primitive_kind:
+              all: "Alle typer"
+              resource: "Ressource"
+            primitive_risk:
+              read: "Læs kun"
+              moderation: "Moderation"
+            filter:
+              all: "Alle"
+          never: "Aldrig"
+          actions:
+            revoke: "Tilbagekald"
         experimental:
           title: "Eksperimentel"
         emojis:
@@ -4627,13 +4713,26 @@ da:
       new_features:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
+      site_traffic_explorer:
+        metric_information: "Om %{metric}"
+        clear_all: "Ryd alle"
+        apply: "Anvend"
+        view_more: "Se mere"
+        cards:
+          pages: "Sider"
+          visitors: "Besøgende"
+        filters:
+          browser: "Browser"
+          language: "Sprog"
+          ip: "IP-adresse"
+        series:
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"
         discourse_last_updated: "Discourse opdateret:"
         version: "Installeret version"
         up_to_date: "Du kører den seneste version af Discourse."
-        critical_available: "En kritisk opdatering er tilgængelig."
         updates_available: "Opdatering er tilgængelige."
         please_update: "Opdatér venligst!"
         no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
@@ -4697,6 +4796,8 @@ da:
               share: "Del"
             whos_posting:
               staff: "Personale"
+              modal:
+                apply: "Gem"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nye"
@@ -4709,6 +4810,11 @@ da:
             table:
               searches: "søgninger"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Discourse opdateret"
+            dashboard_updated: "instrumentbræt opdateret"
         reports_section:
           header_action: "Administrér"
           no_data: "Ingen data at vise"
@@ -4720,6 +4826,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"
@@ -4749,6 +4856,13 @@ da:
           average_for_sample: "Gennemsnit for prøve"
           total: "Total tid"
           no_data: "Ingen data at vise."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} bruger"
+              other: "%{count} brugere"
+            posts_count:
+              one: "%{count} indlæg"
+              other: "%{count} indlæg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
@@ -6191,12 +6305,10 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        search: "Søg efter teksten du gerne vil rette"
+        search_label: "Søg"
+        theme_disabled: "Deaktiveret"
         edit: "Rediger"
-        revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
-        go_back: "Tilbage til søgning"
-        recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."

@@ -6,7 +6,7 @@ describe GithubPermalinks do
   context "when it doesn't contain github link to the file" do
     let(:post) { Fabricate(:post, raw: "there is no github link") }
 
-    it "it does not run the job" do
+    it "does not run the job" do
       Jobs.expects(:cancel_scheduled_job).never
       GithubPermalinks.replace_github_non_permalinks(post)
     end

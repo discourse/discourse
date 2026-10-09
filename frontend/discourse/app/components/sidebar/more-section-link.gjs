@@ -4,6 +4,7 @@ import SectionLink from "./section-link";
 
 const SidebarMoreSectionLink = <template>
   <SectionLink
+    ...attributes
     @badgeText={{@sectionLink.badgeText}}
     @content={{dReplaceEmoji @sectionLink.text}}
     @currentWhen={{@sectionLink.currentWhen}}
@@ -15,13 +16,13 @@ const SidebarMoreSectionLink = <template>
     @prefixValue={{@sectionLink.prefixValue}}
     @query={{@sectionLink.query}}
     @route={{@sectionLink.route}}
+    @scrollIntoView={{@scrollIntoView}}
     @shouldDisplay={{@sectionLink.shouldDisplay}}
     @suffixCSSClass={{@sectionLink.suffixCSSClass}}
     @suffixType={{@sectionLink.suffixType}}
     @suffixValue={{@sectionLink.suffixValue}}
     @title={{@sectionLink.title}}
     @toggleNavigationMenu={{@toggleNavigationMenu}}
-    ...attributes
   />
 </template>;
 

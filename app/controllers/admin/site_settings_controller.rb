@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
+  # On an archived site the only site setting an admin may change is
+  # `site_archived` itself (to toggle archive back off). The guard inside
+  # #update blocks every other setting.
+  allow_when_archived :update
+
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
   end
@@ -34,6 +39,10 @@ class Admin::SiteSettingsController < Admin::AdminController
     else
       backfill = params[:update_existing_user]
       settings = [{ setting_name: id, value: params[id], backfill: }]
+    end
+
+    if SiteSetting.site_archived && settings.any? { |s| s[:setting_name].to_s != "site_archived" }
+      raise Discourse::SiteArchived
     end
 
     SiteSetting::Update.call(

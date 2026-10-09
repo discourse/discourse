@@ -15,7 +15,11 @@ import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
+import {
+  continuesOnError,
+  NODE_DIRECT_SETTING_KEYS,
+  withContinueOnError,
+} from "../../../lib/workflows/node-data-shape";
 import {
   nodeTypeDescription,
   nodeTypeIcon,
@@ -40,6 +44,7 @@ import CredentialControl from "../configurators/credential";
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
 import OutputContext from "../context/output";
+import { takenNodeNames } from "../editor/node-factory";
 import LivePreview from "./live-preview";
 
 function credentialSlotLabel(slot) {
@@ -80,6 +85,7 @@ export default class NodeConfigurator extends Component {
     notesInFlow: this.args.model.node.configuration?.notesInFlow === true,
     alwaysOutputData:
       this.args.model.node.configuration?.alwaysOutputData === true,
+    continueOnError: continuesOnError(this.args.model.node.configuration),
   };
 
   @tracked credentialConfig = structuredClone(
@@ -136,34 +142,6 @@ export default class NodeConfigurator extends Component {
     );
   }
 
-  async #loadTypes() {
-    this.nodeTypes = await this.workflowsNodeTypes.load();
-    this.#applyDefaults();
-    this.#setSavedBaseline(this.configuration, this.initialNodeName);
-  }
-
-  #applyDefaults() {
-    const config = this.initialConfiguration;
-
-    for (const [key, fs] of Object.entries(this.propertySchema)) {
-      if (config[key] != null) {
-        continue;
-      }
-      if (fs.default !== undefined) {
-        config[key] = fs.default;
-      } else if (
-        fieldType(fs) === "collection" ||
-        fieldType(fs) === "fixed_collection"
-      ) {
-        config[key] = {};
-      } else if (fieldType(fs) === "assignment_collection") {
-        config[key] = { assignments: [] };
-      } else if (fieldType(fs) === "array") {
-        config[key] = [];
-      }
-    }
-  }
-
   get nodeTypeDefaultName() {
     return nodeTypeLabel(this.resolvedNodeType);
   }
@@ -178,6 +156,10 @@ export default class NodeConfigurator extends Component {
       this.args.model.node.type,
       typeVersionForNode(this.args.model.node)
     );
+  }
+
+  get canContinueOnError() {
+    return !this.args.model.node.type?.startsWith("trigger:");
   }
 
   get showsOutputContext() {
@@ -214,8 +196,84 @@ export default class NodeConfigurator extends Component {
     return this.nodeName.trim();
   }
 
+  get nodeNameError() {
+    if (this.trimmedNodeName.length === 0) {
+      return null;
+    }
+
+    const otherNodes = this.args.model.nodes.filter(
+      (node) => node.clientId !== this.args.model.node.clientId
+    );
+
+    return takenNodeNames(otherNodes).has(this.trimmedNodeName)
+      ? i18n("discourse_workflows.node_name_taken")
+      : null;
+  }
+
   get canSaveNodeName() {
-    return this.trimmedNodeName.length > 0;
+    return this.trimmedNodeName.length > 0 && !this.nodeNameError;
+  }
+
+  get runScopeLabel() {
+    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, {
+      typeVersion: this.args.model.node.typeVersion,
+      configuration: this.configuration,
+    });
+    return labelKey ? i18n(labelKey) : null;
+  }
+
+  get configuration() {
+    if (!this.parametersApi) {
+      return this.configurationWithDirectSettings(this.initialConfiguration);
+    }
+
+    const config = {};
+    for (const key of [
+      ...Object.keys(this.propertySchema),
+      ...NODE_DIRECT_SETTING_KEYS,
+    ]) {
+      let value = this.parametersApi.get(key);
+      if (
+        value === undefined &&
+        Object.hasOwn(this.initialConfiguration, key)
+      ) {
+        value = this.initialConfiguration[key];
+      }
+      if (value !== undefined) {
+        config[key] = value;
+      }
+    }
+
+    return this.configurationWithDirectSettings(config);
+  }
+
+  get settingsConfiguration() {
+    if (!this.settingsApi) {
+      return this.settingsFormData;
+    }
+
+    return {
+      notes: this.settingsApi.get("notes") || "",
+      notesInFlow: this.settingsApi.get("notesInFlow") === true,
+      alwaysOutputData: this.settingsApi.get("alwaysOutputData") === true,
+      continueOnError: this.settingsApi.get("continueOnError") === true,
+    };
+  }
+
+  get isDirty() {
+    const nameDirty = this.nodeName !== this.initialNodeName;
+    const configurationDirty =
+      JSON.stringify(this.configuration) !==
+      JSON.stringify(this.initialConfiguration);
+    return nameDirty || configurationDirty;
+  }
+
+  get showSaveStatus() {
+    return this.saveStatus === "saving" || this.saveStatus === "saved";
+  }
+
+  get canExecuteStep() {
+    return shouldShowExecuteStep(this.args.model.node);
   }
 
   @action
@@ -225,6 +283,7 @@ export default class NodeConfigurator extends Component {
         notes: this.configuration.notes || "",
         notesInFlow: this.configuration.notesInFlow === true,
         alwaysOutputData: this.configuration.alwaysOutputData === true,
+        continueOnError: continuesOnError(this.configuration),
       };
     }
     this.activeTab = tab;
@@ -245,11 +304,6 @@ export default class NodeConfigurator extends Component {
     const notes = value || "";
     await set(name, notes);
     await set("notesInFlow", notes.trim().length > 0);
-  }
-
-  @action
-  async handleAlwaysOutputDataSet(value, { set, name }) {
-    await set(name, value);
   }
 
   @action
@@ -307,71 +361,91 @@ export default class NodeConfigurator extends Component {
     }
   }
 
-  get runScopeLabel() {
-    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, {
-      typeVersion: this.args.model.node.typeVersion,
-      configuration: this.configuration,
-    });
-    return labelKey ? i18n(labelKey) : null;
-  }
-
-  get configuration() {
-    if (!this.parametersApi) {
-      return this.configurationWithDirectSettings(this.initialConfiguration);
-    }
-
-    const config = {};
-    for (const key of [
-      ...Object.keys(this.propertySchema),
-      ...NODE_DIRECT_SETTING_KEYS,
-    ]) {
-      let value = this.parametersApi.get(key);
-      if (
-        value === undefined &&
-        Object.hasOwn(this.initialConfiguration, key)
-      ) {
-        value = this.initialConfiguration[key];
-      }
-      if (value !== undefined) {
-        config[key] = value;
-      }
-    }
-
-    return this.configurationWithDirectSettings(config);
-  }
-
-  get settingsConfiguration() {
-    if (!this.settingsApi) {
-      return this.settingsFormData;
-    }
-
-    return {
-      notes: this.settingsApi.get("notes") || "",
-      notesInFlow: this.settingsApi.get("notesInFlow") === true,
-      alwaysOutputData: this.settingsApi.get("alwaysOutputData") === true,
-    };
-  }
-
   configurationWithDirectSettings(config) {
     return {
       ...config,
       notes: this.settingsConfiguration.notes,
       notesInFlow: this.settingsConfiguration.notesInFlow,
       alwaysOutputData: this.settingsConfiguration.alwaysOutputData,
+      ...withContinueOnError(
+        config,
+        this.settingsConfiguration.continueOnError
+      ),
       credentials: this.credentialConfig,
     };
   }
 
-  get isDirty() {
-    const nameDirty = this.nodeName !== this.initialNodeName;
-    const configurationDirty =
-      JSON.stringify(this.configuration) !==
-      JSON.stringify(this.initialConfiguration);
-    return nameDirty || configurationDirty;
+  @action
+  scheduleSave() {
+    cancel(this.autosaveTimer);
+    this.autosaveTimer = later(() => {
+      this.#saveConfiguration({ throwOnError: true }).catch(() => {
+        this.saveStatus = null;
+        this.isSaveStatusFading = false;
+      });
+    }, AUTOSAVE_DELAY_MS);
   }
 
-  get showSaveStatus() {
-    return this.saveStatus === "saving" || this.saveStatus === "saved";
+  @action
+  async saveCurrentConfiguration() {
+    cancel(this.autosaveTimer);
+    await this.#saveConfiguration({ throwOnError: true });
+  }
+
+  @action
+  handleClose() {
+    if (this.isDirty) {
+      cancel(this.autosaveTimer);
+      this.args.model.onSave(
+        this.configuration,
+        this.trimmedNodeName || this.initialNodeName
+      );
+    }
+    this.args.closeModal();
+    this.args.model.session.clearEditingContext();
+  }
+
+  @action
+  async executeStep() {
+    try {
+      await this.saveCurrentConfiguration();
+      await runExecuteStep({
+        clientId: this.args.model.node.clientId || this.args.model.node.id,
+        workflowId: this.args.model.session?.workflowId,
+        toasts: this.toasts,
+        router: this.router,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  async #loadTypes() {
+    this.nodeTypes = await this.workflowsNodeTypes.load();
+    this.#applyDefaults();
+    this.#setSavedBaseline(this.configuration, this.initialNodeName);
+  }
+
+  #applyDefaults() {
+    const config = this.initialConfiguration;
+
+    for (const [key, fs] of Object.entries(this.propertySchema)) {
+      if (config[key] != null) {
+        continue;
+      }
+      if (fs.default !== undefined) {
+        config[key] = fs.default;
+      } else if (
+        fieldType(fs) === "collection" ||
+        fieldType(fs) === "fixed_collection"
+      ) {
+        config[key] = {};
+      } else if (fieldType(fs) === "assignment_collection") {
+        config[key] = { assignments: [] };
+      } else if (fieldType(fs) === "array") {
+        config[key] = [];
+      }
+    }
   }
 
   #cancelTimers() {
@@ -430,61 +504,12 @@ export default class NodeConfigurator extends Component {
     }
   }
 
-  @action
-  scheduleSave() {
-    cancel(this.autosaveTimer);
-    this.autosaveTimer = later(() => {
-      this.#saveConfiguration({ throwOnError: true }).catch(() => {
-        this.saveStatus = null;
-        this.isSaveStatusFading = false;
-      });
-    }, AUTOSAVE_DELAY_MS);
-  }
-
-  @action
-  async saveCurrentConfiguration() {
-    cancel(this.autosaveTimer);
-    await this.#saveConfiguration({ throwOnError: true });
-  }
-
-  @action
-  handleClose() {
-    if (this.isDirty) {
-      cancel(this.autosaveTimer);
-      this.args.model.onSave(
-        this.configuration,
-        this.trimmedNodeName || this.initialNodeName
-      );
-    }
-    this.args.closeModal();
-    this.args.model.session.clearEditingContext();
-  }
-
-  get canExecuteStep() {
-    return shouldShowExecuteStep(this.args.model.node);
-  }
-
-  @action
-  async executeStep() {
-    try {
-      await this.saveCurrentConfiguration();
-      await runExecuteStep({
-        clientId: this.args.model.node.clientId || this.args.model.node.id,
-        workflowId: this.args.model.session?.workflowId,
-        toasts: this.toasts,
-        router: this.router,
-      });
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   <template>
     <DModal
-      @closeModal={{this.handleClose}}
-      @submitOnEnter={{false}}
-      @hideHeader={{true}}
       class="workflows-configurator-modal"
+      @closeModal={{this.handleClose}}
+      @hideHeader={{true}}
+      @submitOnEnter={{false}}
     >
       <:body>
         <div class="workflows-configurator-modal__header" {{this.focusModal}}>
@@ -498,28 +523,34 @@ export default class NodeConfigurator extends Component {
           {{/if}}
           {{#if this.isEditingName}}
             <input
+              class="workflows-configurator-modal__name-input"
               type="text"
               value={{this.nodeName}}
-              class="workflows-configurator-modal__name-input"
               {{this.focusNameInput}}
               {{on "input" this.updateNodeName}}
               {{on "keydown" this.handleNameKeydown}}
             />
             <div class="workflows-configurator-modal__name-actions">
               <DButton
+                class="btn-flat workflows-configurator-modal__save-name"
                 @action={{this.saveNodeName}}
+                @disabled={{not this.canSaveNodeName}}
                 @icon="check"
                 @title="discourse_workflows.save"
-                @disabled={{not this.canSaveNodeName}}
-                class="btn-flat workflows-configurator-modal__save-name"
               />
               <DButton
+                class="btn-flat workflows-configurator-modal__cancel-name"
                 @action={{this.cancelEditingName}}
                 @icon="xmark"
                 @title="discourse_workflows.cancel"
-                class="btn-flat workflows-configurator-modal__cancel-name"
               />
             </div>
+            {{#if this.nodeNameError}}
+              <div
+                class="workflows-configurator-modal__name-error"
+                role="alert"
+              >{{this.nodeNameError}}</div>
+            {{/if}}
           {{else}}
             {{! eslint-disable ember/template-no-invalid-interactive }}
             <div
@@ -527,10 +558,10 @@ export default class NodeConfigurator extends Component {
               {{on "click" this.startEditingName}}
             >{{this.nodeName}}</div>
             <DButton
+              class="btn-flat workflows-configurator-modal__edit-name"
               @action={{this.startEditingName}}
               @icon="pencil"
               @title="discourse_workflows.edit"
-              class="btn-flat workflows-configurator-modal__edit-name"
             />
           {{/if}}
           {{#if this.showSaveStatus}}
@@ -560,16 +591,16 @@ export default class NodeConfigurator extends Component {
           {{/if}}
           {{#if this.canExecuteStep}}
             <DButton
+              class="btn-small workflows-configurator-modal__execute-step"
               @action={{this.executeStep}}
               @icon="play"
               @label="discourse_workflows.execute_step.run"
-              class="btn-small workflows-configurator-modal__execute-step"
             />
           {{/if}}
           <DButton
+            class="btn-flat workflows-configurator-modal__close"
             @action={{this.handleClose}}
             @icon="xmark"
-            class="btn-flat workflows-configurator-modal__close"
           />
         </div>
         <DConditionalLoadingSpinner @condition={{this.isLoading}}>
@@ -592,34 +623,34 @@ export default class NodeConfigurator extends Component {
           >
             <div class="workflows-configurator-modal__column --left">
               <InputContext
+                @connections={{@model.connections}}
+                @hasConfiguration={{this.hasConfiguration}}
                 @node={{@model.node}}
                 @nodes={{@model.nodes}}
-                @connections={{@model.connections}}
-                @triggerType={{@model.triggerType}}
                 @nodeTypes={{this.nodeTypes}}
                 @session={{@model.session}}
-                @hasConfiguration={{this.hasConfiguration}}
+                @triggerType={{@model.triggerType}}
               />
             </div>
 
             <div class="workflows-configurator-modal__column --center">
               <div class="workflows-configurator__tabs">
                 <button
-                  type="button"
                   class={{dConcatClass
                     "workflows-configurator__tab"
                     (if (eq this.activeTab "parameters") "is-active")
                   }}
+                  type="button"
                   {{on "click" (fn this.switchTab "parameters")}}
                 >{{i18n
                     "discourse_workflows.configurator.tabs.parameters"
                   }}</button>
                 <button
-                  type="button"
                   class={{dConcatClass
                     "workflows-configurator__tab"
                     (if (eq this.activeTab "settings") "is-active")
                   }}
+                  type="button"
                   {{on "click" (fn this.switchTab "settings")}}
                 >{{i18n
                     "discourse_workflows.configurator.tabs.settings"
@@ -628,33 +659,33 @@ export default class NodeConfigurator extends Component {
 
               {{#if this.hasConfiguration}}
                 <Form
+                  class="workflows-configurator-form
+                    {{unless (eq this.activeTab 'parameters') 'is-hidden'}}"
                   @data={{this.initialConfiguration}}
                   @onRegisterApi={{this.registerParametersApi}}
                   @onSet={{this.scheduleSave}}
                   @validateOn="change"
-                  class="workflows-configurator-form
-                    {{unless (eq this.activeTab 'parameters') 'is-hidden'}}"
                   as |form transientData|
                 >
                   <PropertyEngineConfigurator
-                    @form={{form}}
-                    @formApi={{this.parametersApi}}
                     @configuration={{transientData}}
-                    @nodeType={{@model.node.type}}
-                    @schema={{this.propertySchema}}
+                    @connections={{@model.connections}}
                     @credentials={{this.credentialConfig}}
                     @credentialSlots={{this.credentialSlots}}
                     @credentialValue={{this.credentialValue}}
-                    @onCredentialSet={{this.handleCredentialSet}}
-                    @triggerType={{@model.triggerType}}
+                    @form={{form}}
+                    @formApi={{this.parametersApi}}
                     @node={{@model.node}}
                     @nodeParameters={{transientData}}
                     @nodes={{@model.nodes}}
-                    @connections={{@model.connections}}
+                    @nodeType={{@model.node.type}}
                     @nodeTypes={{this.nodeTypes}}
-                    @session={{@model.session}}
-                    @onChange={{this.scheduleSave}}
                     @onBeforeStartTestSession={{this.saveCurrentConfiguration}}
+                    @onChange={{this.scheduleSave}}
+                    @onCredentialSet={{this.handleCredentialSet}}
+                    @schema={{this.propertySchema}}
+                    @session={{@model.session}}
+                    @triggerType={{@model.triggerType}}
                   />
                   {{#each this.unanchoredCredentialSlots as |slot|}}
                     {{#if (credentialSlotVisible slot transientData)}}
@@ -681,20 +712,20 @@ export default class NodeConfigurator extends Component {
                   </div>
                 {{/if}}
                 <Form
+                  class="workflows-configurator-form"
                   @data={{this.settingsFormData}}
                   @onRegisterApi={{this.registerSettingsApi}}
                   @onSet={{this.scheduleSave}}
-                  class="workflows-configurator-form"
                   as |form|
                 >
                   <form.Field
+                    @format="full"
                     @name="notes"
+                    @onSet={{this.handleNotesSet}}
                     @title={{i18n
                       "discourse_workflows.configurator.description"
                     }}
                     @type="textarea"
-                    @format="full"
-                    @onSet={{this.handleNotesSet}}
                     as |field|
                   >
                     <field.Control
@@ -704,21 +735,37 @@ export default class NodeConfigurator extends Component {
                     />
                   </form.Field>
                   <form.Field
+                    class="workflows-configurator-form__setting-toggle"
+                    @description={{i18n
+                      "discourse_workflows.configurator.always_output_data_help"
+                    }}
+                    @format="full"
                     @name="alwaysOutputData"
                     @title={{i18n
                       "discourse_workflows.configurator.always_output_data"
                     }}
-                    @description={{i18n
-                      "discourse_workflows.configurator.always_output_data_help"
-                    }}
                     @type="toggle"
-                    @format="full"
-                    @onSet={{this.handleAlwaysOutputDataSet}}
-                    class="workflows-configurator-form__setting-toggle"
                     as |field|
                   >
                     <field.Control />
                   </form.Field>
+                  {{#if this.canContinueOnError}}
+                    <form.Field
+                      class="workflows-configurator-form__setting-toggle"
+                      @description={{i18n
+                        "discourse_workflows.configurator.continue_on_error_help"
+                      }}
+                      @format="full"
+                      @name="continueOnError"
+                      @title={{i18n
+                        "discourse_workflows.configurator.continue_on_error"
+                      }}
+                      @type="toggle"
+                      as |field|
+                    >
+                      <field.Control />
+                    </form.Field>
+                  {{/if}}
                 </Form>
                 {{#if this.nodeDescription}}
                   <div class="workflows-configurator-modal__node">
@@ -746,19 +793,19 @@ export default class NodeConfigurator extends Component {
             {{#if this.showsOutputContext}}
               <div class="workflows-configurator-modal__column --right">
                 <LivePreview
+                  @configuration={{this.configuration}}
                   @node={{@model.node}}
                   @nodeTypes={{this.nodeTypes}}
                   @session={{@model.session}}
-                  @configuration={{this.configuration}}
                 />
                 <OutputContext
+                  @configuration={{this.configuration}}
+                  @connections={{@model.connections}}
                   @node={{@model.node}}
                   @nodes={{@model.nodes}}
-                  @connections={{@model.connections}}
-                  @triggerType={{@model.triggerType}}
                   @nodeTypes={{this.nodeTypes}}
                   @session={{@model.session}}
-                  @configuration={{this.configuration}}
+                  @triggerType={{@model.triggerType}}
                 />
               </div>
             {{/if}}

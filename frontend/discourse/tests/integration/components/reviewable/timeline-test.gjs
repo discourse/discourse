@@ -1,11 +1,35 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableTimeline from "discourse/components/reviewable/timeline";
+import UserCardContents from "discourse/components/user-card-contents";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | Reviewable | Timeline", function (hooks) {
   setupRenderingTest(hooks);
+
+  function note(id, content) {
+    return {
+      id,
+      content,
+      created_at: `2024-01-0${id - 9}T00:00:00.000Z`,
+      user: { id: 1, username: "moderator" },
+    };
+  }
+
+  function storedReviewable(context, notes) {
+    return getOwner(context)
+      .lookup("service:store")
+      .createRecord("reviewable", {
+        id: 1,
+        reviewable_scores: [],
+        reviewable_notes: notes,
+      });
+  }
 
   function reviewableWithReason(reason) {
     return {
@@ -72,8 +96,8 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
     await render(
       <template>
         <ReviewableTimeline
-          @reviewable={{reviewable}}
           @historyEvents={{historyEvents}}
+          @reviewable={{reviewable}}
         />
       </template>
     );
@@ -81,5 +105,112 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
     assert.dom(".timeline-event").exists({ count: 2 });
     assert.dom(".timeline-event__icon .d-icon-user-plus").exists();
     assert.dom(".timeline-event__icon .d-icon-user-xmark").exists();
+  });
+
+  test("renders the notes of the reviewable currently passed in", async function (assert) {
+    const state = new (class {
+      @tracked
+      reviewable = {
+        reviewable_scores: [],
+        reviewable_notes: [note(10, "Note on the first reviewable")],
+      };
+    })();
+
+    await render(
+      <template>
+        <ReviewableTimeline @reviewable={{state.reviewable}} />
+      </template>
+    );
+
+    assert
+      .dom(".timeline-event__description")
+      .hasText("Note on the first reviewable", "renders the note it owns");
+
+    state.reviewable = { reviewable_scores: [] };
+    await settled();
+
+    assert
+      .dom(".timeline-event")
+      .doesNotExist("drops the previous reviewable's notes");
+  });
+
+  test("renders a note pushed onto the reviewable after it was rendered", async function (assert) {
+    const reviewable = storedReviewable(this, [note(10, "An existing note")]);
+
+    await render(
+      <template><ReviewableTimeline @reviewable={{reviewable}} /></template>
+    );
+
+    assert
+      .dom(".timeline-event__description")
+      .hasText("An existing note", "renders the note it was created with");
+
+    reviewable.reviewable_notes.push(note(11, "A note added from the form"));
+    await settled();
+
+    assert
+      .dom(".timeline-event:last-child .timeline-event__description")
+      .hasText("A note added from the form", "appends the pushed note");
+  });
+
+  test("opens the user card when clicking a mention in a saved note", async function (assert) {
+    const savedNote = {
+      ...note(10, "Please ask @charlie for help."),
+      cooked:
+        '<p>Please ask <a class="mention" href="/u/charlie">@charlie</a> for help.</p>',
+    };
+    const reviewable = storedReviewable(this, [savedNote]);
+
+    await render(
+      <template>
+        <div id="main-outlet">
+          <ReviewableTimeline @reviewable={{reviewable}} />
+        </div>
+        <UserCardContents />
+        <DMenus />
+      </template>
+    );
+
+    assert
+      .dom(".timeline-event__description a.mention")
+      .hasAttribute(
+        "href",
+        "/u/charlie",
+        "the mention links to the user profile"
+      );
+
+    await click(".timeline-event__description a.mention");
+
+    assert
+      .dom(".user-card .card-content")
+      .exists("clicking the mention opens the user card");
+    assert
+      .dom(".user-card .username")
+      .hasText("charlie", "shows the mentioned user's profile");
+  });
+
+  test("removes a deleted note from the timeline", async function (assert) {
+    const reviewable = storedReviewable(this, [
+      note(10, "A note that stays"),
+      note(11, "A note that gets deleted"),
+    ]);
+
+    this.currentUser.admin = true;
+    pretender.delete("/review/1/notes/11", () => response({}));
+
+    await render(
+      <template><ReviewableTimeline @reviewable={{reviewable}} /></template>
+    );
+
+    await click(".timeline-event:last-child .timeline-event__delete-note");
+
+    assert
+      .dom(".timeline-event")
+      .exists({ count: 1 }, "drops the deleted note");
+    assert.deepEqual(
+      [...reviewable.reviewable_notes].map((n) => n.id),
+      [10],
+      "writes the removal back to the reviewable"
+    );
   });
 });

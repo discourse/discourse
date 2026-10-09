@@ -93,8 +93,8 @@ export default class CategoriesDisplay extends Component {
 
   <template>
     <PluginOutlet
-      @name="above-discovery-categories"
       @connectorTagName="div"
+      @name="above-discovery-categories"
       @outletArgs={{lazyHash categories=@categories topics=@topics}}
     />
     {{#if this.canLoadMore}}

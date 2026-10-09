@@ -64,9 +64,9 @@ export default class AiAgentToolOptions extends Component {
   <template>
     {{#if this.showToolOptions}}
       <@form.Container
-        @title={{i18n "discourse_ai.ai_agent.tool_options"}}
         @direction="column"
         @format="full"
+        @title={{i18n "discourse_ai.ai_agent.tool_options"}}
       >
         <@form.Object
           @name="toolOptions"
@@ -83,10 +83,10 @@ export default class AiAgentToolOptions extends Component {
                   {{#each (this.toolOptionKeys toolId) as |optionName|}}
                     {{#let (get toolMeta optionName) as |optionMeta|}}
                       <optionsObj.Field
+                        @format="full"
+                        @helpText={{optionMeta.description}}
                         @name={{optionName}}
                         @title={{optionMeta.name}}
-                        @helpText={{optionMeta.description}}
-                        @format="full"
                         @type={{this.fieldTypeForOption optionMeta.type}}
                         as |field|
                       >
@@ -99,10 +99,10 @@ export default class AiAgentToolOptions extends Component {
                         {{else if (eq optionMeta.type "llm")}}
                           <field.Control>
                             <AiLlmSelector
-                              @value={{field.value}}
+                              class="ai-agent-tool-option-editor__llms"
                               @llms={{@llms}}
                               @onChange={{field.set}}
-                              class="ai-agent-tool-option-editor__llms"
+                              @value={{field.value}}
                             />
                           </field.Control>
                         {{else if (eq optionMeta.type "boolean")}}

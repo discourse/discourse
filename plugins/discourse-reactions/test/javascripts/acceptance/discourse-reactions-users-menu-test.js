@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
@@ -93,6 +93,31 @@ acceptance(
         "does not refetch when returning to all"
       );
       assert.dom(".users-popup__item").exists({ count: 5 });
+    });
+
+    test("moves focus into the users menu and back out again", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .hasAria("expanded", "false", "the counter starts collapsed");
+
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .hasAria("expanded", "true", "the counter reports the menu is open");
+      assert.true(
+        document.querySelector(".users-popup").contains(document.activeElement),
+        "focus moves into the menu"
+      );
+
+      await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+      assert.dom(".users-popup").doesNotExist("escape closes the menu");
+      assert
+        .dom("#post_1 .discourse-reactions-counter")
+        .isFocused("focus returns to the counter");
     });
 
     test("closes the users menu when navigating away", async function (assert) {

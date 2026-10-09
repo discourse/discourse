@@ -35,7 +35,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     invite_only: "invite_only",
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
-    contains_media: "skip_media_review_groups",
+    contains_media: "skip_review_media_groups",
   }
 
   attributes :id,
@@ -56,6 +56,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   def include_reviewable_conversation?
     return false if object.meta_topic.blank?
+    if object.meta_topic.private_message? && @options[:include_private_conversations] == false
+      return false
+    end
     scope&.can_see?(object.meta_topic) || object.notify_moderators_flag_message?
   end
 
@@ -81,7 +84,12 @@ class ReviewableScoreSerializer < ApplicationSerializer
         return @reason = PrettyText.sanitize("<p>#{watched_word_reason(link)}</p>")
       end
 
-      text = I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
+      text =
+        if object.reason == "fast_typer"
+          fast_typer_reason(link)
+        else
+          I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
+        end
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
@@ -115,6 +123,24 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   private
+
+  def fast_typer_reason(link)
+    typing_time = fast_typer_typing_time
+    if typing_time.blank?
+      return I18n.t("reviewables.reasons.fast_typer", link:, default: object.reason)
+    end
+
+    I18n.t("reviewables.reasons.fast_typer_with_time", link:, typing_time:, default: object.reason)
+  end
+
+  def fast_typer_typing_time
+    msecs = object.reviewable.payload&.dig("typing_duration_msecs")
+    return if msecs.blank?
+
+    count = msecs.to_i.fdiv(1000).round(1)
+    count = count.to_i if count == count.to_i
+    I18n.t("reviewables.reasons.fast_typer_time", count:)
+  end
 
   def watched_word_reason(link)
     words = watched_words_found

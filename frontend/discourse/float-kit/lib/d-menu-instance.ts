@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -6,6 +7,7 @@ import Owner, { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
+  type FloatCloseOptions,
   type FloatKitTrigger,
   MENU,
   type MenuOptions,
@@ -13,18 +15,15 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
-import type ModalService from "discourse/services/modal";
 
 /**
  * The concrete float instance backing a menu. It holds the menu's options,
  * open/close state, and portal outlet, and implements the trigger and lifecycle
  * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
- * it closes and, on mobile, closes through the modal service when it was shown
- * as a modal.
+ * it closes.
  */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
-  @service declare modal: ModalService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;
@@ -52,25 +51,34 @@ export default class DMenuInstance extends FloatKitInstance {
   @tracked options: MenuOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger: FloatKitTrigger;
+  @tracked _trigger?: FloatKitTrigger;
 
   constructor(owner: Owner, options: Partial<MenuOptions> = {}) {
     super();
 
     setOwner(this, owner);
-    this.options = { ...MENU.options, ...options };
+
+    const merged = { ...MENU.options, ...options };
+
+    // `trapTab` defaults to true and the two are alternatives, so inline ordering has to switch
+    // it off itself or every caller would carry a second flag. An explicit `trapTab: true` is
+    // left alone for `DFloatBody` to assert on rather than resolved silently here.
+    if (options.inlineTabOrder && options.trapTab === undefined) {
+      merged.trapTab = false;
+    }
+
+    this.options = merged;
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get portalOutletElement() {
-    return (
-      this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
-    );
-  }
-
-  get trigger() {
-    return this._trigger;
+  /**
+   * Set when the trigger registers, which comes before the float can show or
+   * hand out its API. A read before then is a bug, so it asserts.
+   */
+  get trigger(): FloatKitTrigger {
+    const trigger = this._trigger;
+    assert("DMenuInstance: the trigger is read before it registered", trigger);
+    return trigger;
   }
 
   set trigger(element: FloatKitTrigger) {
@@ -80,28 +88,71 @@ export default class DMenuInstance extends FloatKitInstance {
     this.setupListeners();
   }
 
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
+  }
+
   get shouldTrapPointerDown() {
     return this.expanded;
   }
 
+  /**
+   * Whether focus currently sits inside the menu's content. Read before the content is torn
+   * down, because a menu that owns focus has to hand it back on close — otherwise closing
+   * strands focus on a removed element and the browser drops it to the body.
+   */
+  get #ownsFocus(): boolean {
+    return !!this.content?.contains(document.activeElement);
+  }
+
+  /**
+   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
+   * the menu opened, so an action that replaces or removes the element it named still returns
+   * focus to whatever now stands in its place. The trigger element is the fallback, and is
+   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
+   * exists to serve.
+   */
+  get #focusReturnTarget(): HTMLElement | null {
+    const { focusTarget } = this.options;
+
+    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
+    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
+    // honoured rather than falling through to the trigger.
+    return focusTarget ? focusTarget() : this.triggerElement;
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
+  }
+
   @action
-  async close(options = { focusTrigger: true }) {
+  async close(options: FloatCloseOptions = {}) {
+    this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
     if (isDestroying(getOwner(this)!)) {
       return;
     }
 
-    await animateClosing(this.content);
+    const ownedFocus = this.#ownsFocus;
 
-    if (this.renderInModal && this.expanded) {
-      await this.modal.close();
-    }
+    await animateClosing(this.content);
 
     await this.menu.close(this);
 
-    if (options.focusTrigger) {
-      this.triggerElement?.focus();
+    // A caller that closes without asking for the trigger to be refocused (a click outside,
+    // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
+    // closing is animated, so by now the click may have deliberately focused something else,
+    // and only focus left with no owner is ours to restore.
+    if (
+      (options.focusTrigger ?? true) ||
+      (ownedFocus && this.#focusIsUnowned)
+    ) {
+      this.#focusReturnTarget?.focus();
     }
 
     await super.close(options);
@@ -140,9 +191,14 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onPointerLeave(event: PointerEvent) {
-    if (this.untriggers.includes("hover")) {
-      await this.onUntrigger(event);
+    if (!this.untriggers.includes("hover")) {
+      return;
     }
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+    await this.onUntrigger(event);
   }
 
   @action

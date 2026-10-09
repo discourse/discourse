@@ -40,9 +40,9 @@ export default class CalendarSubscriptionUrl extends Component {
 
       <div class="calendar-subscription-url__actions">
         <a
+          class="btn btn-default btn-small"
           href={{@url}}
           {{on "click" this.copy}}
-          class="btn btn-default btn-small"
         >
           {{dIcon (if this.copied "check" "copy")}}
           {{if
@@ -52,24 +52,24 @@ export default class CalendarSubscriptionUrl extends Component {
           }}
         </a>
         <a
-          href={{this.googleCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
           class="btn btn-flat btn-small"
+          href={{this.googleCalendarUrl}}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {{dIcon "fab-google"}}
           {{i18n "user.calendar_subscriptions.add_to_google"}}
         </a>
         <a
-          href={{this.outlookCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
           class="btn btn-flat btn-small"
+          href={{this.outlookCalendarUrl}}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {{dIcon "fab-microsoft"}}
           {{i18n "user.calendar_subscriptions.add_to_outlook"}}
         </a>
-        <a href={{this.webcalUrl}} class="btn btn-flat btn-small">
+        <a class="btn btn-flat btn-small" href={{this.webcalUrl}}>
           {{dIcon "fab-apple"}}
           {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>

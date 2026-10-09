@@ -31,11 +31,19 @@ RSpec.describe "AI Bot - Homepage" do
       display_name: "Duplicate",
     )
   end
+  fab!(:general_agent) do
+    AiAgent
+      .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+      .tap do |agent|
+        agent.update!(default_llm: claude_2)
+        agent.ensure_user!
+      end
+  end
   fab!(:bot_user) do
     enable_current_plugin
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.ai_bot_enabled = true
-    claude_2.reload.user
+    general_agent.user
   end
   fab!(:bot) do
     agent =
@@ -43,7 +51,7 @@ RSpec.describe "AI Bot - Homepage" do
         .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
         .class_instance
         .new
-    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: claude_2)
   end
 
   fab!(:pm) do
@@ -99,7 +107,9 @@ RSpec.describe "AI Bot - Homepage" do
     enable_current_plugin
 
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
-    pm.save!
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = general_agent.id
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+    pm.save_custom_fields
 
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.navigation_menu = "sidebar"
@@ -346,7 +356,7 @@ RSpec.describe "AI Bot - Homepage" do
 
     it "displays the shuffle icon when on homepage or bot PM" do
       visit "/"
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
       header.click_bot_button
 
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
@@ -355,9 +365,9 @@ RSpec.describe "AI Bot - Homepage" do
       ai_pm_homepage.click_fist_sidebar_conversation
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
 
-      # Go back home and assert that the icon is now robot again
+      # Go back home and assert that the icon is now discobot again
       header.click_bot_button
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     end
 
     it "displays 'new question' button on homepage and topic page" do
@@ -436,7 +446,7 @@ RSpec.describe "AI Bot - Homepage" do
 
       it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "far-discobot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
         expect(header).to have_icon_in_bot_button(icon: "shuffle")

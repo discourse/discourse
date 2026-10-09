@@ -108,3 +108,8 @@ nl:
         title: "Gamificatie"
         name: "Naam"
         period: "Periode"
+    discourse_workflows:
+      gamification_score:
+        username: "Gebruiker"
+        date: "Datum"
+        description: "Beschrijving"

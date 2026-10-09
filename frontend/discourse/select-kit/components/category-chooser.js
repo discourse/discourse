@@ -52,6 +52,27 @@ export default class CategoryChooser extends ComboBoxComponent {
     return this.siteSettings.fixed_category_positions_on_create;
   }
 
+  @computed(
+    "selectKit.filter",
+    "selectKit.options.scopedCategoryId",
+    "selectKit.options.prioritizedCategoryId"
+  )
+  get content() {
+    if (!this.selectKit.filter) {
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
+
+      if (scopedCategoryId) {
+        return this.categoriesByScope({ scopedCategoryId });
+      }
+
+      if (prioritizedCategoryId) {
+        return this.categoriesByScope({ prioritizedCategoryId });
+      }
+    }
+
+    return this.categoriesByScope();
+  }
+
   modifyComponentForRow(collection, item) {
     if (typeof item?.onSelect === "function") {
       return SelectKitRow;
@@ -136,27 +157,6 @@ export default class CategoryChooser extends ComboBoxComponent {
     } else {
       return this.content;
     }
-  }
-
-  @computed(
-    "selectKit.filter",
-    "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId"
-  )
-  get content() {
-    if (!this.selectKit.filter) {
-      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
-
-      if (scopedCategoryId) {
-        return this.categoriesByScope({ scopedCategoryId });
-      }
-
-      if (prioritizedCategoryId) {
-        return this.categoriesByScope({ prioritizedCategoryId });
-      }
-    }
-
-    return this.categoriesByScope();
   }
 
   categoriesByScope({

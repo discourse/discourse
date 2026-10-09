@@ -19,9 +19,11 @@ ar:
         countdown:
           passed: لقد انقضى التاريخ
       title: إدخال التاريخ/الوقت
+      edit_date: تعديل %{date}
       create:
         form:
           insert: إدراج
+          save: حفظ
           format_description: "التنسيق المستخدم لعرض التاريخ للمستخدم. استخدم Z لعرض الإزاحة وzz لاسم المنطقة الزمنية."
           timezones_title: المناطق الزمنية لعرضها
           timezones_description: سيتم استخدام المناطق الزمنية لعرض التواريخ في المعاينة والنسخة الاحتياطية.

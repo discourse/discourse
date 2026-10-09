@@ -9,8 +9,8 @@
   }
 
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
-    var(--space-4);
+  --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
+    var(--space-2) var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -67,6 +67,38 @@
   }
 }
 
+.sidebar-link-drop-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-block: var(--space-1);
+  padding: var(--space-3);
+  color: var(--token-color-text-default);
+  background: var(--token-color-surface-selected);
+  border-radius: var(--d-border-radius);
+  font-weight: var(--token-font-weight-semibold);
+  animation: sidebar-link-drop-target-reveal 0.15s ease-out;
+
+  /* Native drag hit-testing honors this, so while it applies the zone cannot
+     take a drop. */
+
+  &.is-arming {
+    pointer-events: none;
+  }
+
+  &.is-active {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes sidebar-link-drop-target-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
 .sidebar-row {
   box-sizing: border-box;
   height: var(--d-sidebar-row-height);
@@ -96,6 +128,7 @@
   @include unselectable;
 
   .sidebar-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -525,10 +558,7 @@
   }
 
   &__shortcut-hint {
-    min-width: 26px;
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-3);
-    color: var(--d-sidebar-link-color);
+    margin-right: var(--space-2);
   }
 }
 

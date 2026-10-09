@@ -145,7 +145,7 @@ ar:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: يمكنك الاعتماد عليه
-        discobot_disabled: لقد أوقفتني في تفضيلاتك. عليك السماح بعرض نصائح إعداد المستخدم الجديد للتفاعل معي.
+        discobot_disabled: لقد أوقفتني في تفضيلاتك. عليك السماح بعرض نصائح تهيئة المستخدم الجديد للتفاعل معي.
       do_not_understand:
         first_response: |-
           مرحبًا، شكرًا على الرد!

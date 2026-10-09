@@ -21,6 +21,11 @@ export default class NotificationsButton extends DropdownSelectBoxComponent {
   content = allLevels;
   nameProperty = "key";
 
+  @computed("value")
+  get buttonForValue() {
+    return buttonDetails(this.value);
+  }
+
   getTitle(key) {
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
     return i18n(`${i18nPrefix}.${key}${i18nPostfix}.title`);
@@ -44,10 +49,5 @@ export default class NotificationsButton extends DropdownSelectBoxComponent {
       icon: this.buttonForValue.icon,
     });
     return content;
-  }
-
-  @computed("value")
-  get buttonForValue() {
-    return buttonDetails(this.value);
   }
 }

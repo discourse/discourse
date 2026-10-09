@@ -28,6 +28,20 @@ export default class ChatTrackingStateManager extends Service {
     cancel(this._onTriggerNotificationDebounceHandler);
   }
 
+  get watchedThreadsUnreadCount() {
+    return this.#allChannels.reduce((unreadCount, channel) => {
+      return unreadCount + channel.tracking.watchedThreadsUnreadCount;
+    }, 0);
+  }
+
+  get #publicChannels() {
+    return this.chatChannelsManager.publicMessageChannels;
+  }
+
+  get #allChannels() {
+    return this.chatChannelsManager.allChannels;
+  }
+
   // to avoid having to load all the threads across all channels into memory at once.
   setupWithPreloadedState({ channel_tracking = {} }) {
     this.chatChannelsManager.channels.forEach((channel) => {
@@ -85,12 +99,6 @@ export default class ChatTrackingStateManager extends Service {
     }, 0);
   }
 
-  get watchedThreadsUnreadCount() {
-    return this.#allChannels.reduce((unreadCount, channel) => {
-      return unreadCount + channel.tracking.watchedThreadsUnreadCount;
-    }, 0);
-  }
-
   /**
    * Some reactivity in the app such as the document title
    * updates are only done via appEvents -- rather than
@@ -117,13 +125,5 @@ export default class ChatTrackingStateManager extends Service {
     model.tracking.mentionCount = state.mention_count;
     model.tracking.watchedThreadsUnreadCount =
       state.watched_threads_unread_count;
-  }
-
-  get #publicChannels() {
-    return this.chatChannelsManager.publicMessageChannels;
-  }
-
-  get #allChannels() {
-    return this.chatChannelsManager.allChannels;
   }
 }

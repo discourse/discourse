@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
 import {
   click,
   fillIn,
@@ -70,6 +71,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("search results keep input focus");
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
@@ -129,9 +133,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await render(
       <template>
         <SearchMenu
+          @hideResults={{state.hidden}}
           @location="test"
           @searchInputId="icon-search-input"
-          @hideResults={{state.hidden}}
         />
       </template>
     );
@@ -167,6 +171,34 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom("#search-term.search-term__input")
       .exists("input defaults to id of search-term");
+  });
+
+  test("updates when the input placeholder changes", async function (assert) {
+    const state = new (class {
+      @tracked placeholder = "search.title";
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @location="test"
+          @searchInputPlaceholder={{state.placeholder}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("search.title"))
+      .hasAttribute("aria-label", i18n("search.title"));
+
+    state.placeholder = "welcome_banner.search_placeholder";
+    await settled();
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("welcome_banner.search_placeholder"))
+      .hasAttribute("aria-label", i18n("welcome_banner.search_placeholder"));
   });
 
   test("search-context state changes updates the UI", async function (assert) {
@@ -220,5 +252,72 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .exists(
         "PM context button reappears after selecting 'in:messages' suggestion"
       );
+  });
+  test("announces the outcome of a submitted search, but not suggestions", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message, priority) {
+          announcements.push({ message, priority });
+        }
+      }
+    );
+
+    pretender.get("/search/query", (request) => {
+      if (request.queryParams.term === "nothing") {
+        return response({ grouped_search_result: {} });
+      }
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        return response({
+          users: searchFixtures["search/query"]["users"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return response(searchFixtures["search/query"]);
+    });
+
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    await fillIn("#icon-search-input", "test");
+
+    assert.deepEqual(announcements, [], "suggestions while typing are silent");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.strictEqual(
+      announcements.length,
+      1,
+      "a submitted search is announced"
+    );
+    assert.strictEqual(announcements[0].priority, "polite");
+    assert.true(
+      /^\d+ results? found\.$/.test(announcements[0].message),
+      "with the number of results shown"
+    );
+
+    await fillIn("#icon-search-input", "nothing");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.no_results"), priority: "polite" },
+      "an empty search says so"
+    );
+
+    await fillIn("#icon-search-input", "a");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.too_short"), priority: "polite" },
+      "a term too short to search says why"
+    );
   });
 });

@@ -1,5 +1,55 @@
 import { set } from "@ember/object";
 
+const BUNDLES = {
+  approve: { action_ids: ["approve"] },
+  reject: { action_ids: ["reject"] },
+  reject_user: {
+    icon: "user-xmark",
+    label: "Delete User...",
+    action_ids: ["reject_user_delete", "reject_user_block"],
+  },
+};
+
+const ACTIONS = {
+  approve: { label: "Approve", icon: "far-thumbs-up" },
+  reject: { label: "Reject", icon: "far-thumbs-down" },
+  reject_user_delete: {
+    icon: "user-xmark",
+    button_class: null,
+    label: "Delete User",
+    description: "The user will be deleted from the forum.",
+    require_reject_reason: true,
+  },
+  reject_user_block: {
+    icon: "ban",
+    button_class: null,
+    label: "Delete and Block User",
+    description:
+      "The user will be deleted, and we'll block their IP and email address.",
+    require_reject_reason: true,
+  },
+};
+
+function bundledActionsFor(reviewableId, bundleIds) {
+  return bundleIds.map((bundleId) => ({
+    ...BUNDLES[bundleId],
+    id: `${reviewableId}-${bundleId}`,
+    action_ids: BUNDLES[bundleId].action_ids.map(
+      (actionId) => `${reviewableId}-${actionId}`
+    ),
+  }));
+}
+
+function actionsFor(reviewableId, bundleIds) {
+  return bundleIds
+    .flatMap((bundleId) => BUNDLES[bundleId].action_ids)
+    .map((actionId) => ({
+      ...ACTIONS[actionId],
+      id: `${reviewableId}-${actionId}`,
+      action_name: actionId,
+    }));
+}
+
 export default function (helpers) {
   const { response } = helpers;
 
@@ -14,6 +64,9 @@ export default function (helpers) {
     reviewable_score_ids: [1, 2],
   };
 
+  const USER_BUNDLES = ["approve", "reject", "reject_user"];
+  const QUEUED_BUNDLES = ["approve", "reject"];
+
   this.get("/review", () => {
     return response(200, {
       reviewables: [
@@ -27,7 +80,7 @@ export default function (helpers) {
           created_at: "2019-01-14T19:49:53.571Z",
           username: "newbie",
           email: "newbie@example.com",
-          bundled_action_ids: ["approve", "reject", "reject_user"],
+          bundled_action_ids: USER_BUNDLES.map((b) => `1234-${b}`),
           reviewable_score_ids: [],
         },
         {
@@ -51,55 +104,18 @@ export default function (helpers) {
             { id: "payload.raw", type: "textarea" },
             { id: "payload.tags", type: "tags" },
           ],
-          bundled_action_ids: ["approve", "reject"],
+          bundled_action_ids: QUEUED_BUNDLES.map((b) => `4321-${b}`),
           reviewable_score_ids: [],
         },
         flag,
       ],
       bundled_actions: [
-        {
-          id: "approve",
-          action_ids: ["approve"],
-        },
-        {
-          id: "reject",
-          action_ids: ["reject"],
-        },
-        {
-          id: "reject_user",
-          icon: "user-xmark",
-          label: "Delete User...",
-          action_ids: ["reject_user_delete", "reject_user_block"],
-        },
+        ...bundledActionsFor(1234, USER_BUNDLES),
+        ...bundledActionsFor(4321, QUEUED_BUNDLES),
       ],
       actions: [
-        {
-          id: "approve",
-          label: "Approve",
-          icon: "far-thumbs-up",
-        },
-        {
-          id: "reject",
-          label: "Reject",
-          icon: "far-thumbs-down",
-        },
-        {
-          id: "reject_user_delete",
-          icon: "user-xmark",
-          button_class: null,
-          label: "Delete User",
-          description: "The user will be deleted from the forum.",
-          require_reject_reason: true,
-        },
-        {
-          id: "reject_user_block",
-          icon: "ban",
-          button_class: null,
-          label: "Delete and Block User",
-          description:
-            "The user will be deleted, and we'll block their IP and email address.",
-          require_reject_reason: true,
-        },
+        ...actionsFor(1234, USER_BUNDLES),
+        ...actionsFor(4321, QUEUED_BUNDLES),
       ],
       reviewable_scores: [
         {

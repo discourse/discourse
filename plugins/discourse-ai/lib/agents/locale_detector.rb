@@ -52,10 +52,6 @@ module DiscourseAi
         ]
       end
 
-      def temperature
-        0
-      end
-
       private
 
       def configured_locale_lines

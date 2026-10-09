@@ -131,9 +131,15 @@ class EmbeddingDefinition < ActiveRecord::Base
   validate :api_key_or_secret_present
 
   after_create :create_indexes
+  after_update_commit :clear_provider_pause
+  after_destroy_commit :clear_provider_pause
 
   def create_indexes
     Jobs.enqueue(:manage_embedding_def_search_index, id: id)
+  end
+
+  def clear_provider_pause
+    DiscourseAi::Embeddings::ProviderHealth.clear!(id)
   end
 
   def tokenizer

@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
 import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
@@ -89,7 +89,7 @@ export default class AdminUserIndexController extends Controller {
     return this.model.automaticGroups
       .map((group) => {
         const name = trustHTML(group.name);
-        return `<a href="/g/${name}">${name}</a>`;
+        return `<a href="${groupPath(name)}">${name}</a>`;
       })
       .join(", ");
   }
@@ -164,6 +164,15 @@ export default class AdminUserIndexController extends Controller {
     ).canAdminCheckEmails;
   }
 
+  @computed("ssoLastPayload")
+  get ssoPayload() {
+    return this.ssoLastPayload.split("&");
+  }
+
+  get deleteUserOptions() {
+    return this.adminTools.deleteUserOptions;
+  }
+
   groupAdded(added) {
     return this.model
       .groupAdded(added)
@@ -179,11 +188,6 @@ export default class AdminUserIndexController extends Controller {
         }
       })
       .catch(() => this.dialog.alert(i18n("generic_error")));
-  }
-
-  @computed("ssoLastPayload")
-  get ssoPayload() {
-    return this.ssoLastPayload.split("&");
   }
 
   @action
@@ -232,11 +236,6 @@ export default class AdminUserIndexController extends Controller {
   @action
   approve() {
     return this.model.approve(this.currentUser);
-  }
-
-  @action
-  _formatError(event) {
-    return `http: ${event.status} - ${event.body}`;
   }
 
   @action
@@ -440,10 +439,6 @@ export default class AdminUserIndexController extends Controller {
     return ajax(path, { type: "DELETE" })
       .then(() => user.set("tl3_requirements.penalty_counts.total", 0))
       .catch(popupAjaxError);
-  }
-
-  get deleteUserOptions() {
-    return this.adminTools.deleteUserOptions;
   }
 
   @action
@@ -660,5 +655,10 @@ export default class AdminUserIndexController extends Controller {
         deleteAllPosts: () => this.adminTools.deletePostsDecider(this.model),
       },
     });
+  }
+
+  @action
+  _formatError(event) {
+    return `http: ${event.status} - ${event.body}`;
   }
 }

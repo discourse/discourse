@@ -508,7 +508,7 @@ module(
     test("url is correct for a setting that belongs to a plugin not using the new show page", async function (assert) {
       let setting = {
         plugin: "discourse-calendar",
-        setting: "calendar_enabled",
+        setting: "discourse_events_enabled",
       };
       let formatter = new SettingLinkFormatter(
         this.router,
@@ -518,7 +518,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().url,
-        "/admin/site_settings/category/discourse_calendar?filter=calendar_enabled",
+        "/admin/site_settings/category/discourse_calendar?filter=discourse_events_enabled",
         "url uses the admin site settings category and setting"
       );
     });

@@ -36,7 +36,7 @@ describe Jobs::DigestRagUpload do
 
   describe "#execute" do
     context "when processing an image upload" do
-      it "will reject the indexing if the site setting is not enabled" do
+      it "rejects indexing if the site setting is disabled" do
         SiteSetting.ai_rag_images_enabled = false
 
         expect {
@@ -99,6 +99,7 @@ describe Jobs::DigestRagUpload do
         expect(parsed).to eq(parsed_document_with_metadata.read.delete_suffix("\n"))
       end
     end
+
     context "when processing an upload for the first time" do
       before { File.expects(:open).returns(document_file) }
 
@@ -174,6 +175,22 @@ describe Jobs::DigestRagUpload do
               .pick(:fragment)
 
           expect(indexed_content).to eq("before 猫  after 犬")
+        end
+      end
+
+      context "when the document produces a blank trailing chunk" do
+        let(:document_file) do
+          StringIO.new(
+            "[[metadata {\"source_url\":\"https://example.com\"}]]\n#{"some text " * 200}\n",
+          )
+        end
+
+        it "only creates fragments containing text" do
+          job.execute(upload_id: upload.id, target_id: agent.id, target_type: agent.class.to_s)
+
+          fragments = RagDocumentFragment.where(upload:, target: agent).pluck(:fragment)
+
+          expect(fragments).to all(be_present)
         end
       end
     end

@@ -88,14 +88,6 @@ export default class ChatChannel extends Component {
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
 
-  @action
-  registerScroller(element) {
-    this.scroller = element;
-    this.#userScrollEvents.forEach((event) =>
-      element.addEventListener(event, this.#markUserScroll, { passive: true })
-    );
-  }
-
   @cached
   get messagesLoader() {
     return new ChatMessagesLoader(getOwner(this), this.args.channel);
@@ -127,6 +119,14 @@ export default class ChatChannel extends Component {
   @cached
   get hiddenMessageIds() {
     return new Set((this.args.hiddenMessageIds ?? []).map(Number));
+  }
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
+    this.#userScrollEvents.forEach((event) =>
+      element.addEventListener(event, this.#markUserScroll, { passive: true })
+    );
   }
 
   @action
@@ -341,7 +341,10 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser.user_option.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -619,6 +622,10 @@ export default class ChatChannel extends Component {
 
   @action
   async onSendMessage(message) {
+    if (this.pane.sending) {
+      return;
+    }
+
     if (
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
@@ -630,84 +637,23 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    await message.cook();
-    if (message.editing) {
-      await this.#sendEditMessage(message);
-    } else {
-      await this.#sendNewMessage(message);
+    this.pane.sending = true;
+
+    try {
+      await message.cook();
+      if (message.editing) {
+        await this.#sendEditMessage(message);
+      } else {
+        await this.#sendNewMessage(message);
+      }
+    } finally {
+      this.pane.sending = false;
     }
   }
 
   @action
   resetComposerMessage() {
     this.args.channel.resetDraft(this.currentUser);
-  }
-
-  async #sendEditMessage(message) {
-    this.pane.sending = true;
-
-    const data = {
-      message: message.message,
-      upload_ids: message.uploads.map((upload) => upload.id),
-    };
-
-    this.resetComposerMessage();
-
-    try {
-      await this.chatApi.editMessage(this.args.channel.id, message.id, data);
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      message.editing = false;
-      this.pane.sending = false;
-    }
-  }
-
-  async #sendNewMessage(message) {
-    this.pane.sending = true;
-
-    await this.args.channel.stageMessage(message);
-
-    message.manager = this.args.channel.messagesManager;
-    this.resetComposerMessage();
-
-    if (!this.messagesLoader.canLoadMoreFuture) {
-      this.scrollToLatestMessage();
-    }
-
-    try {
-      await this.chatApi.sendMessage(this.args.channel.id, {
-        message: message.message,
-        in_reply_to_id: message.inReplyTo?.id,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        client_created_at: message.createdAt.toISOString(),
-        ...extractCurrentTopicInfo(this),
-      });
-
-      this.scrollToLatestMessage();
-    } catch (error) {
-      this._onSendError(message.id, error);
-    } finally {
-      this.pane.sending = false;
-    }
-  }
-
-  _onSendError(id, error) {
-    const stagedMessage =
-      this.args.channel.messagesManager.findStagedMessage(id);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        // only network errors are retryable
-        stagedMessage.message = "";
-        stagedMessage.cooked = "";
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
-
-    this.resetComposerMessage();
   }
 
   @action
@@ -742,6 +688,80 @@ export default class ChatChannel extends Component {
     });
   }
 
+  async #sendEditMessage(message) {
+    const data = {
+      message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
+
+    this.resetComposerMessage();
+
+    try {
+      await this.chatApi.editMessage(this.args.channel.id, message.id, data);
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      message.editing = false;
+    }
+  }
+
+  async #sendNewMessage(message) {
+    await this.args.channel.stageMessage(message);
+
+    message.manager = this.args.channel.messagesManager;
+    this.resetComposerMessage();
+
+    if (!this.messagesLoader.canLoadMoreFuture) {
+      this.scrollToLatestMessage();
+    }
+
+    try {
+      await this.chatApi.sendMessage(this.args.channel.id, {
+        message: message.message,
+        in_reply_to_id: message.inReplyTo?.id,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
+        client_created_at: message.createdAt.toISOString(),
+        ...extractCurrentTopicInfo(this),
+      });
+
+      this.scrollToLatestMessage();
+    } catch (error) {
+      this._onSendError(message.id, error);
+    }
+  }
+
+  #cancelHandlers() {
+    cancel(this._debouncedHighlightOrFetchMessageHandler);
+    cancel(this._debouncedUpdateLastReadMessageHandler);
+    cancel(this._debouncedFillPaneAttemptHandler);
+  }
+
+  #preloadThreadTrackingState(thread, threadTracking) {
+    if (!threadTracking[thread.id]) {
+      return;
+    }
+
+    thread.tracking.unreadCount = threadTracking[thread.id].unread_count;
+    thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
+    thread.tracking.watchedThreadsUnreadCount =
+      threadTracking[thread.id].watched_threads_unread_count;
+  }
+
+  #flushIgnoreNextScroll() {
+    const prev = this._ignoreNextScroll;
+    this._ignoreNextScroll = false;
+    return prev;
+  }
+
+  _onSendError(id, error) {
+    const stagedMessage =
+      this.args.channel.messagesManager.findStagedMessage(id);
+    stagedMessage?.setSendError(error);
+
+    this.resetComposerMessage();
+  }
+
   @bind
   _captureKeystroke(event) {
     const { key, metaKey, ctrlKey, code, target } = event;
@@ -774,29 +794,6 @@ export default class ChatChannel extends Component {
     return;
   }
 
-  #cancelHandlers() {
-    cancel(this._debouncedHighlightOrFetchMessageHandler);
-    cancel(this._debouncedUpdateLastReadMessageHandler);
-    cancel(this._debouncedFillPaneAttemptHandler);
-  }
-
-  #preloadThreadTrackingState(thread, threadTracking) {
-    if (!threadTracking[thread.id]) {
-      return;
-    }
-
-    thread.tracking.unreadCount = threadTracking[thread.id].unread_count;
-    thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
-    thread.tracking.watchedThreadsUnreadCount =
-      threadTracking[thread.id].watched_threads_unread_count;
-  }
-
-  #flushIgnoreNextScroll() {
-    const prev = this._ignoreNextScroll;
-    this._ignoreNextScroll = false;
-    return prev;
-  }
-
   <template>
     <div
       class={{dConcatClass
@@ -807,26 +804,26 @@ export default class ChatChannel extends Component {
         (if this.messagesLoader.fetchedOnce "--loaded")
         (if this.isEmpty "is-empty")
       }}
+      data-id={{@channel.id}}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
       {{didUpdate this.loadMessages @targetMessageId}}
-      data-id={{@channel.id}}
     >
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
-        @isFiltering={{@isFiltering}}
-        @onToggleFilter={{@onToggleFilter}}
         @channel={{@channel}}
+        @isFiltering={{@isFiltering}}
         @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+        @onToggleFilter={{@onToggleFilter}}
       />
 
       <ChatPinnedMessageBar
         @channel={{@channel}}
+        @hiddenMessageIds={{this.hiddenMessageIds}}
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
-        @hiddenMessageIds={{this.hiddenMessageIds}}
       />
 
       <ChatMessagesScroller
@@ -837,11 +834,11 @@ export default class ChatChannel extends Component {
         <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="channel"
+              @disableMouseEvents={{this.isScrolling}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @message={{message}}
+              @resendStagedMessage={{this.resendStagedMessage}}
             />
           {{else}}
             {{#if this.messagesLoader.fetchedOnce}}
@@ -865,20 +862,20 @@ export default class ChatChannel extends Component {
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
-        @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.paneState.hasPendingContentBelow}}
         @channel={{@channel}}
+        @isVisible={{this.paneState.hasPendingContentBelow}}
+        @onScrollToBottom={{this.scrollToLatestMessage}}
       />
 
       {{#if this.pane.selectingMessages}}
         <ChatSelectionManager
+          @channel={{@channel}}
           @enableMove={{and
             (not @channel.isDirectMessageChannel)
             @channel.canModerate
           }}
-          @channel={{@channel}}
-          @pane={{this.pane}}
           @messagesManager={{this.messagesManager}}
+          @pane={{this.pane}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
@@ -886,9 +883,9 @@ export default class ChatChannel extends Component {
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}
-            @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
             @scroller={{this.scroller}}
+            @uploadDropZone={{this.uploadDropZone}}
           />
         {{/if}}
       {{/if}}

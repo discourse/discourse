@@ -8,6 +8,10 @@ hy:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Ամսաթիվ"
+          outcomes:
+            failed: "Ձախողված"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,11 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      copied: "Պատճենված է"
+      ai_decoded_transcript:
+        type: "Տիպ"
+        error: "Սխալ"
+        response: "Արձագանք"
       ai_tool_approval:
         loading: "Բեռնվում է..."
         tool: "Գործողություն"
@@ -106,6 +115,33 @@ hy:
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
         total: "Ամբողջ"
+      logs:
+        short_title: "Գրառումներ"
+        apply: "Կիրառել"
+        successful: "Հաջողված"
+        failed: "Ձախողված"
+        unknown: "Անհայտ"
+        time: "Ժամ"
+        when: "Երբ"
+        request: "Հարցում"
+        provider: "Մատակարար"
+        user: "Օգտատեր"
+        context: "Համատեքստ"
+        topic: "Թեմա"
+        post: "Գրառում"
+        post_short: "Գրառում %{id}"
+        actions: "Գործողություններ"
+        view_details: "Մանրամասներ"
+        periods:
+          custom: "Մասնավոր"
+        detail:
+          request: "Հարցում"
+          response: "Արձագանք"
+          context: "Համատեքստ"
+        retention:
+          summary_stage: "Ամփոփումը"
+          deleted_stage: "Ջնջված է"
+          save: "Պահպանել"
       ai_agent:
         name: "Անուն"
         edit: "Խմբագրել"
@@ -165,6 +201,9 @@ hy:
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
+        vision_modes:
+          disabled:
+            title: "Անջատված"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: Ջնջել
@@ -210,6 +249,7 @@ hy:
           fake: "Մասնավոր"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Տևողությունը."
           request: "Հարցում"
           response: "Արձագանք"
           next_log: "Հաջորդը"
@@ -230,8 +270,10 @@ hy:
           table:
             total_count: "Ամբողջ"
       discobot_discoveries:
-        regular_results: "Թեմաներ"
-        collapse: "Կրճատել"
-        tooltip:
-          actions:
-            disable: "Անջատել"
+        legacy:
+          regular_results: "Թեմաներ"
+          collapse: "Կրճատել"
+          tooltip:
+            actions:
+              disable: "Անջատել"
+        search_messages: "Հաղորդագրություն"

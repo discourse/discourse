@@ -136,7 +136,7 @@ describe DiscourseReactions::CustomReactionsController do
       expect(messages[1].data[:reactions]).to contain_exactly("cry", "angry")
     end
 
-    it "publishes MessageBus messages securely" do
+    it "publishes MessageBus messages to private-message users" do
       sign_in(user_1)
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}/reactions") do
@@ -146,16 +146,30 @@ describe DiscourseReactions::CustomReactionsController do
                 "HTTP_API_USERNAME" => api_key.user.username,
               }
         end
-      user_1_messages = messages.find { |m| m.user_ids.include?(user_1.id) }
+
       expect(messages.count).to eq(1)
-      expect(user_1_messages).to eq(nil)
+      expect(messages.first.user_ids).to include(user_2.id, admin.id)
+      expect(messages.first.group_ids).to be_nil
+      expect(messages.first.user_ids).not_to include(user_1.id)
     end
 
-    it "does not publish MessageBus messages when the post topic is unavailable" do
-      post_1.stubs(:topic).returns(nil)
-      MessageBus.expects(:publish).never
+    it "does not publish reactions to an empty secure audience" do
+      category = Fabricate(:category, read_restricted: true)
+      topic = Fabricate(:topic, category: category)
+      post = Fabricate(:post, topic: topic)
 
-      described_class.new.send(:publish_change_to_clients!, post_1, reaction: "cry")
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}/reactions") do
+          put "/discourse-reactions/posts/#{post.id}/custom-reactions/hugs/toggle.json",
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reactions"]).to eq(payload_with_user)
+      expect(messages).to be_empty
     end
 
     it "errors when reaction is invalid" do
@@ -195,6 +209,23 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["post_id"]).to eq(post_2.id)
       expect(parsed[0]["post"]["user"]["id"]).to eq(user_1.id)
       expect(parsed[0]["reaction"]["id"]).to eq(laughing_reaction.id)
+    end
+
+    it "hides another user's reaction activity when user activity is hidden" do
+      SiteSetting.hide_user_activity_tab = true
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+      aggregate_failures do
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(
+          reaction_user_1.id.to_s,
+          user_2.id.to_s,
+          post_2.id.to_s,
+          laughing_reaction.reaction_value,
+        )
+      end
     end
 
     it "does not expose post author names when names are disabled" do

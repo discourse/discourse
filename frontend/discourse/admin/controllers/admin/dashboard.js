@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import {
@@ -17,23 +17,21 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @service router;
   @service siteSettings;
+  @service exception;
   @service loadingSlider;
-  @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked version = null;
   @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "start_date", "end_date", "version"];
+  queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -65,12 +63,40 @@ export default class AdminDashboardController extends Controller {
     );
   }
 
-  #customDate(value, edge) {
-    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
-      return null;
-    }
-    const parsed = moment(value, "YYYY-MM-DD", true);
-    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  get showRedesign() {
+    return this.siteSettings.dashboard_improvements;
+  }
+
+  @computed("siteSettings.version_checks")
+  get showVersionChecks() {
+    return this.siteSettings.version_checks;
+  }
+
+  @computed("siteSettings.dashboard_visible_tabs")
+  get visibleTabs() {
+    return (this.siteSettings.dashboard_visible_tabs || "")
+      .split("|")
+      .filter(Boolean);
+  }
+
+  @computed("visibleTabs")
+  get isModerationTabVisible() {
+    return this.visibleTabs.includes("moderation");
+  }
+
+  @computed("visibleTabs")
+  get isSecurityTabVisible() {
+    return this.visibleTabs.includes("security");
+  }
+
+  @computed("visibleTabs")
+  get isReportsTabVisible() {
+    return this.visibleTabs.includes("reports");
+  }
+
+  @computed("problemsFetchedAt")
+  get problemsTimestamp() {
+    return moment(this.problemsFetchedAt).format("LLL");
   }
 
   @action
@@ -115,6 +141,136 @@ export default class AdminDashboardController extends Controller {
     this.#persistConfiguration(nextConfig, previous, { needsRefetch: false });
   }
 
+  @action
+  async fetchSections() {
+    const id = ++this._sectionsLoadId;
+    const period = this.safePeriod;
+    const startDate = this.startDate;
+    const endDate = this.endDate;
+
+    this.loadingSections = true;
+    this.sectionsFetchError = false;
+
+    this._sectionsLoadingCount += 1;
+    if (this._sectionsLoadingCount === 1) {
+      this.loadingSlider.transitionStarted();
+    }
+
+    try {
+      const model = await AdminDashboard.fetch({ startDate, endDate });
+
+      if (id !== this._sectionsLoadId) {
+        return;
+      }
+
+      this.loadedSections = {
+        period,
+        startDate,
+        endDate,
+        sections: model.sections,
+        configuration: model.configuration,
+      };
+      this.problems = model.problems;
+    } catch {
+      if (id !== this._sectionsLoadId) {
+        return;
+      }
+      this.sectionsFetchError = true;
+    } finally {
+      this._sectionsLoadingCount = Math.max(this._sectionsLoadingCount - 1, 0);
+      if (this._sectionsLoadingCount === 0) {
+        this.loadingSlider.transitionEnded();
+      }
+
+      if (id === this._sectionsLoadId) {
+        this.loadingSections = false;
+      }
+    }
+  }
+
+  fetchProblems() {
+    if (this.isLoadingProblems) {
+      return;
+    }
+
+    if (
+      !this.problemsFetchedAt ||
+      moment().subtract(PROBLEMS_CHECK_MINUTES, "minutes").toDate() >
+        this.problemsFetchedAt
+    ) {
+      this._loadProblems();
+    }
+  }
+
+  fetchDashboard() {
+    const versionChecks = this.siteSettings.version_checks;
+
+    if (this.isLoading || !versionChecks) {
+      return;
+    }
+
+    if (
+      !this.dashboardFetchedAt ||
+      moment().subtract(30, "minutes").toDate() > this.dashboardFetchedAt
+    ) {
+      this.set("isLoading", true);
+
+      AdminDashboard.fetch()
+        .then((model) => {
+          let properties = {
+            dashboardFetchedAt: new Date(),
+          };
+
+          if (versionChecks) {
+            properties.versionCheck = new VersionCheck(model.version_check);
+          }
+
+          this.setProperties(properties);
+        })
+        .catch((e) => {
+          this.exception.show(e.jqXHR);
+        })
+        .finally(() => {
+          this.set("isLoading", false);
+        });
+    }
+  }
+
+  @action
+  refreshProblems() {
+    this._loadProblems();
+  }
+
+  @action
+  async refreshSiteAdvice() {
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async ignoreProblem(problem) {
+    try {
+      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
+      this.problems = this.problems.filter(
+        (candidate) => candidate.id !== problem.id
+      );
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  }
+
   #applyConfigOptimistically(nextConfig) {
     for (const section of this.loadedSections?.sections ?? []) {
       this._sectionDataCache.set(section.id, section.data);
@@ -150,140 +306,6 @@ export default class AdminDashboardController extends Controller {
     }
   }
 
-  @action
-  async fetchSections() {
-    const id = ++this._sectionsLoadId;
-    const period = this.safePeriod;
-    const startDate = this.startDate;
-    const endDate = this.endDate;
-
-    this.loadingSections = true;
-    this.sectionsFetchError = false;
-
-    this._sectionsLoadingCount += 1;
-    if (this._sectionsLoadingCount === 1) {
-      this.loadingSlider.transitionStarted();
-    }
-
-    try {
-      const model = await AdminDashboard.fetch({
-        startDate,
-        endDate,
-        version: this.version,
-      });
-
-      if (id !== this._sectionsLoadId) {
-        return;
-      }
-
-      this.loadedSections = {
-        period,
-        startDate,
-        endDate,
-        sections: model.sections,
-        configuration: model.configuration,
-      };
-      this.problems = model.problems;
-    } catch {
-      if (id !== this._sectionsLoadId) {
-        return;
-      }
-      this.sectionsFetchError = true;
-    } finally {
-      this._sectionsLoadingCount = Math.max(this._sectionsLoadingCount - 1, 0);
-      if (this._sectionsLoadingCount === 0) {
-        this.loadingSlider.transitionEnded();
-      }
-
-      if (id === this._sectionsLoadId) {
-        this.loadingSections = false;
-      }
-    }
-  }
-
-  get showRedesign() {
-    if (this.version === "alt") {
-      return !this.siteSettings.dashboard_improvements;
-    }
-    return this.siteSettings.dashboard_improvements;
-  }
-
-  @computed("siteSettings.version_checks")
-  get showVersionChecks() {
-    return this.siteSettings.version_checks;
-  }
-
-  @computed("siteSettings.dashboard_visible_tabs")
-  get visibleTabs() {
-    return (this.siteSettings.dashboard_visible_tabs || "")
-      .split("|")
-      .filter(Boolean);
-  }
-
-  @computed("visibleTabs")
-  get isModerationTabVisible() {
-    return this.visibleTabs.includes("moderation");
-  }
-
-  @computed("visibleTabs")
-  get isSecurityTabVisible() {
-    return this.visibleTabs.includes("security");
-  }
-
-  @computed("visibleTabs")
-  get isReportsTabVisible() {
-    return this.visibleTabs.includes("reports");
-  }
-
-  fetchProblems() {
-    if (this.isLoadingProblems) {
-      return;
-    }
-
-    if (
-      !this.problemsFetchedAt ||
-      moment().subtract(PROBLEMS_CHECK_MINUTES, "minutes").toDate() >
-        this.problemsFetchedAt
-    ) {
-      this._loadProblems();
-    }
-  }
-
-  fetchDashboard() {
-    const versionChecks = this.siteSettings.version_checks;
-
-    if (this.isLoading || !versionChecks) {
-      return;
-    }
-
-    if (
-      !this.dashboardFetchedAt ||
-      moment().subtract(30, "minutes").toDate() > this.dashboardFetchedAt
-    ) {
-      this.set("isLoading", true);
-
-      AdminDashboard.fetch({ version: this.version })
-        .then((model) => {
-          let properties = {
-            dashboardFetchedAt: new Date(),
-          };
-
-          if (versionChecks) {
-            properties.versionCheck = new VersionCheck(model.version_check);
-          }
-
-          this.setProperties(properties);
-        })
-        .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
-        })
-        .finally(() => {
-          this.set("isLoading", false);
-        });
-    }
-  }
-
   async _loadProblems() {
     this.setProperties({
       loadingProblems: true,
@@ -295,38 +317,6 @@ export default class AdminDashboardController extends Controller {
       this.problems = model.problems;
     } finally {
       this.loadingProblems = false;
-    }
-  }
-
-  @computed("problemsFetchedAt")
-  get problemsTimestamp() {
-    return moment(this.problemsFetchedAt).format("LLL");
-  }
-
-  @action
-  refreshProblems() {
-    this._loadProblems();
-  }
-
-  @action
-  async refreshSiteAdvice() {
-    try {
-      const model = await AdminDashboard.fetchProblems();
-      this.problems = model.problems;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  async ignoreProblem(problem) {
-    try {
-      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
-      this.problems = this.problems.filter(
-        (candidate) => candidate.id !== problem.id
-      );
-    } catch (error) {
-      popupAjaxError(error);
     }
   }
 }

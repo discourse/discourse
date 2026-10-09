@@ -30,6 +30,8 @@ sr:
       cast-votes:
         title: "Daj svoj glas"
         label: "Glasaj sada!"
+      keep-vote:
+        label: "Nazad"
       show-results:
         title: "Prikaži rezultate ankete"
         label: "Rezultati"

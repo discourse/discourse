@@ -25,6 +25,10 @@ module DiscourseAi
         PROMPT
       end
 
+      def defer_forced_tool_for_vision?
+        true
+      end
+
       def available_tools
         [DiscourseAi::Agents::Tools::SetTopicSummary]
       end

@@ -26,6 +26,8 @@ lt:
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
+      keep-vote:
+        label: "Atgal"
       show-results:
         title: "Rodyti balsavimo rezultatus"
         label: "Rezultatai"

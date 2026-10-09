@@ -6,11 +6,9 @@ class DiskSpace
   end
 
   def self.uploads_free_bytes
-    if Discourse.store.external?
-      0
-    else
-      free(uploads_path)
-    end
+    return nil if Discourse.store.external?
+
+    free(uploads_path)
   end
 
   def self.free(path)

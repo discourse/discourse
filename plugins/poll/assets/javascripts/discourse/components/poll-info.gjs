@@ -62,43 +62,40 @@ export default class PollInfoComponent extends Component {
     return i18n("poll.total_votes", { count: this.totalVotes });
   }
 
-  get automaticCloseAgeLabel() {
-    return i18n("poll.automatic_close.age", this.age);
+  get showAutomaticClose() {
+    return (
+      this.args.isAutomaticallyClosed ||
+      (!!this.args.closesAt && !this.args.closed)
+    );
   }
 
-  get automaticCloseClosesInLabel() {
-    return i18n("poll.automatic_close.closes_in", this.timeLeft);
+  get automaticCloseLabel() {
+    return trustHTML(
+      this.args.isAutomaticallyClosed
+        ? i18n("poll.automatic_close.age", { age: this.age })
+        : i18n("poll.automatic_close.closes_in", { timeLeft: this.timeLeft })
+    );
   }
 
   get showMultipleHelpText() {
-    return this.args.isMultiple && !this.args.showResults && !this.args.closed;
+    return (
+      this.args.isMultiple &&
+      !this.args.showResults &&
+      !this.args.showingVotedChoices &&
+      !this.args.closed
+    );
   }
 
   get closeTitle() {
-    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
-    if (closeDate.isValid()) {
-      return closeDate.format("LLL");
-    } else {
-      return "";
-    }
+    return this.args.closesAt?.format("LLL") ?? "";
   }
 
   get age() {
-    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
-    if (closeDate.isValid()) {
-      return relativeAge(closeDate.toDate(), { addAgo: true });
-    } else {
-      return 0;
-    }
+    return relativeAge(this.args.closesAt.toDate(), { addAgo: true });
   }
 
   get timeLeft() {
-    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
-    if (closeDate.isValid()) {
-      return moment().to(closeDate, true);
-    } else {
-      return 0;
-    }
+    return moment().to(this.args.closesAt, true);
   }
 
   get resultsOnVote() {
@@ -147,8 +144,9 @@ export default class PollInfoComponent extends Component {
 
   get showInstructionsSection() {
     return (
+      this.args.showingVotedChoices ||
       this.showMultipleHelpText ||
-      this.args.close ||
+      this.showAutomaticClose ||
       this.args.closedBy ||
       this.resultsOnVote ||
       this.resultsOnClose ||
@@ -178,10 +176,16 @@ export default class PollInfoComponent extends Component {
       </div>
       {{#if this.showInstructionsSection}}
         <ul class="poll-info_instructions">
-          {{#if (if @isDynamic true this.poll.dynamic)}}
+          {{#if @isDynamic}}
             <li class="is-dynamic">
               {{dIcon "shuffle"}}
               <span>{{i18n "poll.dynamic.enabled_hint"}}</span>
+            </li>
+          {{/if}}
+          {{#if @showingVotedChoices}}
+            <li class="vote-recorded">
+              {{dIcon "check"}}
+              <span>{{i18n "poll.vote_recorded"}}</span>
             </li>
           {{/if}}
           {{#if this.showMultipleHelpText}}
@@ -190,18 +194,11 @@ export default class PollInfoComponent extends Component {
               <span>{{this.multipleHelpText}}</span>
             </li>
           {{/if}}
-          {{#if this.poll.close}}
-            {{#if this.isAutomaticallyClosed}}
-              <li title={{this.title}}>
-                {{dIcon "lock"}}
-                <span>{{this.automaticCloseAgeLabel}}</span>
-              </li>
-            {{else}}
-              <li title={{this.title}}>
-                {{dIcon "far-clock"}}
-                <span>{{this.automaticCloseClosesInLabel}}</span>
-              </li>
-            {{/if}}
+          {{#if this.showAutomaticClose}}
+            <li title={{this.closeTitle}}>
+              {{dIcon (if @isAutomaticallyClosed "lock" "far-clock")}}
+              <span>{{this.automaticCloseLabel}}</span>
+            </li>
           {{/if}}
           {{#if @closedBy}}
             <li class="poll-info_closed-by">

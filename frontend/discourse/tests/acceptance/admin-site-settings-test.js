@@ -9,6 +9,7 @@ import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -68,13 +69,13 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.cancel");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("canceling doesn't mark setting as overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.ok");
     assert
       .dom(".row.setting.overridden")
@@ -95,12 +96,6 @@ acceptance("Admin - Site Settings", function (needs) {
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't marked as overridden after undo");
-
-    await fillIn(".input-setting-string", "Test");
-    await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
-    assert
-      .dom(".row.setting.overridden")
-      .exists("saving via Enter key marks setting as overridden");
   });
 
   test("always shows filtered site settings if a filter is set", async function (assert) {
@@ -202,7 +197,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await click('[data-setting="highlight_scope"] > .setting-controls__undo');
 
     assert
-      .dom('[data-setting="highlight_categories"] .input-setting-string')
+      .dom('[data-setting="highlight_categories"] .form-kit__control-input')
       .hasValue("default", "parent controls reset the dependent setting");
     assert
       .dom(".setting-depends-on-notice")
@@ -349,15 +344,15 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     await fillIn(
-      '[data-setting="highlight_scope"] .input-setting-string',
+      '[data-setting="highlight_scope"] .form-kit__control-input',
       "include"
     );
     await fillIn(
-      '[data-setting="highlight_categories"] .input-setting-string',
+      '[data-setting="highlight_categories"] .form-kit__control-input',
       "selected categories"
     );
     await fillIn(
-      '[data-setting="unrelated_setting"] .input-setting-string',
+      '[data-setting="unrelated_setting"] .form-kit__control-input',
       "do not save me"
     );
 
@@ -376,6 +371,76 @@ acceptance("Admin - Site Settings", function (needs) {
       currentURL(),
       "/admin/site_settings/category/basic?filter=menu"
     );
+  });
+
+  test("labels the MCP settings category and client policies", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "mcp_oauth_client_id_metadata_policy",
+              humanized_name: "MCP OAuth Client ID metadata policy",
+              description:
+                "Choose how OAuth clients can register with this site. Users must still approve the access requested by each client.",
+              default: "any_domain",
+              value: "any_domain",
+              category: "mcp",
+              preview: null,
+              secret: false,
+              type: "enum",
+              valid_values: [
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.disabled",
+                  value: "disabled",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.approved_domains",
+                  value: "approved_domains",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.any_domain",
+                  value: "any_domain",
+                },
+              ],
+              translate_names: true,
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings?filter=mcp%20client%20id%20metadata");
+
+    assert
+      .dom(".admin-site-settings-category-nav__item.mcp a")
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.categories.mcp"),
+        "the MCP category has a translated label"
+      );
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] .form-kit__control-select'
+      )
+      .hasValue("any_domain", "CIMD from any domain is selected by default");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="disabled"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.disabled"));
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="approved_domains"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.approved_domains"));
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="any_domain"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.any_domain"));
   });
 
   test("shows all_results if current category has none", async function (assert) {

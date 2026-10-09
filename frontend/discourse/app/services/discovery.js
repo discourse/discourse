@@ -37,6 +37,26 @@ export default class DiscoveryService extends Service {
     }
   }
 
+  /**
+   * Which category listing is on screen, for consumers that scope behaviour by
+   * page. Undefined anywhere a category listing isn't being rendered.
+   *
+   * - `"categories"` the categories page
+   * - `"subcategories"` a category's subcategories page
+   * - `"category"` the subcategories listed above a category's topics
+   */
+  get categoryListPage() {
+    const { currentRouteName } = this.router;
+
+    if (currentRouteName === "discovery.categories") {
+      return "categories";
+    } else if (currentRouteName === "discovery.subcategories") {
+      return "subcategories";
+    } else if (this.category) {
+      return "category";
+    }
+  }
+
   get custom() {
     if (this.onDiscoveryRoute) {
       return this.router.currentRouteName === "discovery.custom";

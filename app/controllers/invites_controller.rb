@@ -129,8 +129,7 @@ class InvitesController < ApplicationController
     if is_staff_invite
       guardian.ensure_can_create_admin_invite!
 
-      if params[:topic_id].present? || params[:group_ids].present? ||
-           params[:group_names].present? || params[:domain].present?
+      if params[:topic_id].present? || params[:group_ids].present? || params[:group_names].present?
         raise Discourse::InvalidParameters.new(is_admin_invite ? :is_admin : :is_moderator)
       end
 
@@ -368,6 +367,11 @@ class InvitesController < ApplicationController
     # via the SSO flow (SessionController#sso_login)
     raise Discourse::NotFound if SiteSetting.enable_discourse_connect
 
+    if Invite.email_code_enabled?(current_user) && current_user.nil? &&
+         server_session[:authentication].blank?
+      raise Discourse::NotFound
+    end
+
     params.require(:id)
     params.permit(
       :email,
@@ -602,7 +606,9 @@ class InvitesController < ApplicationController
       end
     end
 
-    email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+    email_verified_by_link =
+      !Invite.email_code_enabled?(current_user) && invite.email_token.present? &&
+        params[:t] == invite.email_token
 
     email = invite.email if email_verified_by_link
 

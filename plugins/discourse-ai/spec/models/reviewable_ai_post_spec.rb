@@ -125,6 +125,7 @@ describe ReviewableAiPost do
     let(:reviewable) do
       described_class.needs_review!(target: target, created_by: Discourse.system_user)
     end
+
     fab!(:admin)
 
     before do

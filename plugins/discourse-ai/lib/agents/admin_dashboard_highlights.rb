@@ -11,10 +11,6 @@ module DiscourseAi
         []
       end
 
-      def temperature
-        0
-      end
-
       def system_prompt
         <<~PROMPT.strip
           You write the brief highlight shown at the top of a Discourse community admin dashboard, for the community owner.

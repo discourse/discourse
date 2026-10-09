@@ -71,8 +71,8 @@ module DiscourseAi
               .each { |topic_post| grouped_results.add(topic_post) }
           rescue Discourse::InvalidAccess
             return render_json_error(I18n.t("invalid_access"), status: 403)
-          rescue Net::HTTPBadResponse => e
-            Rails.logger.warn("Semantic search embedding generation failed: #{e.message}")
+          rescue DiscourseAi::Inference::EmbeddingInferenceError,
+                 DiscourseAi::Embeddings::ProviderPausedError
           end
 
           render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
@@ -110,8 +110,8 @@ module DiscourseAi
             semantic_search
               .search_for_topics(query, _page = 1, hyde: false)
               .each { |topic_post| grouped_results.add(topic_post) }
-          rescue Net::HTTPBadResponse => e
-            Rails.logger.warn("Quick search embedding generation failed: #{e.message}")
+          rescue DiscourseAi::Inference::EmbeddingInferenceError,
+                 DiscourseAi::Embeddings::ProviderPausedError
           end
 
           render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)

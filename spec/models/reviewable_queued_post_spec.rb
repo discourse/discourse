@@ -149,7 +149,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         fab!(:contact_user, :user)
 
         before do
-          SiteSetting.site_contact_group_name = contact_group.name
+          SiteSetting.site_contact_group_name = contact_group.id.to_s
           SiteSetting.site_contact_username = contact_user.username
         end
 
@@ -231,7 +231,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         context "when the topic is nil in the case of a new topic being created" do
           let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
-          it "works" do
+          it "sends revision feedback for the rejected new topic" do
             args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
             expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
               Topic.where(archetype: Archetype.private_message).count
@@ -444,13 +444,13 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       it "includes actions" do
         actions = reviewable.actions_for(Guardian.new(admin))
-        action_ids = actions.to_a.map(&:id).map(&:to_s)
+        action_names = actions.to_a.map(&:action_name)
 
-        expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("reject_post")
-        expect(action_ids).to include("revise_and_reject_post")
-        expect(action_ids).to include("delete_user")
-        expect(action_ids).to include("delete_user_block")
+        expect(action_names).to include("approve_post")
+        expect(action_names).to include("reject_post")
+        expect(action_names).to include("revise_and_reject_post")
+        expect(action_names).to include("delete_user")
+        expect(action_names).to include("delete_user_block")
       end
     end
   end

@@ -3,12 +3,21 @@
 module PageObjects
   module Pages
     class Review < PageObjects::Pages::Base
-      POST_BODY_TOGGLE_SELECTOR = ".post-body__toggle-btn"
-      POST_BODY_COLLAPSED_SELECTOR = ".post-body.is-collapsed"
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
 
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
+        self
+      end
+
+      # Reaching a reviewable through the user menu keeps the app running, which
+      # is the only way to exercise the state a reviewable item carries over from
+      # the previously displayed one. `visit_reviewable` always starts afresh.
+      def visit_reviewable_from_user_menu(reviewable)
+        PageObjects::Components::UserMenu.new.open.click_review_queue_tab.click_reviewable(
+          reviewable,
+        )
+        reviewable_by_id(reviewable.id)
         self
       end
 
@@ -32,28 +41,11 @@ module PageObjects
         end
       end
 
-      def delete_user_from_reviewable(reviewable, action)
+      # Pass confirm: false for reviewables that require a rejection reason, as
+      # those open a modal instead of the confirmation dialog.
+      def delete_user_from_reviewable(reviewable, action, confirm: true)
         select_bundled_action(reviewable, action, bundle_index: 1)
-      end
-
-      def click_post_body_toggle
-        find(POST_BODY_TOGGLE_SELECTOR).click
-      end
-
-      def has_post_body_toggle?
-        page.has_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_no_post_body_toggle?
-        page.has_no_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_post_body_collapsed?
-        page.has_css?(POST_BODY_COLLAPSED_SELECTOR)
-      end
-
-      def has_no_post_body_collapsed?
-        page.has_no_css?(POST_BODY_COLLAPSED_SELECTOR)
+        PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
       def has_reviewable_action_dropdown?
@@ -62,6 +54,12 @@ module PageObjects
 
       def has_no_reviewable_action_dropdown?
         page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
+      end
+
+      def has_no_reviewable_actions?(reviewable)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
+        end
       end
 
       def has_reviewable_items?(count:)
@@ -77,10 +75,6 @@ module PageObjects
 
       def has_scrub_button?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
-      end
-
-      def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".user-scrub") }
       end
 
       def click_scrub_user_button

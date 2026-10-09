@@ -24,6 +24,9 @@ export default class PollBreakdownChart extends Component {
   _previousHighlightedSliceIndex = null;
   _previousDisplayMode = null;
 
+  /** @type {import("chart.js").Chart | null} */
+  _chart = null;
+
   init() {
     super.init(...arguments);
     this._optionToSlice = {};
@@ -40,30 +43,6 @@ export default class PollBreakdownChart extends Component {
   @computed("options.@each.votes")
   get data() {
     return this.options?.map?.((item) => item.votes) ?? [];
-  }
-
-  async didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    const canvas = this.element.querySelector("canvas");
-
-    const [Chart, ChartDataLabelsPlugin] = await Promise.all([
-      loadChartJS(),
-      loadChartJSDatalabels(),
-    ]);
-    this._chart = new Chart(canvas.getContext("2d"), {
-      ...this.chartConfig,
-      plugins: [ChartDataLabelsPlugin],
-    });
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this._chart) {
-      this._updateDisplayMode();
-      this._updateHighlight();
-    }
   }
 
   @computed("optionColors", "index")
@@ -161,6 +140,30 @@ export default class PollBreakdownChart extends Component {
         },
       },
     };
+  }
+
+  async didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    const canvas = this.element.querySelector("canvas");
+
+    const [Chart, ChartDataLabelsPlugin] = await Promise.all([
+      loadChartJS(),
+      loadChartJSDatalabels(),
+    ]);
+    this._chart = new Chart(canvas.getContext("2d"), {
+      ...this.chartConfig,
+      plugins: [ChartDataLabelsPlugin],
+    });
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (this._chart) {
+      this._updateDisplayMode();
+      this._updateHighlight();
+    }
   }
 
   _updateDisplayMode() {

@@ -8,6 +8,7 @@ import ComposerContainer from "discourse/components/composer-container";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
+import DesignWizardPanel from "discourse/components/design-wizard-panel";
 import DiscourseRoot from "discourse/components/discourse-root";
 import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
@@ -31,7 +32,6 @@ import DTooltips from "discourse/float-kit/components/d-tooltips";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { eq } from "discourse/truth-helpers";
 import DCustomHtml from "discourse/ui-kit/d-custom-html";
 
 export default <template>
@@ -46,8 +46,8 @@ export default <template>
     <DDocument />
     <PageLoadingSlider />
     <PluginOutlet
-      @name="above-site-header"
       @connectorTagName="div"
+      @name="above-site-header"
       @outletArgs={{lazyHash
         currentPath=@controller.router._router.currentPath
       }}
@@ -58,8 +58,8 @@ export default <template>
         @canSignUp={{@controller.canSignUp}}
         @showCreateAccount={{routeAction "showCreateAccount"}}
         @showLogin={{routeAction "showLogin"}}
-        @sidebarEnabled={{@controller.sidebarEnabled}}
         @showSidebar={{@controller.showSidebar}}
+        @sidebarEnabled={{@controller.sidebarEnabled}}
         @toggleSidebar={{@controller.toggleSidebar}}
       />
     {{/if}}
@@ -70,15 +70,11 @@ export default <template>
       <OfflineIndicator />
     {{/if}}
 
-    {{#if
-      (eq @controller.siteSettings.welcome_banner_location "below_site_header")
-    }}
-      <WelcomeBanner />
-    {{/if}}
+    <WelcomeBanner @location="below_site_header" />
 
     <PluginOutlet
-      @name="below-site-header"
       @connectorTagName="div"
+      @name="below-site-header"
       @outletArgs={{lazyHash
         currentPath=@controller.router._router.currentPath
       }}
@@ -88,7 +84,7 @@ export default <template>
       <BlockOutlet @name="hero-blocks" />
     {{/unless}}
 
-    <div id="main-outlet-wrapper" class="wrap" role="main">
+    <div class="wrap" id="main-outlet-wrapper" role="main">
       {{#if @controller.sidebarEnabled}}
         <SidebarWrapper
           @showSidebar={{@controller.showSidebar}}
@@ -102,7 +98,7 @@ export default <template>
 
       <div id="main-outlet">
         {{#unless @controller.shouldHideScrollableContentAbove}}
-          <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+          <PluginOutlet @connectorTagName="div" @name="above-main-container" />
           {{#unless @controller.isCurrentAdminRoute}}
             <BlockOutlet @name="main-outlet-blocks" />
           {{/unless}}
@@ -111,14 +107,7 @@ export default <template>
             <AdminOnboardingBanner />
           {{/if}}
 
-          {{#if
-            (eq
-              @controller.siteSettings.welcome_banner_location
-              "above_topic_content"
-            )
-          }}
-            <WelcomeBanner />
-          {{/if}}
+          <WelcomeBanner @location="above_topic_content" />
 
           <div class="container" id="main-container">
             {{#if @controller.showTop}}
@@ -128,8 +117,8 @@ export default <template>
             <PwaInstallBanner />
             <GlobalNotice />
             <PluginOutlet
-              @name="top-notices"
               @connectorTagName="div"
+              @name="top-notices"
               @outletArgs={{lazyHash
                 currentPath=@controller.router._router.currentPath
               }}
@@ -163,24 +152,25 @@ export default <template>
     </div>
 
     <PluginOutlet
-      @name="above-footer"
       @connectorTagName="div"
+      @name="above-footer"
       @outletArgs={{lazyHash showFooter=@controller.showFooter}}
     />
     {{#if @controller.showFooter}}
       <DCustomHtml
+        class="custom-footer-content"
         @name="footer"
         @triggerAppEvent={{true}}
-        class="custom-footer-content"
       />
     {{/if}}
     <PluginOutlet
-      @name="below-footer"
       @connectorTagName="div"
+      @name="below-footer"
       @outletArgs={{lazyHash showFooter=@controller.showFooter}}
     />
 
     <ModalContainer />
+    <DesignWizardPanel />
     <DialogHolder />
     <ComposerContainer />
     <RenderGlimmerContainer />

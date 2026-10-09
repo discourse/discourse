@@ -1,4 +1,5 @@
 $max_image_height: 150px;
+$max_video_height: 250px;
 
 .chat-message {
   // append selectors to set images to a
@@ -15,6 +16,10 @@ $max_image_height: 150px;
     max-width: 100%;
     width: unset;
     overflow: hidden;
+  }
+
+  iframe.youtube-onebox {
+    max-width: calc(#{$max_video_height} / 9 * 16);
   }
 
   .onebox {
@@ -73,13 +78,45 @@ $max_image_height: 150px;
     }
   }
 
+  .youtube-onebox {
+    margin-top: var(--space-1);
+  }
+
+  .onebox.twitterstatus {
+    max-width: 500px;
+
+    .tweet-images {
+      .tweet-video {
+        height: calc(576px / (var(--aspect-ratio)));
+        max-height: 400px;
+      }
+    }
+
+    .aspect-image-full-size {
+      object-fit: initial;
+      max-height: 400px;
+
+      .tweet-image {
+        object-fit: initial;
+        max-height: 400px;
+      }
+    }
+
+    .thumbnail.onebox-avatar {
+      max-width: 38px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-1);
+    }
+  }
+
   .chat-message-collapser
     .chat-message-collapser-header
     + div
     .chat-message-collapser-lazy-video {
     object-fit: contain;
-    max-height: $max_image_height;
-    max-width: calc(#{$max_image_height} / 9 * 16);
+    max-height: $max_video_height;
+    max-width: calc(#{$max_video_height} / 9 * 16);
+    margin-top: var(--space-2);
 
     &:has(div[data-provider-name="tiktok"]) {
       max-height: unset;

@@ -747,6 +747,7 @@ class TopicView
         WHERE
           r.target_id IN (:post_ids) AND
           r.target_type = 'Post' AND
+          r.type IN (:known_types) AND
           COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
@@ -755,7 +756,12 @@ class TopicView
         counts = {}
 
         DB
-          .query(sql, pending: ReviewableScore.statuses[:pending], post_ids: @posts.map(&:id))
+          .query(
+            sql,
+            pending: ReviewableScore.statuses[:pending],
+            post_ids: @posts.map(&:id),
+            known_types: Reviewable.sti_names,
+          )
           .each do |row|
             counts[row.target_id] = {
               total: row.total,

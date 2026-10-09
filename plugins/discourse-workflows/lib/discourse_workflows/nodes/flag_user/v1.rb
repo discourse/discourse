@@ -74,14 +74,7 @@ module DiscourseWorkflows
                 expression: true,
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 
@@ -126,8 +119,9 @@ module DiscourseWorkflows
               potential_spam: false,
               payload: reviewable_payload(user),
             )
-          score_added = add_review_score(reviewable, actor)
-          add_provenance_note(exec_ctx, reviewable, actor, config["reason"])
+          context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
+          score_added = add_review_score(reviewable, actor, context)
+          add_provenance_note(exec_ctx, reviewable, actor, config["reason"], item_index)
 
           output(
             user,
@@ -156,38 +150,34 @@ module DiscourseWorkflows
         end
 
         def reviewable_payload(user)
-          profile = user.user_profile
-
-          {
-            username: user.username,
-            name: user.name,
-            email: user.email,
-            bio: profile&.bio_raw,
-            website: profile&.website,
-          }
+          ::ReviewableUser.payload_for(user)
         end
 
-        def add_review_score(reviewable, actor)
+        def add_review_score(reviewable, actor, context)
           score_type = ::ReviewableScore.types[:needs_approval]
 
           if reviewable.reviewable_scores.pending.exists?(
                user_id: actor.id,
                reviewable_score_type: score_type,
                reason: SCORE_REASON,
+               context: context,
              )
             return false
           end
 
-          reviewable.add_score(actor, score_type, reason: SCORE_REASON, force_review: true)
+          reviewable.add_score(
+            actor,
+            score_type,
+            reason: SCORE_REASON,
+            context: context,
+            force_review: true,
+          )
           true
         end
 
-        def add_provenance_note(exec_ctx, reviewable, actor, custom_reason)
+        def add_provenance_note(exec_ctx, reviewable, actor, custom_reason, item_index)
           parts = [
-            I18n.t(
-              "discourse_workflows.flag_user.flagged_by_workflow",
-              workflow_name: exec_ctx.get_workflow.name,
-            ),
+            DiscourseWorkflows.review_attribution(exec_ctx, item_index:, flag_type: :flag_user),
           ]
           custom_reason = custom_reason.to_s.strip
           parts << custom_reason if custom_reason.present?

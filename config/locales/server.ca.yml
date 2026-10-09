@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 ca:
+  markdown_endpoints:
+    latest: "Més recents"
+    categories: "Categories"
+    tags: "Etiquetes"
+    previous_page: "Pàgina anterior"
+    next_page: "Pàgina següent"
+    replies: "Respostes"
+    last_updated: "Darrera actualització"
+    event:
+      location: "Ubicació"
+  mcp:
+    errors:
+      topic_not_found: "Tema no trobat"
+    oauth:
+      deny: "Denega"
+      approve: "Autoritza"
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categories"
+      about:
+        label: "Quant a"
+      guidelines:
+        label: "Directrius"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -560,16 +588,15 @@ ca:
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
   email_login:
     title: "Inici de sessió de correu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
       ipad: "iPad"
@@ -587,6 +614,10 @@ ca:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
+  admin_site_traffic_explorer:
+    unknown: "Desconegut"
+    traffic_types:
+      anonymous: "Anònim"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
@@ -705,7 +736,7 @@ ca:
     topic_description: "Per a tornar a subscriure-us a %{link}, feu servir el control de notificacions a baix o a la dreta del tema."
     private_topic_description: "Per a tornar a subscriure-us, utilitzeu el control de notificació a baix o la dreta del tema."
   unsubscribe:
-    title: "Cancel·la la subscripció!"
+    unsubscribe: "Cancel·la la subscripció!"
     stop_watching_topic: "Deixa de vigilar el tema, %{link}"
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
@@ -831,6 +862,11 @@ ca:
         share: "Comparteix"
       types:
         staff: "Equip responsable"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuari"
+        count: "Publicacions"
+        share: "Comparteix"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -978,6 +1014,9 @@ ca:
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_entry_urls:
       labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
@@ -1142,8 +1181,6 @@ ca:
       host_names: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
       queue_size: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
-      s3_upload_config: 'El servidor és configurat per a carregar fitxers a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
-      s3_backup_config: 'El servidor és configurat per a carregar còpies de seguretat a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu-la. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
       image_magick: 'El servidor és configurat per a crear miniatures d''imatges grans, però ImageMagick no és instal·lat. Instal·leu ImageMagick amb el vostre gestor de paquets preferit o <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixeu la versió més recent</a>.'
       failing_emails: 'Hi ha %{num_failed_jobs} tasques de correu electrònic que han fallat. Comproveu app.yml i assegureu-vos que la configuració del servidor de correu és correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulteu les tasques fallides en Sidekiq</a>.'
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
@@ -1390,7 +1427,6 @@ ca:
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
-    min_ban_entries_for_roll_up: "En clicar el botó Agrupa es crearà una nova entrada de prohibició de subxarxa si hi ha almenys (N) entrades."
     max_age_unmatched_emails: "Suprimeix entrades no coincidents de correus sota supervisió després de (N) dies."
     max_age_unmatched_ips: "Suprimeix entrades no coincidents d'entrades IP sota supervisió després de (N) dies."
     num_flaggers_to_close_topic: "Nombre mínim de banderes úniques necessàries per a aturar automàticament un tema per a una intervenció"
@@ -1546,7 +1582,6 @@ ca:
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap usuari amb aquest nom."
-      invalid_group: "No hi ha cap grup amb aquest nom."
       invalid_integer_min_max: "El valor ha de ser entre %{min} i %{max}."
       invalid_integer_min: "El valor ha de ser %{min} o més gran."
       invalid_integer_max: "El valor no pot ser més gran de %{max}."
@@ -2312,9 +2347,6 @@ ca:
     user_posted_pm_staged:
       title: "L'usuari ha publicat un missatge personal (MP) fictici"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
@@ -2391,7 +2423,7 @@ ca:
     signup_after_approval:
       title: "Registre després d'aprovació"
       subject_template: "El vostre compte ha estat aprovat en %{site_name}!"
-      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{base_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
+      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{login_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
     signup:
       title: "Registre"
       subject_template: "[%{email_prefix}] Confirmeu el vostre compte nou"
@@ -2751,6 +2783,9 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
+  design_wizard:
+    palette_pairs:
+      default: "Per defecte"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2813,6 +2848,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"
@@ -2869,8 +2908,6 @@ ca:
         title: "Sí"
       approve_and_unhide:
         title: "Sí"
-      delete_post:
-        complete: "Publicació suprimida"
       delete_user:
         complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"

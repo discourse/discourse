@@ -107,3 +107,8 @@ vi:
         title: "Trò chơi hóa"
         name: "Tên"
         period: "Giai đoạn"
+    discourse_workflows:
+      gamification_score:
+        username: "Người dùng"
+        date: "Ngày"
+        description: "Mô tả"

@@ -32,6 +32,14 @@ describe AdPlugin::HouseAdSetting do
       expect(AdPlugin::HouseAdSetting.all[:topic_list_top]).to eq("Banner|Donate")
     end
 
+    it "can set the above site header override" do
+      AdPlugin::HouseAd.create(name: "Header", html: "<p>Header</p>")
+      expect { AdPlugin::HouseAdSetting.update(:above_site_header, "Header") }.to change {
+        PluginStoreRow.count
+      }.by(1)
+      expect(AdPlugin::HouseAdSetting.all[:above_site_header]).to eq("Header")
+    end
+
     it "can update an existing override" do
       AdPlugin.pstore_set("ad-setting:topic_list_top", "Banner")
       expect { AdPlugin::HouseAdSetting.update(:topic_list_top, "Banner|Donate") }.to_not change {

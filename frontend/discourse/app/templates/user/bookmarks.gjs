@@ -11,7 +11,7 @@ export default <template>
   {{bodyClass "user-activity-bookmarks-page"}}
 
   <DConditionalLoadingSpinner @condition={{@controller.loading}}>
-    <PluginOutlet @name="above-user-bookmarks" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="above-user-bookmarks" />
 
     {{#if @controller.permissionDenied}}
       <div class="alert alert-info">{{i18n
@@ -19,23 +19,23 @@ export default <template>
         }}</div>
     {{else if @controller.userDoesNotHaveBookmarks}}
       <DEmptyState
-        @title={{i18n "user.no_bookmarks_title"}}
         @body={{@controller.emptyStateBody}}
+        @title={{i18n "user.no_bookmarks_title"}}
       />
     {{else}}
       <div class="inline-form full-width bookmark-search-form">
         <Input
-          @type="text"
-          @value={{@controller.searchTerm}}
+          autocomplete="off"
+          id="bookmark-search"
           placeholder={{i18n "bookmarks.search_placeholder"}}
           @enter={{@controller.search}}
-          id="bookmark-search"
-          autocomplete="off"
+          @type="text"
+          @value={{@controller.searchTerm}}
         />
         <DButton
+          class="btn-primary"
           @action={{@controller.search}}
           @icon="magnifying-glass"
-          class="btn-primary"
         />
       </div>
       {{#if @controller.nothingFound}}
@@ -43,10 +43,10 @@ export default <template>
       {{else}}
         <BookmarkList
           @bulkSelectHelper={{@controller.bulkSelectHelper}}
+          @content={{@controller.model.bookmarks}}
+          @loadingMore={{@controller.loadingMore}}
           @loadMore={{@controller.loadMore}}
           @reload={{@controller.reload}}
-          @loadingMore={{@controller.loadingMore}}
-          @content={{@controller.model.bookmarks}}
         />
       {{/if}}
     {{/if}}

@@ -51,5 +51,13 @@ de:
           topic_upvote: "Wenn ein Benutzer über ein Thema abstimmt"
           topic_unvote: "Wenn ein Benutzer seine Stimme für ein Thema zurücknimmt"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Erfordert die Aktivierung von Themenabstimmungen."
+      nodes:
+        "trigger:topic_received_vote": "Thema hat eine Stimme erhalten"
+      node_descriptions:
+        "trigger:topic_received_vote": "Wird ausgelöst, wenn ein Benutzer in einem Thema abstimmt"
       topic_received_vote:
+        category_ids_description: "Nur für Themen in diesen Kategorien auslösen. Leer lassen, um alle Kategorien abzudecken."
         tag_names: "Schlagwörter"
+        tag_names_description: "Nur für Themen auslösen, die mindestens eines dieser Schlagwörter haben"

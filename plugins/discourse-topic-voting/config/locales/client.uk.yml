@@ -17,6 +17,7 @@ uk:
     topic_voting:
       notification_label:
         vote_released: "Голос повернуто"
+        voting_closed: "Голосування закрито"
       hot_nav_help: "найпопулярніші останні теми, включаючи ті, за які нещодавно голосували"
       voted: "Ви проголосували в цій темі"
       vote_title: "Голосувати"

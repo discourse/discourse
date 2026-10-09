@@ -41,7 +41,8 @@ class TagSettingsUpdater
 
   def update_basic_attributes(params)
     @tag.name = DiscourseTagging.clean_tag(params[:name]) if params[:name].present?
-    @tag.slug = params[:slug] if params[:slug].present?
+    @tag.locale = params[:locale].presence if params.key?(:locale)
+    @tag.slug = params[:slug] if params.key?(:slug)
     @tag.description = params[:description] if params.key?(:description)
   end
 
@@ -56,7 +57,11 @@ class TagSettingsUpdater
   def remove_synonyms(removed_ids)
     return if removed_ids.blank?
 
-    synonym_tag_ids = editable_synonym_ids(Tag.where(id: removed_ids, target_tag_id: @tag.id))
+    synonym_tag_ids =
+      DiscourseTagging.editable_synonym_ids(
+        Tag.where(id: removed_ids, target_tag_id: @tag.id),
+        @actor.guardian,
+      )
     Tag.where(id: synonym_tag_ids, target_tag_id: @tag.id).update_all(target_tag_id: nil)
   end
 
@@ -64,16 +69,13 @@ class TagSettingsUpdater
     return if new_synonyms.blank?
 
     synonym_tag_ids = new_synonyms.filter_map { |t| t[:id]&.to_i }
-    synonym_tag_ids = editable_synonym_ids(Tag.where(id: synonym_tag_ids))
+    synonym_tag_ids =
+      DiscourseTagging.editable_synonym_ids(Tag.where(id: synonym_tag_ids), @actor.guardian)
     DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:) if synonym_tag_ids.present?
   end
 
-  def editable_synonym_ids(synonyms)
-    synonyms.filter_map { |synonym| synonym.id if @actor.guardian.can_edit_tag?(synonym) }
-  end
-
   def update_localizations(localizations)
-    return if localizations.blank?
+    return if localizations.nil?
 
     submitted_locales = []
 

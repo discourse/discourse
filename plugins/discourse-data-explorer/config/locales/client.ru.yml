@@ -25,8 +25,8 @@ ru:
       admin_dashboard_card:
         no_results: "Нет результатов"
     explorer:
-      default_query: "По умолчанию"
       default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
+      view_query: "Вид"
       queries: "Запросы"
       query_created: "Запрос создан!"
       mode:
@@ -101,6 +101,7 @@ ru:
         other: "Показаны %{count} лучшего результата."
       query_name: "Запрос"
       query_groups: "Группы"
+      query_tags: "Теги"
       link: "Ссылка для"
       report_name: "Отчёт"
       query_description: "Описание"
@@ -135,8 +136,6 @@ ru:
         "action:sql": "Выполните SQL-запрос только для чтения к базе данных."
       sql:
         operation_description: "Как выполнить запрос"
-        queries: "Запросы"
-        raw: "Необработанный SQL"
         query_id: "Запрос"
         add_param: "Добавить параметр"
         param_value: "Значение"

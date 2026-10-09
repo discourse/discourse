@@ -25,6 +25,21 @@ module("Unit | Model | post", function (hooks) {
     assert.false(post.new_user, "post is no longer from a new user");
   });
 
+  test("user includes user_locale from the post payload", function (assert) {
+    const post = this.store.createRecord("post", {
+      id: 1,
+      user_id: 2,
+      username: "author",
+      user_locale: "ja",
+    });
+
+    assert.strictEqual(
+      post.user.locale,
+      "ja",
+      "maps user_locale to user.locale"
+    );
+  });
+
   test("firstPost", function (assert) {
     const post = this.store.createRecord("post", { post_number: 1 });
     assert.true(post.firstPost, "is the first post");

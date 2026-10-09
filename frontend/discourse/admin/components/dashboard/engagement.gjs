@@ -7,22 +7,18 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DashboardSection
-    @title={{i18n "admin.dashboard.sections.engagement.title"}}
-    @startDate={{@startDate}}
-    @endDate={{@endDate}}
     ...attributes
+    @endDate={{@endDate}}
+    @startDate={{@startDate}}
+    @title={{i18n "admin.dashboard.sections.engagement.title"}}
   >
     {{#if @fetchError}}
       <div class="db-section__error" role="alert">
         {{i18n "admin.dashboard.sections.engagement.fetch_error"}}
       </div>
     {{else}}
-      {{#if @engagement.headline}}
-        <EngagementHeadline
-          @headline={{@engagement.headline}}
-          @kpis={{@engagement.kpis}}
-          @period={{@period}}
-        />
+      {{#if @engagement}}
+        <EngagementHeadline @kpis={{@engagement.kpis}} />
       {{/if}}
 
       <div class="db-section__row-group">
@@ -34,9 +30,9 @@ export default <template>
           </div>
           <div class="db-section__row-block">
             <WhosPosting
+              @endDate={{@endDate}}
               @posters={{@engagement.posters}}
               @startDate={{@startDate}}
-              @endDate={{@endDate}}
             />
           </div>
         </div>
@@ -45,8 +41,8 @@ export default <template>
             <div class="db-section__row-block">
               <ActivityByCategory
                 @activity={{@engagement.activity_by_category}}
-                @startDate={{@startDate}}
                 @endDate={{@endDate}}
+                @startDate={{@startDate}}
               />
             </div>
           </div>

@@ -14,6 +14,21 @@ RSpec.describe "Admin AI agent configuration" do
     sign_in(admin)
   end
 
+  it "lets admins require uploaded document search on every reply" do
+    agent = Fabricate(:ai_agent)
+    agent_editor_page.visit_edit(agent)
+    agent_editor_page.select_tool("SearchUploadedDocuments")
+    agent_editor_page.select_tool("SearchUploadedDocuments", forced: true)
+    form.field("forced_tool_count").select(-1)
+    form.submit
+
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    agent_editor_page.visit_edit(agent)
+
+    expect(agent_editor_page).to have_forced_tool("Search Uploaded Documents")
+    expect(page).to have_select("Forced tool strategy", selected: "Apply to all replies")
+  end
+
   it "allows creation of a agent" do
     visit "/admin/plugins/discourse-ai/ai-agents"
 
@@ -66,10 +81,41 @@ RSpec.describe "Admin AI agent configuration" do
     expect(page).not_to have_selector("input[name='toolOptions.Read.got_deleted']", visible: :all)
   end
 
-  it "will not allow deletion or editing of system agents" do
+  it "saves and reloads selected subagents" do
+    child = Fabricate(:ai_agent, name: "Individual fact checker", enabled: true)
+    parent = Fabricate(:ai_agent, name: "Lead fact checker")
+
+    agent_editor_page.visit_edit(parent)
+    expect(agent_editor_page).to have_no_subagent_option(parent)
+    agent_editor_page.select_subagent(child)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+    expect(agent_editor_page).to have_floating_actions
+
+    agent_editor_page.form.submit
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    expect(parent.reload.subagent_ids).to eq([child.id])
+
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_selected_subagent(child)
+    expect(agent_editor_page).to have_subagent_summary(1)
+
+    child.update!(enabled: false)
+    agent_editor_page.visit_edit(parent)
+
+    expect(agent_editor_page).to have_disabled_subagent(child)
+
+    agent_editor_page.clear_subagents.form.submit
+    expect(parent.reload.subagent_ids).to eq([])
+  end
+
+  it "prevents deletion or editing of system agents" do
     visit "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}/edit"
     expect(page).not_to have_selector(".ai-agent-editor__delete")
     expect(form.field("system_prompt")).to be_disabled
+    expect(agent_editor_page).to have_subagent_selector_disabled
   end
 
   it "starts an unsaved custom agent by duplicating a system agent" do
@@ -145,6 +191,7 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.visit_edit(source_agent).duplicate
 
     expect(agent_editor_page).to have_no_agent_user
+    form.field("enabled").toggle
 
     form.submit
 
@@ -184,7 +231,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(agent_editor_page).to have_floating_actions
   end
 
-  it "will enable agent right away when you click on enable but does not save side effects" do
+  it "enables the agent immediately without saving other edits" do
     agent = Fabricate(:ai_agent, enabled: false)
 
     visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"

@@ -158,6 +158,23 @@ CREATE FUNCTION discourse_functions.raise_topic_timers_topic_id_readonly() RETUR
 $$;
 
 
+--
+-- Name: skip_piggyback_browser_pageview_events(); Type: FUNCTION; Schema: discourse_functions; Owner: -
+--
+
+CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF NEW.source = 1 THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -307,7 +324,9 @@ CREATE TABLE public.admin_dashboard_reports (
     source character varying NOT NULL,
     identifier character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    rows integer DEFAULT 1 NOT NULL,
+    cols integer DEFAULT 1 NOT NULL
 );
 
 
@@ -471,7 +490,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
-    thinking_effort character varying
+    thinking_effort character varying,
+    subagent_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -519,7 +539,8 @@ CREATE TABLE public.ai_api_audit_logs (
     llm_id bigint,
     response_status integer,
     request_attempts jsonb,
-    estimated_cost numeric(20,10)
+    estimated_cost numeric(20,10),
+    time_to_first_token_msecs integer
 );
 
 
@@ -987,7 +1008,8 @@ CREATE TABLE public.ai_summaries (
     summary_type integer DEFAULT 0 NOT NULL,
     origin integer,
     highest_target_number integer DEFAULT 1 NOT NULL,
-    locale character varying(20)
+    locale character varying(20),
+    summarized_cooked text
 );
 
 
@@ -1321,6 +1343,153 @@ CREATE TABLE public.ar_internal_metadata (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: ask_ai_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_logs (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    query text NOT NULL,
+    keyword_query text,
+    semantic_query text,
+    query_locale character varying,
+    candidate_post_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    source_post_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    answer_title text,
+    answer text,
+    suggested_follow_up text,
+    ask_outcome integer,
+    failure_stage integer,
+    asked_at timestamp(6) without time zone NOT NULL,
+    time_to_first_answer_ms integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ask_ai_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_logs_id_seq OWNED BY public.ask_ai_logs.id;
+
+
+--
+-- Name: ask_ai_report_subject_asks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subject_asks (
+    id bigint NOT NULL,
+    ask_ai_report_subject_id bigint NOT NULL,
+    ask_ai_log_id bigint NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subject_asks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subject_asks_id_seq OWNED BY public.ask_ai_report_subject_asks.id;
+
+
+--
+-- Name: ask_ai_report_subjects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subjects (
+    id bigint NOT NULL,
+    ask_ai_report_id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text NOT NULL,
+    "position" integer NOT NULL,
+    ask_count integer NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subjects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subjects_id_seq OWNED BY public.ask_ai_report_subjects.id;
+
+
+--
+-- Name: ask_ai_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_reports (
+    id bigint NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    requested_by_id bigint NOT NULL,
+    report_status integer DEFAULT 0 NOT NULL,
+    send_to_groups boolean DEFAULT false NOT NULL,
+    total_ask_count integer NOT NULL,
+    reported_ask_count integer NOT NULL,
+    topic_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    selected_ask_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    summary text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_reports_id_seq OWNED BY public.ask_ai_reports.id;
 
 
 --
@@ -1955,7 +2124,9 @@ CREATE TABLE public.browser_pageview_country_daily_rollups (
     date date NOT NULL,
     country_code character varying(2),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2010,6 +2181,40 @@ ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY pub
 
 
 --
+-- Name: browser_pageview_entry_url_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_entry_url_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    entry_url character varying(2000) NOT NULL,
+    count bigint NOT NULL,
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_entry_url_daily_rollups_id_seq OWNED BY public.browser_pageview_entry_url_daily_rollups.id;
+
+
+--
 -- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2027,6 +2232,27 @@ CREATE TABLE public.browser_pageview_event_scores (
     datacenter_asn_score smallint DEFAULT 0 NOT NULL,
     single_request_no_referrer_score smallint DEFAULT 0 NOT NULL,
     stale_browser_score smallint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_event_scores_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores_backup (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint NOT NULL,
+    known_asn_score smallint NOT NULL,
+    velocity_score smallint NOT NULL,
+    churn_score smallint NOT NULL,
+    rapid_nav_score smallint NOT NULL,
+    referrer_score smallint NOT NULL,
+    engagement_score smallint NOT NULL,
+    ip_rotation_score smallint NOT NULL,
+    datacenter_asn_score smallint NOT NULL,
+    single_request_no_referrer_score smallint NOT NULL,
+    stale_browser_score smallint NOT NULL
 );
 
 
@@ -2068,7 +2294,40 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 2 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint,
+    language character varying(255),
+    normalized_language character varying
+);
+
+
+--
+-- Name: browser_pageview_events_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_events_backup (
+    id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    ip_address inet NOT NULL,
+    referrer character varying(2000),
+    user_agent character varying(1000) NOT NULL,
+    session_id character varying(32) NOT NULL,
+    topic_id integer,
+    user_id integer,
+    country_code character varying(2),
+    created_at timestamp without time zone NOT NULL,
+    asn integer,
+    score integer,
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint,
+    source smallint NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint,
+    language character varying(255),
+    normalized_language character varying
 );
 
 
@@ -2100,7 +2359,9 @@ CREATE TABLE public.browser_pageview_referrer_daily_rollups (
     date date NOT NULL,
     normalized_referrer character varying(2000),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint NOT NULL,
+    likely_crawler_count bigint DEFAULT 0 NOT NULL,
+    likely_crawler_logged_in_count bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2133,7 +2394,10 @@ CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
     logged_in boolean NOT NULL,
     sessions bigint NOT NULL,
     bounced bigint NOT NULL,
-    engaged_seconds_total bigint NOT NULL
+    engaged_seconds_total bigint NOT NULL,
+    likely_crawler_sessions bigint DEFAULT 0 NOT NULL,
+    likely_crawler_bounced bigint DEFAULT 0 NOT NULL,
+    likely_crawler_engaged_seconds_total bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2276,7 +2540,8 @@ CREATE TABLE public.category_activity_daily_rollups (
     category_id integer NOT NULL,
     topics integer DEFAULT 0 NOT NULL,
     posts integer DEFAULT 0 NOT NULL,
-    page_views bigint DEFAULT 0 NOT NULL
+    page_views bigint DEFAULT 0 NOT NULL,
+    likely_crawler_page_views bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -3011,6 +3276,40 @@ ALTER SEQUENCE public.chat_message_custom_prompts_id_seq OWNED BY public.chat_me
 
 
 --
+-- Name: chat_message_hotlinked_media; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chat_message_hotlinked_media (
+    id bigint NOT NULL,
+    chat_message_id bigint NOT NULL,
+    url character varying NOT NULL,
+    status character varying NOT NULL,
+    upload_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chat_message_hotlinked_media_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chat_message_hotlinked_media_id_seq OWNED BY public.chat_message_hotlinked_media.id;
+
+
+--
 -- Name: chat_message_interactions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3664,6 +3963,68 @@ ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_expl
 
 
 --
+-- Name: data_explorer_query_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_tags (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    query_tag_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_tags_id_seq OWNED BY public.data_explorer_query_tags.id;
+
+
+--
+-- Name: data_explorer_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_tags (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_tags.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4148,6 +4509,207 @@ ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public
 
 
 --
+-- Name: discourse_kanban_board_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_board_histories (
+    id bigint NOT NULL,
+    acting_user_id bigint NOT NULL,
+    action integer NOT NULL,
+    board_id bigint NOT NULL,
+    column_id bigint,
+    details jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_kanban_board_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_board_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_board_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_board_histories_id_seq OWNED BY public.discourse_kanban_board_histories.id;
+
+
+--
+-- Name: discourse_kanban_boards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_boards (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    allow_read_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    allow_write_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    require_confirmation boolean DEFAULT true NOT NULL,
+    show_tags boolean DEFAULT false NOT NULL,
+    card_style integer DEFAULT 0 NOT NULL,
+    show_topic_thumbnail boolean DEFAULT false NOT NULL,
+    created_by_id bigint,
+    updated_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    category_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    archived boolean DEFAULT false NOT NULL,
+    archived_at timestamp(6) without time zone,
+    archived_by_id bigint,
+    original_slug character varying
+);
+
+
+--
+-- Name: discourse_kanban_boards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_boards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_boards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_boards_id_seq OWNED BY public.discourse_kanban_boards.id;
+
+
+--
+-- Name: discourse_kanban_card_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_card_histories (
+    id bigint NOT NULL,
+    acting_user_id bigint NOT NULL,
+    action integer NOT NULL,
+    board_id bigint NOT NULL,
+    card_id bigint NOT NULL,
+    details jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_kanban_card_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_card_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_card_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_card_histories_id_seq OWNED BY public.discourse_kanban_card_histories.id;
+
+
+--
+-- Name: discourse_kanban_cards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_cards (
+    id bigint NOT NULL,
+    board_id bigint NOT NULL,
+    column_id bigint,
+    topic_id bigint,
+    card_type integer DEFAULT 0 NOT NULL,
+    title character varying,
+    notes text,
+    due_at timestamp(6) without time zone,
+    "position" bigint DEFAULT 0 NOT NULL,
+    created_by_id bigint,
+    updated_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    assigned_to_id bigint,
+    assigned_to_type character varying,
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    column_changed_at timestamp(6) without time zone NOT NULL,
+    inline_onebox_data jsonb
+);
+
+
+--
+-- Name: discourse_kanban_cards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_cards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_cards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_cards_id_seq OWNED BY public.discourse_kanban_cards.id;
+
+
+--
+-- Name: discourse_kanban_columns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_columns (
+    id bigint NOT NULL,
+    board_id bigint NOT NULL,
+    title character varying NOT NULL,
+    icon character varying,
+    "position" integer DEFAULT 0 NOT NULL,
+    move_to_category_id bigint,
+    move_to_assigned character varying,
+    move_to_status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    tag_id integer,
+    default_sort integer DEFAULT 0 NOT NULL,
+    color character varying
+);
+
+
+--
+-- Name: discourse_kanban_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_columns_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_columns_id_seq OWNED BY public.discourse_kanban_columns.id;
+
+
+--
 -- Name: discourse_post_event_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4196,6 +4758,39 @@ CREATE SEQUENCE public.discourse_post_event_events_id_seq
 --
 
 ALTER SEQUENCE public.discourse_post_event_events_id_seq OWNED BY public.discourse_post_event_events.id;
+
+
+--
+-- Name: discourse_post_event_hosts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_post_event_hosts (
+    id bigint NOT NULL,
+    post_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_post_event_hosts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_post_event_hosts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_post_event_hosts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_post_event_hosts_id_seq OWNED BY public.discourse_post_event_hosts.id;
 
 
 --
@@ -4775,7 +5370,8 @@ CREATE TABLE public.discourse_workflows_executions (
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    job_id character varying
 );
 
 
@@ -5287,7 +5883,8 @@ CREATE TABLE public.email_login_codes (
     expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    purpose integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6840,7 +7437,8 @@ CREATE TABLE public.llm_models (
     max_output_tokens integer,
     cache_write_cost double precision DEFAULT 0.0,
     allowed_attachment_types text[] DEFAULT '{}'::text[] NOT NULL,
-    ai_secret_id bigint
+    ai_secret_id bigint,
+    vision_llm_model_id bigint
 );
 
 
@@ -6937,6 +7535,348 @@ CREATE SEQUENCE public.llm_quotas_id_seq
 --
 
 ALTER SEQUENCE public.llm_quotas_id_seq OWNED BY public.llm_quotas.id;
+
+
+--
+-- Name: mcp_audit_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_audit_logs (
+    id bigint NOT NULL,
+    occurred_at timestamp(6) without time zone NOT NULL,
+    bucket_at timestamp(6) without time zone,
+    occurrences integer DEFAULT 1 NOT NULL,
+    user_id integer,
+    mcp_oauth_client_id bigint,
+    request_id character varying,
+    method character varying,
+    tool character varying,
+    outcome character varying NOT NULL,
+    http_status integer,
+    duration_ms integer,
+    target jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_audit_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_audit_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_audit_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_audit_logs_id_seq OWNED BY public.mcp_audit_logs.id;
+
+
+--
+-- Name: mcp_group_scopes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_group_scopes (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    scope character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_group_scopes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_group_scopes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_group_scopes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_group_scopes_id_seq OWNED BY public.mcp_group_scopes.id;
+
+
+--
+-- Name: mcp_oauth_access_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_access_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    mcp_oauth_client_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    resource character varying NOT NULL,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    last_used_at timestamp(6) without time zone,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_access_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_access_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_access_tokens_id_seq OWNED BY public.mcp_oauth_access_tokens.id;
+
+
+--
+-- Name: mcp_oauth_authorization_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorization_codes (
+    id bigint NOT NULL,
+    code_hash character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    redirect_uri character varying NOT NULL,
+    resource character varying NOT NULL,
+    code_challenge character varying NOT NULL,
+    code_challenge_method character varying DEFAULT 'S256'::character varying NOT NULL,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorization_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorization_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorization_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorization_codes_id_seq OWNED BY public.mcp_oauth_authorization_codes.id;
+
+
+--
+-- Name: mcp_oauth_authorization_scopes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorization_scopes (
+    id bigint NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorization_scopes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorization_scopes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorization_scopes_id_seq OWNED BY public.mcp_oauth_authorization_scopes.id;
+
+
+--
+-- Name: mcp_oauth_authorizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorizations (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    mcp_oauth_client_id bigint NOT NULL,
+    resource character varying NOT NULL,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    client_metadata_hash character varying,
+    grant_version integer DEFAULT 1 NOT NULL,
+    consented_at timestamp(6) without time zone NOT NULL,
+    revoked_at timestamp(6) without time zone,
+    revoked_reason character varying,
+    revoked_by_user_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorizations_id_seq OWNED BY public.mcp_oauth_authorizations.id;
+
+
+--
+-- Name: mcp_oauth_clients; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_clients (
+    id bigint NOT NULL,
+    client_id character varying NOT NULL,
+    name character varying NOT NULL,
+    registration_type character varying NOT NULL,
+    trust_state character varying DEFAULT 'approved'::character varying NOT NULL,
+    metadata_uri character varying,
+    metadata_hash character varying,
+    metadata_expires_at timestamp(6) without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    redirect_uris character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    last_seen_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    admin_managed boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_clients_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_clients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_clients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_clients_id_seq OWNED BY public.mcp_oauth_clients.id;
+
+
+--
+-- Name: mcp_oauth_refresh_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_refresh_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    family_id character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    parent_id bigint,
+    replacement_id bigint,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_refresh_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_refresh_tokens_id_seq OWNED BY public.mcp_oauth_refresh_tokens.id;
+
+
+--
+-- Name: mcp_primitives; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_primitives (
+    id bigint NOT NULL,
+    kind character varying NOT NULL,
+    identifier character varying NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    emergency_blocked boolean DEFAULT false NOT NULL,
+    consent_required_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_primitives_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_primitives_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_primitives_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_primitives_id_seq OWNED BY public.mcp_primitives.id;
 
 
 --
@@ -8322,6 +9262,50 @@ ALTER SEQUENCE public.rag_document_fragments_id_seq OWNED BY public.rag_document
 
 
 --
+-- Name: rag_document_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rag_document_sources (
+    id bigint NOT NULL,
+    target_type character varying(800) NOT NULL,
+    target_id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    url_digest character varying(64) NOT NULL,
+    refresh_interval_hours integer DEFAULT 24 NOT NULL,
+    upload_id integer,
+    etag character varying,
+    last_modified character varying,
+    last_fetched_at timestamp(6) without time zone,
+    next_refresh_at timestamp(6) without time zone,
+    last_error_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    pending_upload_id integer,
+    managed boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rag_document_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rag_document_sources_id_seq OWNED BY public.rag_document_sources.id;
+
+
+--
 -- Name: redelivering_webhook_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8797,7 +9781,10 @@ CREATE TABLE public.search_logs (
     search_type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     search_result_type integer,
-    user_agent character varying(2000)
+    user_agent character varying(2000),
+    crawler boolean DEFAULT false NOT NULL,
+    likely_crawler boolean DEFAULT false NOT NULL,
+    session_id character varying(32)
 );
 
 
@@ -10104,6 +11091,37 @@ ALTER SEQUENCE public.topic_custom_fields_id_seq OWNED BY public.topic_custom_fi
 
 
 --
+-- Name: topic_embed_aliases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.topic_embed_aliases (
+    id bigint NOT NULL,
+    topic_embed_id bigint NOT NULL,
+    url_key text NOT NULL,
+    url_hash character varying(64) NOT NULL
+);
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.topic_embed_aliases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.topic_embed_aliases_id_seq OWNED BY public.topic_embed_aliases.id;
+
+
+--
 -- Name: topic_embeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10117,7 +11135,8 @@ CREATE TABLE public.topic_embeds (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    embed_content_cache text
+    embed_content_cache text,
+    content_truncated boolean
 );
 
 
@@ -11095,7 +12114,8 @@ CREATE TABLE public.user_associated_accounts (
     credentials jsonb DEFAULT '{}'::jsonb NOT NULL,
     extra jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    avatar_upload_id integer
 );
 
 
@@ -11240,7 +12260,8 @@ CREATE TABLE public.user_avatars (
     gravatar_upload_id integer,
     last_gravatar_download_attempt timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    selected_user_associated_account_id bigint
 );
 
 
@@ -11777,7 +12798,6 @@ CREATE TABLE public.user_options (
     sidebar_show_count_of_new_items boolean DEFAULT false NOT NULL,
     watched_precedence_over_muted boolean DEFAULT false NOT NULL,
     chat_separate_sidebar_mode integer DEFAULT 0 NOT NULL,
-    topics_unread_when_closed boolean DEFAULT true NOT NULL,
     show_thread_title_prompts boolean DEFAULT true NOT NULL,
     auto_image_caption boolean DEFAULT false NOT NULL,
     enable_smart_lists boolean DEFAULT true NOT NULL,
@@ -11803,7 +12823,16 @@ CREATE TABLE public.user_options (
     push_notification_level integer DEFAULT 1 NOT NULL,
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    send_shortcut integer DEFAULT 0 NOT NULL
+    send_shortcut integer DEFAULT 0 NOT NULL,
+    ai_ask_ai_default boolean DEFAULT true NOT NULL,
+    chat_channel_list_filter integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
+    chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
+    chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
+    event_reminder_preference integer DEFAULT 0 NOT NULL,
+    hidden_composer_toolbar_buttons character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -12274,6 +13303,230 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: voice_co_presences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_co_presences (
+    id bigint NOT NULL,
+    user_id_1 integer NOT NULL,
+    user_id_2 integer NOT NULL,
+    date date NOT NULL,
+    total_seconds integer DEFAULT 0 NOT NULL,
+    session_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT chk_voice_co_presences_user_order CHECK ((user_id_1 < user_id_2))
+);
+
+
+--
+-- Name: voice_co_presences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_co_presences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_co_presences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_co_presences_id_seq OWNED BY public.voice_co_presences.id;
+
+
+--
+-- Name: voice_invites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_invites (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    invited_by_id bigint NOT NULL,
+    source integer DEFAULT 0 NOT NULL,
+    redeemed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_invites_id_seq OWNED BY public.voice_invites.id;
+
+
+--
+-- Name: voice_recordings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_recordings (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    started_by_id bigint NOT NULL,
+    egress_id character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    filepath character varying NOT NULL,
+    filename character varying,
+    location character varying,
+    duration_ms bigint,
+    size_bytes bigint,
+    started_at timestamp(6) without time zone NOT NULL,
+    ended_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_recordings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_recordings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_recordings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_recordings_id_seq OWNED BY public.voice_recordings.id;
+
+
+--
+-- Name: voice_room_memberships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_room_memberships (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    role integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_room_memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_room_memberships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_room_memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_room_memberships_id_seq OWNED BY public.voice_room_memberships.id;
+
+
+--
+-- Name: voice_rooms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_rooms (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description text,
+    public boolean DEFAULT false NOT NULL,
+    max_participants integer,
+    creator_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    cooked_description text,
+    room_type integer DEFAULT 0 NOT NULL,
+    video_enabled boolean DEFAULT true NOT NULL,
+    chat_channel_id bigint,
+    chat_idle_minutes integer DEFAULT 15 NOT NULL,
+    livekit_enabled boolean DEFAULT false NOT NULL,
+    max_quality_profile integer,
+    ephemeral boolean DEFAULT false NOT NULL,
+    last_occupied_at timestamp(6) without time zone
+);
+
+
+--
+-- Name: voice_rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_rooms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_rooms_id_seq OWNED BY public.voice_rooms.id;
+
+
+--
+-- Name: voice_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_sessions (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    joined_at timestamp(6) without time zone NOT NULL,
+    left_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_sessions_id_seq OWNED BY public.voice_sessions.id;
+
+
+--
 -- Name: watched_word_groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12471,7 +13724,6 @@ ALTER SEQUENCE public.web_hook_events_daily_aggregates_id_seq OWNED BY public.we
 --
 
 CREATE SEQUENCE public.web_hook_events_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -12722,6 +13974,34 @@ ALTER TABLE ONLY public.application_requests ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: ask_ai_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_logs ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_logs_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_report_subject_asks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subject_asks_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_report_subjects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subjects_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_reports_id_seq'::regclass);
+
+
+--
 -- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12796,6 +14076,13 @@ ALTER TABLE ONLY public.browser_pageview_country_daily_rollups ALTER COLUMN id S
 --
 
 ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_crawler_daily_rollups_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_entry_url_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_entry_url_daily_rollups_id_seq'::regclass);
 
 
 --
@@ -12995,6 +14282,13 @@ ALTER TABLE ONLY public.chat_message_custom_prompts ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: chat_message_hotlinked_media id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media ALTER COLUMN id SET DEFAULT nextval('public.chat_message_hotlinked_media_id_seq'::regclass);
+
+
+--
 -- Name: chat_message_interactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13128,6 +14422,20 @@ ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: data_explorer_query_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_tags_id_seq'::regclass);
+
+
+--
+-- Name: data_explorer_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_tags_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13226,10 +14534,52 @@ ALTER TABLE ONLY public.discourse_calendar_post_event_dates ALTER COLUMN id SET 
 
 
 --
+-- Name: discourse_kanban_board_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_board_histories ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_board_histories_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_boards id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_boards ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_boards_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_card_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_card_histories ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_card_histories_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_cards id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_cards_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_columns id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_columns_id_seq'::regclass);
+
+
+--
 -- Name: discourse_post_event_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.discourse_post_event_events ALTER COLUMN id SET DEFAULT nextval('public.discourse_post_event_events_id_seq'::regclass);
+
+
+--
+-- Name: discourse_post_event_hosts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_post_event_hosts ALTER COLUMN id SET DEFAULT nextval('public.discourse_post_event_hosts_id_seq'::regclass);
 
 
 --
@@ -13751,6 +15101,69 @@ ALTER TABLE ONLY public.llm_quotas ALTER COLUMN id SET DEFAULT nextval('public.l
 
 
 --
+-- Name: mcp_audit_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_audit_logs ALTER COLUMN id SET DEFAULT nextval('public.mcp_audit_logs_id_seq'::regclass);
+
+
+--
+-- Name: mcp_group_scopes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_group_scopes ALTER COLUMN id SET DEFAULT nextval('public.mcp_group_scopes_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_access_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_access_tokens_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorization_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_codes ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorization_codes_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_scopes ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorization_scopes_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorizations ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorizations_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_clients id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_clients ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_clients_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_refresh_tokens ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_refresh_tokens_id_seq'::regclass);
+
+
+--
+-- Name: mcp_primitives id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_primitives ALTER COLUMN id SET DEFAULT nextval('public.mcp_primitives_id_seq'::regclass);
+
+
+--
 -- Name: message_bus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14007,6 +15420,13 @@ ALTER TABLE ONLY public.quoted_posts ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.rag_document_fragments ALTER COLUMN id SET DEFAULT nextval('public.rag_document_fragments_id_seq'::regclass);
+
+
+--
+-- Name: rag_document_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources ALTER COLUMN id SET DEFAULT nextval('public.rag_document_sources_id_seq'::regclass);
 
 
 --
@@ -14350,6 +15770,13 @@ ALTER TABLE ONLY public.topic_allowed_users ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.topic_custom_fields ALTER COLUMN id SET DEFAULT nextval('public.topic_custom_fields_id_seq'::regclass);
+
+
+--
+-- Name: topic_embed_aliases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases ALTER COLUMN id SET DEFAULT nextval('public.topic_embed_aliases_id_seq'::regclass);
 
 
 --
@@ -14731,6 +16158,48 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Name: voice_co_presences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_co_presences ALTER COLUMN id SET DEFAULT nextval('public.voice_co_presences_id_seq'::regclass);
+
+
+--
+-- Name: voice_invites id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_invites ALTER COLUMN id SET DEFAULT nextval('public.voice_invites_id_seq'::regclass);
+
+
+--
+-- Name: voice_recordings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_recordings ALTER COLUMN id SET DEFAULT nextval('public.voice_recordings_id_seq'::regclass);
+
+
+--
+-- Name: voice_room_memberships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships ALTER COLUMN id SET DEFAULT nextval('public.voice_room_memberships_id_seq'::regclass);
+
+
+--
+-- Name: voice_rooms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_rooms ALTER COLUMN id SET DEFAULT nextval('public.voice_rooms_id_seq'::regclass);
+
+
+--
+-- Name: voice_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_sessions ALTER COLUMN id SET DEFAULT nextval('public.voice_sessions_id_seq'::regclass);
+
+
+--
 -- Name: watched_word_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15012,6 +16481,38 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: ask_ai_logs ask_ai_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_logs
+    ADD CONSTRAINT ask_ai_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_report_subject_asks ask_ai_report_subject_asks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT ask_ai_report_subject_asks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_report_subjects ask_ai_report_subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects
+    ADD CONSTRAINT ask_ai_report_subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_reports ask_ai_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports
+    ADD CONSTRAINT ask_ai_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15100,11 +16601,35 @@ ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups
 
 
 --
+-- Name: browser_pageview_entry_url_daily_rollups browser_pageview_entry_url_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
+    ADD CONSTRAINT browser_pageview_entry_url_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_event_scores_backup browser_pageview_event_scores_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores_backup
+    ADD CONSTRAINT browser_pageview_event_scores_backup_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_event_scores
     ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_events_backup browser_pageview_events_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_events_backup
+    ADD CONSTRAINT browser_pageview_events_backup_pkey PRIMARY KEY (id);
 
 
 --
@@ -15332,6 +16857,14 @@ ALTER TABLE ONLY public.chat_message_custom_prompts
 
 
 --
+-- Name: chat_message_hotlinked_media chat_message_hotlinked_media_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media
+    ADD CONSTRAINT chat_message_hotlinked_media_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: chat_message_interactions chat_message_interactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15484,6 +17017,22 @@ ALTER TABLE ONLY public.data_explorer_query_stats
 
 
 --
+-- Name: data_explorer_query_tags data_explorer_query_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags
+    ADD CONSTRAINT data_explorer_query_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_tags data_explorer_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags
+    ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15604,11 +17153,59 @@ ALTER TABLE ONLY public.discourse_calendar_post_event_dates
 
 
 --
+-- Name: discourse_kanban_board_histories discourse_kanban_board_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_board_histories
+    ADD CONSTRAINT discourse_kanban_board_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_boards discourse_kanban_boards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_boards
+    ADD CONSTRAINT discourse_kanban_boards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_card_histories discourse_kanban_card_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_card_histories
+    ADD CONSTRAINT discourse_kanban_card_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_cards discourse_kanban_cards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT discourse_kanban_cards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_columns discourse_kanban_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT discourse_kanban_columns_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_post_event_events discourse_post_event_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.discourse_post_event_events
     ADD CONSTRAINT discourse_post_event_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_post_event_hosts discourse_post_event_hosts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_post_event_hosts
+    ADD CONSTRAINT discourse_post_event_hosts_pkey PRIMARY KEY (id);
 
 
 --
@@ -16212,6 +17809,78 @@ ALTER TABLE ONLY public.llm_quotas
 
 
 --
+-- Name: mcp_audit_logs mcp_audit_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_audit_logs
+    ADD CONSTRAINT mcp_audit_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_group_scopes mcp_group_scopes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_group_scopes
+    ADD CONSTRAINT mcp_group_scopes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_access_tokens mcp_oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_access_tokens
+    ADD CONSTRAINT mcp_oauth_access_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorization_codes mcp_oauth_authorization_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_codes
+    ADD CONSTRAINT mcp_oauth_authorization_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes mcp_oauth_authorization_scopes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_scopes
+    ADD CONSTRAINT mcp_oauth_authorization_scopes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorizations mcp_oauth_authorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorizations
+    ADD CONSTRAINT mcp_oauth_authorizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_clients mcp_oauth_clients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_clients
+    ADD CONSTRAINT mcp_oauth_clients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens mcp_oauth_refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_refresh_tokens
+    ADD CONSTRAINT mcp_oauth_refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_primitives mcp_primitives_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_primitives
+    ADD CONSTRAINT mcp_primitives_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: message_bus message_bus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16513,6 +18182,14 @@ ALTER TABLE ONLY public.quoted_posts
 
 ALTER TABLE ONLY public.rag_document_fragments
     ADD CONSTRAINT rag_document_fragments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rag_document_sources rag_document_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources
+    ADD CONSTRAINT rag_document_sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -16913,6 +18590,14 @@ ALTER TABLE ONLY public.topic_allowed_users
 
 ALTER TABLE ONLY public.topic_custom_fields
     ADD CONSTRAINT topic_custom_fields_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: topic_embed_aliases topic_embed_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases
+    ADD CONSTRAINT topic_embed_aliases_pkey PRIMARY KEY (id);
 
 
 --
@@ -17380,6 +19065,54 @@ ALTER TABLE ONLY public.user_search_data
 
 
 --
+-- Name: voice_co_presences voice_co_presences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_co_presences
+    ADD CONSTRAINT voice_co_presences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_invites voice_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_invites
+    ADD CONSTRAINT voice_invites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_recordings voice_recordings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_recordings
+    ADD CONSTRAINT voice_recordings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_room_memberships voice_room_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships
+    ADD CONSTRAINT voice_room_memberships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_rooms voice_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_rooms
+    ADD CONSTRAINT voice_rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_sessions voice_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_sessions
+    ADD CONSTRAINT voice_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: watched_word_groups watched_word_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17520,6 +19253,41 @@ CREATE INDEX idx_access_control_lists_allowed_user_ids ON public.access_control_
 
 
 --
+-- Name: idx_ai_api_audit_logs_failed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_failed_id ON public.ai_api_audit_logs USING btree (id) WHERE (((response_status IS NOT NULL) AND ((response_status < 200) OR (response_status > 299))) OR ((response_status IS NULL) AND (COALESCE(response_tokens, 0) <= 0)));
+
+
+--
+-- Name: idx_ai_api_audit_logs_feature_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs USING btree (feature_name, id) WHERE (feature_name IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_payload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_payload_id ON public.ai_api_audit_logs USING btree (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL));
+
+
+--
+-- Name: idx_ai_api_audit_logs_retried_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_retried_id ON public.ai_api_audit_logs USING btree (id) WHERE (request_attempts IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_user_id_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_user_id_id ON public.ai_api_audit_logs USING btree (user_id, id);
+
+
+--
 -- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17583,38 +19351,66 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
--- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events USING btree (created_at, country_code);
-
-
---
--- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_events USING btree (created_at, normalized_referrer);
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (browser IS NULL);
 
 
 --
--- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_crawler_created_at_covering; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
-
-
---
--- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
+CREATE INDEX idx_bpe_crawler_created_at_covering ON public.browser_pageview_events USING btree (created_at) INCLUDE (topic_id, user_id, ip_address) WHERE (score > 55);
 
 
 --
--- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_created_at_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC);
+
+
+--
+-- Name: idx_bpe_created_at_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USING btree (created_at, session_id, source);
+
+
+--
+-- Name: idx_bpe_ip_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_ip_created_at ON public.browser_pageview_events USING btree (ip_address, created_at);
+
+
+--
+-- Name: idx_bpe_referrer_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
+
+
+--
+-- Name: idx_bpe_session_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_session_created_at_covering ON public.browser_pageview_events USING btree (session_id, created_at) INCLUDE (user_id, score);
+
+
+--
+-- Name: idx_bpe_url_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_url_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
+
+
+--
+-- Name: idx_bpeu_daily_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpeu_daily_rollups_date_url_unique ON public.browser_pageview_entry_url_daily_rollups USING btree (date, entry_url);
 
 
 --
@@ -17706,6 +19502,27 @@ CREATE INDEX idx_chat_messages_thread_id_id_user_id_not_deleted ON public.chat_m
 --
 
 CREATE INDEX idx_chat_pinned_messages_channel_created ON public.chat_pinned_messages USING btree (chat_channel_id, created_at DESC);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_query_tag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_query_tag ON public.data_explorer_query_tags USING btree (query_id, query_tag_id);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_tag_query; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_tag_query ON public.data_explorer_query_tags USING btree (query_tag_id, query_id);
+
+
+--
+-- Name: idx_data_explorer_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_tags_on_name ON public.data_explorer_tags USING btree (name);
 
 
 --
@@ -17839,6 +19656,13 @@ CREATE UNIQUE INDEX idx_dwf_execution_data_on_execution_id ON public.discourse_w
 --
 
 CREATE UNIQUE INDEX idx_dwf_execution_stats_on_workflow_id_and_date ON public.discourse_workflows_execution_stats USING btree (workflow_id, date);
+
+
+--
+-- Name: idx_dwf_executions_on_job_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_executions_on_job_id ON public.discourse_workflows_executions USING btree (job_id) WHERE (job_id IS NOT NULL);
 
 
 --
@@ -18038,6 +19862,83 @@ CREATE UNIQUE INDEX idx_group_tag_notification_defaults_unique ON public.group_t
 
 
 --
+-- Name: idx_kanban_boards_category_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_boards_category_ids ON public.discourse_kanban_boards USING gin (category_ids);
+
+
+--
+-- Name: idx_kanban_boards_tag_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_boards_tag_ids ON public.discourse_kanban_boards USING gin (tag_ids);
+
+
+--
+-- Name: idx_kanban_cards_assigned_to; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_assigned_to ON public.discourse_kanban_cards USING btree (assigned_to_type, assigned_to_id);
+
+
+--
+-- Name: idx_kanban_cards_board_column_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_board_column_position ON public.discourse_kanban_cards USING btree (board_id, column_id, "position");
+
+
+--
+-- Name: idx_kanban_cards_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_board_id ON public.discourse_kanban_cards USING btree (board_id);
+
+
+--
+-- Name: idx_kanban_cards_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_column_id ON public.discourse_kanban_cards USING btree (column_id);
+
+
+--
+-- Name: idx_kanban_cards_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_topic_id ON public.discourse_kanban_cards USING btree (topic_id);
+
+
+--
+-- Name: idx_kanban_cards_unique_topic_per_column; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_kanban_cards_unique_topic_per_column ON public.discourse_kanban_cards USING btree (board_id, column_id, topic_id) WHERE ((topic_id IS NOT NULL) AND (column_id IS NOT NULL));
+
+
+--
+-- Name: idx_kanban_columns_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_board_id ON public.discourse_kanban_columns USING btree (board_id);
+
+
+--
+-- Name: idx_kanban_columns_board_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_board_position ON public.discourse_kanban_columns USING btree (board_id, "position");
+
+
+--
+-- Name: idx_kanban_columns_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_tag_id ON public.discourse_kanban_columns USING btree (tag_id);
+
+
+--
 -- Name: idx_leaderboard_scores_lb_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18052,6 +19953,27 @@ CREATE UNIQUE INDEX idx_leaderboard_scores_lb_user_date ON public.gamification_l
 
 
 --
+-- Name: idx_mcp_active_authorizations_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_active_authorizations_unique ON public.mcp_oauth_authorizations USING btree (user_id, mcp_oauth_client_id) WHERE (revoked_at IS NULL);
+
+
+--
+-- Name: idx_mcp_authorization_scopes_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_authorization_scopes_unique ON public.mcp_oauth_authorization_scopes USING btree (mcp_oauth_authorization_id, name);
+
+
+--
+-- Name: idx_mcp_primitives_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_primitives_unique ON public.mcp_primitives USING btree (kind, identifier);
+
+
+--
 -- Name: idx_notifications_speedup_unread_count; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18063,6 +19985,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 --
 
 CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_feature_credit_costs USING btree (llm_model_id, feature_name);
+
+
+--
+-- Name: idx_on_mcp_oauth_authorization_id_d749d8a9de; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_authorization_codes USING btree (mcp_oauth_authorization_id);
 
 
 --
@@ -18101,10 +20030,24 @@ CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post
 
 
 --
+-- Name: idx_posts_search_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_posts_search_covering ON public.posts USING btree (id) INCLUDE (topic_id, post_number, post_type) WHERE ((deleted_at IS NULL) AND (NOT hidden));
+
+
+--
 -- Name: idx_posts_user_id_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_rag_document_sources_target_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_rag_document_sources_target_url ON public.rag_document_sources USING btree (target_type, target_id, url_digest);
 
 
 --
@@ -18290,6 +20233,13 @@ CREATE INDEX idx_user_actions_speed_up_user_all ON public.user_actions USING btr
 
 
 --
+-- Name: idx_user_badges_granted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_badges_granted_at ON public.user_badges USING btree (granted_at DESC);
+
+
+--
 -- Name: idx_user_chat_thread_memberships_on_thread_id_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18343,6 +20293,34 @@ CREATE INDEX idx_users_ip_address ON public.users USING btree (ip_address);
 --
 
 CREATE INDEX idx_users_moderator ON public.users USING btree (id) WHERE moderator;
+
+
+--
+-- Name: idx_voice_co_presences_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_co_presences_unique ON public.voice_co_presences USING btree (user_id_1, user_id_2, date);
+
+
+--
+-- Name: idx_voice_invites_redeemed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_voice_invites_redeemed ON public.voice_invites USING btree (invited_by_id, user_id) WHERE (redeemed_at IS NOT NULL);
+
+
+--
+-- Name: idx_voice_room_memberships_on_room_and_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_room_memberships_on_room_and_user ON public.voice_room_memberships USING btree (room_id, user_id);
+
+
+--
+-- Name: idx_voice_sessions_orphaned; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_voice_sessions_orphaned ON public.voice_sessions USING btree (left_at) WHERE (left_at IS NULL);
 
 
 --
@@ -18654,6 +20632,13 @@ CREATE INDEX index_ai_spam_logs_on_post_id ON public.ai_spam_logs USING btree (p
 
 
 --
+-- Name: index_ai_summaries_missing_cooked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_summaries_missing_cooked ON public.ai_summaries USING btree (id) WHERE ((summarized_cooked IS NULL) AND (summary_type = 0) AND ((target_type)::text = 'Topic'::text));
+
+
+--
 -- Name: index_ai_summaries_on_target_type_and_target_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18756,6 +20741,55 @@ CREATE INDEX index_api_keys_on_user_id ON public.api_keys USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX index_application_requests_on_date_and_req_type ON public.application_requests USING btree (date, req_type);
+
+
+--
+-- Name: index_ask_ai_logs_on_asked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_logs_on_asked_at ON public.ask_ai_logs USING btree (asked_at);
+
+
+--
+-- Name: index_ask_ai_logs_on_user_id_and_asked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_logs_on_user_id_and_asked_at ON public.ask_ai_logs USING btree (user_id, asked_at);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_ask_ai_log_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_report_subject_asks_on_ask_ai_log_id ON public.ask_ai_report_subject_asks USING btree (ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_subject_and_log; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subject_asks_on_subject_and_log ON public.ask_ai_report_subject_asks USING btree (ask_ai_report_subject_id, ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subjects_on_ask_ai_report_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subjects_on_ask_ai_report_id_and_position ON public.ask_ai_report_subjects USING btree (ask_ai_report_id, "position");
+
+
+--
+-- Name: index_ask_ai_reports_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_created_at ON public.ask_ai_reports USING btree (created_at);
+
+
+--
+-- Name: index_ask_ai_reports_on_start_date_and_end_date_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_start_date_and_end_date_and_created_at ON public.ask_ai_reports USING btree (start_date, end_date, created_at);
 
 
 --
@@ -18868,20 +20902,6 @@ CREATE UNIQUE INDEX index_browser_pageview_event_scores_on_event_id ON public.br
 --
 
 CREATE INDEX index_browser_pageview_events_on_created_at ON public.browser_pageview_events USING brin (created_at);
-
-
---
--- Name: index_browser_pageview_events_on_topic_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pageview_events USING btree (topic_id);
-
-
---
--- Name: index_browser_pageview_events_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
 
 
 --
@@ -19165,6 +21185,20 @@ CREATE UNIQUE INDEX index_chat_message_custom_prompts_on_message_id ON public.ch
 
 
 --
+-- Name: index_chat_message_hotlinked_media_on_message_and_url_md5; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_chat_message_hotlinked_media_on_message_and_url_md5 ON public.chat_message_hotlinked_media USING btree (chat_message_id, md5((url)::text));
+
+
+--
+-- Name: index_chat_message_hotlinked_media_on_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_message_hotlinked_media_on_upload_id ON public.chat_message_hotlinked_media USING btree (upload_id);
+
+
+--
 -- Name: index_chat_message_interactions_on_chat_message_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19218,6 +21252,13 @@ CREATE INDEX index_chat_messages_on_chat_channel_id_and_created_at ON public.cha
 --
 
 CREATE INDEX index_chat_messages_on_chat_channel_id_and_id ON public.chat_messages USING btree (chat_channel_id, id) WHERE (deleted_at IS NOT NULL);
+
+
+--
+-- Name: index_chat_messages_on_in_reply_to_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_messages_on_in_reply_to_id ON public.chat_messages USING btree (in_reply_to_id) WHERE (in_reply_to_id IS NOT NULL);
 
 
 --
@@ -19459,10 +21500,87 @@ CREATE INDEX index_discourse_calendar_post_event_dates_on_finished_at ON public.
 
 
 --
+-- Name: index_discourse_kanban_board_histories_on_acting_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_acting_user_id ON public.discourse_kanban_board_histories USING btree (acting_user_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_on_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_board_id ON public.discourse_kanban_board_histories USING btree (board_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_on_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_column_id ON public.discourse_kanban_board_histories USING btree (column_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_one_view_per_user_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_board_histories_one_view_per_user_day ON public.discourse_kanban_board_histories USING btree (board_id, acting_user_id, ((created_at)::date)) WHERE (action = 7);
+
+
+--
+-- Name: index_discourse_kanban_boards_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_boards_on_created_by_id ON public.discourse_kanban_boards USING btree (created_by_id);
+
+
+--
+-- Name: index_discourse_kanban_boards_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_boards_on_slug ON public.discourse_kanban_boards USING btree (slug);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_on_acting_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_card_histories_on_acting_user_id ON public.discourse_kanban_card_histories USING btree (acting_user_id);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_on_board_id_and_card_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_card_histories_on_board_id_and_card_id ON public.discourse_kanban_card_histories USING btree (board_id, card_id);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_one_view_per_user_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_card_histories_one_view_per_user_day ON public.discourse_kanban_card_histories USING btree (board_id, card_id, acting_user_id, ((created_at)::date)) WHERE (action = 7);
+
+
+--
 -- Name: index_discourse_post_event_events_on_image_upload_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_discourse_post_event_events_on_image_upload_id ON public.discourse_post_event_events USING btree (image_upload_id);
+
+
+--
+-- Name: index_discourse_post_event_hosts_on_post_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_post_event_hosts_on_post_id_and_user_id ON public.discourse_post_event_hosts USING btree (post_id, user_id);
+
+
+--
+-- Name: index_discourse_post_event_hosts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_post_event_hosts_on_user_id ON public.discourse_post_event_hosts USING btree (user_id);
 
 
 --
@@ -20236,6 +22354,13 @@ CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_sequence ON public.linke
 
 
 --
+-- Name: index_livestream_topic_chat_channels_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_livestream_topic_chat_channels_on_chat_channel_id ON public.livestream_topic_chat_channels USING btree (chat_channel_id);
+
+
+--
 -- Name: index_llm_credit_allocations_on_llm_model_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20271,6 +22396,13 @@ CREATE INDEX index_llm_models_on_ai_secret_id ON public.llm_models USING btree (
 
 
 --
+-- Name: index_llm_models_on_vision_llm_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_llm_models_on_vision_llm_model_id ON public.llm_models USING btree (vision_llm_model_id);
+
+
+--
 -- Name: index_llm_quota_usages_on_llm_quota_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20296,6 +22428,83 @@ CREATE UNIQUE INDEX index_llm_quotas_on_group_id_and_llm_model_id ON public.llm_
 --
 
 CREATE INDEX index_llm_quotas_on_llm_model_id ON public.llm_quotas USING btree (llm_model_id);
+
+
+--
+-- Name: index_mcp_audit_logs_on_occurred_at_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_audit_logs_on_occurred_at_and_id ON public.mcp_audit_logs USING btree (occurred_at, id);
+
+
+--
+-- Name: index_mcp_group_scopes_on_group_id_and_scope; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_group_scopes_on_group_id_and_scope ON public.mcp_group_scopes USING btree (group_id, scope);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_mcp_oauth_authorization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_access_tokens_on_mcp_oauth_authorization_id ON public.mcp_oauth_access_tokens USING btree (mcp_oauth_authorization_id);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_access_tokens_on_token_hash ON public.mcp_oauth_access_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_user_id_and_revoked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_access_tokens_on_user_id_and_revoked_at ON public.mcp_oauth_access_tokens USING btree (user_id, revoked_at);
+
+
+--
+-- Name: index_mcp_oauth_authorization_codes_on_code_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_authorization_codes_on_code_hash ON public.mcp_oauth_authorization_codes USING btree (code_hash);
+
+
+--
+-- Name: index_mcp_oauth_authorizations_on_mcp_oauth_client_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_authorizations_on_mcp_oauth_client_id ON public.mcp_oauth_authorizations USING btree (mcp_oauth_client_id);
+
+
+--
+-- Name: index_mcp_oauth_clients_on_client_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_clients_on_client_id ON public.mcp_oauth_clients USING btree (client_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_family_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_refresh_tokens_on_family_id ON public.mcp_oauth_refresh_tokens USING btree (family_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id ON public.mcp_oauth_refresh_tokens USING btree (mcp_oauth_authorization_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_refresh_tokens_on_token_hash ON public.mcp_oauth_refresh_tokens USING btree (token_hash);
 
 
 --
@@ -21055,6 +23264,20 @@ CREATE INDEX index_rag_document_fragments_on_target_type_and_target_id ON public
 
 
 --
+-- Name: index_rag_document_sources_on_next_refresh_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_next_refresh_at ON public.rag_document_sources USING btree (next_refresh_at);
+
+
+--
+-- Name: index_rag_document_sources_on_target_type_and_target_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_target_type_and_target_id ON public.rag_document_sources USING btree (target_type, target_id);
+
+
+--
 -- Name: index_redelivering_webhook_events_on_web_hook_event_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21153,6 +23376,13 @@ CREATE INDEX index_reviewables_on_status_and_type ON public.reviewables USING bt
 
 
 --
+-- Name: index_reviewables_on_target_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_on_target_created_by_id ON public.reviewables USING btree (target_created_by_id);
+
+
+--
 -- Name: index_reviewables_on_target_id_where_post_type_eq_post; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21227,6 +23457,13 @@ CREATE UNIQUE INDEX index_screened_urls_on_url ON public.screened_urls USING btr
 --
 
 CREATE INDEX index_search_logs_on_created_at ON public.search_logs USING btree (created_at);
+
+
+--
+-- Name: index_search_logs_on_created_at_excluding_crawlers; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search_logs USING btree (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler));
 
 
 --
@@ -21657,10 +23894,31 @@ CREATE UNIQUE INDEX index_topic_custom_fields_on_topic_id_and_slack_thread_id ON
 
 
 --
+-- Name: index_topic_embed_aliases_on_topic_embed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embed_aliases_on_topic_embed_id ON public.topic_embed_aliases USING btree (topic_embed_id);
+
+
+--
+-- Name: index_topic_embed_aliases_on_url_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_topic_embed_aliases_on_url_hash ON public.topic_embed_aliases USING btree (url_hash);
+
+
+--
 -- Name: index_topic_embeds_on_embed_url; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_topic_embeds_on_embed_url ON public.topic_embeds USING btree (embed_url);
+
+
+--
+-- Name: index_topic_embeds_on_lower_embed_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embeds_on_lower_embed_url ON public.topic_embeds USING btree (lower((embed_url)::text));
 
 
 --
@@ -22203,6 +24461,13 @@ CREATE UNIQUE INDEX index_user_archived_messages_on_user_id_and_topic_id ON publ
 
 
 --
+-- Name: index_user_associated_accounts_on_avatar_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_associated_accounts_on_avatar_upload_id ON public.user_associated_accounts USING btree (avatar_upload_id) WHERE (avatar_upload_id IS NOT NULL);
+
+
+--
 -- Name: index_user_associated_groups; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22270,6 +24535,13 @@ CREATE INDEX index_user_avatars_on_custom_upload_id ON public.user_avatars USING
 --
 
 CREATE INDEX index_user_avatars_on_gravatar_upload_id ON public.user_avatars USING btree (gravatar_upload_id);
+
+
+--
+-- Name: index_user_avatars_on_selected_user_associated_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_avatars_on_selected_user_associated_account_id ON public.user_avatars USING btree (selected_user_associated_account_id) WHERE (selected_user_associated_account_id IS NOT NULL);
 
 
 --
@@ -22665,6 +24937,125 @@ CREATE UNIQUE INDEX index_users_on_username_lower ON public.users USING btree (u
 
 
 --
+-- Name: index_voice_co_presences_on_user_id_1_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_co_presences_on_user_id_1_and_date ON public.voice_co_presences USING btree (user_id_1, date);
+
+
+--
+-- Name: index_voice_co_presences_on_user_id_2_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_co_presences_on_user_id_2_and_date ON public.voice_co_presences USING btree (user_id_2, date);
+
+
+--
+-- Name: index_voice_invites_on_room_id_and_user_id_and_invited_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_invites_on_room_id_and_user_id_and_invited_by_id ON public.voice_invites USING btree (room_id, user_id, invited_by_id);
+
+
+--
+-- Name: index_voice_invites_on_user_id_and_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_invites_on_user_id_and_room_id ON public.voice_invites USING btree (user_id, room_id);
+
+
+--
+-- Name: index_voice_recordings_on_egress_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_recordings_on_egress_id ON public.voice_recordings USING btree (egress_id);
+
+
+--
+-- Name: index_voice_recordings_on_room_id_and_started_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_recordings_on_room_id_and_started_at ON public.voice_recordings USING btree (room_id, started_at);
+
+
+--
+-- Name: index_voice_room_memberships_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_room_memberships_on_room_id ON public.voice_room_memberships USING btree (room_id);
+
+
+--
+-- Name: index_voice_room_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_room_memberships_on_user_id ON public.voice_room_memberships USING btree (user_id);
+
+
+--
+-- Name: index_voice_rooms_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_chat_channel_id ON public.voice_rooms USING btree (chat_channel_id);
+
+
+--
+-- Name: index_voice_rooms_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_creator_id ON public.voice_rooms USING btree (creator_id);
+
+
+--
+-- Name: index_voice_rooms_on_ephemeral; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_ephemeral ON public.voice_rooms USING btree (id) WHERE ephemeral;
+
+
+--
+-- Name: index_voice_rooms_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_rooms_on_slug ON public.voice_rooms USING btree (slug);
+
+
+--
+-- Name: index_voice_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_room_id ON public.voice_sessions USING btree (room_id);
+
+
+--
+-- Name: index_voice_sessions_on_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_room_id_and_joined_at ON public.voice_sessions USING btree (room_id, joined_at);
+
+
+--
+-- Name: index_voice_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id ON public.voice_sessions USING btree (user_id);
+
+
+--
+-- Name: index_voice_sessions_on_user_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id_and_joined_at ON public.voice_sessions USING btree (user_id, joined_at);
+
+
+--
+-- Name: index_voice_sessions_on_user_id_and_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id_and_room_id_and_joined_at ON public.voice_sessions USING btree (user_id, room_id, joined_at);
+
+
+--
 -- Name: index_watched_words_on_action_and_word; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22931,6 +25322,13 @@ CREATE TRIGGER discourse_rss_polling_rss_feeds_author_readonly BEFORE INSERT OR 
 
 
 --
+-- Name: browser_pageview_events skip_piggyback_browser_pageview_events; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER skip_piggyback_browser_pageview_events BEFORE INSERT OR UPDATE OF source ON public.browser_pageview_events FOR EACH ROW WHEN ((new.source = ANY (ARRAY[1, 2]))) EXECUTE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events();
+
+
+--
 -- Name: topic_timers topic_timers_topic_id_readonly; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -22943,6 +25341,14 @@ CREATE TRIGGER topic_timers_topic_id_readonly BEFORE INSERT OR UPDATE OF topic_i
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT fk_rails_1d362f2e97 FOREIGN KEY (profile_background_upload_id) REFERENCES public.uploads(id);
+
+
+--
+-- Name: discourse_kanban_cards fk_rails_23a074d40f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_23a074d40f FOREIGN KEY (column_id) REFERENCES public.discourse_kanban_columns(id) ON DELETE SET NULL;
 
 
 --
@@ -22962,6 +25368,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: discourse_kanban_cards fk_rails_428adf8573; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_428adf8573 FOREIGN KEY (topic_id) REFERENCES public.topics(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_impressions fk_rails_45ce2c4d3c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -22975,6 +25389,14 @@ ALTER TABLE ONLY public.ad_plugin_impressions
 
 ALTER TABLE ONLY public.ad_plugin_house_ads_groups
     ADD CONSTRAINT fk_rails_4973d7060d FOREIGN KEY (ad_plugin_house_ad_id) REFERENCES public.ad_plugin_house_ads(id) ON DELETE CASCADE;
+
+
+--
+-- Name: discourse_kanban_cards fk_rails_51c00a5eb2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_51c00a5eb2 FOREIGN KEY (board_id) REFERENCES public.discourse_kanban_boards(id) ON DELETE CASCADE;
 
 
 --
@@ -23018,11 +25440,27 @@ ALTER TABLE ONLY public.user_security_keys
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_969b09bee9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_969b09bee9 FOREIGN KEY (ask_ai_report_subject_id) REFERENCES public.ask_ai_report_subjects(id) ON DELETE CASCADE;
+
+
+--
 -- Name: reviewable_notes fk_rails_9ea278a8aa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reviewable_notes
     ADD CONSTRAINT fk_rails_9ea278a8aa FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: voice_room_memberships fk_rails_a55e8c404b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships
+    ADD CONSTRAINT fk_rails_a55e8c404b FOREIGN KEY (room_id) REFERENCES public.voice_rooms(id);
 
 
 --
@@ -23074,6 +25512,14 @@ ALTER TABLE ONLY public.ai_tool_actions
 
 
 --
+-- Name: discourse_kanban_columns fk_rails_c2f2ed5c5d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT fk_rails_c2f2ed5c5d FOREIGN KEY (move_to_category_id) REFERENCES public.categories(id) ON DELETE SET NULL;
+
+
+--
 -- Name: ad_plugin_house_ads_categories fk_rails_c6e88d8af5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23090,6 +25536,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_e54eb07de5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_e54eb07de5 FOREIGN KEY (ask_ai_log_id) REFERENCES public.ask_ai_logs(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_house_ads_categories fk_rails_ea323de4ce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23103,6 +25557,14 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_categories
 
 ALTER TABLE ONLY public.javascript_caches
     ADD CONSTRAINT fk_rails_ed33506dbd FOREIGN KEY (theme_field_id) REFERENCES public.theme_fields(id) ON DELETE CASCADE;
+
+
+--
+-- Name: discourse_kanban_columns fk_rails_ef6a319cc1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT fk_rails_ef6a319cc1 FOREIGN KEY (board_id) REFERENCES public.discourse_kanban_boards(id) ON DELETE CASCADE;
 
 
 --
@@ -23128,12 +25590,114 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261007082151'),
+('20261006113418'),
+('20261005091527'),
+('20261005091447'),
+('20261001073226'),
+('20260930114733'),
+('20260928103925'),
+('20260925155026'),
+('20260925054715'),
+('20260923174053'),
+('20260923141924'),
+('20260923080644'),
+('20260923080642'),
+('20260922233816'),
+('20260921120000'),
+('20260921081150'),
+('20260921074918'),
+('20260921015711'),
+('20260918062827'),
+('20260918062145'),
+('20260918061735'),
+('20260917145657'),
+('20260916113851'),
+('20260916113806'),
+('20260915204557'),
+('20260915191328'),
+('20260914213908'),
+('20260914172801'),
+('20260914172757'),
+('20260914140746'),
+('20260914032737'),
+('20260910110851'),
+('20260910033302'),
+('20260910030427'),
+('20260910030404'),
+('20260910030345'),
+('20260909181443'),
+('20260909132955'),
+('20260908160656'),
+('20260908153158'),
+('20260908112615'),
+('20260904065041'),
+('20260904063128'),
+('20260904000537'),
+('20260903195501'),
+('20260903065141'),
+('20260902150024'),
+('20260902075239'),
+('20260901020329'),
+('20260831162602'),
+('20260831011840'),
+('20260831011839'),
+('20260831011836'),
+('20260828145150'),
+('20260827064809'),
+('20260826133816'),
+('20260826124054'),
+('20260826121453'),
+('20260826090055'),
+('20260824214608'),
+('20260824214603'),
+('20260824091843'),
+('20260824072257'),
+('20260824051214'),
+('20260821210913'),
+('20260821210543'),
+('20260821164114'),
+('20260820171539'),
+('20260820143851'),
+('20260820092502'),
+('20260819131113'),
+('20260818143417'),
+('20260818081537'),
+('20260818045317'),
+('20260818045314'),
+('20260818045311'),
+('20260818045308'),
+('20260818045305'),
+('20260817092359'),
+('20260817054353'),
+('20260817054044'),
+('20260814083721'),
+('20260814060100'),
+('20260814060000'),
+('20260813202233'),
+('20260813160047'),
+('20260813071230'),
+('20260813071223'),
+('20260813000000'),
+('20260812094609'),
+('20260811231259'),
+('20260810154331'),
+('20260810012238'),
+('20260807182856'),
+('20260807000920'),
+('20260806074210'),
+('20260806074204'),
+('20260803163818'),
+('20260803163214'),
+('20260803144425'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),
 ('20260729153343'),
+('20260728201053'),
 ('20260728162521'),
 ('20260728162516'),
+('20260728150000'),
 ('20260728134532'),
 ('20260728071552'),
 ('20260728050038'),
@@ -23153,6 +25717,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260721080420'),
 ('20260721043536'),
 ('20260721043534'),
+('20260717172530'),
 ('20260715202231'),
 ('20260715183411'),
 ('20260715134306'),
@@ -23162,6 +25727,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260715064155'),
 ('20260714152340'),
 ('20260713180615'),
+('20260709165411'),
 ('20260708095336'),
 ('20260708080308'),
 ('20260708051450'),
@@ -23172,10 +25738,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260706050124'),
 ('20260703164430'),
 ('20260703163425'),
+('20260703134812'),
 ('20260702102111'),
 ('20260701073045'),
 ('20260701013609'),
 ('20260701013606'),
+('20260630183841'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629210246'),
@@ -23186,16 +25754,19 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260623201925'),
 ('20260623090824'),
 ('20260623052745'),
+('20260623042355'),
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),
 ('20260619085855'),
+('20260618203643'),
 ('20260617180115'),
 ('20260617104005'),
 ('20260617053237'),
 ('20260616114637'),
 ('20260615084100'),
 ('20260615082047'),
+('20260612135211'),
 ('20260612092612'),
 ('20260612064730'),
 ('20260611102547'),
@@ -23205,13 +25776,17 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260609050938'),
 ('20260608104742'),
 ('20260607161322'),
+('20260605051007'),
 ('20260604052235'),
 ('20260603115312'),
 ('20260603115200'),
+('20260603055342'),
 ('20260603013342'),
+('20260602233501'),
 ('20260602104726'),
 ('20260601063855'),
 ('20260601043020'),
+('20260529220000'),
 ('20260528074731'),
 ('20260528074719'),
 ('20260525105009'),
@@ -23240,7 +25815,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260430172653'),
 ('20260430142946'),
 ('20260429122035'),
+('20260429052246'),
 ('20260428072232'),
+('20260427025159'),
+('20260424060304'),
 ('20260424004343'),
 ('20260422144944'),
 ('20260422135650'),
@@ -23251,12 +25829,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260421061908'),
 ('20260420014648'),
 ('20260415082426'),
+('20260410040858'),
+('20260410040217'),
 ('20260409225129'),
 ('20260408214007'),
 ('20260408165014'),
 ('20260407093145'),
+('20260407065612'),
 ('20260402141924'),
 ('20260402141912'),
+('20260402064240'),
+('20260402053105'),
+('20260402052139'),
 ('20260402023645'),
 ('20260331024139'),
 ('20260330161714'),
@@ -23293,9 +25877,19 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260306183220'),
 ('20260306000002'),
 ('20260306000001'),
+('20260305165401'),
+('20260305165400'),
+('20260305162426'),
+('20260304212353'),
 ('20260304063335'),
+('20260303033335'),
+('20260227010000'),
+('20260226060000'),
+('20260226020000'),
 ('20260223032030'),
+('20260220154336'),
 ('20260218104617'),
+('20260218044500'),
 ('20260218000000'),
 ('20260217064339'),
 ('20260211051130'),
@@ -23612,6 +26206,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241111022618'),
 ('20241110120303'),
 ('20241108154026'),
+('20241107000000'),
 ('20241105211601'),
 ('20241104132424'),
 ('20241104053309'),

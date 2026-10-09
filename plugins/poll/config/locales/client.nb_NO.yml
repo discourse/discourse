@@ -28,6 +28,8 @@ nb_NO:
       cast-votes:
         title: "Stem nå"
         label: "Stem!"
+      keep-vote:
+        label: "Forrige"
       show-results:
         title: "Vis resultat"
         label: "Resultater"

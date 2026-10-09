@@ -86,7 +86,11 @@ module Jobs
         end
       end
 
-      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
+      MessageBus.publish(
+        "/topic/#{topic.id}",
+        { reload_topic: true },
+        topic.secure_audience_publish_messages,
+      )
     end
 
     private

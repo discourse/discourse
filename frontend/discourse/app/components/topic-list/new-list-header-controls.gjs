@@ -39,34 +39,34 @@ export default class NewListHeaderControls extends Component {
 
   <template>
     <button
-      {{on "click" (fn @changeNewListSubset null)}}
       class={{dConcatClass
         "topics-replies-toggle --all"
         (if this.allActive "active")
       }}
       title={{i18n "filters.new.all_tooltip"}}
+      {{on "click" (fn @changeNewListSubset null)}}
     >
       {{i18n "filters.new.all"}}
     </button>
 
     <button
-      {{on "click" (fn @changeNewListSubset "topics")}}
       class={{dConcatClass
         "topics-replies-toggle --topics"
         (if this.topicsActive "active")
       }}
       title={{i18n "filters.new.new_topics_tooltip"}}
+      {{on "click" (fn @changeNewListSubset "topics")}}
     >
       {{this.topicsButtonLabel}}
     </button>
 
     <button
-      {{on "click" (fn @changeNewListSubset "replies")}}
       class={{dConcatClass
         "topics-replies-toggle --replies"
         (if this.repliesActive "active")
       }}
       title={{i18n "filters.new.new_replies_tooltip"}}
+      {{on "click" (fn @changeNewListSubset "replies")}}
     >
       {{this.repliesButtonLabel}}
     </button>

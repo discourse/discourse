@@ -637,6 +637,66 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when user is a direct message channel participant" do
+      fab!(:attacker, :user)
+      fab!(:attacker_recipient, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [attacker, attacker_recipient],
+          threading_enabled: false,
+        )
+      end
+      fab!(:victim, :user)
+      fab!(:victim_recipient, :user)
+      fab!(:victim_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [victim, victim_recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:victim_thread) do
+        Fabricate(:chat_thread, channel: victim_channel, original_message_user: victim_recipient)
+      end
+      fab!(:victim_reply) do
+        Fabricate(
+          :chat_message,
+          thread: victim_thread,
+          chat_channel: victim_channel,
+          user: victim_recipient,
+        )
+      end
+
+      before do
+        Jobs.run_immediately!
+        victim_thread.add(victim)
+        victim_thread.update!(last_message: victim_reply)
+        sign_in(attacker)
+      end
+
+      it "preserves unread threads in inaccessible direct messages" do
+        expect(victim_channel.chatable.user_can_access?(attacker)).to be(false)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
+
+        put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("channel", "threading_enabled")).to be(true)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
+      end
+    end
+
     context "when channel is a direct message channel" do
       fab!(:user, :admin)
       fab!(:channel, :direct_message_channel)

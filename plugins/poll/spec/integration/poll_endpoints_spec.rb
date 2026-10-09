@@ -28,7 +28,7 @@ RSpec.describe "DiscoursePoll endpoints" do
     let(:ranked_choice_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
     let(:ranked_choice_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
-    it "should return the right response" do
+    it "returns the expected voters" do
       DiscoursePoll::Poll.vote(user, post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
 
       get "/polls/voters.json",
@@ -47,7 +47,7 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return the right response for a single option" do
+    it "returns voters for a single option" do
       DiscoursePoll::Poll.vote(
         user,
         post_with_multiple_poll.id,
@@ -75,7 +75,7 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return valid response for a ranked choice option" do
+    it "returns voters for a ranked-choice option" do
       ranked_choice_poll = post_with_ranked_choice_poll.polls.first
       ranked_choice_poll_options = ranked_choice_poll.poll_options
       ranked_choice_votes = {
@@ -113,14 +113,14 @@ RSpec.describe "DiscoursePoll endpoints" do
     end
 
     describe "when post_id is blank" do
-      it "should raise the right error" do
+      it "returns a bad request response" do
         get "/polls/voters.json", params: { poll_name: DiscoursePoll::DEFAULT_POLL_NAME }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when post_id is not valid" do
-      it "should raise the right error" do
+      it "returns a bad request response" do
         get "/polls/voters.json",
             params: {
               post_id: -1,
@@ -132,14 +132,14 @@ RSpec.describe "DiscoursePoll endpoints" do
     end
 
     describe "when poll_name is blank" do
-      it "should raise the right error" do
+      it "returns a bad request response" do
         get "/polls/voters.json", params: { post_id: post.id }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when poll_name is not valid" do
-      it "should raise the right error" do
+      it "returns a bad request response" do
         get "/polls/voters.json", params: { post_id: post.id, poll_name: "wrongpoll" }
         expect(response.status).to eq(400)
         expect(response.body).to include("poll_name")
@@ -151,7 +151,7 @@ RSpec.describe "DiscoursePoll endpoints" do
         Fabricate(:post, raw: "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]")
       end
 
-      it "should return the right response" do
+      it "returns voters for the number poll" do
         post
 
         DiscoursePoll::Poll.vote(
@@ -182,6 +182,7 @@ RSpec.describe "DiscoursePoll endpoints" do
     fab!(:user2, :user)
     fab!(:user3, :user)
     fab!(:user4, :user)
+    fab!(:admin)
 
     fab!(:post) { Fabricate(:post, raw: <<~SQL) }
       [poll type=multiple public=true min=1 max=2]
@@ -195,6 +196,34 @@ RSpec.describe "DiscoursePoll endpoints" do
       - Red
       - Blue
       - Yellow
+      [/poll]
+      SQL
+
+    fab!(:post_with_staff_only_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=staff_only]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_on_close_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=on_close]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_on_vote_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=true results=on_vote]
+      - A
+      - B
+      [/poll]
+      SQL
+
+    fab!(:post_with_secret_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll public=false results=always]
+      - A
+      - B
       [/poll]
       SQL
 
@@ -344,6 +373,85 @@ RSpec.describe "DiscoursePoll endpoints" do
 
       expect(response.status).to eq(400)
       expect(response.body).to include("user_field_name")
+    end
+
+    it "only returns grouped tallies to users who can see poll results" do
+      SiteSetting.poll_groupable_user_fields = "something"
+
+      [
+        post_with_staff_only_poll,
+        post_with_on_close_poll,
+        post_with_on_vote_poll,
+        post_with_secret_poll,
+      ].each do |poll_post|
+        DiscoursePoll::Poll.vote(user2, poll_post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
+      end
+
+      [
+        post_with_staff_only_poll,
+        post_with_on_close_poll,
+        post_with_on_vote_poll,
+      ].each do |poll_post|
+        get "/polls/grouped_poll_results.json",
+            params: {
+              post_id: poll_post.id,
+              poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+              user_field_name: "something",
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+        expect(response.parsed_body).not_to have_key("grouped_results")
+      end
+
+      sign_in(admin)
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_staff_only_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      sign_in(user1)
+      post_with_on_close_poll.polls.first.update!(status: :closed)
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_on_close_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      DiscoursePoll::Poll.vote(
+        user1,
+        post_with_on_vote_poll.id,
+        DiscoursePoll::DEFAULT_POLL_NAME,
+        [option_b],
+      )
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_on_vote_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
+
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_secret_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body).to have_key("grouped_results")
     end
 
     context "when topic is in a private category" do

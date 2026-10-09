@@ -54,15 +54,15 @@ export default class List extends Component {
   }
 
   async debouncedLoadCollection() {
-    await this.args.collection.load({ limit: 10 });
+    await this.args.collection.load({ limit: 10 }).catch(() => {});
   }
 
   <template>
     <div class="c-list">
       <div
         class={{if @collection.fetchedOnce "--loaded"}}
-        {{this.fill}}
         ...attributes
+        {{this.fill}}
       >
         {{#each this.collectionItemsMaybeFiltered as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}

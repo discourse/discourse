@@ -39,3 +39,8 @@ ca:
       custom_range_from: "De"
       admin:
         name: "Nom"
+    discourse_workflows:
+      gamification_score:
+        username: "Usuari"
+        date: "Data"
+        description: "Descripció"

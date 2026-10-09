@@ -117,6 +117,7 @@ module DiscourseWorkflows
       @js_context.attach("__getNodeContext", method(:fetch_node_context))
       @js_context.attach("__getNodeParams", method(:fetch_node_params))
       @js_context.attach("__isNodeExecuted", method(:node_executed?))
+      @js_context.attach("__absoluteUrl", method(:absolute_url))
 
       execution = @workflow_context.fetch("__execution") { {} }
       declare_json("__vars", @vars)
@@ -216,6 +217,12 @@ module DiscourseWorkflows
           configurable: true,
           writable: false
         });
+
+        Object.defineProperty(this, '$helpers', {
+          value: Object.freeze({
+            absoluteUrl: function(path) { return __absoluteUrl(path); }
+          })
+        });
       JS
     end
 
@@ -223,6 +230,10 @@ module DiscourseWorkflows
       @site_setting_store.fetch(name)&.to_s
     rescue StandardError
       nil
+    end
+
+    def absolute_url(path)
+      UrlHelper.absolute_without_cdn(path.to_s)
     end
 
     def fetch_node_item(name, item_index = nil)

@@ -7,6 +7,8 @@
 te:
   js:
     poll:
+      keep-vote:
+        label: "వెనుకకు"
       show-results:
         label: "ఫలితాలు"
       export-results:

@@ -86,7 +86,13 @@ class NestedTopic::ListChildren
       else
         0
       end
-    tree_data = loader.batch_preload_tree(children_posts, params.sort, max_depth: remaining_depth)
+    tree_data =
+      loader.batch_preload_tree(
+        children_posts,
+        params.sort,
+        max_depth: remaining_depth,
+        starting_depth: params.depth,
+      )
     context[:children_map] = tree_data[:children_map]
     context[:all_posts] = tree_data[:all_posts]
   end

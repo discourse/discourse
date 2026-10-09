@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "benchmark"
+
 module FreedomPatches
   module SchemaMigrationDetails
     def exec_migration(conn, direction)

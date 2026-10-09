@@ -37,4 +37,14 @@ be:
       nodes:
         "trigger:assigned": "Прызначаны"
       assign_topic:
+        resources:
+          topic: "Тэма"
+          post: "пост"
         topic_id: "Ідэнтыфікатар тэмы"
+        post_id: "Ідэнтыфікатар допісу"
+      check_assignment:
+        target_types:
+          topic: "Тэма"
+          post: "пост"
+        topic_id: "Ідэнтыфікатар тэмы"
+        post_id: "Ідэнтыфікатар допісу"

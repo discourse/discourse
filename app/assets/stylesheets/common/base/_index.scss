@@ -8,7 +8,6 @@
 @import "categories-topic-list";
 @import "category-list";
 @import "code_highlighting";
-@import "colorpicker";
 @import "compose";
 @import "crawler_layout";
 @import "d-icon";
@@ -42,7 +41,6 @@
 @import "onebox";
 @import "personal-message";
 @import "popup-menu";
-@import "redirection";
 @import "reorder-categories";
 @import "review";
 @import "reviewables";
@@ -58,6 +56,7 @@
 @import "sidebar-more-section-links";
 @import "sidebar-section";
 @import "sidebar-section-link";
+@import "sidebar-user-nav";
 @import "static-login";
 @import "tagging";
 @import "tag-settings";
@@ -71,3 +70,4 @@
 @import "user-badges";
 @import "user-tips";
 @import "embed-mode";
+@import "_mcp";

@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
@@ -32,6 +33,10 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+  @tracked groups = null;
+  @tracked availableTags = [];
+  @tracked aiGroupIds = [];
+  @tracked aiTags = [];
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
@@ -39,12 +44,21 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked showPreview = false;
   @tracked view = "sql";
 
-  manualFormData = { name: "", description: "" };
+  manualFormData = { name: "", description: "", groupIds: [], tags: [] };
   _teardownAiGeneration = null;
 
   get previewDisabled() {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
+    );
+  }
+
+  get groupOptions() {
+    return (this.groups ?? []).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.everyone.id &&
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        group.id !== AUTO_GROUPS.logged_in_users.id
     );
   }
 
@@ -80,13 +94,13 @@ export default class AdminPluginsExplorerNew extends Controller {
     });
   }
 
+  get aiQueriesEnabled() {
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
+  }
+
   @action
   setView(value) {
     this.view = value;
-  }
-
-  get aiQueriesEnabled() {
-    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   @action
@@ -115,7 +129,17 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async create({ name, description }) {
+  updateAiGroupIds(value) {
+    this.aiGroupIds = value;
+  }
+
+  @action
+  updateAiTags(value) {
+    this.aiTags = value;
+  }
+
+  @action
+  async create({ name, description, groupIds, tags }) {
     try {
       this.loading = true;
       const result = await this.store
@@ -123,6 +147,8 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: name.trim(),
           description: description?.trim(),
           sql: this.manualSql,
+          group_ids: groupIds,
+          tags,
         })
         .save();
       this.toasts.success({
@@ -242,17 +268,16 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: this.generatedName,
           description: this.generatedDescription,
           sql: this.generatedSql,
+          group_ids: this.aiGroupIds,
+          tags: this.aiTags,
         })
         .save();
       this.toasts.success({
         data: { message: i18n("explorer.query_created") },
       });
-      // Run the query straight away — there's nothing new to do on the edit
-      // page first, so save and show the results in one step.
       this.router.transitionTo(
         "adminPlugins.show.explorer.edit",
-        result.target.id,
-        { queryParams: { run: true } }
+        result.target.id
       );
     } catch (error) {
       popupAjaxError(error);
@@ -281,11 +306,6 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = event.target.value;
   }
 
-  _teardownAi() {
-    this._teardownAiGeneration?.();
-    this._teardownAiGeneration = null;
-  }
-
   resetState() {
     this._teardownAi();
     this.aiGenerating = false;
@@ -296,13 +316,27 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = rememberedMode() ?? "ai";
     this.schema = null;
+    this.groups = null;
+    this.availableTags = [];
+    this.aiGroupIds = [];
+    this.aiTags = [];
     this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
-    this.manualFormData = { name: "", description: "" };
+    this.manualFormData = {
+      name: "",
+      description: "",
+      groupIds: [],
+      tags: [],
+    };
     this.previewLoading = false;
     this.previewResults = null;
     this.showPreview = false;
     this.view = "sql";
+  }
+
+  _teardownAi() {
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
   }
 }

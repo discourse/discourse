@@ -139,6 +139,30 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  it "includes invisible thoughts once with candidate output in work settlement" do
+    response = {
+      candidates: [
+        { content: { parts: [{ text: "Answer" }], role: "model" }, finishReason: "STOP" },
+      ],
+      usageMetadata: {
+        promptTokenCount: 1000,
+        candidatesTokenCount: 5,
+        thoughtsTokenCount: 95,
+        totalTokenCount: 1100,
+      },
+    }
+    stub_request(:post, "#{model.url}:generateContent?key=#{model.api_key}").to_return(
+      body: response.to_json,
+    )
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
+    model.to_llm.generate("Input", user: user, execution_context: execution)
+    expect(execution.work_budget.used).to eq(100)
+    expect(AiApiAuditLog.last.response_tokens).to eq(100)
+  end
+
   def minimal_pdf_content
     <<~PDF
       %PDF-1.4
@@ -1557,6 +1581,38 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
         " has a different color using inline styles for simplicity.  Each letter will be wrapped",
       ],
     )
+  end
+
+  it "raises when an error event arrives mid-stream instead of returning the partial reply" do
+    response = <<~TEXT
+      data: {"candidates": [{"content": {"parts": [{"text": "Partial"}],"role": "model"}}]}
+
+      data: {"error": {"code": 503,"message": "This model is currently experiencing high demand.","status": "UNAVAILABLE"}}
+
+    TEXT
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    expect { llm.generate("Hello", user: user) { |_| } }.to raise_error(
+      DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      /high demand/,
+    )
+  end
+
+  it "logs the block reason when the prompt is blocked" do
+    response = <<~TEXT
+      data: {"promptFeedback": {"blockReason": "PROHIBITED_CONTENT"},"usageMetadata": {"promptTokenCount": 417,"totalTokenCount": 417}}
+
+    TEXT
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    stub_request(:post, url).to_return(status: 200, body: response)
+    Rails.logger.expects(:warn).with(includes("PROHIBITED_CONTENT"))
+
+    expect(llm.generate("Hello", user: user) { |_| }).to eq("")
   end
 
   it "Can correctly handle streamed responses even if they are chunked badly" do

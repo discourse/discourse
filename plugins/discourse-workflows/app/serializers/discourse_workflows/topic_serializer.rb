@@ -17,6 +17,7 @@ module DiscourseWorkflows
                :bumped_at,
                :archetype,
                :visible,
+               :visibility_reason_id,
                :closed,
                :archived,
                :has_summary,
@@ -93,6 +94,10 @@ module DiscourseWorkflows
 
     def include_participants?
       object.private_message?
+    end
+
+    def include_visibility_reason_id?
+      object.visibility_reason_id.present?
     end
 
     def custom_fields

@@ -689,14 +689,6 @@
     }
   }
 
-  &.critical .version-notes .normal-note {
-    display: none;
-  }
-
-  &.normal .version-notes .critical-note {
-    display: none;
-  }
-
   .face .fa {
     font-size: var(--font-up-4);
   }

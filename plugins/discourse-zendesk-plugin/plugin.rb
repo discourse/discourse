@@ -26,12 +26,16 @@ end
 
 require_relative "lib/discourse_zendesk_plugin/engine"
 require_relative "lib/discourse_zendesk_plugin/helper"
+require_relative "lib/discourse_zendesk_plugin/oauth_token"
 
 after_initialize do
   require_relative "app/jobs/onceoff/migrate_zendesk_autogenerate_categories_site_settings"
   require_relative "app/jobs/regular/zendesk_job"
   require_relative "lib/discourse_zendesk_plugin/post_extension"
   require_relative "lib/discourse_zendesk_plugin/topic_extension"
+  require_relative "app/services/problem_check/zendesk_api_token_deprecation"
+
+  register_problem_check ProblemCheck::ZendeskApiTokenDeprecation
 
   reloadable_patch do |plugin|
     Post.prepend DiscourseZendeskPlugin::PostExtension
@@ -55,7 +59,6 @@ after_initialize do
   end
 
   add_to_serializer(:current_user, :discourse_zendesk_plugin_status) do
-    SiteSetting.zendesk_jobs_email.present? && SiteSetting.zendesk_jobs_api_token.present? &&
-      SiteSetting.zendesk_url
+    DiscourseZendeskPlugin::Helper.configured? && SiteSetting.zendesk_url
   end
 end

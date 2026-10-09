@@ -7,14 +7,22 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import {
+  ExecutionProgressStream,
+  formatDuration,
+  isRunning,
+} from "../../../lib/workflows/execution-progress";
 import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
 
+const EXECUTIONS_CHANNEL = "/discourse-workflows/executions";
+
 const STATUS_ICONS = {
+  pending: "clock",
   success: "circle-check",
   error: "circle-xmark",
-  running: "spinner",
   waiting: "clock",
 };
 
@@ -29,17 +37,24 @@ function formatTime(timestamp) {
   return new Date(timestamp).toLocaleString();
 }
 
-function runTime(execution) {
-  const ms = execution.run_time_ms;
-  if (ms == null) {
+function runTime(execution, currentTime) {
+  if (isRunning(execution)) {
+    return formatDuration(execution.started_at, null, currentTime);
+  }
+
+  const milliseconds = execution.run_time_ms;
+  if (milliseconds == null) {
     return "—";
   }
-  return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+  return milliseconds < 1000
+    ? `${milliseconds}ms`
+    : `${(milliseconds / 1000).toFixed(1)}s`;
 }
 
 export default class ExecutionsManager extends Component {
   @service currentUser;
   @service dialog;
+  @service messageBus;
   @service router;
 
   @tracked executions = null;
@@ -47,26 +62,68 @@ export default class ExecutionsManager extends Component {
   @tracked loadingMore = false;
   @tracked bulkMode = false;
 
+  #loadMoreToken = 0;
+  #loading = false;
+  #progress;
+
   constructor() {
     super(...arguments);
+    this.#progress = new ExecutionProgressStream(this.messageBus, {
+      onMessage: (message) => this.#applyProgress(message),
+      onGap: () => this.loadExecutions(),
+      onRetry: () => this.loadExecutions(),
+    });
     this.loadExecutions();
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#progress.destroy();
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
+  }
+
+  get canLoadMore() {
+    return !!this.loadMoreUrl;
+  }
+
+  get isLoading() {
+    return this.executions === null;
+  }
+
   async loadExecutions() {
+    if (this.#loading) {
+      return;
+    }
+
+    this.#loading = true;
+    this.#loadMoreToken++;
+    this.#progress.unsubscribe();
+
     try {
       const url = this.args.workflowId
         ? `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/executions.json`
         : "/admin/plugins/discourse-workflows/executions.json";
       const result = await ajax(url);
+      if (this.isDestroying) {
+        return;
+      }
+
       this.executions = result.executions;
       this.loadMoreUrl = result.meta?.load_more_executions;
-    } catch (e) {
-      popupAjaxError(e);
+      this.#progress.resetRetry();
+      this.#progress.lastMessageId = result.meta?.message_bus_last_id ?? 0;
+      this.#progress.subscribe(EXECUTIONS_CHANNEL);
+      this.#syncTimer();
+    } catch (error) {
+      if (!this.isDestroying) {
+        this.#progress.scheduleRetry(error);
+      }
+    } finally {
+      this.#loading = false;
     }
-  }
-
-  get canLoadMore() {
-    return !!this.loadMoreUrl;
   }
 
   @action
@@ -76,19 +133,33 @@ export default class ExecutionsManager extends Component {
     }
 
     this.loadingMore = true;
+    const loadMoreToken = ++this.#loadMoreToken;
     try {
       const result = await ajax(this.loadMoreUrl);
-      this.executions = [...this.executions, ...result.executions];
-      this.loadMoreUrl = result.meta?.load_more_executions;
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loadingMore = false;
-    }
-  }
+      if (this.isDestroying || loadMoreToken !== this.#loadMoreToken) {
+        return;
+      }
 
-  get isLoading() {
-    return this.executions === null;
+      const existingIds = new Set(
+        this.executions.map((execution) => execution.id)
+      );
+      this.executions = [
+        ...this.executions,
+        ...result.executions.filter(
+          (execution) => !existingIds.has(execution.id)
+        ),
+      ];
+      this.loadMoreUrl = result.meta?.load_more_executions;
+      this.#syncTimer();
+    } catch (e) {
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loadingMore = false;
+      }
+    }
   }
 
   @action
@@ -132,24 +203,68 @@ export default class ExecutionsManager extends Component {
     });
   }
 
+  #applyProgress(message) {
+    if (!this.executions) {
+      this.loadExecutions();
+      return;
+    }
+
+    if (
+      !["execution_created", "execution_update"].includes(message.type) ||
+      !message.execution
+    ) {
+      return;
+    }
+
+    const update = message.execution;
+    if (
+      this.args.workflowId &&
+      update.workflow_id !== Number(this.args.workflowId)
+    ) {
+      return;
+    }
+
+    const current = this.executions.find(
+      (execution) => execution.id === update.id
+    );
+    if (current) {
+      this.executions = this.executions.map((execution) =>
+        execution.id === update.id ? { ...execution, ...update } : execution
+      );
+    } else if (message.type === "execution_created") {
+      this.executions = [...this.executions, update].sort(
+        (left, right) => right.id - left.id
+      );
+    }
+    this.#syncTimer();
+  }
+
+  #syncTimer() {
+    if ((this.executions || []).some(isRunning)) {
+      this.#progress.startTicker();
+    } else {
+      this.#progress.stopTicker();
+    }
+  }
+
   <template>
     <AdminTable
-      @items={{this.executions}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.executions}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
       @selectable={{this.bulkMode}}
     >
       <:empty>
         <EmptyState
+          @description={{i18n
+            "discourse_workflows.executions.empty_description"
+          }}
           @emoji="wave"
           @title={{i18n
             "discourse_workflows.executions.empty_title"
             username=this.currentUser.displayName
-          }}
-          @description={{i18n
-            "discourse_workflows.executions.empty_description"
           }}
         />
       </:empty>
@@ -157,27 +272,27 @@ export default class ExecutionsManager extends Component {
         {{#if this.bulkMode}}
           {{#if toolbar.hasSelection}}
             <DButton
+              class="btn-danger btn-small"
               @action={{fn
                 this.deleteSelected
                 toolbar.selectedIds
                 toolbar.clearSelection
               }}
-              @label="discourse_workflows.executions.delete_selected"
               @icon="trash-can"
-              class="btn-danger btn-small"
+              @label="discourse_workflows.executions.delete_selected"
             />
           {{/if}}
           <DButton
+            class="btn-default btn-small"
             @action={{fn this.cancelBulkMode toolbar.clearSelection}}
             @label="discourse_workflows.executions.cancel_select"
-            class="btn-default btn-small"
           />
         {{else}}
           <DButton
-            @action={{this.enableBulkMode}}
-            @label="discourse_workflows.executions.select"
-            @icon="list-check"
             class="btn-default btn-small"
+            @action={{this.enableBulkMode}}
+            @icon="list-check"
+            @label="discourse_workflows.executions.select"
           />
         {{/if}}
       </:toolbar>
@@ -217,7 +332,11 @@ export default class ExecutionsManager extends Component {
             <span
               class="workflows-executions-manager__status --{{execution.status}}"
             >
-              {{dIcon (statusIcon execution.status)}}
+              {{#if (isRunning execution)}}
+                {{dLoadingSpinner size="small"}}
+              {{else}}
+                {{dIcon (statusIcon execution.status)}}
+              {{/if}}
               {{i18n
                 (concat
                   "discourse_workflows.executions.statuses." execution.status
@@ -238,7 +357,11 @@ export default class ExecutionsManager extends Component {
             <span
               class="workflows-executions-manager__status --{{execution.status}}"
             >
-              {{dIcon (statusIcon execution.status)}}
+              {{#if (isRunning execution)}}
+                {{dLoadingSpinner size="small"}}
+              {{else}}
+                {{dIcon (statusIcon execution.status)}}
+              {{/if}}
               {{i18n
                 (concat
                   "discourse_workflows.executions.statuses." execution.status
@@ -253,18 +376,20 @@ export default class ExecutionsManager extends Component {
             {{formatTime execution.started_at}}
           </td>
         {{/if}}
-        <td class="d-table__cell --detail">
+        <td
+          class="d-table__cell --detail workflows-executions-manager__run-time"
+        >
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.executions.run_time"}}
           </div>
-          {{runTime execution}}
+          {{runTime execution this.currentTime}}
         </td>
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.showExecution execution}}
               @label="discourse_workflows.executions.show"
-              class="btn-default btn-small"
             />
           </div>
         </td>

@@ -19,8 +19,10 @@ de:
     chat_integration_slack_transcript_quote: Slack-Transkript in [quote]-Tags einbetten?
     errors:
       chat_integration_slack_api_configs_are_empty: "Du musst entweder eine ausgehende Webhook-URL eingeben oder ein Zugriffstoken"
+      chat_integration_telegram_api_base_url_invalid: "Die Basis-URL der Telegram-API muss eine gültige HTTPS-URL sein, die weder Anmeldedaten noch einen Abfrage-String oder ein Fragment enthält"
     chat_integration_telegram_enabled: "Aktiviere den Chat-Integration-Provider für Telegram"
     chat_integration_telegram_access_token: "Das Zugriffstoken deines Bots vom Telegram @BotFather"
+    chat_integration_telegram_api_base_url: "Basis-URL, die für Anfragen an die Telegram-Bot-API verwendet wird. Ändere diese nur, wenn du Anfragen über einen vertrauenswürdigen HTTPS-Proxy weiterleitest. Hosts in privaten Netzwerken müssen außerdem zur Website-Einstellung für erlaubte interne Hosts hinzugefügt werden."
     chat_integration_telegram_excerpt_length: "Auszugslänge für Telegram-Beiträge"
     chat_integration_telegram_enable_slash_commands: "Erlaube die Verwaltung von Telegram-Abos über „Slash-Befehle“"
     chat_integration_discord_enabled: "Aktiviere den Chat-Integration-Provider für Discord"
@@ -72,6 +74,10 @@ de:
     errors:
       send_chat_integration_message:
         channel_not_found: "Kanal nicht gefunden: %{channel_id}"
+        provider_disabled: "Der Chat-Integrationsanbieter ist deaktiviert oder fehlt: %{provider}"
+        provider_failed: "Der Anbieter %{provider} konnte die Nachricht nicht senden"
+        provider_failed_with_details: "Der Anbieter %{provider} konnte die Nachricht nicht senden: %{details}"
+        message_required: "Eine Nachricht ist erforderlich"
   chat_integration:
     all_categories: "(alle Kategorien)"
     deleted_category: "(Kategorie gelöscht)"

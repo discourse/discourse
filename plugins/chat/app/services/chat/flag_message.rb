@@ -38,7 +38,10 @@ module Chat
 
       validates :message_id, presence: true
       validates :channel_id, presence: true
-      validates :flag_type_id, inclusion: { in: -> { ::ReviewableScore.types.values } }
+      validates :flag_type_id,
+                inclusion: {
+                  in: -> { Flag.enabled.applicable_to("Chat::Message").ids },
+                }
     end
 
     model :message
@@ -65,12 +68,14 @@ module Chat
     end
 
     def flag_message(message:, params:, guardian:)
-      Chat::ReviewQueue.new.flag_message(
-        message,
-        guardian,
-        params.flag_type_id,
-        **params.slice(:message, :is_warning, :take_action, :queue_for_review),
-      )
+      result =
+        Chat::ReviewQueue.new.flag_message(
+          message,
+          guardian,
+          params.flag_type_id,
+          **params.slice(:message, :is_warning, :take_action, :queue_for_review),
+        )
+      fail!(result[:errors]) if !result[:success]
     end
   end
 end

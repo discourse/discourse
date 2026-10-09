@@ -166,4 +166,90 @@ describe DiscourseAi::Translation::EntryPoint do
       expect(job_enqueued?(job: :detect_translate_topic)).to eq false
     end
   end
+
+  describe "upon category updated" do
+    it "enqueues category retranslation when the description changes" do
+      SiteSetting.content_localization_supported_locales = "de|fr"
+      category = Fabricate(:category_with_definition, locale: "en")
+
+      category.update!(description: "An updated category description")
+
+      expect_job_enqueued(
+        job: :localize_categories,
+        args: {
+          category_id: category.id,
+          fields: ["description"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "enqueues category retranslation when the name changes" do
+      category = Fabricate(:category, locale: "en")
+
+      category.update!(name: "A new category name")
+
+      expect_job_enqueued(
+        job: :localize_categories,
+        args: {
+          category_id: category.id,
+          fields: ["name"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "does not enqueue category retranslation when another field changes" do
+      category = Fabricate(:category, locale: "en")
+
+      category.update!(color: "FF0000")
+
+      expect(job_enqueued?(job: :localize_categories)).to eq(false)
+    end
+  end
+
+  describe "upon tag updated" do
+    it "enqueues tag retranslation when the description changes" do
+      SiteSetting.content_localization_supported_locales = "de|fr"
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(description: "An updated tag description")
+
+      expect_job_enqueued(
+        job: :localize_tags,
+        args: {
+          tag_id: tag.id,
+          fields: ["description"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "enqueues tag retranslation when the name changes" do
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(name: "a-new-tag-name")
+
+      expect_job_enqueued(
+        job: :localize_tags,
+        args: {
+          tag_id: tag.id,
+          fields: ["name"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "does not enqueue tag retranslation when another field changes" do
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(staff_topic_count: 1)
+
+      expect(job_enqueued?(job: :localize_tags)).to eq(false)
+    end
+  end
 end

@@ -1,6 +1,7 @@
 import { array, fn, hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -29,10 +30,10 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form
-          @data={{hash foo=1}}
           @commitOnSubmit={{false}}
-          @onSubmit={{onSubmit}}
+          @data={{hash foo=1}}
           @onRegisterApi={{registerApi}}
+          @onSubmit={{onSubmit}}
         />
       </template>
     );
@@ -47,6 +48,42 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     assert.strictEqual(formApi.get("foo"), 1, "the failed change can be reset");
   });
 
+  test("@validate can prevent the current submission", async function (assert) {
+    let formApi;
+    let shouldPreventSubmit = true;
+    const onSubmit = sinon.spy();
+    const registerApi = (api) => (formApi = api);
+    const validate = (_data, { preventSubmit }) => {
+      if (shouldPreventSubmit) {
+        preventSubmit();
+      }
+    };
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1}}
+          @onRegisterApi={{registerApi}}
+          @onSubmit={{onSubmit}}
+          @validate={{validate}}
+        />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+    await formApi.submit();
+
+    assert.false(onSubmit.called, "the submission callback is not called");
+    assert.true(formApi.isDirty, "the draft data is not committed");
+    assert.form().hasNoErrors("no validation error is displayed");
+
+    shouldPreventSubmit = false;
+    await formApi.submit();
+
+    assert.true(onSubmit.calledOnce, "a later submission can proceed");
+    assert.false(formApi.isDirty, "the successful submission is committed");
+  });
+
   test("@onSet", async function (assert) {
     const calls = [];
     const onSet = (name, value, data) => {
@@ -56,7 +93,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{hash foo=1}} @onSet={{onSet}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+          <form.Field @name="foo" @title="Foo" @type="input" as |field|>
             <field.Control />
           </form.Field>
         </Form>
@@ -80,7 +117,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
           >Add</form.Button>
 
           <form.Collection @name="foo" as |collection|>
-            <collection.Field @type="input" @name="bar" @title="Bar" as |field|>
+            <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
               <field.Control />
             </collection.Field>
           </form.Collection>
@@ -107,8 +144,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{hash foo=1 bar=2}} @validate={{validate}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" />
-          <form.Field @type="input" @name="bar" @title="Bar" />
+          <form.Field @name="foo" @title="Foo" @type="input" />
+          <form.Field @name="bar" @title="Bar" @type="input" />
         </Form>
       </template>
     );
@@ -128,18 +165,18 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       <template>
         <Form @data={{data}} as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             @validation="required"
             as |field|
           >
             <field.Control />
           </form.Field>
           <form.Field
-            @type="input"
             @name="bar"
             @title="Bar"
+            @type="input"
             @validation="required"
             as |field|
           >
@@ -189,8 +226,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       <template>
         <Form
           @data={{model}}
-          @onSubmit={{submit}}
           @onRegisterApi={{registerApi}}
+          @onSubmit={{submit}}
           as |form data|
         >
           <div class="bar">{{data.bar}}</div>
@@ -288,7 +325,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{model}} @onRegisterApi={{registerApi}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+          <form.Field @name="foo" @title="Foo" @type="input" as |field|>
             <field.Control />
           </form.Field>
         </Form>
@@ -332,15 +369,15 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       <template>
         <Form @data={{hash bar=1}} @onReset={{onReset}} as |form|>
           <form.Field
-            @type="input"
-            @title="Foo"
             @name="foo"
+            @title="Foo"
+            @type="input"
             @validation="required"
             as |field|
           >
             <field.Control />
           </form.Field>
-          <form.Field @type="input" @title="Bar" @name="bar" as |field|>
+          <form.Field @name="bar" @title="Bar" @type="input" as |field|>
             <field.Control />
           </form.Field>
           <form.Button class="set-bar" @action={{fn form.set "bar" 2}} />
@@ -367,7 +404,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{data}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+          <form.Field @name="foo" @title="Foo" @type="input" as |field|>
             <field.Control />
           </form.Field>
           <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
@@ -483,9 +520,9 @@ module("Integration | Component | FormKit | Form", function (hooks) {
         <Form @data={{hash visible=true}} as |form data|>
           {{#if data.visible}}
             <form.Field
-              @type="input"
-              @title="Foo"
               @name="foo"
+              @title="Foo"
+              @type="input"
               @validation="required"
               as |field|
             >
@@ -539,9 +576,9 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             @validation="required"
             as |field|
           >
@@ -567,7 +604,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @validate={{validate}} as |form|>
-          <form.Field @name="foo" @type="custom" @title="Foo" as |field|>
+          <form.Field @name="foo" @title="Foo" @type="custom" as |field|>
             <field.Control>
               <div class="not-focusable">Custom content</div>
             </field.Control>

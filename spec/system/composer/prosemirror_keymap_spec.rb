@@ -49,6 +49,17 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     expect(rich).to have_css("ul li", text: "Item 1")
   end
 
+  it "lets the user nest and lift list items with Tab" do
+    open_composer
+    composer.type_content("* First\nSecond")
+
+    composer.send_keys(:tab)
+    expect(composer).to have_nested_list_item("Second")
+
+    composer.send_keys(%i[shift tab])
+    expect(composer).to have_top_level_list_item("Second")
+  end
+
   it "supports Ctrl + Shift + 9 to create a blockquote" do
     open_composer
     composer.type_content("This is a blockquote")

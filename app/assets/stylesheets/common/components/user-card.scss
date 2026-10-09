@@ -1,13 +1,15 @@
 @use "sass:math";
 @use "lib/viewport";
 
-.fk-d-menu[data-identifier="usercard"] {
+.fk-d-menu[data-identifier="usercard"],
+.fk-d-menu[data-identifier="category-card"] {
   max-width: calc(100vw - 2em);
   width: auto;
 
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
+    border-radius: var(--d-border-radius-large);
   }
 
   @include viewport.until(sm) {
@@ -48,9 +50,10 @@
   }
 }
 
-// shared styles for user and group cards
+// shared styles for user, group, and category cards
 .user-card,
-.group-card {
+.group-card,
+.category-card {
   --card-width: 39em;
   --avatar-width: 8em;
   --avatar-margin: -3.3em; // extends the avatar above the card
@@ -59,11 +62,11 @@
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  position: unset !important;
-  margin: 0 !important;
-  border-radius: var(--d-border-radius) !important;
-  box-shadow: unset !important;
-  z-index: unset !important;
+  position: unset;
+  margin: 0;
+  border-radius: var(--d-border-radius-large);
+  box-shadow: unset;
+  z-index: unset;
 
   @include viewport.until(sm) {
     box-sizing: border-box;
@@ -72,9 +75,11 @@
   }
 
   .card-content {
+    container-type: inline-size;
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-border-radius-large);
+    border: 5px solid var(--secondary);
 
     &::after {
       content: "";
@@ -98,6 +103,8 @@
 
   // avatar - names - controls
   .first-row {
+    display: flex;
+
     @include viewport.until(sm) {
       flex-wrap: wrap;
     }
@@ -254,21 +261,23 @@
 
   // avatar - names - controls
   .first-row {
-    display: flex;
-
     .avatar-placeholder {
       width: var(--avatar-width);
       height: var(--avatar-width);
     }
 
-    .user-card-avatar {
+    .user-card-avatar-wrapper {
       margin-top: var(--avatar-margin);
-      max-height: var(--avatar-width);
       position: relative;
 
       @include viewport.until(sm) {
         flex: 0 0 auto;
       }
+    }
+
+    .user-card-avatar {
+      max-height: var(--avatar-width);
+      position: relative;
 
       .own-avatar-pencil {
         opacity: 0;
@@ -500,26 +509,51 @@
   .user-status {
     display: flex;
     align-items: center;
+    gap: var(--space-1);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(calc((var(--avatar-width) / 3)));
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100cqi - 50% - var(--avatar-width) / 3);
+    background: var(--primary-very-low);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 9999px;
+    border: 5px solid var(--secondary);
+    box-shadow:
+      0 0 0 1px var(--primary-low),
+      0 2px 12px rgb(0, 0, 0, 0.1);
+    font-size: var(--font-down-1);
 
-    @include viewport.until(sm) {
-      font-size: var(--font-down-1);
+    &.--empty {
+      font-style: italic;
+
+      .user-status__description {
+        padding-inline-end: 0.15em;
+      }
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
     }
 
-    img.emoji {
-      margin-right: 0.3em;
+    .emoji {
+      width: 1.35em;
+      height: 1.35em;
     }
 
     .relative-date {
       flex: 1 0 auto;
       text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 0.5em;
-      margin-left: 0.6em;
+      font-size: var(--font-down-2);
+      margin-left: var(--space-half);
       color: var(--primary-medium);
     }
 
     &__description {
       @include ellipsis;
+      min-width: 0;
     }
   }
 }
@@ -528,8 +562,6 @@
 .group-card {
   // avatar - names and controls
   .first-row {
-    display: flex;
-
     .group-card-avatar {
       margin-top: var(--avatar-margin);
     }

@@ -14,6 +14,14 @@ describe Chat::UsersFromUsernamesAndGroupsQuery do
       expect(result).to contain_exactly(user1, user4)
     end
 
+    it "matches usernames case-insensitively" do
+      user = Fabricate(:user, username: "MixedCase")
+
+      result = described_class.call(usernames: [user.username.downcase], groups: [])
+
+      expect(result).to contain_exactly(user)
+    end
+
     it "works with a number" do
       user = Fabricate(:user, username: 12_345_678)
       result = described_class.call(usernames: [12_345_678], groups: [])

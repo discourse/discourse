@@ -19,6 +19,16 @@ vi:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Hỏi AI"
+        ask_ai:
+          title: "Hỏi AI"
+          reports:
+            retry_questions: "Thử lại"
+          date: "Ngày"
+          outcomes:
+            failed: "Thất bại"
         emotion:
           title: "Cảm xúc (Emotion)"
           description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
@@ -88,6 +98,11 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      copied: "Đã sao chép"
+      ai_decoded_transcript:
+        type: "Loại"
+        error: "Lỗi"
+        response: "Đáp ứng"
       post_image_captions:
         edit: "Không có tiến trình ngôn ngữ nào."
         title: "Đã dịch %{translated}/%{total} sang %{language}"
@@ -126,6 +141,7 @@ vi:
           reset: "Cài lại"
         search:
           name: "Tìm kiếm"
+          ask_ai: "Hỏi AI"
         embeddings:
           setting_groups:
             related_topics: "Các chủ đề liên quan"
@@ -228,6 +244,39 @@ vi:
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
+      logs:
+        short_title: "Log"
+        retry: "Thử lại"
+        apply: "Áp dụng"
+        successful: "Thành công"
+        failed: "Thất bại"
+        unknown: "Không biết"
+        time: "Thời gian"
+        when: "Khi"
+        outcome: "Kết quả"
+        feature: "Tính năng"
+        model: "Mô hình"
+        request: "Yêu cầu"
+        user: "Người dùng"
+        context: "Ngữ cảnh"
+        topic: "Chủ đề"
+        post: "Tút"
+        post_short: "Tút %{id}"
+        duration: "Thời hạn"
+        actions: "Hành động"
+        view_details: "Chi tiết"
+        periods:
+          day: "24 giờ qua"
+          week: "7 ngày qua"
+          custom: "Tùy biến"
+        detail:
+          request: "Yêu cầu"
+          response: "Đáp ứng"
+          context: "Ngữ cảnh"
+        retention:
+          summary_stage: "Tóm tắt"
+          deleted_stage: "Đã xóa"
+          save: "Lưu lại"
       ai_agent:
         name: "Tên"
         edit: "Sửa"
@@ -306,6 +355,9 @@ vi:
           required: "Bắt buộc"
       llms:
         display_name: "Tên"
+        vision_modes:
+          disabled:
+            title: "Vô hiệu hóa"
         save: "Lưu lại"
         edit: "Sửa"
         delete: Xóa
@@ -324,10 +376,6 @@ vi:
           ai_image_caption: "Chú thích hình ảnh"
           ai_summarization: "Tóm tắt"
           ai_spam: "Rác"
-        model_description:
-          open_ai-gpt-5-6-sol: "Mô hình tiên tiến nhất của OpenAI dành cho các tác vụ chuyên môn phức tạp"
-          open_ai-gpt-5-6-terra: "Cân bằng giữa trí thông minh và chi phí cho các tác vụ yêu cầu cao"
-          open_ai-gpt-5-6-luna: "Tối ưu hóa chi phí cho các tác vụ khối lượng lớn"
         next:
           title: "Kế tiếp"
         tests:
@@ -382,19 +430,14 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
-        semantic_search_results:
-          unavailable: "Kết quả AI không khả dụng"
-          zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
-          invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
-        semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
-        ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
         agent: "Tác nhân:"
         llm: "Mô hình (Model):"
         try_again: "Thử lại"
         debug_ai_modal:
+          duration_label: "Thời hạn:"
           request: "Yêu cầu"
           response: "Đáp ứng"
           next_log: "Kế tiếp"
@@ -429,12 +472,18 @@ vi:
             expanded: "Mở rộng"
             expanded_description: "Với tóm tắt AI"
       discobot_discoveries:
-        regular_results: "Các chủ đề"
-        collapse: "Thu gọn"
+        main_title: "Hỏi AI"
         user_setting: "Bật tính năng tìm kiếm bằng AI"
-        tooltip:
-          actions:
-            disable: "Tắt"
+        legacy:
+          regular_results: "Các chủ đề"
+          collapse: "Thu gọn"
+          tooltip:
+            actions:
+              disable: "Tắt"
+        search_all_topics: "Tất cả chủ đề"
+        search_messages: "Tin nhắn"
+        sources:
+          related_discussions: "Các chủ đề liên quan"
     review:
       types:
         reviewable_ai_post:

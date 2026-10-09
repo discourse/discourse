@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
+import { horizontalViewportInset } from "discourse/float-kit/lib/update-position";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
+import FloatKitTabOrderInline from "discourse/float-kit/modifiers/tab-order-inline";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
@@ -31,6 +34,17 @@ interface DFloatBodySignature {
 
     /** Whether to trap Tab focus within the content. */
     trapTab?: boolean;
+
+    /**
+     * Whether the content should take part in the tab sequence as if it were rendered inline
+     * after the trigger, rather than at the portal's position in the document: Tab leads into its
+     * controls from the trigger, and off the end of them it dismisses the float and continues
+     * from the trigger.
+     *
+     * The non-containing alternative to `trapTab`, for a float that is dismissable but whose
+     * content holds focus. See `FloatKitTabOrderInline`.
+     */
+    inlineTabOrder?: boolean;
 
     /**
      * The element to render into. Some callers forward this even though the body
@@ -80,12 +94,72 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
+  /**
+   * Extends the trigger's grace period across the content itself, so hovering onto the
+   * float keeps it open and leaving it starts the close. Focus moving within the
+   * content is not a departure, so it holds the lock rather than scheduling a close.
+   */
+  hoverGrace = modifierFn((element: HTMLElement) => {
+    const instance = this.args.instance;
+
+    const onPointerEnter = () => instance.cancelHoverClose();
+    const onPointerLeave = () => instance.scheduleHoverClose();
+    const onFocusIn = () => instance.lockHoverCloseForFocus();
+    const onFocusOut = (event: FocusEvent) => {
+      const nextFocused = event.relatedTarget;
+      if (nextFocused instanceof Node && element.contains(nextFocused)) {
+        return;
+      }
+      instance.unlockHoverCloseForFocus();
+      instance.scheduleHoverClose();
+    };
+
+    element.addEventListener("pointerenter", onPointerEnter, { passive: true });
+    element.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    element.addEventListener("focusin", onFocusIn, { passive: true });
+    element.addEventListener("focusout", onFocusOut, { passive: true });
+
+    return () => {
+      element.removeEventListener("pointerenter", onPointerEnter);
+      element.removeEventListener("pointerleave", onPointerLeave);
+      element.removeEventListener("focusin", onFocusIn);
+      element.removeEventListener("focusout", onFocusOut);
+    };
+  });
+
+  /**
+   * Whether to install the grace-period listeners on the content. Only meaningful while
+   * the float is open, and only when a grace period is configured.
+   *
+   * @returns `true` when the content should participate in the grace period.
+   */
+  get supportsHoverGrace(): boolean {
+    return this.args.instance.expanded && this.options.hoverGracePeriod > 0;
+  }
+
+  /**
+   * The float borrows its accessible name from its trigger, but only a float whose trigger
+   * markup carries the instance id can do so. A float opened through the service anchors to an
+   * element that was never given that id — and one anchored to a virtual reference has no
+   * element at all — so emitting the id regardless produced a reference to nothing, which is
+   * ignored during name computation and leaves the float silently unnamed. Emit it only when it
+   * actually resolves, and let `ariaLabel` name the float in every other case.
+   */
   get contentAriaLabelledby(): string | null | undefined {
+    if (this.#hasPresentationalRole || this.contentAriaLabel) {
+      return;
+    }
+
+    const { id } = this.args.instance;
+    return id && document.getElementById(id) ? id : null;
+  }
+
+  get contentAriaLabel(): string | null | undefined {
     if (this.#hasPresentationalRole) {
       return;
     }
 
-    return this.args.instance.id;
+    return this.options.ariaLabel;
   }
 
   /**
@@ -94,6 +168,22 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
    */
   get #hasPresentationalRole() {
     return this.args.role === "none" || this.args.role === "presentation";
+  }
+
+  /**
+   * Whether to repair the tab order, asserting first that containment was not ALSO asked for.
+   *
+   * The two are alternatives, and the conflict is otherwise silent and one-sided: `dTrapTab` is
+   * applied first below, so its `preventDefault` lands before the tab-order handler runs, and the
+   * float traps focus while its author believes they configured the opposite.
+   */
+  get inlineTabOrder() {
+    assert(
+      "float-kit: `trapTab` and `inlineTabOrder` are alternatives — the first contains focus, the second deliberately lets it leave. Setting both keeps the trap and silently ignores the tab-order repair.",
+      !(this.args.trapTab && this.args.inlineTabOrder)
+    );
+
+    return this.args.inlineTabOrder;
   }
 
   get supportsCloseOnClickOutside() {
@@ -121,12 +211,16 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
   }
 
   get style() {
-    const maxWidth =
-      typeof this.options.maxWidth === "number"
-        ? `${this.options.maxWidth}px`
-        : this.options.maxWidth;
+    const { maxWidth } = this.options;
 
-    return trustHTML(`max-width: ${maxWidth}`);
+    // Only a number is clamped: a keyword like `none` or `unset` is invalid inside `min()`,
+    // which would drop the declaration and hand the float to whatever CSS sets `max-width`.
+    const value =
+      typeof maxWidth === "number"
+        ? `min(${maxWidth}px, calc(100dvw - ${horizontalViewportInset(this.options)}px))`
+        : maxWidth;
+
+    return trustHTML(`max-width: ${value}`);
   }
 
   <template>
@@ -135,18 +229,29 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
       @portalOutletElement={{@instance.portalOutletElement}}
     >
       <div
+        aria-label={{this.contentAriaLabel}}
+        aria-labelledby={{this.contentAriaLabelledby}}
         class={{dConcatClass
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
         }}
-        data-identifier={{this.options.identifier}}
         data-content
-        aria-labelledby={{this.contentAriaLabelledby}}
+        data-identifier={{this.options.identifier}}
         role={{@role}}
+        style={{this.style}}
+        ...attributes
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
+        {{(if
+          this.inlineTabOrder
+          (modifier
+            FloatKitTabOrderInline
+            @instance.triggerElement
+            (fn @instance.close (hash focusTrigger=false))
+          )
+        )}}
         {{(if
           this.supportsCloseOnClickOutside
           (modifier
@@ -160,8 +265,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
-        style={{this.style}}
-        ...attributes
+        {{(if this.supportsHoverGrace (modifier this.hoverGrace))}}
       >
         <div class={{@innerClass}}>
           {{yield}}

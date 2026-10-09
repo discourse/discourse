@@ -124,10 +124,10 @@ export default class ChangeReplyTo extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "composer.change_reply_to.title"}}
-      @flash={{this.flash}}
       class="change-reply-to-modal"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{i18n "composer.change_reply_to.title"}}
     >
       <:body>
         {{#if this.selectedPost}}
@@ -145,43 +145,43 @@ export default class ChangeReplyTo extends Component {
         {{/if}}
 
         <TopicTimeline
-          @model={{this.topic}}
-          @fullscreen={{true}}
+          @convertToPrivateMessage={{this.noop}}
+          @convertToPublicTopic={{this.noop}}
+          @deleteTopic={{this.noop}}
           @enteredIndex={{this.initialEnteredIndex}}
-          @jumpTop={{this.handleJumpTop}}
+          @fullscreen={{true}}
           @jumpBottom={{this.handleJumpBottom}}
           @jumpEnd={{this.handleJumpBottom}}
           @jumpToIndex={{this.handleJumpToIndex}}
+          @jumpTop={{this.handleJumpTop}}
           @jumpToPostPrompt={{this.noop}}
-          @replyToPost={{this.noop}}
-          @showTopReplies={{this.noop}}
-          @toggleMultiSelect={{this.noop}}
-          @showTopicSlowModeUpdate={{this.noop}}
-          @deleteTopic={{this.noop}}
+          @model={{this.topic}}
           @recoverTopic={{this.noop}}
-          @toggleClosed={{this.noop}}
-          @toggleArchived={{this.noop}}
-          @toggleVisibility={{this.noop}}
-          @showTopicTimerModal={{this.noop}}
-          @showFeatureTopic={{this.noop}}
-          @showChangeTimestamp={{this.noop}}
+          @replyToPost={{this.noop}}
           @resetBumpDate={{this.noop}}
-          @convertToPublicTopic={{this.noop}}
-          @convertToPrivateMessage={{this.noop}}
+          @showChangeTimestamp={{this.noop}}
+          @showFeatureTopic={{this.noop}}
+          @showTopicSlowModeUpdate={{this.noop}}
+          @showTopicTimerModal={{this.noop}}
+          @showTopReplies={{this.noop}}
+          @toggleArchived={{this.noop}}
+          @toggleClosed={{this.noop}}
+          @toggleMultiSelect={{this.noop}}
+          @toggleVisibility={{this.noop}}
         />
       </:body>
       <:footer>
         <DButton
-          @action={{this.submit}}
-          @label="composer.change_reply_to.submit"
-          @disabled={{not this.canSubmit}}
           class="btn-primary"
+          @action={{this.submit}}
+          @disabled={{not this.canSubmit}}
+          @label="composer.change_reply_to.submit"
         />
         {{#if this.canRemove}}
           <DButton
+            class="btn-danger"
             @action={{this.remove}}
             @label="composer.change_reply_to.remove"
-            class="btn-danger"
           />
         {{/if}}
         <DButton @action={{@closeModal}} @label="cancel" />

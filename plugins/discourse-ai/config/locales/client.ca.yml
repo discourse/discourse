@@ -8,6 +8,10 @@ ca:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Fallits"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,11 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tipus"
+        error: "Error"
+        response: "Reacció"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -110,6 +119,36 @@ ca:
         total: "Total"
         periods:
           last_day: "Últimes 24 hores"
+      logs:
+        short_title: "Registres"
+        apply: "Aplica"
+        successful: "Amb èxit"
+        failed: "Fallits"
+        unknown: "Desconegut"
+        time: "Hora"
+        when: "Quan"
+        request: "Sol·licita"
+        provider: "Proveïdor"
+        user: "Usuari"
+        context: "Context"
+        topic: "Tema"
+        post: "Publicació"
+        post_short: "Publicació %{id}"
+        duration: "Duració"
+        actions: "Accions"
+        view_details: "Detalls"
+        periods:
+          day: "Últimes 24 hores"
+          week: "Els darrers 7 dies"
+          custom: "Personalitzat"
+        detail:
+          request: "Sol·licita"
+          response: "Reacció"
+          context: "Context"
+        retention:
+          summary_stage: "Resum"
+          deleted_stage: "Suprimit"
+          save: "Desa"
       ai_agent:
         name: "Nom"
         edit: "Edita"
@@ -172,6 +211,9 @@ ca:
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
+        vision_modes:
+          disabled:
+            title: "Desactivat"
         save: "Desa"
         edit: "Edita"
         delete: Suprimeix
@@ -212,6 +254,7 @@ ca:
           fake: "Personalitzat"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Duració:"
           request: "Sol·licita"
           response: "Reacció"
           next_log: "Següent"
@@ -234,8 +277,10 @@ ca:
           table:
             total_count: "Total"
       discobot_discoveries:
-        regular_results: "Temes"
-        collapse: "Redueix"
-        tooltip:
-          actions:
-            disable: "Desactiva"
+        legacy:
+          regular_results: "Temes"
+          collapse: "Redueix"
+          tooltip:
+            actions:
+              disable: "Desactiva"
+        search_messages: "Missatges"

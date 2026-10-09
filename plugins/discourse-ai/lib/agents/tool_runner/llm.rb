@@ -24,17 +24,21 @@ module DiscourseAi
                 if response_format && !response_format.is_a?(Hash)
                   raise ::Discourse::InvalidParameters.new("response_format must be a hash")
                 end
-                @llm.generate(
-                  convert_js_prompt_to_ruby(prompt),
-                  user: llm_user,
-                  feature_name: "custom_tool_#{tool.name}",
-                  response_format: response_format,
-                  temperature: options["temperature"],
-                  top_p: options["top_p"],
-                  max_tokens: options["max_tokens"],
-                  thinking_effort: options["thinking_effort"],
-                  stop_sequences: options["stop_sequences"],
-                )
+                response =
+                  @llm.generate(
+                    convert_js_prompt_to_ruby(prompt),
+                    user: llm_user,
+                    feature_name: "custom_tool_#{tool.name}",
+                    execution_context: @context.execution_context,
+                    cancel_manager: @context.cancel_manager,
+                    response_format: response_format,
+                    temperature: options["temperature"],
+                    top_p: options["top_p"],
+                    max_tokens: options["max_tokens"],
+                    thinking_effort: options["thinking_effort"],
+                    stop_sequences: options["stop_sequences"],
+                  )
+                DiscourseAi::Completions::Llm.text_from_response(response)
               end
             end,
           )

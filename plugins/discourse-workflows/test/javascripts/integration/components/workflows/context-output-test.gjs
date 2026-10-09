@@ -47,9 +47,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -81,9 +81,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -139,12 +139,12 @@ module(
       await render(
         <template>
           <OutputContext
+            @configuration={{configuration}}
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
-            @configuration={{configuration}}
           />
         </template>
       );
@@ -200,9 +200,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{session}}
           />
@@ -233,9 +233,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -243,7 +243,12 @@ module(
       );
 
       assert.dom(".workflows-context-panel__title-meta").doesNotExist();
-      assert.dom(".workflows-context-panel__empty").hasText("No output data");
+      assert
+        .dom(".workflows-context-panel__empty")
+        .hasText(
+          "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab.",
+          "the empty state explains how to continue the execution"
+        );
     });
 
     test("shows item count and field-empty state for real empty output items", async function (assert) {
@@ -266,9 +271,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -305,9 +310,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -315,7 +320,12 @@ module(
       );
 
       assert.dom(".workflows-schema-field__key-title").doesNotExist();
-      assert.dom(".workflows-context-panel__empty").hasText("No output data");
+      assert
+        .dom(".workflows-context-panel__empty")
+        .hasText(
+          "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab.",
+          "the latest zero-item run explains how to continue the execution"
+        );
     });
 
     test("merges fields across output items without rendering item rows", async function (assert) {
@@ -344,9 +354,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -398,9 +408,9 @@ module(
       await render(
         <template>
           <OutputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />

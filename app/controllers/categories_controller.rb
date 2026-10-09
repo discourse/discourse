@@ -17,8 +17,6 @@ class CategoriesController < ApplicationController
                  ]
 
   before_action :fetch_category, only: %i[show update destroy visible_groups convert_nested_replies]
-  before_action :initialize_staff_action_logger, only: %i[create update destroy]
-
   skip_before_action :check_xhr,
                      only: %i[
                        index
@@ -65,19 +63,20 @@ class CategoriesController < ApplicationController
           MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)),
         )
 
-        @topic_list = fetch_topic_list
-
-        if @topic_list.present? && @topic_list.topics.present?
-          store_preloaded(
-            @topic_list.preload_key,
-            MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
-          )
-        end
+        preload_topic_list
 
         render
       end
 
       format.json { render_serialized(@category_list, CategoryListSerializer) }
+      format.md do
+        render_markdown(
+          MarkdownEndpoint::DirectoryRenderer.new.categories(
+            @category_list,
+            params.permit(:page, :parent_category_id, :include_subcategories, :tag).to_h,
+          ),
+        )
+      end
     end
   end
 
@@ -158,37 +157,20 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
-  MAX_DESCRIPTION_PARAM_LENGTH = 1000
+  MAX_DESCRIPTION_PARAM_LENGTH = CategoryCreator::MAX_DESCRIPTION_LENGTH
+
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
     category_type = params[:category_type]
-
-    if category_params[:description].present? &&
-         category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
-      render json: {
-               errors: [
-                 I18n.t(
-                   "category.errors.description_too_long",
-                   count: MAX_DESCRIPTION_PARAM_LENGTH,
-                 ),
-               ],
-             },
-             status: :unprocessable_entity
-      return
-    end
-
-    @category =
-      begin
-        Category.new(required_create_params.merge(user: current_user))
-      rescue ArgumentError => e
-        return render json: { errors: [e.message] }, status: :unprocessable_entity
-      end
+    category_attributes = required_create_params
 
     configure_error = nil
 
     Category.transaction do
-      if @category.save
+      @category = CategoryCreator.create(guardian, category_attributes)
+
+      if @category.persisted?
         @category.move_to(position.to_i) if position
 
         if category_type.present?
@@ -243,10 +225,6 @@ class CategoriesController < ApplicationController
     end
 
     if @category.persisted?
-      Scheduler::Defer.later "Log staff action create category" do
-        @staff_action_logger.log_category_creation(@category)
-      end
-
       render_serialized(@category, CategorySerializer)
     else
       render_json_error(@category)
@@ -257,7 +235,7 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_edit!(@category)
 
     json_result(@category, serializer: CategorySerializer) do |cat|
-      old_category_params = category_params.dup
+      category_params_for_log = category_params.dup
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
       category_params.delete(:position)
@@ -295,24 +273,19 @@ class CategoriesController < ApplicationController
 
       merge_pending_custom_fields!(cat, pending_custom_fields)
 
-      # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
-
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
-      if result = cat.update(category_params)
+      if result =
+           CategoryUpdater.update(
+             guardian,
+             cat,
+             category_params,
+             log_attributes: category_params_for_log,
+             old_permissions:,
+             old_custom_fields:,
+           )
         Category.preload_user_fields!(guardian, [cat])
-
-        Scheduler::Defer.later "Log staff action change category settings" do
-          @staff_action_logger.log_category_settings_change(
-            @category,
-            old_category_params,
-            old_permissions: old_permissions,
-            old_custom_fields: old_custom_fields,
-          )
-        end
       end
 
       result
@@ -371,13 +344,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    guardian.ensure_can_delete!(@category)
-    @category.destroy
-    Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
-
-    Scheduler::Defer.later "Log staff action delete category" do
-      @staff_action_logger.log_category_deletion(@category)
-    end
+    CategoryDestroyer.destroy(guardian, @category)
 
     render json: success_json
   end
@@ -450,6 +417,10 @@ class CategoriesController < ApplicationController
     raise Discourse::NotFound if categories.blank?
 
     Category.preload_user_fields!(guardian, categories)
+
+    if serializer == SiteCategorySerializer && Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
@@ -877,11 +848,26 @@ class CategoriesController < ApplicationController
       parent_category_id: parent_category&.id,
       include_topics: include_topics,
       include_subcategories: include_subcategories,
+      include_pagination: request.format.md?,
       tag: params[:tag],
       page: params[:page].try(:to_i) || 1,
     }
 
     @category_list = CategoryList.new(guardian, category_options)
+  end
+
+  # The crawler layout renders categories only and emits no preloaded data, so
+  # building and serializing the list would be pure waste.
+  def preload_topic_list
+    return if use_crawler_layout?
+
+    @topic_list = fetch_topic_list
+    return if @topic_list.blank? || @topic_list.topics.blank?
+
+    store_preloaded(
+      @topic_list.preload_key,
+      MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
+    )
   end
 
   def fetch_topic_list(topics_filter: nil)
@@ -913,9 +899,5 @@ class CategoriesController < ApplicationController
     end
 
     @topic_list
-  end
-
-  def initialize_staff_action_logger
-    @staff_action_logger = StaffActionLogger.new(current_user)
   end
 end

@@ -76,37 +76,19 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   filter(category) {
-    return this.routeConfig?.filter === "default"
-      ? category.get("default_view") || "latest"
-      : this.routeConfig?.filter;
-  }
-
-  async _createSubcategoryList(category) {
-    if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.list(this.store, category);
+    if (this.routeConfig?.filter !== "default") {
+      return this.routeConfig?.filter;
     }
-  }
 
-  async _retrieveTopicList(category, transition, modelParams) {
-    const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.historyStore.isPoppedState };
+    // Mirrors `ListController#category_default_view`: `default_view` is free-form,
+    // so only honour it when this visitor could request `/l/<filter>` directly.
+    const allowed = this.currentUser
+      ? this.site.filters
+      : this.site.anonymous_list_filters;
 
-    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
-    if (findOpts.no_subcategories) {
-      listFilter += "/none";
-    }
-    listFilter += `/l/${this.filter(category)}`;
-
-    const topicList = await findTopicList(
-      this.store,
-      this.topicTrackingState,
-      listFilter,
-      findOpts,
-      extras
-    );
-    TopicList.hideUniformCategory(topicList, category);
-
-    return topicList;
+    return allowed.includes(category.default_view)
+      ? category.default_view
+      : "latest";
   }
 
   titleToken() {
@@ -166,6 +148,34 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
+  }
+
+  async _createSubcategoryList(category) {
+    if (category.isParent && category.show_subcategory_list) {
+      return CategoryList.list(this.store, category);
+    }
+  }
+
+  async _retrieveTopicList(category, transition, modelParams) {
+    const findOpts = filterQueryParams(modelParams, this.routeConfig);
+    const extras = { cached: this.historyStore.isPoppedState };
+
+    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
+    if (findOpts.no_subcategories) {
+      listFilter += "/none";
+    }
+    listFilter += `/l/${this.filter(category)}`;
+
+    const topicList = await findTopicList(
+      this.store,
+      this.topicTrackingState,
+      listFilter,
+      findOpts,
+      extras
+    );
+    TopicList.hideUniformCategory(topicList, category);
+
+    return topicList;
   }
 }
 

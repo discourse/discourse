@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 bg:
+  markdown_endpoints:
+    latest: "Последни"
+    categories: "Категории"
+    tags: "Етикети"
+    previous_page: "Предишна страница"
+    next_page: "Следваща страница"
+    replies: "Отговори"
+    last_updated: "Последна актуализация"
+    event:
+      location: "Локация"
+  mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
+    oauth:
+      deny: "Отказ"
+  llms_txt:
+    sections:
+      optional: "По избор"
+    links:
+      search:
+        label: "Търсене"
+      categories:
+        label: "Категории"
+      about:
+        label: "Относно"
+      guidelines:
+        label: "Насоки"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -416,6 +443,10 @@ bg:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    unknown: "Неизвестно"
+    traffic_types:
+      anonymous: "Анонимен"
   change_email:
     error: "Възникна грешка при промяната на вашия имейл адрес. Може би адресът вече се използва?"
   activation:
@@ -480,7 +511,7 @@ bg:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
   unsubscribe:
-    title: "Отписвам"
+    unsubscribe: "Отписвам"
     log_out: "Изход "
     digest_frequency:
       never: "никога"
@@ -543,6 +574,11 @@ bg:
         share: "Споделяне"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Потребител"
+        count: "Публикации"
+        share: "Споделяне"
     trust_level_pipeline:
       labels:
         count: "Членове"
@@ -653,6 +689,9 @@ bg:
         num_clicks: "Кликвания"
         num_topics: "Теми"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_entry_urls:
       labels:
         count: "Посещения "
     top_referrers_by_browser_pageviews:
@@ -898,7 +937,6 @@ bg:
     privacy_policy_url: "Ако имате документ \"Декларация за поверителност\", който се хоства някъде другаде и желаете да го използвате, въведете пълния път до URL адреса тук. "
     allowed_spam_host_domains: "Списък с домейните изключени от спам хост теста. Новите потребители никога няма да бъдат ограничавани в създаването на публикации с линкове към тези домейни."
     levenshtein_distance_spammer_emails: "Колко символа разлика в съвпадението може да има, когато се проверява имейла за спам, за да има приблизително съвпадение."
-    min_ban_entries_for_roll_up: "Когато щракнете на бутона Сливане, ще създадете нов бан на подмрежа, ако в същата има повече от (N) записа."
     max_age_unmatched_emails: "Изтриване на несъвпадащите пресяти имейл записи след (N) дни."
     max_age_unmatched_ips: "Изтрий несъчетаните пресяти IP вписвания след (N) дни."
     num_flaggers_to_close_topic: "Минимален брой уникални сигнализации, които се изискват за спиране на темата"
@@ -1026,6 +1064,7 @@ bg:
     new_registrations_disabled: "В момента новите регистации са забранени."
     password_too_long: "Паролата е ограничена до 200 символа."
     reserved_username: "Това потребителско име не е разрешено."
+    missing_username: "Моля, въведете потребителско име"
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
     second_factor_title: "Двуфакторна автентификация"
@@ -1359,6 +1398,9 @@ bg:
     description: "Безопасният режим ви позволява да тествате сайта си, без да зареждате теми или персонализации на плъгини от страна на клиента. Персонализирането на плъгини от страна на сървъра остава активирано."
     no_unofficial_plugins: "Деактивирайте неофициалните персонализации на приставки от страна на клиента"
     no_plugins: "Деактивирайте всички персонализации на приставки от страна на клиента"
+  design_wizard:
+    palette_pairs:
+      default: "По подразбиране"
   wizard:
     step:
       setup:
@@ -1406,6 +1448,10 @@ bg:
       low: "Ниска"
       medium: "Среден"
       high: "Висок"
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунда"
+        other: "%{count} секунди "
     actions:
       agree:
         title: "Да"
@@ -1482,13 +1528,6 @@ bg:
         title: "Да"
       approve_and_unhide:
         title: "Да"
-      delete_post:
-        title: "Изтрий публикацията"
-        complete: "Публикацията е изтрита"
-      hide_post:
-        title: "Скриване на публикацията"
-      restore_post:
-        title: "Възстановяване на публикацията"
       silence_user:
         title: "Заглушаване на потребителя"
       suspend_user:

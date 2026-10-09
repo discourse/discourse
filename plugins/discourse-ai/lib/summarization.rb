@@ -11,14 +11,12 @@ module DiscourseAi
 
         locale ||= source_locale(topic)
 
-        agent_klass = ai_agent.class_instance
-        llm_model ||= find_summarization_model(agent_klass)
+        llm_model ||= find_summarization_model(ai_agent)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
-          build_bot(agent_klass, llm_model),
           DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale:),
-        )
+        ) { build_bot(ai_agent.class_instance, llm_model) }
       end
 
       def topic_gist(topic, locale: nil, llm_model: nil)
@@ -27,17 +25,15 @@ module DiscourseAi
           return nil
         end
 
-        agent_klass = ai_agent.class_instance
-        llm_model ||= find_summarization_model(agent_klass)
+        llm_model ||= find_summarization_model(ai_agent)
         return nil if llm_model.blank?
 
         locale ||= gist_source_locale(topic)
         strategy = DiscourseAi::Summarization::Strategies::HotTopicGists.new(topic, locale:)
 
-        DiscourseAi::Summarization::FoldContent.new(
-          build_bot(agent_klass, llm_model, output_tool: strategy.output_tool),
-          strategy,
-        )
+        DiscourseAi::Summarization::FoldContent.new(strategy) do
+          build_bot(ai_agent.class_instance, llm_model, output_tool: strategy.output_tool)
+        end
       end
 
       def chat_channel_summary(channel, time_window_in_hours, llm_model: nil)
@@ -46,15 +42,13 @@ module DiscourseAi
           return nil
         end
 
-        agent_klass = ai_agent.class_instance
-        llm_model ||= find_summarization_model(agent_klass)
+        llm_model ||= find_summarization_model(ai_agent)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
-          build_bot(agent_klass, llm_model),
           DiscourseAi::Summarization::Strategies::ChatMessages.new(channel, time_window_in_hours),
           persist_summaries: false,
-        )
+        ) { build_bot(ai_agent.class_instance, llm_model) }
       end
 
       def gist_locales(topic)
@@ -115,8 +109,9 @@ module DiscourseAi
       # Priorities are:
       #   1. Agent's default LLM
       #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
-      def find_summarization_model(agent_klass)
-        model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
+      # @param agent [AiAgent, Class] - an agent record or its class instance; only default_llm_id is read
+      def find_summarization_model(agent)
+        model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)
@@ -133,6 +128,7 @@ module DiscourseAi
         if output_tool
           agent.define_singleton_method(:available_tools) { [output_tool] }
           agent.define_singleton_method(:force_tool_use) { [output_tool] }
+          agent.define_singleton_method(:defer_forced_tool_for_vision?) { true }
           agent.define_singleton_method(:forced_tool_count) { 1 }
           agent.define_singleton_method(:response_format) { nil }
         end

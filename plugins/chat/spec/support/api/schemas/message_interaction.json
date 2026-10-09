@@ -19,8 +19,23 @@
         "action_id": {
           "type": "string"
         },
+        "icon": {
+          "type": "string",
+          "maxLength": 255
+        },
         "schema_version": {
           "type": "integer"
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "default",
+            "primary",
+            "danger",
+            "success",
+            "flat",
+            "transparent"
+          ]
         },
         "text": {
           "type": "object",

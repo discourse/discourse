@@ -57,6 +57,29 @@ export default class TopicNotificationsButton extends Component {
     }
   }
 
+  get conditionalWrapper() {
+    if (this.args.expanded) {
+      return ParagraphWrapper;
+    } else {
+      return EmptyWrapper;
+    }
+  }
+
+  @action
+  async changeTopicNotificationLevel(levelId) {
+    if (levelId === this.notificationLevel) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    try {
+      await this.args.topic.details.updateNotifications(levelId);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   // The user may have changed their category or tag tracking settings
   // since this topic was tracked/watched based on those settings in the
   // past. In that case we need to alter the reason message we show them
@@ -93,39 +116,16 @@ export default class TopicNotificationsButton extends Component {
     return false;
   }
 
-  get conditionalWrapper() {
-    if (this.args.expanded) {
-      return ParagraphWrapper;
-    } else {
-      return EmptyWrapper;
-    }
-  }
-
-  @action
-  async changeTopicNotificationLevel(levelId) {
-    if (levelId === this.notificationLevel) {
-      return;
-    }
-
-    this.isLoading = true;
-
-    try {
-      await this.args.topic.details.updateNotifications(levelId);
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
   <template>
     <div class="topic-notifications-button" ...attributes>
       <this.conditionalWrapper>
         <TopicNotificationsTracking
+          @contentClass={{@contentClass}}
           @levelId={{this.notificationLevel}}
           @onChange={{this.changeTopicNotificationLevel}}
-          @showFullTitle={{@expanded}}
           @showCaret={{@expanded}}
+          @showFullTitle={{@expanded}}
           @topic={{@topic}}
-          @contentClass={{@contentClass}}
         />
 
         {{#if @expanded}}

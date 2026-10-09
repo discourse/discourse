@@ -6,7 +6,7 @@
 
 ur:
   site_settings:
-    chat_integration_enabled: 'ڈسکورس-چَیٹ-اِنٹیگرَیشَن پلگ اِن کو فعال کریں'
+    chat_integration_enabled: 'Discourse کے انضامِ گفتگو کی اضافی سہولت فعال کریں'
     chat_integration_discourse_username: 'صارف کا اسمِ صارف جس کی بنیاد پر مواد لایا جائے۔'
     chat_integration_delay_seconds: 'پوسٹ کی تخلیق کے بعد چَیٹ اطلاعات بھیجنے سے پہلے کتنے سیکنڈ کا انتظار کیا جائے'
     chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا اسمِ صارف"
@@ -16,17 +16,22 @@ ur:
     chat_integration_slack_excerpt_length: 'سلَّیک پوسٹ کے اقتباس کا سائز'
     chat_integration_slack_icon_url: 'جس آئکن کے ساتھ سلَّیک پر پوسٹ کیا جائے (ڈِیفالٹ فورم لوگو ہے)'
     chat_integration_slack_outbound_webhook_url: "OAuth API کے بجائے سلَّیک کے 'اِنکَمینگ وَیب ھُوک' کے سِسٹَم کا استعمال کرنے کیلئے۔ ناپسندیدہ۔"
+    chat_integration_slack_transcript_quote: Slack کے متن کو [quote] ٹیگز میں لپیٹ دیں؟
     errors:
       chat_integration_slack_api_configs_are_empty: "آپ کا ایک آؤٹ باؤنڈ وَیب ھُوک URL، یا ایک ایکسَیس ٹوکن درج کرنا ضروری ہے"
+      chat_integration_telegram_api_base_url_invalid: "Telegram API کا بنیادی URL بغیر اسناد، استفسار، یا ٹکڑے کے، ایک درست HTTPS URL ہونا چاہیے۔"
     chat_integration_telegram_enabled: "ٹَیلیگرام کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
     chat_integration_telegram_access_token: "ٹَیلیگرام بَوٹفادر کی طرف سے آپ کے بَوٹ کا ایکسَیس ٹوکن"
-    chat_integration_telegram_excerpt_length: "ٹَیلیگرام پوسٹ کے اقتباس کا سائز"
+    chat_integration_telegram_api_base_url: "بنیادی URL کو Telegram Bot API پر استعمال کیا جاتا ہے۔ اسے صرف اس وقت تبدیل کریں جب ایک قابل اعتماد HTTPS پراکسی کا استعمال کریں۔ نجی نیٹ ورکس پر میزبانوں کو فورم کی ترتیبات میں اجازت یافتہ اندرونی میزبانوں میں شامل کریں۔"
+    chat_integration_telegram_excerpt_length: "Telegram کے اقتباسی دھاگے کی لمبائی"
     chat_integration_telegram_enable_slash_commands: "ٹَیلیگرام کی سَبسکرِپشنز کو 'سلَیش کمانڈز' کا استعمال کرتے ہوئے مَینَیج کرنے کی اجازت دیں"
     chat_integration_discord_enabled: "ڈِسکَورڈ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
     chat_integration_discord_message_content: "ڈِسکَورڈ پر اِطلاع بھیجنے پر، خلاصہ کے اوپر شامل کیے جانے والا پیغام"
     chat_integration_discord_excerpt_length: "ڈِسکَورڈ پوسٹ کے اقتباس کا سائز"
-    chat_integration_mattermost_enabled: "مَیٹرمَوسٹ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_mattermost_webhook_url: 'مَیٹرمَوسٹ وَیب ھُوک کیلئے URL'
+    chat_integration_guilded_enabled: "Guilded انضامِ گفتگو کا فراہم کنندہ کو فعال کریں"
+    chat_integration_guilded_excerpt_length: "Guilded کے اقتباسی دھاگے کی لمبائی"
+    chat_integration_mattermost_enabled: "Mattermost کے انضامِ گفتگو کے فراہم کنندہ کو فعال کریں"
+    chat_integration_mattermost_webhook_url: 'Mattermost وَیب ھُوک کیلئے URL'
     chat_integration_mattermost_incoming_webhook_token: 'آنے والی درخواستوں کی توثیق کرنے کیلئے استعمال ہونے والا توثیقی ٹوکن'
     chat_integration_mattermost_icon_url: "مَیٹرمَوسٹ پر پوسٹس کیلئے آئکن (ڈِیفالٹ فورَم لوگو ہے)"
     chat_integration_mattermost_excerpt_length: "مَیٹرمَوسٹ پوسٹ کے اقتباس کا سائز"
@@ -44,17 +49,55 @@ ur:
     chat_integration_rocketchat_webhook_url: "راکٹ چیٹ انٹیگریشن ویب ھُوک کیلئے یو آر ایل"
     chat_integration_rocketchat_excerpt_length: "راکٹ چَیٹ پوسٹ کے اقتباس کا سائز"
     chat_integration_gitter_enabled: "گِیٹر کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_groupme_enabled: "Groupme کے انضامِ گفتگو کے فراہم کنندہ کو فعال کریں"
+    chat_integration_groupme_excerpt_length: "Groupme کے اقتباسی دھاگے کی لمبائی"
+    chat_integration_groupme_bot_ids: "*مطلوبہ* بوٹ آئی ڈیز، اگر ایک سے زیادہ کو '،' سے الگ کریں"
+    chat_integration_groupme_instance_names: " *مطلوبہ* GroupMe کی گفتگو کا نام، اگر ایک سے زیادہ ہیں '،' سے الگ کریں (بوٹ آئی ڈی کی ہی طرح کی ایک ترتیب)"
+    chat_integration_teams_enabled: "Microsoft Teams کے انضامِ گفتگو کے فراہم کنندہ کو فعال کریں"
+    chat_integration_teams_excerpt_length: "Microsoft Teams کے اقتباسی دھاگے کی لمبائی"
+    chat_integration_powerautomate_enabled: "Microsoft Power Automate کے انضامِ گفتگو کے فراہم کنندہ کو فعال کریں"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate کے اقتباسی دھاگے کی لمبائی"
+    chat_integration_webex_enabled: "Weber Teams کے انضامِ گفتگو کے فراہم کنندہ کو فعال کریں"
+    chat_integration_webex_excerpt_length: "Webex Team اقتباسی دھاگے کی لمبائی"
     chat_integration_google_enabled: "'گوگل چیٹ' چیٹ انٹیگریشن فراہم کنندہ کو فعال کریں"
+    chat_integration_google_excerpt_length: "Google Chat کے اقتباسی دھاگے کی لمبائی"
+  dashboard:
+    problem:
+      channel_errors: "کچھ انضامِ گفتگو چینلز میں غلطیاں ہیں۔ مزید جاننے کے لئے <a href='%{base_path}/admin/plugins/discourse-chat-integration'>انضامِ گفتگو سیکشن</a> کو ملاحظہ کریں۔"
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Slack پیغام بھیجیں
+      send_chat_integration_message:
+        title: انضامِ گفتگو کا پیغام بھیجیں
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "چینل نہیں ملا: %{channel_id}"
+        provider_disabled: "انضامِ گفتگو کا فراہم کنندہ غیر فعال یا غائب ہے: %{provider}"
+        provider_failed: "%{provider} فراہم کنندہ پیغام نہیں بھیج سکا"
+        provider_failed_with_details: "%{provider} فراہم کنندہ پیغام نہیں بھیج سکا: %{details}"
+        message_required: "ایک پیغام درکار ہے"
   chat_integration:
     all_categories: "(تمام زمرہ جات)"
     deleted_category: "(حذف کردہ زُمرہ)"
     deleted_group: "(حذف کردہ گروپ)"
     group_mention_template: "ذکر: @%{name} کے"
     group_message_template: "پیغامات: @%{name} کیلئے"
+    topic_tag_changed:
+      added_and_removed: "%{added} شامل کیا گیا اور %{removed} ہٹا دیا گیا"
+      added: "%{added} شامل کیا گیا"
+      removed: "%{removed} ہٹا دیا گیا"
+    errors:
+      provider_already_enabled: "فراہم کنندہ '%{name}' پہلے ہی فعال ہے"
+      provider_not_found: "فراہم کنندہ '%{name}' نہیں ملا"
+      setting_update_failed: "ترتیبات کو اپ ڈیٹ کرنے میں ناکامی: %{errors}"
     provider:
       slack:
         errors:
+          auth_error: "فراہم کردہ تصدیقی ٹوکن غلط ہے"
           action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
+          channel_not_found: "مخصوص چینل Slack پر موجود نہیں ہے"
         status:
           header: |
             *اِس چینل کیلئے اصول*
@@ -66,14 +109,35 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اس اصول کو تخلیق کرتے وقت ایک پریشانی کا سامنہ ہوا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اس اصول کو حذف کرتے وقت ایک پریشانی پیش آئی۔ قواعد کی فہرست کے لیے /discourse status لکھیں۔"
         not_found:
           tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
+        help: |
+          * نیا اصول: * `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          (آپ کو اصول کی قسم اور کم از کم ایک زمرہ یا ٹیگ درج کرنا ہوگا)
+          - *تھریڈ* - نئے موضوعات کے لئے اس چینل کو مطلع کریں
+          - *خاموش* - اس چینل کی اطلاعات روکیں
+
+          *اصول ہٹائیں: * `/discourse remove [rule number]`
+          (`[rule number]` کو `/discourse status` سے حاصل کریں)
+
+          *اصولوں کی فہرست: * `/discourse status`
+
+          * [Experimental] دھاگے کا مسودہ: * `/discourse post [n]`
+          اس چینل کے آخری `n` دھاگوں پر مشتعمل ایک موضوع کا مسودہ بنائیں
+
+          *مدد کے لیے:* `/discourse help`
         transcript:
+          modal_title: "متن بنائیں"
+          modal_description: "تھریڈ میں موجود تمام پیغامات کو ایک ہی عنوان میں جمع کیا جائے گا۔ تخلیق سے پہلے آپ کو متن میں ترمیم کا موقع دیا جائے گا۔"
+          transcript_ready: "متن تیار ہے"
+          continue_on_discourse: "فورم پر جاری رکھیں"
           error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
-          post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈسکورس پر ایک لڑی کا مسودہ تیار کرنے کے لیے یہاں کلک کریں"
+          post_to_discourse: "متن کا استعمال کرتے ہوئے Discourse دھاگہ بنانے کے لیے یہاں کلک کریں"
           api_required: "معذرت، یہ انضمام ٹرانسکرپٹس پوسٹ کرنے کی حمایت کے لیے ترتیب نہیں دیا گیا۔"
           view_on_slack: "%{name}میں سلَّیک پر دیکھیں"
           first_message_pretext: "شروع %{n} پیغامات قبل:"
@@ -82,9 +146,17 @@ ur:
           change_first_message: "پہلا پیغام تبدیل کریں..."
           change_last_message: "آخری پیغام تبدیل کریں..."
           loading: "ٹرانسکرِپٹ لوڈ ہو رہی ہے..."
+          error_users: "خرابی: Slack سے صارفین کو لانے میں ناکامی"
+          error_history: "خرابی: Slack سے چینل کی سرگزشت حاصل کرنے میں ناکامی"
+          error_ts: "خرابی: Slack سے درخواست کردہ پیغام لانے میں ناکامی"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "%{added} شامل کیا گیا اور %{removed} ہٹا دیا گیا"
+            added: "%{added} شامل کیا گیا"
+            removed: "%{removed} ہٹا دیا گیا"
       telegram:
-        unknown_chat: "یہ چیٹ %{site_title} پر سیٹ اپ نہیں ہے۔ 'چیٹ آئی ڈی' %{chat_id} والا چینل شامل کرنے کیلئے ایک منتظم کو کہیے۔"
-        known_chat: "یہ چیٹ %{site_title} پر سیٹ اَپ ہے۔ اسے منتظمی کے پینل میں ترتیب دیں۔ (چیٹ آئی ڈی: %{chat_id})"
+        unknown_chat: "اس گفتگو کا %{site_title} پر اقدام نہیں ہے۔ 'گفتگو کی آئی ڈی' %{chat_id} والا چینل شامل کرنے کیلئے ایک منتظم سے مدد لیں"
+        known_chat: "اس گفتگو کا %{site_title} پر اقدام نہیں ہے۔ اسے منتظمی کے پینل میں ترتیب دیں۔ (گفتگو کی آئی ڈی: %{chat_id})"
         message: |-
           <b>%{user}</b>نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا
 
@@ -100,8 +172,10 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اس اصول کو تخلیق کرتے وقت ایک پریشانی کا سامنہ ہوا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اس اصول کو حذف کرتے وقت ایک پریشانی پیش آئی۔ قواعد کی فہرست کے لیے <code>/status</code> لکھیں۔"
         not_found:
           tag: "ٹیگ <b>%{name}</b> تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ <b>%{name}</b> تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: <b>%{list}</b>"
@@ -132,8 +206,10 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اس اصول کو تخلیق کرتے وقت ایک پریشانی کا سامنہ ہوا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اس اصول کو حذف کرتے وقت ایک پریشانی پیش آئی۔ قواعد کی فہرست کے لیے /discourse status لکھیں۔"
         not_found:
           tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
@@ -163,3 +239,11 @@ ur:
           ~~~اقتباس
           %{excerpt}
           ~~~
+      google:
+        new_post: "%{site_title} پر نیا دھاگہ"
+        new_topic: "%{site_title} پر نیا موضوع"
+        author: "@%{username} نے لکھا"
+        link: "%{site_title} پر دیکھیں"
+      groupme:
+        errors:
+          instance_names_issue: "دیئے گئے نام غلط طریقے سے فارمیٹ یا فراہم نہیں کیے گئے"

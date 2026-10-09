@@ -8,6 +8,10 @@ ro:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dată"
+          outcomes:
+            failed: "Eșuată"
         reports:
           filters:
             sort_by:
@@ -51,6 +55,12 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        arguments: "Argumente"
+        type: "Tip"
+        error: "Eroare"
+        response: "Răspuns"
       discourse_workflows:
         ai_agent:
           mode: "Mod"
@@ -157,6 +167,37 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
+      logs:
+        short_title: "Rapoarte"
+        retry: "Încearcă din nou"
+        apply: "Aplică"
+        successful: "Cu succes"
+        failed: "Eșuată"
+        unknown: "Necunoscută"
+        time: "Oră"
+        when: "Când"
+        request: "Cere"
+        provider: "Furnizor"
+        user: "Utilizator"
+        context: "Context"
+        topic: "Subiect"
+        post: "Articol"
+        post_short: "Postarea %{id}"
+        duration: "Durată"
+        actions: "Acțiuni"
+        view_details: "Detalii"
+        periods:
+          day: "Ultimele 24 de ore"
+          week: "Ultimele 7 zile"
+          custom: "Personalizat"
+        detail:
+          request: "Cere"
+          response: "Răspuns"
+          context: "Context"
+        retention:
+          summary_stage: "Rezumat"
+          deleted_stage: "Șters"
+          save: "Salvează"
       ai_agent:
         name: "Nume"
         edit: "Editează"
@@ -222,6 +263,9 @@ ro:
       llms:
         display_name: "Nume"
         provider: "Furnizor"
+        vision_modes:
+          disabled:
+            title: "Dezactivate"
         save: "Salvează"
         edit: "Editează"
         delete: Șterge
@@ -241,8 +285,6 @@ ro:
           ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
         next:
           title: "Următorul"
         tests:
@@ -281,6 +323,7 @@ ro:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
+          duration_label: "Durată:"
           request: "Cere"
           response: "Răspuns"
           next_log: "Următorul"
@@ -308,9 +351,11 @@ ro:
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
       discobot_discoveries:
-        regular_results: "Discuții"
-        collapse: "Colaps"
         user_setting: "Activează descoperirile de căutare IA"
-        tooltip:
-          actions:
-            disable: "Dezactivează"
+        legacy:
+          regular_results: "Discuții"
+          collapse: "Colaps"
+          tooltip:
+            actions:
+              disable: "Dezactivează"
+        search_messages: "Mesaje"

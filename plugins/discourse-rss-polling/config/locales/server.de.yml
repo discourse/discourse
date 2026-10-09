@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 de:
+  site_settings:
+    rss_polling_enabled: "Importieren von eingebetteten Beiträgen aus mehreren RSS-Feeds ermöglichen"
+    rss_polling_frequency: "Häufigkeit der Feed-Abfrage (in Minuten)"
+    rss_polling_feed_request_timeout: "Maximale Wartezeit in Sekunden, bis ein Feed beim Abruf antwortet."
+    rss_polling_verbose_logging: "Protokolliere detaillierte Informationen zu jedem Abrufversuch, einschließlich der Elemente, die importiert oder übersprungen wurden, und der Gründe dafür."
+    rss_polling_use_pubdate: "Erstellungsdatum des Themas auf das im RSS-Feed gefundene pubDate setzen"
+    rss_polling_update_tags: "Aktualisiere Schlagwörter des Themas, wenn es aktualisiert wird. Wenn du diese Option deaktivierst, werden die ursprünglichen Schlagwörter übernommen, aber weitere Änderungen nicht mehr vorgenommen."
   rss_polling:
     errors:
+      feed_url_must_be_http: "Die Feed-URL muss mit http:// oder https:// beginnen."
       unknown_author_username: "Es wurde kein Benutzer mit dem Benutzernamen „%{username}“ gefunden."
+      required_tag_group: "Themen in „%{category}“ benötigen mindestens %{count} Schlagwörter aus der Gruppe „%{tag_group}“ (%{tags}). Füge eines dieser Schlagwörter hinzu, damit importierte Elemente nicht abgelehnt werden."

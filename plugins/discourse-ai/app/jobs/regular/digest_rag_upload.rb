@@ -38,6 +38,8 @@ module Jobs
             chunk_tokens:,
             overlap_tokens:,
           ) do |chunk, metadata|
+            next if chunk.blank?
+
             fragment_ids << RagDocumentFragment.create!(
               target:,
               fragment: chunk,
@@ -59,6 +61,11 @@ module Jobs
       fragment_ids.each_slice(50) do |slice|
         Jobs.enqueue(:generate_rag_embeddings, fragment_ids: slice)
       end
+    rescue StandardError => error
+      if upload.present? && target.present?
+        RagDocumentSource.mark_indexing_failed(target:, upload:, error:)
+      end
+      raise
     ensure
       @file&.close
     end

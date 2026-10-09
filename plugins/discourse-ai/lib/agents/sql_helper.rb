@@ -43,10 +43,6 @@ module DiscourseAi
         [Tools::DbSchema]
       end
 
-      def temperature
-        0.2
-      end
-
       def system_prompt
         <<~PROMPT
             You are a PostgreSQL expert.

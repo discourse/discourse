@@ -103,6 +103,8 @@ class AdminDashboardSectionLoader
       AdminDashboard::Reports::Section.build(guardian: user.guardian)
     when "search"
       AdminDashboardSearch.build(start_date: start_date, end_date: end_date)
+    when "system"
+      AdminDashboardSystem.build(guardian: user.guardian)
     else
       section = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == id }
       section&.dig(:loader)&.call(start_date: start_date, end_date: end_date, current_user: user)

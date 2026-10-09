@@ -73,4 +73,26 @@ acceptance("Video Placeholder Test", function () {
       .dom("video")
       .doesNotExist("No video element is created for invalid URL");
   });
+
+  test("displays an error for video URL with attribute breakout payload", async function (assert) {
+    await visit("/t/54081");
+
+    const placeholder = document.querySelector(".video-placeholder-container");
+    placeholder.setAttribute(
+      "data-video-src",
+      '/uploads/default/original/1X/video.mp4" onerror="window.__videoPlaceholderXss = true'
+    );
+
+    await click(".video-placeholder-overlay");
+
+    assert
+      .dom("[onerror]")
+      .doesNotExist("No event handler attribute is created");
+    assert
+      .dom("video")
+      .doesNotExist("No video element is created for invalid URL");
+    assert
+      .dom(".video-placeholder-wrapper .notice.error")
+      .exists("An error message is displayed for an invalid URL");
+  });
 });

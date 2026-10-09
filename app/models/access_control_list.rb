@@ -78,6 +78,16 @@ class AccessControlList < ActiveRecord::Base
           else
             auto_group_ids = [Group::AUTO_GROUPS[:logged_in_users]]
 
+            if user.is_system_user?
+              auto_group_ids.concat(
+                [
+                  Group::AUTO_GROUPS[:admins],
+                  Group::AUTO_GROUPS[:staff],
+                  Group::AUTO_GROUPS[:moderators],
+                ],
+              )
+            end
+
             # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent,
             # it's similar logic to User.in_any_groups?
             if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
@@ -94,13 +104,19 @@ class AccessControlList < ActiveRecord::Base
         ->(group) { allowing_any_group([group.id]).or(allowing_users_in_group(group.id)) }
 
   def self.inject_mandatory_acl(flattened_acl, target)
-    return flattened_acl if !target.class.has_mandatory_acl?
+    target_klass =
+      if target.is_a?(String)
+        target.safe_constantize
+      else
+        target.class
+      end
+
+    return flattened_acl if !target_klass.has_mandatory_acl?
 
     flattened_acl = dedup_flattened_list(flattened_acl)
 
-    target.class.mandatory_acl.each do |mandatory_acl|
+    target_klass.mandatory_acl.each do |mandatory_acl|
       next if flattened_acl.any? { |acl| AclTarget.acl_matches?(acl, mandatory_acl) }
-
       flattened_acl << mandatory_acl
     end
 

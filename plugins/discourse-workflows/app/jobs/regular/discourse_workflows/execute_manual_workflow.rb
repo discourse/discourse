@@ -12,6 +12,7 @@ module Jobs
 
         if !SiteSetting.enable_discourse_workflows
           execution.update!(status: :skipped, finished_at: Time.current)
+          ::DiscourseWorkflows::ExecutionProgressPublisher.publish(execution, refresh: true)
           return
         end
 
@@ -49,6 +50,7 @@ module Jobs
             error: "Workflow snapshot missing",
             finished_at: Time.current,
           )
+          ::DiscourseWorkflows::ExecutionProgressPublisher.publish(execution, refresh: true)
           return
         end
 

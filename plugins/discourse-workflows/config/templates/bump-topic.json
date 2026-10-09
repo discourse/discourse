@@ -1,0 +1,53 @@
+{
+  "name": "Bump topic from the admin menu",
+  "description": "Adds a button to the topic admin menu that immediately bumps the topic to the top of the latest list.",
+  "nodes": [
+    {
+      "id": "bump-button",
+      "type": "trigger:topic_admin_button",
+      "typeVersion": "1.0",
+      "name": "Bump button",
+      "parameters": {
+        "label": "Bump topic",
+        "icon": "arrow-up"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 12,
+        "y": 22
+      }
+    },
+    {
+      "id": "bump-topic",
+      "type": "action:topic",
+      "typeVersion": "1.0",
+      "name": "Bump topic",
+      "parameters": {
+        "operation": "bump",
+        "topic_id": "={{ $json.topic.id }}",
+        "silent": false,
+        "actor_username": "system"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 292,
+        "y": 22
+      }
+    }
+  ],
+  "connections": {
+    "Bump button": {
+      "main": [
+        [
+          {
+            "node": "Bump topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

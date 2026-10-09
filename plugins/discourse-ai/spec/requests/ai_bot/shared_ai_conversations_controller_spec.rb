@@ -2,34 +2,36 @@
 
 RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   before do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
+    prepare_ai_bot_fixtures(bots: [claude_2])
     SiteSetting.ai_bot_allowed_groups = "10"
     SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
   end
 
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
+  fab!(:agent) { Fabricate(:ai_agent, default_llm: claude_2).tap(&:ensure_user!) }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:attacker) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic)
   fab!(:pm, :private_message_topic)
   fab!(:user_pm) { Fabricate(:private_message_topic, recipient: user) }
 
-  fab!(:bot_user) do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = "10"
-    SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
-    claude_2.reload.user
-  end
+  fab!(:bot_user) { agent.user }
 
   fab!(:user_pm_share) do
     pm_topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
     # a different unknown user
     Fabricate(:post, topic: pm_topic, user: user)
-    Fabricate(:post, topic: pm_topic, user: bot_user)
+    Fabricate(
+      :post,
+      topic: pm_topic,
+      user: bot_user,
+      custom_fields: {
+        DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => agent.id,
+        DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => claude_2.id,
+        DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => "Claude-2",
+      },
+    )
     Fabricate(:post, topic: pm_topic, user: user)
     pm_topic
   end
@@ -178,10 +180,12 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
             sha1: SecureRandom.hex(20),
             original_sha1: upload_2.sha1,
           )
-          post_with_upload_1.update!(
+          PostRevisor.new(post_with_upload_1).revise!(
+            Discourse.system_user,
             raw: "This is a post with a cool AI generated picture ![wow](#{upload_1.short_url})",
           )
-          post_with_upload_2.update!(
+          PostRevisor.new(post_with_upload_2).revise!(
+            Discourse.system_user,
             raw:
               "Another post that has been birthed by AI with a picture ![meow](#{upload_2.short_url})",
           )
@@ -253,10 +257,12 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
             sha1: SecureRandom.hex(20),
             original_sha1: upload_2.sha1,
           )
-          shared_conversation.target.posts.first.update!(
+          PostRevisor.new(shared_conversation.target.posts.first).revise!(
+            Discourse.system_user,
             raw: "This is a post with a cool AI generated picture ![wow](#{upload_1.short_url})",
           )
-          shared_conversation.target.posts.second.update!(
+          PostRevisor.new(shared_conversation.target.posts.second).revise!(
+            Discourse.system_user,
             raw:
               "Another post that has been birthed by AI with a picture ![meow](#{upload_2.short_url})",
           )
@@ -430,6 +436,21 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
         artifact.reload
         expect(artifact.metadata&.dig("public")).not_to eq(true)
       end
+    end
+  end
+
+  describe "GET /onebox" do
+    it "does not expose a trashed conversation through a local onebox preview" do
+      source_post = user_pm_share.posts.last
+      source_post.update!(raw: "private transcript excerpt")
+      conversation = SharedAiConversation.share_conversation(user, user_pm_share)
+      user_pm_share.trash!
+
+      sign_in(attacker)
+      get "/onebox.json", params: { url: conversation.url }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include(source_post.raw)
     end
   end
 

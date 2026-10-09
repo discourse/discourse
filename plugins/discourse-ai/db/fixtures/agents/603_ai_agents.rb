@@ -35,6 +35,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
     elsif [
           DiscourseAi::Agents::AdminDashboardHighlights,
+          DiscourseAi::Agents::AskAiReporter,
           DiscourseAi::Agents::DiscourseAdminAssistant,
         ].include?(agent_class)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
@@ -119,4 +120,16 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
   # editable in the UI, unlike temperature/top_p which are code-owned).
   agent.thinking_effort = instance.thinking_effort if agent.thinking_effort.nil?
   agent.save!(validate: false)
+
+  source_ids =
+    agent_class.rag_document_sources.map do |attributes|
+      source = agent.rag_document_sources.find_or_initialize_by(url: attributes.fetch(:url))
+      source.assign_attributes(attributes.merge(managed: true))
+      source.save!
+      source.id
+    end
+
+  agent.rag_document_sources.where(managed: true).where.not(id: source_ids).destroy_all
 end
+
+AiAgent.ensure_users!

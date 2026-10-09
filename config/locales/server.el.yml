@@ -5,6 +5,37 @@
 # https://translate.discourse.org/
 
 el:
+  markdown_endpoints:
+    latest: "Πρόσφατα"
+    categories: "Κατηγορίες"
+    tags: "Ετικέτες"
+    previous_page: "Προηγούμενη σελίδα"
+    next_page: "Επόμενη σελίδα"
+    replies: "Απαντήσεις"
+    last_updated: "Τελευταία ενημέρωση"
+    event:
+      name: "Εκδήλωση"
+      location: "Τοποθεσία"
+      link: "Σύνδεσμος"
+  mcp:
+    errors:
+      draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"
+      topic_not_found: "Το θέμα δε βρέθηκε"
+    oauth:
+      deny: "Άρνηση"
+      approve: "Εξουσιοδότηση"
+  llms_txt:
+    sections:
+      optional: "Προαιρετικό"
+    links:
+      search:
+        label: "Αναζήτηση"
+      categories:
+        label: "Κατηγορίες"
+      about:
+        label: "Σχετικά"
+      guidelines:
+        label: "Οδηγίες"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -642,16 +673,15 @@ el:
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
   email_login:
     title: "Σύνδεση μέσω email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Εφαρμογή DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Εφαρμογή DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "άγνωστος περιηγητής"
     device:
       android: "Συσκευή Android"
       chromebook: "Chrome OS"
@@ -671,6 +701,11 @@ el:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "άγνωστο λειτουργικό σύστημα"
+  admin_site_traffic_explorer:
+    unknown: "Άγνωστο"
+    traffic_types:
+      logged_in: "Συνδεδεμένοι"
+      anonymous: "Ανώνυμοι"
   change_email:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "
@@ -782,7 +817,7 @@ el:
     title: "Οι προτιμήσεις email ενημερώθηκαν!"
     topic_description: "Για να εγγραφείτε ξανά στο %{link}, χρησιμοποιήστε τον έλεγχο ειδοποιήσεων στην κάτω ή στην δεξιά πλευρά του θέματος."
   unsubscribe:
-    title: "Απεγγραφή"
+    unsubscribe: "Απεγγραφή"
     stop_watching_topic: "Διακοπή επιτήρησης αυτού του θέματος, %{link}."
     mute_topic: "Σίγαση όλων των ειδοποιήσεων για αυτό το νήμα, %{link}"
     unwatch_category: "Διακοπή επιτήρησης όλων των θεμάτων της κατηγορίας %{category}"
@@ -920,6 +955,11 @@ el:
         new_members: "Νέα μέλη"
         returning: "Επιστρέφοντες"
         staff: "Συνεργάτες"
+    posters_by_member_type_members:
+      labels:
+        user: "Χρήστης"
+        count: "Αναρτήσεις"
+        share: "Κοινοποίηση"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1065,6 +1105,9 @@ el:
       description: "Οι χώρες από τις οποίες προέρχονται οι περισσότερες προβολές σελίδων μέσω προγράμματος περιήγησης στο φόρουμ σας κατά την επιλεγμένη περίοδο."
       labels:
         country_code: "Κωδικός χώρας"
+        count: "Επισκέψεις"
+    top_entry_urls:
+      labels:
         count: "Επισκέψεις"
     top_referrers_by_browser_pageviews:
       labels:
@@ -1297,10 +1340,9 @@ el:
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     blocked_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
     allowed_internal_hosts: "Μια λίστα από internal hosts την οποία το discourse μπορεί να ανιχνεύει με ασφάλεια για oneboxing και άλλους λόγους"
-    llms_txt: "Ανεβάστε ένα αρχείο κειμένου που θα εμφανίζεται στο /llms.txt για τους ανιχνευτές LLM. Δείτε στο <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> για περισσότερες πληροφορίες."
     share_links: "Καθόρισε ποια στοιχεία εμφανίζονται στον διάλογο διαμοιρασμού και με ποια σειρά."
     site_contact_username: "Ένα έγκυρο όνομα χρήστη των συνεργατών από το οποίο θα στέλνονται όλα τα αυτοματοποιημένα μηνύματα. Αν αφεθεί κενό, θα χρησιμοποιείται ο προκαθορισμένος λογαριασμός συστήματος. "
-    site_contact_group_name: "Ένα έγκυρο όνομα για μια ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα."
+    site_contact_group_name: "Η ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα."
     send_welcome_message: "Στείλε σε όλους τους νέους χρήστες ένα μήνυμα καλωσορίσματος μαζί με ένα γρήγορο οδηγό έναρξης."
     suppress_reply_directly_below: "Να μην εμφανίζεται το επεκτάσιμο αριθμός απαντήσεων σε ένα θέμα όταν υπάρχει μία μόνο απάντηση ακριβώς κάτω από αυτήν την ανάρτηση."
     suppress_reply_directly_above: "Να μην εμφανίζεται το επεκτάσιμο 'ως απάντηση σε' σε μία ανάρτηση όταν υπάρχει μόνο μία απάντηση ακριβώς πάνω από αυτή την ανάρτηση. "
@@ -1429,7 +1471,6 @@ el:
     topic_view_duration_hours: "Να μετράται μια νέα προβολή θέματος μία φορά ανά IP/Χρήστη κάθε N ώρες"
     user_profile_view_duration_hours: "Μετρήστε μια νέα προβολή προφίλ χρήστη μία φορά ανά IP/User κάθε N ώρες"
     levenshtein_distance_spammer_emails: "Στην αντιστοίχιση διευθύνσεων email των σπάμερ, η διαφορά στον αριθμό των χαρακτήρων η οποία θα επιτρέπει μια ασαφή αντιστοίχιση."
-    min_ban_entries_for_roll_up: "Το πάτημα του πλήκτρου Κύλιση προς τα πάνω, θα δημιουργήσει μία απαγόρευση εισαγωγής νέου υποδικτύου αν υπάρχουν τουλάχιστον (Ν) εισαγωγές. "
     max_age_unmatched_emails: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές email μετά από (N) μέρες."
     max_age_unmatched_ips: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές IP μετά από (N) μέρες."
     num_flaggers_to_close_topic: "Ελάχιστος αριθμός ξεχωριστών αναφορών που απαιτείται για την αυτόματη παύση ενός θέματος για παρέμβαση"
@@ -1739,6 +1780,7 @@ el:
     password_too_long: "Οι κωδικοί πρόσβασης περιορίζονται σε 200 χαρακτήρες."
     email_too_long: "Η διεύθυνση email που δώσατε είναι πολύ μεγάλη. Οι ηλεκτρονικές διευθύνσεις δεν πρέπει να είναι περισσότερο από 254 χαρακτήρες, και τα ονόματα τομέων δεν πρέπει να είναι περισσότερο απο 253 χαρακτήρες."
     reserved_username: "Αυτό το όνομα χρήστη δεν είναι επιτρεπτό."
+    missing_username: "Παρακαλώ εισαγάγετε ένα όνομα χρήστη"
     auth_complete: "Η ταυτοποιήση έχει ολοκληρωθεί."
     click_to_continue: "Κλικ εδώ για να συνεχίσετε."
     second_factor_title: "Έλεγχος Ταυτότητας Δύο Παραγόντων"
@@ -2515,9 +2557,6 @@ el:
     user_posted_pm_staged:
       title: "Χρήστης που ανάρτησε σταδιακό ΠΜ"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
@@ -2985,6 +3024,9 @@ el:
     title: "Έναρξη ασφαλούς λειτουργίας"
     enter: "Έναρξη Ασφαλούς Λειτουργίας"
     must_select: "Θα πρέπει να διαλέξτε τουλάχιστον μία επιλογή για να εισέλθετε σε ασφαλή λειτοθργία."
+  design_wizard:
+    palette_pairs:
+      default: "Προεπιλογή"
   wizard:
     title: "Εγκατάσταση Discourse"
     step:
@@ -3044,6 +3086,9 @@ el:
       high: "Υψηλή"
     user_claimed: "Αυτό το στοιχείο έχει διεκδικηθεί από άλλον χρήστη."
     reasons:
+      fast_typer_time:
+        one: "%{count} δευτερόλεπτο"
+        other: "%{count} δευτερόλεπτα"
       invite_only: "Όλοι οι νέοι χρήστες θα πρέπει να προσκληθούν. Δείτε %{link}."
       links:
         watched_word: ρυθμίσεις παρακολουθούμενης λέξης
@@ -3079,8 +3124,6 @@ el:
         complete: "Η ανάρτηση έχει κρυφτεί, ο χρήστης έχει ειδοποιηθεί."
       agree_and_edit:
         title: "Επεξεργασία ανάρτησης"
-        description: "Συμφωνώ με την αναφορά και άνοιγμα παραθύρου συνθέτη για την επεξεργασία της ανάρτησης."
-        complete: "Έγινε γνώση της αναφοράς, μπορείτε πλέον να επεξεργαστείτε την ανάρτηση."
       delete:
         title: "Διαγραφή"
         complete: "Η ανάρτΗσΗ διαγράφΗκε."
@@ -3103,6 +3146,8 @@ el:
         title: "Επαναφορά ανάρτησης"
         description: "Διαφωνώ με την αναφορά και επαναφορά της ανάρτησης"
         complete: "Η ανάρτηση αποκαταστάθηκε."
+      disagree_and_keep_deleted:
+        title: "Διατήρηση ανάρτησης ως διαγραμμένη"
       disagree_bundle:
         title: "Όχι"
       disagree:
@@ -3174,30 +3219,6 @@ el:
       approve_and_unhide:
         title: "Ναι "
         complete: "Η ανάρτηση εγκρίθηκε και επανεμφανίστηκε"
-      post_actions:
-        bundle_title: "Τι θέλετε να κάνετε με την ανάρτηση;"
-      delete_post:
-        title: "Διαγραφή ανάρτησης"
-        description: "Διαγραφή ανάρτησης"
-        complete: "Η ανάρτΗσΗ διαγράφΗκε"
-      hide_post:
-        title: "Απόκρυψη ανάρτησης"
-        description: "Απόκρυψη αυτής της ανάρτησης από δημόσια θέα"
-        complete: "Η ανάρτηση κρύφτηκε"
-      unhide_post:
-        title: "Επανεμφάνιση ανάρτησης"
-        description: "Κάντε αυτήν την ανάρτηση ορατή σε όλους τους χρήστες"
-        complete: "Η ανάρτηση επανεμφανίστηκε"
-      restore_post:
-        title: "Επαναφορά ανάρτησης"
-        description: "Επαναφορά αυτής της διαγραμμένης ανάρτησης"
-        complete: "Η ανάρτηση αποκαταστάθηκε"
-      edit_post:
-        title: "Επεξεργασία ανάρτησης"
-        description: "Επεξεργασία του περιεχομένου αυτής της ανάρτησης"
-        complete: "Η ανάρτηση τροποποιήθηκε"
-      user_actions:
-        bundle_title: "Τι θέλετε να κάνετε με τον χρήστη;"
       silence_user:
         title: "Σίγαση χρήστη"
         complete: "Ο χρήστης τέθηκε σε σίγαση"

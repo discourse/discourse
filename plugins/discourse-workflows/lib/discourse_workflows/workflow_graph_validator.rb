@@ -328,9 +328,16 @@ module DiscourseWorkflows
     end
 
     def resolve_type_version(node_data, existing)
-      existing&.dig("typeVersion") || node_data[:typeVersion] ||
-        DiscourseWorkflows::Registry.latest_version(node_data[:type]) ||
+      existing&.dig("typeVersion").presence || node_data[:typeVersion].presence ||
+        implicit_type_version(node_data, existing) || DiscourseWorkflows::Registry::DEFAULT_VERSION
+    end
+
+    def implicit_type_version(node_data, existing)
+      if existing && existing["type"] == node_data[:type]
         DiscourseWorkflows::Registry::DEFAULT_VERSION
+      else
+        DiscourseWorkflows::Registry.latest_version(node_data[:type])
+      end
     end
 
     def normalized_nodes_data

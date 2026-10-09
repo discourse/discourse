@@ -17,7 +17,7 @@ describe Reports::TopReferrersByBrowserPageviews do
       3.times do
         Fabricate(:browser_pageview_event, normalized_referrer: "news.ycombinator.com/item?id=1")
       end
-      1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com/r/discourse") }
+      Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com/r/discourse")
 
       data = report.data
       expect(data.map { |row| row[:normalized_referrer] }).to eq(
@@ -89,6 +89,25 @@ describe Reports::TopReferrersByBrowserPageviews do
       Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com", user_id: user.id)
 
       expect(report.data.first[:count]).to eq(1)
+    end
+
+    it "excludes likely crawler pageviews once crawler detection is enabled" do
+      SiteSetting.improved_crawler_detection = true
+      3.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 10) }
+      Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com", score: 90)
+      Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com", score: 10)
+
+      data = report.data
+      expect(data.map { |row| row[:normalized_referrer] }).to eq(%w[google.com reddit.com])
+      expect(data.map { |row| row[:count] }).to eq([3, 1])
+      expect(data.first[:percent]).to eq(75)
+    end
+
+    it "counts likely crawler pageviews while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      3.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com", score: 90) }
+
+      expect(report.data.first[:count]).to eq(3)
     end
 
     it "returns empty data when no qualifying events exist" do

@@ -5,11 +5,11 @@ import SpinnerSmallExample from "../../examples/atoms/spinners/small";
 import spinnerSmallSource from "../../examples/atoms/spinners/small?source=template";
 
 export default <template>
-  <StyleguideExample @title="spinner - small" @code={{spinnerSmallSource}}>
+  <StyleguideExample @code={{spinnerSmallSource}} @title="spinner - small">
     <SpinnerSmallExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="spinner - regular" @code={{spinnerRegularSource}}>
+  <StyleguideExample @code={{spinnerRegularSource}} @title="spinner - regular">
     <SpinnerRegularExample />
   </StyleguideExample>
 </template>

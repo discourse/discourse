@@ -49,10 +49,27 @@ module PageObjects
           Time.parse(tr_element.find(".invite-expires-at").text).utc
         end
 
+        def copy_link
+          actions_menu.expand
+          actions_menu.option(".copy-button").click
+        end
+
+        def has_link_copied?
+          actions_menu.has_option?(".copy-button.ok")
+        end
+
         private
 
         def invite_type_col
           tr_element.find(".invite-type")
+        end
+
+        def actions_menu
+          @actions_menu ||=
+            PageObjects::Components::DMenu.new(
+              tr_element.find(".invite-actions [data-trigger][data-identifier='invites-menu']"),
+              "invites-menu",
+            )
         end
       end
 
@@ -76,6 +93,10 @@ module PageObjects
 
       def latest_invite
         Invite.new(find(".user-content .user-invite-list tbody tr:first-of-type"))
+      end
+
+      def invite_row(invite)
+        Invite.new(find(".user-content .user-invite-list tbody tr", text: invite.email))
       end
     end
   end

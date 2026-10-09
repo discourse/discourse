@@ -5,8 +5,9 @@ const SidebarSections = <template>
   {{#if @currentUser}}
     <UserSections
       @collapsableSections={{@collapsableSections}}
-      @panel={{@panel}}
+      @enableLinkDrop={{@enableLinkDrop}}
       @hideApiSections={{@hideApiSections}}
+      @panel={{@panel}}
       @toggleNavigationMenu={{@toggleNavigationMenu}}
     />
   {{else}}

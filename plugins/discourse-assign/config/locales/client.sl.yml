@@ -35,4 +35,14 @@ sl:
       post: "Prispevek"
     discourse_workflows:
       assign_topic:
+        resources:
+          topic: "Tema"
+          post: "Prispevek"
         topic_id: "ID teme"
+        post_id: "ID prispevka"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Prispevek"
+        topic_id: "ID teme"
+        post_id: "ID prispevka"

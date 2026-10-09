@@ -10,7 +10,10 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/svg-sprite/picker-search", () =>
-      response(200, [{ id: "pencil", name: "pencil" }])
+      response(200, {
+        icons: [{ id: "pencil", name: "pencil" }],
+        has_more: false,
+      })
     );
   });
 
@@ -20,8 +23,8 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
     await render(
       <template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="icon" @name="foo" @title="Foo" as |field|>
+        <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="icon" as |field|>
             <field.Control />
           </form.Field>
         </Form>
@@ -37,15 +40,40 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     assert.form().field("foo").hasValue("pencil");
   });
 
+  test("forwards allowClear and clears the field value", async function (assert) {
+    let data = { foo: "pencil" };
+    const mutateData = (value) => (data = value);
+
+    await render(
+      <template>
+        <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="icon" as |field|>
+            <field.Control @allowClear={{true}} />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker__clear")
+      .exists("the clear action is forwarded to the icon picker");
+
+    await click(".d-icon-grid-picker__clear");
+    await formKit().submit();
+
+    assert.strictEqual(data.foo, null, "the icon value is cleared");
+    assert.form().field("foo").hasNoValue("the cleared field has no value");
+  });
+
   test("when disabled", async function (assert) {
     await render(
       <template>
         <Form as |form|>
           <form.Field
-            @type="icon"
+            @disabled={{true}}
             @name="foo"
             @title="Foo"
-            @disabled={{true}}
+            @type="icon"
             as |field|
           >
             <field.Control />

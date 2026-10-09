@@ -299,8 +299,15 @@ class PostActionCreator
       created_at: @created_at,
     }
 
-    # First try to revive a trashed record
-    post_action = PostAction.where(where_attrs).with_deleted.where.not(deleted_at: nil).first
+    # Revive a trashed record only if it was never reviewed. A reviewed one would come back
+    # already agreed with (or deferred/disagreed), so it would never count as a new flag.
+    post_action =
+      PostAction
+        .where(where_attrs)
+        .with_deleted
+        .where.not(deleted_at: nil)
+        .where(agreed_at: nil, disagreed_at: nil, deferred_at: nil)
+        .first
 
     if post_action
       post_action.recover!

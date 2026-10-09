@@ -17,12 +17,35 @@ const WORKFLOW_METHOD_DOCS = Object.freeze({
       infoKey: "discourse_workflows.expression_docs.methods.input.last",
     }),
   }),
+  $helpers: Object.freeze({
+    absoluteUrl: Object.freeze({
+      detail: "(path)",
+      infoKey:
+        "discourse_workflows.expression_docs.methods.helpers.absolute_url",
+    }),
+  }),
 });
 
 export function resolveVariableId(variable, itemPrefix = "$json") {
   return variable.id.startsWith("$")
     ? variable.id
     : `${itemPrefix}.${variable.id}`;
+}
+
+// Null whenever the point does not resolve inside the control, including on
+// engines without caretPositionFromPoint, where callers append instead.
+export function caretOffsetFromPoint(control, x, y) {
+  const position = document.caretPositionFromPoint?.(x, y);
+  if (
+    position?.offsetNode !== control ||
+    !Number.isInteger(position.offset) ||
+    position.offset < 0 ||
+    position.offset > control.value.length
+  ) {
+    return null;
+  }
+
+  return position.offset;
 }
 
 // Matches paths like $('Node Name').rest or $("Node Name").rest
@@ -320,6 +343,17 @@ function buildExecutionScope(nodes) {
   return scope;
 }
 
+function buildHelpersScope() {
+  return cleanObject({
+    absoluteUrl: (path) => {
+      if (typeof path !== "string" || !/^\/[^/]/.test(path)) {
+        return path;
+      }
+      return `${window.location.origin}${path}`;
+    },
+  });
+}
+
 function buildInputScope($json) {
   const currentItem = buildItem($json);
   const inputItems = [currentItem];
@@ -364,6 +398,7 @@ export function buildScope({
     $current_user: cleanObject({ id: 0, username: "" }),
     $vars: buildVarsScope(workflowVars),
     $execution: buildExecutionScope(nodes),
+    $helpers: buildHelpersScope(),
     $: (name) => nodeOutputs[name] || EMPTY_NODE_OUTPUT,
     JSON,
     Math,

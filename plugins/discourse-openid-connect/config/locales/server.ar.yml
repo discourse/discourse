@@ -22,8 +22,13 @@ ar:
     openid_connect_overrides_email: "تجاوز عنوان البريد الإلكتروني للمستخدم باستخدام قيمة openid-connect في كل عملية تسجيل دخول. يعمل بنفس طريقة عمل الإعداد {{setting:auth_overrides_email}}، لكنه خاص بعمليات تسجيل الدخول باستخدام OpenID Connect."
     openid_connect_claims: "تحديد المطالبات بشكلٍ صريح، والتي سيتم استخدامها مع مقدِّمي الخدمة الذي لا يعيدون تمرير البيانات حسب النطاقات (JSON)"
     openid_connect_groups_claim: "اسم الحقل (claim) في رمز OIDC الذي يحتوي على مجموعات المستخدمين كمصفوفة من السلاسل النصية. اتركه فارغًا لإيقاف مزامنة المجموعات."
+    openid_connect_user_field_mappings: "تخطيط مطالبات OIDC إلى حقول المستخدم في Discourse. يقرن كل إدخال اسم مطالبة OIDC بالمعرِّف الرقمي لحقل مستخدم في Discourse"
     openid_connect_match_by_email: "استخدم عنوان البريد الإلكتروني لمطابقة مصادقات OpenID Connect مع حسابات مستخدمي Discourse الموجودة."
     openid_connect_use_pkce: "تفعيل Proof Key for Code Exchange (PKCE) لمصادقة OpenID Connect."
+    openid_connect_mtls_client_cert: "شهادة عميل X.509 لمصادقة عميل mTLS مع موفِّر OIDC. لتفعيل mTLS، يجب أيضًا ضبط {{setting:openid_connect_mtls_client_key}}."
+    openid_connect_mtls_client_key: "مفتاح X.509 الخاص لشهادة عميل mTLS. لتفعيل mTLS، يجب أيضًا ضبط {{setting:openid_connect_mtls_client_cert}}."
+    openid_connect_mtls_client_key_passcode: "عبارة المرور لمفتاح mTLS الخاص (اختياري)"
   login:
     omniauth_error:
       openid_connect_discovery_error: يتعذَّر جلب التكوين من موفِّر الهوية. يُرجى إعادة المحاولة.
+      openid_connect_mtls_error: هناك مشكلة في تكوين شهادة عميلة mTLS. يُرجى التواصل مع مسؤول.

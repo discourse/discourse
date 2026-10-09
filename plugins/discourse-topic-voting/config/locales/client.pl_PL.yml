@@ -17,6 +17,7 @@ pl_PL:
     topic_voting:
       notification_label:
         vote_released: "Głos zwrócony"
+        voting_closed: "Głosowanie zakończone"
       hot_nav_help: "najpopularniejsze ostatnio tematy, w tym te, na które ostatnio głosowano"
       voted: "Oddałeś już głos"
       vote_title: "Głosuj"

@@ -27,6 +27,11 @@ ja:
                 lt_1h: "< １時間"
                 gt_24h: "> 24 時間"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "変更"
+        changes_removed: "削除"
+        tag_names: "タグ"
     notifications:
       alt:
         solved:
@@ -76,6 +81,11 @@ ja:
           solved: "解決済み"
           unsolved: "未解決"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "トピック"
+            category: "カテゴリ"
       web_hooks:
         solved_event:
           group_name: "解決済みイベント"

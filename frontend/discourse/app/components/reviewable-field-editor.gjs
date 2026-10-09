@@ -6,6 +6,6 @@ import DEditor from "discourse/ui-kit/d-editor";
 @tagName("")
 export default class ReviewableFieldEditor extends Component {
   <template>
-    <DEditor @value={{this.value}} @change={{this.valueChanged}} />
+    <DEditor @change={{this.valueChanged}} @value={{this.value}} />
   </template>
 }

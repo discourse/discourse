@@ -78,14 +78,21 @@ module DiscourseWorkflows
                 filterable: true,
               },
             },
-            actor_username: {
-              type: :string,
+            set_primary_group: {
+              type: :boolean,
               required: false,
-              default: "system",
+              default: false,
               ui: {
-                control: :actor,
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["add"],
+                },
               },
             },
+            **actor_property,
           },
         )
 
@@ -107,6 +114,8 @@ module DiscourseWorkflows
                 "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
                 "username" => exec_ctx.get_node_parameter("username", item_index),
                 "group_id" => exec_ctx.get_node_parameter("group_id", item_index),
+                "set_primary_group" =>
+                  exec_ctx.get_node_parameter("set_primary_group", item_index, default: false),
               }
 
               if config["operation"] == "check_membership"
@@ -143,9 +152,15 @@ module DiscourseWorkflows
           else
             group.add(user)
             logger.log_add_user_to_group(user)
+            set_primary_group(user, group, guardian) if config["set_primary_group"]
           end
 
           { group: serialized_group, user: user_data(user, guardian) }
+        end
+
+        def set_primary_group(user, group, guardian)
+          guardian.ensure_can_change_primary_group!(user, group)
+          user.update!(primary_group_id: group.id)
         end
 
         def check_membership(exec_ctx, item, config, item_index)

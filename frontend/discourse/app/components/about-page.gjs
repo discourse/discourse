@@ -205,6 +205,10 @@ export default class AboutPage extends Component {
     });
   }
 
+  get showExtraGroups() {
+    return !isBlank(this.siteSettings.about_page_extra_groups);
+  }
+
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
     const statKeys = Object.keys(stats);
@@ -232,10 +236,6 @@ export default class AboutPage extends Component {
     return configs;
   }
 
-  get showExtraGroups() {
-    return !isBlank(this.siteSettings.about_page_extra_groups);
-  }
-
   <template>
     {{#if this.currentUser.admin}}
       <p>
@@ -254,8 +254,8 @@ export default class AboutPage extends Component {
       <h1>{{@model.title}}</h1>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet
-        @name="about-after-description"
         @connectorTagName="section"
+        @name="about-after-description"
         @outletArgs={{lazyHash model=@model}}
       />
     </section>
@@ -280,24 +280,24 @@ export default class AboutPage extends Component {
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h2>{{i18n "about.our_admins"}}</h2>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
+            <AboutPageUsers @truncateAt={{6}} @users={{@model.admins}} />
           </section>
         {{/if}}
         <PluginOutlet
-          @name="about-after-admins"
           @connectorTagName="section"
+          @name="about-after-admins"
           @outletArgs={{lazyHash model=@model}}
         />
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h2>{{i18n "about.our_moderators"}}</h2>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
+            <AboutPageUsers @truncateAt={{6}} @users={{@model.moderators}} />
           </section>
         {{/if}}
         <PluginOutlet
-          @name="about-after-moderators"
           @connectorTagName="section"
+          @name="about-after-moderators"
           @outletArgs={{lazyHash model=@model}}
         />
         {{#if this.showExtraGroups}}

@@ -152,7 +152,7 @@ class EmailUpdater
     end
     @user.reload
 
-    DiscourseEvent.trigger(:user_updated, @user)
+    DiscourseEvent.trigger(:user_updated, @user, %w[email])
     @user.set_automatic_groups
   end
 

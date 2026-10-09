@@ -61,20 +61,20 @@ export default class extends Component {
     <StyleguideExample @title="<DModal>">
       <StyleguideComponent>
         <DButton
-          @label="styleguide.sections.modal.open"
           @action={{this.openModal}}
+          @label="styleguide.sections.modal.open"
         />
 
         {{#if this.open}}
           <DModal
             @closeModal={{this.closeModal}}
-            @hideHeader={{this.hideHeader}}
-            @title={{this.title}}
-            @subtitle={{this.subtitle}}
+            @dismissable={{this.dismissable}}
+            @errors={{this.errors}}
             @flash={{this.flash}}
             @flashType={{this.flashType}}
-            @errors={{this.errors}}
-            @dismissable={{this.dismissable}}
+            @hideHeader={{this.hideHeader}}
+            @subtitle={{this.subtitle}}
+            @title={{this.title}}
           >
             <:body>
               {{this.body}}
@@ -102,25 +102,25 @@ export default class extends Component {
         </Row>
         <Row @name="@tagName">
           <ComboBox
-            @value={{this.modalTagName}}
             @content={{this.modalTagNames}}
-            @onChange={{fn (mut this.modalTagName)}}
-            @valueProperty={{null}}
             @nameProperty={{null}}
+            @onChange={{fn (mut this.modalTagName)}}
+            @value={{this.modalTagName}}
+            @valueProperty={{null}}
           />
         </Row>
         <Row @name="@title">
           <input
-            {{on "input" (withEventValue (fn (mut this.title)))}}
             type="text"
             value={{this.title}}
+            {{on "input" (withEventValue (fn (mut this.title)))}}
           />
         </Row>
         <Row @name="@subtitle">
           <input
-            {{on "input" (withEventValue (fn (mut this.subtitle)))}}
             type="text"
             value={{this.subtitle}}
+            {{on "input" (withEventValue (fn (mut this.subtitle)))}}
           />
         </Row>
         <Row @name="<:body>">
@@ -128,18 +128,18 @@ export default class extends Component {
         </Row>
         <Row @name="@flash">
           <input
-            {{on "input" (withEventValue (fn (mut this.flash)))}}
             type="text"
             value={{this.flash}}
+            {{on "input" (withEventValue (fn (mut this.flash)))}}
           />
         </Row>
         <Row @name="@flashType">
           <ComboBox
-            @value={{this.flashType}}
             @content={{this.flashTypes}}
-            @onChange={{fn (mut this.flashType)}}
-            @valueProperty={{null}}
             @nameProperty={{null}}
+            @onChange={{fn (mut this.flashType)}}
+            @value={{this.flashType}}
+            @valueProperty={{null}}
           />
         </Row>
       </Controls>

@@ -27,6 +27,11 @@ pt_BR:
                 lt_1h: "< 1 hora"
                 gt_24h: "> 24 horas"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Alterações"
+        changes_removed: "Removido(a)"
+        tag_names: "Tags"
     notifications:
       alt:
         solved:
@@ -87,6 +92,11 @@ pt_BR:
           solved: "foram solucionados"
           unsolved: "não foram solucionados"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tópico"
+            category: "Categoria"
       web_hooks:
         solved_event:
           group_name: "Evento solucionado"

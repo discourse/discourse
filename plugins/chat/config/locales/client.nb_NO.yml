@@ -127,6 +127,11 @@ nb_NO:
         sort:
           relevance: "Relevanse"
           latest: "Siste"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omtalelser"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"
@@ -192,4 +197,10 @@ nb_NO:
         message: "Send"
       chat_approval:
         message: "Send"
+        buttons: "Knapper"
+        value: "Verdi"
+        style_default: "Forvalg"
+        style_primary: "Primær"
+        style_success: "Suksess"
+        icon: "Ikon"
         channel_id: "Kanal"

@@ -5,6 +5,35 @@
 # https://translate.discourse.org/
 
 ug:
+  markdown_endpoints:
+    latest: "ئاخىرقى"
+    categories: "سەھىپە"
+    tags: "بەلگە"
+    replies: "جاۋاب"
+    last_updated: "ئاخىرقى يېڭىلانغان ۋاقىت"
+    event:
+      location: "ئورنى"
+      link: "ئۇلانما"
+  mcp:
+    errors:
+      draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"
+      post_not_found: "يازما تېپىلمىدى"
+      topic_not_found: "تېما تېپىلمىدى"
+    oauth:
+      deny: "رەت قىل"
+      approve: "دەلىللە"
+  llms_txt:
+    sections:
+      optional: "تاللاشچان"
+    links:
+      search:
+        label: "ئىزدە"
+      categories:
+        label: "سەھىپە"
+      about:
+        label: "ھەققىدە"
+      guidelines:
+        label: "كۆرسەتمە"
   dates:
     short_date_no_year: "D-MMMM"
     short_date: "YYYY-يىلى D-MMMM"
@@ -936,16 +965,15 @@ ug:
   email_login:
     invalid_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
     title: "ئېلخەتتە تىزىمغا كىرىش"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub ئەپى"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub ئەپى"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "نامەلۇم توركۆرگۈ"
     device:
       android: "Android ئۈسكۈنىسى"
       chromebook: "Chrome OS"
@@ -965,6 +993,10 @@ ug:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "نامەلۇم مەشغۇلات سىستېمىسى"
+  admin_site_traffic_explorer:
+    unknown: "يوچۇن"
+    traffic_types:
+      anonymous: "نامسىز"
   change_email:
     error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
     doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."
@@ -1112,7 +1144,7 @@ ug:
   uploads:
     marked_insecure_from_theme_component_reason: "تېما بۆلىكىدىكى يۈكلەش ئىشلىتىلگەن"
   unsubscribe:
-    title: "مۇشتەرىلىكنى قالدۇر"
+    unsubscribe: "مۇشتەرىلىكنى قالدۇر"
     stop_watching_topic: "بۇ تېمىنى كۆزىتىشنى توختات، %{link}"
     mute_topic: "بۇ تېمىنىڭ بارلىق ئۇقتۇرۇشلىرىنى ئۈنسىزلە، %{link}"
     unwatch_category: "%{category} سەھىپىدىكى بارلىق تېمىنى كۆزىتىشنى توختات"
@@ -1248,6 +1280,11 @@ ug:
         share: "ھەمبەھىر"
       types:
         staff: "باشقۇرغۇچى خادىم"
+    posters_by_member_type_members:
+      labels:
+        user: "ئىشلەتكۈچى"
+        count: "يازما"
+        share: "ھەمبەھىر"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1421,6 +1458,9 @@ ug:
         num_topics: "تېما"
       description: "ئىشلەتكۈچى ھەمبەھىرلەنگەن ئۇلانمىنىڭ چېكىلىش قېتىم سانى بويىچە تىزىلىدۇ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "زىيارەت"
+    top_entry_urls:
       labels:
         count: "زىيارەت"
     top_referrers_by_browser_pageviews:
@@ -1615,12 +1655,6 @@ ug:
       host_names: "سىزنىڭ config/database.yml ھۆججىتىڭىز كۆڭۈلدىكى localhost مۇلازىمېتىر ئىسمىنى ئىشلىتىۋاتىدۇ. ئۇنى تور بېكىتىڭىزنىڭ مۇلازىمېتىر ئىسمىغا يېڭىلاڭ."
       queue_size: "ئۆچرەتتە %{queue_size} ۋەزىپە بار، ۋەزىپە ئېغىر. بۇ بەلكىم Sidekiq جەريانىدا مەسىلە بارلىقى سەۋەبىدىن بولۇشى ياكى تېخىمۇ كۆپ Sidekiq جەريانى قوشۇش كېرەكلىكىنى بىلدۈرۈشى مۇمكىن."
       ram: "مۇلازىمېتىرىڭىزدىكى جەمئىي ئەسلەك 1GB دىن ئاز ھالەتتە ئىجرا قىلىنىۋاتىدۇ. كەم دېگەندە 1GB ئەسلەك تەۋسىيە قىلىنىدۇ."
-      google_oauth2_config: 'مۇلازىمېتىر Google OAuth2 ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە خېرىدار شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      facebook_config: 'مۇلازىمېتىر Facebook ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_facebook_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      twitter_config: 'مۇلازىمېتىر Twitter ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_twitter_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      github_config: 'مۇلازىمېتىر GitHub ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      s3_upload_config: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_upload_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
-      s3_backup_config: 'مۇلازىمېتىر زاپاسنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_backup_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
       s3_cdn: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەيدىغان قىلىپ سەپلەنگەن. بۇ قىممەت S3 چىقىمى ۋە تور بېكەتنىڭ ئاستىلىشىنى كەلتۈرۈپ چىقىرىشى مۇمكىن. <a href="https://meta.discourse.org/t/-/148916" target="_blank">تەپسىلاتىنى «يۈكلەشكە ئوبيېكت ساقلىغۇچىسىنى ئىشلىتىش» تىن كۆرۈڭ</a>.'
       image_magick: 'مۇلازىمېتىر چوڭ سۈرەتنىڭ كىچىك سۈرىتىنى قۇرۇشقا سەپلەنگەن ئەمما ImageMagick ئورنىتىلمىغان. سىز ياقتۇرىدىغان بوغچا باشقۇرغۇچنى ئىشلىتىپ ImageMagick نى ئورنىتىڭ ياكى <a href="https://www.imagemagick.org/script/download.php" target="_blank">ئەڭ يېڭى نەشرىنى چۈشۈرۈڭ</a>.'
       failing_emails: '%{num_failed_jobs} ئېلخەت خىزمىتى مەغلۇپ بولدى. app.yml ۋە ئېلخەت مۇلازىمېتىر تەڭشىكىنىڭ توغرىلىقىنى تەكشۈرۈڭ. <a href="%{base_path}/sidekiq/retries" target="_blank">مەغلۇپ بولغان خىزمەتنى Sidekiq دىن كۆرۈڭ</a>.'
@@ -1801,7 +1835,7 @@ ug:
     share_links: "باش بەت ھەمبەھىر سۆزلەشكۈدە قايسى تۈرلەرنىڭ كۆرۈنۈدىغانلىقى ۋە تەرتىپىنى جەزملەيدۇ."
     allow_username_in_share_links: "ھەمبەھىر ئۇلانمىسىدا ئىشلەتكۈچى ئاتىنىڭ بولۇشىغا يول قويىدۇ. بۇ بىردىنبىر زىيارەتچىگە ئاساسەن تارتۇق بېرىشتە كېرەكلىك."
     site_contact_username: "بارلىق ئاپتوماتىك ئۇچۇرلارنى ئەۋەتىدىغان ئۈنۈملۈك باشقۇرغۇچى خادىمنىڭ ئىشلەتكۈچى ئاتى. ئەگەر بوش قالدۇرۇلسا، كۆڭۈلدىكى سىستېما ھېساباتى ئىشلىتىلىدۇ."
-    site_contact_group_name: "ئىناۋەتلىك گۇرۇپپا ئىسمى، بۇ گۇرۇپپا ئۆزلۈكىدىن يوللانغان شەخسىي ئۇچۇرنىڭ ھەممىسىگە تەكلىپ قىلىنىدۇ."
+    site_contact_group_name: "ئۆزلۈكىدىن يوللانغان شەخسىي ئۇچۇرنىڭ ھەممىسىگە تەكلىپ قىلىنغان گۇرۇپپا."
     send_welcome_message: "بارلىق يېڭى ئىشلەتكۈچىلەرگە تېز باشلاش يېتەكچىسى ئارقىلىق قارشى ئېلىش ئۇچۇرى يوللايدۇ."
     send_tl1_welcome_message: "ئىشەنچ دەرىجىسى 1 بولغان يېڭى ئىشلەتكۈچىگە قارشى ئېلىش ئۇچۇرى يوللايدۇ."
     send_tl2_promotion_message: "ئىشەنچ دەرىجىسى 2 بولغان يېڭى ئىشلەتكۈچىگە ئۆستۈرۈش ئۇچۇرى ئەۋەتىدۇ."
@@ -2060,7 +2094,6 @@ ug:
     user_profile_view_duration_hours: "ھەر IP/ئىشلەتكۈچىنىڭ ھەر N سائەتتە يېڭى ئىشلەتكۈچى تەرجىمىھالىنىڭ كۆرۈلۈشىنى ھېسابلايدۇ"
     levenshtein_distance_spammer_emails: "ئەخلەت ئېلخەت يوللىغۇچىلارنى ماسلاشتۇرۇپ سېلىشتۇرغاندا، مۈجمەل ماس كەلگەن ھەرپ سانى پەرقىگە يەنىلا يول قويىدۇ."
     max_new_accounts_per_registration_ip: "ئەگەر بۇ IP دىن كەلگەن ئىشەنچ دەرىجىسى 0 بولغان (n) ھېسابات بولسا (ھەمدە بىرسىمۇ باشقۇرغۇچى ئەمەس ياكى ئىشەنچ دەرىجىسى 2 ياكى ئۇنىڭدىن يۇقىرى بولمىغان بولسا)، ئۇنداقتا بۇ IP ئادرېستىن كەلگەن يېڭى تىزىملاشقا قوشۇلۇشنى توختىتىدۇ. 0 گە تەڭشەلسە چەكلىمىنى چەكلەيدۇ."
-    min_ban_entries_for_roll_up: "يىغ توپچە چېكىلگەندە، ئەگەر كەم دېگەندە (N) تۈر بولسا، تارماق تور چەكلەش تۈرىنى قۇرىدۇ."
     max_age_unmatched_emails: "(N) كۈندىن كېيىن ماس كەلمىگەن چەكلەنگەن ئېلخەت ئادرېس تۈرىنى ئۆچۈرىدۇ."
     max_age_unmatched_ips: "(N) كۈندىن كېيىن ماس كەلمىگەن چەكلەنگەن IP ئادرېس تۈرىنى ئۆچۈرىدۇ."
     num_flaggers_to_close_topic: "تېمىنى ئۆزلۈكىدىن ۋاقىتلىق توختىتىپ مۇداخىلە قىلىشقا كېرەكلىك ئەڭ ئاز پاش قىلىش قېتىم سانى"
@@ -2304,7 +2337,6 @@ ug:
     revoke_user_api_keys_unused_days: "ئىشلەتكۈچى API ئاچقۇچى ئاخىرقى قېتىم ئىشلىتىلگەندىن كېيىن ئۆزلۈكىدىن بىكار قىلىنىشتىن ئىلگىرىكى كۈن سانى (0 ھەرگىز)"
     revoke_user_api_keys_maxlife_days: "ئىشلەتكۈچى API ئاچقۇچى ئۆزلۈكىدىن بىكار قىلىنىشتىن ئىلگىرىكى كۈن سانى (0 ھەرگىز)"
     tagging_enabled: "تېمىدا بەلگىنى قوزغىتامدۇ؟ تېخىمۇ كۆپ ئۇچۇرنى <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta دا بەلگە باشقۇرۇش يېتەكچىسى</a>دىن كۆرۈڭ."
-    create_tag_allowed_groups: "بەلگە قۇرالايدىغانلارنىڭ گۇرۇپپىسى. باشقۇرغۇچى ۋە رىياسەتچى ھەمىشە بەلگە قۇرالايدۇ."
     max_tags_per_topic: "بىر تېمىغا قوللىنىشقا بولىدىغان ئەڭ كۆپ بەلگە سانى."
     max_tags_per_email_subject: "ئېلخەت ماۋزۇسىدا ئىشلىتىشكە بولىدىغان ئەڭ كۆپ بەلگە سانى"
     max_tag_length: "بەلگىدە ئىشلىتىشكە بولىدىغان ئەڭ كۆپ ھەرپ سانى."
@@ -2369,7 +2401,6 @@ ug:
       invalid_email: "ئىناۋەتسىز ئېلخەت ئادرېسى."
       invalid_username: "بۇ ئىسىمدىكى ئىشلەتكۈچى يوق."
       valid_username: "بۇ ئىسىمدىكى بىر ئىشلەتكۈچى بار."
-      invalid_group: "بۇ ئىسىمدىكى گۇرۇپپا يوق."
       invalid_integer_min_max: "قىممىتى چوقۇم %{min} بىلەن %{max} ئارىسىدا بولۇشى كېرەك."
       invalid_integer_min: "قىممىتى چوقۇم %{min} ياكى چوڭراق بولۇشى كېرەك."
       invalid_integer_max: "قىممىتى %{max} دىن ئاشماسلىقى كېرەك."
@@ -2420,7 +2451,6 @@ ug:
         other: "تىزىم چوقۇم ئېنىق %{count} قىممەتنى ئۆز ئىچىگە ئېلىشى كېرەك."
       markdown_linkify_tlds: "سىز «*» قىممەتنى ئۆز ئىچىگە ئالسىڭىز بولمايدۇ."
       google_oauth2_hd_groups: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم بارلىق «google oauth2 hd» تەڭشىكىنى سەپلىشىڭىز كېرەك."
-      linkedin_oidc_credentials: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم LinkedIn OIDC سالاھىيەت كىملىكى (linkedin_oidc_client_id' ۋە 'linkedin_oidc_client_secret) نى سەپلىشىڭىز كېرەك."
       search_tokenize_chinese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_chinese» نى چەكلىشىڭىز كېرەك."
       search_tokenize_japanese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_japanese» نى چەكلىشىڭىز كېرەك."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "ئەگەر ئىككى ئامىللىق دەلىللەش يەنى 2FA مەجبۇرىي ئىجرا قىلىنغان بولسا DiscourseConnect نى قوزغىتالمايسىز."
@@ -2459,8 +2489,6 @@ ug:
       tags_any: "بەلگىلەنگەن خالىغان بەلگە (پەش بىلەن ئايرىلغان) بار تېمىنى كۆرسىتىدۇ"
       tags_all: "بەلگىلەنگەن ھەممە بەلگە (قوشۇش بەلگىسى بىلەن ئايرىلغان) بار تېمىنى كۆرسىتىدۇ"
       exclude_tag: "مۇئەييەن بەلگە بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
-      exclude_tags_any: "بەلگىلەنگەن خالىغان بەلگە (پەش بىلەن ئايرىلغان) بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
-      exclude_tags_all: "بەلگىلەنگەن ھەممە بەلگە (قوشۇش بەلگىسى بىلەن ئايرىلغان) بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
       tag_group: "بەلگىلەنگەن بەلگە گۇرۇپپىسىدىن بەلگىسى بار تېمىنى كۆرسىتىدۇ"
       exclude_tag_group: "بەلگىلەنگەن بەلگە گۇرۇپپىسىدىن بەلگىسى بار تېمىنى چىقىرىۋېتىدۇ"
       status_open: "ئوچۇق تېمىنى كۆرسەت (تاقالمىغان ياكى ئارخىپلانمىغان)"
@@ -2652,6 +2680,7 @@ ug:
     wrong_invite_code: "سىز كىرگۈزگەن تەكلىپ كودى خاتا."
     reserved_username: "ئۇ ئىشلەتكۈچى نامىغا يول قويۇلمايدۇ."
     missing_user_field: "چوقۇم تولدۇرۇشقا تېگىشلىك ئىشلەتكۈچى بۆلەكلىرىنى تاماملىمىدىڭىز"
+    missing_username: "ئىشلەتكۈچى ئاتىنى كىرگۈزۈڭ"
     auth_complete: "سالاھىيەت دەلىللەش تاماملاندى."
     click_to_continue: "بۇ جاي چېكىلسە داۋاملىشىدۇ."
     already_logged_in: "كەچۈرۈڭ! بۇ تەكلىپ نۆۋەتتە تېخى ھېساباتى يوق يېڭى ئىشلەتكۈچىنى نىشانلىغان."
@@ -3733,9 +3762,6 @@ ug:
     user_posted_pm_staged:
       title: "ئىشلەتكۈچى يوللىغان شەخسىي ئۇچۇر ۋاقىتلىق ساقلاندى"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
@@ -3912,7 +3938,7 @@ ug:
         باشقۇرغۇچى ئەزا %{site_name} دىكى ھېساباتىڭىزنى تەستىقلايدۇ.
 
         سىزھازىر تىزىمغا كىرىپ يېڭى ھېساباتىڭىزنى زىيارەت قىلالايسىز:
-        %{base_url}
+        %{login_url}
 
         ئەگەر ئۈستىدىكى ئۇلانمىنى چەككىلى بولمىسا، ئۇنى كۆچۈرۈپ تور كۆرگۈڭىزنىڭ ئادرېس بالدىقىغا چاپلاڭ.
 
@@ -4433,6 +4459,10 @@ ug:
   performance_report:
     initial_post_raw: بۇ تېمىدا تور بېكىتىڭىزنىڭ كۈندىلىك ئۈنۈم دوكلاتى بار.
     initial_topic_title: تور بېكەت ئۈنۈم دوكلاتى
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ."
+      other: "بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ."
   tags:
     title: "بەلگە"
     restricted_tag_disallowed: '«%{tag}» بەلگىنى قوللىنالمايسىز.'
@@ -4483,6 +4513,10 @@ ug:
     deprecation_error_label: Javascript ئىشلەتمەسلىك خاتالىقى كەلتۈرۈپ چىقىرىدۇ
     enter: "بىخەتەر ھالەتكە كىرىدۇ"
     must_select: "بىخەتەر ھالەتكە كىرىشتە كەم دېگەندە تاللاشتىن بىرى تاللىنىدۇ."
+  design_wizard:
+    palette_pairs:
+      default: "كۆڭۈلدىكى"
+      dracula: "دراكۇلا"
   wizard:
     title: "Discourse تەڭشەك"
     step:
@@ -4603,6 +4637,9 @@ ug:
       group: "بەلگىلەنگەن گۇرۇپپىدا يوق ئىشلەتكۈچىلەرنىڭ ئىنكاسىنى چوقۇم باشقۇرغۇچى تەستىقلايدۇ. %{link} نى كۆرۈڭ."
       new_topics_unless_trust_level: "تۆۋەن ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچىنىڭ تېمىسىنى باشقۇرغۇچى خادىملار تەستىقلىشى كېرەك. %{link} نى كۆرۈڭ."
       fast_typer: "يېڭى ئىشلەتكۈچى كىرگۈزگەن تۇنجى يازما سۈرئىتى گۇمانلىق، ماشىنا ئادەم ياكى ئەخلەت ئۇچۇر تارقاتقۇچىنىڭ قىلمىشى بولۇشى مۇمكىن. %{link} نى كۆرۈڭ."
+      fast_typer_time:
+        one: "%{count} سېكۇنت"
+        other: "%{count} سېكۇنت"
       auto_silence_regex: "تۇنجى يازمىسى %{link} تەڭشەك بىلەن ماسلاشقان يېڭى ئىشلەتكۈچى."
       watched_word:
         one: "بۇ يازمىدا كۆزىتىلىدىغان سۆز بار، پاش قىلىنغان سۆز: %{words}. تەپسىلاتىنى %{link} دىن كۆرۈڭ."
@@ -4652,8 +4689,6 @@ ug:
         complete: "يازما يوشۇرۇن ، ئىشلەتكۈچىگە ئۇقتۇرۇش قىلىندى."
       agree_and_edit:
         title: "يازما تەھرىر"
-        description: "پاش قىلىشقا قوشۇلۇپ، تەھرىرلەش كۆزنىكىنى ئېچىپ يازمىنى تەھرىرلەيدۇ."
-        complete: "پاش قىلىش بىلدۈرۈلدى، ھازىر يازمىنى تەھرىرلىيەلەيسىز."
       delete:
         title: "ئۆچۈر"
         complete: "يازما ئۆچۈرۈلدى."
@@ -4674,6 +4709,8 @@ ug:
       disagree_and_restore:
         title: "يازمىنى ئەسلىگە كەلتۈرىدۇ"
         complete: "يازما ئەسلىگە كەلتۈرۈلدى."
+      disagree_and_keep_deleted:
+        title: "يازما ئۆچۈرۈشنى ساقلاپ قال"
       disagree_bundle:
         title: "ياق"
       disagree:
@@ -4745,28 +4782,6 @@ ug:
       approve_and_unhide:
         title: "ھەئە"
         complete: "يازما تەستىقلاندى ۋە ئاشكارىلاندى"
-      post_actions:
-        bundle_title: "يازمىغا نېمە ئىش قىلماقچى؟"
-      delete_post:
-        title: "يازما ئۆچۈر"
-        description: "بۇ يازمىنى ئۆچۈرىدۇ"
-        complete: "يازما ئۆچۈرۈلدى"
-      hide_post:
-        title: "يازمىنى يوشۇر"
-        description: "بۇ يازمىنى جامائەتتىن يوشۇرىدۇ"
-        complete: "يازما يوشۇرۇن"
-      unhide_post:
-        title: "يازمىنى يوشۇرما"
-        description: "بۇ يازمىنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان قىلىپ تەڭشەيدۇ"
-        complete: "يازما ئاشكارا"
-      restore_post:
-        title: "يازمىنى ئەسلىگە كەلتۈرىدۇ"
-        description: "ئۆچۈرۈلگەن بۇ يازمىنى ئەسلىگە كەلتۈرىدۇ"
-        complete: "يازما ئەسلىگە كەلتۈرۈلدى"
-      edit_post:
-        title: "يازما تەھرىر"
-        description: "بۇ يازمىنىڭ مەزمۇنىنى تەھرىرلەيدۇ"
-        complete: "يازما تەھرىرلەندى"
       silence_user:
         title: "ئىشلەتكۈچىنى ئۈنسىزلە"
         complete: "ئىشلەتكۈچى ئۈنسىزلەندى"

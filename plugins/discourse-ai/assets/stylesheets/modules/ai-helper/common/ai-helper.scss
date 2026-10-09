@@ -233,19 +233,13 @@
 
 // Suggest Titles Related
 .showing-ai-suggestions {
-  .title-input {
-    // border on focus should be on top of suggestion button
-    input:focus {
-      z-index: 1;
-    }
-  }
-
   #edit-title {
     padding-right: 2em;
   }
 }
 
-.suggestion-button {
+.suggestion-button,
+.ai-split-topic-suggestion-button {
   .d-icon-spinner {
     animation: spin 1s linear infinite;
   }
@@ -260,7 +254,6 @@
 .suggest-titles-button {
   position: absolute;
 
-  #reply-control &,
   .edit-topic-title & {
     background: var(--primary-low);
     right: var(--space-1);
@@ -269,20 +262,11 @@
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
     z-index: z("composer", "dropdown");
+    transform: translateY(50%);
 
     .d-icon {
       color: var(--tertiary);
     }
-  }
-
-  .edit-topic-title & {
-    transform: translateY(50%);
-  }
-
-  #reply-control & {
-    transform: translateY(
-      calc(50% - 0.25em)
-    ); // .25em = half of input margin-bottom padding
   }
 }
 
@@ -293,12 +277,6 @@
     // because we need another layer to put the AI icon above dropdowns
     // while also keeping them below the composer tips
     z-index: z("composer", "dropdown") + 2;
-  }
-
-  .showing-ai-suggestions {
-    #reply-title {
-      padding-right: 2em;
-    }
   }
 }
 
@@ -377,12 +355,6 @@
     .multi-select {
       flex: 1;
       margin-bottom: 0;
-    }
-  }
-
-  .ai-split-topic-suggestion-button {
-    .d-icon-spinner {
-      animation: spin 1s linear infinite;
     }
   }
 }
@@ -494,10 +466,6 @@
     align-items: center;
 
     .shortcut {
-      border: none;
-      background: none;
-      font-size: var(--font-down-1);
-      color: var(--primary-low-mid);
       margin-left: auto;
     }
   }
@@ -532,7 +500,8 @@
   }
 }
 
-.fk-d-menu {
+.fk-d-menu,
+.fk-d-menu-modal {
   &[data-identifier="ai-composer-helper-menu"],
   &[data-identifier="ai-title-suggester"] {
     z-index: z("modal", "dialog");
@@ -541,8 +510,32 @@
       z-index: z("header") + 1;
     }
 
-    .mobile-view & {
-      z-index: z("mobile-composer");
+    .ai-suggestions-menu {
+      max-width: 100%;
+
+      &__loading {
+        text-align: center;
+        padding: var(--space-2);
+
+        .d-icon-spinner {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      &__empty {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-1) var(--space-2) var(--space-1) var(--space-4);
+      }
+
+      &__empty-text {
+        font-size: var(--font-down-1-rem);
+      }
+
+      .d-button-label {
+        @include ellipsis;
+      }
     }
   }
 }

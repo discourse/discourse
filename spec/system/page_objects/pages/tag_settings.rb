@@ -51,6 +51,19 @@ module PageObjects
         self
       end
 
+      def remove_localization
+        find(".form-kit__collection .btn-danger").click
+        self
+      end
+
+      def has_localizations?
+        has_css?(".form-kit__collection")
+      end
+
+      def has_no_localizations?
+        has_no_css?(".form-kit__collection")
+      end
+
       def name_input
         find("input[name='name']")
       end

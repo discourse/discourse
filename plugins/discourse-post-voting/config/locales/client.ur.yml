@@ -9,7 +9,7 @@ ur:
     admin:
       site_settings:
         categories:
-          discourse_post_voting: "ڈسکورس دھاگے کے لیے ووٹنگ"
+          discourse_post_voting: "Discourse دھاگے کے لیے ووٹنگ"
   post_voting:
     reviewables:
       comment_already_handled: "شکریہ، لیکن ہم پہلے ہی اس تبصرے کا جائزہ لے چکے اور طے کیا ہے کہ اسے دوبارہ فلیگ کرنے کی ضرورت نہیں۔"

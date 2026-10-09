@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    sign_in_with_apple_enabled: '是否啟用使用 Apple 登錄？'
+    apple_client_id: "（使用 Apple 登錄）開發者控制臺中的 Apple“服務標識符”。通常是一個反向域名樣式的字符串（例如 com.example.auth）。"
+    apple_team_id: '（使用 Apple 登錄）Apple Team ID（10 個字符）'
+    apple_key_id: '（使用 Apple 登錄）Apple Key ID（10 個字符）'
+    apple_pem: '（使用 Apple 登錄）Apple Pem 文件內容。包括 BEGIN 和 END 行'

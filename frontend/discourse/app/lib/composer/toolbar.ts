@@ -1,5 +1,4 @@
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
-import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import type Site from "discourse/models/site";
 import type { CapabilitiesService } from "discourse/services/capabilities";
@@ -69,8 +68,8 @@ export interface PopupMenuOption {
   translatedTitle?: string;
   /** Keyboard shortcut that invokes the option. */
   shortcut?: string;
-  /** Shortcut exposed to assistive technology. */
-  ariaKeyshortcuts?: string;
+  /** The shortcut in binding spelling (`mod+b`), for display and announcement. */
+  shortcutKeys?: string;
   /** Whether the option is available. */
   condition: boolean | (() => boolean);
   /** Whether the active option displays its status icon. */
@@ -121,8 +120,8 @@ export interface ToolbarButton {
   title: string;
   /** Keyboard shortcut that invokes the button. */
   shortcut?: string;
-  /** Shortcut exposed to assistive technology. */
-  ariaKeyshortcuts?: string;
+  /** The shortcut in binding spelling (`mod+b`), for display and announcement. */
+  shortcutKeys?: string;
   /** Whether the button is inserted at the beginning of its group. */
   unshift?: boolean;
   /** Reports whether the button matches the editor state. */
@@ -133,6 +132,8 @@ export interface ToolbarButton {
   shortcutAction?: (event: ToolbarEvent) => void;
   /** Whether the button is disabled. */
   disabled?: boolean;
+  /** Whether the user's preferences exclude the button from the toolbar. */
+  hiddenByUser?: boolean;
 }
 
 type ToolbarButtonAttrs = Omit<
@@ -172,6 +173,8 @@ export interface ToolbarOptions {
   site?: Partial<Site>;
   /** Whether the link button is included. */
   showLink?: boolean;
+  /** Ids of the buttons the user has chosen to hide. Only honoured for ids in `HIDEABLE_BUTTONS`. */
+  hiddenButtons?: string[];
 }
 
 function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
@@ -179,21 +182,53 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
 
+/**
+ * Core buttons a user may remove from the composer toolbar, with the translation
+ * key naming each one. Buttons outside this list — including every button
+ * contributed by a plugin — are always shown.
+ */
+export const HIDEABLE_BUTTONS = [
+  { id: "bold", label: "composer.bold_title" },
+  { id: "italic", label: "composer.italic_title" },
+  { id: "heading", label: "composer.text_size_title" },
+  { id: "link", label: "composer.link_title" },
+  { id: "blockquote", label: "composer.blockquote_title" },
+  { id: "code", label: "composer.code_title" },
+  { id: "list", label: "composer.list_title" },
+  { id: "toggle-direction", label: "composer.toggle_direction" },
+  { id: "emoji", label: "composer.emoji" },
+  { id: "gifs", label: "gifs.composer_title" },
+  {
+    id: "post-language-selector",
+    label: "post.localizations.post_language_selector.title",
+  },
+];
+
+const HIDEABLE_BUTTON_IDS = new Set(HIDEABLE_BUTTONS.map(({ id }) => id));
+
 const DEFAULT_GROUP = "main";
 
 export class ToolbarBase {
   /** Buttons and menu options keyed by keyboard shortcut. */
   shortcuts: Record<string, ToolbarButton | PopupMenuOption>;
+
   /** Editor callbacks used by toolbar actions. */
   context: ToolbarContext;
+
   /** Ordered groups rendered by the toolbar. */
   groups: ToolbarGroup[];
+
   /** Client settings used to configure toolbar behavior. */
   siteSettings: Record<string, unknown>;
+
   /** Browser capabilities used to configure toolbar behavior. */
   capabilities: Partial<CapabilitiesService>;
+
   /** Site state used to configure toolbar behavior. */
   site: Partial<Site>;
+
+  /** Ids of the buttons the user has chosen to hide, read once when the toolbar is built. */
+  hiddenButtons: string[];
 
   constructor(opts: ToolbarOptions = {}) {
     this.shortcuts = {};
@@ -202,6 +237,7 @@ export class ToolbarBase {
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
     this.site = opts.site || {};
+    this.hiddenButtons = opts.hiddenButtons || [];
   }
 
   /** Adds a button to its configured toolbar group. */
@@ -221,6 +257,9 @@ export class ToolbarBase {
     createdButton.tabindex ??= "-1";
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
+    createdButton.hiddenByUser =
+      HIDEABLE_BUTTON_IDS.has(buttonAttrs.id) &&
+      this.hiddenButtons.includes(buttonAttrs.id);
 
     createdButton.action = async () => {
       if (buttonAttrs.popupMenu) {
@@ -244,30 +283,19 @@ export class ToolbarBase {
     };
 
     // Main button shortcut bindings and title text.
+    // The shortcut suffix is added where the button renders, since it is
+    // shown only when a keyboard is likely.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
+    createdButton.title = title;
     if (buttonAttrs.shortcut) {
-      const shortcutKeyTranslated = translateModKey(
-        buttonAttrs.shortcut.length === 1
-          ? buttonAttrs.shortcut.toUpperCase()
-          : buttonAttrs.shortcut
-      );
-      const shortcutTitle = `${translateModKey(
-        PLATFORM_KEY_MODIFIER + " "
-      )}${shortcutKeyTranslated}`;
-
-      if (buttonAttrs.hideShortcutInTitle) {
-        createdButton.title = title;
-      } else {
-        createdButton.title = `${title} (${shortcutTitle})`;
-      }
+      createdButton.shortcutKeys = `mod+${buttonAttrs.shortcut}`;
+      createdButton.hideShortcutInTitle = buttonAttrs.hideShortcutInTitle;
 
       // These shortcuts are actually bound in the keymap inside
       // components/d-editor.gjs
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
-
-      createdButton.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
     } else {
       createdButton.title = title;
     }
@@ -280,22 +308,13 @@ export class ToolbarBase {
 
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
-          const shortcutKeyTranslated = translateModKey(
-            option.shortcut.length === 1
-              ? option.shortcut.toUpperCase()
-              : option.shortcut
-          );
-          const shortcutTitle = `${translateModKey(
-            PLATFORM_KEY_MODIFIER + " "
-          )}${shortcutKeyTranslated}`;
+          option.shortcutKeys = `mod+${option.shortcut}`;
 
           // These shortcuts are actually bound in the keymap inside
           // components/d-editor.gjs
           this.shortcuts[
             `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
           ] = option;
-
-          option.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
         }
       });
     }

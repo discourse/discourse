@@ -47,8 +47,8 @@ module DiscourseAi
             @tool_batch_id = parsed_json[:id] if parsed_json[:id].present?
 
             if output_thinking
-              reasoning = parsed_json.dig(:choices, 0, :delta, :reasoning).presence
-              reasoning ||= parsed_json.dig(:choices, 0, :delta, :reasoning_content)
+              delta = parsed_json.dig(:choices, 0, :delta) || {}
+              reasoning = delta[:reasoning].presence || delta[:reasoning_content]
               if reasoning.present?
                 if @thinking.nil?
                   @thinking = Thinking.new(message: reasoning.dup, partial: true)
@@ -56,7 +56,11 @@ module DiscourseAi
                   @thinking.message << reasoning
                 end
                 elements << Thinking.new(message: reasoning, partial: true)
-              elsif @thinking
+              end
+
+              # a delta may carry both reasoning and content; close the thinking
+              # block before any content from the same delta is emitted
+              if @thinking && (delta[:content].present? || delta[:tool_calls].present?)
                 @thinking.partial = false
                 elements << @thinking
                 @thinking = nil
@@ -150,6 +154,8 @@ module DiscourseAi
         end
 
         def thinking_template_kwargs
+          return {} if thinking_config&.explicit_none?
+
           override = active_custom_param("thinking_override")
 
           if override

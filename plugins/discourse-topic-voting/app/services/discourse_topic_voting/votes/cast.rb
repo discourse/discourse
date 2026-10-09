@@ -50,7 +50,7 @@ module DiscourseTopicVoting
       end
 
       def create_vote(guardian:, topic:)
-        DiscourseTopicVoting::Vote.create!(user: guardian.user, topic: topic)
+        DiscourseTopicVoting::Vote.create(user: guardian.user, topic: topic)
       end
 
       def refresh_vote_count(topic:)

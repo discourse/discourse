@@ -19,10 +19,10 @@ module DiscourseAi
           return [] if !SiteSetting.ai_helper_enabled
 
           custom_prompt_allowed_group_ids =
-            DB.query_single(
-              "SELECT allowed_group_ids FROM ai_agents WHERE id = :customp_prompt_agent_id",
-              customp_prompt_agent_id: SiteSetting.ai_helper_custom_prompt_agent,
-            ).flatten
+            AiAgent
+              .select(:allowed_group_ids)
+              .find_by(id: SiteSetting.ai_helper_custom_prompt_agent)
+              &.allowed_group_ids || []
 
           scope.user.in_any_groups?(custom_prompt_allowed_group_ids)
         end

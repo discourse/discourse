@@ -1,5 +1,6 @@
 en:
   js:
     checklist:
+      item: "Checklist item"
       composer:
         checklist: "Check list"

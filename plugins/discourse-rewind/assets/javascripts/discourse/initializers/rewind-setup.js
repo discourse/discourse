@@ -18,7 +18,27 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("preferences", {
+        name: "preferences-rewind",
+        route: "preferences.rewind",
+        label: "discourse_rewind.title",
+        icon: "repeat",
+        // Same conditions as `RewindPreferencesNav` in the horizontal nav: the
+        // site setting gates the tab so it does not vanish when a user turns
+        // rewind off for themselves, and `active` reflects the viewer's state.
+        displayed: ({ siteSettings, owner }) =>
+          siteSettings.discourse_rewind_enabled &&
+          !!owner.lookup("service:rewind")?.active,
+      });
+
       if (this.rewind.enabled) {
+        api.addUserNavSidebarLink("activity", {
+          name: "activity-rewind",
+          route: "userActivity.rewind",
+          label: "discourse_rewind.title",
+          icon: "repeat",
+        });
+
         api.addQuickAccessProfileItem({
           icon: "repeat",
           href: "/my/activity/rewind",

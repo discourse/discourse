@@ -156,8 +156,146 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
   end
 
+  it "bounds reasoning-inclusive root, child and helper requests on the same model" do
+    model.update!(
+      max_prompt_tokens: 200_000,
+      max_output_tokens: 64_000,
+      provider_params:
+        model.provider_params.merge("enable_reasoning" => true, "reasoning_tokens" => 32_768),
+    )
+    child =
+      Fabricate(
+        :ai_agent,
+        default_llm_id: model.id,
+        max_turn_tokens: 32_000,
+        thinking_effort: "high",
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    parent =
+      Fabricate(
+        :ai_agent,
+        default_llm_id: model.id,
+        max_turn_tokens: 32_000,
+        subagent_ids: [child.id],
+      )
+    Group.refresh_automatic_groups!
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+      )
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution,
+        root_token_budget: 32_000,
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        execution_context: execution,
+        subagent_execution_state: state,
+      )
+    calls = []
+    client =
+      stub_sdk_client(
+        response: mock_converse_response(text: "Helper", output_tokens: 25),
+      ) do |listeners|
+        fire_message_start(listeners)
+        fire_content_block_delta(listeners, text: "Evidence")
+        fire_content_block_stop(listeners)
+        fire_message_stop(listeners)
+        fire_metadata(listeners, output_tokens: 35)
+      end
+    reservation = execution.work_budget.reserve_output(16_000)
+    model
+      .to_llm
+      .generate(
+        "Root",
+        user: user,
+        execution_context: execution,
+        max_tokens: 16_000,
+        thinking_effort: "high",
+        work_generation_admitted: true,
+      ) do |partial|
+        next if !partial.is_a?(String) || partial.empty? || calls.present?
+        runner =
+          DiscourseAi::Agents::SubagentRunner.new(
+            parent_agent: parent.class_instance.new,
+            child_id: child.id,
+            prompt: "Check the evidence",
+            context: context,
+            parent_llm: model.to_llm,
+          )
+        calls << runner.run
+        calls << model.to_llm.generate(
+          "Helper",
+          user: user,
+          execution_context: execution,
+          thinking_effort: "high",
+        )
+      end
+    expect(calls.first[:response]).to eq("Evidence")
+    expect(calls.last).to eq("Helper")
+    expect(client).to have_received(:converse_stream).twice do |params|
+      expect(params.dig(:inference_config, :max_tokens)).to eq(16_000)
+      expect(params.dig(:additional_model_request_fields, :thinking, :budget_tokens)).to eq(14_976)
+    end
+    expect(client).to have_received(:converse) do |params|
+      expect(params.dig(:inference_config, :max_tokens)).to eq(15_965)
+      expect(params.dig(:additional_model_request_fields, :thinking, :budget_tokens)).to eq(14_941)
+    end
+    expect(execution.work_budget.used).to eq(95)
+    expect(execution.work_budget.limit).to eq(32_000)
+    expect(execution.token_usage_tracker.response).to eq(95)
+  ensure
+    execution&.work_budget&.release_output(reservation)
+  end
+
+  it "excludes Converse maintenance from work and ordinary usage while preserving actual bills" do
+    stub_sdk_client(response: mock_converse_response(input_tokens: 100, output_tokens: 35))
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000, used: 250),
+      )
+    model.to_llm.generate(
+      "Summarize history",
+      user: user,
+      feature_name: "context_compression",
+      execution_context: execution,
+    )
+    expect(execution.work_budget.used).to eq(250)
+    expect(execution.token_usage_tracker.total).to eq(135)
+    expect(execution.token_usage_tracker.preparation_tokens).to eq(135)
+    model.to_llm.generate("Answer", user: user, execution_context: execution)
+    expect(execution.work_budget.used).to eq(285)
+    expect(execution.token_usage_tracker.total).to eq(270)
+  end
+
+  it "settles partially emitted cancelled Converse output and actual usage" do
+    cancel = DiscourseAi::Completions::CancelManager.new
+    stub_sdk_client do |listeners|
+      fire_message_start(listeners)
+      fire_content_block_delta(listeners, text: "Partial answer")
+      fire_message_stop(listeners)
+    end
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
+    model
+      .to_llm
+      .generate("Answer", user: user, execution_context: execution, cancel_manager: cancel) do
+        cancel.cancel!
+      end
+    expect(execution.work_budget.used).to eq(model.to_llm.tokenizer.size("Partial answer"))
+    expect(execution.token_usage_tracker.response).to be > 0
+    expect(AiApiAuditLog.last.raw_request_payload).to be_present
+  end
+
   describe "non-streaming completion" do
     it "completes a simple prompt" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_180)
       response = mock_converse_response(text: "Test response", input_tokens: 15, output_tokens: 8)
       client = stub_sdk_client(response: response)
 
@@ -165,8 +303,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       result = llm.generate("hello", user: user)
 
       expect(result).to eq("Test response")
-      expect(AiApiAuditLog.last.request_tokens).to eq(15)
-      expect(AiApiAuditLog.last.response_tokens).to eq(8)
+      expect(AiApiAuditLog.last).to have_attributes(
+        request_tokens: 15,
+        response_tokens: 8,
+        time_to_first_token_msecs: 180,
+      )
     end
 
     it "passes thinking config for Claude models" do
@@ -260,6 +401,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
 
   describe "streaming completion" do
     it "streams text responses" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_090, 9_999)
       partials = []
 
       stub_sdk_client do |listeners|
@@ -276,8 +418,42 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       llm.generate("hello", user: user) { |partial| partials << partial }
 
       expect(partials).to eq(["Hello", " ", "world"])
-      expect(AiApiAuditLog.last.request_tokens).to eq(10)
-      expect(AiApiAuditLog.last.response_tokens).to eq(3)
+      expect(AiApiAuditLog.last).to have_attributes(
+        request_tokens: 10,
+        response_tokens: 3,
+        time_to_first_token_msecs: 90,
+      )
+    end
+
+    it "waits for non-empty structured output before recording time to first token" do
+      described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_120)
+      stub_sdk_client do |listeners|
+        fire_message_start(listeners)
+        fire_content_block_delta(listeners, text: "")
+        fire_content_block_delta(listeners, text: '{"message":"Hello"}')
+        fire_content_block_stop(listeners)
+        fire_message_stop(listeners)
+        fire_metadata(listeners)
+      end
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm.generate(
+        "hello",
+        user: user,
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      ) { |_partial| }
+
+      expect(AiApiAuditLog.last.time_to_first_token_msecs).to eq(120)
     end
   end
 
@@ -362,6 +538,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       )
       expect(AiApiAuditLog.last.response_status).to be_nil
     end
+
     it "records SDK error response status when available" do
       client = instance_double(Aws::BedrockRuntime::Client)
       context = Seahorse::Client::RequestContext.new

@@ -8,7 +8,7 @@ export default class PostField extends BaseField {
   <template>
     <section class="field post-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="field-wrapper">
@@ -19,8 +19,8 @@ export default class PostField extends BaseField {
             {{#if this.displayPlaceholders}}
               <PlaceholdersList
                 @currentValue={{@field.metadata.value}}
-                @placeholders={{@placeholders}}
                 @onCopy={{this.mutValue}}
+                @placeholders={{@placeholders}}
               />
             {{/if}}
           </div>

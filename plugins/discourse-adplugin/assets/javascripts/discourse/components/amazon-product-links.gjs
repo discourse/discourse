@@ -8,6 +8,7 @@ import AdComponent from "./ad-component";
 export default class AmazonProductLinks extends AdComponent {
   init() {
     const data = {
+      "above-site-header": {},
       "topic-list-top": {},
       "topic-above-post-stream": {},
       "topic-above-suggested": {},
@@ -15,6 +16,35 @@ export default class AmazonProductLinks extends AdComponent {
     };
     const mobileView = this.site.get("mobileView");
     const placement = this.get("placement");
+
+    if (!mobileView && this.siteSettings.amazon_above_site_header_src_code) {
+      data["above-site-header"]["user_input"] =
+        this.siteSettings.amazon_above_site_header_src_code;
+      data["above-site-header"]["amazon_width"] = parseInt(
+        this.siteSettings.amazon_above_site_header_ad_width_code,
+        10
+      );
+      data["above-site-header"]["amazon_height"] = parseInt(
+        this.siteSettings.amazon_above_site_header_ad_height_code,
+        10
+      );
+    }
+
+    if (
+      mobileView &&
+      this.siteSettings.amazon_mobile_above_site_header_src_code
+    ) {
+      data["above-site-header"]["user_input_mobile"] =
+        this.siteSettings.amazon_mobile_above_site_header_src_code;
+      data["above-site-header"]["mobile_amazon_width"] = parseInt(
+        this.siteSettings.amazon_mobile_above_site_header_ad_width_code,
+        10
+      );
+      data["above-site-header"]["mobile_amazon_height"] = parseInt(
+        this.siteSettings.amazon_mobile_above_site_header_ad_height_code,
+        10
+      );
+    }
 
     if (!mobileView && this.siteSettings.amazon_topic_list_top_src_code) {
       data["topic-list-top"]["user_input"] =
@@ -222,12 +252,12 @@ export default class AmazonProductLinks extends AdComponent {
             style={{this.adTitleStyleMobile}}
           ><h2>{{i18n "adplugin.advertisement_label"}}</h2></div>
           <iframe
-            style={{this.adWrapperStyleMobile}}
-            marginwidth="0"
-            marginheight="0"
-            scrolling="no"
             frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            scrolling="no"
             src={{this.userInputMobile}}
+            style={{this.adWrapperStyleMobile}}
             title={{i18n "adplugin.advertisement_label"}}
           >
           </iframe>
@@ -235,14 +265,14 @@ export default class AmazonProductLinks extends AdComponent {
           <div class="amazon-product-links-label"><h2>{{i18n
                 "adplugin.advertisement_label"
               }}</h2></div>
-          <div class="container" align="center">
+          <div align="center" class="container">
             <iframe
-              style={{this.adWrapperStyle}}
-              marginwidth="0"
-              marginheight="0"
-              scrolling="no"
               frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              scrolling="no"
               src={{this.userInput}}
+              style={{this.adWrapperStyle}}
               title={{i18n "adplugin.advertisement_label"}}
             >
             </iframe>

@@ -28,6 +28,15 @@ require_relative "lib/discourse_reactions/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::PostReaction::V1,
+        DiscourseWorkflows::Nodes::PostReactionChanged::V1,
+      ]
+    end
+  end
+
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
     app/models/discourse_reactions/reaction_user.rb
@@ -37,6 +46,7 @@ after_initialize do
     app/services/discourse_reactions/reaction_manager.rb
     app/services/discourse_reactions/reaction_notification.rb
     app/services/discourse_reactions/reaction_like_synchronizer.rb
+    app/services/discourse_reactions/post_reaction/toggle.rb
     lib/discourse_reactions/guardian_extension.rb
     lib/discourse_reactions/notification_extension.rb
     lib/discourse_reactions/post_alerter_extension.rb
@@ -63,11 +73,13 @@ after_initialize do
   end
 
   register_anonymous_action("react_to_post") do |user, params|
-    post = Post.find_by(id: params["post_id"])
-    next if !post || !user.guardian.can_see?(post)
-    reaction_value = params["reaction"].to_s
-    next if !DiscourseReactions::Reaction.valid?(reaction_value)
-    DiscourseReactions::ReactionManager.new(reaction_value:, user:, post:).toggle!
+    DiscourseReactions::PostReaction::Toggle.call(
+      params: {
+        post_id: params["post_id"],
+        reaction: params["reaction"],
+      },
+      guardian: user.guardian,
+    )
   end
 
   Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
@@ -430,4 +442,38 @@ after_initialize do
       ::Jobs.enqueue_at(5.minutes.from_now, Jobs::DiscourseReactions::LikeSynchronizer)
     end
   end
+end
+
+after_initialize do
+  require_relative "lib/discourse_reactions/mcp_tools"
+  register_mcp_tool(
+    "discourse_reactions_post_reaction_set",
+    title: "Set post reaction",
+    description: "Adds, changes, or removes the authenticated user's reaction to a visible post.",
+    implementation: DiscourseReactions::McpTools::SetReaction,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        reaction: {
+          type: "string",
+          minLength: 1,
+          maxLength: 100,
+        },
+      },
+      required: %w[post_id reaction],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseReactions::McpTools::SetReaction::OUTPUT_SCHEMA,
+    required_scopes: DiscourseReactions::McpTools::SetReaction::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.discourse_reactions_enabled },
+  )
 end

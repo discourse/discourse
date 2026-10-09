@@ -3,20 +3,23 @@
 RSpec.describe DiscourseWorkflows::Nodes::Schedule::Payload do
   describe ".build" do
     it "returns compatible timestamp fields", :aggregate_failures do
-      payload = described_class.build(time: Time.utc(2026, 3, 18, 9, 0), timezone: "UTC")
+      payload = described_class.build(time: Time.utc(2026, 3, 18, 14, 0), timezone: "UTC")
 
       expect(payload).to include(
-        "timestamp" => "2026-03-18T09:00:00.000Z",
-        "readable_date" => "March 18th 2026, 9:00:00 am",
-        "readable_time" => "9:00:00 am",
+        "timestamp" => "2026-03-18T14:00:00.000Z",
+        "readable_date" => "March 18th 2026, 2:00:00 pm",
+        "readable_time" => "2:00:00 pm",
+        "date" => "2026-03-18",
         "day_of_week" => "Wednesday",
         "year" => "2026",
         "month" => "March",
+        "month_number" => "03",
         "day_of_month" => "18",
-        "hour" => "09",
+        "hour" => "14",
         "minute" => "00",
         "second" => "00",
         "timezone" => "UTC (UTC+00:00)",
+        "time" => "14:00:00",
       )
       expect(payload).to match_node_output_schema(DiscourseWorkflows::Nodes::Schedule::V1)
     end

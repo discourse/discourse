@@ -6,6 +6,7 @@ import InitialOptions from "discourse/components/search-menu/results/initial-opt
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
@@ -55,80 +56,113 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
+  // The list resolved from the index; a consumer answering the same term another
+  // way takes over the space until it has nothing to offer.
+  get showIndexedResults() {
+    return applyValueTransformer("search-menu-indexed-results-enabled", true, {
+      location: this.args.location,
+    });
+  }
+
   get inTopicContext() {
     return this.search.inTopicContext && !this.args.searchTopics;
   }
 
   <template>
-    {{#unless this.inTopicContext}}
-      <DConditionalLoadingSection @isLoading={{this.loading}}>
-        <div class="results">
-          <PluginOutlet
-            @name="search-menu-results-top"
-            @outletArgs={{lazyHash
-              closeSearchMenu=@closeSearchMenu
-              searchTerm=this.search.activeGlobalSearchTerm
-              inTopicContext=this.search.inTopicContext
-              searchTopics=@searchTopics
-            }}
-          />
-          {{#if @suggestionKeyword}}
+    <DConditionalLoadingSection @isLoading={{this.loading}}>
+      <div class="results">
+        {{! outside the topic-context guard below: a consumer offering scope as a
+            choice needs somewhere to offer the way back out of one }}
+        <PluginOutlet
+          @name="search-menu-results-top"
+          @outletArgs={{lazyHash
+            closeSearchMenu=@closeSearchMenu
+            location=@location
+            searchTerm=this.search.activeGlobalSearchTerm
+            inTopicContext=this.search.inTopicContext
+            inPMInboxContext=@inPMInboxContext
+            clearPMInboxContext=@clearPMInboxContext
+            searchTopics=@searchTopics
+            triggerSearch=@triggerSearch
+            updateTypeFilter=@updateTypeFilter
+            openAdvancedSearch=@openAdvancedSearch
+            searchTermChanged=@searchTermChanged
+            clearTopicContext=@clearTopicContext
+          }}
+        />
+        {{#unless this.inTopicContext}}
+          {{#if (and @suggestionKeyword this.showIndexedResults)}}
             <Assistant
-              @suggestionKeyword={{@suggestionKeyword}}
-              @results={{@suggestionResults}}
               @closeSearchMenu={{@closeSearchMenu}}
+              @results={{@suggestionResults}}
               @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
             />
           {{else if this.termTooShort}}
             <div class="no-results">{{i18n "search.too_short"}}</div>
-          {{else if this.noTopicResults}}
+          {{else if (and this.noTopicResults this.showIndexedResults)}}
             <div class="no-results">{{i18n "search.no_results"}}</div>
           {{else if this.renderInitialOptions}}
             <InitialOptions
-              @searchInputId={{@searchInputId}}
               @closeSearchMenu={{@closeSearchMenu}}
+              @location={{@location}}
+              @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
-            {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
+            {{#if
+              (and
+                this.showIndexedResults
+                (not @searchTopics)
+                (not @inPMInboxContext)
+              )
+            }}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
-                @searchInputId={{@searchInputId}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @location={{@location}}
+                @searchInputId={{@searchInputId}}
                 @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
 
-            {{#if (and @searchTopics this.resultTypesWithComponent)}}
+            {{#if
+              (and
+                this.showIndexedResults
+                @searchTopics
+                this.resultTypesWithComponent
+              )
+            }}
               {{! render results after a search has been performed }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
-                @topicResultsOnly={{true}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @topicResultsOnly={{true}}
               />
               <MoreLink
-                @updateTypeFilter={{@updateTypeFilter}}
-                @triggerSearch={{@triggerSearch}}
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @resultTypes={{this.resultTypesWithComponent}}
                 @searchTermChanged={{@searchTermChanged}}
+                @triggerSearch={{@triggerSearch}}
+                @updateTypeFilter={{@updateTypeFilter}}
               />
             {{else if
               (and
+                this.showIndexedResults
                 (not @inPMInboxContext)
                 (not @searchTopics)
                 this.resultTypesWithComponent
               )
             }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchTermChanged={{@searchTermChanged}}
                 @displayNameWithUser={{true}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
             <PluginOutlet
@@ -145,8 +179,8 @@ export default class Results extends Component {
               closeSearchMenu=@closeSearchMenu
             }}
           />
-        </div>
-      </DConditionalLoadingSection>
-    {{/unless}}
+        {{/unless}}
+      </div>
+    </DConditionalLoadingSection>
   </template>
 }

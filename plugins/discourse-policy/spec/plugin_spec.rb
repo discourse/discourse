@@ -61,6 +61,24 @@ describe DiscoursePolicy do
       expect(policy.next_renew_at).to be_nil
     end
 
+    context "when a policy is inside a blockquote" do
+      fab!(:target_group, :group)
+
+      it "does not persist a policy placed inside a blockquote" do
+        raw = <<~MD
+          [quote="someone, post:1, topic:1"]
+          [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+            Here's the new policy
+          [/policy]
+          [/quote]
+        MD
+
+        post = create_post(raw: raw, user: moderator)
+
+        expect(PostPolicy.find_by(post: post)).to be_nil
+      end
+    end
+
     context "with add_users_to_group present" do
       fab!(:group2, :group)
       fab!(:post) { Fabricate(:post, user: moderator) }

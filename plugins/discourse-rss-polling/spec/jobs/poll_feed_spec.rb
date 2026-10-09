@@ -29,6 +29,55 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
       )
     end
 
+    context "when inferring how to import feed content" do
+      let(:raw_feed) { <<~XML }
+          <?xml version="1.0" encoding="UTF-8"?>
+          <rss version="2.0">
+            <channel>
+              <title>Example feed</title>
+              <link>https://example.com</link>
+              <description>Example feed</description>
+              <item>
+                <title>Feed item</title>
+                <link>https://example.com/feed-item</link>
+                <description><![CDATA[#{description}]]></description>
+              </item>
+            </channel>
+          </rss>
+        XML
+      let(:post) do
+        job.execute(feed_url: feed_url, author_username: author.username)
+        author.topics.last.first_post
+      end
+
+      before { SiteSetting.embed_truncate = true }
+
+      context "with an untyped Markdown description" do
+        let(:description) { "**Meetup overview**\n\n#{"Talk details. " * 50}" }
+
+        it "imports an excerpt and expands to the complete feed content" do
+          expect(post.cook_method).to eq(Post.cook_methods[:regular])
+          expect(post.raw).not_to include("Talk details")
+          expect(post.cooked).to have_tag("strong", text: "Meetup overview")
+          expect(post.topic.expandable_first_post?).to eq(true)
+          expect(TopicEmbed.expanded_for(post)).to include("Talk details")
+        end
+      end
+
+      context "with a short teaser" do
+        let(:description) { <<~HTML }
+            <h2>Legibility of effort</h2>
+            <p>A short description of the article.</p>
+            <a href="https://example.com/feed-item">Read the full post!</a>
+          HTML
+
+        it "imports the complete feed content without an expansion button" do
+          expect(post.raw).to include("Read the full post!")
+          expect(post.topic.expandable_first_post?).to eq(false)
+        end
+      end
+    end
+
     context "with use_pubdate set to false" do
       before do
         SiteSetting.rss_polling_use_pubdate = false
@@ -73,6 +122,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
 
       context "with rss polling set to true" do
         before { SiteSetting.rss_polling_update_tags = true }
+
         it "updates tags by default" do
           topic = author.topics.last
           job.execute(
@@ -246,6 +296,15 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
 
         job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
         expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+      end
+
+      it "records already imported items as updated on subsequent polls" do
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id)
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.imported_count).to eq(0)
+        expect(attempt.updated_count).to eq(1)
       end
 
       it "does not poll a disabled feed on a scheduled (non-forced) run" do

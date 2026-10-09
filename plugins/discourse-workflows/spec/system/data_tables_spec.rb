@@ -7,12 +7,15 @@ RSpec.describe "Discourse Workflows - Data Tables" do
 
   before { sign_in(admin) }
 
-  it "shows existing data tables" do
+  it "shows existing data tables with their row counts" do
     data_table = Fabricate(:discourse_workflows_data_table, name: "users_cache")
+    2.times { insert_data_table_row(data_table) }
 
     data_tables_page.visit_index
 
     expect(data_tables_page).to have_data_table("users_cache")
+    expect(data_tables_page).to have_row_count_column
+    expect(data_tables_page).to have_data_table_row_count(data_table, 2)
   end
 
   it "creates a new data table and navigates to its viewer" do

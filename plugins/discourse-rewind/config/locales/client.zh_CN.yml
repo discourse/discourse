@@ -12,7 +12,6 @@ zh_CN:
           discourse_rewind: "Discourse 回顾"
   js:
     discourse_rewind:
-      placeholder: Discourse 回顾
       title: 回顾
       loading: "正在重构样条曲线…"
       viewing_other_user: "您正在查看 <strong>%{username}</strong> 的 Discourse 回顾。"
@@ -82,18 +81,14 @@ zh_CN:
           title_others:
             other: "%{username} 最好的 %{count} 个帖子"
         ai_usage:
-          title: AI 使用
           total_requests: 请求总数
           total_tokens: token 总数
           success_rate: 成功率
-          favorite_features: 使用最多的功能
-          favorite_models: 最常用的 AI 模型
           wake_up: "醒醒吧，%{username}…"
           system_title: "检测到 AI 使用"
           section_features: "位居前列的功能"
           section_models: "位居前列的模型"
         assignments:
-          title: 指定
           total_assigned: 指定给我
           total_assigned_others: "指定给 %{username}"
           completed: 任务已完成
@@ -102,13 +97,6 @@ zh_CN:
           completion_rate: 完成率
         chat_usage:
           title: 聊天活动
-          total_messages: 消息总数
-          dm_messages: 私信
-          unique_dm_channels: 私信对话
-          reactions_received: 收到的回应
-          avg_message_length: 平均消息长度
-          favorite_channels: 最喜欢的频道
-          messages: 消息
           bot_name: XxRewindBotxX
           author: 您
           author_others: "%{username}"
@@ -130,25 +118,7 @@ zh_CN:
           message_4: "您的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "您最喜欢的频道："
           dancing_baby_alt: "跳舞的宝宝"
-        favorite_gifs:
-          title:
-            other: 您最喜欢的 %{count} 个 GIF
-          title_others:
-            other: "%{username} 最喜欢的 %{count} 个 GIF"
-          total_usage:
-            other: 共使用 %{count} 次
         invites:
-          title: 邀请
-          total_invites: 发送的邀请总数
-          redeemed: 已接受的邀请
-          redemption_rate: 接受率
-          avg_trust_level: 平均信任级别
-          invitee_impact: 您的受邀者的影响
-          invitee_impact_others: "%{username} 的受邀者的影响"
-          invitee_posts: 创建的帖子
-          invitee_topics: 发起的话题
-          invitee_likes: 点赞
-          most_active_invitee: 最活跃的受邀者
           guest_book_title: 留言簿
           guest_book_subtitle: 您的社区邀请
           guest_book_subtitle_others: "%{username} 的社区邀请"
@@ -161,19 +131,8 @@ zh_CN:
           label_likes_given: "点赞："
           section_most_active: 最活跃访客
         new_user_interactions:
-          title: 指导新用户
-          subtitle:
-            other: 今年您帮助了 %{count} 个新用户
-          subtitle_others:
-            other: "%{username} 今年帮助了 %{count} 个新用户"
           new_member:
             other: "%{count} 个新成员"
-          total_interactions: 互动总数
-          unique_new_users: 唯一身份新用户
-          likes_given: 点赞
-          replies: 回复帖子
-          mentions: 提及
-          topics_with_new_users: 有新用户的话题
           contributions_helped: 您的贡献很有帮助
           contributions_helped_others: "%{username} 的贡献很有帮助"
         time_of_day_activity:

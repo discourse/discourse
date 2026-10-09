@@ -150,6 +150,7 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
        db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
@@ -195,6 +196,7 @@ task "multisite:migrate" => %w[
         database_shards = databases.each_slice(database_shard_size).to_a
 
         Discourse.before_fork
+        Process.warmup
 
         pids =
           database_shards.map do |database_shard|
@@ -234,6 +236,7 @@ task "db:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",

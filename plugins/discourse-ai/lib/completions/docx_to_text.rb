@@ -6,10 +6,11 @@ require "compression/safe_zip_reader"
 module DiscourseAi
   module Completions
     class DocxToText
+      include TextNormalization
+
       MAX_ENTRY_XML_BYTES = 10 * 1024 * 1024
       MAX_TOTAL_XML_BYTES = 30 * 1024 * 1024
       MAX_ZIP_ENTRIES = 1_000
-      MAX_EXTRACTED_TEXT_CHARS = 100_001
       MAX_PARAGRAPHS = 20_000
 
       SUPPORTED_PARTS = %w[word/document.xml word/footnotes.xml word/endnotes.xml word/comments.xml]
@@ -20,6 +21,8 @@ module DiscourseAi
       end
 
       class Numbering
+        include TextNormalization
+
         Level = Struct.new(:num_format, :level_text, :start, keyword_init: true)
 
         BULLET_FORMAT = "bullet"
@@ -269,10 +272,6 @@ module DiscourseAi
         def integer_value(value, default = 0)
           value.present? ? value.to_i : default
         end
-
-        def force_utf8(text)
-          text.to_s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
-        end
       end
 
       def self.convert(path)
@@ -414,10 +413,6 @@ module DiscourseAi
           .join(" - ")
       end
 
-      def normalize_inline_text(text)
-        force_utf8(text).gsub("\u00A0", " ").gsub(/\s+/, " ").strip
-      end
-
       def normalize_paragraph_text(text)
         force_utf8(text)
           .gsub("\u00A0", " ")
@@ -425,19 +420,6 @@ module DiscourseAi
           .gsub(/[ \t]+\n/, "\n")
           .gsub(/\n[ \t]+/, "\n")
           .rstrip
-      end
-
-      def normalize_document_text(text)
-        force_utf8(text)
-          .gsub("\u00A0", " ")
-          .gsub(/\r\n?/, "\n")
-          .gsub(/[ \t]+\n/, "\n")
-          .gsub(/\n{3,}/, "\n\n")
-          .strip
-      end
-
-      def force_utf8(text)
-        text.to_s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
       end
     end
   end

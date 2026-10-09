@@ -57,7 +57,7 @@ module PageObjects
       end
 
       def open_original_message
-        find(".chat-message-info__original-message").click
+        find(".chat-message-info__original-message__text").click
       end
 
       def has_back_link_to_thread_list?(channel)

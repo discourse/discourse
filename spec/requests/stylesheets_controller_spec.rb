@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe StylesheetsController do
+  fab!(:user)
+
+  describe "#show_source_map" do
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      manager = Stylesheet::Manager.new(theme_id: nil)
+      builder = Stylesheet::Manager::Builder.new(target: "common", manager: manager, theme: nil)
+      builder.compile
+
+      get "/stylesheets/#{builder.stylesheet_filename}.map"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
+  end
+
   it "can survive cache miss" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)
@@ -218,6 +235,19 @@ RSpec.describe StylesheetsController do
       expect(response.status).to eq(200)
       json = JSON.parse(response.body)
       expect(json["color_scheme_id"]).not_to eq(scheme.id)
+    end
+
+    it "uses a non-user-selectable theme_id for staff, like theme previews do" do
+      scheme = ColorScheme.create_from_base(name: "hidden scheme", colors: [])
+      non_selectable_theme = Fabricate(:theme, user_selectable: false, color_scheme_id: scheme.id)
+      admin = Fabricate(:admin)
+      sign_in(admin)
+
+      get "/color-scheme-stylesheet/-1/#{non_selectable_theme.id}.json"
+
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["color_scheme_id"]).to eq(scheme.id)
     end
 
     it "works as expected" do

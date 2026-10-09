@@ -10,6 +10,9 @@ import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   AUTOMATICALLY_TRANSLATE_COOKIE_EXPIRY,
   automaticallyTranslate,
+  languageSwitcherEnabled,
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_EXPIRY,
   normalizeUnderstoodLanguages,
 } from "discourse/lib/content-localization";
 import cookie from "discourse/lib/cookie";
@@ -41,18 +44,36 @@ export default class ContentLanguagePreferencesModal extends Component {
     };
   }
 
+  get allLanguageOptions() {
+    return this.#toOptions(this.siteSettings.available_locales);
+  }
+
   get interfaceLanguageOptions() {
-    return this.siteSettings.available_locales.map(({ value }) => ({
-      name: this.languageNameLookup.getLanguageName(value),
-      value,
-      id: value,
-    }));
+    // Anonymous visitors change locale through the `locale` cookie. When the language switcher is
+    // what makes that cookie honoured, the server only accepts the site's configured locales, so
+    // offering the rest would silently discard the choice.
+    if (
+      !this.currentUser &&
+      !this.siteSettings.set_locale_from_cookie &&
+      languageSwitcherEnabled(this.siteSettings)
+    ) {
+      return this.#toOptions(
+        this.siteSettings.available_content_localization_locales
+      );
+    }
+
+    return this.allLanguageOptions;
   }
 
   get canChangeInterfaceLanguage() {
+    if (!this.siteSettings.allow_user_locale) {
+      return false;
+    }
+
     return (
-      this.siteSettings.allow_user_locale &&
-      (this.currentUser || this.siteSettings.set_locale_from_cookie)
+      !!this.currentUser ||
+      this.siteSettings.set_locale_from_cookie ||
+      languageSwitcherEnabled(this.siteSettings)
     );
   }
 
@@ -121,7 +142,10 @@ export default class ContentLanguagePreferencesModal extends Component {
         );
       } else {
         if (this.canChangeInterfaceLanguage) {
-          cookie("locale", data.interfaceLanguage, { path: "/" });
+          cookie(LOCALE_COOKIE, data.interfaceLanguage, {
+            path: getURL("/"),
+            expires: LOCALE_COOKIE_EXPIRY,
+          });
         }
         cookie(AUTOMATICALLY_TRANSLATE_COOKIE, data.automaticallyTranslate, {
           path: "/",
@@ -137,27 +161,36 @@ export default class ContentLanguagePreferencesModal extends Component {
     }
   }
 
+  #toOptions(locales) {
+    return (locales ?? []).map(({ value }) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+      id: value,
+    }));
+  }
+
   <template>
     <DModal
-      @title={{i18n "content_localization.preferences.title"}}
-      @closeModal={{@closeModal}}
       class="content-language-preferences-modal"
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
+      @title={{i18n "content_localization.preferences.title"}}
     >
       <:body>
         <Form
           @data={{this.data}}
-          @onSubmit={{this.save}}
           @onRegisterApi={{this.registerFormApi}}
+          @onSubmit={{this.save}}
           as |form|
         >
           <form.Field
-            @name="interfaceLanguage"
-            @type="select"
-            @title={{i18n "user.locale.title"}}
-            @validation="required"
-            @format="full"
-            @onSet={{this.setInterfaceLanguage}}
             @disabled={{this.interfaceLanguageReadOnly}}
+            @format="full"
+            @name="interfaceLanguage"
+            @onSet={{this.setInterfaceLanguage}}
+            @title={{i18n "user.locale.title"}}
+            @type="select"
+            @validation="required"
             as |field|
           >
             <field.Control as |select|>
@@ -171,25 +204,25 @@ export default class ContentLanguagePreferencesModal extends Component {
 
           {{#if this.currentUser}}
             <form.Field
-              @name="understoodLanguages"
-              @type="custom"
-              @title={{i18n "user.content_languages.understood"}}
               @description={{i18n
                 "user.content_languages.understood_description"
               }}
-              @showOptional={{false}}
               @format="full"
+              @name="understoodLanguages"
               @onSet={{this.setUnderstoodLanguages}}
+              @showOptional={{false}}
+              @title={{i18n "user.content_languages.understood"}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <MultiSelect
-                  @valueProperty="value"
+                  @content={{this.allLanguageOptions}}
                   @langProperty="value"
-                  @content={{this.interfaceLanguageOptions}}
-                  @value={{field.value}}
                   @onChange={{field.set}}
                   @options={{hash filterable=true}}
+                  @value={{field.value}}
+                  @valueProperty="value"
                 />
               </field.Control>
             </form.Field>
@@ -203,10 +236,10 @@ export default class ContentLanguagePreferencesModal extends Component {
           {{/if}}
 
           <form.Field
-            @name="automaticallyTranslate"
-            @type="checkbox"
-            @title={{i18n "user.automatically_translate"}}
             @format="full"
+            @name="automaticallyTranslate"
+            @title={{i18n "user.automatically_translate"}}
+            @type="checkbox"
             as |field|
           >
             <field.Control data-test-automatically-translate />
@@ -216,10 +249,10 @@ export default class ContentLanguagePreferencesModal extends Component {
 
       <:footer>
         <DButton
-          @label="save"
+          class="btn-primary"
           @action={{this.submit}}
           @disabled={{this.saving}}
-          class="btn-primary"
+          @label="save"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

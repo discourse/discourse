@@ -170,7 +170,6 @@ export default class extends Controller {
       "tracked_category_ids",
       "watched_first_post_category_ids",
       "watched_precedence_over_muted",
-      "topics_unread_when_closed",
     ];
 
     if (this.siteSettings.tagging_enabled) {

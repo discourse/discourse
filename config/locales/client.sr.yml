@@ -364,14 +364,19 @@ sr:
     admin_onboarding_banner:
       select_theme:
         title: "Prilagodite svoj sajt"
-        description: "Izaberite početnu temu za svoju zajednicu"
-        action: "Izaberi temu"
-        modal_title: "Izaberite temu"
-        browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
       start_posting:
         back: "Nazad"
+    design_wizard:
+      title: "Prilagodite svoj sajt"
+      back: "Nazad"
+      next: "Dalje"
+      sections:
+        search: "Pretraži"
+      homepage:
+        topics: "Teme"
+        categories: "Kategorije"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"
@@ -663,9 +668,6 @@ sr:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti prava da sprečite ostale da ga pregledaju"
-        required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
-        claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
-        claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -820,6 +822,9 @@ sr:
       user_label: "Korisnik"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati na prethodno"
       notes:
         delete: "Obriši"
       topic_label: "Tema"
@@ -1304,6 +1309,12 @@ sr:
       users: "Korisnici"
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
+      mcp_authorizations:
+        details: "Detalji"
+        never: "Nikad"
+        status: "Status"
+        statuses:
+          active: "Aktivni"
       api_approved: "Potvrđenji:"
       api_expires_never: "nikada"
       staff_counters:
@@ -1800,6 +1811,10 @@ sr:
       optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
+      delete: "Obriši"
+      home: "Home"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Obriši %{name}"
       default_header_text: Odaberite…
@@ -1941,6 +1956,7 @@ sr:
       tags: "Tagovi"
       in: "u"
       type:
+        default: "Poruka"
         users: "Korisnici"
         categories: "Kategorije"
       context:
@@ -2248,7 +2264,6 @@ sr:
       reply_as_new_topic: "Odgovori u linkovanoj Temi"
       continue_discussion: "Nastavak diskusije iz %{postLink}:"
       follow_quote: "idi na citiranu poruku"
-      show_full: "Prikaži Celu Poruku"
       collapse: "spusti"
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
@@ -2359,6 +2374,7 @@ sr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Poslednje teme"
       description_expand: "Pokaži više"
       description_collapse: "Pokaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -2478,6 +2494,7 @@ sr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "resetuj"
         button:
           label: "Filter"
       latest:
@@ -2820,6 +2837,11 @@ sr:
         group_other: "Ostalo"
         chart:
           total: "Ukupno: %{count}"
+        related_items:
+          users:
+            title: "Korisnici"
+          labels:
+            user: "Korisnik"
       config_sections:
         community:
           title: "Zajednica"
@@ -2851,6 +2873,52 @@ sr:
       config:
         developer:
           title: "Programer"
+        mcp:
+          tabs:
+            activity: "Aktivnosti"
+          overview:
+            status: "Status"
+          access:
+            group: "Grupa"
+            groups: "Grupe"
+            actions: "Akcije"
+            edit: "Izmeni"
+            delete: "Obriši"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Posebna"
+          authorizations:
+            user: "Korisnik"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Vreme"
+            user: "Korisnik"
+          values:
+            server_status:
+              disabled: "Isključeno"
+            client_trust:
+              approved: "Potvrđenji"
+            authorization_status:
+              active: "Aktivni"
+            activity_outcome:
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućeno"
+              disabled: "Isključeno"
+            primitive_kind:
+              all: "Svi tipovi"
+            filter:
+              all: "Sve"
+          never: "Nikad"
+          actions:
+            revoke: "Povuci"
         emojis:
           title: "Emoji"
         files:
@@ -2950,11 +3018,25 @@ sr:
         default_value: "Подразумевано"
       search:
         title: "Pretraži"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        apply: "Primeni"
+        view_more: "Pogledajte više"
+        cards:
+          visitors: "Posetioci"
+        filters:
+          referrer: "Upućivač"
+          ip: "IP adrese"
+        metrics:
+          logged_in_share:
+            label: "Udeo prijavljenih"
+        series:
+          logged_in_human: "Prijavljen"
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
-        critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
@@ -3000,6 +3082,10 @@ sr:
               returning: "Vraćajući"
               staff: "Osoblje"
               empty: "Nema objava u izabranom periodu."
+              modal:
+                apply: "Sačuvaj"
+                move_up: "Pomeri %{title} gore"
+                move_down: "Pomeri %{title} dole"
             trust_level_pipeline:
               title: "Pipeline nivoa poverenja"
               trust_levels:
@@ -3019,24 +3105,10 @@ sr:
                   other: "-%{count} padova"
               stable_aria: "bez pokreta"
             headline:
-              healthy_growth:
-                title: "Članovi stvaraju naviku da se vraćaju."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u porastu."
-              declining:
-                title: "Članovi se vraćaju ređe."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u padu."
-              engaged_but_shrinking:
-                title: "Članovi su angažovani, ali se zajednica smanjuje."
-                summary: "Lepljivost se održava, ali dnevna angažovanost ili nove registracije su opali."
-              growing_but_distracted:
-                title: "Novi članovi se registruju, ali ne ostaju."
-                summary: "Registracije rastu, ali je lepljivost ovog perioda opala."
-              mixed:
-                title: "Trendovi angažovanja su ovog perioda mešoviti."
-                summary: "Neki metrici su u porastu, a drugi u padu — otvorite pločice ispod za detalje."
-              no_signal:
-                title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
-                summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              titles:
+                insufficient_activity: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
+              summaries:
+                insufficient_activity: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
               metrics:
                 new_signups: "Nove registracije"
                 dau_mau: "DAU / MAU lepljivost"
@@ -3045,6 +3117,9 @@ sr:
             title: "Pretraži"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Uredi"
           modal:
@@ -3115,6 +3190,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
+          crawler_learn_more: "Saznaj više"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
@@ -3136,6 +3212,15 @@ sr:
           monthly: Top mesečne
           weekly: Top nedeljne
           groups: "Sve grupe"
+          posters_by_member_type_members:
+            users_count:
+              one: "{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} poruka"
+              few: "%{count} poruka"
+              other: "%{count} poruka"
           sort_button: "Sortiraj po %{column}"
           filters:
             group:
@@ -3737,6 +3822,8 @@ sr:
         field_types:
           confirm: "Potvrda"
       site_text:
+        search_label: "Pretraži"
+        theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"
         outdated:

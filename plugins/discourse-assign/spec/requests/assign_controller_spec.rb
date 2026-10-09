@@ -196,6 +196,26 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
       expect(allowed_topic.reload.assignment).to be_blank
     end
+
+    it "unassigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+      Fabricate(:topic_assignment, target: topic, assigned_to: admin, assigned_by_user: admin)
+
+      put "/assign/unassign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+          }
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#assign" do
@@ -523,6 +543,26 @@ RSpec.describe DiscourseAssign::AssignController do
           username: another_user.username,
         ),
       )
+    end
+
+    it "assigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+
+      put "/assign/assign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+            username: admin.username,
+          }
+
+      expect(response.status).to eq(200)
     end
   end
 

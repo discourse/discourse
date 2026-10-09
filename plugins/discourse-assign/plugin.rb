@@ -27,13 +27,12 @@ require_relative "lib/validators/assign_statuses_validator"
 after_initialize do
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
-      require_relative "lib/discourse_workflows/nodes/assigned/v1"
-      [DiscourseWorkflows::Nodes::AssignTopic::V1, DiscourseWorkflows::Nodes::Assigned::V1]
-    end
-
-    on(:assigned) do |assignment|
-      DiscourseWorkflows::EventListener.handle(DiscourseWorkflows::Nodes::Assigned::V1, assignment)
+      [
+        DiscourseWorkflows::Nodes::AssignTopic::V1,
+        DiscourseWorkflows::Nodes::Assigned::V1,
+        DiscourseWorkflows::Nodes::Unassigned::V1,
+        DiscourseWorkflows::Nodes::CheckAssignment::V1,
+      ]
     end
   end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
@@ -868,6 +867,11 @@ after_initialize do
     MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, opts)
   end
 
+  add_api_key_scope(
+    :assign,
+    { assign: { actions: %w[discourse_assign/assign#assign discourse_assign/assign#unassign] } },
+  )
+
   # Event listeners
   on(:post_created) { |post| ::Assigner.auto_assign(post, force: true) }
 
@@ -886,20 +890,32 @@ after_initialize do
           assigner = ::Assigner.new(post, Discourse.system_user)
           assigner.unassign(silent: true, deactivate: true)
         end
-      MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
+      MessageBus.publish(
+        "/topic/#{topic.id}",
+        { reload_topic: true, refresh_stream: true },
+        topic.secure_audience_publish_messages,
+      )
     end
 
     if SiteSetting.reassign_on_open && (status == "closed" || status == "autoclosed") && !enabled &&
          Assignment.inactive.exists?(topic: topic)
       Assignment.reactivate!(topic: topic)
-      MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
+      MessageBus.publish(
+        "/topic/#{topic.id}",
+        { reload_topic: true, refresh_stream: true },
+        topic.secure_audience_publish_messages,
+      )
     end
   end
 
   on(:post_destroyed) do |post|
     if Assignment.active.exists?(target: post)
       post.assignment.deactivate!
-      MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
+      MessageBus.publish(
+        "/topic/#{post.topic_id}",
+        { reload_topic: true, refresh_stream: true },
+        post.topic.secure_audience_publish_messages,
+      )
     end
 
     # small actions have to be destroyed as link is incorrect
@@ -919,7 +935,11 @@ after_initialize do
   on(:post_recovered) do |post|
     if SiteSetting.reassign_on_open && Assignment.inactive.exists?(target: post)
       post.assignment.reactivate!
-      MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
+      MessageBus.publish(
+        "/topic/#{post.topic_id}",
+        { reload_topic: true, refresh_stream: true },
+        post.topic.secure_audience_publish_messages,
+      )
     end
   end
 

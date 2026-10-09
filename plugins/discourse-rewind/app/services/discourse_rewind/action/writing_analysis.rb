@@ -3,6 +3,9 @@
 module DiscourseRewind
   module Action
     class WritingAnalysis < BaseReport
+      MINIMUM_WORDS = 100
+      MINIMUM_POSTS = 5
+
       FakeData = {
         data: {
           total_words: 45_230,
@@ -16,30 +19,11 @@ module DiscourseRewind
       def call
         return FakeData if should_use_fake_data?
 
-        total_words =
-          DB.query_single(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
-          SELECT SUM(p.word_count)
-          FROM posts p
-          INNER JOIN topics t ON t.id = p.topic_id
-          WHERE p.user_id = :user_id
-          AND p.created_at BETWEEN :date_start AND :date_end
-          AND p.deleted_at IS NULL
-          AND t.deleted_at IS NULL
-        SQL
+        posts = Post.joins(:topic).where(user_id: user.id, created_at: date)
+        total_words, total_posts =
+          posts.pick(Arel.sql("COALESCE(SUM(posts.word_count), 0)"), Arel.sql("COUNT(*)"))
 
-        post_count =
-          DB.query_single(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
-          SELECT COUNT(*)
-          FROM posts p
-          INNER JOIN topics t ON t.id = p.topic_id
-          WHERE p.user_id = :user_id
-          AND p.created_at BETWEEN :date_start AND :date_end
-          AND p.deleted_at IS NULL
-          AND t.deleted_at IS NULL
-        SQL
-
-        average_post_length =
-          post_count.first > 0 ? (total_words.first.to_f / post_count.first).round(2) : 0
+        return if total_words < MINIMUM_WORDS || total_posts < MINIMUM_POSTS
 
         # Calculated using the Flesch Reading Ease formula,
         # with a statistical approximation for syllables (1.45 per word,
@@ -51,74 +35,30 @@ module DiscourseRewind
         # and ending with emojis by treating them as a single sentence.
         #
         # Scores are bounded between 0-100 to prevent extreme negative values.
-        readability_score =
-          DB.query_single(<<~SQL, user_id: user.id, start: date.first, end: date.last)
+        readability_score = DB.query_single(<<~SQL).first
           WITH cleaned AS (
-            SELECT
-              p.id AS post_id,
-              p.user_id,
-              p.created_at,
-              p.word_count,
-              regexp_replace(p.cooked, '<[^>]+>', ' ', 'g') AS plain
-            FROM posts p
-            INNER JOIN topics t ON t.id = p.topic_id
-            WHERE p.user_id = :user_id
-              AND p.created_at BETWEEN :start AND :end
-              AND p.deleted_at IS NULL
-              AND t.deleted_at IS NULL
+            #{posts.select("posts.word_count AS words", "regexp_replace(posts.cooked, '<[^>]+>', ' ', 'g') AS plain").to_sql}
           ),
           metrics AS (
             SELECT
-              post_id,
-              user_id,
-              created_at,
-              plain,
-              word_count AS words,
-              regexp_count(plain, '[.!?;:](\s|$)')                   AS sentences_raw,
-              (word_count * 1.45)                                    AS syllables
-            FROM cleaned
-          ),
-          scores AS (
-            SELECT
-              post_id,
-              user_id,
-              created_at,
               words,
-              syllables,
-              plain,
-
               CASE
-                WHEN sentences_raw = 0 AND words > 5 THEN 1
-                ELSE sentences_raw
-              END AS sentences_fixed,
-
-              -- Flesch Reading Ease formula with bounds (0-100)
-              CASE
-                WHEN words = 0 THEN NULL
-                WHEN (CASE WHEN sentences_raw = 0 AND words > 5 THEN 1 ELSE sentences_raw END) = 0 THEN NULL
-                ELSE GREATEST(0, LEAST(100,
-                  206.835
-                  - 1.015 * (
-                      words::float /
-                      (CASE WHEN sentences_raw = 0 AND words > 5 THEN 1 ELSE sentences_raw END)
-                    )
-                  - 84.6  * (syllables::float / words)
-                ))
-              END AS readability_score
-
-            FROM metrics
+                WHEN regexp_count(plain, '[.!?;:](\s|$)') = 0 AND words > 5 THEN 1
+                ELSE regexp_count(plain, '[.!?;:](\s|$)')
+              END AS sentences
+            FROM cleaned
           )
-          SELECT AVG(readability_score) AS avg_readability_score
-          FROM scores
-          GROUP BY user_id;
+          SELECT AVG(GREATEST(0, LEAST(100, 206.835 - 1.015 * (words::float / sentences) - 84.6 * 1.45)))
+          FROM metrics
+          WHERE words > 0 AND sentences > 0
         SQL
 
         {
           data: {
-            total_words: total_words.first,
-            total_posts: post_count.first,
-            average_post_length: average_post_length,
-            readability_score: readability_score.first,
+            total_words:,
+            total_posts:,
+            average_post_length: (total_words.to_f / total_posts).round(2),
+            readability_score:,
           },
           identifier: "writing-analysis",
         }

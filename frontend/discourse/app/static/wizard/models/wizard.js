@@ -207,10 +207,6 @@ export class Field {
     }
   }
 
-  get chosen() {
-    return this.choices?.find((choice) => choice.id === this.value);
-  }
-
   get valid() {
     return this._validState === ValidStates.VALID;
   }
@@ -220,14 +216,6 @@ export class Field {
     this._errorDescription = null;
   }
 
-  get invalid() {
-    return this._validState === ValidStates.INVALID;
-  }
-
-  get unchecked() {
-    return this._validState === ValidStates.UNCHECKED;
-  }
-
   get errorDescription() {
     return this._errorDescription;
   }
@@ -235,6 +223,18 @@ export class Field {
   set errorDescription(description) {
     this._validState = ValidStates.INVALID;
     this._errorDescription = description;
+  }
+
+  get chosen() {
+    return this.choices?.find((choice) => choice.id === this.value);
+  }
+
+  get invalid() {
+    return this._validState === ValidStates.INVALID;
+  }
+
+  get unchecked() {
+    return this._validState === ValidStates.UNCHECKED;
   }
 
   validate() {

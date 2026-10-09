@@ -19,17 +19,6 @@ export default class UserApiKeyActivateController extends Controller {
   codeFormData = { [CODE_FIELD]: "" };
   approvalFormData = {};
 
-  normalizeCode(value) {
-    return value?.toUpperCase().replace(/[^A-Z0-9]/g, "") || "";
-  }
-
-  reset(model) {
-    this.page = model;
-    this.error = null;
-    this.isLoading = false;
-    this.codeFormApi = null;
-  }
-
   get showEnterCode() {
     return (
       this.page?.state === USER_API_KEY_DEVICE_ACTIVATION_STATES.ENTER_CODE
@@ -51,6 +40,17 @@ export default class UserApiKeyActivateController extends Controller {
 
   get avatarUrl() {
     return this.page?.current_user?.avatar_template?.replace("{size}", "24");
+  }
+
+  normalizeCode(value) {
+    return value?.toUpperCase().replace(/[^A-Z0-9]/g, "") || "";
+  }
+
+  reset(model) {
+    this.page = model;
+    this.error = null;
+    this.isLoading = false;
+    this.codeFormApi = null;
   }
 
   @action

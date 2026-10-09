@@ -1,0 +1,163 @@
+.voice-chat {
+  // border-box so the 22rem min-width (set by the room sidebar) includes the
+  // borders — content-box would make the panel 2px wider than the sidebar,
+  // whose overflow: hidden then clips the right border off.
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--primary-low);
+  border-radius: 0.75rem;
+  background: var(--secondary);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-block-end: 1px solid var(--primary-low);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-0);
+    font-weight: 600;
+  }
+
+  &__open-in-chat {
+    margin-inline-start: auto;
+  }
+
+  &__close {
+    margin-inline-start: auto;
+
+    // The chat toggle in the room's control bar is the close affordance; only
+    // the narrow-viewport layout needs an X of its own, because there the
+    // panel becomes a drawer overlaying that control bar. Breakpoint matches
+    // the sidebar drawer in voice-room-page.scss.
+    display: none;
+
+    @media (width <= 1000px) {
+      display: inline-flex;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+
+    .loading-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    // The chat plugin sizes .chat-thread to the viewport via its chat-height()
+    // mixin (including mobile/footer-nav variants); inside the room panel the
+    // panel itself is the bounding box. The fade eases the loading-state →
+    // thread swap so it doesn't read as a flicker.
+    .chat-thread {
+      height: 100% !important;
+      animation: voice-chat-fade-in 0.15s ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    // A thread freshly created from the starter composer holds only that one
+    // message, which loads faster than the skeleton can finish appearing — so
+    // that swap suppresses it instead of flashing it.
+    &.--hide-skeleton .chat-skeleton {
+      display: none;
+    }
+
+    // The panel header's open-in-chat button is the single link out to the
+    // thread; the original message's own "See in <channel>" chip duplicates
+    // it in a cramped space.
+    .chat-message-info__original-message {
+      display: none;
+    }
+  }
+
+  &__empty {
+    margin: auto;
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--primary-medium);
+
+    .d-icon {
+      font-size: 2rem;
+      color: var(--primary-low-mid);
+    }
+  }
+
+  &__empty-title {
+    margin: var(--space-2) 0 var(--space-1);
+    color: var(--primary-high);
+    font-weight: 600;
+  }
+
+  &__empty-body {
+    margin: 0;
+    font-size: var(--font-down-1);
+  }
+
+  // Only the session's very first message goes through this starter composer;
+  // once the thread exists the native chat composer replaces it.
+  &__composer {
+    padding: var(--space-2) var(--space-3);
+    border-block-start: 1px solid var(--primary-low);
+  }
+
+  &__composer-inner {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-1);
+    border: 1px solid var(--d-chat-input-border-color);
+    border-radius: var(--d-border-radius-large);
+    background: var(--d-chat-input-bg-color);
+
+    &:focus-within {
+      box-shadow: var(--d-chat-input-focused-shadow);
+    }
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    max-height: 8rem;
+    margin: 0;
+    padding: var(--space-2) 0;
+    border: 0;
+    background: transparent;
+    line-height: 1.3;
+    resize: none;
+
+    // The wrapper's focus-within shadow is the focus indicator (matching
+    // chat's own composer), not core's default textarea outline.
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__send {
+    flex: 0 0 auto;
+  }
+}
+
+@keyframes voice-chat-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -143,6 +143,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
       settings: [
         "ai_summarization_enabled",
         "ai_summarization_agent",
+        "ai_summaries_for_crawlers",
         "ai_pm_summarization_allowed_groups",
       ],
     },
@@ -166,7 +167,38 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "settings",
       titleKey: "discourse_ai.features.search.setting_groups.settings",
-      settings: ["ai_discover_enabled", "ai_discover_agent"],
+      settings: [
+        "ai_discover_enabled",
+        "ai_ask_ai_enabled",
+        "ai_ask_ai_summary_detail",
+        "ai_ask_ai_related_count",
+      ],
+    },
+    {
+      key: "agents",
+      titleKey: "discourse_ai.features.search.setting_groups.agents",
+      settings: [
+        "ai_discover_agent",
+        "ai_ask_ai_agent",
+        "ai_ask_ai_query_rewriter_agent",
+        "ai_ask_ai_report_agent",
+        "ai_ask_ai_follow_up_agent",
+      ],
+    },
+    {
+      key: "access_control",
+      titleKey: "discourse_ai.features.search.setting_groups.access_control",
+      settings: ["ai_ask_ai_allowed_groups"],
+    },
+    {
+      key: "ask_ai_reports",
+      titleKey: "discourse_ai.features.search.setting_groups.ask_ai_reports",
+      settings: [
+        "ai_ask_ai_report_weekly_enabled",
+        "ai_ask_ai_report_exclude_groups",
+        "ai_ask_ai_report_max_asks",
+        "ai_ask_ai_report_recipient_groups",
+      ],
     },
   ],
 

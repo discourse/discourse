@@ -10,6 +10,10 @@ RSpec.describe TagGuardian do
   fab!(:trust_level_3)
 
   describe "#can_see_tag?" do
+    it "returns false when the tag is missing" do
+      expect(Guardian.new(nil).can_see_tag?(nil)).to be_falsey
+    end
+
     it "returns false when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
@@ -32,6 +36,22 @@ RSpec.describe TagGuardian do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
 
       expect(Guardian.new(admin).can_see_tag?(tag)).to be_truthy
+    end
+  end
+
+  describe "#visible_tag_ids" do
+    it "memoizes category-aware tag visibility" do
+      visible_tag = Fabricate(:tag)
+      restricted_tag = Fabricate(:tag)
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      private_category.tags = [restricted_tag]
+      guardian = Guardian.new(user)
+
+      queries = track_sql_queries { 2.times { guardian.visible_tag_ids } }
+
+      expect(guardian.visible_tag_ids).to include(visible_tag.id)
+      expect(guardian.visible_tag_ids).not_to include(restricted_tag.id)
+      expect(queries.count { |query| query.include?("FROM \"tags\"") }).to eq(1)
     end
   end
 

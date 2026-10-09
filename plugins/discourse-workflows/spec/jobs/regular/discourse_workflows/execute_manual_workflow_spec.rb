@@ -43,11 +43,17 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
         },
       )
 
-    described_class.new.execute(execution_id: execution.id, user_id: admin.id)
+    messages =
+      MessageBus.track_publish(
+        DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(execution.id),
+      ) { described_class.new.execute(execution_id: execution.id, user_id: admin.id) }
 
     execution.reload
     expect(execution.status).to eq("skipped")
     expect(execution.finished_at).to be_present
+    expect(messages.one?).to eq(true)
+    expect(messages.first.data).to include(type: "execution_progress", refresh: true)
+    expect(messages.first.data[:execution]).to include(id: execution.id, status: "skipped")
   end
 
   it "leaves a non-pending execution untouched" do

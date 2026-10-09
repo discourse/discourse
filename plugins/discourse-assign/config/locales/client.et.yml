@@ -62,7 +62,17 @@ et:
       nodes:
         "trigger:assigned": "Määratud"
       assign_topic:
+        resources:
+          topic: "Teema"
+          post: "Postitus"
         operations:
           assign: "Määra"
           unassign: "Eemalda määramine"
         topic_id: "Teema ID"
+        post_id: "Postituse ID"
+      check_assignment:
+        target_types:
+          topic: "Teema"
+          post: "Postitus"
+        topic_id: "Teema ID"
+        post_id: "Postituse ID"

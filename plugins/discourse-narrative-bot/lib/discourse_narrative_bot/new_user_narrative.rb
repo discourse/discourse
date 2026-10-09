@@ -272,7 +272,7 @@ module DiscourseNarrativeBot
       # the user drops some other random link, but we accept that risk for now.
       found_link =
         @post.raw.match(
-          %r{https://en\.wikipedia\.org/wiki/(Inherently_funny_word|Death_by_coconut|Calculator_spelling)},
+          %r{https://en\.wikipedia\.org/wiki/(Inherently_funny_word|Death_by_coconut|Calculator_spelling|Exotic_Shorthair)},
         )
 
       if found_link

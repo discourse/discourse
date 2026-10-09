@@ -110,3 +110,18 @@ pl_PL:
         title: "Grywalizacja"
         name: "Nazwa"
         period: "Okres"
+    discourse_workflows:
+      node_unavailable:
+        requires_gamification: "Wymaga włączenia wtyczki Gamification"
+      nodes:
+        "action:gamification_score": "Wynik konkursu"
+      node_descriptions:
+        "action:gamification_score": "Dodawanie lub odejmowanie punktów grywalizacji dla użytkownika"
+      gamification_score:
+        username: "Użytkownik"
+        points: "Punkty"
+        points_description: "Liczba punktów do przyznania. Użyj wartości ujemnej, aby odjąć punkty."
+        date: "Data"
+        date_description: "Data, do której odnoszą się punkty (RRRR-MM-DD). Domyślnie jest to dziś."
+        description: "Opis"
+        description_description: "Opcjonalna notatka wyświetlana obok zdarzenia."

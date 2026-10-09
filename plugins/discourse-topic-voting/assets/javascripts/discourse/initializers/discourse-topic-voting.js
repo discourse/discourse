@@ -7,12 +7,35 @@ export default {
 
   initialize() {
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-votes",
+        route: "userActivity.votes",
+        label: "topic_voting.vote_title_plural",
+        icon: "check-to-slot",
+        displayed: ({ siteSettings }) =>
+          siteSettings.topic_voting_show_votes_on_profile,
+      });
+
+      api.replaceIcon("topic_voting.voting_closed", "lock");
+
       api.registerNotificationTypeRenderer(
         "votes_released",
         (NotificationTypeBase) => {
           return class extends NotificationTypeBase {
             get label() {
-              return i18n("topic_voting.notification_label.vote_released");
+              return this.siteSettings.topic_voting_enable_vote_limits
+                ? i18n("topic_voting.notification_label.vote_released")
+                : i18n("topic_voting.notification_label.voting_closed");
+            }
+
+            get linkTitle() {
+              return this.label;
+            }
+
+            get icon() {
+              return this.siteSettings.topic_voting_enable_vote_limits
+                ? super.icon
+                : "topic_voting.voting_closed";
             }
           };
         }

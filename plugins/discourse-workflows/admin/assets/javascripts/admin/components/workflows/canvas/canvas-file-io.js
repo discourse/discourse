@@ -7,6 +7,7 @@ import {
 import WorkflowNode, {
   NODE_DIRECT_SETTING_KEYS,
 } from "../../../models/workflow-node";
+import { defaultNodeName } from "../editor/node-factory";
 
 function sanitizeImportedObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -49,6 +50,13 @@ function directSettingsFromImportedNode(node) {
   }
 
   return settings;
+}
+
+// an imported file is arbitrary user input, so a node can arrive with a missing
+// or non-string name that the server would then reject on every later save
+function importedNodeName(node) {
+  const name = typeof node.name === "string" ? node.name.trim() : "";
+  return name || defaultNodeName(node.type);
 }
 
 function hasUnsupportedNodeKey(node) {
@@ -147,7 +155,7 @@ export function parseWorkflowImport(text) {
       clientId: crypto.randomUUID(),
       type: n.type,
       typeVersion: n.typeVersion,
-      name: n.name,
+      name: importedNodeName(n),
       parameters: sanitizeImportedObject(n.parameters),
       credentials: {},
       webhookId: n.webhookId || null,

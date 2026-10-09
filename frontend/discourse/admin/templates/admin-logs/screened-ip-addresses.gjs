@@ -19,18 +19,18 @@ export default <template>
   <div class="screened-ip-controls">
     <div class="filter-screened-ip-address inline-form">
       <DTextField
-        @value={{@controller.filter}}
-        @placeholderKey="admin.logs.screened_ips.form.filter"
-        @autocorrect="off"
-        @autocapitalize="off"
         class="ip-address-input"
+        @autocapitalize="off"
+        @autocorrect="off"
+        @placeholderKey="admin.logs.screened_ips.form.filter"
+        @value={{@controller.filter}}
       />
       <DButton
+        class="btn-default"
         @action={{@controller.exportScreenedIpList}}
         @icon="download"
-        @title="admin.export_csv.button_title.screened_ip"
         @label="admin.export_csv.button_text"
-        class="btn-default"
+        @title="admin.export_csv.button_title.screened_ip"
       />
     </div>
 
@@ -62,14 +62,14 @@ export default <template>
               <td class="col first ip_address">
                 {{#if item.editing}}
                   <DTextField
-                    @value={{item.ip_address}}
                     @autofocus="autofocus"
+                    @value={{item.ip_address}}
                   />
                 {{else}}
                   <a
+                    class="inline-editable-field"
                     href
                     {{on "click" (fn @controller.edit item)}}
-                    class="inline-editable-field"
                   >
                     {{#if item.isRange}}
                       <strong>{{item.ip_address}}</strong>
@@ -104,39 +104,39 @@ export default <template>
               <td class="col actions">
                 {{#if item.editing}}
                   <DButton
+                    class="btn-default"
                     @action={{fn @controller.save item}}
                     @label="admin.logs.save"
-                    class="btn-default"
                   />
                   <DButton
+                    class="btn-flat"
                     @action={{fn @controller.cancel item}}
                     @translatedLabel={{i18n "cancel"}}
-                    class="btn-flat"
                   />
                 {{else}}
                   <DButton
+                    class="btn-default btn-danger"
                     @action={{fn @controller.destroyRecord item}}
                     @icon="trash-can"
-                    class="btn-default btn-danger"
                   />
                   <DButton
+                    class="btn-default"
                     @action={{fn @controller.edit item}}
                     @icon="pencil"
-                    class="btn-default"
                   />
                   {{#if item.isBlocked}}
                     <DButton
+                      class="btn-default"
                       @action={{fn @controller.allow item}}
                       @icon="check"
                       @label="admin.logs.screened_ips.actions.do_nothing"
-                      class="btn-default"
                     />
                   {{else}}
                     <DButton
+                      class="btn-default"
                       @action={{fn @controller.block item}}
                       @icon="ban"
                       @label="admin.logs.screened_ips.actions.block"
-                      class="btn-default"
                     />
                   {{/if}}
                 {{/if}}

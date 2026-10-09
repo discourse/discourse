@@ -38,6 +38,12 @@ module DiscourseAi
           LlmCreditAllocation.check_credits!(@llm_model, feature_name)
 
           start_time = Time.now
+          start_time_msecs = monotonic_milliseconds
+          time_to_first_token_msecs = nil
+          record_first_token =
+            lambda do
+              time_to_first_token_msecs ||= (monotonic_milliseconds - start_time_msecs).round
+            end
 
           return if cancel_manager&.cancelled?
 
@@ -131,13 +137,17 @@ module DiscourseAi
               orig_blk = blk
               blk =
                 lambda do |partial|
+                  should_record_first_token = !partial.is_a?(String) || !partial.empty?
                   partials_raw << partial.to_s
                   response_data << partial if partial.is_a?(String)
                   if partial.is_a?(String) && structured_output.present?
                     structured_output << partial if !partial.empty?
                     partial = structured_output
                   end
-                  orig_blk.call(partial) if partial
+                  if partial
+                    record_first_token.call if should_record_first_token
+                    orig_blk.call(partial)
+                  end
                 end
 
               if cancel_manager
@@ -175,15 +185,18 @@ module DiscourseAi
               results = processor.process_message(resp.to_h.deep_symbolize_keys)
               results.each { |partial| partials_raw << partial.to_s }
 
+              # Non-streaming callers receive their first output only after the response is complete.
               if structured_output.present?
                 results.each { |data| structured_output << data if data.is_a?(String) }
                 structured_output.finish
+                record_first_token.call
                 call_status = :success
                 return structured_output
               end
 
               response_data = results.length == 1 ? results.first : results
               response_data = "" if response_data.nil?
+              record_first_token.call
               call_status = :success
               response_data
             end
@@ -192,7 +205,7 @@ module DiscourseAi
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
-            should_log = log && call_status != :cancelled
+            should_log = log && (call_status != :cancelled || partials_raw.present?)
 
             if should_log
               log.raw_response_payload = raw_response if raw_response.present?
@@ -202,15 +215,24 @@ module DiscourseAi
                 processor.cache_read_input_tokens if processor.cache_read_input_tokens
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
+              execution_context&.settle_generation(
+                tokens: log.response_tokens,
+                tokenizer: tokenizer,
+                complete: call_status == :success,
+              )
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
               log.response_status ||= 200 if call_status == :success
               log.estimated_cost = estimated_cost_for(log)
               log.created_at = start_time
               log.updated_at = Time.now
               log.duration_msecs = (Time.now - start_time) * 1000
+              log.time_to_first_token_msecs = time_to_first_token_msecs
               log.save!
 
-              execution_context&.token_usage_tracker&.add_from_audit_log(log)
+              execution_context&.token_usage_tracker&.add_from_audit_log(
+                log,
+                preparation: feature_name == "context_compression",
+              )
 
               AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
               LlmQuota.log_usage(

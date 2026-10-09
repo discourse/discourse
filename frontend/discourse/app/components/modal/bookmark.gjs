@@ -9,6 +9,8 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
@@ -359,35 +361,40 @@ export default class BookmarkModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{this.closingModal}}
-      @title={{this.modalTitle}}
-      @flash={{this.flash}}
-      @flashType="error"
-      id="bookmark-reminder-modal"
       class="bookmark-reminder-modal"
       data-bookmark-id={{this.bookmark.id}}
+      id="bookmark-reminder-modal"
+      @closeModal={{this.closingModal}}
+      @flash={{this.flash}}
+      @flashType="error"
+      @title={{this.modalTitle}}
       {{didInsert this.didInsert}}
     >
       <:headerPrimaryAction>
         <DButton
-          @label="bookmarks.save"
-          @action={{this.saveAndClose}}
-          @title="modal.close"
           class="btn-transparent"
+          @action={{this.saveAndClose}}
+          @label="bookmarks.save"
+          @title="modal.close"
         />
       </:headerPrimaryAction>
 
       <:body>
         <div class="control-group">
           <Input
-            id="bookmark-name"
-            @value={{this.bookmark.name}}
-            name="bookmark-name"
-            class="bookmark-name"
-            placeholder={{i18n "post.bookmarks.name_placeholder"}}
             aria-label={{i18n "post.bookmarks.name_input_label"}}
+            class="bookmark-name"
+            id="bookmark-name"
+            name="bookmark-name"
+            placeholder={{i18n "post.bookmarks.name_placeholder"}}
+            @value={{this.bookmark.name}}
           />
         </div>
+
+        <PluginOutlet
+          @name="bookmark-modal-after-name"
+          @outletArgs={{lazyHash bookmark=this.bookmark}}
+        />
 
         <div class="bookmark-options-panel">
           <label
@@ -395,11 +402,11 @@ export default class BookmarkModal extends Component {
             for="bookmark_auto_delete_preference"
           >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
           <ComboBox
+            class="bookmark-option-selector"
             @content={{this.autoDeletePreferences}}
-            @value={{this.bookmark.autoDeletePreference}}
             @id="bookmark-auto-delete-preference"
             @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
-            class="bookmark-option-selector"
+            @value={{this.bookmark.autoDeletePreference}}
           />
         </div>
 
@@ -420,12 +427,12 @@ export default class BookmarkModal extends Component {
 
           {{#if this.userHasTimezoneSet}}
             <DTimeShortcutPicker
-              @timeShortcuts={{this.timeOptions}}
-              @prefilledDatetime={{this.prefilledDatetime}}
-              @onTimeSelected={{this.onTimeSelected}}
-              @hiddenOptions={{this.hiddenTimeShortcutOptions}}
-              @customLabels={{this.customTimeShortcutLabels}}
               @_itsatrap={{this._itsatrap}}
+              @customLabels={{this.customTimeShortcutLabels}}
+              @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+              @onTimeSelected={{this.onTimeSelected}}
+              @prefilledDatetime={{this.prefilledDatetime}}
+              @timeShortcuts={{this.timeOptions}}
             />
           {{else}}
             <div class="alert alert-info">{{trustHTML
@@ -438,21 +445,21 @@ export default class BookmarkModal extends Component {
       <:footer>
         {{#if this.site.desktopView}}
           <DButton
-            @label="bookmarks.save"
-            @action={{this.saveAndClose}}
-            id="save-bookmark"
             class="btn-primary"
+            id="save-bookmark"
+            @action={{this.saveAndClose}}
+            @label="bookmarks.save"
           />
           <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
         {{/if}}
         {{#if this.showDelete}}
           <DButton
-            @icon="trash-can"
+            class="delete-bookmark btn-danger"
+            id="delete-bookmark"
             @action={{this.delete}}
             @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
+            @icon="trash-can"
             @title="post.bookmarks.actions.delete_bookmark.name"
-            id="delete-bookmark"
-            class="delete-bookmark btn-danger"
           />
         {{/if}}
       </:footer>

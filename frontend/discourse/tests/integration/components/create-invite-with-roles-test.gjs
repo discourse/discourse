@@ -25,6 +25,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
     assert
       .dom("input[name='invite-role']")
       .doesNotExist("role toggle is not shown");
+    await click(".advanced-mode-btn");
     assert.true(formKit().hasField("domain"), "defaults to member link mode");
   });
 
@@ -57,11 +58,30 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
     assert
       .dom("input[name='invite-role'][value='admin']")
       .isChecked("defaults to the admins tab");
-    assert.true(formKit().hasField("email"), "shows the email field");
-    assert.false(
-      formKit().hasField("domain"),
-      "does not show the domain field"
-    );
+    assert
+      .dom(".form-kit__inline-radio input[value='link']")
+      .isChecked("defaults to link delivery");
+    assert
+      .dom("[data-name='domain']")
+      .doesNotExist("hides the domain field until advanced mode is on");
+
+    await click(".advanced-mode-btn");
+
+    assert
+      .dom("[data-name='domain']")
+      .isVisible("shows the domain field in link mode");
+    assert
+      .dom("[data-name='email']")
+      .isNotVisible("does not show the email field in link mode");
+    assert
+      .dom(".save-invite")
+      .hasText(i18n("user.invited.invite_roles.create_and_copy"));
+
+    await click(".form-kit__inline-radio input[value='email']");
+
+    assert
+      .dom("[data-name='email']")
+      .isVisible("shows the email field in email mode");
     assert
       .dom(".save-invite")
       .hasText(i18n("user.invited.invite_roles.create_and_send"));
@@ -76,6 +96,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".advanced-mode-btn");
     assert.true(formKit().hasField("domain"), "stays in member mode");
   });
 
@@ -107,6 +128,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".form-kit__inline-radio input[value='email']");
     await formKit().field("email").fillIn("new-admin@example.com");
     await click(".save-invite");
 
@@ -164,6 +186,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
         "the description tracks the selected staff role"
       );
 
+    await click(".form-kit__inline-radio input[value='email']");
     await formKit().field("email").fillIn("new-mod@example.com");
     await click(".save-invite");
 
@@ -186,10 +209,48 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".form-kit__inline-radio input[value='email']");
     await formKit().field("email").fillIn("not-an-email");
     await click(".save-invite");
 
     assert.dom(".form-kit__errors").exists("shows a validation error");
+  });
+
+  test("creating an admin invite link posts skip_email and is_admin", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin", invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 47,
+        invite_key: "adm456",
+        link: "http://example.com/invites/adm456",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+    await formKit().field("domain").fillIn("example.com");
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("is_admin"), "true");
+    assert.strictEqual(requestBody.get("skip_email"), "true");
+    assert.strictEqual(requestBody.get("domain"), "example.com");
+    assert.strictEqual(requestBody.get("email"), null);
+
+    assert
+      .dom(".create-invite-with-roles-modal__link-share input.invite-link")
+      .hasValue("http://example.com/invites/adm456");
   });
 
   test("creating a member link invite posts skip_email and shows the summary", async function (assert) {
@@ -326,8 +387,8 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
         "create-invite-admin-mode",
         <template>
           <button
-            type="button"
             class="test-disable-submit"
+            type="button"
             {{on "click" (fn @outletArgs.setSubmitDisabled true)}}
           >disable</button>
         </template>
@@ -379,6 +440,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       </template>
     );
 
+    await click(".advanced-mode-btn");
     await formKit().field("domain").fillIn("");
     await click(".save-invite");
 
@@ -390,5 +452,59 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
     assert
       .dom(".create-invite-with-roles-modal__summary-rows")
       .doesNotIncludeText("google.com", "the restriction is gone");
+  });
+
+  test("editing a domain-restricted admin invite keeps the domain", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/48", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 48,
+        invite_key: "adm789",
+        link: "http://example.com/invites/adm789",
+        domain: "example.com",
+        grants_admin: true,
+        max_redemptions_allowed: 1,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".advanced-mode-btn");
+
+    assert
+      .form()
+      .field("domain")
+      .hasValue("example.com", "the existing restriction is pre-filled");
+
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "example.com",
+      "the restriction survives an update that doesn't touch it"
+    );
+    assert
+      .dom(".create-invite-with-roles-modal__summary-rows")
+      .includesText("example.com", "the summary still shows the restriction");
   });
 });

@@ -10,7 +10,10 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -322,6 +325,42 @@ acceptance("Composer Form Template", function (needs) {
         i18n("form_templates.errors.value_missing.default"),
         "the replacement editor is still connected to the visible error"
       );
+  });
+
+  test("preserves newlines from a composer field in the generated post body", async function (assert) {
+    let capturedRaw;
+    pretender.post("/posts", (request) => {
+      capturedRaw = parsePostData(request.requestBody).raw;
+      return response(200, {
+        success: true,
+        action: "create_post",
+        post: { id: 42, topic_id: 960, topic_slug: "x" },
+      });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    const multiline = "## Heading\n\nParagraph one.\n\n- item a\n- item b";
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await fillIn(".d-editor-input", multiline);
+    await click("#reply-control button.create");
+
+    // normalise CRLF (from FormData's textarea handling) to LF so the
+    // assertions describe the shape, not the transport encoding
+    const raw = capturedRaw.replace(/\r\n/g, "\n");
+
+    assert.true(
+      raw.includes("## Heading\n\nParagraph one."),
+      "the multi-line composer field survives to the submitted post body"
+    );
+    assert.true(
+      raw.includes("- item a\n- item b"),
+      "list items from the composer field reach the post body on separate lines"
+    );
   });
 
   test("blocks topic creation when a required composer field is empty even if other fields are filled", async function (assert) {

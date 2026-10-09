@@ -70,8 +70,8 @@ export default class ChatModalMoveMessageToChannel extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-move-message-to-channel"
+      @closeModal={{@closeModal}}
       @inline={{@inline}}
       @title={{i18n "chat.move_to_channel.title"}}
     >
@@ -81,21 +81,21 @@ export default class ChatModalMoveMessageToChannel extends Component {
         {{/if}}
 
         <ChatChannelChooser
-          @content={{this.availableChannels}}
-          @value={{this.destinationChannelId}}
-          @nameProperty="title"
           class="chat-modal-move-message-to-channel__channel-chooser"
+          @content={{this.availableChannels}}
+          @nameProperty="title"
+          @value={{this.destinationChannelId}}
         />
       </:body>
       <:footer>
         <DButton
-          @icon="right-from-bracket"
-          @disabled={{this.disableMoveButton}}
-          @action={{this.moveMessages}}
-          @label="chat.move_to_channel.confirm_move"
           class="btn-primary"
+          @action={{this.moveMessages}}
+          @disabled={{this.disableMoveButton}}
+          @icon="right-from-bracket"
+          @label="chat.move_to_channel.confirm_move"
         />
-        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
+        <DButton class="btn-flat" @action={{@closeModal}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

@@ -80,21 +80,21 @@ export default class PostVotingComments extends Component {
       {{#each this.comments as |comment|}}
         <PostVotingComment
           @comment={{comment}}
+          @disabled={{this.disabled}}
           @removeComment={{this.removeComment}}
+          @removeVote={{this.removeVote}}
           @updateComment={{this.updateComment}}
           @vote={{this.vote}}
-          @removeVote={{this.removeVote}}
-          @disabled={{this.disabled}}
         />
       {{/each}}
 
       {{#if @canCreatePost}}
         <PostVotingCommentsMenu
-          @id={{@post.id}}
-          @postNumber={{@post.post_number}}
-          @moreCommentCount={{this.moreCommentCount}}
-          @lastCommentId={{this.lastCommentId}}
           @appendComments={{this.appendComments}}
+          @id={{@post.id}}
+          @lastCommentId={{this.lastCommentId}}
+          @moreCommentCount={{this.moreCommentCount}}
+          @postNumber={{@post.post_number}}
         />
       {{/if}}
     </div>

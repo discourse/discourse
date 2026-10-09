@@ -307,7 +307,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         to: "dm-admin",
         output_index: 0,
         input_index: 0,
-        connection_type: "true",
+        connection_type: "main",
       },
     ]
 
@@ -649,7 +649,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         to: "log",
         output_index: 0,
         input_index: 0,
-        connection_type: "main",
+        connection_type: "true",
       },
     ]
 
@@ -657,7 +657,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
 
     expect(result[:valid]).to eq(false)
     expect(result[:graph_errors]).to contain_exactly(
-      'Filter posts output connection_type "main" is invalid for condition:filter. Use one of: true, false.',
+      'Filter posts output connection_type "true" is invalid for condition:filter. Use one of: main.',
     )
   end
 

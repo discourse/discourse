@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -12,9 +12,12 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
+import { afterRender } from "discourse/lib/decorators";
+import { deliverBlobDownload } from "discourse/lib/download-blob";
 import round from "discourse/lib/round";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import pollBounds from "discourse/plugins/poll/lib/poll-bounds";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {
   MULTIPLE_POLL_TYPE,
@@ -26,6 +29,7 @@ import PollInfo from "../components/poll-info";
 import PollOptions from "../components/poll-options";
 import PollResultsPie from "../components/poll-results-pie";
 import PollResultsTabs from "../components/poll-results-tabs";
+import PollVotedChoices from "../components/poll-voted-choices";
 
 const FETCH_VOTERS_COUNT = 25;
 const STAFF_ONLY = "staff_only";
@@ -49,8 +53,9 @@ export default class PollComponent extends Component {
   @tracked preloadedVoters = this.defaultPreloadedVoters();
   @tracked voterListExpanded = false;
 
-  @tracked hasSavedVote = this.savedVote.length > 0;
+  @tracked hasSavedVote = this.rawSavedVote.length > 0;
   @tracked showTally = false;
+  @tracked castingVote = false;
 
   registerPollButtons = (element) => {
     this.pollButtonsElement = element;
@@ -65,7 +70,9 @@ export default class PollComponent extends Component {
     }
 
     const userGroups =
-      user && user.groups && user.groups.map((g) => g.name.toLowerCase());
+      user &&
+      user.visibleGroups &&
+      user.visibleGroups.map((g) => g.name.toLowerCase());
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
@@ -92,6 +99,8 @@ export default class PollComponent extends Component {
   @tracked _vote = this.initialVote();
 
   @tracked _showResults = this.initialShowResults();
+
+  @tracked _isAmendingVote = this.poll.amendingVoteToggle;
 
   _toggleOption = (option, rank = 0) => {
     if (this.isMultiple) {
@@ -127,7 +136,7 @@ export default class PollComponent extends Component {
   };
 
   get showResults() {
-    return this._showResults;
+    return this._showResults || this.resultsRevealedByClose;
   }
 
   set showResults(value) {
@@ -135,29 +144,13 @@ export default class PollComponent extends Component {
     this.poll.showResultsToggle = value;
   }
 
-  get resultsVisibilityAllowed() {
-    return (
-      !(this.poll.results === ON_CLOSE && !this.closed) &&
-      !(this.staffOnly && !this.isStaff)
-    );
+  get isAmendingVote() {
+    return this._isAmendingVote;
   }
 
-  get resultsToggleAllowed() {
-    return !this.hideResultsDisabled && this.resultsVisibilityAllowed;
-  }
-
-  initialShowResults() {
-    if (
-      this.poll.showResultsToggle !== undefined &&
-      this.resultsToggleAllowed
-    ) {
-      return this.poll.showResultsToggle;
-    }
-
-    return (
-      this.resultsVisibilityAllowed &&
-      (this.hasSavedVote || this.hideResultsDisabled)
-    );
+  set isAmendingVote(value) {
+    this._isAmendingVote = value;
+    this.poll.amendingVoteToggle = value;
   }
 
   get vote() {
@@ -169,50 +162,49 @@ export default class PollComponent extends Component {
     this.poll.inProgressVote = value;
   }
 
-  initialVote() {
-    if (this.poll.inProgressVote !== undefined) {
-      return this.copyVote(this.poll.inProgressVote);
-    }
+  get resultsRevealedByClose() {
+    return (
+      this.poll.results === ON_CLOSE &&
+      this.closed &&
+      this.poll.options.every((option) => option.votes !== undefined)
+    );
+  }
 
-    return this.savedVote;
+  get resultsVisibilityAllowed() {
+    return (
+      !(this.poll.results === ON_CLOSE && !this.closed) &&
+      !(this.staffOnly && !this.isStaff)
+    );
+  }
+
+  get hasHiddenSavedVote() {
+    return (
+      this.hasSavedVote && !this.showResults && !this.resultsVisibilityAllowed
+    );
+  }
+
+  get showVotedChoices() {
+    return this.hasHiddenSavedVote && !this.isAmendingVote;
+  }
+
+  get votedChoices() {
+    return this.hasSavedVote ? this.rawSavedVote : [];
+  }
+
+  get resultsToggleAllowed() {
+    return !this.hideResultsDisabled && this.resultsVisibilityAllowed;
+  }
+
+  get rawSavedVote() {
+    return this.args.post.polls_votes?.[this.poll.name] || [];
   }
 
   get savedVote() {
-    return this.copyVote(this.args.post.polls_votes?.[this.poll.name] || []);
-  }
-
-  copyVote(votes) {
-    return this.isRankedChoice
-      ? votes.map((vote) => ({ ...vote }))
-      : [...votes];
+    return this.copyVote(this.rawSavedVote);
   }
 
   get poll() {
     return this.args.poll;
-  }
-
-  defaultPreloadedVoters() {
-    const preloadedVoters = {};
-
-    if (this.poll.public && this.poll.preloaded_voters) {
-      Object.keys(this.poll.preloaded_voters).forEach((key) => {
-        preloadedVoters[key] = {
-          voters: this.poll.preloaded_voters[key],
-          loading: false,
-        };
-      });
-    }
-
-    this.options.forEach((option) => {
-      if (!preloadedVoters[option.id]) {
-        preloadedVoters[option.id] = {
-          voters: [],
-          loading: false,
-        };
-      }
-    });
-
-    return preloadedVoters;
   }
 
   get id() {
@@ -265,59 +257,6 @@ export default class PollComponent extends Component {
     return this.poll.status;
   }
 
-  @action
-  async castVotes(option) {
-    if (!this.canCastVotes) {
-      return;
-    }
-
-    if (!this.currentUser) {
-      return;
-    }
-
-    try {
-      const { poll } = await ajax("/polls/vote", {
-        type: "PUT",
-        data: {
-          post_id: this.post.id,
-          poll_name: this.poll.name,
-          options: this.vote,
-        },
-      });
-
-      this.hasSavedVote = true;
-      if (!this.args.post.polls_votes) {
-        this.args.post.polls_votes = trackedObject();
-      }
-      this.args.post.polls_votes[this.poll.name] = this.copyVote(this.vote);
-      this.poll.inProgressVote = undefined;
-      Object.assign(this.poll, poll);
-
-      this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
-
-      if (this.poll.results !== ON_CLOSE) {
-        this.showResults = true;
-      }
-
-      if (this.poll.results === STAFF_ONLY) {
-        if (this.currentUser && this.currentUser.staff) {
-          this.showResults = true;
-        } else {
-          this.showResults = false;
-        }
-      }
-    } catch (error) {
-      if (error) {
-        if (!this.isMultiple && !this.isRankedChoice) {
-          this._toggleOption(option);
-        }
-        popupAjaxError(error);
-      } else {
-        this.dialog.alert(i18n("poll.error_while_casting_votes"));
-      }
-    }
-  }
-
   get options() {
     let enrichedOptions = this.poll.options;
 
@@ -345,33 +284,31 @@ export default class PollComponent extends Component {
     return this.poll.ranked_choice_outcome || null;
   }
 
-  get min() {
-    let min = parseInt(this.poll.min, 10);
-    if (isNaN(min) || min < 0) {
-      min = 1;
-    }
+  get #bounds() {
+    return pollBounds(this.poll, this.poll.options?.length ?? 0);
+  }
 
-    return min;
+  get min() {
+    return this.#bounds.min;
   }
 
   get max() {
-    let max = parseInt(this.poll.max, 10);
-    const numOptions = this.poll.options.length;
-    if (isNaN(max) || max > numOptions) {
-      max = numOptions;
-    }
-    return max;
+    return this.#bounds.max;
   }
 
   get closed() {
     return this.status === CLOSED_STATUS || this.isAutomaticallyClosed;
   }
 
+  @cached
+  get closesAt() {
+    return this.poll.close
+      ? moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z")
+      : null;
+  }
+
   get isAutomaticallyClosed() {
-    return (
-      (this.poll.close ?? false) &&
-      moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
-    );
+    return this.closesAt !== null && this.closesAt.valueOf() <= Date.now();
   }
 
   get hasVoted() {
@@ -380,6 +317,270 @@ export default class PollComponent extends Component {
 
   get hideResultsDisabled() {
     return !this.staffOnly && (this.closed || this.topicArchived);
+  }
+
+  get isVoteDirty() {
+    const key = (votes) =>
+      (this.isRankedChoice
+        ? votes
+            .filter((vote) => vote.rank !== 0)
+            .map((vote) => `${vote.digest}:${vote.rank}`)
+        : [...votes]
+      )
+        .sort()
+        .join();
+
+    return key(this.rawSavedVote) !== key(this.vote);
+  }
+
+  get canCastVotes() {
+    if (this.closed || this.castingVote || !this.currentUser) {
+      return false;
+    }
+
+    if (this.hasSavedVote && !this.isVoteDirty) {
+      return false;
+    }
+
+    const selectedOptionCount = this.vote?.length || 0;
+
+    if (this.isMultiple) {
+      return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
+    }
+
+    if (this.isRankedChoice) {
+      return (
+        this.options.length === this.vote?.length &&
+        this.areRanksValid(this.vote)
+      );
+    }
+
+    return selectedOptionCount > 0;
+  }
+
+  get notInVotingGroup() {
+    return !this.checkUserGroups(this.currentUser, this.poll);
+  }
+
+  get pollGroups() {
+    return i18n("poll.results.groups.title", { groups: this.poll.groups });
+  }
+
+  get showCastVotesButton() {
+    return (
+      (this.isMultiple || this.isRankedChoice) &&
+      !this.showResults &&
+      !this.showVotedChoices
+    );
+  }
+
+  get castVotesButtonClass() {
+    return `btn cast-votes ${
+      this.canCastVotes ? "btn-primary" : "btn-default"
+    }`;
+  }
+
+  get castVotesButtonIcon() {
+    return !this.castVotesDisabled ? "check" : "far-square";
+  }
+
+  get castVotesButtonLabel() {
+    return i18n(
+      this.hasSavedVote
+        ? "poll.cast-votes.update_label"
+        : "poll.cast-votes.label"
+    );
+  }
+
+  get castVotesButtonTitle() {
+    return i18n(
+      this.hasSavedVote
+        ? "poll.cast-votes.update_title"
+        : "poll.cast-votes.title"
+    );
+  }
+
+  get castVotesDisabled() {
+    return !this.canCastVotes;
+  }
+
+  get showHideResultsButton() {
+    return this.showResults && !this.hideResultsDisabled;
+  }
+
+  get showShowResultsButton() {
+    return (
+      !this.showResults &&
+      this.resultsToggleAllowed &&
+      !(this.poll.results === ON_VOTE && !this.hasSavedVote && !this.isMe) &&
+      this.voters > 0
+    );
+  }
+
+  get canChangeVote() {
+    return !this.closed && !this.hideResultsDisabled;
+  }
+
+  get showRemoveVoteButton() {
+    return (
+      this.canChangeVote &&
+      !this.showResults &&
+      this.hasSavedVote &&
+      !this.showVotedChoices
+    );
+  }
+
+  get showAmendVoteButton() {
+    return this.canChangeVote && this.showVotedChoices;
+  }
+
+  get showKeepVoteButton() {
+    return this.hasHiddenSavedVote && this.isAmendingVote;
+  }
+
+  get isCheckbox() {
+    return this.isMultiple;
+  }
+
+  get resultsWidgetTypeClass() {
+    const type = this.poll.type;
+    return this.isNumber || this.poll.chart_type !== PIE_CHART_TYPE
+      ? `discourse-poll-${type}-results`
+      : "discourse-poll-pie-chart";
+  }
+
+  get resultsPie() {
+    return this.poll.chart_type === PIE_CHART_TYPE;
+  }
+
+  get averageRating() {
+    const totalScore = this.options.reduce((total, o) => {
+      return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
+    }, 0);
+
+    const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
+
+    return trustHTML(i18n("poll.average_rating", { average }));
+  }
+
+  get availableDisplayMode() {
+    if (
+      !this.showResults ||
+      this.poll.chart_type === PIE_CHART_TYPE ||
+      ![REGULAR_POLL_TYPE, MULTIPLE_POLL_TYPE].includes(this.poll.type)
+    ) {
+      return null;
+    }
+    return this.showTally ? "showPercentage" : "showTally";
+  }
+
+  initialShowResults() {
+    if (
+      this.poll.showResultsToggle !== undefined &&
+      this.resultsToggleAllowed
+    ) {
+      return this.poll.showResultsToggle;
+    }
+
+    return (
+      this.resultsVisibilityAllowed &&
+      (this.hasSavedVote || this.hideResultsDisabled)
+    );
+  }
+
+  initialVote() {
+    if (this.poll.inProgressVote !== undefined) {
+      return this.copyVote(this.poll.inProgressVote);
+    }
+
+    return this.savedVote;
+  }
+
+  copyVote(votes) {
+    return this.isRankedChoice
+      ? votes.map((vote) => ({ ...vote }))
+      : [...votes];
+  }
+
+  defaultPreloadedVoters() {
+    const preloadedVoters = {};
+
+    if (this.poll.public && this.poll.preloaded_voters) {
+      Object.keys(this.poll.preloaded_voters).forEach((key) => {
+        preloadedVoters[key] = {
+          voters: this.poll.preloaded_voters[key],
+          loading: false,
+        };
+      });
+    }
+
+    this.options.forEach((option) => {
+      if (!preloadedVoters[option.id]) {
+        preloadedVoters[option.id] = {
+          voters: [],
+          loading: false,
+        };
+      }
+    });
+
+    return preloadedVoters;
+  }
+
+  @action
+  async castVotes(option) {
+    if (!this.canCastVotes) {
+      return;
+    }
+
+    this.castingVote = true;
+    const castVote = this.copyVote(this.vote);
+
+    try {
+      const { poll } = await ajax("/polls/vote", {
+        type: "PUT",
+        data: {
+          post_id: this.post.id,
+          poll_name: this.poll.name,
+          options: castVote,
+        },
+      });
+
+      this.hasSavedVote = true;
+      if (!this.args.post.polls_votes) {
+        this.args.post.polls_votes = trackedObject();
+      }
+      this.args.post.polls_votes[this.poll.name] = castVote;
+      this.poll.inProgressVote = undefined;
+      Object.assign(this.poll, poll);
+
+      this.appEvents.trigger("poll:voted", poll, this.post, castVote);
+
+      if (this.poll.results !== ON_CLOSE) {
+        this.showResults = true;
+      }
+
+      if (this.poll.results === STAFF_ONLY) {
+        if (this.currentUser && this.currentUser.staff) {
+          this.showResults = true;
+        } else {
+          this.showResults = false;
+        }
+      }
+
+      this.isAmendingVote = false;
+      this.focusCurrentView();
+    } catch (error) {
+      if (error) {
+        if (!this.isMultiple && !this.isRankedChoice) {
+          this._toggleOption(option);
+        }
+        popupAjaxError(error);
+      } else {
+        this.dialog.alert(i18n("poll.error_while_casting_votes"));
+      }
+    } finally {
+      this.castingVote = false;
+    }
   }
 
   @action
@@ -418,6 +619,9 @@ export default class PollComponent extends Component {
       this.vote.length === 1 &&
       this.vote[0] === option.id
     ) {
+      if (this.isAmendingVote) {
+        return this.keepVote();
+      }
       return this.removeVote();
     }
 
@@ -432,12 +636,21 @@ export default class PollComponent extends Component {
     }
   }
 
-  @action
-  toggleResults() {
+  @afterRender
+  focusCurrentView() {
+    this.pollButtonsElement
+      ?.closest(".poll")
+      ?.querySelector(
+        this.showVotedChoices ? ".amend-vote" : "[data-poll-option-id] button"
+      )
+      ?.focus();
+  }
+
+  preserveButtonsPosition(callback) {
     const anchor = this.pollButtonsElement;
     const anchorTop = anchor?.getBoundingClientRect().top;
 
-    this.showResults = !this.showResults;
+    callback();
 
     if (anchorTop == null) {
       return;
@@ -455,111 +668,29 @@ export default class PollComponent extends Component {
     });
   }
 
-  get canCastVotes() {
-    if (this.closed || !this.currentUser) {
-      return false;
-    }
-
-    const selectedOptionCount = this.vote?.length || 0;
-
-    if (this.isMultiple) {
-      return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
-    }
-
-    if (this.isRankedChoice) {
-      return (
-        this.options.length === this.vote?.length &&
-        this.areRanksValid(this.vote)
-      );
-    }
-
-    return selectedOptionCount > 0;
+  @action
+  toggleResults() {
+    this.preserveButtonsPosition(() => {
+      this.showResults = !this.showResults;
+    });
   }
 
-  get notInVotingGroup() {
-    return !this.checkUserGroups(this.currentUser, this.poll);
+  @action
+  amendVote() {
+    this.preserveButtonsPosition(() => {
+      this.isAmendingVote = true;
+    });
+    this.focusCurrentView();
   }
 
-  get pollGroups() {
-    return i18n("poll.results.groups.title", { groups: this.poll.groups });
-  }
-
-  get showCastVotesButton() {
-    return (this.isMultiple || this.isRankedChoice) && !this.showResults;
-  }
-
-  get castVotesButtonClass() {
-    return `btn cast-votes ${
-      this.canCastVotes ? "btn-primary" : "btn-default"
-    }`;
-  }
-
-  get castVotesButtonIcon() {
-    return !this.castVotesDisabled ? "check" : "far-square";
-  }
-
-  get castVotesDisabled() {
-    return !this.canCastVotes;
-  }
-
-  get showHideResultsButton() {
-    return this.showResults && !this.hideResultsDisabled;
-  }
-
-  get showShowResultsButton() {
-    return (
-      !this.showResults &&
-      !this.hideResultsDisabled &&
-      !(this.poll.results === ON_VOTE && !this.hasSavedVote && !this.isMe) &&
-      !(this.poll.results === ON_CLOSE && !this.closed) &&
-      !(this.poll.results === STAFF_ONLY && !this.isStaff) &&
-      this.voters > 0
-    );
-  }
-
-  get showRemoveVoteButton() {
-    return (
-      !this.showResults &&
-      !this.closed &&
-      !this.hideResultsDisabled &&
-      this.hasSavedVote
-    );
-  }
-
-  get isCheckbox() {
-    return this.isMultiple;
-  }
-
-  get resultsWidgetTypeClass() {
-    const type = this.poll.type;
-    return this.isNumber || this.poll.chart_type !== PIE_CHART_TYPE
-      ? `discourse-poll-${type}-results`
-      : "discourse-poll-pie-chart";
-  }
-
-  get resultsPie() {
-    return this.poll.chart_type === PIE_CHART_TYPE;
-  }
-
-  get averageRating() {
-    const totalScore = this.options.reduce((total, o) => {
-      return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
-    }, 0);
-
-    const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
-
-    return trustHTML(i18n("poll.average_rating", { average }));
-  }
-
-  get availableDisplayMode() {
-    if (
-      !this.showResults ||
-      this.poll.chart_type === PIE_CHART_TYPE ||
-      ![REGULAR_POLL_TYPE, MULTIPLE_POLL_TYPE].includes(this.poll.type)
-    ) {
-      return null;
-    }
-    return this.showTally ? "showPercentage" : "showTally";
+  @action
+  keepVote() {
+    this.preserveButtonsPosition(() => {
+      this._vote = this.savedVote;
+      this.poll.inProgressVote = undefined;
+      this.isAmendingVote = false;
+    });
+    this.focusCurrentView();
   }
 
   @action
@@ -669,6 +800,8 @@ export default class PollComponent extends Component {
         this.poll.inProgressVote = undefined;
         this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
         this.showResults = false;
+        this.isAmendingVote = false;
+        this.focusCurrentView();
       })
       .catch((error) => popupAjaxError(error));
   }
@@ -754,17 +887,13 @@ export default class PollComponent extends Component {
       },
     })
       .then((csvContent) => {
-        const downloadLink = document.createElement("a");
-        const blob = new Blob([csvContent], {
+        const blob = new Blob(["\uFEFF" + csvContent], {
           type: "text/csv;charset=utf-8;",
         });
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.setAttribute(
-          "download",
-          `poll-export-${this.poll.name}-${this.post.id}.csv`
-        );
-        downloadLink.click();
-        downloadLink.remove();
+
+        deliverBlobDownload(blob, {
+          fallbackFilename: `poll-export-${this.poll.name}-${this.post.id}.csv`,
+        });
       })
       .catch((error) => {
         if (error) {
@@ -783,8 +912,8 @@ export default class PollComponent extends Component {
   <template>
     <div class="poll">
       <div
-        {{didUpdate this.updatedVoters this.poll.preloaded_voters}}
         class="poll-container"
+        {{didUpdate this.updatedVoters this.poll.preloaded_voters}}
       >
         {{this.titleHTML}}
         {{#if this.notInVotingGroup}}
@@ -799,58 +928,101 @@ export default class PollComponent extends Component {
                 <PollResultsPie @id={{this.id}} @options={{this.options}} />
               {{else}}
                 <PollResultsTabs
+                  @fetchVoters={{this.fetchVoters}}
+                  @isPublic={{this.poll.public}}
+                  @isRankedChoice={{this.isRankedChoice}}
                   @options={{this.options}}
                   @pollName={{this.poll.name}}
                   @pollType={{this.poll.type}}
-                  @isRankedChoice={{this.isRankedChoice}}
-                  @isPublic={{this.poll.public}}
                   @postId={{this.post.id}}
+                  @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
+                  @showTally={{this.showTally}}
                   @vote={{this.vote}}
                   @voters={{this.preloadedVoters}}
                   @votersCount={{this.poll.voters}}
-                  @fetchVoters={{this.fetchVoters}}
-                  @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
-                  @showTally={{this.showTally}}
                 />
               {{/if}}
             {{/if}}
           </div>
+        {{else if this.showVotedChoices}}
+          <PollVotedChoices
+            @isRankedChoice={{this.isRankedChoice}}
+            @options={{this.options}}
+            @votes={{this.votedChoices}}
+          />
         {{else}}
           <PollOptions
             @isCheckbox={{this.isCheckbox}}
             @isRankedChoice={{this.isRankedChoice}}
             @options={{this.options}}
-            @votes={{this.vote}}
             @sendOptionSelect={{this.toggleOption}}
+            @votes={{this.vote}}
           />
         {{/if}}
       </div>
       <PollInfo
-        @options={{this.options}}
-        @min={{this.min}}
-        @max={{this.max}}
-        @isMultiple={{this.isMultiple}}
-        @close={{this.close}}
         @closed={{this.closed}}
         @closedBy={{this.poll.closed_by}}
-        @results={{this.poll.results}}
-        @showResults={{this.showResults}}
-        @postUserId={{this.poll.post.user_id}}
-        @isPublic={{this.poll.public}}
-        @isDynamic={{if @isDynamic true this.poll.dynamic}}
+        @closesAt={{this.closesAt}}
         @hasVoted={{this.hasVoted}}
+        @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+        @isDynamic={{if @isDynamic true this.poll.dynamic}}
+        @isMultiple={{this.isMultiple}}
+        @isPublic={{this.poll.public}}
+        @max={{this.max}}
+        @min={{this.min}}
+        @options={{this.options}}
+        @postUserId={{this.poll.post.user_id}}
+        @results={{this.poll.results}}
+        @showingVotedChoices={{this.showVotedChoices}}
+        @showResults={{this.showResults}}
         @voters={{this.voters}}
       />
       <div class="poll-buttons" {{didInsert this.registerPollButtons}}>
+        {{#if this.showKeepVoteButton}}
+          <button
+            class="btn btn-default keep-vote"
+            title={{i18n "poll.keep-vote.title"}}
+            {{on "click" this.keepVote}}
+          >
+            {{dIcon "chevron-left"}}
+            <span class="d-button-label">{{i18n "poll.keep-vote.label"}}</span>
+          </button>
+        {{/if}}
+
         {{#if this.showCastVotesButton}}
           <button
             class={{this.castVotesButtonClass}}
-            title={{i18n "poll.cast-votes.title"}}
             disabled={{this.castVotesDisabled}}
+            title={{this.castVotesButtonTitle}}
             {{on "click" this.castVotes}}
           >
             {{dIcon this.castVotesButtonIcon}}
-            <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
+            <span class="d-button-label">{{this.castVotesButtonLabel}}</span>
+          </button>
+        {{/if}}
+
+        {{#if this.showRemoveVoteButton}}
+          <button
+            class="btn btn-default remove-vote"
+            title={{i18n "poll.remove-vote.title"}}
+            {{on "click" this.removeVote}}
+          >
+            {{dIcon "arrow-rotate-left"}}
+            <span class="d-button-label">{{i18n
+                "poll.remove-vote.label"
+              }}</span>
+          </button>
+        {{/if}}
+
+        {{#if this.showAmendVoteButton}}
+          <button
+            class="btn btn-default amend-vote"
+            title={{i18n "poll.amend-vote.title"}}
+            {{on "click" this.amendVote}}
+          >
+            {{dIcon "pencil"}}
+            <span class="d-button-label">{{i18n "poll.amend-vote.label"}}</span>
           </button>
         {{/if}}
 
@@ -880,30 +1052,17 @@ export default class PollComponent extends Component {
           </button>
         {{/if}}
 
-        {{#if this.showRemoveVoteButton}}
-          <button
-            class="btn btn-default remove-vote"
-            title={{i18n "poll.remove-vote.title"}}
-            {{on "click" this.removeVote}}
-          >
-            {{dIcon "arrow-rotate-left"}}
-            <span class="d-button-label">{{i18n
-                "poll.remove-vote.label"
-              }}</span>
-          </button>
-        {{/if}}
-
         <PollButtonsDropdown
+          @availableDisplayMode={{this.availableDisplayMode}}
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @isRankedChoice={{this.isRankedChoice}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
-          @availableDisplayMode={{this.availableDisplayMode}}
+          @isMe={{this.isMe}}
+          @isRankedChoice={{this.isRankedChoice}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </div>
     </div>

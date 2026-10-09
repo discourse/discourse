@@ -1,3 +1,4 @@
+import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
@@ -21,6 +22,7 @@ import type {
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import type { LinkMatcher } from "discourse/lib/link-matcher";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -64,18 +66,6 @@ interface PlaceholderData {
   processingPlaceholder?: string;
 }
 
-interface LinkifyMatch {
-  index: number;
-  lastIndex: number;
-  raw: string;
-  url: string;
-}
-
-interface Linkify {
-  test(text: string): boolean;
-  match(text: string): LinkifyMatch[] | null;
-}
-
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
 
@@ -114,6 +104,8 @@ export default class TextareaTextManipulation implements TextManipulation {
 
   @service declare capabilities: CapabilitiesService;
 
+  autocompletes: object[] = [];
+
   allowPreview = true;
 
   eventPrefix: string;
@@ -124,7 +116,7 @@ export default class TextareaTextManipulation implements TextManipulation {
 
   state = trackedObject<ToolbarState & Record<string, unknown>>({});
 
-  _cachedLinkify?: Linkify;
+  _cachedLinkify?: LinkMatcher;
 
   constructor(
     owner: Owner,
@@ -365,156 +357,6 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
   }
 
-  #applyWholeLineSurround(
-    sel: SelectedText,
-    head: string | ((previous?: string) => string),
-    tail: string,
-    opts: SurroundOptions
-  ): void {
-    const [hval, hlen] = getHead(head);
-    const lines = sel.value.split("\n");
-    const formattedLines = lines.filter(
-      (line) => opts.applyEmptyLines || line.length > 0
-    );
-    const removing =
-      formattedLines.length > 0 &&
-      formattedLines.every(
-        (line) => line.startsWith(hval) && line.endsWith(tail)
-      );
-
-    const contents = lines
-      .map((line) => {
-        if (!opts.applyEmptyLines && line.length === 0) {
-          return line;
-        }
-        if (removing) {
-          return line.slice(hlen, tail.length ? -tail.length : undefined);
-        }
-        let content = line;
-        if (hval) {
-          content = content.replaceAll(hval, "");
-        }
-        if (tail) {
-          content = content.replaceAll(tail, "");
-        }
-        return `${hval}${content}${tail}`;
-      })
-      .join("\n");
-
-    this._insertAt(sel.start, sel.end, contents);
-
-    if (lines.length === 1) {
-      this.selectText(
-        sel.start + (removing ? 0 : hlen),
-        removing ? contents.length : contents.length - hlen - tail.length
-      );
-    } else {
-      this.selectText(sel.start, contents.length);
-    }
-  }
-
-  #expandToLines(sel: SelectedText): SelectedText {
-    const value = this.value;
-    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
-    const endAnchor =
-      sel.end > sel.start && value[sel.end - 1] === "\n"
-        ? sel.end - 1
-        : sel.end;
-    const nextNewline = value.indexOf("\n", endAnchor);
-    const end = nextNewline === -1 ? value.length : nextNewline;
-
-    return {
-      start,
-      end,
-      value: value.slice(start, end),
-      pre: value.slice(0, start),
-      post: value.slice(end),
-      lineVal: value.slice(start, end),
-    };
-  }
-
-  // perform the same operation over many lines of text
-  _getMultilineContents(
-    lines: string[],
-    head: string | ((previous?: string) => string),
-    hval: string,
-    hlen: number,
-    tail: string,
-    tlen: number,
-    opts?: SurroundOptions
-  ): string {
-    let operation = OP.NONE;
-
-    const applyEmptyLines = opts && opts.applyEmptyLines;
-
-    return lines
-      .map((l) => {
-        if (!applyEmptyLines && l.length === 0) {
-          return l;
-        }
-
-        if (
-          operation !== OP.ADDED &&
-          l.slice(0, hlen) === hval &&
-          (tlen === 0 || l.slice(-tlen) === tail)
-        ) {
-          operation = OP.REMOVED;
-          if (tlen === 0) {
-            const result = l.slice(hlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          } else if (l.slice(-tlen) === tail) {
-            const result = l.slice(hlen, -tlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          }
-        } else if (operation === OP.NONE) {
-          operation = OP.ADDED;
-        } else if (operation === OP.REMOVED) {
-          return l;
-        }
-
-        const result = `${hval}${l}${tail}`;
-        [hval, hlen] = getHead(head, hval);
-        return result;
-      })
-      .join("\n");
-  }
-
-  _addBlock(sel: SelectedText, text: string): void {
-    text = (text || "").trim();
-    if (text.length === 0) {
-      return;
-    }
-
-    let start = sel.start;
-    let end = sel.end;
-
-    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
-    if (newLinesBeforeSelection) {
-      start -= newLinesBeforeSelection;
-    }
-
-    if (sel.pre.length > 0) {
-      text = `\n\n${text}`;
-    }
-
-    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
-    if (newLinesAfterSelection) {
-      end += newLinesAfterSelection;
-    }
-
-    if (sel.post.length > 0) {
-      text = `${text}\n\n`;
-    } else {
-      text = `${text}\n`;
-    }
-
-    this._insertAt(start, end, text);
-    this.textarea.setSelectionRange(start + text.length, start + text.length);
-    schedule("afterRender", this, this.blurAndFocus);
-  }
-
   applyLink(url: string): void {
     const sel = this.getSelected();
     if (sel.start === sel.end) {
@@ -540,15 +382,6 @@ export default class TextareaTextManipulation implements TextManipulation {
 
     this._insertAt(sel.start, sel.end, text);
     this.blurAndFocus();
-  }
-
-  _insertAt(
-    start: number,
-    end: number,
-    text: string,
-    opts: InsertAtOptions = {}
-  ): void {
-    insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
   extractTable(text: string): string | null {
@@ -630,7 +463,6 @@ export default class TextareaTextManipulation implements TextManipulation {
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, table)
           : this.insertText(table);
@@ -641,7 +473,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     if (canPasteHtml && plainText) {
       if (isInlinePasting) {
         canPasteHtml = !(
-          lineVal.match(/^```/) ||
+          isCodeBlock ||
           this.isInside(pre, /`/g) ||
           lineVal.match(/^    /)
         );
@@ -687,7 +519,6 @@ export default class TextareaTextManipulation implements TextManipulation {
         }
 
         if (isComposer) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           this.eventPrefix
             ? this.appEvents.trigger(
                 `${this.eventPrefix}:insert-text`,
@@ -697,7 +528,6 @@ export default class TextareaTextManipulation implements TextManipulation {
           handled = true;
         }
       } else if (plainText && isComposer) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
           : this.insertText(plainText);
@@ -708,44 +538,6 @@ export default class TextareaTextManipulation implements TextManipulation {
     if (handled || (canUpload && !plainText)) {
       e.preventDefault();
     }
-  }
-
-  /**
-   * Removes the provided char from the provided str up
-   * until the limit, or until a character that is _not_
-   * the provided one is encountered.
-   */
-  _deindentLine(str: string, char: string, limit: number): string {
-    let eaten = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (eaten < limit && str[i] === char) {
-        eaten += 1;
-      } else {
-        return str.slice(eaten);
-      }
-    }
-    return str;
-  }
-
-  _updateListNumbers(text: string, currentNumber: number): string {
-    return text
-      .split("\n")
-      .map((line) => {
-        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
-          const result = line.replace(
-            `${currentNumber}`,
-            `${currentNumber + 1}`
-          );
-          currentNumber += 1;
-          return result;
-        }
-        return line;
-      })
-      .join("\n");
-  }
-
-  #isAfterStartedCodeFence(beforeText: string): number | null {
-    return this.isInside(beforeText, /(^|\n)```/g);
   }
 
   maybeContinueList(): void {
@@ -973,11 +765,22 @@ export default class TextareaTextManipulation implements TextManipulation {
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
+    const collapsedSelection = sel.start === sel.end;
+
     if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
-      if (sel.start === sel.end) {
+
+      let absorbedHead = false;
+      if (hlen > 0 && sel.pre.slice(sel.pre.lastIndexOf("\n") + 1) === hval) {
+        sel.start -= hlen;
+        sel.pre = sel.pre.slice(0, -hlen);
+        sel.value = `${hval}${sel.value}`;
+        absorbedHead = true;
+      }
+
+      if (collapsedSelection && !absorbedHead) {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
@@ -985,6 +788,7 @@ export default class TextareaTextManipulation implements TextManipulation {
       // they are "list-like" in that they have a character at
       // the start and a level, rather than having a surrounding format.
       let number;
+      let removedHead = false;
       if (hval.includes("#")) {
         const currentHeadingLevel = sel.value.search(/[^#]/);
 
@@ -992,6 +796,7 @@ export default class TextareaTextManipulation implements TextManipulation {
         // mirrors list behavior.
         if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
           number = sel.value.slice(hlen);
+          removedHead = true;
         } else {
           // Replace the existing heading level with the new one, or
           // if there is no heading level, add the new one.
@@ -1009,6 +814,7 @@ export default class TextareaTextManipulation implements TextManipulation {
         // it to "list item"
         if (sel.value.startsWith(hval)) {
           number = sel.value.slice(hlen);
+          removedHead = true;
         } else {
           number = `${hval}${sel.value}`;
         }
@@ -1024,17 +830,14 @@ export default class TextareaTextManipulation implements TextManipulation {
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
 
-      if (opts?.excludeHeadInSelection) {
-        this.selectText(
-          sel.start + (preNewlines.length - preChars) + hval.length,
-          number.length - hval.length
-        );
-      } else {
-        this.selectText(
-          sel.start + (preNewlines.length - preChars),
-          number.length
-        );
-      }
+      const headSelectionOffset =
+        (opts?.excludeHeadInSelection || collapsedSelection) && !removedHead
+          ? hval.length
+          : 0;
+      this.selectText(
+        sel.start + (preNewlines.length - preChars) + headSelectionOffset,
+        number.length - headSelectionOffset
+      );
     }
   }
 
@@ -1190,13 +993,232 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
   }
 
-  autocomplete(options: AutocompleteOptions): unknown {
-    return dAutocomplete.setupAutocomplete(
+  autocomplete(options: AutocompleteOptions | "destroy"): unknown {
+    if (options === "destroy") {
+      this.autocompletes.forEach((modifier) => destroy(modifier));
+      this.autocompletes = [];
+      return;
+    }
+
+    const modifier = dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,
       options
     );
+    this.autocompletes.push(modifier);
+    return modifier;
+  }
+
+  #applyWholeLineSurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    opts: SurroundOptions
+  ): void {
+    const [hval, hlen] = getHead(head);
+    const lines = sel.value.split("\n");
+    const formattedLines = lines.filter(
+      (line) => opts.applyEmptyLines || line.length > 0
+    );
+    const removing =
+      formattedLines.length > 0 &&
+      formattedLines.every(
+        (line) => line.startsWith(hval) && line.endsWith(tail)
+      );
+
+    const contents = lines
+      .map((line) => {
+        if (!opts.applyEmptyLines && line.length === 0) {
+          return line;
+        }
+        if (removing) {
+          return line.slice(hlen, tail.length ? -tail.length : undefined);
+        }
+        let content = line;
+        if (hval) {
+          content = content.replaceAll(hval, "");
+        }
+        if (tail) {
+          content = content.replaceAll(tail, "");
+        }
+        return `${hval}${content}${tail}`;
+      })
+      .join("\n");
+
+    this._insertAt(sel.start, sel.end, contents);
+
+    if (lines.length === 1) {
+      this.selectText(
+        sel.start + (removing ? 0 : hlen),
+        removing ? contents.length : contents.length - hlen - tail.length
+      );
+    } else {
+      this.selectText(sel.start, contents.length);
+    }
+  }
+
+  #expandToLines(sel: SelectedText): SelectedText {
+    const value = this.value;
+    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
+    const endAnchor =
+      sel.end > sel.start && value[sel.end - 1] === "\n"
+        ? sel.end - 1
+        : sel.end;
+    const nextNewline = value.indexOf("\n", endAnchor);
+    const end = nextNewline === -1 ? value.length : nextNewline;
+
+    return {
+      start,
+      end,
+      value: value.slice(start, end),
+      pre: value.slice(0, start),
+      post: value.slice(end),
+      lineVal: value.slice(start, end),
+    };
+  }
+
+  #isAfterStartedCodeFence(beforeText: string): boolean {
+    let openingFence: string | undefined;
+
+    for (const [, fence, trailingText] of beforeText.matchAll(
+      /^ {0,3}(`{3,}|~{3,})(.*)$/gm
+    )) {
+      if (openingFence) {
+        if (fence.startsWith(openingFence) && !trailingText.trim()) {
+          openingFence = undefined;
+        }
+      } else if (fence[0] === "~" || !trailingText.includes("`")) {
+        openingFence = fence;
+      }
+    }
+
+    return Boolean(openingFence);
+  }
+
+  // perform the same operation over many lines of text
+  _getMultilineContents(
+    lines: string[],
+    head: string | ((previous?: string) => string),
+    hval: string,
+    hlen: number,
+    tail: string,
+    tlen: number,
+    opts?: SurroundOptions
+  ): string {
+    let operation = OP.NONE;
+
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
+    return lines
+      .map((l) => {
+        if (!applyEmptyLines && l.length === 0) {
+          return l;
+        }
+
+        if (
+          operation !== OP.ADDED &&
+          l.slice(0, hlen) === hval &&
+          (tlen === 0 || l.slice(-tlen) === tail)
+        ) {
+          operation = OP.REMOVED;
+          if (tlen === 0) {
+            const result = l.slice(hlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          } else if (l.slice(-tlen) === tail) {
+            const result = l.slice(hlen, -tlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          }
+        } else if (operation === OP.NONE) {
+          operation = OP.ADDED;
+        } else if (operation === OP.REMOVED) {
+          return l;
+        }
+
+        const result = `${hval}${l}${tail}`;
+        [hval, hlen] = getHead(head, hval);
+        return result;
+      })
+      .join("\n");
+  }
+
+  _addBlock(sel: SelectedText, text: string): void {
+    text = (text || "").trim();
+    if (text.length === 0) {
+      return;
+    }
+
+    let start = sel.start;
+    let end = sel.end;
+
+    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
+    if (newLinesBeforeSelection) {
+      start -= newLinesBeforeSelection;
+    }
+
+    if (sel.pre.length > 0) {
+      text = `\n\n${text}`;
+    }
+
+    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
+    if (newLinesAfterSelection) {
+      end += newLinesAfterSelection;
+    }
+
+    if (sel.post.length > 0) {
+      text = `${text}\n\n`;
+    } else {
+      text = `${text}\n`;
+    }
+
+    this._insertAt(start, end, text);
+    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    schedule("afterRender", this, this.blurAndFocus);
+  }
+
+  _insertAt(
+    start: number,
+    end: number,
+    text: string,
+    opts: InsertAtOptions = {}
+  ): void {
+    insertAtTextarea(this.textarea, start, end, text, opts);
+  }
+
+  /**
+   * Removes the provided char from the provided str up
+   * until the limit, or until a character that is _not_
+   * the provided one is encountered.
+   */
+  _deindentLine(str: string, char: string, limit: number): string {
+    let eaten = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (eaten < limit && str[i] === char) {
+        eaten += 1;
+      } else {
+        return str.slice(eaten);
+      }
+    }
+    return str;
+  }
+
+  _updateListNumbers(text: string, currentNumber: number): string {
+    return text
+      .split("\n")
+      .map((line) => {
+        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
+          const result = line.replace(
+            `${currentNumber}`,
+            `${currentNumber + 1}`
+          );
+          currentNumber += 1;
+          return result;
+        }
+        return line;
+      })
+      .join("\n");
   }
 }
 
@@ -1268,6 +1290,74 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
     this.textManipulation = textManipulation;
   }
 
+  insert(file: UppyFile): void {
+    const placeholder = this.#uploadPlaceholder(
+      file,
+      this.composer.model.reply
+    );
+
+    this.textManipulation.insertText(placeholder);
+
+    this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
+  }
+
+  progress(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
+    placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
+      filename: file.name,
+    })}]()\n`;
+
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder,
+      placeholderData.processingPlaceholder
+    );
+
+    // Safari applies user-defined replacements to text inserted programmatically.
+    // One of the most common replacements is ... -> …, so we take care of the case
+    // where that transformation has been applied to the original placeholder
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder.replace("...", "…"),
+      placeholderData.processingPlaceholder
+    );
+  }
+
+  progressComplete(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
+
+    // A preprocessor can complete a file without reporting progress for it, in
+    // which case no processing placeholder was ever shown.
+    if (placeholderData.processingPlaceholder === undefined) {
+      return;
+    }
+
+    this.textManipulation.replaceText(
+      placeholderData.processingPlaceholder,
+      placeholderData.uploadPlaceholder
+    );
+  }
+
+  cancelAll(): void {
+    Object.values(this.#placeholders).forEach((data) => {
+      this.textManipulation.replaceText(data.uploadPlaceholder, "");
+    });
+  }
+
+  cancel(file: UppyFile): void {
+    if (this.#placeholders[file.id]) {
+      this.textManipulation.replaceText(
+        this.#placeholders[file.id].uploadPlaceholder,
+        ""
+      );
+    }
+  }
+
+  success(file: UppyFile, markdown: string): void {
+    this.textManipulation.replaceText(
+      this.#placeholders[file.id].uploadPlaceholder.trim(),
+      markdown
+    );
+  }
+
   #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {
     const clipboard = i18n("clipboard");
     const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
@@ -1322,66 +1412,5 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
   #filenamePlaceholder(data: UppyFile): string {
     return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
-  }
-
-  insert(file: UppyFile): void {
-    const placeholder = this.#uploadPlaceholder(
-      file,
-      this.composer.model.reply
-    );
-
-    this.textManipulation.insertText(placeholder);
-
-    this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
-  }
-
-  progress(file: UppyFile): void {
-    const placeholderData = this.#placeholders[file.id]!;
-    placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
-      filename: file.name,
-    })}]()\n`;
-
-    this.textManipulation.replaceText(
-      placeholderData.uploadPlaceholder,
-      placeholderData.processingPlaceholder
-    );
-
-    // Safari applies user-defined replacements to text inserted programmatically.
-    // One of the most common replacements is ... -> …, so we take care of the case
-    // where that transformation has been applied to the original placeholder
-    this.textManipulation.replaceText(
-      placeholderData.uploadPlaceholder.replace("...", "…"),
-      placeholderData.processingPlaceholder
-    );
-  }
-
-  progressComplete(file: UppyFile): void {
-    const placeholderData = this.#placeholders[file.id]!;
-    this.textManipulation.replaceText(
-      placeholderData.processingPlaceholder,
-      placeholderData.uploadPlaceholder
-    );
-  }
-
-  cancelAll(): void {
-    Object.values(this.#placeholders).forEach((data) => {
-      this.textManipulation.replaceText(data.uploadPlaceholder, "");
-    });
-  }
-
-  cancel(file: UppyFile): void {
-    if (this.#placeholders[file.id]) {
-      this.textManipulation.replaceText(
-        this.#placeholders[file.id].uploadPlaceholder,
-        ""
-      );
-    }
-  }
-
-  success(file: UppyFile, markdown: string): void {
-    this.textManipulation.replaceText(
-      this.#placeholders[file.id].uploadPlaceholder.trim(),
-      markdown
-    );
   }
 }

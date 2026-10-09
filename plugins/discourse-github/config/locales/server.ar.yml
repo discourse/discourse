@@ -21,7 +21,9 @@ ar:
     github_gold_badge_min_commits: "أقل عدد من الإرسالات للحصول على الشارة الذهبية"
     errors:
       invalid_badge_repo: "يجب عليك إدخال عنوان URL على GitHub أو اسم المستودع بالتنسيق github_user/repository_name"
+      invalid_badge_repo_value: "'%{repo}' ليس عنوان URL على GitHub أو اسم مستودع صالحًا. استخدام التنسيق github_user/repository_name."
       invalid_github_linkback_access_token: "يجب عليك إدخال رمز وصول صالح إلى رابط GitHub والذي يمكنه الوصول إلى مستودعات الشارة التي أدخلتها."
+      invalid_github_linkback_access_token_for_repo: "تعذَّر على رمز وصول الارتباط العكسي لـ GitHub الوصول إلى مستودع '%{repo}'. تأكَّد من صحة الرمز وأن اسم المستودع صحيح ويمكن الوصول إليه."
   github_linkback:
     commit_template: |
       تم ذكر هذا الإرسال في **%{title}**. قد تكون هناك تفاصيل ذات صلة هناك:

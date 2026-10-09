@@ -16,6 +16,16 @@ lt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Paklauskite AI"
+        ask_ai:
+          title: "Paklauskite AI"
+          reports:
+            retry_questions: "Bandykite dar kartą"
+          date: "Data"
+          outcomes:
+            failed: "Nepavyko"
         emotion:
           title: "Emocija"
         reports:
@@ -131,6 +141,12 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      copied: "Nukopijuota"
+      ai_decoded_transcript:
+        tool: "Įrankis"
+        type: "Tipas"
+        error: "Klaida"
+        response: "Atsakymas"
       ai_tool_approval:
         loading: "Kraunasi..."
         tool: "Veiksmai"
@@ -171,8 +187,10 @@ lt:
             backfill: "Užpildymas"
         search:
           name: "Paieška"
+          ask_ai: "Paklauskite AI"
           setting_groups:
             settings: "Pagrindiniai nustatymai"
+            access_control: "Prieigos kontrolė"
         embeddings:
           setting_groups:
             model_settings: "Modelio nustatymai"
@@ -307,6 +325,36 @@ lt:
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."
+      logs:
+        short_title: "Įrašai"
+        apply: "Kandidatuoti"
+        successful: "Sėkmingas"
+        failed: "Nepavyko"
+        unknown: "Nežinoma"
+        time: "Laikas"
+        when: "Kada"
+        model: "Modelis"
+        request: "Užklausa"
+        user: "Narys"
+        context: "Kontekstas"
+        topic: "Tema"
+        post: "Įrašai"
+        post_short: "Įrašas %{id}"
+        duration: "Trukmė"
+        actions: "Veiksmai"
+        view_details: "Detalės"
+        periods:
+          day: "Paskutinės 24 valandos"
+          week: "Paskutinės 7 dienos"
+          custom: "Išskirtinės"
+        detail:
+          request: "Užklausa"
+          response: "Atsakymas"
+          context: "Kontekstas"
+        retention:
+          summary_stage: "Santrauka"
+          deleted_stage: "Ištrinta"
+          save: "Saugoti"
       ai_agent:
         name: "Vardas"
         edit: "Redaguoti"
@@ -370,6 +418,9 @@ lt:
           required: "Privalomi"
       llms:
         display_name: "Vardas"
+        vision_modes:
+          disabled:
+            title: "Uždrausta"
         save: "Saugoti"
         edit: "Redaguoti"
         delete: Pašalinti
@@ -427,6 +478,7 @@ lt:
       ai_bot:
         llm: "Modelis:"
         debug_ai_modal:
+          duration_label: "Trukmė:"
           request: "Užklausa"
           response: "Atsakymas"
           next_log: "Kitas"
@@ -457,11 +509,17 @@ lt:
         chat:
           summarize: "Apibendrinti"
       discobot_discoveries:
-        regular_results: "Temos"
-        collapse: "Suskleisti"
-        tooltip:
-          actions:
-            disable: "Išjungti"
+        main_title: "Paklauskite AI"
+        legacy:
+          regular_results: "Temos"
+          collapse: "Suskleisti"
+          tooltip:
+            actions:
+              disable: "Išjungti"
+        search_type: "AI"
+        search_all_topics: "Visos temos"
+        search_messages: "Žinutės"
+        ask_ai: "AI"
     review:
       types:
         reviewable_ai_tool_action:

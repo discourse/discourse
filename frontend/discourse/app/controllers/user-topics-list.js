@@ -17,7 +17,6 @@ import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
   @service site;
-  @service siteSettings;
 
   @tracked model;
   @tracked listContext = "user-activity";
@@ -61,11 +60,7 @@ export default class UserTopicsListController extends Controller {
   }
 
   get showBottomDismissButtons() {
-    return (
-      !this.site.mobileView ||
-      (this.site.mobileView &&
-        !this.siteSettings.floating_dismiss_topics_on_mobile)
-    );
+    return !this.site.mobileView;
   }
 
   @computed("model.topics.length", "incomingCount")
@@ -81,6 +76,18 @@ export default class UserTopicsListController extends Controller {
   @computed("filter", "model.topics.length")
   get showDismissRead() {
     return this.filter === UNREAD_FILTER && this.model?.topics?.length;
+  }
+
+  get resolvedAscending() {
+    if (isNone(this.ascending)) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return this.ascending.toString() === "true";
+    }
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   subscribe() {
@@ -99,18 +106,6 @@ export default class UserTopicsListController extends Controller {
       this.ascending = false;
     }
     this.order = sortBy;
-  }
-
-  get resolvedAscending() {
-    if (isNone(this.ascending)) {
-      return this.model.get("params.ascending") === "true";
-    } else {
-      return this.ascending.toString() === "true";
-    }
-  }
-
-  get resolvedOrder() {
-    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   @action

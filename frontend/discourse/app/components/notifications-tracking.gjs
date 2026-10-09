@@ -72,6 +72,14 @@ class NotificationsTrackingTrigger extends Component {
 }
 
 export default class NotificationsTracking extends Component {
+  get selectedLevel() {
+    return buttonDetails(this.args.levelId);
+  }
+
+  get levels() {
+    return this.args.levels ?? allLevels;
+  }
+
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
@@ -107,28 +115,23 @@ export default class NotificationsTracking extends Component {
     return this.args.levelId === level.id ? "-selected" : "";
   }
 
-  get selectedLevel() {
-    return buttonDetails(this.args.levelId);
-  }
-
-  get levels() {
-    return this.args.levels ?? allLevels;
-  }
-
   <template>
     <DMenu
+      data-level-id={{this.selectedLevel.id}}
+      data-level-name={{this.selectedLevel.key}}
+      ...attributes
+      @autofocus={{false}}
+      @contentClass={{@contentClass}}
       @identifier="notifications-tracking"
       @modalForMobile={{true}}
+      @onRegisterApi={{this.registerDmenuApi}}
+      @title={{@title}}
       @triggerClass={{dConcatClass
         "btn-default"
         "btn-icon"
         "notifications-tracking-trigger-btn"
         @triggerClass
       }}
-      @contentClass={{@contentClass}}
-      @onRegisterApi={{this.registerDmenuApi}}
-      @title={{@title}}
-      @autofocus={{false}}
       @triggerComponent={{component
         NotificationsTrackingTrigger
         showFullTitle=@showFullTitle
@@ -137,9 +140,6 @@ export default class NotificationsTracking extends Component {
         suffix=@suffix
         prefix=@prefix
       }}
-      data-level-id={{this.selectedLevel.id}}
-      data-level-name={{this.selectedLevel.key}}
-      ...attributes
     >
       <:content>
         <DDropdownMenu as |dropdown|>
@@ -150,9 +150,9 @@ export default class NotificationsTracking extends Component {
                   "notifications-tracking-btn"
                   (this.isSelectedClass level)
                 }}
-                @action={{fn this.setNotificationLevel level.id}}
                 data-level-id={{level.id}}
                 data-level-name={{level.key}}
+                @action={{fn this.setNotificationLevel level.id}}
               >
                 <div class="notifications-tracking-btn__icons">
                   <PluginOutlet

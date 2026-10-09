@@ -148,11 +148,13 @@ module TopicGuardian
     return false if topic.blank?
     return false if !is_staff? && !can_see_topic?(topic, false)
 
-    if is_category_group_moderator?(topic.category) ||
-         user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    if is_category_group_moderator?(topic.category) || can_delete_all_posts_and_topics?
       topic.deleted_at?
     else
-      can_recover_post?(topic.ordered_posts.first)
+      original_post = topic.first_post_with_deleted
+      return false if original_post&.trashed? && !can_see_deleted_post?(original_post)
+
+      can_recover_post?(original_post)
     end
   end
 
@@ -161,7 +163,7 @@ module TopicGuardian
     return false if topic.is_category_topic?
     return false if Discourse.static_doc_topic_ids.include?(topic.id)
     return true if is_category_group_moderator?(topic.category) && can_see_topic?(topic)
-    return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    return true if can_delete_all_posts_and_topics?
 
     is_my_own?(topic) && can_delete_own_topic?(topic)
   end
@@ -209,8 +211,7 @@ module TopicGuardian
   end
 
   def can_see_deleted_topics?(category)
-    is_category_group_moderator?(category) ||
-      user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    is_category_group_moderator?(category) || can_delete_all_posts_and_topics?
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
@@ -220,43 +221,29 @@ module TopicGuardian
     return topic_ids if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
     return [] if topic_ids.blank?
 
-    default_scope = Topic.unscoped.where(id: topic_ids)
+    visible_topic_scope(
+      Topic.unscoped.where(id: topic_ids),
+      deleted: hide_deleted ? :visible : :include,
+    ).pluck(:id)
+  end
 
-    # When `hide_deleted` is `true`, hide deleted topics if user is not staff or category moderator
-    if hide_deleted && !is_staff?
+  def visible_topic_scope(scope, deleted: :visible)
+    return scope if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
+
+    if deleted == :visible && !is_staff?
+      visible = scope.where(deleted_at: nil)
       if category_group_moderation_allowed?
-        default_scope = default_scope.where(<<~SQL)
-          (
-            deleted_at IS NULL OR
-            (
-              deleted_at IS NOT NULL
-              AND topics.category_id IN (#{category_group_moderator_scope.select(:id).to_sql})
-            )
-          )
-        SQL
-      else
-        default_scope = default_scope.where("deleted_at IS NULL")
+        visible = visible.or(scope.where(category_id: category_group_moderator_scope.select(:id)))
       end
+      scope = visible
     end
 
-    # Filter out topics with shared drafts if user cannot see shared drafts
-    if !can_see_shared_draft?
-      default_scope =
-        default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
-    end
+    scope = scope.where.missing(:shared_draft) if !can_see_shared_draft?
 
-    all_topics_scope =
-      if authenticated?
-        Topic.unscoped.merge(
-          secured_regular_topic_scope(default_scope, topic_ids: topic_ids).or(
-            private_message_topic_scope(default_scope),
-          ),
-        )
-      else
-        Topic.unscoped.merge(secured_regular_topic_scope(default_scope, topic_ids: topic_ids))
-      end
+    regular_topics = secured_regular_topic_scope(scope)
+    return regular_topics if !authenticated?
 
-    all_topics_scope.pluck(:id)
+    regular_topics.or(private_message_topic_scope(scope.private_messages))
   end
 
   def can_see_topic?(topic, hide_deleted = true)
@@ -383,7 +370,7 @@ module TopicGuardian
     topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
   end
 
-  def secured_regular_topic_scope(scope, topic_ids:)
+  def secured_regular_topic_scope(scope)
     secured_scope = Topic.unscoped.secured(self)
 
     # Staged users are allowed to see their own topics in read restricted categories when Category#email_in and
@@ -399,12 +386,10 @@ module TopicGuardian
         AND categories.email_in IS NOT NULL
         AND categories.email_in_allow_strangers
         AND topics.user_id = :user_id
-        AND topics.id IN (:topic_ids)
       )
       SQL
 
-      secured_scope =
-        secured_scope.or(Topic.unscoped.where(sql, user_id: user.id, topic_ids: topic_ids))
+      secured_scope = secured_scope.or(Topic.unscoped.where(sql, user_id: user.id))
     end
 
     scope.listable_topics.merge(secured_scope)

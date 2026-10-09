@@ -5,17 +5,17 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.email_appearance.title"}}
     @descriptionLabel={{i18n
       "admin.config.email_appearance.header_description"
     }}
     @shouldDisplay={{true}}
+    @titleLabel={{i18n "admin.config.email_appearance.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/customize/email_style"
         @label={{i18n "admin.customize.email_style.heading"}}
+        @path="/admin/customize/email_style"
       />
     </:breadcrumbs>
     <:tabs>

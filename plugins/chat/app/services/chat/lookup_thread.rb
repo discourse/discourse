@@ -48,7 +48,8 @@ module Chat
     end
 
     def invalid_access(guardian:, thread:)
-      guardian.can_preview_chat_channel?(thread.channel)
+      guardian.can_join_chat_channel?(thread.channel) ||
+        guardian.can_preview_anonymous_public_chat_channel?(thread.channel)
     end
 
     def threading_enabled_for_channel(thread:)

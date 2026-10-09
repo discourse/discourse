@@ -10,15 +10,15 @@ export default class Enum extends Component {
     <div ...attributes>
       <ComboBox
         @content={{this.setting.validValues}}
-        @value={{this.value}}
-        @onChange={{fn (mut this.value)}}
-        @valueProperty={{this.setting.computedValueProperty}}
         @nameProperty={{this.setting.computedNameProperty}}
+        @onChange={{fn (mut this.value)}}
         @options={{hash
           castInteger=true
           allowAny=this.setting.allowsNone
           disabled=@disabled
         }}
+        @value={{this.value}}
+        @valueProperty={{this.setting.computedValueProperty}}
       />
 
       {{this.preview}}

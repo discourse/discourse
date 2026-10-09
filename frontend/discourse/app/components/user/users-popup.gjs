@@ -15,7 +15,7 @@ const PAGE_SIZE = 30;
 const FALLBACK_SKELETON_ROWS = 3;
 
 const SkeletonRow = <template>
-  <div class="users-popup__item users-popup__skeleton-item" aria-hidden="true">
+  <div aria-hidden="true" class="users-popup__item users-popup__skeleton-item">
     <div class="users-popup__skeleton-avatar"></div>
     <div class="users-popup__user-info">
       <div class="users-popup__skeleton-name"></div>
@@ -81,6 +81,19 @@ export default class UsersPopup extends Component {
     return Array.from({ length: count });
   }
 
+  /**
+   * The list is fetched after render, so at insertion time the popup holds no
+   * focusable element for a float's own focus handling to land on. Focusing the
+   * container instead puts a keyboard user inside the dialog — where the tab
+   * trap and Escape apply, and where closing returns focus to the trigger.
+   */
+  @action
+  autofocus(element) {
+    if (this.args.autofocus) {
+      element.focus({ preventScroll: true });
+    }
+  }
+
   @action
   async loadInitial(element) {
     this.#bodyElement = element;
@@ -119,7 +132,12 @@ export default class UsersPopup extends Component {
   }
 
   <template>
-    <div class="users-popup" ...attributes>
+    <div
+      class="users-popup"
+      tabindex="-1"
+      ...attributes
+      {{didInsert this.autofocus}}
+    >
       <div class="users-popup__sticky-header">
         {{#if this.site.mobileView}}
           <div class="users-popup__title">{{@titleText}}</div>
@@ -144,19 +162,20 @@ export default class UsersPopup extends Component {
               {{#if (has-block "avatar")}}
                 {{yield user to="avatar"}}
               {{else}}
-                <DUserAvatar @user={{user}} @size="small" />
+                <DUserAvatar @size="small" @user={{user}} />
               {{/if}}
               <div class="users-popup__user-info">
                 <DUserLink
-                  @username={{user.username}}
                   class="users-popup__name"
+                  @username={{user.username}}
                 >
                   {{this.displayName user}}
                 </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
                   <DUserLink
-                    @username={{user.username}}
                     class="users-popup__username"
+                    @ariaHidden={{true}}
+                    @username={{user.username}}
                   >
                     @{{this.displayUsername user}}
                   </DUserLink>

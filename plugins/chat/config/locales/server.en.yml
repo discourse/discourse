@@ -154,6 +154,10 @@ en:
         ignore:
           title: "Ignore flag"
           description: "Remove it from the queue without taking action."
+        unsilence_user:
+          title: "Unsilence author"
+          description: "Lift the silence on the author. This flag stays in the queue."
+          complete: "Author unsilenced."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
@@ -254,14 +258,47 @@ en:
       default_deny_label: "Deny"
     errors:
       send_chat_message:
-        invalid_params: "Invalid params: %{errors}"
+        invalid_params: "The message is invalid: %{errors}"
         channel_not_found: "Channel not found: %{channel_id}"
-        failed: "Failed to send chat message."
+        channel_blocked: "Can't post in channel %{channel_id}: %{reason}"
+        failed: "Couldn't send the chat message (failed step: %{step})."
+        recipient_blank: "No recipient usernames were given."
+        recipient_staged: "'%{username}' is a staged user and can't use chat."
+        recipient_suspended: "'%{username}' is suspended and can't receive direct messages."
+        recipient_inactive: "'%{username}' hasn't activated their account yet."
+        recipient_chat_disabled: "'%{username}' has disabled chat in their preferences."
+        recipient_cannot_chat: "'%{username}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
+        sender_anonymous: "Direct messages can't be sent anonymously. Choose a user as the sender."
+        sender_chat_disabled: "Sender '%{sender}' has disabled chat in their preferences."
+        sender_cannot_chat: "Sender '%{sender}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
+        sender_cannot_create_dm: "Sender '%{sender}' isn't allowed to send direct messages (see the 'direct message enabled groups' setting)."
+        sender_dms_disabled: "Sender '%{sender}' has disabled personal messages in their preferences."
+        user_blocked: "'%{sender}' can't send a direct message to '%{username}': %{reason}"
+        group_blocked: "'%{sender}' can't send a group direct message to %{usernames}: %{reason}"
       chat_approval:
         channel_not_found: "Chat message failed: channel %{channel_id} not found."
         invalid_params: "Chat message failed: %{errors}"
-        failed: "Chat message failed: %{steps}"
+        channel_blocked: "Chat message failed: can't post in channel %{channel_id}: %{reason}"
+        failed_step: "Chat message failed (failed step: %{step})."
         timeout_must_be_positive: "Timeout minutes must be greater than 0."
+        invalid_timeout_action: "Invalid timeout action: %{action}."
+        buttons_required: "At least one chat approval button is required."
+        too_many_buttons: "Chat approval supports at most %{max} buttons."
+        button_label_required: "Chat approval button %{position} requires a label."
+        button_label_too_long: "Chat approval button %{position} label must be %{max} characters or fewer."
+        button_value_required: "Chat approval button %{position} requires a value."
+        button_value_too_long: "Chat approval button %{position} value must be %{max} characters or fewer."
+        button_style_invalid: "Chat approval button %{position} style must be one of: %{styles}."
+        button_icon_too_long: "Chat approval button %{position} icon must be %{max} characters or fewer."
+    hints:
+      send_chat_message:
+        self_message: "Sender and recipient are both '%{username}', so the message was posted to their personal chat."
+        preferences_bypassed: "'%{username}' doesn't accept direct messages from '%{sender}', but the message was delivered because the sender is staff."
+    logs:
+      send_chat_message:
+        sent_to_channel: "Item %{item_index}: sent message %{message_id} to channel %{channel_id}."
+        sent_to_user: "Item %{item_index}: '%{sender}' sent message %{message_id} to '%{username}'."
+        sent_to_group: "Item %{item_index}: '%{sender}' sent message %{message_id} to the group direct message with %{usernames}."
 
   reviewable_score_types:
     needs_review:

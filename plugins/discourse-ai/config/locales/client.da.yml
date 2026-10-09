@@ -8,6 +8,10 @@ da:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dato"
+          outcomes:
+            failed: "Fejlet"
         reports:
           filters:
             sort_by:
@@ -42,6 +46,11 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopieret"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Fejl"
+        response: "Svar"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
@@ -129,6 +138,38 @@ da:
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
+      logs:
+        short_title: "Logs"
+        apply: "Anvend"
+        successful: "Gennemført"
+        failed: "Fejlet"
+        unknown: "Ukendt"
+        time: "Tidspunkt"
+        when: "Hvorår"
+        model: "Model"
+        request: "Anmod om medlemskab"
+        provider: "Udbyder"
+        user: "Bruger"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Indlæg"
+        post_short: "Indlæg %{id}"
+        duration: "Varighed"
+        actions: "Handlinger"
+        view_details: "Detaljer"
+        periods:
+          day: "Seneste 24 timer"
+          week: "Seneste 7 dage"
+          custom: "Tilpasset"
+        detail:
+          request: "Anmod om medlemskab"
+          response: "Svar"
+          context: "Kontekst"
+          network_error: "Netværksfejl"
+        retention:
+          summary_stage: "Statistik"
+          deleted_stage: "Slettet"
+          save: "Gem"
       ai_agent:
         name: "Navn"
         edit: "Rediger"
@@ -197,6 +238,9 @@ da:
           required: "Obligatoriske"
       llms:
         display_name: "Navn"
+        vision_modes:
+          disabled:
+            title: "Deaktiveret"
         save: "Gem"
         edit: "Rediger"
         delete: Slet
@@ -250,6 +294,7 @@ da:
       ai_bot:
         llm: "Model:"
         debug_ai_modal:
+          duration_label: "Varighed:"
           request: "Anmod om medlemskab"
           response: "Svar"
           next_log: "Næste"
@@ -276,8 +321,11 @@ da:
         chat:
           summarize: "Opsummer"
       discobot_discoveries:
-        regular_results: "Emner"
-        collapse: "Fold sammen"
-        tooltip:
-          actions:
-            disable: "Deaktiver"
+        legacy:
+          regular_results: "Emner"
+          collapse: "Fold sammen"
+          tooltip:
+            actions:
+              disable: "Deaktiver"
+        search_all_topics: "Alle emner"
+        search_messages: "Beskeder"

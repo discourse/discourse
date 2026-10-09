@@ -46,13 +46,13 @@ class UserOptionSerializer < ApplicationSerializer
              :sidebar_link_to_filtered_list,
              :sidebar_show_count_of_new_items,
              :watched_precedence_over_muted,
-             :topics_unread_when_closed,
              :composition_mode,
              :interface_color_mode,
              :show_original_content,
              :send_shortcut,
              :automatically_translate,
-             :understood_languages
+             :understood_languages,
+             :hidden_composer_toolbar_buttons
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

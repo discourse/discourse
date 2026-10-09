@@ -19,8 +19,8 @@ export default <template>
 
     <form class="groups-form form-vertical">
       <GroupsFormProfileFields
-        @model={{@controller.model}}
         @disableSave={{@controller.saving}}
+        @model={{@controller.model}}
       >
         <div class="control-group">
           <label class="control-label" for="owner-selector">{{i18n
@@ -28,11 +28,11 @@ export default <template>
             }}</label>
 
           <EmailGroupUserChooser
+            class="input-xxlarge"
             @id="owner-selector"
-            @value={{@controller.splitOwnerUsernames}}
             @onChange={{@controller.updateOwnerUsernames}}
             @options={{hash filterPlaceholder="groups.selector_placeholder"}}
-            class="input-xxlarge"
+            @value={{@controller.splitOwnerUsernames}}
           />
         </div>
 
@@ -42,11 +42,11 @@ export default <template>
             }}</label>
 
           <EmailGroupUserChooser
+            class="input-xxlarge"
             @id="member-selector"
-            @value={{@controller.splitUsernames}}
             @onChange={{@controller.updateUsernames}}
             @options={{hash filterPlaceholder="groups.selector_placeholder"}}
-            class="input-xxlarge"
+            @value={{@controller.splitUsernames}}
           />
         </div>
       </GroupsFormProfileFields>
@@ -57,11 +57,11 @@ export default <template>
       <GroupFlairVisibilityWarning @model={{@controller.model}} />
       <div class="control-group buttons">
         <DButton
+          class="btn-primary group-form-save"
+          type="submit"
           @action={{@controller.save}}
           @disabled={{@controller.saving}}
           @label="admin.groups.new.create"
-          type="submit"
-          class="btn-primary group-form-save"
         />
 
         <LinkTo @route="groups">

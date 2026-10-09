@@ -14,6 +14,11 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/credentials" => "admin#index"
       get "/workflows/new" => "admin#index"
       get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/nodes/:node_id" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            node_id: %r{[^/]+},
+          }
       get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/:id/executions/:execution_id" => "admin#index",
           :constraints => {
@@ -89,6 +94,7 @@ DiscourseWorkflows::Engine.routes.draw do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
     post "/trigger-post-button" => "post_button#create"
     post "/modal-responses" => "modal_responses#create"
+    post "/modal-dismissals" => "modal_dismissals#create"
   end
 
   scope "/workflows", defaults: { format: :json } do

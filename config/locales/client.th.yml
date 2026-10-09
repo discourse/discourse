@@ -315,12 +315,19 @@ th:
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
     admin_onboarding_banner:
-      select_theme:
-        use_theme: "ใช้ธีมที่เลือก"
-        enabled: "เลือก"
-        applying_theme: "กำลังใช้ธีม..."
       start_posting:
         back: "กลับ"
+    design_wizard:
+      back: "กลับ"
+      next: "ต่อไป"
+      sections:
+        theme: "ธีม"
+        search: "ค้นหา"
+      theme:
+        selected: "เลือก"
+      homepage:
+        topics: "หัวข้อ"
+        categories: "หมวดหมู่"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -531,6 +538,9 @@ th:
       user_label: "ผู้ใช้"
       timeline:
         target_deleted: "โพสต์ถูกลบ"
+      author_penalty:
+        toast:
+          undo: "เลิกทำ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -924,6 +934,12 @@ th:
       ignored_users_instructions: "ระงับโพสต์ การแจ้งเตือน และข้อความส่วนตัวทั้งหมดจากผู้ใช้เหล่านี้"
       tracked_topics_link: "แสดง"
       apps: "แอป"
+      mcp_authorizations:
+        details: "รายละเอียด"
+        never: "ไม่เคย"
+        status: "สถานะ"
+        statuses:
+          active: "ใช้งานอยู่"
       api_approved: "อนุมัติแล้ว:"
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
       api_expires_never: "ไม่เลย"
@@ -1440,7 +1456,10 @@ th:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "เอ็นเทอร์"
+      delete: "ลบ"
+      home: "หน้าแรก"
     category_row:
+      subcategories: "+ หมวดหมู่ย่อย"
       topic_count:
         other: "%{count}กระทู้ในหมวดหมู่นี้"
     select_kit:
@@ -1671,6 +1690,7 @@ th:
       categories: "หมวดหมู่"
       tags: "แท็ก"
       type:
+        default: "โพส"
         users: "ผู้ใช้"
         categories: "หมวดหมู่"
       context:
@@ -2069,7 +2089,6 @@ th:
       reply_as_new_topic: "ตอบด้วยหัวข้อที่ลิงค์ไว้"
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
-      show_full: "แสดงโพสต์ทั้งหมด"
       collapse: "ย่อ"
       expand_collapse: "ขยาย/ย่อ"
       locked: "ทีมงานได้ปิดโพสต์นี้จากการแก้ไข"
@@ -2345,6 +2364,8 @@ th:
     filters:
       with_topics: "%{filter} กระทู้"
       with_category: "%{filter} %{category} กระทู้"
+      filter:
+        reset: "ล้าง"
       latest:
         title: "ล่าสุด"
         title_with_count:
@@ -2411,11 +2432,8 @@ th:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1}หรือ%{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "ปุ่มลัดของคีย์บอร์ด"
       description_header: "รายละเอียด"
       search_aliases:
@@ -2663,6 +2681,11 @@ th:
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
         group_other: "อื่นๆ"
+        related_items:
+          users:
+            title: "ผู้ใช้"
+          labels:
+            user: "ผู้ใช้"
       config_sections:
         account:
           title: "บัญชี"
@@ -2695,6 +2718,53 @@ th:
       config:
         developer:
           title: "นักพัฒนา"
+        mcp:
+          tabs:
+            access: "การเข้าถึง"
+            activity: "กิจกรรม"
+          overview:
+            status: "สถานะ"
+          access:
+            title: "การเข้าถึง"
+            group: "กลุ่ม"
+            groups: "กลุ่ม"
+            actions: "การกระทำ"
+            edit: "แก้ไข"
+            delete: "ลบ"
+          primitives:
+            group_by_options:
+              kind: "ชนิด"
+            kind: "ชนิด"
+          clients:
+            actions: "การกระทำ"
+            block: "บล็อก"
+          authorizations:
+            user: "ผู้ใช้"
+            status: "สถานะ"
+            actions: "การกระทำ"
+          activity:
+            time: "เวลา"
+            user: "ผู้ใช้"
+            duration: "ช่วงเวลา"
+          values:
+            server_status:
+              disabled: "ปิดใช้งานแล้ว"
+            client_trust:
+              approved: "อนุมัติ"
+            authorization_status:
+              active: "ใช้งานอยู่"
+            activity_outcome:
+              success: "สำเร็จ"
+              error: "ผิดพลาด"
+            primitive_state:
+              disabled: "ปิดใช้งานแล้ว"
+            primitive_kind:
+              all: "ทุกประเภท"
+            filter:
+              all: "ทั้งหมด"
+          never: "ไม่เคย"
+          actions:
+            revoke: "เอาออก"
         emojis:
           title: "Emoji"
         files:
@@ -2788,11 +2858,17 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
+      site_traffic_explorer:
+        metric_information: "เกี่ยวกับ %{metric}"
+        apply: "นำไปใช้"
+        filters:
+          ip: "ที่อยู่ไอพี"
+        series:
+          anonymous_human: "ไม่ระบุชื่อ"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
-        critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         github: "กิตฮับ"
@@ -2827,6 +2903,8 @@ th:
               share: "แบ่งปัน"
             whos_posting:
               staff: "ทีมงาน"
+              modal:
+                apply: "บันทึก"
             trust_level_pipeline:
               trust_levels:
                 "0": "ใหม่"
@@ -2837,6 +2915,9 @@ th:
             table:
               searches: "ค้นหา"
               status: "สถานะ"
+          system:
+            title: "ระบบ"
+            status: "สถานะ"
         reports_section:
           header_action: "จัดการ"
           modal:
@@ -2844,6 +2925,7 @@ th:
         site_traffic:
           series:
             anonymous: "ไม่ระบุชื่อ"
+          crawler_learn_more: "เรียนรู้เพิ่มเติม"
         period:
           last_7_days: "7 วันที่ผ่านมา"
           last_30_days: "30 วันที่ผ่านมา"
@@ -2865,6 +2947,11 @@ th:
           dates: "วัน (UTC)"
           groups: "กลุ่มทั้งหมด"
           no_data: "ไม่มีข้อมูลที่จะแสดง"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} ผู้ใช้"
+            posts_count:
+              other: "%{count} โพส"
           filters:
             group:
               label: กลุ่ม
@@ -3481,12 +3568,10 @@ th:
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
-        search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
+        search_label: "ค้นหา"
+        theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
-        revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
-        go_back: "กลับไปค้นหา"
-        recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
         outdated:
           dismiss: "ซ่อน"
       settings:

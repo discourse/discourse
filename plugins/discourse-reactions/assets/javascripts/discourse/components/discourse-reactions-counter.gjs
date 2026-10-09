@@ -18,6 +18,34 @@ export default class DiscourseReactionsCounter extends Component {
     }`;
   }
 
+  get expanded() {
+    return this.menu.getByIdentifier(MENU_IDENTIFIER)?.id === this.elementId;
+  }
+
+  get classes() {
+    const classes = ["discourse-reactions-counter"];
+    const mainReaction =
+      this.siteSettings.discourse_reactions_reaction_for_like;
+
+    const { reactions } = this.args.post;
+
+    if (
+      reactions?.length &&
+      (!this.siteSettings.enable_emoji ||
+        (reactions.length === 1 && reactions[0].id === mainReaction))
+    ) {
+      classes.push("only-like");
+    }
+
+    return classes.join(" ");
+  }
+
+  get counterAriaLabel() {
+    return i18n("discourse_reactions.counter.aria_label", {
+      count: this.args.post.reaction_users_count,
+    });
+  }
+
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
@@ -26,14 +54,6 @@ export default class DiscourseReactionsCounter extends Component {
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
-  }
-
-  @action
-  keyDown(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      this.#toggleMenu(event.currentTarget);
-    }
   }
 
   @action
@@ -51,40 +71,8 @@ export default class DiscourseReactionsCounter extends Component {
     this.#toggleMenu(event.currentTarget);
   }
 
-  get classes() {
-    const classes = [];
-    const mainReaction =
-      this.siteSettings.discourse_reactions_reaction_for_like;
-
-    const { post } = this.args;
-
-    if (
-      post.reactions &&
-      post.reactions.length === 1 &&
-      post.reactions[0].id === mainReaction
-    ) {
-      classes.push("only-like");
-    }
-
-    if (post.reaction_users_count > 0) {
-      classes.push("discourse-reactions-counter");
-    }
-
-    return classes.join(" ");
-  }
-
-  get counterAriaLabel() {
-    return i18n("discourse_reactions.counter.aria_label", {
-      count: this.args.post.reaction_users_count,
-    });
-  }
-
   #toggleMenu(trigger) {
-    const virtualElement = {
-      getBoundingClientRect: () => trigger.getBoundingClientRect(),
-    };
-
-    this.menu.show(virtualElement, {
+    this.menu.show(trigger, {
       identifier: MENU_IDENTIFIER,
       component: DiscourseReactionsUsersMenu,
       modalForMobile: true,
@@ -98,24 +86,24 @@ export default class DiscourseReactionsCounter extends Component {
 
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
-    <div
-      id={{this.elementId}}
-      class={{this.classes}}
-      role="button"
-      tabindex="0"
-      aria-label={{this.counterAriaLabel}}
-      {{on "mousedown" this.mouseDown}}
-      {{on "mouseup" this.mouseUp}}
-      {{on "click" this.click}}
-      {{on "keydown" this.keyDown}}
-    >
-      {{#if @post.reaction_users_count}}
+    {{#if @post.reaction_users_count}}
+      <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        aria-haspopup="dialog"
+        aria-label={{this.counterAriaLabel}}
+        class={{this.classes}}
+        id={{this.elementId}}
+        type="button"
+        {{on "mousedown" this.mouseDown}}
+        {{on "mouseup" this.mouseUp}}
+        {{on "click" this.click}}
+      >
         <DiscourseReactionsList @post={{@post}} />
 
-        <span class="reactions-counter" aria-hidden="true">
+        <span aria-hidden="true" class="reactions-counter">
           {{@post.reaction_users_count}}
         </span>
-      {{/if}}
-    </div>
+      </button>
+    {{/if}}
   </template>
 }

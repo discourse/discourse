@@ -3,6 +3,7 @@
 module RetrieveTitle
   CRAWL_TIMEOUT = 1
   UNRECOVERABLE_ERRORS = [
+    Errno::ECONNRESET,
     Net::ReadTimeout,
     FinalDestination::SSRFError,
     FinalDestination::UrlEncodingError,
@@ -16,7 +17,7 @@ module RetrieveTitle
       headers: headers,
     )
   rescue *UNRECOVERABLE_ERRORS
-    # ¯\_(ツ)_/¯
+    nil
   end
 
   def self.extract_title(html, encoding = nil)

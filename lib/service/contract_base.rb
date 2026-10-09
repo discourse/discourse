@@ -30,8 +30,7 @@ class Service::ContractBase
 
   def initialize(*args, options: nil, **kwargs)
     @__options__ = options
-    kwargs.deep_symbolize_keys!.slice!(*self.class.attribute_names.map(&:to_sym))
-    super(*args, **kwargs)
+    super(*args, **kwargs.deep_symbolize_keys.slice(*self.class.attribute_names.map(&:to_sym)))
   end
 
   def options
@@ -52,6 +51,12 @@ class Service::ContractBase
     [super, nested_attributes_valid?].all?
   end
 
+  protected
+
+  def options=(options)
+    @__options__ = options
+  end
+
   private
 
   def nested_attributes_valid?
@@ -67,6 +72,7 @@ class Service::ContractBase
       .wrap(attribute.value)
       .map
       .with_index do |contract, index|
+        contract.options = options
         next true if contract.valid?
         import_nested_errors(contract, attribute, index)
         false

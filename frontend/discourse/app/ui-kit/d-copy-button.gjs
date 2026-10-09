@@ -1,79 +1,97 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 
-@tagName("")
 export default class DCopyButton extends Component {
-  copyIcon = "copy";
-  copyClass = "btn-primary";
-  announcement = "";
+  @tracked showCopied = false;
 
-  init() {
-    super.init(...arguments);
-
-    this.copyTranslatedLabel = this.translatedLabel;
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this.isCopied && !this._wasCopied) {
+  watchExternalCopy = modifier((_, [isCopied]) => {
+    if (isCopied && !this._wasCopied) {
       this._showCopied();
     }
 
-    this._wasCopied = this.isCopied;
+    this._wasCopied = isCopied;
+  });
+
+  get copyIcon() {
+    return this.showCopied ? "check" : this.args.icon || "copy";
+  }
+
+  get copyClass() {
+    const baseClass = this.args.copyClass || "btn-primary";
+    return this.showCopied ? `${baseClass} ok` : baseClass;
+  }
+
+  get copyTranslatedLabel() {
+    return this.showCopied
+      ? this.args.translatedLabelAfterCopy
+      : this.args.translatedLabel;
+  }
+
+  get announcement() {
+    return this.showCopied ? this.args.translatedLabelAfterCopy : "";
+  }
+
+  @action
+  async copy() {
+    let value = this.args.value;
+
+    if (value === undefined) {
+      if (!this.args.selector) {
+        return;
+      }
+
+      const target = document.querySelector(this.args.selector);
+      if (!target) {
+        return;
+      }
+
+      value = target.value ?? target.textContent;
+    }
+
+    if (value == null) {
+      return;
+    }
+
+    try {
+      await clipboardCopy(value);
+      this.args.copied?.();
+      this._showCopied();
+    } catch {}
   }
 
   _showCopied() {
-    this.set("copyIcon", "check");
-    this.set("copyClass", "btn-primary ok");
-    this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
-    this.set("announcement", this.translatedLabelAfterCopy);
+    this.showCopied = true;
 
     discourseDebounce(this._restoreButton, 3000);
   }
 
   @bind
   _restoreButton() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
-    this.set("copyIcon", "copy");
-    this.set("copyClass", "btn-primary");
-    this.set("copyTranslatedLabel", this.translatedLabel);
-    this.set("announcement", "");
-  }
-
-  @action
-  copy() {
-    const target = document.querySelector(this.selector);
-    target.select();
-    target.setSelectionRange(0, target.value.length);
-
-    try {
-      document.execCommand("copy");
-
-      if (this.copied) {
-        this.copied();
-      }
-
-      this._showCopied();
-    } catch {}
+    this.showCopied = false;
   }
 
   <template>
     <DButton
-      @icon={{this.copyIcon}}
-      @action={{this.copy}}
       class="copy-button {{this.copyClass}}"
-      @ariaLabel={{this.ariaLabel}}
+      @action={{this.copy}}
+      @ariaLabel={{@ariaLabel}}
+      @icon={{this.copyIcon}}
       @translatedLabel={{this.copyTranslatedLabel}}
     />
-    <span class="sr-only" aria-live="polite">{{this.announcement}}</span>
+    <span
+      aria-live="polite"
+      class="sr-only"
+      {{this.watchExternalCopy @isCopied}}
+    >{{this.announcement}}</span>
   </template>
 }

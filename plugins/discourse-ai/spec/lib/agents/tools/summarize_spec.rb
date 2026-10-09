@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::Summarize do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
@@ -29,6 +29,22 @@ RSpec.describe DiscourseAi::Agents::Tools::Summarize do
         expect(info).to include("Topic summarized")
         expect(summarization.custom_raw).to include(summary)
         expect(summarization.chain_next_response?).to eq(false)
+      end
+    end
+
+    it "combines multiple LLM text blocks into the custom response" do
+      post = Fabricate(:post)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([["summary ", "stuff"]]) do
+        summarization =
+          described_class.new(
+            { topic_id: post.topic_id, guidance: "why did it happen?" },
+            bot_user: bot_user,
+            llm: llm,
+          )
+        summarization.invoke(&progress_blk)
+
+        expect(summarization.custom_raw).to eq("summary stuff")
       end
     end
 

@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  site_settings:
+    rss_polling_enabled: "启用从 RSS 订阅源导入嵌入帖子"
+    rss_polling_frequency: "订阅源轮询频率（以分钟为单位）"
+    rss_polling_feed_request_timeout: "获取订阅源时等待其响应的最长时间（以秒为单位）。"
+    rss_polling_verbose_logging: "记录每次轮询尝试的详细信息，包括导入或跳过的条目及原因。"
+    rss_polling_use_pubdate: "将话题创建日期设为在 RSS 订阅源中找到的 pubDate"
+    rss_polling_update_tags: "当话题更新时更新话题标签。禁用此功能会拉取初始标签，但会禁用进一步的标签更改。"
   rss_polling:
     errors:
+      feed_url_must_be_http: "订阅源 URL 必须以 http:// 或 https:// 开头。"
       unknown_author_username: "未找到用户名为 '%{username}' 的用户。"
+      required_tag_group: "“%{category}”中的话题至少需要 %{count} 个来自“%{tag_group}”群组的标签 (%{tags})。请添加下列标签之一，以免导入的条目被拒绝。"

@@ -9,6 +9,37 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Component | ChatMessage", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("Confirmation messages render their body once inside the card", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      cooked: "<p>Changing name from Storm → Wind &amp; Rain</p>",
+      blocks: [
+        {
+          type: "confirmation",
+          title: "Edit category",
+          cooked_question: "<p>Do you want to make this change?</p>",
+          parameters: [],
+          elements: [
+            { type: "button", action_id: "approve", text: { text: "Yes" } },
+          ],
+        },
+      ],
+    });
+
+    await render(
+      <template><ChatMessage @message={{this.message}} /></template>
+    );
+
+    assert
+      .dom(".chat-confirmation__description")
+      .hasText(
+        "Changing name from Storm → Wind & Rain",
+        "renders the change inside the card"
+      );
+    assert
+      .dom(".chat-message-content > .chat-message-text")
+      .doesNotExist("does not repeat the body outside the card");
+  });
+
   test("Message with edits", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       edited: true,
@@ -91,11 +122,52 @@ module("Component | ChatMessage", function (hooks) {
     this.message = new ChatFabricators(getOwner(this)).message();
     await render(
       <template>
-        <ChatMessage @message={{this.message}} @interactive={{false}} />
+        <ChatMessage @interactive={{false}} @message={{this.message}} />
       </template>
     );
 
     assert.dom(".chat-message-container.-not-interactive").exists();
+  });
+
+  test("Action messages render without user info and break message grouping", async function (assert) {
+    const fabricators = new ChatFabricators(getOwner(this));
+    const channel = fabricators.channel();
+    const user = new CoreFabricators(getOwner(this)).user();
+    const actionMessage = fabricators.message({
+      channel,
+      user,
+      is_action: true,
+      cooked: `<p><em class="chat-message-action">${user.username} waves</em></p>`,
+      created_at: "2026-07-29T12:00:00Z",
+    });
+    const nextMessage = fabricators.message({
+      channel,
+      user,
+      cooked: "<p>Hello again</p>",
+      created_at: "2026-07-29T12:01:00Z",
+    });
+
+    channel.messagesManager.addMessages([actionMessage, nextMessage]);
+    actionMessage.manager = channel.messagesManager;
+    nextMessage.manager = channel.messagesManager;
+
+    this.message = actionMessage;
+    await render(
+      <template><ChatMessage @message={{this.message}} /></template>
+    );
+
+    assert.dom(".chat-message-avatar").doesNotExist();
+    assert.dom(".chat-message-info").doesNotExist();
+    assert.dom(".chat-message-left-gutter").exists();
+
+    await clearRender();
+    this.message = nextMessage;
+    await render(
+      <template><ChatMessage @message={{this.message}} /></template>
+    );
+
+    assert.dom(".chat-message-avatar").exists();
+    assert.dom(".chat-message-info").exists();
   });
 
   test("Message with streaming", async function (assert) {

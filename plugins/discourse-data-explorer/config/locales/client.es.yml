@@ -20,8 +20,8 @@ es:
       admin_dashboard_card:
         no_results: "No hay resultados"
     explorer:
-      default_query: "Por defecto"
       default_query_notice: "Esta es una consulta por defecto, el SQL no se puede editar. Para editar el SQL, crea una nueva consulta."
+      view_query: "Ver"
       queries: "Consultas"
       query_created: "¡Consulta creada!"
       mode:
@@ -84,6 +84,7 @@ es:
         other: "Mostrando los mejores %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
+      query_tags: "Etiquetas"
       link: "Enlace para"
       report_name: "Informe"
       query_description: "Descripción"
@@ -113,7 +114,6 @@ es:
       nodes:
         "action:sql": "Explorador de datos"
       sql:
-        queries: "Consultas"
         query_id: "Consulta"
         add_param: "Añadir parámetro"
         param_value: "Valor"

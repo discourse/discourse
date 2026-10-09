@@ -4,6 +4,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
   requires_plugin DiscoursePoll::PLUGIN_NAME
 
   before_action :ensure_logged_in, except: %i[voters grouped_poll_results]
+  before_action :ensure_can_see_post
 
   def vote
     post_id = params.require(:post_id)
@@ -91,5 +92,14 @@ class DiscoursePoll::PollsController < ::ApplicationController
         render_json_error e.message
       end
     end
+  end
+
+  private
+
+  def ensure_can_see_post
+    post = Post.find_by(id: params.require(:post_id))
+    return if !post || !guardian.can_see_topic?(post.topic)
+
+    guardian.ensure_can_see!(post)
   end
 end

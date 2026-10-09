@@ -8,6 +8,9 @@ be:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Няўдалыя"
         reports:
           filters:
             sort_by:
@@ -34,6 +37,9 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Тып"
+        error: "памылка"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"
@@ -106,6 +112,24 @@ be:
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
         total: "Усяго"
+      logs:
+        short_title: "Журналы"
+        apply: "Прымяніць"
+        successful: "Паспяховая"
+        failed: "Няўдалыя"
+        unknown: "Невядома"
+        when: "Калі"
+        request: "Запыт"
+        user: "Карыстальнік"
+        topic: "Тэма"
+        post: "пост"
+        actions: "Дзеянні"
+        view_details: "Падрабязнасці"
+        detail:
+          request: "Запыт"
+        retention:
+          summary_stage: "Зводка"
+          save: "Захаваць"
       ai_agent:
         name: "Назва"
         edit: "Рэдагаваць"
@@ -152,6 +176,9 @@ be:
           required: "Абавязкова"
       llms:
         display_name: "Імя"
+        vision_modes:
+          disabled:
+            title: "Адключаныя"
         save: "Захаваць"
         edit: "Рэдагаваць"
         delete: Выдаліць
@@ -199,7 +226,10 @@ be:
           table:
             total_count: "агульны"
       discobot_discoveries:
-        regular_results: "тэмы"
-        tooltip:
-          actions:
-            disable: "Адключыць"
+        legacy:
+          regular_results: "тэмы"
+          tooltip:
+            actions:
+              disable: "Адключыць"
+        search_all_topics: "Усе тэмы"
+        search_messages: "Паведамленні"

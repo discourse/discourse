@@ -259,14 +259,16 @@ module DiscourseTagging
           end
           return false
         end
-
-        topic.tags = tags
       else
         return false unless validate_min_required_tags_for_category(guardian, topic, category)
         return false unless validate_required_tags_from_group(guardian, topic, category)
 
-        topic.tags = []
+        tags = []
       end
+
+      yield(tags) if block_given?
+
+      topic.tags = tags
       topic.tags_changed = true
 
       DiscourseEvent.trigger(
@@ -506,6 +508,7 @@ module DiscourseTagging
   #   selected_tag_ids: an array of tag ids that are in the current selection
   #   only_tag_names: limit results to tags with these names
   #   exclude_synonyms: exclude synonyms from results
+  #   ignore_required_tag_groups: skip category-required tag groups when filtering for an input
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
   #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
@@ -639,14 +642,18 @@ module DiscourseTagging
     # - and no search term has been included
     required_tag_ids = nil
     required_category_tag_group = nil
-    if opts[:for_input] && category&.category_required_tag_groups.present? &&
-         (filter_for_non_admin || term.blank?)
-      category.category_required_tag_groups.each do |crtg|
+    remaining_required_tag_count = nil
+    category_required_tag_groups = category&.category_required_tag_groups
+    if !opts[:ignore_required_tag_groups] && opts[:for_input] &&
+         category_required_tag_groups.present? && (filter_for_non_admin || term.blank?)
+      category_required_tag_groups.each do |crtg|
         group_tags = crtg.tag_group.tags.pluck(:id)
-        next if (group_tags & selected_tag_ids).size >= crtg.min_count
+        selected_tag_count = (group_tags & selected_tag_ids).size
+        next if selected_tag_count >= crtg.min_count
         if filter_for_non_admin || group_tags.size >= opts[:limit].to_i
           required_category_tag_group = crtg
           required_tag_ids = group_tags
+          remaining_required_tag_count = crtg.min_count - selected_tag_count
           builder.where("id IN (?)", required_tag_ids)
         end
         break
@@ -720,6 +727,7 @@ module DiscourseTagging
           name: required_category_tag_group.tag_group.name,
           min_count: required_category_tag_group.min_count,
         }
+        context[:remaining_required_tag_count] = remaining_required_tag_count
       end
       [result, context]
     else
@@ -746,6 +754,17 @@ module DiscourseTagging
     filter_visible_in_accessible_categories(permitted, guardian)
   end
 
+  def self.visible_tag_ids_resolving_synonyms(tag_names, guardian = nil)
+    tag_ids =
+      filter_visible(Tag, guardian)
+        .where_name(tag_names)
+        .pluck(:id, :target_tag_id)
+        .map { |id, target_tag_id| target_tag_id || id }
+        .uniq
+
+    filter_visible(Tag.where(id: tag_ids), guardian).pluck(:id)
+  end
+
   def self.filter_visible(query, guardian = nil)
     guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
@@ -757,7 +776,8 @@ module DiscourseTagging
   end
 
   def self.filter_visible_in_accessible_categories(query, guardian = nil)
-    return query if guardian.nil? || guardian.is_admin?
+    guardian ||= Guardian.new
+    return query if guardian.is_admin?
 
     query.where(<<~SQL, ids: guardian.allowed_category_ids)
       tags.id NOT IN (
@@ -942,6 +962,10 @@ module DiscourseTagging
         .all
       new_tag_names.each { |name| taggable.tags << Tag.create(name: name) }
     end
+  end
+
+  def self.editable_synonym_ids(synonyms, guardian)
+    synonyms.filter_map { |synonym| synonym.id if guardian.can_edit_tag?(synonym) }
   end
 
   # Add synonyms to a target tag.

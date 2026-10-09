@@ -1,3 +1,7 @@
+import { tableChrome } from "../lib/table/chrome";
+import tableEditing from "../lib/table/editing";
+import { buildTableNodeView, TableCellView } from "../lib/table/node-view";
+
 // Markdown Table Example:
 //
 // | Left-aligned | Center-aligned | Right-aligned |
@@ -5,21 +9,13 @@
 // | git status   | git status     | git status    |
 // | git diff     | git diff       | git diff      |
 
-class TableNodeView {
-  constructor() {
-    const div = document.createElement("div");
-    div.classList.add("md-table");
-    const table = document.createElement("table");
-    div.appendChild(table);
-
-    this.dom = div;
-    this.contentDOM = table;
-  }
-}
-
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
-  nodeViews: { table: TableNodeView },
+  nodeViews: {
+    table: buildTableNodeView,
+    table_cell: TableCellView,
+    table_header_cell: TableCellView,
+  },
   nodeSpec: {
     table: {
       content: "table_head? table_body",
@@ -30,7 +26,7 @@ const extension = {
       draggable: true,
       parseDOM: [{ tag: "table" }],
       toDOM() {
-        return ["table", { class: "md-table" }, 0];
+        return ["div", { class: "md-table" }, ["table", 0]];
       },
     },
     table_head: {
@@ -43,7 +39,7 @@ const extension = {
       },
     },
     table_body: {
-      content: "table_row+",
+      content: "table_row*",
       tableRole: "body",
       isolating: true,
       parseDOM: [{ tag: "tbody" }],
@@ -131,7 +127,6 @@ const extension = {
     },
   },
   serializeNode: {
-    // TODO(renato): state.renderInline should escape `|` if `state.inTable`
     table(state, node) {
       state.flushClose(1);
 
@@ -145,7 +140,7 @@ const extension = {
       const prevInTable = state.inTable;
       state.inTable = true;
 
-      // leading newline, it seems to have issues in a line just below a > blockquote otherwise
+      // Keep a table following a blockquote from being parsed as part of it.
       if (state.out) {
         state.out += "\n";
       }
@@ -170,7 +165,11 @@ const extension = {
             }
             state.out += cellIndex === 0 ? "| " : " | ";
 
+            const cellStart = state.out.length;
             state.renderInline(cell);
+            state.out =
+              state.out.slice(0, cellStart) +
+              state.out.slice(cellStart).replaceAll("|", "\\|");
 
             if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {
@@ -202,7 +201,12 @@ const extension = {
     table_header_cell() {},
     table_cell() {},
   },
-  plugins({ pmState: { Plugin }, pmModel: { Slice, Fragment } }) {
+  plugins(params) {
+    const {
+      pmState: { Plugin },
+      pmModel: { Slice, Fragment },
+    } = params;
+
     function hasTableNodes(fragment) {
       let found = false;
       fragment.descendants((node) => {
@@ -214,7 +218,7 @@ const extension = {
       return found;
     }
 
-    return new Plugin({
+    const pastedTables = new Plugin({
       props: {
         transformPasted(paste) {
           if (!hasTableNodes(paste.content)) {
@@ -244,6 +248,8 @@ const extension = {
         },
       },
     });
+
+    return [pastedTables, tableEditing(), tableChrome(params)];
   },
 };
 

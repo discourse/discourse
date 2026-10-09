@@ -150,7 +150,8 @@ export default {
               sanitized &&
               sanitized.trim() !== "" &&
               !sanitized.includes("&gt;") &&
-              !sanitized.includes("&lt;")
+              !sanitized.includes("&lt;") &&
+              !sanitized.includes('"')
             ) {
               return sanitized;
             }

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :ensure_can_search, only: %i[show query]
   before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
@@ -54,6 +55,7 @@ class SearchController < ApplicationController
     search_args[:search_type] = :full_page
     search_args[:ip_address] = request.remote_ip
     search_args[:user_agent] = request.user_agent
+    search_args[:session_id] = pageview_session_id
     search_args[:user_id] = current_user.id if current_user.present?
 
     if rate_limit_search
@@ -109,6 +111,7 @@ class SearchController < ApplicationController
     search_args[:search_type] = :header
     search_args[:ip_address] = request.remote_ip
     search_args[:user_agent] = request.user_agent
+    search_args[:session_id] = pageview_session_id
     search_args[:user_id] = current_user.id if current_user.present?
     search_args[:restrict_to_archetype] = params[:restrict_to_archetype] if params[
       :restrict_to_archetype
@@ -163,6 +166,20 @@ class SearchController < ApplicationController
   end
 
   protected
+
+  def ensure_can_search
+    return if guardian.can_search?
+
+    if request.format.html?
+      redirect_to_login
+    else
+      ensure_logged_in
+    end
+  end
+
+  def pageview_session_id
+    request.headers["HTTP_DISCOURSE_PAGEVIEW_SESSION_ID"]
+  end
 
   def site_overloaded?
     queue_time = request.env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]

@@ -1,37 +1,48 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { i18n } from "discourse-i18n";
 import {
   createNode,
-  generateNodeName,
+  takenNodeNames,
+  uniqueNodeName,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor/node-factory";
 import { FORM_TRIGGER_TYPE } from "discourse/plugins/discourse-workflows/admin/lib/workflows/node-data-shape";
+import { STICKY_NOTE_NAME } from "discourse/plugins/discourse-workflows/admin/models/sticky-note";
 import WorkflowNode from "discourse/plugins/discourse-workflows/admin/models/workflow-node";
 
 module("Unit | lib | discourse-workflows | node-factory", function (hooks) {
   setupTest(hooks);
 
-  test("generateNodeName returns a non-empty string for a valid identifier", function (assert) {
-    const name = generateNodeName("trigger:webhook", []);
-    assert.strictEqual(typeof name, "string");
-    assert.true(name.length > 0);
+  test("createNode names a node after its i18n label, deduping against existing nodes", function (assert) {
+    const baseName = i18n("discourse_workflows.nodes.trigger:webhook");
+
+    assert.strictEqual(createNode("trigger:webhook", []).name, baseName);
+    assert.strictEqual(
+      createNode("trigger:webhook", [
+        { name: baseName },
+        { name: `${baseName} 1` },
+      ]).name,
+      `${baseName} 2`
+    );
   });
 
-  test("generateNodeName appends counter on single name collision", function (assert) {
-    const baseName = generateNodeName("trigger:webhook", []);
-    const existingNodes = [{ name: baseName }];
-    const name = generateNodeName("trigger:webhook", existingNodes);
-    assert.strictEqual(name, `${baseName} 1`);
+  test("takenNodeNames reserves the sticky note name alongside existing names", function (assert) {
+    const taken = takenNodeNames([{ name: "Foo step" }]);
+
+    assert.true(taken.has(STICKY_NOTE_NAME), "sticky note name is reserved");
+    assert.true(taken.has("Foo step"), "existing node names are taken");
   });
 
-  test("generateNodeName increments counter past multiple collisions", function (assert) {
-    const baseName = generateNodeName("trigger:webhook", []);
-    const existingNodes = [
-      { name: baseName },
-      { name: `${baseName} 1` },
-      { name: `${baseName} 2` },
-    ];
-    const name = generateNodeName("trigger:webhook", existingNodes);
-    assert.strictEqual(name, `${baseName} 3`);
+  test("uniqueNodeName keeps the base name when free and suffixes on collision", function (assert) {
+    assert.strictEqual(uniqueNodeName("Foo step", new Set()), "Foo step");
+    assert.strictEqual(
+      uniqueNodeName("Foo step", new Set(["Foo step"])),
+      "Foo step 1"
+    );
+    assert.strictEqual(
+      uniqueNodeName("Foo step", new Set(["Foo step", "Foo step 1"])),
+      "Foo step 2"
+    );
   });
 
   test("createNode returns a node with correct type and default version", function (assert) {

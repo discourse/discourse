@@ -40,10 +40,21 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
+      access_control:
+        invalid_groups: "Groups from input must resolve to an array of valid group IDs."
+        missing_groups: "Groups from input contains groups that no longer exist."
+        required_permission: "Access must include at least one %{permissions} permission."
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
       approval_timed_out: "Approval timed out"
+      rate_limited:
+        global:
+          one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+          other: "This workflow wasn't run because %{count} workflow executions already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+        per_workflow:
+          one: "This workflow wasn't run because it already started %{count} execution in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
+          other: "This workflow wasn't run because it already started %{count} executions in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
       step_execution:
         not_executable: "This node cannot be executed as a single step."
         waiting_not_supported: "Nodes that wait for a response cannot run during a step execution. Run the workflow or pin data past them first."
@@ -76,19 +87,27 @@ en:
       node_does_not_accept_inputs: "%{node} does not accept inputs."
       duplicate_node_names: "Node names must be unique within a workflow. Duplicates: %{names}"
       no_rows_matched_filter: "No rows matched the provided filter."
+      unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
+        not_found: "No user found with username '%{username}'."
+        id_not_found: "No user found with ID %{id}."
+        restricted:
+          staged: "The user '%{username}' is a staged user and can't perform actions."
+          silenced: "The user '%{username}' is silenced."
+          suspended: "The user '%{username}' is suspended."
+          inactive: "The user '%{username}' hasn't activated their account."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
       topic:
         create_failed: "Failed to create topic."
-        unknown_operation: "Unknown operation: %{operation}."
+        bump_failed: "Failed to bump topic."
+        invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        unknown_operation: "Unknown operation: %{operation}."
-        invalid_filter: "Invalid post filter fragment: %{fragments}."
+        invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
         actor_not_staff: "The acting user must be a staff member to flag posts."
@@ -98,7 +117,6 @@ en:
         actor_not_staff: "The acting user must be a staff member to flag users."
         cannot_flag_staff: "'%{username}' cannot be flagged. Staff members and automated accounts cannot be added to the review queue."
       user:
-        unknown_operation: "Unknown operation: %{operation}."
         unknown_extensions: "Unknown user extensions: %{extensions}."
         invalid_updates: "User updates must be an object."
         invalid_trust_level: "Invalid trust level: %{level}."
@@ -123,14 +141,28 @@ en:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
       topic_tags:
+        unknown_mode: "Unknown tag mode: %{mode}."
         no_tag_names: "No tag names provided."
+        overlapping_tag_names: "The same tags cannot be added and removed: %{tag_names}."
+        unapplied_tag_names: "Tag changes could not be applied: %{tag_names}."
         operation_failed: "Tag operation failed: %{errors}"
+        personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
+      tag_group:
+        no_tag_names: "No tag names provided."
+        no_valid_tag_names: "No valid tag names provided."
+        operation_failed: "Tag group operation failed: %{errors}"
+      site_setting:
+        name_required: "No site setting name provided."
+        unknown_setting: "Unknown site setting '%{name}'."
+        secret_setting: "Site setting '%{name}' holds a secret and cannot be changed by a workflow."
+        actor_not_admin: "'%{username}' must be an admin to change site settings."
+        update_failed: "Site setting '%{name}' could not be updated: %{errors}"
+        unknown_error: "unknown error"
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
         uncategorized_not_allowed: "This site does not allow topics without a category."
       topic_pin:
-        unknown_operation: "Unknown operation: %{operation}."
         unknown_pin_type: "Unknown pin type: %{pin_type}."
         invalid_timestamp: "'%{field}' is not a valid date and time: '%{value}'."
         pin_not_allowed: "'%{username}' cannot pin or unpin topic %{topic_id}. Pinning requires staff, trust level 4, or moderator access to the topic's category."
@@ -164,7 +196,6 @@ en:
         header_name_invalid: "Header name contains invalid characters."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
-        unknown_operation: "Unknown operation: %{operation}."
         invalid_query: "Invalid query: %{errors}"
         invalid_row: "Invalid row: %{errors}"
         filter_required: "Filter must not be empty"
@@ -181,12 +212,16 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    post:
+      destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     user:
       check_email_context: "Workflow user node"
     flag_user:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."

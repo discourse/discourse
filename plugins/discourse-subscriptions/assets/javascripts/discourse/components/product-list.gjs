@@ -19,7 +19,7 @@ export default class ProductList extends Component {
         <p>{{i18n "discourse_subscriptions.subscribe.no_products"}}</p>
       {{else}}
         {{#each this.products as |product|}}
-          <ProductItem @product={{product}} @isLoggedIn={{this.isLoggedIn}} />
+          <ProductItem @isLoggedIn={{this.isLoggedIn}} @product={{product}} />
         {{/each}}
       {{/if}}
     </div>

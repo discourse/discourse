@@ -17,7 +17,7 @@ const IpLookupAccountsTable = <template>
       {{#each @accounts as |account|}}
         <tr>
           <td class="user">
-            <LinkTo @route="adminUser" @model={{account}}>
+            <LinkTo @model={{account}} @route="adminUser">
               {{dAvatar account imageSize="tiny"}}
               <span>{{account.username}}</span>
             </LinkTo>

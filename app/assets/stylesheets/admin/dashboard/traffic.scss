@@ -21,7 +21,7 @@
 
   &__list {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     column-gap: var(--space-4);
     row-gap: var(--space-2);
     list-style: none;
@@ -46,6 +46,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
+    min-width: 0;
+  }
+
+  &__label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -102,11 +106,17 @@
     font-size: var(--font-down-1-rem);
   }
 
-  &__see-details {
+  &__see-details,
+  &__learn-more {
     align-self: flex-end;
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
     font-size: var(--font-down-1-rem);
+  }
+
+  &__learn-more,
+  &__learn-more:visited {
+    color: var(--primary-medium);
   }
 }

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import IpLookup from "discourse/components/reviewable/ip-lookup";
 import { shortDate } from "discourse/lib/formatter";
+import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -71,7 +72,7 @@ export default class ReviewableInsights extends Component {
 
     if (postCount > 0 && user?.username) {
       activities.push(
-        `<a href="/u/${user.username}/activity">${postsText}</a>`
+        `<a href="${userPath(`${user.username}/activity`)}">${postsText}</a>`
       );
     } else {
       activities.push(postsText);

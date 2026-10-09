@@ -358,6 +358,8 @@ class SiteSettings::TypeSupervisor
       val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
       val = val.is_a?(Integer) ? val : val.id
+    elsif type == self.class.types[:group] && val.present?
+      val = (Group.find_by_id_or_name(val)&.id || val).to_s
     elsif type == self.class.types[:objects] && val.present?
       begin
         objects = val.is_a?(String) ? JSON.parse(val) : val

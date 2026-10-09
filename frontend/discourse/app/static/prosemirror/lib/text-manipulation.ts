@@ -1,3 +1,4 @@
+import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
@@ -90,6 +91,8 @@ function isPlainTextFragment(fragment: Fragment, schema: Schema): boolean {
 }
 
 export default class ProsemirrorTextManipulation implements TextManipulation {
+  autocompletes: object[] = [];
+
   allowPreview = false;
 
   schema: Schema;
@@ -181,13 +184,21 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
-  autocomplete(options: AutocompleteOptions): unknown {
-    return dAutocomplete.setupAutocomplete(
+  autocomplete(options: AutocompleteOptions | "destroy"): unknown {
+    if (options === "destroy") {
+      this.autocompletes.forEach((modifier) => destroy(modifier));
+      this.autocompletes = [];
+      return;
+    }
+
+    const modifier = dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.view.dom,
       this.autocompleteHandler,
       options
     );
+    this.autocompletes.push(modifier);
+    return modifier;
   }
 
   applySurroundSelection(
@@ -585,6 +596,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
             placeholderNodes.push({ node, pos, filename: match[1] });
           }
         }
+      } else if (
+        node.type === this.schema.nodes.upload_placeholder &&
+        imagesToWrapGrid.has(node.attrs.filename)
+      ) {
+        placeholderNodes.push({
+          node,
+          pos,
+          filename: node.attrs.filename,
+        });
       }
     });
 
@@ -752,32 +772,6 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
     this.convertFromMarkdown = convertFromMarkdown;
   }
 
-  #revokeBlobUrl(node: Node): void {
-    if (node.attrs.src?.startsWith("blob:")) {
-      URL.revokeObjectURL(node.attrs.src);
-    }
-  }
-
-  #findPlaceholder(fileId: string): FoundPlaceholder | null {
-    let result: FoundPlaceholder | null = null;
-    this.view.state.doc.descendants((node, pos) => {
-      if (result) {
-        return false;
-      }
-      if (
-        (node.type === this.schema.nodes.image &&
-          node.attrs.placeholder &&
-          node.attrs.title === fileId) ||
-        (node.type === this.schema.nodes.upload_placeholder &&
-          node.attrs.fileId === fileId)
-      ) {
-        result = { node, pos };
-        return false;
-      }
-    });
-    return result;
-  }
-
   insert(file: UppyFile): void {
     const isImage = file.data?.type?.startsWith("image/");
     const isEmptyParagraph =
@@ -865,24 +859,22 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
 
     // resolve transparent.png placeholders using the upload URL cache,
     // which was populated before success() was called
-    if (found.node.type === this.schema.nodes.image) {
-      tr.doc.nodesBetween(
-        found.pos,
-        found.pos + replacement.size,
-        (node, pos) => {
-          if (
-            node.type.name === "image" &&
-            node.attrs.originalSrc &&
-            node.attrs.src?.includes("transparent.png")
-          ) {
-            const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
-            if (cached?.url) {
-              tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
-            }
+    tr.doc.nodesBetween(
+      found.pos,
+      found.pos + replacement.size,
+      (node, pos) => {
+        if (
+          node.type.name === "image" &&
+          node.attrs.originalSrc &&
+          node.attrs.src?.includes("transparent.png")
+        ) {
+          const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
+          if (cached?.url) {
+            tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
           }
         }
-      );
-    }
+      }
+    );
 
     if (wasSelected) {
       const resolved = tr.doc.resolve(found.pos);
@@ -891,6 +883,32 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
       }
     }
 
-    this.view.dispatch(tr);
+    this.view.dispatch(tr.setMeta("uploadPlaceholderResolved", true));
+  }
+
+  #revokeBlobUrl(node: Node): void {
+    if (node.attrs.src?.startsWith("blob:")) {
+      URL.revokeObjectURL(node.attrs.src);
+    }
+  }
+
+  #findPlaceholder(fileId: string): FoundPlaceholder | null {
+    let result: FoundPlaceholder | null = null;
+    this.view.state.doc.descendants((node, pos) => {
+      if (result) {
+        return false;
+      }
+      if (
+        (node.type === this.schema.nodes.image &&
+          node.attrs.placeholder &&
+          node.attrs.title === fileId) ||
+        (node.type === this.schema.nodes.upload_placeholder &&
+          node.attrs.fileId === fileId)
+      ) {
+        result = { node, pos };
+        return false;
+      }
+    });
+    return result;
   }
 }

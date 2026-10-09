@@ -4,6 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module PostButton
       class V1 < NodeType
+        INVALID_POST_NUMBER = 0
         POSITION_OPTIONS = %w[first last more_menu relative].freeze
         POSITION_DIRECTION_OPTIONS = %w[before after].freeze
         POSITION_ANCHOR_OPTIONS = %w[
@@ -51,6 +52,12 @@ module DiscourseWorkflows
                 name_property: "name",
                 filterable: true,
               },
+            },
+            post_number: {
+              type: :integer,
+              required: false,
+              min: 1,
+              no_data_expression: true,
             },
             position: {
               type: :options,
@@ -141,6 +148,19 @@ module DiscourseWorkflows
           group_ids.present? && user.in_any_groups?(group_ids)
         end
 
+        def self.resolved_post_number(parameters)
+          return unless value = parameters["post_number"].to_s.strip.presence
+
+          value.match?(/\A[1-9]\d*\z/) ? value.to_i : INVALID_POST_NUMBER
+        end
+
+        def self.matches_post_number?(post, parameters)
+          post_number = resolved_post_number(parameters)
+          return true if post_number.nil?
+
+          post.post_number == post_number
+        end
+
         def self.resolved_position(parameters)
           position = parameters["position"].presence || "last"
           return position if position != "relative"
@@ -156,10 +176,6 @@ module DiscourseWorkflows
         def initialize(post)
           super(parameters: {})
           @post = post
-        end
-
-        def valid?
-          @post.present? && @post.topic.present?
         end
 
         def output

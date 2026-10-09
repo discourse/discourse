@@ -22,17 +22,21 @@ RSpec.describe BrowserPageviewCountryDailyRollup do
       )
     end
 
-    it "splits total count from logged-in count" do
+    it "splits the total count by logged-in and likely crawler traffic" do
       user = Fabricate(:user)
-      Fabricate(:browser_pageview_event, country_code: "US", user_id: user.id)
-      Fabricate(:browser_pageview_event, country_code: "US")
-      Fabricate(:browser_pageview_event, country_code: "US")
+      Fabricate(:browser_pageview_event, country_code: "US", score: 90)
+      Fabricate(:browser_pageview_event, country_code: "US", score: 90, user_id: user.id)
+      Fabricate(:browser_pageview_event, country_code: "US", score: 10)
+      Fabricate(:browser_pageview_event, country_code: "US", score: nil, user_id: user.id)
 
       described_class.aggregate(start_date: start_date, end_date: end_date)
 
-      row = described_class.first
-      expect(row.count).to eq(3)
-      expect(row.logged_in_count).to eq(1)
+      expect(described_class.find_by(country_code: "US")).to have_attributes(
+        count: 4,
+        logged_in_count: 2,
+        likely_crawler_count: 2,
+        likely_crawler_logged_in_count: 1,
+      )
     end
 
     it "stores rows for NULL country_code (no GeoIP match) without duplication on re-run" do

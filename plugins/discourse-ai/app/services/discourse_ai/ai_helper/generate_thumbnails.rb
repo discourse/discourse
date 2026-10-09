@@ -31,11 +31,8 @@ module DiscourseAi
       end
 
       def fetch_llm_model(agent:)
-        model =
-          LlmModel.find_by(id: agent.default_llm_id) ||
-            LlmModel.find_by(id: SiteSetting.ai_default_llm_model)
-        fail!("llm_model_not_configured") if model.nil?
-        model
+        LlmModel.find_by(id: agent.default_llm_id) ||
+          LlmModel.find_by(id: SiteSetting.ai_default_llm_model)
       end
 
       def generate_images(agent:, llm_model:, params:, guardian:)

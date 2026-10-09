@@ -33,17 +33,17 @@ export default class NotActivated extends Component {
 
   <template>
     <DModal
+      class="not-activated-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "log_in"}}
-      class="not-activated-modal"
     >
       <:body>
         {{trustHTML (i18n "login.not_activated" sentTo=@model.sentTo)}}
       </:body>
       <:footer>
         <ActivationControls
-          @sendActivationEmail={{this.sendActivationEmail}}
           @editActivationEmail={{this.editActivationEmail}}
+          @sendActivationEmail={{this.sendActivationEmail}}
         />
       </:footer>
     </DModal>

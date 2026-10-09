@@ -22,11 +22,21 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import type Session from "discourse/models/session";
 import type Site from "discourse/models/site";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
 import type GlimmerNodeView from "discourse/static/prosemirror/lib/glimmer-node-view";
 import type { ToolbarBase } from "./toolbar";
+
+export interface MarkdownOptions {
+  /** Avatar template of a post in the host editor's topic. */
+  lookupAvatarTemplateByPostNumber?: (
+    postNumber: number,
+    topicId: number
+  ) => string | undefined;
+  [key: string]: unknown;
+}
 
 export interface PluginContext {
   /** Placeholder shown when the document is empty. */
@@ -51,10 +61,14 @@ export interface PluginContext {
   siteSettings: Record<string, unknown>;
   /** Application event bus. */
   appEvents: AppEventsService;
+  /** Service used to announce editor changes to assistive technology. */
+  a11y: A11yService;
   /** Service used to show confirmation and alert dialogs. */
   dialog: DialogService;
   /** Replaces or restores the toolbar displayed by the editor container. */
   replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
+  /** Markdown cook options provided by the host editor. */
+  markdownOptions?: MarkdownOptions;
   /** Registers a rendered component-backed node view. */
   addGlimmerNodeView: (nodeView: GlimmerNodeView) => void;
   /** Unregisters a rendered component-backed node view. */
@@ -135,15 +149,16 @@ export type StateFunction = (
 ) => Record<string, unknown>;
 
 type RichPluginValue = Plugin | PluginSpec<unknown>;
-export type RichPlugin =
+type RichPluginFactory = (
+  params: PluginParams
+) =>
   | RichPluginValue
   | RichPluginValue[]
-  | ((
-      params: PluginParams
-    ) =>
-      | RichPluginValue
-      | RichPluginValue[]
-      | Promise<RichPluginValue | RichPluginValue[]>);
+  | Promise<RichPluginValue | RichPluginValue[]>;
+export type RichPlugin =
+  | RichPluginValue
+  | RichPluginFactory
+  | (RichPluginValue | RichPluginFactory)[];
 
 export type ParseFunction = (
   state: unknown,
@@ -199,6 +214,8 @@ export interface GlimmerNodeViewDescriptor {
   name?: string;
   /** Whether the node view exposes editable child content. */
   hasContent?: boolean;
+  /** Passed to the component as `@options`. */
+  options?: Record<string, unknown>;
   /** Determines whether the node view should be rendered. */
   shouldRender?: (params: {
     /** Node represented by the view. */

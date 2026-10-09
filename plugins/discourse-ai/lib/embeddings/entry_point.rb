@@ -53,7 +53,9 @@ module DiscourseAi
         # embeddings generation.
         callback =
           Proc.new do |target|
+            definition = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
             if DiscourseAi::Embeddings.enabled? &&
+                 !DiscourseAi::Embeddings::ProviderHealth.paused?(definition) &&
                  (target.is_a?(Topic) || SiteSetting.ai_embeddings_per_post_enabled)
               Jobs.enqueue(
                 :generate_embeddings,
@@ -77,10 +79,15 @@ module DiscourseAi
           if DiscourseAi::Embeddings.enabled?
             query = [args[:title], args[:raw]].join("\n\n")
 
-            DiscourseAi::Embeddings::SemanticSearch
-              .new(args[:guardian])
-              .similar_topic_ids_to(query, candidates: args[:candidates])
-              .each { |similar_topic_id| plugin_candidate_ids << similar_topic_id }
+            begin
+              DiscourseAi::Embeddings::SemanticSearch
+                .new(args[:guardian])
+                .similar_topic_ids_to(query, candidates: args[:candidates])
+                .each { |similar_topic_id| plugin_candidate_ids << similar_topic_id }
+            rescue DiscourseAi::Inference::EmbeddingInferenceError,
+                   DiscourseAi::Embeddings::ProviderPausedError
+              # Ordinary similar-topic candidates remain available.
+            end
           end
         end
       end

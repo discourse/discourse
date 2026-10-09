@@ -22,7 +22,7 @@ module DiscourseWorkflows
 
     after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
 
-    scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id: workflow_id) : all }
+    scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id:) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
     scope :successful, -> { where(status: :success) }
     scope :with_duration,
@@ -41,33 +41,35 @@ module DiscourseWorkflows
     def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
       transaction do
         create!(
-          workflow: workflow,
+          workflow:,
           workflow_version_id: workflow.version_id,
-          trigger_node_id: trigger_node_id,
-          trigger_data: trigger_data,
+          trigger_node_id:,
+          trigger_data:,
           status: :pending,
           execution_mode: :manual,
         ).tap do |execution|
           ExecutionData.create!(
-            execution: execution,
+            execution:,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
           )
         end
+      end.tap do |execution|
+        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
       end
     end
 
     def self.create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
       transaction do
         create!(
-          workflow: workflow,
+          workflow:,
           workflow_version_id: workflow.version_id,
           trigger_node_id: node_id,
-          trigger_data: trigger_data,
+          trigger_data:,
           status: :pending,
           execution_mode: :manual,
         ).tap do |execution|
           ExecutionData.create!(
-            execution: execution,
+            execution:,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
             data: {
               "entries" => {
@@ -80,6 +82,8 @@ module DiscourseWorkflows
             },
           )
         end
+      end.tap do |execution|
+        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
       end
     end
 
@@ -104,9 +108,8 @@ module DiscourseWorkflows
       end
     end
 
-    def self.claim_for_resume(execution, resume_token: nil)
-      scope = where(id: execution.id, status: :waiting)
-      scope = scope.where(resume_token: resume_token) if resume_token
+    def self.claim_for_resume(execution, resume_token: execution.resume_token)
+      scope = where(id: execution.id, status: :waiting, resume_token:)
 
       now = Time.current
       affected = scope.update_all(status: statuses[:running], updated_at: now)
@@ -114,6 +117,7 @@ module DiscourseWorkflows
 
       execution.status = :running
       execution.updated_at = now
+      ExecutionProgressPublisher.publish(execution)
       execution
     end
 
@@ -130,6 +134,7 @@ module DiscourseWorkflows
       execution.status = :running
       execution.started_at = now
       execution.updated_at = now
+      ExecutionProgressPublisher.publish(execution)
       execution
     end
 
@@ -156,41 +161,51 @@ module DiscourseWorkflows
     def fail_with_timeout!
       message = I18n.t("discourse_workflows.errors.approval_timed_out")
       node_id = waiting_node_id
-      claimed = false
+      claimed =
+        transaction do
+          run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
 
-      transaction do
-        run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
+          affected =
+            self
+              .class
+              .where(id:, status: :waiting, resume_token:, waiting_until:, timeout_action:)
+              .update_all(
+                status: self.class.statuses[:error],
+                error: message,
+                finished_at: Time.current,
+                run_time_ms:,
+                waiting_node_id: nil,
+                waiting_until: nil,
+                resume_token: nil,
+                timeout_action: nil,
+                updated_at: Time.current,
+              )
 
-        affected =
-          self
-            .class
-            .where(id: id, status: :waiting)
-            .update_all(
-              status: self.class.statuses[:error],
-              error: message,
-              finished_at: Time.current,
-              run_time_ms: run_time_ms,
-              waiting_node_id: nil,
-              waiting_until: nil,
-              resume_token: nil,
-              timeout_action: nil,
-              updated_at: Time.current,
-            )
+          next false if affected.zero?
+          update_step_status_in_data!(
+            node_id,
+            Executor::Step::WAITING,
+            Executor::Step::ERROR,
+            message,
+          )
+          true
+        end
+      return false unless claimed
 
-        next if affected.zero?
+      reload
+      trigger_error_workflow(StandardError.new(message))
+      DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
+      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
+      true
+    end
 
-        claimed = true
-        update_step_status_in_data!(
-          node_id,
-          Executor::Step::WAITING,
-          Executor::Step::ERROR,
-          message,
-        )
-      end
-
-      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(reload) if claimed
-
-      claimed
+    def trigger_error_workflow(error, steps: execution_data&.steps_array || [])
+      Executor::ErrorWorkflowTrigger.new(
+        workflow,
+        steps,
+        execution: self,
+        execution_mode: execution_mode.to_sym,
+      ).trigger_error_workflow(error)
     end
 
     def waiting_step_input_items
@@ -243,11 +258,11 @@ module DiscourseWorkflows
       full_data = execution_data.data.deep_dup
       (full_data["entries"] || {}).each_value do |steps|
         Array(steps).each do |step|
-          if step["node_id"] == node_id.to_s && step["status"] == from_status.to_s
-            step["status"] = to_status.to_s
-            step["error"] = error_msg if error_msg
-            step["finished_at"] = Time.current.iso8601
-          end
+          next unless step["node_id"] == node_id.to_s && step["status"] == from_status.to_s
+
+          step["status"] = to_status.to_s
+          step["error"] = error_msg if error_msg
+          step["finished_at"] = Time.current.iso8601
         end
       end
       execution_data.update!(data: full_data)
@@ -272,6 +287,7 @@ end
 #  waiting_until       :datetime
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  job_id              :string
 #  trigger_node_id     :string(100)
 #  waiting_node_id     :string(100)
 #  workflow_id         :bigint           not null
@@ -279,6 +295,7 @@ end
 #
 # Indexes
 #
+#  idx_dwf_executions_on_job_id                       (job_id) UNIQUE WHERE (job_id IS NOT NULL)
 #  idx_dwf_executions_on_resume_token                 (resume_token) WHERE (resume_token IS NOT NULL)
 #  idx_dwf_executions_on_retention                    (created_at) WHERE (status = ANY (ARRAY[2, 3, 5, 6]))
 #  idx_dwf_executions_on_status_waiting_until         (status,waiting_until)

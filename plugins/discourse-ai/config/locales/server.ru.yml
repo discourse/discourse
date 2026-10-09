@@ -80,10 +80,8 @@ ru:
     ai_helper_allowed_in_pm: "Включить AI-помощник для редактора в личных сообщениях."
     ai_helper_automatic_chat_thread_title_delay: "Задержка в минутах, прежде чем AI-помощник автоматически установит заголовок темы чата."
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
-    ai_helper_enabled_features: "Выберите функции, которые нужно включить в AI-помощнике."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
-    ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
     ai_embeddings_semantic_related_topics_enabled: "Использовать семантический поиск для связанных тем."
     ai_embeddings_semantic_related_topics: "Максимальное количество тем для показа в разделе связанных тем."
     ai_embeddings_backfill_batch_size: "Количество векторных представлений для обратного заполнения каждые 15 минут."
@@ -99,7 +97,6 @@ ru:
     ai_pm_summarization_allowed_groups: "Группам разрешено создавать и просматривать сводки в личных сообщениях."
     ai_summary_gists_enabled: "Автоматически создает краткие сводки последних ответов в темах"
     ai_bot_enabled: "Включить модуль AI-бота."
-    ai_bot_allowed_groups: "Если у GPT-бота есть доступ к личным сообщениям, он будет отвечать участникам указанных групп."
     ai_bot_debugging_allowed_groups: "Разрешить этим группам видеть в публикациях кнопку отладки, которая отображает необработанный запрос и ответ AI."
     ai_bot_public_sharing_allowed_groups: "Разрешить этим группам делиться личными сообщениями AI с общественностью по уникальной общедоступной ссылке. Примечание: если ваш сайт требует входа, для доступа также потребуется вход."
     ai_bot_github_access_token: "Токен доступа к GitHub для использования с инструментами GitHub AI (требуется для поддержки поиска)"
@@ -260,7 +257,6 @@ ru:
         unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
-        generate_titles: Предложить названия для темы
         proofread: Вычитать текст
         markdown_table: Сгенерировать таблицу в формате Markdown
         custom_prompt: "Пользовательский запрос"
@@ -286,10 +282,30 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      navigation:
+        settings:
+          title: "Настройки сайта"
+        users:
+          title: "По пользователям"
+        groups:
+          title: "Группы"
+        review:
+          title: "Очередь проверки"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Теги"
+        themes:
+          title: "тем"
+        authentication:
+          title: "Вход и аутентификация"
+        backups:
+          title: "Резервные копии"
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
+      read_post:
+        unknown_post: "публикация"
       agents:
-        default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
         admin_dashboard_highlights:
           description: "Составляет краткий отчет, отображаемый в верхней части административной панели, с объяснением изменений и моментов, заслуживающих внимания в этот период."
@@ -441,6 +457,8 @@ ru:
         suspend_user: "Заблокировать пользователя"
         silence_user: "Заморозка пользователя"
         edit_post: "Редактировать пост"
+        edit_tag: "Редактировать тег"
+        create_category: "Создать категорию"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"
@@ -471,7 +489,8 @@ ru:
         categories: "Вывод всех общедоступных категорий на форуме"
         flag_post: "Пометить текущую публикацию для проверки сотрудниками"
         delete_topic: "Удаление темы"
-        edit_category: "Переместить тему в другую категорию"
+        create_category: "Создать новую категорию"
+        change_topic_category: "Переместить тему в другую категорию"
         set_slow_mode: "Включить или отключить медленный режим для темы"
         move_posts: "Переместить сообщения в новую или существующую тему"
         grant_badge: "Назначение награды пользователю"
@@ -509,8 +528,8 @@ ru:
         lock_post: "Блокировка поста %{post_id} (заблокировано: %{locked})"
         delete_topic: "Удаление темы %{topic_id} (удалено: %{deleted})"
         edit_post: "Редактирование поста %{post_id}"
-        edit_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
-        edit_category: "Переместить тему %{topic_id} в категорию %{category_id}"
+        change_topic_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
+        change_topic_category: "Переместить тему %{topic_id} в категорию %{category_id}"
         set_topic_timer: "Установка таймера %{timer_type} для темы %{topic_id} (%{duration_hours}ч)"
         set_slow_mode: "Установка медленного режима для темы %{topic_id} (%{slow_mode_seconds}с)"
         move_posts: "Перемещение сообщений %{post_ids} из темы %{topic_id}"
@@ -566,9 +585,6 @@ ru:
           few: "Найдено %{count} результата по запросу «%{query}»"
           many: "Найдено %{count} результатов по запросу «%{query}»"
           other: "Найдено %{count} результата по запросу «%{query}»"
-      discoveries:
-        continue_conversation:
-          raw: "Во время поиска «%{query}» вы предоставили мне следующие сведения:\n\n%{context}\n\nДавайте продолжим разговор."
       flag_post:
         already_flagged: "Сообщение уже помечено для проверки."
         flagged: "Сообщение помечено для проверки."
@@ -609,14 +625,23 @@ ru:
           not_allowed: "Вам не разрешено редактировать этот пост."
           no_reason: "Необходимо указать причину редактирования."
         success: "Пост успешно отредактирован."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Тема не найдена."
           not_allowed: "Вам не разрешено редактировать теги в этой теме."
           no_reason: "Для редактирования тегов необходима причина."
           tagging_disabled: "На этом сайте функция добавления тегов отключена."
         success: "Теги успешно обновлены."
+      create_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
+      edit_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
       edit_category:
+        errors:
+          not_found: "Категория не найдена."
+      change_topic_category:
         errors:
           not_found: "Тема не найдена."
           not_allowed: "Вам не разрешено перемещать эту тему."
@@ -758,7 +783,6 @@ ru:
       no_user_specified: Параметры user_unique_id или username обязательны, укажите нужное.
       user_not_found: Указанный пользователь не существует. Проверьте параметр username.
       agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: persona_name или persona_id)."
-      no_default_llm: У агента должен быть определен параметр default_llm.
       user_not_allowed: Пользователю не разрешено участвовать в теме.
       prompt_message_length: Сообщение %{idx} превышает ограничение в 1000 символов.
       agent_already_exists: Агент с именем %{name} уже существует.

@@ -106,8 +106,8 @@ module DiscourseWorkflows
         object
           .executions
           .includes(:execution_data)
-          .where(status: :success)
-          .order(created_at: :desc)
+          .where(status: %i[success error])
+          .order(created_at: :desc, id: :desc)
           .first
       execution&.execution_data&.run_data
     end

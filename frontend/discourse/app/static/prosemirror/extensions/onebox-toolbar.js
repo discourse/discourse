@@ -75,6 +75,12 @@ class OneboxToolbarPluginView {
     this.#displayToolbar();
   }
 
+  destroy() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#toolbar = null;
+  }
+
   #resetToolbar() {
     this.#menuInstance?.destroy();
     this.#menuInstance = null;
@@ -267,12 +273,6 @@ class OneboxToolbarPluginView {
       .then((instance) => {
         this.#menuInstance = instance;
       });
-  }
-
-  destroy() {
-    this.#menuInstance?.destroy();
-    this.#menuInstance = null;
-    this.#toolbar = null;
   }
 }
 

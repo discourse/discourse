@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
 
 export default class DiscourseReactionsListEmoji extends Component {
   @service siteSettings;
@@ -10,9 +10,9 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   <template>
-    <div class="discourse-reactions-list-emoji" id={{this.elementId}}>
+    <span class="discourse-reactions-list-emoji" id={{this.elementId}}>
       {{#if @reaction.count}}
-        {{dEmoji
+        {{discourseReactionsEmoji
           @reaction.id
           class=(if
             this.siteSettings.discourse_reactions_desaturated_reaction_panel
@@ -21,6 +21,6 @@ export default class DiscourseReactionsListEmoji extends Component {
           )
         }}
       {{/if}}
-    </div>
+    </span>
   </template>
 }

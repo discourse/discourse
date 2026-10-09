@@ -19,6 +19,13 @@ export default {
           route: "adminPlugins.show.explorer",
         },
       ]);
+      api.addAdminSidebarSectionLink("reports", {
+        name: "data_explorer",
+        route: "adminPlugins.show.explorer",
+        routeModels: [PLUGIN_ID],
+        label: "explorer.title",
+        icon: "chart-line",
+      });
     });
   },
 };

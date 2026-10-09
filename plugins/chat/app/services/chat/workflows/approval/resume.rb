@@ -30,7 +30,7 @@ module Chat
           ::DiscourseWorkflows::InteractiveResume.from_action_id(
             params.action_id,
             expected_node_type: "action:chat_approval",
-            allowed_actions: %w[approve deny],
+            allowed_actions: ::DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS,
           )
         end
 

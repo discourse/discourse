@@ -180,9 +180,14 @@ id:
         sort:
           latest: "Terbaru"
       direct_messages:
+        close: "Tutup kanal"
         cannot_create: "Maaf, Anda tidak dapat mengirim pesan langsung."
       channel_list:
         title: "Kanal"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Balasan-balasan"
       incoming_webhooks:
         description: "Deskripsi"
         delete: "Hapus"
@@ -258,3 +263,7 @@ id:
         message: "pesan"
       chat_approval:
         message: "pesan"
+        buttons: "Tombol"
+        style_default: "Asal"
+        style_primary: "Utama"
+        style_success: "Sukses"

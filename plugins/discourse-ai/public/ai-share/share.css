@@ -293,11 +293,14 @@ h1 h2 h3 h4 h5 h6 {
   color: var(--primary-900);
 }
 
-.post__date, .post__agent {
+.post__date,
+.post__agent,
+.post__model {
   font-size: var(--font-down-1);
 }
 
-.post__agent {
+.post__agent,
+.post__model {
   color: var(--primary-600);
 }
 

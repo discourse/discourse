@@ -214,6 +214,7 @@ sq:
       message: "Ne e kemi përditësuar këtë faqe, <span>ju lutemi rifreskoni</span> për të mos patur probleme në funksionim."
       dismiss: "Hiqe"
     back_button: "Kthehu mbrapa"
+    confirm_button: "Konfirmoni"
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
@@ -315,6 +316,15 @@ sq:
     admin_onboarding_banner:
       start_posting:
         back: "Kthehu mbrapa"
+    design_wizard:
+      back: "Kthehu mbrapa"
+      next: "Vazhdo përpara"
+      sections:
+        theme: "Tema"
+        search: "Kërko"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
     about:
       edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"
@@ -564,9 +574,6 @@ sq:
         optional: "opsionale"
       claim_help:
         optional: "Ju mund ta përvetësoni këtë artikull për të parandaluar të tjerët ta shqyrtojnë atë."
-        required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
-        claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
-        claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -717,6 +724,9 @@ sq:
       user_label: "User"
       timeline:
         target_deleted: "Postimi u fshi"
+      author_penalty:
+        toast:
+          undo: "Zhbëj"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -1297,7 +1307,6 @@ sq:
       admin: "%{user} është admin"
       moderator_tooltip: "Ky anëtar është moderator"
       admin_tooltip: "Ky anëtar është administrator"
-      silenced_tooltip: "Ky përdorues është heshtur"
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"
@@ -1355,6 +1364,12 @@ sq:
       tracked_topics_link: "Shfaq"
       automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes"
       apps: "Aplikimet"
+      mcp_authorizations:
+        details: "Detaje"
+        never: "Asnjëherë"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Hiqi aksesin"
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
@@ -1799,7 +1814,6 @@ sq:
         after_10_minutes: "pas 10 minutash"
       notification_level_when_replying:
         track_topic: "Ndiqni temën"
-      topics_unread_when_closed: "Konsideroni temat e palexuara kur ato janë të mbyllura"
       invited:
         title: "Ftesat"
         pending_tab: "Në pritje"
@@ -2389,12 +2403,15 @@ sq:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Hyni"
+      delete: "Fshij"
+      home: "Kryefaqja"
     conditional_loading_section:
       loading: Duke u ngarkuar…
     category_row:
       subcategory_count:
         one: "+%{count} nënkategori"
         other: "+%{count} nënkategori"
+      subcategories: "+ Nënkategori"
       topic_count:
         one: "%{count} temë në këtë kategori"
         other: "%{count} tema në këtë kategori"
@@ -2527,7 +2544,6 @@ sq:
       create_whisper: "Pëshpëritje"
       create_shared_draft: "Krijo draft të përbashkët"
       edit_shared_draft: "Redakto draftin e përbashkët"
-      title: "Ose shtypni %{modifier}Enter"
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
@@ -2695,7 +2711,6 @@ sq:
         other: "%{count} kërkesa të hapura për anëtarësim për '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - përfunduar"
       new_features: "Karakteristika të reja në dispozicion!"
       admin_problems: "Këshilla të reja në panelin e faqes tuaj"
       dismiss_confirmation:
@@ -2803,10 +2818,9 @@ sq:
       recent: "Kërkimet e fundit"
       clear_recent: "Pastro kërkimet e fundit"
       type:
-        default: "Temat/postimet"
+        default: "Postime"
         users: "Anëtarët"
         categories: "Kategoritë"
-        categories_and_tags: "Kategoritë/etiketat"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
@@ -2819,7 +2833,6 @@ sq:
         in: "filtra sipas meta të dhënave (p.sh. në:titull, në:personal, në:gozhduar)"
         status: "filtron sipas statusit të temës"
         full_search: "nis kërkimin në faqe të plotë"
-        full_search_key: "%{modifier} + Enter"
         me: "tregon vetëm postimet tuaja"
       advanced:
         title: Filtra të avancuar
@@ -3412,7 +3425,6 @@ sq:
       reply_as_new_topic: "Përgjigju në një temë të re të ndërlidhur"
       continue_discussion: "Vazhdim i diskutimit nga tema %{postLink}:"
       follow_quote: "shko tek tema e cituar"
-      show_full: "Shfaq postimin e plotë"
       expand_collapse: "zgjero/shkurto"
       gap:
         one: "shiko %{count} përgjigje të fshehur"
@@ -3552,6 +3564,7 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      latest_topics: "Temat e fundit"
       description_expand: "Shfaq më shumë"
       description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
@@ -3689,6 +3702,7 @@ sq:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
       filter:
+        reset: "rivendosni"
         button:
           label: "Filtro"
       latest:
@@ -4015,6 +4029,11 @@ sq:
         group_traffic: "Trafik"
         group_members: "Anëtarë"
         group_other: "Të tjerë"
+        related_items:
+          users:
+            title: "Users"
+          labels:
+            user: "User"
       config_sections:
         account:
           title: "Llogaria"
@@ -4049,6 +4068,55 @@ sq:
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Lejimi"
+            activity: "Aktiviteti"
+          overview:
+            status: "Status"
+          access:
+            title: "Lejimi"
+            group: "Grupi"
+            groups: "Grupet"
+            actions: "Veprimet"
+            edit: "Redaktoni"
+            delete: "Fshij"
+          primitives:
+            group_by_options:
+              kind: "Lloji"
+            kind: "Lloji"
+          clients:
+            actions: "Veprimet"
+            block: "Blloko"
+            presets:
+              custom: "Grupet e krijuara"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Veprimet"
+          activity:
+            time: "Koha"
+            user: "User"
+            duration: "Kohëzgjatja"
+          values:
+            server_status:
+              disabled: "E çaktivizuar"
+            client_trust:
+              approved: "Aprovuar"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              error: "Gabim"
+            primitive_state:
+              enabled: "Aktivizuar"
+              disabled: "E çaktivizuar"
+            primitive_kind:
+              all: "Të gjitha llojet"
+            filter:
+              all: "Të gjitha"
+          never: "Asnjëherë"
+          actions:
+            revoke: "Revoko"
         emojis:
           title: "Emoji"
         files:
@@ -4165,11 +4233,20 @@ sq:
         default_value: "Paracaktuar"
       search:
         title: "Kërko"
+      site_traffic_explorer:
+        metric_information: "Rreth %{metric}"
+        apply: "Apliko"
+        view_more: "Shiko më shumë"
+        cards:
+          visitors: "Vizitorët"
+        filters:
+          ip: "Adresa IP"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
-        critical_available: "Përditësim i rëndësishëm."
         updates_available: "Ka përditësime."
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
@@ -4203,6 +4280,8 @@ sq:
               share: "Shpërndaje"
             whos_posting:
               staff: "Stafi"
+              modal:
+                apply: "Ruani"
             trust_level_pipeline:
               trust_levels:
                 "0": "I Ri"
@@ -4214,6 +4293,9 @@ sq:
             title: "Kërko"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Menaxhoni"
           modal:
@@ -4222,6 +4304,7 @@ sq:
         site_traffic:
           series:
             anonymous: "Anonim"
+          crawler_learn_more: "Mësoni më shumë"
         period:
           custom: "Grupet e krijuara"
         reports:
@@ -4238,6 +4321,13 @@ sq:
           monthly: Mujore
           weekly: Javore
           groups: "Të gjitha grupet"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} anëtar"
+              other: "%{count} anëtarë"
+            posts_count:
+              one: "%{count} postim"
+              other: "%{count} postime"
           sort_button: "Rendit sipas %{column}"
           filters:
             group:
@@ -4919,12 +5009,10 @@ sq:
           confirm: "Konfirmimi"
           dropdown: "Listë Dropdown"
       site_text:
-        search: "Kërkoni për tekstin që dëshironi të redaktoni"
+        search_label: "Kërko"
+        theme_disabled: "E çaktivizuar"
         edit: "Redaktoni"
-        revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
-        go_back: "Kthehu tek kërkimi"
-        recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: "Shfaq vetëm të ndryshuarat"
         outdated:
           dismiss: "Hiqe"

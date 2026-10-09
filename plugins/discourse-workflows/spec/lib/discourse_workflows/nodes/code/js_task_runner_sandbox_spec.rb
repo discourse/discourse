@@ -20,6 +20,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::JsTaskRunnerSandbox do
   end
 
   before { @exec_ctx, @resolver, @sandbox = build_exec_ctx }
+
   after do
     @resolver&.dispose
     @sandbox&.dispose

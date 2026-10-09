@@ -21,6 +21,10 @@ en_GB:
               title: "Categories"
       usage:
         summary: "Summary"
+      logs:
+        post: "Post"
+        retention:
+          summary_stage: "Summary"
       ai_agent:
         description: "Description"
       tools:

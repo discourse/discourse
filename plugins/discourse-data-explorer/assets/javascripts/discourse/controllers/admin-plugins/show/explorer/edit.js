@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import { measuredMin } from "discourse/lib/resize-measurements";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
@@ -19,7 +20,9 @@ import {
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
+const DEFAULT_QUERY_TAG = "default";
 const HIDE_SCHEMA_KEY = "hide_schema";
+const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
@@ -41,11 +44,24 @@ export default class PluginsExplorerController extends Controller {
   @tracked aiPrompt = "";
   @tracked aiGenerating = false;
   @tracked lastGeneratedPrompt = null;
+  @tracked dashboardBusy = false;
+  @tracked dashboardMounted = false;
+  @tracked dashboardMountable = false;
 
   queryParams = ["params"];
   order = null;
   form = null;
   shouldAutoRun = false;
+
+  /**
+   * A weak handle on the panes the live separator resolved, rather than a global
+   * query that would find whichever editor comes first in the document.
+   *
+   * Weak because this controller is an app-lifetime singleton and the separator
+   * can go without telling it, so a strong reference would hold a detached
+   * subtree until something else replaced it.
+   */
+  #resolvedPanes = null;
   _pristine = null;
   _teardownAiGeneration = null;
   _aiGenerationToken = 0;
@@ -58,37 +74,6 @@ export default class PluginsExplorerController extends Controller {
     if (this.model) {
       this.snapshotPristine();
     }
-  }
-
-  snapshotPristine() {
-    if (!this.model) {
-      return;
-    }
-    this._pristine = {
-      name: this.model.name ?? "",
-      description: this.model.description ?? "",
-      sql: this.model.sql ?? "",
-      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
-    };
-    this.dirty = false;
-  }
-
-  recomputeDirty() {
-    if (!this._pristine) {
-      this.dirty = true;
-      return;
-    }
-    const current = {
-      name: this.model.name ?? "",
-      description: this.model.description ?? "",
-      sql: this.model.sql ?? "",
-      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
-    };
-    this.dirty =
-      current.name !== this._pristine.name ||
-      current.description !== this._pristine.description ||
-      current.sql !== this._pristine.sql ||
-      current.group_ids !== this._pristine.group_ids;
   }
 
   // While a query is running (or AI is generating) the actions in the action
@@ -131,10 +116,19 @@ export default class PluginsExplorerController extends Controller {
 
   get groupOptions() {
     return this.groups
-      .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
-      .map((g) => {
-        return { id: g.id, name: g.name };
+      .filter(
+        (group) =>
+          group.id !== AUTO_GROUPS.everyone.id &&
+          group.id !== AUTO_GROUPS.anonymous_users.id &&
+          group.id !== AUTO_GROUPS.logged_in_users.id
+      )
+      .map((group) => {
+        return { id: group.id, name: group.name };
       });
+  }
+
+  get mandatoryTags() {
+    return this.model.is_default ? DEFAULT_QUERY_TAG : null;
   }
 
   get hasResults() {
@@ -156,6 +150,35 @@ export default class PluginsExplorerController extends Controller {
     );
   }
 
+  get showDashboardToggle() {
+    return this.siteSettings.dashboard_improvements && !this.model.destroyed;
+  }
+
+  get dashboardToggleIcon() {
+    return this.dashboardMounted ? "thumbtack-slash" : "thumbtack";
+  }
+
+  get dashboardToggleLabel() {
+    return this.dashboardMounted
+      ? "explorer.dashboard.remove"
+      : "explorer.dashboard.add";
+  }
+
+  get dashboardToggleDisabled() {
+    return (
+      this.actionsBusy ||
+      this.dashboardBusy ||
+      (!this.dashboardMounted && !this.dashboardMountable)
+    );
+  }
+
+  get dashboardToggleTitle() {
+    if (this.dashboardMounted || this.dashboardMountable) {
+      return null;
+    }
+    return i18n("explorer.dashboard.unmountable");
+  }
+
   get viewItems() {
     const items = [
       { value: "chart", icon: "signal" },
@@ -165,6 +188,45 @@ export default class PluginsExplorerController extends Controller {
       items.push({ value: "sql", icon: "code" });
     }
     return items;
+  }
+
+  /** The one place the weak handle is dereferenced. */
+  get #panes() {
+    return this.#resolvedPanes?.deref() ?? null;
+  }
+
+  snapshotPristine() {
+    if (!this.model) {
+      return;
+    }
+    this._pristine = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
+    };
+    this.dirty = false;
+  }
+
+  recomputeDirty() {
+    if (!this._pristine) {
+      this.dirty = true;
+      return;
+    }
+    const current = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
+    };
+    this.dirty =
+      current.name !== this._pristine.name ||
+      current.description !== this._pristine.description ||
+      current.sql !== this._pristine.sql ||
+      current.group_ids !== this._pristine.group_ids ||
+      current.tags !== this._pristine.tags;
   }
 
   initView() {
@@ -179,6 +241,50 @@ export default class PluginsExplorerController extends Controller {
     } else {
       this.view = defaultView(this.results);
     }
+  }
+
+  /**
+   * The panes the separator resizes, found from the separator's own position.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
+  @bind
+  panesFor(separator) {
+    const panes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    this.#resolvedPanes = panes ? new WeakRef(panes) : null;
+    // The element, not the handle. It goes straight to a ResizeObserver.
+    return panes;
+  }
+
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header. This page scrolls, so growing
+   * the panes lengthens it rather than pushing anything out of view.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, measuredMin(this.#panes, "vertical"));
+  }
+
+  @bind
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
+
+    panes.style.height = `${size}px`;
+    this.appEvents.trigger("ace:resize");
+  }
+
+  /** Lets go of the panes. Called by the route on exit. */
+  releasePanes() {
+    this.#resolvedPanes = null;
   }
 
   @action
@@ -285,13 +391,6 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  _teardownAi() {
-    this._aiGenerationToken++;
-    this._teardownAiGeneration?.();
-    this._teardownAiGeneration = null;
-    this.aiGenerating = false;
-  }
-
   @action
   async save() {
     try {
@@ -308,70 +407,45 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  async _importQuery(file) {
-    const json = await this._readFileAsTextAsync(file);
-    const query = this._parseQuery(json);
-    const record = this.store.createRecord("query", query);
-    const response = await record.save();
-    return response.target;
-  }
-
-  _parseQuery(json) {
-    const parsed = JSON.parse(json);
-    const query = parsed.query;
-    if (!query || !query.sql) {
-      throw new TypeError();
+  @action
+  async toggleDashboard() {
+    const mounted = this.dashboardMounted;
+    this.dashboardBusy = true;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: {
+          source: DASHBOARD_REPORT_SOURCE,
+          identifier: String(this.model.id),
+        },
+      });
+      this.dashboardMounted = !mounted;
+      this.toasts.success({
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.dashboardBusy = false;
     }
-    query.id = 0; // 0 means no Id yet
-    return query;
   }
-
-  _readFileAsTextAsync(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-
-      reader.readAsText(file);
-    });
-  }
-
-  @bind
-  dragMove(e) {
-    if (!e.movementX) {
-      return;
-    }
-
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
-
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneHeight = target.clientHeight;
-    }
-
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-
-    target.style.height = newHeight + "px";
-
-    this.appEvents.trigger("ace:resize");
-  }
-
-  @bind
-  didStartDrag() {}
-
-  @bind
-  didEndDrag() {}
 
   @action
   updateGroupIds(value) {
     this.model.set("group_ids", value);
+    this.recomputeDirty();
+  }
+
+  @action
+  updateTags(value) {
+    const tags = this.model.is_default
+      ? [DEFAULT_QUERY_TAG, ...value.filter((tag) => tag !== DEFAULT_QUERY_TAG)]
+      : value;
+    this.model.set("tags", tags);
     this.recomputeDirty();
   }
 
@@ -486,10 +560,11 @@ export default class PluginsExplorerController extends Controller {
         return;
       }
     }
+    const stringifiedParams = JSON.stringify(params);
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(params),
+      params: params === null ? null : stringifiedParams,
     });
 
     ajax(
@@ -499,7 +574,7 @@ export default class PluginsExplorerController extends Controller {
       {
         type: "POST",
         data: {
-          params: JSON.stringify(params),
+          params: stringifiedParams,
           explain,
         },
       }
@@ -536,5 +611,42 @@ export default class PluginsExplorerController extends Controller {
     if (this.shouldAutoRun) {
       this.run();
     }
+  }
+
+  _teardownAi() {
+    this._aiGenerationToken++;
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
+    this.aiGenerating = false;
+  }
+
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  }
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
+    }
+    query.id = 0; // 0 means no Id yet
+    return query;
+  }
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
   }
 }

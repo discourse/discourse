@@ -40,9 +40,9 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     await render(
       <template>
         <DashboardHighlights
+          @endDate={{end}}
           @highlights={{highlights}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -82,9 +82,9 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     await render(
       <template>
         <DashboardHighlights
+          @endDate={{end}}
           @highlights={{highlights}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -101,9 +101,9 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     await render(
       <template>
         <DashboardHighlights
+          @endDate={{end}}
           @highlights={{highlights}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -117,9 +117,9 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     await render(
       <template>
         <DashboardHighlights
+          @endDate={{end}}
           @highlights={{highlights}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -131,10 +131,10 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     await render(
       <template>
         <DashboardHighlights
-          @highlights={{null}}
-          @fetchError={{true}}
-          @startDate={{start}}
           @endDate={{end}}
+          @fetchError={{true}}
+          @highlights={{null}}
+          @startDate={{start}}
         />
       </template>
     );

@@ -62,8 +62,8 @@ export default class AdminReportRadar extends Component {
 
   <template>
     <Chart
-      @chartConfig={{this.chartConfig}}
       class="admin-report-chart admin-report-radar"
+      @chartConfig={{this.chartConfig}}
     />
   </template>
 }

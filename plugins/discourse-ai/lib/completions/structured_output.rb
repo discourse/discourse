@@ -85,6 +85,15 @@ module DiscourseAi
         end
       end
 
+      # Yields the unread chunk of a string property, if any. Reading consumes
+      # the buffer, so unlike a presence check at the call site this never
+      # drops whitespace-only chunks (e.g. a "\n\n" delta between paragraphs).
+      def read_buffered_property_chunk(prop_name)
+        chunk = read_buffered_property(prop_name)
+        yield chunk if !chunk.nil? && !chunk.empty?
+        chunk
+      end
+
       def notify_progress(key, value)
         key_sym = key.to_sym
         return if !@property_names.include?(key_sym)

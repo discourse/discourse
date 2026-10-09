@@ -10,7 +10,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code", async function (assert) {
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code="def test; end" />
+        <DHighlightedCode @code="def test; end" @lang="ruby" />
       </template>
     );
 
@@ -22,7 +22,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
 
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code={{longCodeBlock}} />
+        <DHighlightedCode @code={{longCodeBlock}} @lang="ruby" />
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code with lang=auto", async function (assert) {
     await render(
       <template>
-        <DHighlightedCode @lang="auto" @code="def test; end" />
+        <DHighlightedCode @code="def test; end" @lang="auto" />
       </template>
     );
 
@@ -56,7 +56,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
 
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code={{testState.code}} />
+        <DHighlightedCode @code={{testState.code}} @lang="ruby" />
         {{testState.code}}
       </template>
     );

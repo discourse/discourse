@@ -54,6 +54,8 @@ tr_TR:
       cast-votes:
         title: "Oylarınızı kullanın"
         label: "Hemen oy verin!"
+      keep-vote:
+        label: "Geri"
       show-results:
         title: "Anket sonuçlarını göster"
         label: "Sonuçlar"

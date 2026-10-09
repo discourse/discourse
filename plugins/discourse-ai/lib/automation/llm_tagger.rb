@@ -189,9 +189,12 @@ module DiscourseAi
         first_post = topic.posts.where(post_number: 1).first
         return unless first_post
 
-        changes = { tags: all_tags, bypass_bump: true, skip_validations: true }
-
-        first_post.revise(Discourse.system_user, changes)
+        first_post.revise(
+          Discourse.system_user,
+          { tags: all_tags },
+          bypass_bump: true,
+          skip_validations: true,
+        )
       end
     end
   end

@@ -29,4 +29,14 @@ th:
       post: "โพส"
     discourse_workflows:
       assign_topic:
+        resources:
+          topic: "หัวข้อ"
+          post: "โพส"
         topic_id: "หมายเลขกระทู้"
+        post_id: "หมายเลขโพสต์"
+      check_assignment:
+        target_types:
+          topic: "หัวข้อ"
+          post: "โพส"
+        topic_id: "หมายเลขกระทู้"
+        post_id: "หมายเลขโพสต์"

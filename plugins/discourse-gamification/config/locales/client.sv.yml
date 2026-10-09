@@ -61,3 +61,8 @@ sv:
         title: "Gamification"
         name: "Namn"
         period: "Period"
+    discourse_workflows:
+      gamification_score:
+        username: "Användare"
+        date: "Datum"
+        description: "Beskrivning"

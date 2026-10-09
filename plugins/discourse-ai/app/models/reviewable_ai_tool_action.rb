@@ -42,13 +42,14 @@ class ReviewableAiToolAction < Reviewable
 
   def perform_approve(performed_by, args)
     ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
     tool, tool_class, context = build_tool!
     context.user = performed_by if tool_class.attribute_to_approver?
 
     # Suppress automation re-triggers caused by the tool's side effects
-    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
+    # (e.g. change_topic_tags → topic_tags_changed → automation fires again → loop).
     result =
       if defined?(DiscourseAutomation)
         DiscourseAutomation.suppress_triggers { tool.invoke }
@@ -58,17 +59,42 @@ class ReviewableAiToolAction < Reviewable
 
     ensure_tool_succeeded!(result)
 
-    create_result(:success, :approved)
+    resolution_result(:approved, args, tool_result: result)
   end
 
   def perform_reject(performed_by, args)
     ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
-    create_result(:success, :rejected)
+    resolution_result(:rejected, args)
+  end
+
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
   end
 
   private
+
+  def resolution_result(status, args, tool_result: nil)
+    result = create_result(:success, status)
+    inline_post_id = args[:post_id] || args["post_id"]
+    chat_message_id = args[:chat_message_id] || args["chat_message_id"]
+    return result if inline_post_id.blank? && chat_message_id.blank?
+
+    payload["continuation"] = if chat_message_id.present?
+      { chat_message_id: chat_message_id.to_i, tool_result: tool_result }
+    else
+      { post_id: inline_post_id.to_i, tool_result: tool_result }
+    end
+    result.after_commit = -> do
+      DB.after_commit { Jobs.enqueue(:resume_ai_tool_approval, reviewable_id: id) }
+    end
+    result
+  end
 
   # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
   # context]; the caller sets context.user for audit attribution as needed.
@@ -121,7 +147,7 @@ class ReviewableAiToolAction < Reviewable
       Post.find_by(
         id: inline_post_id,
         topic_id: topic_id,
-        user_id: target&.bot_user_id,
+        user_id: [target&.bot_user_id, target&.ai_agent&.user_id].compact,
         deleted_at: nil,
       )
     approval_marker = "data-ai-tool-approval-reviewable-id='#{id}'"
@@ -130,6 +156,34 @@ class ReviewableAiToolAction < Reviewable
       raise Discourse::InvalidAccess.new(
               I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
             )
+    end
+  end
+
+  def ensure_chat_message_contains_approval!(args)
+    message_id = args[:chat_message_id] || args["chat_message_id"]
+    return if message_id.blank?
+
+    message = ::Chat::Message.find_by(id: message_id)
+    source = ::Chat::Message.find_by(id: payload["chat_message_id"])
+    action_id = DiscourseAi::AiBot::ChatToolApproval.build_action_id("approve", id)
+    valid_block =
+      message&.blocks.to_a.any? do |block|
+        block["elements"].to_a.any? { |element| element["action_id"] == action_id }
+      end
+    valid_context =
+      !source ||
+        (
+          source.chat_channel_id == message&.chat_channel_id &&
+            (
+              source.thread_id == message&.thread_id ||
+                (message&.thread_id.nil? && source.thread&.original_message_id == source.id)
+            )
+        )
+
+    if !message || !message.chat_channel.direct_message_channel? ||
+         ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
+         !valid_block || !valid_context
+      raise Discourse::InvalidAccess
     end
   end
 
@@ -199,11 +253,12 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

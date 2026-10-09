@@ -1,11 +1,16 @@
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { click, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
+import DAccessControlField from "discourse/ui-kit/d-access-control-field";
 import { i18n } from "discourse-i18n";
 
 // A non-automatic group, plus the "logged_in_users" auto group (id: 5) which is one of
@@ -30,6 +35,12 @@ const GROUPS = [
     automatic: true,
   },
 ];
+
+const aclTarget = {
+  type: "TestTarget",
+  id: 123,
+  name: "Test Target",
+};
 
 // Builds a controlled-component wrapper: `onChange` writes the next acl back into
 // tracked state so the component re-renders the way it would in a real parent.
@@ -81,14 +92,74 @@ function rowNames() {
 module("Integration | Component | DAccessControl", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("hydrates missing group and user display names", async function (assert) {
+    const state = controlledState([
+      { type: "group", id: 42, permission: "edit" },
+      {
+        type: "user",
+        id: 7,
+        username: "alice",
+        name: "alice",
+        display_name: "",
+        permission: "view",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(
+        '.d-access-control__row[data-row-type="group"][data-row-id="42"] .d-access-control__item-name'
+      )
+      .hasText("Team A");
+    assert
+      .dom(
+        '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__item-name'
+      )
+      .hasText("alice");
+  });
+
+  test("renders additional rows without fixed ACL entries", async function (assert) {
+    const state = controlledState();
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        >
+          <:additionalRows>
+            <div class="d-access-control__row">Additional access</div>
+          </:additionalRows>
+        </DAccessControl>
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__rows")
+      .hasText(
+        "Additional access",
+        "keeps additional access inside the ACL list"
+      );
+  });
+
   test("adds a group with the default permission via the preloaded grantee chooser", async function (assert) {
     const state = controlledState();
 
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -141,8 +212,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -189,9 +260,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -287,9 +358,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
       await render(
         <template>
           <DAccessControl
-            @groups={{GROUPS}}
             @acl={{state.acl}}
-            @aclTarget="TestTarget"
+            @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
             @onChange={{state.onChange}}
           />
         </template>
@@ -351,8 +422,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -395,8 +466,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -448,8 +519,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -480,8 +551,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -514,8 +585,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -569,9 +640,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -614,8 +685,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -667,8 +738,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -697,9 +768,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -746,9 +817,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -764,5 +835,103 @@ module("Integration | Component | DAccessControl", function (hooks) {
         i18n("access_control.manage.access_permission_editor"),
         "uses the mandatory permission"
       );
+  });
+});
+
+module("Integration | Component | DAccessControlField", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("binds a named field and updates FormKit without an onChange callback", async function (assert) {
+    this.site.groups = GROUPS;
+    this.data = { permissions: [] };
+    this.onSubmit = sinon.spy();
+    pretender.post("/access-control/evaluate.json", (request) => {
+      const payload = JSON.parse(request.requestBody);
+      assert.strictEqual(
+        payload.target_type,
+        aclTarget.type,
+        "evaluates the target class"
+      );
+      assert.strictEqual(
+        payload.new_acl[0].id,
+        42,
+        "evaluates the named field value"
+      );
+      return response({});
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
+          <DAccessControlField
+            @aclTarget={{aclTarget}}
+            @form={{form}}
+            @name="permissions"
+            @title="Permissions"
+          />
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    const chooser = selectKit(".d-access-control__chooser");
+    await chooser.expand();
+    await chooser.selectRowByValue("group:42");
+    await formKit().submit();
+
+    const data = this.onSubmit.firstCall.args[0];
+    assert.strictEqual(
+      data.permissions[0].permission,
+      "edit",
+      "submits the updated permissions"
+    );
+    assert.false(
+      Object.hasOwn(data, "acl"),
+      "does not create the default acl field"
+    );
+  });
+
+  test("reports confirmed access loss and allows submission", async function (assert) {
+    const dialog = getOwner(this).lookup("service:dialog");
+    sinon.stub(dialog, "confirm").resolves(true);
+
+    pretender.post("/access-control/evaluate.json", () =>
+      response(422, {
+        errors: ["You will lose permission to manage this target."],
+        extras: {
+          current_user_will_lose_permission: true,
+          loss_warning_permissions: ["manage"],
+        },
+      })
+    );
+
+    this.data = { acl: [] };
+    this.onChange = sinon.spy();
+    this.onSubmit = sinon.spy();
+    this.onAccessLossConfirmed = sinon.spy();
+
+    await render(
+      <template>
+        <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
+          <DAccessControlField
+            @aclTarget={{aclTarget}}
+            @form={{form}}
+            @onAccessLossConfirmed={{this.onAccessLossConfirmed}}
+            @onChange={{this.onChange}}
+            @title="Access"
+          />
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    assert.true(this.onSubmit.calledOnce, "the form submits");
+    assert.deepEqual(
+      this.onAccessLossConfirmed.firstCall.args,
+      [{ permissions: ["manage"] }],
+      "the confirmed warning permissions are reported"
+    );
   });
 });

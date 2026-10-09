@@ -1,0 +1,148 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { action } from "@ember/object";
+import { eq, includes, not } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import { i18n } from "discourse-i18n";
+import { loadCategories } from "../../lib/boards-categories";
+
+export default class BoardsConstraintFix extends Component {
+  @tracked selectedCategoryId = null;
+  @tracked selectedTagNames = [];
+
+  get canSave() {
+    const { mismatches } = this.args.model;
+    if (mismatches.needsCategory && !this.selectedCategoryId) {
+      return false;
+    }
+    if (mismatches.needsTags && this.selectedTagNames.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  @action
+  async loadCategoryOptions(ids) {
+    const categories = await loadCategories(ids);
+    if (!this.isDestroying && ids.length === 1) {
+      this.selectedCategoryId = categories[0]?.id ?? null;
+    }
+
+    return categories;
+  }
+
+  @action
+  selectCategory(categoryId) {
+    this.selectedCategoryId = categoryId;
+  }
+
+  @action
+  toggleTag(tagName) {
+    if (this.selectedTagNames.includes(tagName)) {
+      this.selectedTagNames = this.selectedTagNames.filter(
+        (t) => t !== tagName
+      );
+    } else {
+      this.selectedTagNames = [...this.selectedTagNames, tagName];
+    }
+  }
+
+  @action
+  confirm() {
+    if (!this.canSave) {
+      return;
+    }
+
+    const result = {};
+    const { mismatches } = this.args.model;
+
+    if (mismatches.needsCategory) {
+      result.category_id = this.selectedCategoryId;
+    }
+    if (mismatches.needsTags) {
+      result.tag_names = this.selectedTagNames;
+    }
+
+    this.args.model.onConfirm(result);
+    this.args.closeModal();
+  }
+
+  @action
+  cancel() {
+    this.args.model.onCancel?.();
+    this.args.closeModal();
+  }
+
+  <template>
+    <DModal
+      class="discourse-boards-constraint-fix-modal"
+      @closeModal={{this.cancel}}
+      @title={{i18n "boards.board.constraint_fix_title"}}
+    >
+      <:body>
+        <p class="discourse-boards-constraint-fix__description">
+          {{i18n "boards.board.constraint_fix_description"}}
+        </p>
+
+        {{#if @model.mismatches.needsCategory}}
+          <div class="discourse-boards-constraint-fix__field">
+            <label>{{i18n "boards.board.constraint_fix_category"}}</label>
+            <div class="discourse-boards-constraint-fix__options">
+              <DAsyncContent
+                @asyncData={{this.loadCategoryOptions}}
+                @context={{@model.mismatches.boardCategoryIds}}
+              >
+                <:content as |categories|>
+                  {{#each categories as |cat|}}
+                    <DButton
+                      class={{if
+                        (eq this.selectedCategoryId cat.id)
+                        "btn-primary discourse-boards-constraint-fix__option--selected"
+                        "btn-default"
+                      }}
+                      data-category-id={{cat.id}}
+                      @action={{fn this.selectCategory cat.id}}
+                      @translatedLabel={{cat.name}}
+                    />
+                  {{/each}}
+                </:content>
+              </DAsyncContent>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if @model.mismatches.needsTags}}
+          <div class="discourse-boards-constraint-fix__field">
+            <label>{{i18n "boards.board.constraint_fix_tags"}}</label>
+            <div class="discourse-boards-constraint-fix__options">
+              {{#each @model.mismatches.boardTagNames as |tagName|}}
+                <DButton
+                  class={{if
+                    (includes this.selectedTagNames tagName)
+                    "btn-primary discourse-boards-constraint-fix__option--selected"
+                    "btn-default"
+                  }}
+                  data-tag-name={{tagName}}
+                  @action={{fn this.toggleTag tagName}}
+                  @translatedLabel={{tagName}}
+                />
+              {{/each}}
+            </div>
+          </div>
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @action={{this.confirm}}
+          @disabled={{not this.canSave}}
+          @label="boards.board.constraint_fix_confirm"
+        />
+        <DButton class="btn-flat" @action={{this.cancel}} @label="cancel" />
+      </:footer>
+    </DModal>
+  </template>
+}

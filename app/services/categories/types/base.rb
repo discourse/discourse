@@ -284,6 +284,8 @@ module Categories
         # Also validates that any site_settings keys are real SiteSettings (a
         # runtime check that cannot be expressed in JSON Schema).
         def validate_schema!
+          require "json_schemer" if !defined?(JSONSchemer)
+
           # Normalize Ruby symbol keys/values to strings via JSON round-trip
           schema_as_json = JSON.parse(configuration_schema.to_json)
 
@@ -446,30 +448,20 @@ module Categories
           end
 
           schema[:site_settings]&.each do |setting_name, target_value|
-            if target_value.is_a?(Hash)
-              default = target_value[:default]
-              custom_label = target_value[:label]
-              custom_type = target_value[:type]
-              custom_choices = target_value[:choices]
-            else
-              default = target_value
-              custom_label = nil
-              custom_type = nil
-              custom_choices = nil
-            end
+            config = target_value.is_a?(Hash) ? target_value : { default: target_value }
 
             meta = SiteSetting.setting_metadata_hash(setting_name)
             depends_on = SiteSetting.type_supervisor.dependencies[setting_name.to_sym]&.first&.to_s
             entry = {
               key: setting_name.to_s,
-              default:,
+              default: config[:default],
               current: SiteSetting.public_send(setting_name),
               overridden: site_setting_overridden?(setting_name),
-              type: custom_type || meta[:type],
-              label: custom_label || meta[:humanized_name],
-              choices: custom_choices || meta[:choices],
+              type: config[:type] || meta[:type],
+              label: config[:label] || meta[:humanized_name],
+              choices: config[:choices] || meta[:choices],
               description: meta[:description],
-              required: false,
+              required: config[:required],
               show_on_create: true,
               show_on_edit: true,
             }

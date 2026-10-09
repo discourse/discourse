@@ -4,6 +4,7 @@ import WorkflowsEditor, {
   buildPastedGraph,
   isNodeUnavailable,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor";
+import { STICKY_NOTE_NAME } from "discourse/plugins/discourse-workflows/admin/models/sticky-note";
 
 function buildEditor(workflow) {
   const editor = Object.create(WorkflowsEditor.prototype);
@@ -258,6 +259,83 @@ module("Unit | Component | workflows editor", function () {
       updatedConnections[0].targetClientId,
       updatedNodes[2].clientId,
       "connection target is remapped"
+    );
+  });
+
+  test("buildPastedGraph preserves copied node names, suffixing only on collision", function (assert) {
+    const existingNodes = [
+      { clientId: "existing", type: "trigger:manual", name: "Foo step" },
+    ];
+
+    const { updatedNodes } = buildPastedGraph({
+      existingNodes,
+      existingConnections: [],
+      copiedNodes: [
+        {
+          clientId: "copied-1",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          name: "Foo step",
+          position: { x: 10, y: 20 },
+        },
+        {
+          clientId: "copied-2",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          name: "Bar step",
+          position: { x: 100, y: 20 },
+        },
+        {
+          clientId: "copied-3",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          name: "   ",
+          position: { x: 200, y: 20 },
+        },
+        {
+          clientId: "copied-4",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          name: "Foo step",
+          position: { x: 300, y: 20 },
+        },
+      ],
+      copiedConnections: [],
+    });
+
+    assert.deepEqual(
+      updatedNodes.map((node) => node.name),
+      [
+        "Foo step",
+        "Foo step 1",
+        "Bar step",
+        i18n("discourse_workflows.nodes.trigger:manual"),
+        "Foo step 2",
+      ],
+      "copied names are kept, deduped on collision (including against already-pasted nodes), regenerated when blank"
+    );
+  });
+
+  test("buildPastedGraph keeps the sticky note name reserved", function (assert) {
+    const { updatedNodes } = buildPastedGraph({
+      existingNodes: [],
+      existingConnections: [],
+      copiedNodes: [
+        {
+          clientId: "copied-1",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          name: STICKY_NOTE_NAME,
+          position: { x: 10, y: 20 },
+        },
+      ],
+      copiedConnections: [],
+    });
+
+    assert.deepEqual(
+      updatedNodes.map((node) => node.name),
+      [`${STICKY_NOTE_NAME} 1`],
+      "reserved even though the workflow has no sticky note"
     );
   });
 

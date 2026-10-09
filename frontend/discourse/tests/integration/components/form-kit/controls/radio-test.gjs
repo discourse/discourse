@@ -12,7 +12,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="radio-group" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
               <field.Control as |RadioGroup|>
                 <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
               </field.Control>
@@ -28,7 +28,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="radio-group" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
               <field.Control as |RadioGroup|>
                 <RadioGroup.Radio @value="one" as |radio|>
                   <radio.Title>One title</radio.Title>
@@ -51,10 +51,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="radio-group"
+              @disabled={{true}}
               @name="foo"
               @title="Foo"
-              @disabled={{true}}
+              @type="radio-group"
               as |field|
             >
               <field.Control as |RadioGroup|>

@@ -32,6 +32,21 @@ class ChatSetupInit {
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("preferences", {
+        name: "preferences-chat",
+        route: "preferences.chat",
+        label: "chat.title_capitalized",
+        icon: "d-chat",
+        displayed: ({ siteSettings, currentUser, user }) =>
+          siteSettings.chat_enabled && (user?.can_chat || currentUser?.admin),
+      });
+
+      api.registerReviewableComponent(
+        "ReviewableChatMessage",
+        async () =>
+          (await import("../components/reviewable/chat-message")).default
+      );
+
       api.addAboutPageActivity("chat_messages", (periods) => {
         const count = periods["7_days"];
         if (count) {

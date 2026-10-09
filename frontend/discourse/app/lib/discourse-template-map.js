@@ -85,22 +85,6 @@ class DiscourseTemplateMap {
     }
   }
 
-  #add(path, moduleName, source) {
-    if (this.templates.has(path)) {
-      const msg = `Duplicate templates found for '${path}': '${moduleName}' clashes with '${this.templates.get(path)}'`;
-
-      if (isTesting()) {
-        throw new Error(msg);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(msg);
-      }
-    } else {
-      this.templates.set(path, moduleName);
-      this.sources.set(path, source);
-    }
-  }
-
   /**
    * Resolve a template name to a module name, taking into account
    * theme/plugin namespaces and overrides.
@@ -117,6 +101,22 @@ class DiscourseTemplateMap {
    */
   identifySource(name) {
     return this.sources.get(name);
+  }
+
+  #add(path, moduleName, source) {
+    if (this.templates.has(path)) {
+      const msg = `Duplicate templates found for '${path}': '${moduleName}' clashes with '${this.templates.get(path)}'`;
+
+      if (isTesting()) {
+        throw new Error(msg);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(msg);
+      }
+    } else {
+      this.templates.set(path, moduleName);
+      this.sources.set(path, source);
+    }
   }
 }
 

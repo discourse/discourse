@@ -1,8 +1,32 @@
 import { getOwner } from "@ember/owner";
 import { later } from "@ember/runloop";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors";
 
 export const MIN_CHARACTER_COUNT = 40;
+
+// Fetches title suggestions from the server. Returns the suggestions array,
+// or null when the request failed (the relevant error is shown to the user).
+export async function fetchTitleSuggestions({ text, topicId }) {
+  const data = text ? { text } : { topic_id: topicId };
+
+  try {
+    const { suggestions } = await ajax(
+      "/discourse-ai/ai-helper/suggest_title",
+      { method: "POST", data }
+    );
+    return suggestions;
+  } catch (error) {
+    if (isAiCreditLimitError(error)) {
+      popupAiCreditLimitError(error);
+    } else {
+      popupAjaxError(error);
+    }
+    return null;
+  }
+}
 
 export function tagNames(tags) {
   return (tags ?? [])

@@ -14,6 +14,7 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
@@ -70,60 +71,36 @@ export default class SupportSection extends Component {
   }
 
   get headline() {
-    const headline = this.data?.headline;
-    if (!headline) {
-      return null;
-    }
-
     const prefix = "admin.dashboard.sections.support.headline";
-    const titleKey = `${prefix}.${headline.key}.title`;
-
-    if (headline.key === "no_data") {
-      return { titleKey, summary: i18n(`${prefix}.no_data.summary`) };
+    const resolutionDirection = this.#direction(
+      this.data?.kpis?.resolution_rate
+    );
+    const replyDirection = this.#direction(this.data?.kpis?.avg_first_reply, {
+      noPriorDirection: "up",
+    });
+    if (
+      resolutionDirection === "unavailable" &&
+      replyDirection === "unavailable"
+    ) {
+      const headlineKeys = supportHeadlineKeys({ noData: true });
+      return {
+        title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+        summary: i18n(`${prefix}.summaries.${headlineKeys.summary}`),
+      };
     }
 
-    const parts = [
-      i18n(`${prefix}.resolution.${headline.resolution_direction}`, {
-        rate: headline.resolution_rate,
-      }),
-    ];
-
-    if (headline.answerers_focus) {
-      parts.push(
-        i18n(`${prefix}.answerers.${headline.answerers_focus}`, {
-          share: headline.answerers_share,
-        })
-      );
-    }
-
-    if (headline.first_reply_seconds != null) {
-      const dir = headline.first_reply_direction;
-      if (
-        (dir === "faster" || dir === "slower") &&
-        headline.first_reply_delta_seconds != null
-      ) {
-        parts.push(
-          i18n(`${prefix}.reply.${dir}`, {
-            time: durationTiny(headline.first_reply_seconds),
-            delta: durationTiny(headline.first_reply_delta_seconds),
-          })
-        );
-      } else {
-        parts.push(
-          i18n(`${prefix}.reply.flat`, {
-            time: durationTiny(headline.first_reply_seconds),
-          })
-        );
-      }
-    }
-
-    if (headline.key === "struggling" && headline.unanswered_count > 0) {
-      parts.push(
-        i18n(`${prefix}.unanswered`, { count: headline.unanswered_count })
-      );
-    }
-
-    return { titleKey, summary: parts.join(" ") };
+    const headlineKeys = supportHeadlineKeys({
+      resolutionRate: resolutionDirection,
+      firstReplyTime: replyDirection,
+    });
+    const summary = i18n(`${prefix}.summaries.${headlineKeys.summary}`);
+    const cta = headlineKeys.cta
+      ? i18n(`${prefix}.cta.${headlineKeys.cta}`)
+      : null;
+    return {
+      title: i18n(`${prefix}.titles.${headlineKeys.title}`),
+      summary: cta ? `${summary} ${cta}` : summary,
+    };
   }
 
   get resolutionRate() {
@@ -194,14 +171,6 @@ export default class SupportSection extends Component {
     return allSupport.length > 0 ? this.#categoryTerm(allSupport) : null;
   }
 
-  #categoryTerm(categories) {
-    const slugs = categories.map((category) => Category.slugFor(category, ":"));
-    // `=` restricts to these exact categories, excluding subcategories, to
-    // match the dashboard's own count (accepted answers are opt-in per
-    // category and never inherited by subcategories).
-    return `=category:${slugs.join(",")}`;
-  }
-
   get dateRangeTerms() {
     const terms = [];
     if (this.args.startDate) {
@@ -264,27 +233,6 @@ export default class SupportSection extends Component {
     this.#persistSelection();
   }
 
-  #persistSelection() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax("/admin/dashboard/sections/support/settings/categories.json", {
-      type: "PUT",
-      contentType: "application/json",
-      data: JSON.stringify({
-        category_ids: this.selectedCategories.map((c) => c.id),
-      }),
-    }).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n("admin.dashboard.sections.support.save_error"),
-        },
-      });
-    });
-  }
-
   @action
   onPeriodChange() {
     if (this.selectedCategories.length === 0) {
@@ -323,12 +271,61 @@ export default class SupportSection extends Component {
     }
   }
 
+  #direction(kpi, { noPriorDirection } = {}) {
+    if (kpi?.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null && noPriorDirection) {
+      return noPriorDirection;
+    }
+
+    const previousValue = kpi.previous_value ?? 0;
+    const roundedChange = Math.round(kpi.value - previousValue);
+    if (roundedChange > 0) {
+      return "up";
+    } else if (roundedChange < 0) {
+      return "down";
+    }
+
+    return "flat";
+  }
+
+  #categoryTerm(categories) {
+    const slugs = categories.map((category) => Category.slugFor(category, ":"));
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/support/settings/categories.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n("admin.dashboard.sections.support.save_error"),
+        },
+      });
+    });
+  }
+
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.support.title"}}
-      @startDate={{@startDate}}
-      @endDate={{@endDate}}
       ...attributes
+      @endDate={{@endDate}}
+      @startDate={{@startDate}}
+      @title={{i18n "admin.dashboard.sections.support.title"}}
       {{didUpdate this.onPeriodChange @startDate @endDate}}
     >
       {{#if @fetchError}}
@@ -339,7 +336,7 @@ export default class SupportSection extends Component {
         {{#if this.headline}}
           <div class="db-section__subheader">
             <div class="db-section__subintro">
-              <h3>{{i18n this.headline.titleKey}}</h3>
+              <h3>{{this.headline.title}}</h3>
               <p>{{this.headline.summary}}</p>
             </div>
 
@@ -350,9 +347,9 @@ export default class SupportSection extends Component {
                 </div>
                 <div class="db-section__metric-label">
                   <LinkTo
-                    @route="adminReports.show"
                     @model={{this.resolutionRate.reportType}}
                     @query={{this.resolutionRate.reportQuery}}
+                    @route="adminReports.show"
                   >
                     {{i18n
                       "admin.dashboard.sections.support.kpi.resolution_rate.label"
@@ -360,10 +357,10 @@ export default class SupportSection extends Component {
                   </LinkTo>
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.resolution_rate.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.resolutionRate}} />
@@ -379,10 +376,10 @@ export default class SupportSection extends Component {
                   }}
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.staff_involvement.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.staffInvolvement}} />
@@ -398,10 +395,10 @@ export default class SupportSection extends Component {
                   }}
                   <DTooltip
                     class="db-section__info"
-                    @icon="far-circle-question"
                     @content={{i18n
                       "admin.dashboard.sections.support.kpi.avg_first_reply.tooltip"
                     }}
+                    @icon="far-circle-question"
                   />
                 </div>
                 <DeltaPill @delta={{this.avgFirstReply}} />
@@ -413,11 +410,15 @@ export default class SupportSection extends Component {
         {{#if this.showFilter}}
           <div class="db-support__filter">
             <MultipleCategoriesSelector
-              @categories={{this.selectedCategories}}
               @blockedCategories={{this.blockedCategories}}
+              @categories={{this.selectedCategories}}
               @onChange={{this.onCategoriesChange}}
               @onClose={{this.onClose}}
-              @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
+              @options={{hash
+                maximum=MAX_CATEGORIES
+                none="category.all"
+                showAncestorsInSelectedChoice=true
+              }}
             />
           </div>
         {{/if}}

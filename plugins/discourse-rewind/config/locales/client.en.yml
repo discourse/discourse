@@ -6,7 +6,6 @@ en:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Reticulating splines..."
       viewing_other_user: "You are viewing <strong>%{username}'s</strong> Discourse Rewind report."
@@ -88,18 +87,14 @@ en:
             one: "%{username}'s best post"
             other: "%{username}'s %{count} best posts"
         ai_usage:
-          title: AI Usage
           total_requests: Total Requests
           total_tokens: Total Tokens
           success_rate: Success Rate
-          favorite_features: Most Used Features
-          favorite_models: Most Used AI Models
           wake_up: "Wake up, %{username}..."
           system_title: "AI USAGE DETECTED"
           section_features: "TOP FEATURES"
           section_models: "TOP MODELS"
         assignments:
-          title: Assignments
           total_assigned: Assigned to me
           total_assigned_others: "Assigned to %{username}"
           completed: Assignments completed
@@ -108,13 +103,6 @@ en:
           completion_rate: Completion rate
         chat_usage:
           title: Chat Activity
-          total_messages: Total Messages
-          dm_messages: Direct Messages
-          unique_dm_channels: Direct Message Conversations
-          reactions_received: Reactions Received
-          avg_message_length: Avg Message Length
-          favorite_channels: Favorite Channels
-          messages: messages
           bot_name: XxRewindBotxX
           author: You
           author_others: "%{username}"
@@ -141,28 +129,7 @@ en:
           message_4: "Your average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
           dancing_baby_alt: "Dancing baby"
-        favorite_gifs:
-          title:
-            one: Your favorite GIF
-            other: Your %{count} favorite GIFs
-          title_others:
-            one: "%{username}'s favorite GIF"
-            other: "%{username}'s %{count} favorite GIFs"
-          total_usage:
-            one: Used %{count} time
-            other: Used %{count} times total
         invites:
-          title: Invites
-          total_invites: Total Invites Sent
-          redeemed: Accepted Invites
-          redemption_rate: Acceptance Rate
-          avg_trust_level: Avg Trust Level
-          invitee_impact: Impact of Your Invitees
-          invitee_impact_others: "Impact of %{username}'s Invitees"
-          invitee_posts: Posts Created
-          invitee_topics: Topics Started
-          invitee_likes: Likes Given
-          most_active_invitee: Most Active Invitee
           guest_book_title: Guest Book
           guest_book_subtitle: Your Community Invitations
           guest_book_subtitle_others: "%{username}'s Community Invitations"
@@ -175,22 +142,9 @@ en:
           label_likes_given: "Likes given:"
           section_most_active: Most Active Guest
         new_user_interactions:
-          title: Mentoring New Users
-          subtitle:
-            one: You helped %{count} new user this year
-            other: You helped %{count} new users this year
-          subtitle_others:
-            one: "%{username} helped %{count} new user this year"
-            other: "%{username} helped %{count} new users this year"
           new_member:
             one: "%{count} new member"
             other: "%{count} new members"
-          total_interactions: Total Interactions
-          unique_new_users: Unique New Users
-          likes_given: Likes Given
-          replies: Replies to Posts
-          mentions: Mentions
-          topics_with_new_users: Topics with New Users
           contributions_helped: your contributions helped
           contributions_helped_others: "%{username}'s contributions helped"
         time_of_day_activity:

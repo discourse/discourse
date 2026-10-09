@@ -35,10 +35,10 @@ export default class ChatDirectMessageButton extends Component {
   <template>
     {{#if this.shouldRender}}
       <DButton
-        @action={{this.startChatting}}
-        @label="chat.title_capitalized"
-        @icon="d-chat"
         class="btn-primary chat-direct-message-btn"
+        @action={{this.startChatting}}
+        @icon="d-chat"
+        @label="chat.title_capitalized"
       />
     {{/if}}
   </template>

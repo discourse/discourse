@@ -18,6 +18,8 @@ class LlmModelSerializer < ApplicationSerializer
              :url,
              :provider_params,
              :vision_enabled,
+             :vision_mode,
+             :vision_llm_model_id,
              :input_cost,
              :output_cost,
              :cached_input_cost,

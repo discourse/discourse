@@ -32,6 +32,52 @@ RSpec.describe Chat::Api::SearchController do
         end
       end
 
+      context "when chat search is disabled" do
+        fab!(:indexed_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "searchable chat message")
+        end
+
+        before do
+          SiteSetting.chat_search_enabled = true
+          SearchIndexer.enable
+          SearchIndexer.index(indexed_message)
+        end
+
+        after { SearchIndexer.disable }
+
+        it "blocks global and channel-scoped searches" do
+          get "/chat/api/search.json", params: { query: "searchable chat message" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(indexed_message.message)
+
+          get "/chat/api/search.json",
+              params: {
+                query: "searchable chat message",
+                channel_id: channel.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(indexed_message.message)
+
+          SiteSetting.chat_search_enabled = false
+
+          get "/chat/api/search.json", params: { query: "searchable chat message" }
+
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(indexed_message.message)
+
+          get "/chat/api/search.json",
+              params: {
+                query: "searchable chat message",
+                channel_id: channel.id,
+              }
+
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(indexed_message.message)
+        end
+      end
+
       context "when query is missing" do
         it "returns a 400" do
           get "/chat/api/search.json", params: {}
@@ -139,6 +185,37 @@ RSpec.describe Chat::Api::SearchController do
           get "/chat/api/search.json", params: { query: "hello world", sort: "latest" }
 
           expect(response.status).to eq(200)
+        end
+
+        context "when channel_id refers to a readonly category channel" do
+          fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+          fab!(:readonly_channel) do
+            category =
+              Fabricate(
+                :private_category,
+                group: readonly_group,
+                permission_type: CategoryGroup.permission_types[:readonly],
+              )
+            Fabricate(:category_channel, chatable: category)
+          end
+          fab!(:restricted_message) do
+            Fabricate(
+              :chat_message,
+              chat_channel: readonly_channel,
+              message: "Confidential restricted search message",
+            )
+          end
+
+          it "does not expose scoped search results" do
+            get "/chat/api/search.json",
+                params: {
+                  query: restricted_message.message,
+                  channel_id: readonly_channel.id,
+                }
+
+            expect(response.status).to eq(404)
+            expect(response.body).not_to include(restricted_message.message)
+          end
         end
       end
     end

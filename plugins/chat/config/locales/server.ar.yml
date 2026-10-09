@@ -68,6 +68,7 @@ ar:
       users_cant_be_added_to_channel: "لا يمكن إضافة المستخدمين إلى هذه القناة."
       user_cant_be_removed_from_channel: "لا يمكن إزالة المستخدم من هذه القناة"
       channel_exists_for_category: "توجد قناة بالفعل في هذه الفئة وبهذا الاسم"
+      public_channels_disabled: "يتعذَّر إنشاء القناة لأن القنوات العامة معطَّلة. يمكن لأحد المسؤولين تفعيل إعداد الموقع \"تفعيل القنوات العامة\"."
       channel_new_message_disallowed:
         archived: "القناة مؤرشفة، ولا يمكن إرسال رسائل جديدة"
         closed: "القناة مغلقة، ولا يمكن إرسال رسائل جديدة"

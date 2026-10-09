@@ -19,6 +19,10 @@ hr:
                 lt_1h: "< 1 sat"
                 gt_24h: "> 24 sata"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Uklonjeno"
+        tag_names: "Oznake"
     notifications:
       alt:
         solved:
@@ -50,6 +54,12 @@ hr:
     topic_statuses:
       solved:
         help: "Ova tema ima rješenje"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Kategorija"
     discourse_automation:
       triggerables:
         first_accepted_solution:

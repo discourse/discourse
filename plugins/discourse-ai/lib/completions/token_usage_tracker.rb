@@ -3,8 +3,9 @@
 module DiscourseAi
   module Completions
     class TokenUsageTracker
-      def initialize(base_total: nil, base_request: nil, base_response: nil)
+      def initialize(base_total: nil, base_request: nil, base_response: nil, base_preparation: 0)
         @mutex = Mutex.new
+        @preparation_tokens = base_preparation.to_i
         if base_request.nil? && base_response.nil?
           total = base_total.to_i
           initial_request = total / 2
@@ -23,7 +24,7 @@ module DiscourseAi
         end
       end
 
-      def add_from_audit_log(log)
+      def add_from_audit_log(log, preparation: false)
         # request_tokens = non-cached input (already excludes cached)
         # cache_write_tokens = newly cached (full cost)
         # cache_read_tokens = served from cache (1/10 cost)
@@ -35,7 +36,7 @@ module DiscourseAi
         request = estimate_tokens(raw_payload(log, :raw_request_payload)) if request <= 0
         response = estimate_tokens(raw_payload(log, :raw_response_payload)) if response <= 0
 
-        add_effective(request: request, response: response)
+        add_effective(request: request, response: response, preparation: preparation)
       end
 
       def raw_payload(log, name)
@@ -48,10 +49,11 @@ module DiscourseAi
         (payload.to_s.bytesize / 3.0).ceil
       end
 
-      def add_effective(request:, response:)
+      def add_effective(request:, response:, preparation: false)
         @mutex.synchronize do
           @request += request.to_i
           @response += response.to_i
+          @preparation_tokens += request.to_i + response.to_i if preparation
         end
       end
 
@@ -61,6 +63,10 @@ module DiscourseAi
 
       def response
         @mutex.synchronize { @response }
+      end
+
+      def preparation_tokens
+        @mutex.synchronize { @preparation_tokens }
       end
 
       def total

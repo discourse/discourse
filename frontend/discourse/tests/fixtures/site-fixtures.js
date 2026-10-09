@@ -3,6 +3,7 @@ import { NOTIFICATION_TYPES } from "./concerns/notification-types";
 const siteFixtures = {
   "site.json": {
     site: {
+      can_search: true,
       default_archetype: "regular",
       shared_drafts_category_id: 24,
       notification_types: NOTIFICATION_TYPES,
@@ -46,6 +47,11 @@ const siteFixtures = {
         "hot",
         "unseen"
       ],
+      anonymous_list_filters: [
+        "latest",
+        "top",
+        "hot"
+      ],
       homepage_choices: [
         "latest",
         "new",
@@ -58,6 +64,7 @@ const siteFixtures = {
         "hot",
         "unread"
       ],
+      homepage_options: [],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",

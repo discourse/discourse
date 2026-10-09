@@ -321,6 +321,7 @@ it:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     back_button: "Indietro"
+    confirm_button: "Conferma"
     welcome_banner:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
@@ -431,10 +432,29 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
+    design_wizard:
+      back: "Indietro"
+      next: "Avanti"
+      sections:
+        theme: "Tema"
+        fonts: "Caratteri"
+        homepage: "Homepage"
+        search: "Cerca"
+      theme:
+        selected: "Selezionato"
+      colors:
+        light: "Chiaro"
+        dark: "Scuro"
+      fonts:
+        base_font: "Font di base"
+        heading_font: "Carattere dell'intestazione"
+      homepage:
+        topics: "Argomenti"
+        categories: "Categorie"
+        styles:
+          boxes: "Riquadri"
     about:
       edit: "Modifica questa pagina"
       simple_title: "Informazioni"
@@ -700,10 +720,6 @@ it:
         optional: "facoltativo"
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
-        required: "Per poter revisionare gli elementi devi prima rivendicarli."
-        claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
-        claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
-        automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -882,6 +898,9 @@ it:
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
         no_events: "Nessun evento nella cronologia da visualizzare"
+      author_penalty:
+        toast:
+          undo: "Annulla"
       notes:
         add_note_button: "Aggiungi note"
         placeholder: "Scrivi qui le tue note..."
@@ -1496,7 +1515,6 @@ it:
       admin: "%{user} è un amministratore"
       moderator_tooltip: "Questo utente è un moderatore"
       admin_tooltip: "Questo utente è un amministratore"
-      silenced_tooltip: "Questo utente è silenziato"
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
@@ -1555,6 +1573,16 @@ it:
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo"
       apps: "App"
+      mcp_authorizations:
+        endpoint: "Risorsa"
+        scopes: "Ambiti"
+        details: "Dettagli"
+        last_used: "Ultimo utilizzo"
+        never: "Mai"
+        status: "Stato"
+        statuses:
+          active: "Attivi"
+          revoked: "Revocata"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
@@ -2010,7 +2038,6 @@ it:
         watch_topic: "Osserva l'argomento"
         track_topic: "Traccia l'argomento"
         do_nothing: "Non fare nulla"
-      topics_unread_when_closed: "Considera gli argomenti come non letti quando sono chiusi"
       invited:
         title: "Inviti"
         pending_tab: "In sospeso"
@@ -2649,12 +2676,18 @@ it:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Invio"
+      option: "Opzione"
+      period: "Periodo"
+      tab: "Tab"
+      delete: "Elimina"
+      home: "Pagina principale"
     conditional_loading_section:
       loading: Caricamento…
     category_row:
       subcategory_count:
         one: "+%{count} sottocategoria"
         other: "+%{count} sottocategorie"
+      subcategories: "+ Sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
@@ -2800,7 +2833,6 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "Oppure premi %{modifier}Invio"
       discard: "Elimina"
       users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
@@ -2998,7 +3030,6 @@ it:
         other: "%{count} richieste di iscrizione aperte per '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completato"
       new_features: "Nuove funzionalità disponibili!"
       admin_problems: "Nuovo avviso sul dashboard del tuo sito"
       dismiss_confirmation:
@@ -3114,10 +3145,10 @@ it:
         search_field: "Campo di ricerca nell'intestazione del sito"
         search_icon: "Icona di ricerca vicino all'avatar del profilo"
       type:
-        default: "Argomenti/messaggi"
+        default: "Messaggi"
         users: "Utenti"
         categories: "Categorie"
-        categories_and_tags: "Categorie/etichette"
+        categories_and_tags: "Categorie ed etichette"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -3130,7 +3161,6 @@ it:
         in: "filtra per metadati (per es. in:title, in:personal, in:pinned)"
         status: "filtra per stato dell'argomento"
         full_search: "avvia la ricerca a pagina intera"
-        full_search_key: "%{modifier} + Invio"
         me: "mostra solo i tuoi messaggi"
       advanced:
         title: Filtri avanzati
@@ -3812,7 +3842,6 @@ it:
       reply_as_new_private_message: "Rispondi come nuovo messaggio agli stessi destinatari"
       continue_discussion: "Continua la discussione da %{postLink}:"
       follow_quote: "vai al messaggio citato"
-      show_full: "Mostra Messaggio Completo"
       show_hidden: "Visualizza contenuto ignorato."
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "comprimi"
@@ -4159,6 +4188,7 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      latest_topics: "Argomenti più recenti"
       description_expand: "Mostra altro"
       description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
@@ -4417,6 +4447,7 @@ it:
       with_category: "%{filter} %{category} argomenti"
       filter:
         title: "Risultati filtrati per %{filter}"
+        reset: "reimposta"
         button:
           label: "Filtro"
       latest:
@@ -4524,12 +4555,8 @@ it:
     invalid_video_url: Questo video non può essere riprodotto perché l'URL non è valido o non è disponibile.
     keyboard_shortcuts_help:
       search_placeholder: "Cerca una scorciatoia tramite descrizione o combinazione di tasti"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Tasti di scelta rapida"
       short_title: "Scorciatoie"
       search_ctrl_f_tip: "Per cercare nell'intero forum, premi <kbd>/</kbd>"
@@ -4626,11 +4653,11 @@ it:
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     download_calendar:
-      title: "Scarica il calendario"
+      title: "Aggiungi al calendario"
+      calendar: "Calendario"
       save_ics: "Scarica il file.ics"
       save_google: "Aggiungi al calendario di Google"
       remember: "Non chiedermelo più"
-      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
       download: "Scarica"
       default_calendar: "Calendario predefinito"
       default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
@@ -5196,6 +5223,11 @@ it:
         group_traffic: "Traffico"
         group_members: "Membri"
         group_other: "Altri"
+        related_items:
+          users:
+            title: "Utenti"
+          labels:
+            user: "Utente"
       config_sections:
         account:
           title: "Account"
@@ -5245,6 +5277,73 @@ it:
           header_description: "Fornisci qui informazioni su questo sito e sul tuo team in modo che le persone possano scoprire di cosa si occupa la tua community, chi c'è dietro e come contattarti in caso di problemi. I dati verranno visualizzati sulla pagina <a href='%{basePath}/about'>Informazioni</a> del tuo sito."
         developer:
           title: "Sviluppatore"
+        mcp:
+          tabs:
+            access: "Accesso"
+            activity: "Attività"
+          overview:
+            status: "Stato"
+            tools: "Strumenti"
+          access:
+            title: "Accesso"
+            group: "Gruppo"
+            groups: "Gruppi"
+            actions: "Azioni"
+            edit: "Modifica"
+            delete: "Elimina"
+          primitives:
+            group_by: "Raggruppa per"
+            group_by_options:
+              scope: "Ambito"
+              provider: "Fornitore"
+              kind: "Tipo"
+            provider: "Fornitore"
+            kind: "Tipo"
+            scope: "Ambito"
+            state: "Stato"
+            scopes: "Ambiti"
+          clients:
+            actions: "Azioni"
+            block: "Blocca"
+            use_preset: "Configura"
+            presets:
+              custom: "Personalizzato"
+          authorizations:
+            user: "Utente"
+            last_used: "Ultimo utilizzo"
+            status: "Stato"
+            actions: "Azioni"
+          activity:
+            outcome: "Esito"
+            time: "Ora"
+            user: "Utente"
+            duration: "Durata"
+          values:
+            server_status:
+              disabled: "Disabilitati"
+            client_trust:
+              approved: "Approvato"
+            authorization_status:
+              active: "Attivi"
+              revoked: "Revocata"
+            activity_outcome:
+              success: "Operazione riuscita"
+              error: "Errore"
+            primitive_state:
+              enabled: "Abilitato"
+              disabled: "Disabilitati"
+            primitive_kind:
+              all: "Tutti i tipi"
+              tool: "Strumento"
+              resource: "Risorsa"
+            primitive_risk:
+              read: "Sola lettura"
+              moderation: "Moderazione"
+            filter:
+              all: "Tutte"
+          never: "Mai"
+          actions:
+            revoke: "Revoca"
         experimental:
           title: "Sperimentale"
           header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"
@@ -5402,7 +5501,6 @@ it:
           header_description: "Configura le impostazioni di ricerca, tra cui la registrazione e la tokenizzazione per le lingue cinese e giapponese"
         search_everything:
           title: "Cerca"
-          header_description: "Qui puoi trovare qualsiasi cosa nell'interfaccia di amministrazione. Puoi filtrare i risultati qui sotto e le tue preferenze verranno memorizzate. Per aprire questa ricerca in qualsiasi punto dell'interfaccia di amministrazione, premi %{shortcutHTML}."
         security:
           title: "Sicurezza"
           header_description: "Configura le impostazioni di sicurezza, tra cui l'autenticazione a due fattori, i privilegi di moderatore e le policy di sicurezza dei contenuti"
@@ -5621,13 +5719,27 @@ it:
       new_features:
         title: "Cosa c'è di nuovo?"
         check_for_updates: "Controlla gli aggiornamenti"
+      site_traffic_explorer:
+        metric_information: "Informazioni su %{metric}"
+        clear_all: "Deseleziona tutto"
+        apply: "Applica"
+        view_more: "Mostra altro"
+        cards:
+          pages: "Pagine"
+          visitors: "Visitatori"
+        filters:
+          country: "Paese"
+          browser: "Browser"
+          language: "Lingua"
+          ip: "Indirizzo IP"
+        series:
+          anonymous_human: "Anonimo"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aggiornato:"
         discourse_last_updated: "Discourse aggiornato:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
-        critical_available: "È disponibile un aggiornamento essenziale."
         updates_available: "Sono disponibili aggiornamenti."
         please_update: "Aggiorna!"
         no_check_performed: "Non è stato effettuato un controllo sugli aggiornamenti. Assicurati che sidekiq sia attivo."
@@ -5693,6 +5805,8 @@ it:
               share: "Condividi"
             whos_posting:
               staff: "Staff"
+              modal:
+                apply: "Salva"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nuovo"
@@ -5705,6 +5819,11 @@ it:
             table:
               searches: "Ricerche"
               status: "Stato"
+          system:
+            title: "Sistema"
+            status: "Stato"
+            discourse_updated: "Discourse aggiornato"
+            dashboard_updated: "Dashboard aggiornato"
         reports_section:
           header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
@@ -5718,6 +5837,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"
@@ -5757,6 +5877,14 @@ it:
           average_for_sample: "Media per campione"
           total: "Totale generale"
           no_data: "Non ci sono dati da mostrare."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} utente"
+              other: "%{count} utenti"
+            posts_count:
+              one: "%{count} messaggio"
+              other: "%{count} messaggi"
+            deselect: "Deseleziona %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
@@ -7671,13 +7799,14 @@ it:
           multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
-        search: "Trova il testo che vorresti modificare"
+        search_label: "Cerca"
+        theme_disabled: "Disabilitati"
+        filters: "Filtri"
+        status:
+          invalid: "Non valido"
         title: "Testi del sito"
         edit: "Modifica"
-        revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
-        go_back: "Torna alla Ricerca"
-        recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"

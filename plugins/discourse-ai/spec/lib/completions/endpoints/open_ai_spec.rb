@@ -211,6 +211,50 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
   before { enable_current_plugin }
 
+  describe "DNS SRV endpoints" do
+    let(:domain) { "_openai._tcp.example.com" }
+    let(:resolved_url) { "https://llm.example.com:8443" }
+    let(:response_body) { { choices: [{ message: { content: "hello" } }] }.to_json }
+
+    before do
+      resource = Resolv::DNS::Resource::IN::SRV.new(1, 1, 8443, "llm.example.com")
+      Resolv::DNS
+        .any_instance
+        .stubs(:getresources)
+        .with(domain, Resolv::DNS::Resource::IN::SRV)
+        .returns([resource])
+      Discourse.cache.delete("dns_srv_lookup:#{domain}")
+    end
+
+    it "uses the configured path" do
+      model.update!(url: "srv://#{domain}/custom/chat/completions")
+      request =
+        stub_request(:post, "#{resolved_url}/custom/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+
+      expect(request).to have_been_requested
+    end
+
+    it "uses the fallback path when no path is configured" do
+      request =
+        stub_request(:post, "#{resolved_url}/v1/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      ["srv://#{domain}", "srv://#{domain}/"].each do |url|
+        model.update!(url: url)
+        DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+      end
+
+      expect(request).to have_been_requested.twice
+    end
+  end
+
   describe "max tokens for reasoning models" do
     it "uses max_completion_tokens for reasoning models" do
       model.update!(name: "o3-mini", max_output_tokens: 999)
@@ -792,7 +836,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
           compliance.streaming_mode_simple_prompt(open_ai_mock)
         end
 
-        it "will automatically recover from a bad payload" do
+        it "recovers automatically from a bad payload" do
           called = false
 
           # this should not happen, but lets ensure nothing bad happens
@@ -863,6 +907,51 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
       context "with tools" do
         it "returns a function invocation" do
           compliance.streaming_mode_tools(open_ai_mock)
+        end
+
+        it "emits every tool call when a streamed event contains multiple calls" do
+          event = {
+            choices: [
+              {
+                index: 0,
+                delta: {
+                  content: "Searching\n",
+                  tool_calls: [
+                    {
+                      index: 0,
+                      id: "call_sam",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"sam"}',
+                      },
+                    },
+                    {
+                      index: 1,
+                      id: "call_dan",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"dan"}',
+                      },
+                    },
+                  ],
+                },
+                finish_reason: "tool_calls",
+              },
+            ],
+          }
+          open_ai_mock.stub_raw("data: #{event.to_json}\n\ndata: [DONE]\n\n")
+          dialect = compliance.dialect(prompt: compliance.generic_prompt(tools: tools))
+          response = []
+
+          endpoint.perform_completion!(dialect, user) { |partial| response << partial }
+
+          expect(response.first).to eq("Searching\n")
+          tool_calls = response.drop(1)
+          expect(tool_calls.map(&:id)).to eq(%w[call_sam call_dan])
+          expect(tool_calls.map(&:parameters)).to eq(
+            [{ search_query: "sam" }, { search_query: "dan" }],
+          )
+          expect(tool_calls).to all(have_attributes(partial: false))
         end
 
         it "properly handles multiple tool calls" do

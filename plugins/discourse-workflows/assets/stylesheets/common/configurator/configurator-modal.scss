@@ -59,6 +59,11 @@
     gap: var(--space-1);
   }
 
+  &__name-error {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+  }
+
   &__edit-name,
   &__save-name,
   &__cancel-name {

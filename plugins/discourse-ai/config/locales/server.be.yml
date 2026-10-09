@@ -10,10 +10,24 @@ be:
       title: "😐 нейтральны"
   discourse_ai:
     ai_bot:
+      navigation:
+        users:
+          title: "карыстальнікаў"
+        groups:
+          title: "Груп"
+        categories:
+          title: "катэгорыі"
+        tags:
+          title: "Цэтлікі"
+        backups:
+          title: "Рэзервовыя копіі"
+      read_post:
+        unknown_post: "пост"
       tool_summary:
         search: "Пошук"
       tool_help:
         delete_topic: "Выдаліць тэму"
+        create_category: "Стварыць новую катэгорыю"
       close_topic:
         errors:
           not_found: "Тэма не знойдзена."
@@ -23,10 +37,13 @@ be:
       delete_topic:
         errors:
           not_found: "Тэма не знойдзена."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Тэма не знойдзена."
       edit_category:
+        errors:
+          not_found: "Катэгорыя не знойдзена."
+      change_topic_category:
         errors:
           not_found: "Тэма не знойдзена."
           category_not_found: "Катэгорыя не знойдзена."

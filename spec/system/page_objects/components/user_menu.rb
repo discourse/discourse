@@ -27,6 +27,17 @@ module PageObjects
         self
       end
 
+      def click_review_queue_tab
+        click_link("user-menu-button-review-queue")
+        has_css?("#quick-access-review-queue")
+        self
+      end
+
+      def click_reviewable(reviewable)
+        find("#quick-access-review-queue a[href$='/review/#{reviewable.id}']").click
+        self
+      end
+
       def click_logout_button
         find("#quick-access-profile .logout .btn").click
         has_css?(".d-header .login-button")

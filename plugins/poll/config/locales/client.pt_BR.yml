@@ -60,6 +60,8 @@ pt_BR:
       cast-votes:
         title: "Participe da enquete"
         label: "Votar agora!"
+      keep-vote:
+        label: "Voltar"
       show-results:
         title: "Mostrar o resultado da enquete"
         label: "Resultados"

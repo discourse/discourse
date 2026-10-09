@@ -295,6 +295,7 @@ RSpec.describe PushNotificationPusher do
           payload
         end
       end
+
       it "Allows modifications to the payload passed to the translation" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:push_notification_pusher_title_payload, &modifier_block)

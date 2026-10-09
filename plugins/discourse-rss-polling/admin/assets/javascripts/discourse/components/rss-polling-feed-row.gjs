@@ -62,8 +62,8 @@ export default class RssPollingFeedRow extends Component {
       <td class="d-table__cell --overview">
         <LinkTo
           class="d-table__overview-link"
-          @route="adminPlugins.show.discourse-rss-polling-feeds.edit"
           @model={{@feed.id}}
+          @route="adminPlugins.show.discourse-rss-polling-feeds.edit"
         >
           <span
             class="d-table__overview-name rss-polling-feed__url"
@@ -75,7 +75,7 @@ export default class RssPollingFeedRow extends Component {
             <span class="d-table__mobile-label">{{i18n
                 "admin.rss_polling.author"
               }}</span>
-            <DUserAvatar @user={{@feed.author}} @size="small" />
+            <DUserAvatar @size="small" @user={{@feed.author}} />
             <DUserLink
               @user={{@feed.author}}
             >{{@feed.author.username}}</DUserLink>
@@ -114,13 +114,13 @@ export default class RssPollingFeedRow extends Component {
       </td>
       <td class="d-table__cell rss-polling-feed__status">
         <DToggleSwitch
-          @state={{this.feedToggle.enabled}}
           aria-label={{if
             this.feedToggle.enabled
             (i18n "admin.rss_polling.feeds.disable")
             (i18n "admin.rss_polling.feeds.enable")
           }}
           class="rss-polling-feed__toggle"
+          @state={{this.feedToggle.enabled}}
           {{on "click" this.feedToggle.toggle}}
         />
         <span class="d-table__mobile-label">{{if
@@ -132,17 +132,17 @@ export default class RssPollingFeedRow extends Component {
       <td class="d-table__cell --controls">
         <div class="d-table__cell-actions">
           <DButton
+            class="btn-default btn-small rss-polling-feed__edit"
+            @icon="pencil"
             @route="adminPlugins.show.discourse-rss-polling-feeds.edit"
             @routeModels={{@feed.id}}
-            @icon="pencil"
             @title="admin.rss_polling.feeds.edit"
-            class="btn-default btn-small rss-polling-feed__edit"
           />
           <DButton
+            class="btn-danger btn-small rss-polling-feed__delete"
             @action={{this.delete}}
             @icon="trash-can"
             @title="admin.rss_polling.feeds.delete"
-            class="btn-danger btn-small rss-polling-feed__delete"
           />
         </div>
       </td>

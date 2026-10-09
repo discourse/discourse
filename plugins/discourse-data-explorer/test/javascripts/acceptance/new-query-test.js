@@ -5,6 +5,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Query", function (needs) {
   needs.user();
@@ -14,6 +15,11 @@ acceptance("New Query", function (needs) {
   });
 
   const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+  let createParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+  });
 
   needs.hooks.afterEach(() => {
     dataExplorerStore.remove("hide_schema");
@@ -37,7 +43,12 @@ acceptance("New Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
-      return helper.response([]);
+      return helper.response([
+        { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
+        { id: 41, name: "support" },
+      ]);
     });
 
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
@@ -52,13 +63,18 @@ acceptance("New Query", function (needs) {
       });
     });
 
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
+    );
+
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [],
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
       return helper.response({
         query: {
           id: -15,
@@ -68,7 +84,8 @@ acceptance("New Query", function (needs) {
           param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
-          group_ids: [],
+          group_ids: [41],
+          tags: ["monthly"],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -122,7 +139,31 @@ acceptance("New Query", function (needs) {
       ".query-new__manual-form [data-name='description'] textarea",
       "a test query"
     );
+    const tags = selectKit(
+      ".query-new__manual-form [data-name='tags'] .query-tag-chooser"
+    );
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created manually"
+    );
+    await tags.emptyFilter();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
     await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["Monthly"],
+      "the newly created tag is sent with the query"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -132,6 +173,53 @@ acceptance("New Query", function (needs) {
     assert
       .dom(".query-editor.no-schema .schema__toggle.--expand")
       .exists("schema hidden state persists across Data Explorer pages");
+  });
+
+  test("group access can be granted while creating the query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "groups that cannot be granted access are not offered"
+    );
+
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
+  });
+
+  test("group access survives creating a query with no SQL", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    document
+      .querySelector(".query-new__manual-form .editor-panel .ace_editor")
+      .env.editor.setValue("", 1);
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent even when there is no SQL to save"
+    );
   });
 
   test("starts with the schema hidden when the preference is stored", async function (assert) {
@@ -160,6 +248,11 @@ acceptance("New Query - AI", function (needs) {
   });
 
   const GENERATION_ID = "test-generation";
+  let createParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/discourse-data-explorer.json", () => {
@@ -179,10 +272,18 @@ acceptance("New Query - AI", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () =>
-      helper.response([])
+      helper.response([
+        { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
+        { id: 41, name: "support" },
+      ])
     );
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
       helper.response({ topics: [] })
+    );
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
     );
     server.get("/admin/plugins/discourse-data-explorer/queries", () =>
       helper.response({ queries: [] })
@@ -209,8 +310,9 @@ acceptance("New Query - AI", function (needs) {
         })
     );
 
-    server.post("/admin/plugins/discourse-data-explorer/queries", () =>
-      helper.response({
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
+      return helper.response({
         query: {
           id: -15,
           sql: "SELECT 23 AS my_value",
@@ -218,11 +320,12 @@ acceptance("New Query - AI", function (needs) {
           description: "",
           param_info: [],
           group_ids: [],
+          tags: ["staff"],
           hidden: false,
           user_id: -1,
         },
-      })
-    );
+      });
+    });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-15", () =>
       helper.response({
@@ -315,7 +418,42 @@ acceptance("New Query - AI", function (needs) {
       .exists("the SQL is available behind its own tab");
   });
 
-  test("saving transitions to the edit page and runs the query", async function (assert) {
+  test("group access can be granted before saving a generated query", async function (assert) {
+    await generate("show me a value");
+
+    const groups = selectKit(".query-new__fields .query-group-select");
+    await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "groups that cannot be granted access are not offered"
+    );
+
+    await groups.selectRowByValue(41);
+    const tags = selectKit(".query-new__fields .query-tag-chooser");
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered in the AI form"
+    );
+    await tags.selectRowByValue("staff");
+    await click(".query-new__save-btn");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["staff"],
+      "the selected tag is sent with the new query"
+    );
+  });
+
+  test("saving transitions to the edit page without running the query", async function (assert) {
     await generate("show me a value");
 
     await click(".query-new__save-btn");
@@ -326,9 +464,9 @@ acceptance("New Query - AI", function (needs) {
       ),
       "transitions to the saved query"
     );
-    assert.true(
-      currentURL().includes("run=true"),
-      "carries the auto-run flag so the query runs immediately"
+    assert.false(
+      currentURL().includes("run="),
+      "does not run the saved query before parameters can be adjusted"
     );
   });
 });

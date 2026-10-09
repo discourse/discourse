@@ -3,10 +3,16 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      include NodeErrorHandling
+
       BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
       WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
       NODE_ID_FIELD = "discourse_workflows_node_id"
+
+      # PostDestroyer leaves an author-deleted post as a stub unless this is below 1;
+      # a workflow delete should always actually delete
+      ALWAYS_TRASH = 0
 
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
@@ -15,7 +21,7 @@ module DiscourseWorkflows
       JAVASCRIPT_UNDEFINED = CodeRunner::JAVASCRIPT_UNDEFINED
       JobResult = Data.define(:ok, :result, :error)
       WaitRequest =
-        Data.define(:waiting_until, :kind, :payload) do
+        Data.define(:waiting_until, :kind, :payload, :timeout_action) do
           def workflow_call?
             kind == "workflow_call"
           end
@@ -62,6 +68,8 @@ module DiscourseWorkflows
       end
 
       class RuntimeState
+        MAX_ITEM_ERROR_GROUPS = 20
+
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
         def initialize
@@ -72,16 +80,29 @@ module DiscourseWorkflows
           @wait_request = nil
         end
 
-        def request_wait(waiting_until, kind: "default", payload: {})
-          @wait_request = WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys)
+        def request_wait(waiting_until, kind: "default", payload: {}, timeout_action: nil)
+          @wait_request =
+            WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys, timeout_action)
         end
 
         def add_condition_details(details)
           @condition_step_details.concat(details)
         end
 
+        # Per-item nodes would otherwise repeat the same hint once per item.
         def add_execution_hints(hints)
-          @execution_hints.concat(hints.map(&:deep_stringify_keys))
+          @execution_hints |= hints.map(&:deep_stringify_keys)
+        end
+
+        def add_item_error(item_index, error)
+          groups = (@metadata["item_errors"] ||= [])
+          group = groups.find { |entry| entry["message"] == error.summary }
+
+          if group
+            group["items"] << item_index
+          elsif groups.size < MAX_ITEM_ERROR_GROUPS
+            groups << { "message" => error.summary, "items" => [item_index] }
+          end
         end
 
         def merge_metadata(metadata)
@@ -239,6 +260,10 @@ module DiscourseWorkflows
         )
       end
 
+      def nearest_upstream_metadata(key, item_index: 0)
+        NodeOutputProxy.new(@resolver_context).nearest_upstream_metadata(key, item_index:)
+      end
+
       def get_input_data(input_index = 0, _connection_type = nil)
         input_items(input_index)
       end
@@ -252,9 +277,34 @@ module DiscourseWorkflows
 
       def continue_on_fail
         on_error = @node_settings["onError"]
-        return %w[continueRegularOutput continueErrorOutput].include?(on_error) if on_error.present?
+        return NodeDataShape::CONTINUE_ON_ERROR_MODES.include?(on_error) if on_error.present?
 
         ActiveModel::Type::Boolean.new.cast(@node_settings["continueOnFail"]) == true
+      end
+
+      # Fails only this item when the node continues on error, so items already handled
+      # aren't reported as failed too.
+      def guard_item(item, item_index)
+        expression_error_count = expression_errors.size
+        yield
+      rescue DiscourseWorkflows::NodeError => e
+        raise if !continue_on_fail
+
+        demote_expression_errors(from: expression_error_count, item_index:)
+        @runtime_state.add_item_error(item_index, e)
+        Item.with_error(item, e, paired_item: item_index).merge(Item::FAILED_KEY => true)
+      end
+
+      def each_item
+        input_items.flat_map.with_index do |item, item_index|
+          Array
+            .wrap(guard_item(item, item_index) { yield item, item_index })
+            .map do |output|
+              next output if Item.paired_item(output)
+
+              Item.with_paired_item(output, item_index)
+            end
+        end
       end
 
       def start_job(job_type, settings, item_index)
@@ -271,6 +321,13 @@ module DiscourseWorkflows
 
       def get_node_parameter(path, item_index = 0, default: nil, options: {})
         parameter_resolver.resolve(path, item_index, default:, options:)
+      end
+
+      def ensure_no_expression_errors!
+        error = expression_errors.first
+        return unless error
+
+        raise NodeError, format_expression_error(error)
       end
 
       def helpers
@@ -291,38 +348,41 @@ module DiscourseWorkflows
         username = get_node_parameter(path, item_index, default: default)
 
         if username.blank?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s)
+          raise_node_error!(
+            I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s),
+            item_index:,
+          )
         end
 
-        actor_from(username: username, field: path.to_s, item_index: item_index)
+        actor_from(username: username, item_index: item_index)
       end
 
-      def actor_from(username: nil, id: nil, field: nil, item_index: nil)
+      def actor_from(username: nil, id: nil, item_index: nil)
         actor =
           if username == DiscourseWorkflows::AnonymousActor::USERNAME
             DiscourseWorkflows::AnonymousActor.new
           else
-            find_user(username: username.presence, id: id)
+            find_user(username: username.presence, id: id, item_index: item_index)
           end
-        ensure_actor_allowed!(actor, field: field, item_index: item_index)
+        ensure_actor_allowed!(actor, item_index:)
         actor
       end
 
-      def find_user(username: nil, id: nil)
+      def find_user(username: nil, id: nil, item_index: nil)
         if username.present? == id.present?
           raise ArgumentError, "Provide exactly one of username or id"
         end
 
-        if username.present?
-          user = User.find_by_username(username)
-          raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
-        else
-          user = User.find_by(id: id)
-          raise DiscourseWorkflows::NodeError, "User with id #{id} not found" if user.nil?
-        end
+        user = username.present? ? User.find_by_username(username) : User.find_by(id:)
+        return user if user
 
-        user
+        message =
+          if username.present?
+            I18n.t("discourse_workflows.errors.actor.not_found", username:)
+          else
+            I18n.t("discourse_workflows.errors.actor.id_not_found", id:)
+          end
+        raise_node_error!(message, item_index:)
       end
 
       def http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
@@ -356,6 +416,7 @@ module DiscourseWorkflows
           raw: raw,
           reply_to_post_number: reply_to_post_number.presence,
           skip_workflows: true,
+          skip_rate_limits: true,
         }.compact
 
         if ActiveModel::Type::Boolean.new.cast(whisper)
@@ -384,13 +445,31 @@ module DiscourseWorkflows
         post = ::Post.find(post_id)
         raise Discourse::InvalidAccess if !user.guardian.can_edit_post?(post)
 
-        if !PostRevisor.new(post).revise!(user, { raw: raw }, skip_workflows: true)
+        opts = { skip_workflows: true, force_new_version: true }
+
+        if !PostRevisor.new(post).revise!(user, { raw: raw }, opts)
           errors = post.errors.full_messages.presence
           raise DiscourseWorkflows::NodeError,
                 errors&.join(", ") || I18n.t("discourse_workflows.errors.post.edit_failed")
         end
 
         post.reload
+      end
+
+      def destroy_post(user:, post_id:)
+        post = ::Post.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_delete_post_or_topic?(post)
+
+        post_destroyer(user, post).destroy
+        post
+      end
+
+      def recover_post(user:, post_id:)
+        post = ::Post.with_deleted.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_recover_post?(post)
+
+        post_destroyer(user, post).recover
+        post
       end
 
       def serialize_post(
@@ -406,8 +485,18 @@ module DiscourseWorkflows
         self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
-      def put_execution_to_wait(waiting_until = nil, kind: "default", payload: {})
-        @runtime_state.request_wait(waiting_until, kind: kind, payload: payload)
+      def put_execution_to_wait(
+        waiting_until = nil,
+        kind: "default",
+        payload: {},
+        timeout_action: nil
+      )
+        @runtime_state.request_wait(
+          waiting_until,
+          kind: kind,
+          payload: payload,
+          timeout_action: timeout_action,
+        )
       end
 
       def resume_action_id(action, target_user_id: nil)
@@ -481,6 +570,53 @@ module DiscourseWorkflows
 
       private
 
+      def expression_errors
+        @resolver&.expression_errors || []
+      end
+
+      # Any expression error fails the whole step, so a failed item's own ones become warnings.
+      # Those of an item that succeeds still fail the step.
+      def demote_expression_errors(from:, item_index:)
+        @resolver
+          &.discard_expression_errors(from:)
+          &.each { |error| log.warn("#{format_expression_error(error)} [item #{item_index}]") }
+      end
+
+      def format_expression_error(error)
+        "#{error[:expression]}: #{error[:error]}"
+      end
+
+      def ensure_actor_allowed!(actor, item_index:)
+        return if actor.is_a?(DiscourseWorkflows::AnonymousActor)
+
+        reason =
+          if actor.staged?
+            :staged
+          elsif actor.silenced?
+            :silenced
+          elsif actor.suspended?
+            :suspended
+          elsif !actor.active?
+            :inactive
+          end
+        return if reason.nil?
+
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.actor.restricted.#{reason}", username: actor.username),
+          item_index:,
+        )
+      end
+
+      def post_destroyer(user, post)
+        PostDestroyer.new(
+          user,
+          post,
+          context: I18n.t("discourse_workflows.post.destroy_context"),
+          skip_workflows: true,
+          delete_removed_posts_after: ALWAYS_TRASH,
+        )
+      end
+
       def record_permission_bypass!(post)
         post.custom_fields[BYPASSED_PERMISSION_CHECKS_FIELD] = "true"
         post.custom_fields[WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
@@ -503,30 +639,6 @@ module DiscourseWorkflows
         end
 
         with_item_index(item_index) { @resolver.resolve_hash(credential.data || {}) }
-      end
-
-      def ensure_actor_allowed!(actor, field:, item_index:)
-        actor_policy.ensure_allowed!(
-          actor,
-          field: field,
-          item_index: item_index,
-          source: actor_source(field, item_index),
-          purpose: @node_identifier,
-        )
-      end
-
-      def actor_policy
-        @actor_policy ||= ActorPolicy.new(self)
-      end
-
-      def actor_source(field, item_index)
-        return :direct if field.blank?
-
-        raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
-        return :default if raw_value.nil?
-        return :expression if Schema.expression_value?(raw_value)
-
-        :static_config
       end
 
       def current_snapshot_node

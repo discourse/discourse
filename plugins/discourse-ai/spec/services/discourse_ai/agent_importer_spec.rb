@@ -182,6 +182,67 @@ RSpec.describe DiscourseAi::AgentImporter do
       end
     end
 
+    context "when importing subagents" do
+      fab!(:first_subagent) { Fabricate(:ai_agent, name: "Research") }
+      fab!(:second_subagent) { Fabricate(:ai_agent, name: "Writing") }
+      fab!(:existing_agent) do
+        Fabricate(:ai_agent, name: "Parent", subagent_ids: [first_subagent.id])
+      end
+
+      it "resolves subagent names on create" do
+        payload = {
+          "agent" => {
+            "name" => "Imported Parent",
+            "description" => "Parent",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+            "subagents" => %w[Writing Research],
+          },
+          "custom_tools" => [],
+        }
+
+        imported = described_class.new(json: payload).import!
+
+        expect(imported.subagent_ids).to eq([second_subagent.id, first_subagent.id])
+      end
+
+      it "reports missing subagents before creating an agent" do
+        payload = {
+          "agent" => {
+            "name" => "Missing Parent",
+            "description" => "Parent",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+            "subagents" => ["Missing"],
+          },
+          "custom_tools" => [],
+        }
+
+        expect { described_class.new(json: payload).import! }.to raise_error(
+          DiscourseAi::AgentImporter::ImportError,
+        ) { |error| expect(error.conflicts[:subagents]).to eq(["Missing"]) }
+      end
+
+      it "preserves existing subagents when an overwrite omits the key and clears them explicitly" do
+        base = {
+          "agent" => {
+            "name" => "Parent",
+            "description" => "Updated",
+            "system_prompt" => "Prompt",
+            "tools" => [],
+          },
+          "custom_tools" => [],
+        }
+
+        described_class.new(json: base).import!(overwrite: true)
+        expect(existing_agent.reload.subagent_ids).to eq([first_subagent.id])
+
+        base["agent"]["subagents"] = []
+        described_class.new(json: base).import!(overwrite: true)
+        expect(existing_agent.reload.subagent_ids).to eq([])
+      end
+    end
+
     context "when importing mcp server assignments" do
       fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, name: "Jira") }
       fab!(:ai_agent) { Fabricate(:ai_agent, tools: []) }

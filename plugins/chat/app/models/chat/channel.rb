@@ -46,6 +46,7 @@ module Chat
     validates :emoji, length: { maximum: 100 }
     validate :ensure_slug_ok, if: :slug_changed?
     before_validation :generate_auto_slug
+    after_update :enqueue_channel_hashtag_remap, if: :saved_change_to_slug?
 
     scope :with_categories,
           -> do
@@ -110,6 +111,13 @@ module Chat
     ].each { |name| define_method(name) { false } }
 
     %i[allowed_user_ids allowed_group_ids chatable_url].each { |name| define_method(name) { nil } }
+
+    def enqueue_channel_hashtag_remap
+      old_ref = slug_before_last_save
+      return if old_ref.blank? || old_ref.casecmp?(slug.to_s)
+
+      HashtagRemapper.enqueue([{ type: Chat::ChannelHashtagDataSource.type, id:, old_ref: }])
+    end
 
     def ensure_slug_ok
       if self.slug.present?
@@ -240,12 +248,21 @@ module Chat
     def mark_all_threads_as_read(user: nil)
       return if !threading_enabled
 
-      DB.exec(<<~SQL, channel_id: id)
+      params = { channel_id: id }
+      user_condition = ""
+
+      if user
+        params[:user_id] = user.id
+        user_condition = "AND user_chat_thread_memberships.user_id = :user_id"
+      end
+
+      DB.exec(<<~SQL, params)
         UPDATE user_chat_thread_memberships
         SET last_read_message_id = chat_threads.last_message_id
         FROM chat_threads
         WHERE user_chat_thread_memberships.thread_id = chat_threads.id
-        #{user ? "AND user_chat_thread_memberships.user_id = #{user.id}" : ""}
+        AND chat_threads.channel_id = :channel_id
+        #{user_condition}
         AND (
           user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id OR
           user_chat_thread_memberships.last_read_message_id IS NULL

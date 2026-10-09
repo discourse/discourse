@@ -24,6 +24,8 @@ hy:
       cast-votes:
         title: "Քվեարկեք"
         label: "Քվեարկեք հիմա !"
+      keep-vote:
+        label: "Ետ"
       show-results:
         title: "Ցուցադրել հարցման արդյունքները"
         label: "Արդյունքները"

@@ -566,7 +566,7 @@ acceptance("User menu", function (needs) {
       is_anonymous: false,
       can_post_anonymously: false,
       trust_level: 2,
-      groups: [
+      visibleGroups: [
         AUTO_GROUPS.trust_level_0,
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,
@@ -591,7 +591,7 @@ acceptance("User menu", function (needs) {
       is_anonymous: true,
       trust_level: 2,
       can_post_anonymously: true,
-      groups: [
+      visibleGroups: [
         AUTO_GROUPS.trust_level_0,
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,
@@ -609,7 +609,7 @@ acceptance("User menu", function (needs) {
       is_anonymous: true,
       can_post_anonymously: true,
       trust_level: 4,
-      groups: [
+      visibleGroups: [
         AUTO_GROUPS.trust_level_0,
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,
@@ -631,7 +631,7 @@ acceptance("User menu", function (needs) {
       is_anonymous: false,
       can_post_anonymously: false,
       trust_level: 2,
-      groups: [
+      visibleGroups: [
         AUTO_GROUPS.trust_level_0,
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,

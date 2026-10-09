@@ -5,23 +5,67 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "透過 API 觸發自動化"
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            create_automation: 建立自動化
+            update_automation: 更新自動化
+            delete_automation: 刪除自動化
     discourse_automation:
-      back: 上一步
+      title: 自動化
+      table_title: 自動化
+      create: 新增自動化
+      update: 更新自動化
+      back: 返回
       edit: 編輯
+      select_script: 選擇指令碼
+      select_trigger: 選擇觸發條件
+      confirm_automation_reset: 此動作會重設指令碼與觸發條件選項，並儲存新的狀態。要繼續嗎？
+      confirm_automation_trigger: 此動作會觸發自動化。要繼續嗎？
+      no_automation_yet: 目前尚未設定任何自動化。
+      filter_placeholder: 依名稱或說明篩選…
+      edit_automation:
+        trigger_section:
+          forced: 此觸發條件由指令碼強制指定。
+          next_pending_automation: "下一次自動化將於以下時間觸發：%{date}"
+          trigger_now: "立即觸發"
+          title: 時間／內容…
+        fields_section:
+          title: 指令碼選項
+      destroy_automation:
+        confirm: "確定要刪除 `%{name}` 嗎？"
       fields:
+        key_value:
+          label_without_count: "設定"
+          label_with_count:
+            other: "編輯設定（%{count}）"
         user:
           label: 使用者
         pm:
           title:
             label: 標題
           raw:
-            label: 內容
+            label: 內文
         pms:
+          confirm_remove_pm: "確定要移除此私人訊息嗎？"
+          placeholder_title: 私人訊息標題
+          add_pm: 新增私人訊息
+          no_pm_created: 你尚未建立任何私人訊息。自動化觸發後將傳送私人訊息。
           title:
             label: 標題
           raw:
-            label: 內容
+            label: 內文
+          delay:
+            label: 延遲（分鐘）
         group:
           label: 群組
         text:
@@ -31,123 +75,424 @@ zh_TW:
           fields:
             categories:
               label: 分類
+              description: 僅在遭標記主題位於這些分類時觸發
             tags:
-              label: 標記
+              label: 標籤
+              description: 僅在遭標記主題具有其中任一標籤時觸發
+        not_found: 找不到自動化 `%{automation}` 的觸發條件 `%{trigger}`，請確認已安裝相關外掛
         user_badge_granted:
           fields:
             badge:
               label: 徽章
+            only_first_grant:
+              label: 僅在首次授予時
         stalled_topic:
           durations:
+            PT1H: "一小時"
+            P1D: "一天"
+            P1W: "一週"
             P2W: "兩週"
+            P1M: "一個月"
             P3M: "三個月"
             P6M: "六個月"
             P1Y: "一年"
+          fields:
+            categories:
+              label: 限制為指定分類
+            tags:
+              label: 限制為指定標籤
+            stalled_after:
+              label: 停滯時間超過
         recurring:
+          every: 每隔
           frequencies:
+            minute: 分鐘
+            hour: 小時
             day: 天
+            weekday: 工作日
             week: 週
             month: 月
             year: 年
           fields:
             recurrence:
-              label: 週期
+              label: 重複頻率
+            start_date:
+              label: 開始日期
         stalled_wiki:
           durations:
+            PT1H: "一小時"
+            P1D: "一天"
+            P1W: "一週"
             P2W: "兩週"
+            P1M: "一個月"
             P3M: "三個月"
             P6M: "六個月"
             P1Y: "一年"
+          fields:
+            restricted_category:
+              label: 限制為指定分類
+            stalled_after:
+              label: 觸發延遲
+              description: 定義最後一次 Wiki 編輯與自動化觸發之間的延遲
+            retriggered_after:
+              label: 再次觸發延遲
+              description: 若 Wiki 在首次觸發後仍未編輯，定義首次觸發與下次觸發之間的延遲
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: 追蹤的群組
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: 追蹤的群組
+        user_promoted:
+          fields:
+            restricted_group:
+              label: 限制為指定群組
+            trust_level_transition:
+              label: 信任等級轉換
+          trust_levels:
+            ALL: "所有信任等級"
+            TL01: "TL0 至 TL1"
+            TL12: "TL1 至 TL2"
+            TL23: "TL2 至 TL3"
+            TL34: "TL3 至 TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: 執行時間
         topic:
           fields:
             restricted_topic:
-              label: 話題 ID
+              label: 主題 ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: 僅限原始貼文
+              description: 僅在貼文是主題中的原始貼文時觸發
+            action_type:
+              label: 動作類型
+              description: "選填，限制為僅在建立或編輯事件時觸發"
+            valid_trust_levels:
+              label: 有效的信任等級
+              description: 僅在貼文由這些信任等級的使用者建立時觸發；預設為任何信任等級
             restricted_tags:
-              label: 標記
+              label: 標籤
+              description: 選填，僅在貼文具有其中任一標籤時觸發
             restricted_categories:
               label: 分類
-          created: 建立時間
-          with_images: 圖片
+              description: 選填，僅在貼文所屬主題位於這些分類時觸發
+            exclude_subcategories:
+              label: 排除子分類
+              description: 選填，僅在貼文所屬主題正好位於上方指定的分類時觸發
+            restricted_archetype:
+              label: 主題類型
+              description: 選填，允許限制為僅在主題或私人訊息上觸發
+            restricted_groups:
+              label: 限制的群組
+              description: 選填，僅在貼文使用者屬於其中任一群組時觸發
+            restricted_inbox_groups:
+              label: 限制的群組收件匣
+              description: 選填，僅在貼文所屬主題是其中一個群組收件匣中的私人訊息時觸發
+            excluded_groups:
+              label: 排除的群組
+              description: 選填，若貼文使用者屬於其中任一群組，則略過觸發
+            ignore_automated:
+              label: 忽略自動化內容
+              description: 若寄件者使用 noreply 電子郵件或來自自動化來源，則略過觸發。僅適用於透過電子郵件建立的貼文
+            first_post_only:
+              label: 僅限第一篇貼文
+              description: 僅在貼文是使用者建立的第一篇貼文時觸發
+            first_topic_only:
+              label: 僅限第一個主題
+              description: 僅在主題是使用者建立的第一個主題時觸發
+            skip_via_email:
+              label: "略過透過電子郵件建立的內容"
+              description: "若貼文透過電子郵件建立，則略過觸發"
+            post_features:
+              label: 貼文特徵
+              description: "選填，限制為僅在具有這些特徵的貼文上觸發"
+          created: 已建立
+          edited: 已編輯
+          topics: 主題（所有分類）
+          personal_messages: 僅限私人訊息
+          public_topics: 主題（僅限公開分類）
+          with_images: 圖像
           with_links: 連結
-          with_code: 代碼
-          with_uploads: 上傳檔案
+          with_code: 程式碼
+          with_uploads: 上傳項目
+        user_updated:
+          fields:
+            user_profile:
+              label: 使用者個人資料欄位
+              description: 僅在使用者已填寫所有這些欄位時觸發
+            custom_fields:
+              label: 使用者自訂欄位
+              description: 僅在使用者已填寫所有這些欄位時觸發
+            once_per_user:
+              label: 每位使用者一次
+              description: 每位使用者僅觸發一次
+            new_users_only:
+              label: 僅限新使用者
+              description: 僅對此自動化啟用後加入的新使用者觸發
         category_created_edited:
           fields:
             restricted_category:
               label: 父分類
+              description: 選填，允許將觸發執行限制為此分類
         pm_created:
           fields:
             restricted_user:
               label: 使用者
+              description: 僅對傳送給此使用者的私人訊息觸發
             restricted_group:
               label: 群組
+              description: 僅對傳送給此群組的私人訊息觸發
+            ignore_staff:
+              label: 忽略工作人員
+              description: 若寄件者是工作人員，則略過觸發
+            ignore_group_members:
+              label: 忽略群組成員
+              description: 若寄件者是上方指定群組的成員，則略過觸發
+            ignore_automated:
+              label: 忽略自動化內容
+              description: 若寄件者使用 noreply 電子郵件或來自自動化來源，則略過觸發。僅適用於透過電子郵件建立的私人訊息
+            valid_trust_levels:
+              label: 有效的信任等級
+              description: 僅在貼文由這些信任等級的使用者建立時觸發；預設為任何信任等級
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: 新增或移除標籤
+            tags_added: 新增標籤
+            tags_removed: 移除標籤
+          fields:
+            watching_categories:
+              label: 關注的分類
+              description: 僅在主題位於其中一個分類時觸發
+            watching_tags:
+              label: 關注的標籤
+              description: 僅在主題具有其中任一標籤時觸發
+            trigger_on:
+              label: 觸發時機
+            trigger_with_pms:
+              label: 包含私人訊息時觸發
+              description: 即使標籤是在私人訊息中變更，仍會觸發
         after_post_cook:
           fields:
+            valid_trust_levels:
+              label: 有效的信任等級
+              description: 僅在貼文由這些信任等級的使用者建立時觸發；預設為任何信任等級
             restricted_category:
               label: 分類
+              description: 選填，僅在貼文所屬主題位於此分類時觸發
             restricted_tags:
-              label: 標記
+              label: 標籤
+              description: 選填，僅在貼文具有其中任一標籤時觸發
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: 電子郵件範本
+              description: 支援自動化預留位置
+            recipients:
+              label: 收件者
+              description: 要通知的使用者或電子郵件地址
+        not_found: 找不到自動化 `%{automation}` 的指令碼 `%{script}`，請確認已安裝相關外掛
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "必須是有效的 Zapier Webhook URL，例如：https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: 一次
+              description: 每個主題只回應一次
+            word_answer_list:
+              label: 字詞／答案配對清單
+              description: "定義鍵／值群組清單，其中 `key` 是搜尋詞，`value` 是回覆文字。`key` 可留白，以回應所有觸發條件，不論內容為何。請注意，`value` 可使用 `{{key}}` 作為預留位置，回覆時會以 `key` 的值取代。另請注意，`key` 會以規則運算式評估；若 `.` 等特殊字元確實表示句點，必須加上逸出字元，例如：`\\.`"
+            answering_user:
+              label: 回覆使用者
+              description: 預設為系統使用者
         auto_tag_topic:
           fields:
             tags:
-              label: 標記
+              label: 標籤
+              description: 要新增至主題的標籤清單。
+            closed_automatically:
+              label: 自動關閉的主題
+              description: 將標籤新增至自動關閉的主題。
+            closed_manually:
+              label: 手動關閉的主題
+              description: 將標籤新增至手動關閉的主題。
         post:
           fields:
+            creator:
+              label: 建立者
+              post_creator_context: 貼文的建立者
+              updated_user_context: 更新的使用者
             topic:
-              label: 話題 ID
+              label: 主題 ID
+            post:
+              label: 貼文內容
+        topic:
+          fields:
+            creator:
+              label: 建立者
+              updated_user_context: 更新的使用者
+            body:
+              label: 主題內文
+            title:
+              label: 主題標題
+            category:
+              label: 主題分類
+            tags:
+              label: 主題標籤
         group_category_notification_default:
           fields:
             group:
               label: 群組
+            notification_level:
+              label: 通知等級
+            update_existing_members:
+              label: 更新現有成員
+              description: 更新現有群組成員的通知等級
         user_global_notice:
           fields:
             level:
               label: 等級
+            notice:
+              label: 注意
+              description: 可接受 HTML，請勿在此填入不受信任的輸入！
           levels:
+            warning: 警告
             info: 資訊
             success: 成功
             error: 錯誤
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: 徽章名稱
             group:
               label: 群組
+              description: 目標群組。擁有指定徽章的使用者將加入此群組
+            update_user_title_and_flair:
+              label: 更新使用者稱號與識別圖示
+              description: 選填，更新使用者稱號與識別圖示
+            remove_members_without_badge:
+              label: 移除沒有徽章的現有成員
+              description: 選填，移除沒有指定徽章的現有群組成員
             badge:
               label: 徽章
+              description: 選擇徽章
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: 停權至（預設）
+            reason:
+              label: 原因（預設）
             actor:
               label: 使用者
+              description: "負責停權的使用者（預設：系統）"
         pin_topic:
           fields:
             pinnable_topic:
-              label: 話題 ID
+              label: 主題 ID
+            pinned_globally:
+              label: 全域置頂
+            pinned_until:
+              label: 置頂至
         banner_topic:
           fields:
             topic_id:
-              label: 話題 ID
+              label: 主題 ID
+            banner_until:
+              label: 設為橫幅至
             user:
               label: 使用者
+              description: "建立橫幅的使用者（預設：系統）"
+        flag_post_on_words:
+          fields:
+            words:
+              label: 要檢查的字詞
+        topic_required_words:
+          fields:
+            words:
+              label: 必要字詞清單
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: 參與者的群組名稱
+            giftee_assignment_messages:
+              label: 傳送給贈送者的訊息
+        send_pms:
+          add_a_pm_btn:
+            label: 新增私人訊息
+          fields:
+            receiver:
+              label: 私人訊息收件者
+            sendable_pms:
+              label: 私人訊息
+            sender:
+              label: 私人訊息寄件者
+              description: "確保寄件者擁有向收件者傳送私人訊息的正確權限"
         close_topic:
           fields:
             topic:
-              label: 話題 ID
+              label: 主題 ID
+            message:
+              label: 關閉訊息
+              description: "選填，要顯示於「主題已關閉」記錄上的訊息"
             user:
               label: 使用者
+              description: "關閉主題的使用者（預設：系統）"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "使用者自訂欄位名稱"
+        set_topic_timer:
+          title: 設定主題計時器
+          fields:
+            type:
+              label: 計時器類型
+            duration:
+              label: 計時器持續時間
+      unnamed_automation: "未命名的自動化"
       models:
+        script:
+          name:
+            label: 指令碼
         trigger:
           name:
-            label: 觸發
+            label: 觸發條件
         automation:
+          runs_today: "今天 %{count} 次"
+          runs_this_week: "本週 %{count} 次"
+          runs_this_month: "本月 %{count} 次"
+          recent_errors:
+            other: "最近發生 %{count} 個錯誤"
+          runs:
+            label: 執行次數
           name:
-            label: 名字
+            label: 名稱
           trigger:
-            label: 觸發
+            label: 觸發條件
+          script:
+            label: 指令碼
           version:
             label: 版本
           status:
             label: 狀態
+          enabled:
+            label: "啟用自動化"
           disabled:
-            label: 停用
+            label: 已停用
+          placeholders:
+            label: 預留位置
+          last_updated_at:
+            label: 上次更新
+          last_run:
+            label: 上次執行
+          last_updated_by:
+            label: 更新者
+          enable_toggle_disabled: "完成所有必填欄位後，即可啟用此自動化。"

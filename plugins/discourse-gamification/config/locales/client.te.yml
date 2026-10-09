@@ -34,3 +34,8 @@ te:
       custom_range_from: "నుండి"
       admin:
         name: "పేరు"
+    discourse_workflows:
+      gamification_score:
+        username: "సభ్యుడు"
+        date: "తేదీ"
+        description: "వివరణ"

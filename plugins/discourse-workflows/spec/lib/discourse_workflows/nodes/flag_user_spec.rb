@@ -32,6 +32,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
       expect(score.reviewable_score_type).to eq(ReviewableScore.types[:needs_approval])
       expect(score.user).to eq(Discourse.system_user)
       expect(score.reason).to eq("workflow_flagged_user")
+      expect(score.context).to eq("discourse_workflows:workflow:#{workflow.id}")
       expect(result).to include(
         "user_id" => target.id,
         "username" => target.username,
@@ -40,6 +41,25 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
         "reviewable_created" => true,
         "score_added" => true,
         "user_approved" => false,
+      )
+    end
+
+    it "records both workflows when they flag the same user" do
+      other_workflow = Fabricate(:discourse_workflows_workflow)
+
+      [workflow, other_workflow].each do |flagging_workflow|
+        execute_node_output(
+          configuration: {
+            "username" => target.username,
+          },
+          workflow: flagging_workflow,
+        )
+      end
+
+      reviewable = ReviewableUser.pending.find_by(target: target)
+      expect(reviewable.reviewable_scores.pluck(:context)).to contain_exactly(
+        "discourse_workflows:workflow:#{workflow.id}",
+        "discourse_workflows:workflow:#{other_workflow.id}",
       )
     end
 
@@ -53,6 +73,8 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
     end
 
     it "snapshots the same payload fields core's suspect user job does" do
+      avatar = Fabricate(:upload)
+      target.update!(uploaded_avatar_id: avatar.id)
       target.user_profile.update!(bio_raw: "Buy my links", website: "https://spam.example")
 
       flag
@@ -65,6 +87,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
         "email" => target.email,
         "bio" => "Buy my links",
         "website" => "https://spam.example",
+        "avatar_url" => Discourse.store.cdn_url(avatar.url),
       )
     end
 
@@ -223,7 +246,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
     it "raises when the username does not resolve" do
       expect { flag("username" => "nope") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nope' not found",
+        node_error_message(:not_found, scope: :actor, username: "nope"),
       )
     end
   end

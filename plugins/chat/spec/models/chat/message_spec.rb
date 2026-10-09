@@ -75,7 +75,35 @@ describe Chat::Message do
 
     let(:blocks) { nil }
 
+    def button_blocks(style: nil, icon: nil)
+      button = { type: "button", text: { text: "Foo", type: "plain_text" } }
+      button[:style] = style if style
+      button[:icon] = icon if icon
+
+      [{ type: "actions", elements: [button] }]
+    end
+
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    context "when button presentation is provided" do
+      it "allows every supported style and an icon at the maximum length" do
+        aggregate_failures do
+          Chat::Schemas::BUTTON_STYLES.each do |style|
+            expect(message).to allow_value(
+              button_blocks(style:, icon: "a" * Chat::Schemas::BUTTON_ICON_MAX_LENGTH),
+            ).for(:blocks)
+          end
+        end
+      end
+
+      it "rejects an unsupported style" do
+        expect(message).not_to allow_value(button_blocks(style: "warning")).for(:blocks)
+      end
+
+      it "rejects an icon longer than 255 characters" do
+        expect(message).not_to allow_value(button_blocks(icon: "a" * 256)).for(:blocks)
+      end
+    end
 
     context "when blocks format is invalid" do
       let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
@@ -88,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -655,6 +687,33 @@ describe Chat::Message do
       expect(message.build_excerpt).to eq "cat.gif"
     end
 
+    it "escapes upload filenames in excerpts" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", uploads: [upload])
+
+      expect(message.build_excerpt).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
+    it "bounds escaped upload filenames before saving excerpts" do
+      upload = Fabricate(:upload, original_filename: "#{"&" * 250}.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      excerpt = message.build_excerpt
+
+      message.update!(excerpt:)
+
+      expect(excerpt.length).to be <= 1000
+      expect(excerpt).to eq("&amp;" * described_class::EXCERPT_LENGTH)
+      expect(message.reload.excerpt).to eq(excerpt)
+    end
+
+    it "escapes persisted upload filenames for display" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+
+      expect(message.excerpt_for_display).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
     it "supports autolink with <>" do
       cooked = described_class.cook("<https://github.com/discourse/discourse-chat/pull/468>")
 
@@ -759,6 +818,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 

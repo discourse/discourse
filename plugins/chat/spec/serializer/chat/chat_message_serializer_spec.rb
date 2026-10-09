@@ -10,12 +10,85 @@ describe Chat::MessageSerializer do
 
   let(:guardian) { Guardian.new(guardian_user) }
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users with a configured mention limit" do
     it "is limited by max_mentions_per_chat_message setting" do
       Fabricate.times(2, :user_chat_mention, chat_message: message_1)
       SiteSetting.max_mentions_per_chat_message = 1
 
       expect(serializer.as_json[:mentioned_users].length).to eq(1)
+    end
+  end
+
+  describe "#blocks" do
+    it "serializes confirmation cards and cooks the question using the message author's permissions" do
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      message_1.update!(
+        user: Fabricate(:admin),
+        blocks: [
+          {
+            type: "confirmation",
+            title: "Editing category: ##{private_category.slug_ref}::category",
+            description_label: "Duration:",
+            question: "Change ##{private_category.slug_ref}::category?",
+            parameters: [{ label: "name", value: "<new name>" }],
+            elements: [{ type: "button", text: { type: "plain_text", text: "Yes" } }],
+          },
+        ],
+      )
+
+      card = serializer.as_json[:blocks].first
+
+      title = Nokogiri::HTML5.fragment(card[:cooked_title])
+      expect(title.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+      expect(card[:description_label]).to eq("Duration:")
+      expect(card[:parameters]).to eq([{ "label" => "name", "value" => "<new name>" }])
+      question = Nokogiri::HTML5.fragment(card[:cooked_question])
+      expect(question.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+
+      message_1.blocks.first["status"] = "Approved by @#{message_1.user.username}."
+      message_1.blocks.first["elements"] = []
+      message_1.save!
+      resolved =
+        Chat::MessageSerializer.new(message_1, scope: guardian, root: false).as_json[:blocks].first
+
+      expect(resolved[:elements]).to be_empty
+      status = Nokogiri::HTML5.fragment(resolved[:cooked_status])
+      expect(status.at_css("a.mention").text).to eq("@#{message_1.user.username}")
+    end
+
+    it "serializes button presentation without its private value" do
+      message_1.update!(
+        blocks: [
+          {
+            type: "actions",
+            elements: [
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "Continue",
+                },
+                style: "success",
+                icon: "check",
+                value: "private-value",
+              },
+            ],
+          },
+        ],
+      )
+
+      serialized_button = serializer.as_json.dig(:blocks, 0, :elements, 0)
+
+      expect(serialized_button).to eq(
+        action_id: message_1.blocks.dig(0, "elements", 0, "action_id"),
+        type: "button",
+        text: {
+          text: "Continue",
+          type: "plain_text",
+        },
+        style: "success",
+        icon: "check",
+      )
     end
   end
 
@@ -48,6 +121,25 @@ describe Chat::MessageSerializer do
       serializer = described_class.new(message, scope: guardian, root: nil)
 
       expect(serializer.as_json[:excerpt]).to eq("ok ■■■■■")
+    end
+
+    it "escapes persisted upload filenames" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+      serializer = described_class.new(message, scope: guardian, root: nil)
+
+      expect(serializer.as_json[:excerpt]).to eq("&lt;svg onload=alert(1)&gt;.png")
+    end
+  end
+
+  describe "#is_action" do
+    it "identifies action slash commands" do
+      message_1.update!(message: "/me waves")
+      expect(serializer.as_json[:is_action]).to eq(true)
+
+      message_1.update!(message: "/shrug")
+      expect(serializer.as_json[:is_action]).to eq(false)
     end
   end
 
@@ -228,7 +320,7 @@ describe Chat::MessageSerializer do
     end
   end
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users after a mentioned user is deleted" do
     it "doesn't fail if mentioned user was deleted" do
       mentioned_user = Fabricate(:user)
       message =

@@ -14,9 +14,9 @@ export default class ChatMessageLeftGutter extends Component {
     <div class="chat-message-left-gutter">
       {{#if @message.reviewableId}}
         <LinkTo
-          @route="review.show"
-          @model={{@message.reviewableId}}
           class="chat-message-left-gutter__flag"
+          @model={{@message.reviewableId}}
+          @route="review.show"
         >
           {{dIcon "flag" title="chat.flagged"}}
         </LinkTo>

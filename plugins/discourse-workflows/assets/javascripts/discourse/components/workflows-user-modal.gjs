@@ -34,20 +34,44 @@ export default class WorkflowsUserModal extends Component {
     try {
       await ajax("/discourse-workflows/modal-responses", {
         type: "POST",
-        data: { action_id: button.action_id },
+        data: {
+          action_id: button.action_id,
+          modal_id: this.args.model.modal_id,
+        },
       });
-      this.args.closeModal();
     } catch (e) {
+      // Deliberately unguarded: the dialog is global, unlike closeModal below.
       popupAjaxError(e);
       this.submitting = false;
+      return;
+    }
+
+    // While awaiting, the server's close_modal broadcast may have already
+    // closed this modal — and the workflow may have shown the next one.
+    // Closing again here would close that new modal instead.
+    if (!this.isDestroying) {
+      this.args.closeModal();
+    }
+  }
+
+  @action
+  propagateDismissal() {
+    // Not while a response is in flight: if it fails, the copies in the
+    // other tabs are the only place the modal can still be answered.
+    if (this.args.model.modal_id && !this.submitting) {
+      ajax("/discourse-workflows/modal-dismissals", {
+        type: "POST",
+        data: { modal_id: this.args.model.modal_id },
+      }).catch(() => {});
     }
   }
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
       class="workflows-user-modal"
+      @beforeClose={{this.propagateDismissal}}
+      @closeModal={{@closeModal}}
+      @title={{@model.title}}
     >
       <:body>
         {{#if @model.body}}
@@ -58,9 +82,9 @@ export default class WorkflowsUserModal extends Component {
         {{#each this.buttons as |button|}}
           <DButton
             class={{button.styleClass}}
-            @translatedLabel={{button.label}}
             @action={{fn this.respond button}}
             @disabled={{this.submitting}}
+            @translatedLabel={{button.label}}
           />
         {{/each}}
       </:footer>

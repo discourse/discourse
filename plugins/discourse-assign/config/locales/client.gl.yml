@@ -41,4 +41,15 @@ gl:
       nodes:
         "trigger:assigned": "Asignado"
       assign_topic:
+        resource: "Recurso"
+        resources:
+          topic: "Tema"
+          post: "Publicación"
         topic_id: "ID do tema"
+        post_id: "ID da publicación"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Publicación"
+        topic_id: "ID do tema"
+        post_id: "ID da publicación"

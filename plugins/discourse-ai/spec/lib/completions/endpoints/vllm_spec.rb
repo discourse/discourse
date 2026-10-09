@@ -179,7 +179,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   before { enable_current_plugin }
 
-  def capture_payload_for_completion
+  def capture_payload_for_completion(**generation_args)
     captured_payload = nil
     stub =
       stub_request(:post, "https://test.dev/v1/chat/completions")
@@ -189,13 +189,123 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
         end
         .to_return(status: 200, body: completion_response_body)
 
-    llm.generate("say hello", user: Discourse.system_user)
+    llm.generate("say hello", user: Discourse.system_user, **generation_args)
 
     expect(stub).to have_been_requested
     captured_payload
   end
 
   describe "tool support" do
+    %w[coalesced split].each do |delivery|
+      it "preserves interleaved tool progress with #{delivery} transport chunks" do
+        events = [
+          {
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    {
+                      index: 0,
+                      id: "tool-1",
+                      function: {
+                        name: "echo",
+                        arguments: '{"text":"one',
+                      },
+                    },
+                    {
+                      index: 1,
+                      id: "tool-2",
+                      function: {
+                        name: "echo",
+                        arguments: '{"text":"two',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    { index: 1, function: { arguments: '-done"}' } },
+                    { index: 0, function: { arguments: '-done"}' } },
+                  ],
+                },
+              },
+            ],
+          },
+          { choices: [{ delta: {}, finish_reason: "tool_calls" }] },
+        ]
+        chunks =
+          events.map { |event| "data: #{event.merge(id: "chatcmpl-tool-batch").to_json}\n\n" }
+        chunks << "data: [DONE]\n\n"
+        body = delivery == "coalesced" ? [chunks.join] : chunks.flat_map(&:chars)
+        response = []
+
+        vllm_mock.with_chunk_array_support do
+          stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+            status: 200,
+            body: body,
+          )
+          llm.generate(
+            "use both tools",
+            user: Discourse.system_user,
+            partial_tool_calls: true,
+          ) { |partial| response << partial.dup }
+        end
+
+        completed = response.reject(&:partial?)
+        expect(completed.map(&:id)).to eq(%w[tool-1 tool-2])
+        expect(completed.map(&:parameters)).to eq([{ text: "one-done" }, { text: "two-done" }])
+        expect(response.map(&:provider_data)).to all(
+          eq(vllm: { tool_batch_id: "chatcmpl-tool-batch" }),
+        )
+        progress = response.select(&:partial?)
+        if delivery == "split"
+          expect(progress.map(&:parameters)).to eq(
+            [{ text: "one" }, { text: "two" }, { text: "two-done" }, { text: "one-done" }],
+          )
+        else
+          expect(progress).to eq([])
+        end
+      end
+    end
+
+    it "assigns the provider batch to every tool call in a streamed event" do
+      event = {
+        id: "chatcmpl-tool-batch",
+        choices: [
+          {
+            index: 0,
+            delta: {
+              tool_calls: [
+                { index: 0, id: "tool-1", function: { name: "echo", arguments: '{"text":"one"}' } },
+                { index: 1, id: "tool-2", function: { name: "echo", arguments: '{"text":"two"}' } },
+              ],
+            },
+            finish_reason: "tool_calls",
+          },
+        ],
+      }
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: "data: #{event.to_json}\n\ndata: [DONE]\n\n",
+      )
+      response = []
+
+      llm.generate("use both tools", user: Discourse.system_user) { |partial| response << partial }
+
+      expect(response.map(&:id)).to eq(%w[tool-1 tool-2])
+      expect(response.map(&:parameters)).to eq([{ text: "one" }, { text: "two" }])
+      expect(response.map(&:provider_data)).to all(
+        eq(vllm: { tool_batch_id: "chatcmpl-tool-batch" }),
+      )
+      expect(response).to all(have_attributes(partial: false))
+    end
+
     it "is able to invoke XML tools correctly" do
       llm_model.update!(provider_params: { "disable_native_tools" => true })
 
@@ -393,6 +503,21 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
       payload = capture_payload_for_completion
       expect(payload["chat_template_kwargs"]).to eq("enable_thinking" => true)
+    end
+
+    it "suppresses thinking overrides when reasoning is explicitly disabled" do
+      llm_model.update!(
+        provider_params: {
+          "reasoning_parser" => "deepseek_v4",
+          "reasoning_effort" => "high",
+          "thinking_override" => "on",
+        },
+      )
+
+      payload = capture_payload_for_completion(thinking_effort: "none")
+
+      expect(payload).not_to have_key("chat_template_kwargs")
+      expect(payload["reasoning_effort"]).to eq("none")
     end
 
     it "sends thinking for Granite thinking overrides" do
@@ -599,10 +724,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     it "streams Thinking partials followed by content" do
       chunks = []
 
-      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { reasoning: "think." } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: "The answer" } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }).to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { reasoning: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer" } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }.to_json}\n\n"
       chunks << "data: [DONE]\n\n"
 
       stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
@@ -631,6 +756,35 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(thinking_partials[2].partial?).to eq(false)
 
       expect(text_partials.join).to eq("The answer is 4.")
+    end
+
+    it "finalizes Thinking before content when a delta carries both" do
+      chunks = []
+
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer", reasoning: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }] }.to_json}\n\n"
+      chunks << "data: [DONE]\n\n"
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: chunks.join,
+      )
+
+      partials = []
+      llm.generate("what is 2+2?", user: Discourse.system_user, output_thinking: true) do |partial|
+        partials << partial
+      end
+
+      first_content_index = partials.index { |partial| partial.is_a?(String) }
+      final_thinking_index =
+        partials.index do |partial|
+          partial.is_a?(DiscourseAi::Completions::Thinking) && !partial.partial?
+        end
+
+      expect(final_thinking_index).to be < first_content_index
+      expect(partials[final_thinking_index].message).to eq("Let me think.")
+      expect(partials.select { |partial| partial.is_a?(String) }.join).to eq("The answer is 4.")
     end
   end
 
@@ -736,10 +890,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     it "streams Thinking partials followed by content" do
       chunks = []
 
-      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning_content: "Let me " } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { reasoning_content: "think." } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: "The answer" } }] }).to_json}\n\n"
-      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }).to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { role: "assistant", reasoning_content: "Let me " } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { reasoning_content: "think." } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: "The answer" } }] }.to_json}\n\n"
+      chunks << "data: #{{ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }.to_json}\n\n"
       chunks << "data: [DONE]\n\n"
 
       stub_request(:post, "https://test.dev/v1/chat/completions").to_return(

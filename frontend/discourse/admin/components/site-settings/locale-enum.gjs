@@ -22,11 +22,11 @@ export default class LocaleEnum extends Component {
   <template>
     <ComboBox
       @content={{this.content}}
-      @value={{@value}}
-      @onChange={{this.onChangeLocale}}
-      @valueProperty={{@setting.computedValueProperty}}
       @nameProperty={{@setting.computedNameProperty}}
+      @onChange={{this.onChangeLocale}}
       @options={{hash castInteger=true allowAny=@setting.allowsNone}}
+      @value={{@value}}
+      @valueProperty={{@setting.computedValueProperty}}
     />
 
     {{@preview}}

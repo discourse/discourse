@@ -2,6 +2,7 @@
 
 class TopicListSerializer < ApplicationSerializer
   attributes :can_create_topic,
+             :filter,
              :more_topics_url,
              :for_period,
              :per_page,

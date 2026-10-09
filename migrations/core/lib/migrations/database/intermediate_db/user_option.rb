@@ -34,6 +34,7 @@ module Migrations
             enable_smart_lists,
             enable_upcoming_change_available_notifications,
             external_links_in_new_tab,
+            hidden_composer_toolbar_buttons,
             hide_presence,
             hide_profile,
             hide_profile_and_presence,
@@ -61,7 +62,6 @@ module Migrations
             theme_key_seq,
             timezone,
             title_count_mode_key,
-            topics_unread_when_closed,
             understood_languages,
             watched_precedence_over_muted
           )
@@ -97,6 +97,7 @@ module Migrations
         # @param enable_smart_lists                               [Boolean, nil]
         # @param enable_upcoming_change_available_notifications   [Boolean, nil]
         # @param external_links_in_new_tab                        [Boolean, nil]
+        # @param hidden_composer_toolbar_buttons                  [String, nil]
         # @param hide_presence                                    [Boolean, nil]
         # @param hide_profile                                     [Boolean, nil]
         # @param hide_profile_and_presence                        [Boolean, nil]
@@ -124,7 +125,6 @@ module Migrations
         # @param theme_key_seq                                    [Integer, nil]
         # @param timezone                                         [String, nil]
         # @param title_count_mode_key                             [Integer, nil]
-        # @param topics_unread_when_closed                        [Boolean, nil]
         # @param understood_languages                             [String, nil]
         # @param watched_precedence_over_muted                    [Boolean, nil]
         #
@@ -154,6 +154,7 @@ module Migrations
           enable_smart_lists: nil,
           enable_upcoming_change_available_notifications: nil,
           external_links_in_new_tab: nil,
+          hidden_composer_toolbar_buttons: nil,
           hide_presence: nil,
           hide_profile: nil,
           hide_profile_and_presence: nil,
@@ -181,7 +182,6 @@ module Migrations
           theme_key_seq: nil,
           timezone: nil,
           title_count_mode_key: nil,
-          topics_unread_when_closed: nil,
           understood_languages: nil,
           watched_precedence_over_muted: nil
         )
@@ -211,6 +211,7 @@ module Migrations
             Migrations::Database.format_boolean(enable_smart_lists),
             Migrations::Database.format_boolean(enable_upcoming_change_available_notifications),
             Migrations::Database.format_boolean(external_links_in_new_tab),
+            hidden_composer_toolbar_buttons,
             Migrations::Database.format_boolean(hide_presence),
             Migrations::Database.format_boolean(hide_profile),
             Migrations::Database.format_boolean(hide_profile_and_presence),
@@ -238,7 +239,6 @@ module Migrations
             theme_key_seq,
             timezone,
             title_count_mode_key,
-            Migrations::Database.format_boolean(topics_unread_when_closed),
             understood_languages,
             Migrations::Database.format_boolean(watched_precedence_over_muted),
           )

@@ -30,6 +30,11 @@ export default class HashtagAutocompleteResults extends Component {
 
   @tracked isInitialRender = true;
 
+  /**
+   * @param {HashtagAutocompleteResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -48,11 +53,13 @@ export default class HashtagAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;
   }
 
+  /** @param {HashtagAutocompleteResult} result */
   @action
   getResultLabel(result) {
     if (result.model) {
@@ -75,8 +82,8 @@ export default class HashtagAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li {{dScrollIntoView (this.shouldScroll index)}}>
             <a
-              href
               class={{if (eq index @selectedIndex) "selected"}}
+              href
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#unless result.model}}

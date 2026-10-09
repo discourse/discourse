@@ -23,7 +23,6 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
       this.siteSettings.chat_pinned_messages &&
       !this.chatStateManager.isDrawerCollapsed &&
       this.args.channel?.hasPinnedMessages &&
-      !this.args.channel.canManagePins &&
       hasPinsDismissal(this.args.channel) &&
       this.router.currentRoute?.name !== "chat.channel.pins"
     );
@@ -32,16 +31,15 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
   <template>
     {{#if this.showButton}}
       <LinkTo
-        @route="chat.channel.pins"
-        @models={{@channel.routeModels}}
-        title={{this.pinnedMessagesLabel}}
         class="c-navbar__pinned-messages-btn btn no-text btn-transparent"
+        title={{this.pinnedMessagesLabel}}
+        @models={{@channel.routeModels}}
+        @route="chat.channel.pins"
         {{on "click" this.handleClick}}
       >
+        {{! no unread dot: a pin newer than the dismissal brings the bar itself
+        back, so this button never needs to signal newness }}
         {{dIcon "thumbtack"}}
-        {{#if @channel.hasUnseenPins}}
-          <span class="c-navbar__pinned-messages-btn__unread-indicator"></span>
-        {{/if}}
       </LinkTo>
     {{/if}}
   </template>

@@ -64,9 +64,6 @@ fr:
       weekly: "chaque semaine"
       monthly: "chaque mois"
       quarterly: "chaque trimestre"
-    discourse_workflows:
-      assign_topic:
-        error: "Échec de l'attribution du sujet : %{reason}"
   assign_mailer:
     title: "Attribuer un expéditeur"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a attribué le sujet « %{topic_title} » !"

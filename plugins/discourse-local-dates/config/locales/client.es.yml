@@ -19,9 +19,11 @@ es:
         countdown:
           passed: la fecha ha pasado
       title: insertar fecha / hora
+      edit_date: Editar %{date}
       create:
         form:
           insert: Insertar
+          save: Guardar
           format_description: "Formato usado para mostrarle la fecha a los usuarios. Usa Z para mostrar la diferencia horaria y zz para el nombre de la zona horaria."
           timezones_title: Zonas horarias que se muestran
           timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.

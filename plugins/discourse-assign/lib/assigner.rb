@@ -477,6 +477,8 @@ class ::Assigner
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
+      DiscourseEvent.trigger(:unassigned, assignment)
+
       if allowed_user_ids.present?
         MessageBus.publish(
           "/staff/topic-assignment",

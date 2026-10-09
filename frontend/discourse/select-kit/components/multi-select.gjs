@@ -31,6 +31,7 @@ import MultiSelectHeader from "./multi-select/multi-select-header";
   caretDownIcon: "caretIcon",
   caretUpIcon: "caretIcon",
   useHeaderFilter: false,
+  useHeaderSelectedCount: false,
 })
 @pluginApiIdentifiers(["multi-select"])
 export default class MultiSelect extends SelectKitComponent {
@@ -42,6 +43,38 @@ export default class MultiSelect extends SelectKitComponent {
     return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
       : "plus";
+  }
+
+  @computed("value.[]", "content.[]", "selectKit.noneItem")
+  get selectedContent() {
+    const value = makeArray(this.value).map((v) =>
+      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
+    );
+
+    if (value.length) {
+      let content = [];
+
+      value.forEach((v) => {
+        if (this.selectKit.valueProperty) {
+          // extract ID from object values for comparison
+          const vId = this.getValue(v);
+          const c = makeArray(this.content).find(
+            (item) => item[this.selectKit.valueProperty] === vId
+          );
+          if (c) {
+            content.push(c);
+          }
+        } else {
+          if (makeArray(this.content).includes(v)) {
+            content.push(v);
+          }
+        }
+      });
+
+      return this.selectKit.modifySelection(content);
+    }
+
+    return null;
   }
 
   search(filter) {
@@ -140,38 +173,6 @@ export default class MultiSelect extends SelectKitComponent {
     }
   }
 
-  @computed("value.[]", "content.[]", "selectKit.noneItem")
-  get selectedContent() {
-    const value = makeArray(this.value).map((v) =>
-      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
-    );
-
-    if (value.length) {
-      let content = [];
-
-      value.forEach((v) => {
-        if (this.selectKit.valueProperty) {
-          // extract ID from object values for comparison
-          const vId = this.getValue(v);
-          const c = makeArray(this.content).find(
-            (item) => item[this.selectKit.valueProperty] === vId
-          );
-          if (c) {
-            content.push(c);
-          }
-        } else {
-          if (makeArray(this.content).includes(v)) {
-            content.push(v);
-          }
-        }
-      });
-
-      return this.selectKit.modifySelection(content);
-    }
-
-    return null;
-  }
-
   _onKeydown(event) {
     if (
       event.code === "Enter" &&
@@ -214,17 +215,17 @@ export default class MultiSelect extends SelectKitComponent {
         as |HeaderComponent|
       }}
         <HeaderComponent
-          @tabindex={{this.tabindex}}
-          @value={{this.value}}
+          @id={{concat this.selectKit.uniqueID "-header"}}
           @selectedContent={{this.selectedContent}}
           @selectKit={{this.selectKit}}
-          @id={{concat this.selectKit.uniqueID "-header"}}
+          @tabindex={{this.tabindex}}
+          @value={{this.value}}
         />
       {{/let}}
 
       <SelectKitBody
-        @selectKit={{this.selectKit}}
         @id={{concat this.selectKit.uniqueID "-body"}}
+        @selectKit={{this.selectKit}}
       >
         {{#unless this.selectKit.options.useHeaderFilter}}
           {{#let
@@ -232,8 +233,8 @@ export default class MultiSelect extends SelectKitComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
               @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
 
@@ -248,9 +249,9 @@ export default class MultiSelect extends SelectKitComponent {
                 {{#each this.selectedContent as |item|}}
                   <SelectedChoiceComponent
                     @item={{item}}
-                    @selectKit={{this.selectKit}}
                     @mandatoryValues={{@mandatoryValues}}
                     @mandatoryValueTitle={{@mandatoryValueTitle}}
+                    @selectKit={{this.selectKit}}
                   />
                 {{/each}}
               {{/let}}

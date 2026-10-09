@@ -40,6 +40,40 @@ RSpec.describe Admin::GroupsController do
         expect(group.users).to contain_exactly(admin, user)
       end
 
+      it "returns the persisted user count for initial members and owners" do
+        member = Fabricate(:user)
+        owner = Fabricate(:user)
+
+        post "/admin/groups.json",
+             params: {
+               group: {
+                 name: "builders",
+                 usernames: [member.username, owner.username].join(","),
+                 owner_usernames: owner.username,
+               },
+             }
+
+        expect(response).to have_http_status(:ok)
+
+        created_group = Group.find(response.parsed_body.dig("basic_group", "id"))
+
+        expect(created_group.users).to contain_exactly(member, owner)
+        expect(created_group.user_count).to eq(2)
+        expect(response.parsed_body.dig("basic_group", "user_count")).to eq(2)
+      end
+
+      it "returns a zero user count for a group without initial members" do
+        post "/admin/groups.json", params: { group: { name: "empty-group" } }
+
+        expect(response).to have_http_status(:ok)
+
+        created_group = Group.find(response.parsed_body.dig("basic_group", "id"))
+
+        expect(created_group.users).to be_empty
+        expect(created_group.user_count).to eq(0)
+        expect(response.parsed_body.dig("basic_group", "user_count")).to eq(0)
+      end
+
       context "with custom_fields" do
         before do
           plugin = Plugin::Instance.new
@@ -197,10 +231,40 @@ RSpec.describe Admin::GroupsController do
     let(:user2) { Fabricate(:user) }
     let(:user3) { Fabricate(:user) }
 
+    it "rejects an unknown username without changing ownership" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: "unknown_owner",
+               },
+             }
+
+      expect(response.status).to eq(400)
+      expect(group.group_users.find_by(user:)).to be_owner
+    end
+
+    it "matches owner usernames regardless of case" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: user.username.upcase,
+               },
+             }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.find_by(user:)).not_to be_owner
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work" do
+      it "adds the user to the group" do
         group.add_owner(user)
 
         delete "/admin/groups/#{group.id}/owners.json", params: { user_id: user.id }
@@ -209,7 +273,7 @@ RSpec.describe Admin::GroupsController do
         expect(group.group_users.where(owner: true)).to eq([])
       end
 
-      it "should work with multiple users" do
+      it "adds multiple users to the group" do
         group.add_owner(user)
         group.add_owner(user3)
 
@@ -395,7 +459,7 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response for an invalid group_id" do
+      it "returns an error for an invalid group ID" do
         max_id = Group.maximum(:id).to_i
         delete "/admin/groups/#{max_id + 1}.json"
         expect(response.status).to eq(404)

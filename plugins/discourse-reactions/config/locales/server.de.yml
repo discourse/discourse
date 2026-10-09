@@ -22,6 +22,8 @@ de:
     first_reaction:
       name: Erste Reaktion
       description: Auf Beitrag reagiert
+      long_description: |
+        Dieses Abzeichen bekommst du, wenn du zum ersten Mal die Emoji-Reaktionsauswahl nutzt, um auf einen Beitrag zu reagieren. Das ist etwas anderes als ein normales „Gefällt mir“: Es ist eine tolle Möglichkeit, deinen Community-Kollegen zu zeigen, dass ihr Beitrag interessant, nützlich, cool oder lustig war!
   reports:
     reactions:
       title: "Reaktionen"

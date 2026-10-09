@@ -534,7 +534,22 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
+/**
+ * Replaces modifier names in a shortcut string with their platform spelling.
+ *
+ * @deprecated To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`),
+ * which carries the accessible markup too. For the string alone use
+ * `formatShortcut` from `discourse/lib/shortcut-format`.
+ */
 export function translateModKey(string, separator = " ") {
+  deprecated(
+    "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
+    {
+      since: "2026.9.0",
+      id: "discourse.translate-mod-key",
+    }
+  );
+
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
@@ -710,11 +725,15 @@ export function getCaretPosition(element, options) {
  * @return {String} Markdown table
  */
 export function arrayToTable(array, cols, colPrefix = "col", alignments) {
+  const escapeCell = (value) =>
+    String(value ?? "")
+      .replace(/\r?\n|\r/g, " ")
+      .replaceAll("|", "\\|");
+
   let table = "";
 
-  // Generate table headers
   table += "|";
-  table += cols.join(" | ");
+  table += cols.map(escapeCell).join(" | ");
   table += "|\n|";
 
   const alignMap = {
@@ -735,11 +754,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
 
     table +=
       cols
-        .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "")
-            .replace(/\r?\n|\r/g, " ")
-            .replaceAll("|", "\\|");
-        })
+        .map((_key, index) => escapeCell(item[`${colPrefix}${index}`]))
         .join(" | ") + "|\n";
   });
 

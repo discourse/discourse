@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 ug:
+  admin:
+    site_settings:
+      categories:
+        discourse_captcha: "Captcha قىستۇرمىسى"

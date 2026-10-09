@@ -13,10 +13,10 @@ export default <template>
     </div>
     <div>
       <DButton
+        class="btn-primary"
+        id="copy-api-key-btn"
         @action={{@controller.copy}}
         @translatedLabel={{@controller.buttonLabel}}
-        id="copy-api-key-btn"
-        class="btn-primary"
       />
     </div>
   </div>

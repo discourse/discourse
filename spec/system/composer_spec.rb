@@ -75,6 +75,7 @@ describe "Composer" do
   end
 
   it "focuses the reply button when tabbing out of both editor modes" do
+    SiteSetting.enable_composer_redesign = false
     page.visit "/new-topic"
     expect(composer).to be_opened
     composer.focus

@@ -1,0 +1,124 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import { i18n } from "discourse-i18n";
+import guessDateFormat from "../lib/guess-best-date-format";
+
+export default class EventDate extends Component {
+  @service a11y;
+  @service siteSettings;
+
+  <template>
+    {{~#if this.shouldRender~}}
+      <span class="header-topic-title-suffix-outlet event-date-container">
+        {{~#if this.siteSettings.use_local_event_date~}}
+          <span
+            class="event-date event-local-date past"
+            data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
+          >
+            {{this.localDateContent}}
+          </span>
+        {{else}}
+          <span
+            class="event-date event-relative-date {{this.relativeDateType}}"
+            data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
+          >
+            {{~#if this.isWithinDateRange~}}
+              <span class="indicator"></span>
+              <span class="text">{{this.timeRemainingContent}}</span>
+            {{else}}
+              {{this.relativeDateContent}}
+            {{~/if~}}
+          </span>
+        {{~/if~}}
+      </span>
+    {{~/if~}}
+  </template>
+
+  get shouldRender() {
+    return (
+      this.siteSettings.discourse_post_event_enabled &&
+      this.args.topic.event_starts_at
+    );
+  }
+
+  get eventStartedAt() {
+    return this._parsedDate(this.args.topic.event_starts_at);
+  }
+
+  get eventEndedAt() {
+    return this.args.topic.event_ends_at
+      ? this._parsedDate(this.args.topic.event_ends_at)
+      : this.eventStartedAt;
+  }
+
+  get dateRange() {
+    return this.args.topic.event_ends_at
+      ? `${this._formattedDate(this.eventStartedAt)} → ${this._formattedDate(
+          this.eventEndedAt
+        )}`
+      : this._formattedDate(this.eventStartedAt);
+  }
+
+  get localDateContent() {
+    return this._formattedDate(this.eventStartedAt);
+  }
+
+  get now() {
+    void this.a11y.autoUpdatingRelativeDateRef;
+    return Date.now();
+  }
+
+  get relativeDateType() {
+    if (this.isWithinDateRange) {
+      return "current";
+    }
+    if (this.eventStartedAt.isAfter(this.now)) {
+      return "future";
+    }
+    return "past";
+  }
+
+  get isWithinDateRange() {
+    return (
+      this.eventStartedAt.isBefore(this.now) &&
+      this.eventEndedAt.isAfter(this.now)
+    );
+  }
+
+  get relativeDateContent() {
+    // dateType "current" uses a different implementation
+    const relativeDates = {
+      future: this.eventStartedAt.from(this.now),
+      past: this.eventEndedAt.from(this.now),
+    };
+    return relativeDates[this.relativeDateType];
+  }
+
+  get timeRemainingContent() {
+    return i18n("discourse_post_event.topic_title.ends_in_duration", {
+      duration: this.eventEndedAt.from(this.now),
+    });
+  }
+
+  _parsedDate(date) {
+    if (this.args.topic.event_all_day) {
+      return moment(date, "YYYY-MM-DD");
+    }
+    const timezone = this.args.topic.event_show_local_time
+      ? this.args.topic.event_timezone
+      : moment.tz.guess();
+    return moment.utc(date).tz(timezone || moment.tz.guess());
+  }
+
+  _guessedDateFormat() {
+    return guessDateFormat(this.eventStartedAt);
+  }
+
+  _formattedDate(date) {
+    return date.format(this._guessedDateFormat());
+  }
+}

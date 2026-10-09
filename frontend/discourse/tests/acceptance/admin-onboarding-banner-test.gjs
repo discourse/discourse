@@ -5,7 +5,110 @@ import { test } from "qunit";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
+
+const designWizardData = () => ({
+  themes: [
+    {
+      id: -1,
+      name: "Foundation",
+      default: true,
+      color_scheme_id: null,
+      dark_color_scheme_id: null,
+      screenshot_light_url: null,
+      screenshot_dark_url: null,
+      palette_pairs: [
+        {
+          key: "default",
+          name: "Default",
+          dark_only: false,
+          light: {
+            id: -1,
+            name: "Light",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "0088cc",
+            },
+          },
+          dark: {
+            id: -2,
+            name: "Dark",
+            colors: {
+              primary: "dddddd",
+              secondary: "222222",
+              tertiary: "099dd7",
+            },
+          },
+        },
+      ],
+    },
+    {
+      id: -2,
+      name: "Horizon",
+      default: false,
+      color_scheme_id: 23,
+      dark_color_scheme_id: 24,
+      screenshot_light_url: null,
+      screenshot_dark_url: null,
+      palette_pairs: [
+        {
+          key: "horizon",
+          name: "Horizon",
+          dark_only: false,
+          light: {
+            id: 23,
+            name: "Horizon",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "563fe3",
+            },
+          },
+          dark: {
+            id: 24,
+            name: "Horizon Dark",
+            colors: {
+              primary: "e7e5f2",
+              secondary: "1b1533",
+              tertiary: "7965f0",
+            },
+          },
+        },
+        {
+          key: "marigold",
+          name: "Marigold",
+          dark_only: false,
+          light: {
+            id: 25,
+            name: "Marigold",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "b78d12",
+            },
+          },
+          dark: {
+            id: 26,
+            name: "Marigold Dark",
+            colors: {
+              primary: "efe7d4",
+              secondary: "201808",
+              tertiary: "d9a616",
+            },
+          },
+        },
+      ],
+    },
+  ],
+  current_theme: null,
+  base_font: "inter",
+  heading_font: "inter",
+  homepage: "latest",
+  palettes_user_selectable: false,
+});
 
 const withStep = (id, assert) => {
   return {
@@ -16,11 +119,11 @@ const withStep = (id, assert) => {
       return click(`div#${id} .onboarding-step__action .btn`);
     },
     isChecked() {
-      return this.checkbox().hasClass("checked", `${id} step is completed`);
+      return this.checkbox().hasClass("--completed", `${id} step is completed`);
     },
     isNotChecked() {
       return this.checkbox().doesNotHaveClass(
-        "checked",
+        "--completed",
         `${id} step is not completed`
       );
     },
@@ -28,21 +131,41 @@ const withStep = (id, assert) => {
 };
 
 acceptance("Admin - Onboarding Banner", function (needs) {
-  let loggedEvents = [];
+  const loggedEvents = [];
 
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     show_site_owner_onboarding: true,
   });
 
   needs.settings({
     enable_site_owner_onboarding: true,
     general_category_id: 1,
+    staff_category_id: 3,
     default_composer_category: 1,
   });
 
-  needs.hooks.beforeEach(() => (loggedEvents = []));
+  needs.hooks.beforeEach(function () {
+    loggedEvents.length = 0;
+    this.schemeLinks = [];
+
+    // registered so afterEach tears them down even when an assertion throws
+    this.addSchemeLink = (className, href, media) => {
+      const element = document.createElement("link");
+      element.rel = "stylesheet";
+      element.className = className;
+      element.href = href;
+      element.media = media;
+      document.head.prepend(element);
+      this.schemeLinks.push(element);
+      return element;
+    };
+  });
+
+  needs.hooks.afterEach(function () {
+    this.schemeLinks.forEach((link) => link.remove());
+  });
 
   needs.pretender((server, helper) => {
     server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
@@ -62,38 +185,57 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
-    server.get("/admin/themes.json", () => {
-      return helper.response(200, {
-        themes: [
-          {
-            id: -1,
-            name: "Foundation",
-            default: true,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-          },
-          {
-            id: -2,
-            name: "Horizon",
-            default: false,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-          },
-        ],
-        extras: { color_schemes: [] },
-      });
-    });
+    server.put("/admin/config/design-wizard.json", () =>
+      helper.response(200, { success: "OK" })
+    );
 
-    server.put("/admin/themes/-2.json", () => {
-      return helper.response(200, {
-        theme: { id: -2, name: "Horizon", default: true },
-      });
-    });
+    server.get("/color-scheme-stylesheet/:id", () =>
+      helper.response(200, {
+        color_scheme_id: -1,
+        new_href: "/stylesheets/color_definitions_preview.css",
+      })
+    );
+
+    server.get("/color-scheme-stylesheet/:id/:themeId", () =>
+      helper.response(200, {
+        color_scheme_id: -1,
+        new_href: "/stylesheets/color_definitions_preview.css",
+      })
+    );
+
+    server.get("/admin/config/design-wizard.json", () =>
+      helper.response(200, designWizardData())
+    );
   });
 
   test("it shows onboarding banner", async function (assert) {
     await visit("/");
     assert.dom(".admin-onboarding-banner").exists("shows onboarding banner");
+  });
+
+  test("the header controls have accessible labels", async function (assert) {
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner .btn-minimize")
+      .hasAttribute(
+        "aria-label",
+        "Collapse setup steps",
+        "labels the collapse action"
+      );
+    assert
+      .dom(".admin-onboarding-banner .btn-close")
+      .hasAttribute("aria-label", "Dismiss setup", "labels the dismiss action");
+
+    await click(".admin-onboarding-banner .btn-minimize");
+
+    assert
+      .dom(".admin-onboarding-banner .btn-minimize")
+      .hasAttribute(
+        "aria-label",
+        "Expand setup steps",
+        "updates the label for the expand action"
+      );
   });
 
   test("it can end onboarding prematurely", async function (assert) {
@@ -109,21 +251,136 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can complete `start_posting` step with predefined data", async function (assert) {
-    const step = withStep("start_posting", assert);
+  test("posting comes before inviting collaborators", async function (assert) {
     await visit("/");
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((step) => step.id),
+      ["select_theme", "start_posting", "invite_collaborators"]
+    );
+  });
 
-    step.isNotChecked();
+  for (const [option, categoryId] of [
+    ["plan_categories", 3],
+    ["plan_invites", 3],
+    ["introduce_yourself", 1],
+    ["write_your_own", 1],
+  ]) {
+    test(`it completes posting with ${option}`, async function (assert) {
+      const step = withStep("start_posting", assert);
+      const composer = this.container.lookup("service:composer");
+      await visit("/");
+      step.isNotChecked();
+      await step.clickAction();
+      assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
+      assert
+        .dom(`[data-topic-option="${option}"] .badge-category__name`)
+        .exists();
+      await click(`[data-topic-option="${option}"]`);
 
-    await step.clickAction();
+      assert.strictEqual(composer.model.categoryId, categoryId);
+      assert.strictEqual(composer.model.adminOnboardingTopicOption, option);
+      assert.strictEqual(
+        composer.model.serializeDraftData().adminOnboardingTopicOption,
+        option,
+        "saves attribution with the draft"
+      );
+      const custom = option === "write_your_own";
+      assert
+        .dom("#reply-title")
+        .hasValue(
+          custom
+            ? ""
+            : i18n(
+                `admin_onboarding_banner.start_posting.icebreakers.${option}.title`
+              )
+        );
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          custom
+            ? ""
+            : i18n(
+                `admin_onboarding_banner.start_posting.icebreakers.${option}.body`
+              )
+        );
+      assert.strictEqual(
+        loggedEvents.length,
+        0,
+        "opening a card is not completion"
+      );
 
-    assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
-    await click(".predefined-topic-options-modal__card:last-child");
+      await fillIn("#reply-title", "A title tailored to this community");
+      await fillIn(
+        ".d-editor-input",
+        "A conversation tailored to this community."
+      );
+      await click(".create");
+      await visit("/");
+      step.isChecked();
+      assert.deepEqual(
+        loggedEvents,
+        [
+          {
+            event: "step_completed",
+            step: "start_posting",
+            topic_option: option,
+          },
+        ],
+        "logs the original choice even after editing its contents"
+      );
+    });
+  }
 
+  test("unavailable categories cannot fall back to public posting", async function (assert) {
+    this.siteSettings.staff_category_id = -1;
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    assert.dom('[data-topic-option="plan_categories"]').isDisabled();
+    assert.dom('[data-topic-option="plan_invites"]').isDisabled();
+    assert.dom('[data-topic-option="introduce_yourself"]').isEnabled();
+    assert.dom('[data-topic-option="write_your_own"]').isEnabled();
+  });
+
+  test("discarding a suggestion does not attribute an unrelated topic to it", async function (assert) {
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    await click('[data-topic-option="plan_categories"]');
+    await click("#reply-control .discard-button");
+    await click(".discard-draft-modal__discard-btn");
+    assert.strictEqual(loggedEvents.length, 0);
+
+    const composer = this.container.lookup("service:composer");
+    await composer.openNewTopic({
+      title: "An unrelated conversation",
+      body: "This was not created from an onboarding option.",
+    });
+    await settled();
+    assert.strictEqual(composer.model.adminOnboardingTopicOption, null);
     await click(".create");
     await visit("/");
+    assert.strictEqual(loggedEvents.length, 1);
+    assert.strictEqual(loggedEvents[0].step, "start_posting");
+    assert.strictEqual(loggedEvents[0].topic_option, undefined);
+  });
 
-    step.isChecked();
+  test("reopening a saved draft preserves the selected option", async function (assert) {
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    await click('[data-topic-option="plan_invites"]');
+    const composer = this.container.lookup("service:composer");
+    const { draftKey, draftSequence } = composer.model;
+    const draft = JSON.stringify(composer.model.serializeDraftData());
+    await click("#reply-control .discard-button");
+    await click(".discard-draft-modal__discard-btn");
+    await composer.open({ draft, draftKey, draftSequence });
+    await settled();
+    assert.strictEqual(
+      composer.model.adminOnboardingTopicOption,
+      "plan_invites"
+    );
+    await click(".create");
+    await visit("/");
+    assert.strictEqual(loggedEvents[0].topic_option, "plan_invites");
   });
 
   test("it can complete `start_posting` step with registered posting-options", async function (assert) {
@@ -244,7 +501,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can open `select_theme` step", async function (assert) {
+  test("it can walk the design wizard from the `select_theme` step", async function (assert) {
     const step = withStep("select_theme", assert);
 
     await visit("/");
@@ -253,17 +510,199 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await step.clickAction();
     await settled();
 
-    assert.dom(".theme-picker-modal").exists("theme picker modal is shown");
     assert
-      .dom(".theme-picker-modal__card")
-      .exists({ count: 2 }, "shows Foundation and Horizon");
+      .dom(".design-wizard")
+      .exists("the design wizard slides in as a sheet");
+    assert
+      .dom(".design-wizard__theme-card")
+      .exists({ count: 2 }, "the theme step shows Foundation and Horizon");
+    assert
+      .dom(".design-wizard__theme-card.--selected")
+      .hasAttribute("data-theme-id", "-1", "preselects the default theme");
+    assert
+      .dom(".design-wizard__back")
+      .isDisabled("cannot go back from the first step");
+
+    await click(".design-wizard__next");
+    assert
+      .dom(".design-wizard__theme-card")
+      .doesNotExist("theme cards are left behind on the colors step");
+    assert
+      .dom(".design-wizard__swatch")
+      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
+
+    await click(".design-wizard__swatch[data-pair-key='default']");
+    assert
+      .dom("link[data-scheme-id]", document.documentElement)
+      .exists("the page's color scheme stylesheet is swapped for the preview");
+
+    assert
+      .dom(".design-wizard__font-select")
+      .exists({ count: 2 }, "the colors step offers the font dropdowns");
+
+    await click(".design-wizard__next");
+    assert
+      .dom(".design-wizard__homepage-card")
+      .exists({ count: 2 }, "the homepage step offers topics and categories");
+    assert
+      .dom(".design-wizard__homepage-card.--selected")
+      .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
+    assert
+      .dom(".design-wizard__option-row[data-topic-page]")
+      .exists({ count: 3 }, "a topics homepage offers the topic page types");
+    assert
+      .dom(".design-wizard__option-row[data-topic-page].--selected")
+      .hasAttribute("data-topic-page", "latest", "defaults to latest");
+    assert
+      .dom(".design-wizard__switch-row [role='switch']")
+      .exists(
+        { count: 1 },
+        "the homepage step offers the welcome banner switch"
+      );
+    assert
+      .dom(".design-wizard__option-row[data-search-experience]")
+      .exists({ count: 2 }, "the homepage step offers the search experiences");
+
+    await click(".design-wizard__homepage-card[data-homepage='categories']");
+    assert
+      .dom(".design-wizard__style-block")
+      .exists({ count: 3 }, "a categories homepage offers the page styles");
+    assert
+      .dom(".design-wizard__style-block.--selected")
+      .hasAttribute(
+        "data-style",
+        "categories_boxes",
+        "defaults to boxes with subcategories"
+      );
+    assert
+      .dom(".design-wizard__option-row[data-topic-page]")
+      .doesNotExist("the topic page types are hidden for categories");
+
+    assert.dom(".design-wizard__next").doesNotExist("no next on the last step");
+    assert.dom(".design-wizard__save").exists("the last step offers save");
+
+    await click(".design-wizard__back");
+    assert
+      .dom(".design-wizard__swatch")
+      .exists({ count: 1 }, "back returns to the colors step");
+
+    await click(".design-wizard__close");
+    assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
+    assert
+      .dom("link[data-scheme-id]", document.documentElement)
+      .doesNotExist("the palette preview is reverted");
+
+    // previewing a categories homepage routed away from the banner's page
+    await visit("/");
+    step.isNotChecked();
+  });
+
+  test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
+    const darkLink = this.addSchemeLink(
+      "dark-scheme",
+      "data:text/css,design-wizard-dark",
+      "none"
+    );
+    const lightLink = this.addSchemeLink(
+      "light-scheme",
+      "data:text/css,design-wizard-light",
+      "all"
+    );
+
+    await visit("/");
+    await withStep("select_theme", assert).clickAction();
+    await click(".design-wizard__next");
+    await click(".design-wizard__color-mode:not(.--active)");
+
+    assert
+      .dom(lightLink)
+      .hasAttribute("media", "none", "deactivates the light stylesheet");
+    assert
+      .dom(darkLink)
+      .hasAttribute("media", "all", "activates the dark stylesheet");
+
+    await click(".design-wizard__close");
+    assert
+      .dom(lightLink)
+      .hasAttribute(
+        "href",
+        "data:text/css,design-wizard-light",
+        "restores the original light stylesheet"
+      )
+      .hasAttribute("media", "all", "reactivates the light stylesheet");
+    assert
+      .dom(darkLink)
+      .hasAttribute(
+        "href",
+        "data:text/css,design-wizard-dark",
+        "restores the original dark stylesheet"
+      )
+      .hasAttribute("media", "none", "deactivates the dark stylesheet");
+  });
+
+  test("the design wizard keeps a custom default theme until another theme is chosen", async function (assert) {
+    const data = designWizardData();
+    data.themes.forEach((theme) => (theme.default = false));
+    data.current_theme = { id: 42, name: "Air" };
+    pretender.get("/admin/config/design-wizard.json", () => response(data));
+
+    await visit("/");
+    await withStep("select_theme", assert).clickAction();
+    await settled();
+
+    assert
+      .dom(".design-wizard")
+      .exists("the wizard opens without reloading into a theme preview");
+    assert
+      .dom(".design-wizard__theme-card.--selected")
+      .doesNotExist("no theme is preselected");
+    assert
+      .dom(".design-wizard__custom-theme-notice")
+      .includesText("Air", "the notice names the current custom theme");
+    assert
+      .dom(".design-wizard__next")
+      .isDisabled("cannot continue until a theme is chosen");
+
+    await click(".design-wizard__close");
+    assert
+      .dom("link[data-scheme-id]", document.documentElement)
+      .doesNotExist("closing leaves the current theme's palette untouched");
+  });
+
+  test("the design wizard stays on the step when saving progress fails", async function (assert) {
+    pretender.put("/admin/config/design-wizard.json", () =>
+      response(422, { errors: ["Something went wrong"] })
+    );
+
+    await visit("/");
+    await withStep("select_theme", assert).clickAction();
+
+    assert
+      .dom(".design-wizard__theme-card")
+      .exists({ count: 2 }, "starts on the theme step");
+
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__theme-card")
+      .exists({ count: 2 }, "a failed progress save does not advance the step");
+    assert
+      .dom(".design-wizard__swatch")
+      .doesNotExist("the colors step is not reached");
+    assert
+      .dom(".design-wizard__next")
+      .isNotDisabled("the next button is usable again after the failure");
+
+    await click(".dialog-footer .btn-primary");
+    // close the sheet so the palette preview does not leak into other tests
+    await click(".design-wizard__close");
   });
 });
 
 acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     show_site_owner_onboarding: true,
     can_create_admin_invite: true,
   });
@@ -311,6 +750,9 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
       )
       .isChecked("defaults to the admins tab");
 
+    await click(
+      ".create-invite-with-roles-modal .form-kit__inline-radio input[value='email']"
+    );
     await fillIn(
       ".create-invite-with-roles-modal input[name='email']",
       "new-admin@example.com"
@@ -339,7 +781,7 @@ acceptance("Admin - Onboarding Banner - non admin user", function (needs) {
 acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
   needs.settings({
     enable_site_owner_onboarding: false,

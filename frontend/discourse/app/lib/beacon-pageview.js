@@ -8,10 +8,15 @@ export function hasPendingBeaconRequests() {
 }
 
 export function sendBeaconPageview({ sessionId, url, referrer, topicId }) {
+  if (!sessionId) {
+    return;
+  }
+
   const body = {
     session_id: sessionId,
     url,
     referrer,
+    language: navigator.language,
   };
   if (topicId) {
     body.topic_id = topicId;

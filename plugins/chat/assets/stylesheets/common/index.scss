@@ -1,6 +1,7 @@
 @import "chat-unread-indicator";
 @import "chat-height-mixin";
 @import "base-common";
+@import "chat-preferences";
 @import "chat-drawer-routes";
 @import "chat-browse";
 @import "chat-disabled";
@@ -10,6 +11,7 @@
 @import "chat-channel-empty-state";
 @import "chat-channel-icon";
 @import "chat-channel-info";
+@import "chat-channel-list-options";
 @import "chat-channel-name";
 @import "chat-channel-preview-card";
 @import "chat-channel-title";

@@ -273,6 +273,32 @@ RSpec.describe Admin::BadgesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "prevents deletion of system badges" do
+        system_badge = Badge.find(Badge::Regular)
+        expect(system_badge.system?).to eq(true)
+
+        user_badge = BadgeGranter.grant(system_badge, user)
+        user.update!(title: system_badge.name)
+        user.user_profile.update!(granted_title_badge_id: system_badge.id)
+
+        delete "/admin/badges/#{system_badge.id}.json"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("badges.errors.cant_delete_system_badge"),
+        )
+        expect(Badge.where(id: system_badge.id)).to exist
+        expect(UserBadge.where(id: user_badge.id)).to exist
+        expect(user.reload.title).to eq(system_badge.name)
+        expect(user.user_profile.reload.granted_title_badge_id).to eq(system_badge.id)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:delete_badge],
+          ).exists?,
+        ).to eq(false)
+      end
+
       it "deletes the badge" do
         delete "/admin/badges/#{badge.id}.json"
         expect(response.status).to eq(200)
@@ -529,6 +555,31 @@ RSpec.describe Admin::BadgesController do
         file = file_from_fixtures("usernames.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
+      it "awards the badge using a list of usernames saved with a UTF-8 BOM" do
+        Jobs.run_immediately!
+
+        file = file_from_fixtures("usernames_with_bom.csv", "csv")
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
+      it "awards the badge when an entry spans a quoted newline" do
+        Jobs.run_immediately!
+
+        file = file_from_contents(%Q{"multi\nline"\n#{user.username}\n}, "usernames.csv")
+
+        post "/admin/badges/award/#{badge.id}.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(file),
+             }
 
         expect(response.status).to eq(200)
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)

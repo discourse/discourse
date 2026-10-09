@@ -15,6 +15,7 @@ describe DiscourseDataExplorer::QueryController do
         sql: sql,
         hidden: opts[:hidden] || false,
       )
+    DiscourseDataExplorer::QueryTag.sync!(query:, names: opts[:tags]) if opts[:tags]
     group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) }
     query
   end
@@ -23,6 +24,15 @@ describe DiscourseDataExplorer::QueryController do
     fab!(:admin)
 
     before { sign_in(admin) }
+
+    def run_query(id, params = {}, explain = false)
+      params = params.transform_values(&:to_s)
+      post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
+           params: {
+             params: params.to_json,
+             explain: explain,
+           }
+    end
 
     describe "when disabled" do
       before { SiteSetting.data_explorer_enabled = false }
@@ -117,6 +127,119 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
+
+      it "filters by tag and applies text search within the active tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Monthly staff report", tags: ["Staff"])
+        make_query("SELECT 2", name: "Daily staff report", tags: %w[Staff Daily])
+        make_query("SELECT 3", name: "Monthly member report", tags: ["Members"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              tag: "Staff",
+              filter: "monthly",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(
+          ["Monthly staff report"],
+        )
+        expect(response_json["extras"]["tags"]).to eq(%w[daily default members staff])
+      end
+
+      it "matches every selected tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Shared report", tags: %w[Staff Daily])
+        make_query("SELECT 2", name: "Staff report", tags: ["Staff"])
+        make_query("SELECT 3", name: "Daily report", tags: ["Daily"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "staff,daily" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(["Shared report"])
+      end
+
+      it "matches a persisted default query by its virtual and additional tags" do
+        DiscourseDataExplorer::Query.destroy_all
+        query = DiscourseDataExplorer::Query.find(-1)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Staff"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "default,staff" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |result| result["id"] }).to eq([query.id])
+      end
+
+      it "returns the default tag for bundled queries" do
+        DiscourseDataExplorer::Query.destroy_all
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tag: "default" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"]).to be_present
+        expect(response_json["queries"].flat_map { |query| query["tags"] }.uniq).to eq(["default"])
+      end
+    end
+
+    describe "#tags" do
+      it "returns tags from visible queries and bundled defaults" do
+        make_query("SELECT 1", tags: %w[Staff Monthly])
+        make_query("SELECT 2", tags: ["Hidden"], hidden: true)
+
+        get "/admin/plugins/discourse-data-explorer/queries/tags.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json).to eq(%w[default monthly staff])
+      end
+    end
+
+    describe "#create" do
+      fab!(:group)
+
+      it "grants the given groups access to the new query" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 description: "A description",
+                 sql: "SELECT 1",
+                 group_ids: [group.id],
+                 tags: %w[Staff Monthly],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([group.id])
+        expect(response_json["query"]["tags"]).to eq(%w[monthly staff])
+      end
+
+      it "creates a query without groups when none are given" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 sql: "SELECT 1",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+      end
+
+      it "rejects the default tag on user-created queries" do
+        expect {
+          post "/admin/plugins/discourse-data-explorer/queries.json",
+               params: {
+                 query: {
+                   name: "My query",
+                   tags: ["Default"],
+                 },
+               }
+        }.not_to change { DiscourseDataExplorer::Query.user_queries.count }
+
+        expect(response.status).to eq(422)
+      end
     end
 
     describe "#update" do
@@ -155,6 +278,107 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
       end
+
+      it "updates query tags while preserving group access when groups are omitted" do
+        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: %w[Staff Monthly],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(query.reload.tag_names).to eq(%w[monthly staff])
+        expect(query.groups.pluck(:id)).to eq([group2.id])
+      end
+
+      it "removes the last tag when the empty selection is submitted" do
+        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq([])
+        expect(query.reload.tag_names).to eq([])
+        expect(query.groups.pluck(:id)).to eq([group2.id])
+      end
+
+      it "clears group access when an empty group selection is submitted" do
+        query = make_query("SELECT 1", {}, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                group_ids_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+        expect(query.reload.groups).to be_empty
+      end
+
+      it "updates additional tags on default queries without removing the default tag" do
+        query = DiscourseDataExplorer::Query.find(-4)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: %w[Default Staff Monthly])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: ["Staff"],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq(%w[default staff])
+        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(%w[default staff])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq(["default"])
+        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(["default"])
+      end
+    end
+
+    describe "#show" do
+      it "reports whether the query can be, and is, on the admin dashboard" do
+        query = make_query("SELECT 1 as value")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["dashboard_mountable"]).to eq(true)
+        expect(response_json["query"]["dashboard_mounted"]).to eq(false)
+
+        AdminDashboardReport.create!(source: "data_explorer_query", identifier: query.id.to_s)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response_json["query"]["dashboard_mounted"]).to eq(true)
+      end
+
+      it "flags a query with a required parameter as not mountable" do
+        query = make_query("-- [params]\n-- int :num\nSELECT :num")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["dashboard_mountable"]).to eq(false)
+      end
     end
 
     describe "#destroy" do
@@ -174,15 +398,6 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#run" do
-      def run_query(id, params = {}, explain = false)
-        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
-             params: {
-               params: params.to_json,
-               explain: explain,
-             }
-      end
-
       it "can run queries" do
         query = make_query("SELECT 23 as my_value")
         run_query query.id
@@ -486,7 +701,7 @@ describe DiscourseDataExplorer::QueryController do
           create_post
         end
 
-        it "should limit the results in JSON response" do
+        it "limits the results in the JSON response" do
           SiteSetting.data_explorer_query_result_limit = 2
           query = make_query <<~SQL
             SELECT id FROM posts
@@ -508,7 +723,7 @@ describe DiscourseDataExplorer::QueryController do
           expect(response.status).to eq(400)
         end
 
-        it "should limit the results in CSV download" do
+        it "limits the results in the CSV download" do
           query = make_query <<~SQL
             SELECT id FROM posts
           SQL
@@ -578,21 +793,13 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "result caching" do
-      def run_query(id, params = {})
-        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
-             params: {
-               params: params.to_json,
-             }
-      end
-
       it "caches results after running a query" do
         query = make_query("SELECT 23 as my_value")
 
         run_query query.id
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_present
         expect(cached[:rows]).to eq([[23]])
       end
@@ -606,6 +813,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["query"]["cached_result"]).to be_present
         expect(response_json["query"]["cached_result"]["rows"]).to eq([[23]])
         expect(response_json["query"]["cached_result"]["cached_at"]).to be_present
+      end
+
+      it "does not return results cached for another user" do
+        query = make_query("SELECT 23 as my_value")
+        DiscourseDataExplorer::QueryRunner.run(query, nil, current_user: Fabricate(:user))
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_nil
       end
 
       it "returns no cached_result on cache miss" do
@@ -642,7 +858,7 @@ describe DiscourseDataExplorer::QueryController do
              }
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 
@@ -652,7 +868,7 @@ describe DiscourseDataExplorer::QueryController do
         run_query query.id
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 
@@ -660,7 +876,9 @@ describe DiscourseDataExplorer::QueryController do
         query = make_query("SELECT 1 as old_value")
         run_query query.id
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_present
 
         put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
             params: {
@@ -672,7 +890,9 @@ describe DiscourseDataExplorer::QueryController do
             }
         expect(response.status).to eq(200)
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_nil
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_nil
       end
 
       it "does not invalidate cache when only name changes" do
@@ -689,7 +909,9 @@ describe DiscourseDataExplorer::QueryController do
             }
         expect(response.status).to eq(200)
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_present
       end
 
       it "returns cached result on reload when run with no explicit params" do
@@ -710,7 +932,7 @@ describe DiscourseDataExplorer::QueryController do
              }
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 
@@ -982,6 +1204,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
       end
 
+      it "does not expose admin dashboard state" do
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
+
+        get "/g/#{group.name}/reports/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]).not_to have_key("dashboard_mountable")
+        expect(response_json["query"]).not_to have_key("dashboard_mounted")
+      end
+
       it "return a 404 when the query is hidden" do
         query = make_query("SELECT 1 as value", { hidden: true }, [group.id.to_s])
 
@@ -1155,7 +1386,7 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
-  describe "Admin" do
+  describe "Admin AI query generation" do
     fab!(:admin)
 
     before do

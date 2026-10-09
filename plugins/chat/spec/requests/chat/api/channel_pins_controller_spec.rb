@@ -72,6 +72,38 @@ RSpec.describe Chat::Api::ChannelPinsController do
         expect(response.status).to eq(403)
       end
     end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [user]) }
+      fab!(:channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          message: "Confidential restricted pinned message",
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "does not expose pinned messages" do
+        Fabricate(:chat_pinned_message, chat_channel: channel, chat_message: message)
+
+        get "/chat/api/channels/#{channel.id}/pins"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(message.message)
+      end
+    end
   end
 
   describe "#mark_read" do

@@ -100,6 +100,13 @@ class Field {
     }
   }
 
+  get pickerElement() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return this.element.querySelector(".form-kit__control-color-input-picker");
+  }
+
   value() {
     switch (this.resolvedControlType) {
       case "input-number":
@@ -213,13 +220,6 @@ class Field {
     return !!this.element.querySelector(
       ".form-kit__control-color-input-prefix"
     );
-  }
-
-  get pickerElement() {
-    if (this.controlType !== "color") {
-      throw new Error(`Unsupported control type: ${this.controlType}`);
-    }
-    return this.element.querySelector(".form-kit__control-color-input-picker");
   }
 
   swatches() {

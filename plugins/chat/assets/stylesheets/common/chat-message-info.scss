@@ -11,6 +11,10 @@
   }
 }
 
+// The author of a chained message, carried for readers who cannot see that it belongs to
+// the message above. `sr-only` clips it rather than removing it, so it stays focusable —
+// it is left clipped even then, since revealing it would cover the message. The message
+// takes the focus indicator in its place (see `.chat-message-container`).
 .chat-message-info__username {
   display: inline-flex;
   align-items: baseline;
@@ -29,6 +33,13 @@
 
   @include ellipsis;
   max-width: 180px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  cursor: pointer;
 }
 
 .chat-message-info__bot-indicator {

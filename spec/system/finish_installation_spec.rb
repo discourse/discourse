@@ -173,6 +173,12 @@ RSpec.describe "Finish Installation" do
         expect(finish_installation_page).to have_no_error_message
       end
 
+      it "gives the registration form consistent spacing" do
+        finish_installation_page.visit_register
+
+        expect(finish_installation_page.container_padding).to eq("32px")
+      end
+
       it "shows validation error when username is blank" do
         finish_installation_page.visit_register.fill_password("supersecurepassword").submit
         expect(finish_installation_page).to have_username_error

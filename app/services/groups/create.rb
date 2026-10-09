@@ -150,7 +150,6 @@ class Groups::Create
 
   def save(group:)
     group.save!
-    group.restore_user_count!
   end
 
   def log_group_histories(guardian:, group:)

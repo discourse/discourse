@@ -29,6 +29,7 @@ register_svg_icon "circle-stop"
 register_svg_icon "filter"
 register_svg_icon "filter-circle-xmark"
 register_svg_icon "sort"
+register_svg_icon "thumbtack-slash"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
@@ -46,6 +47,14 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
   register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
@@ -90,6 +99,12 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
   UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_dms)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_dms)
   UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
@@ -111,46 +126,40 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/chat_channel_selection"
-      require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
-      require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
-
-      [DiscourseWorkflows::Nodes::SendChatMessage::V1, DiscourseWorkflows::Nodes::ChatApproval::V1]
-    end
-
-    require_relative "lib/discourse_workflows/nodes/chat_message_created/v1"
-    DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
-      self,
-    )
-
-    on(:chat_message_created) do |message, channel, user|
-      DiscourseWorkflows::EventListener.handle(
+      [
+        DiscourseWorkflows::Nodes::SendChatMessage::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V2,
         DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
-        message,
-        channel,
-        user,
-      )
+      ]
     end
 
     on(:chat_message_interaction) do |interaction|
       next unless SiteSetting.enable_discourse_workflows
 
-      action_id = interaction.action&.dig("action_id").to_s
+      action_id = interaction.action.is_a?(Hash) ? interaction.action["action_id"].to_s : ""
       next if action_id.blank?
-      unless DiscourseWorkflows::InteractiveResume.action_id?(
-               action_id,
-               expected_node_type: "action:chat_approval",
-               allowed_actions: %w[approve deny],
-             )
-        next
-      end
+      resume_request =
+        DiscourseWorkflows::InteractiveResume.from_action_id(
+          action_id,
+          expected_node_type: "action:chat_approval",
+          allowed_actions:
+            DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS +
+              DiscourseWorkflows::Nodes::ChatApproval::V2::ACTION_IDS,
+        )
+      next if resume_request.blank?
 
-      Jobs.enqueue(
-        Jobs::Chat::ResumeWorkflowApproval,
-        action_id: action_id,
-        channel_id: interaction.message.chat_channel_id,
-      )
+      if DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS.include?(resume_request.action)
+        Jobs.enqueue(
+          Jobs::Chat::ResumeWorkflowApproval,
+          action_id: action_id,
+          channel_id: interaction.message.chat_channel_id,
+        )
+      else
+        next if interaction.id.blank?
+
+        Jobs.enqueue(Jobs::Chat::ResumeWorkflowApprovalInteraction, interaction_id: interaction.id)
+      end
     end
   end
 
@@ -164,6 +173,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
+    Upload.prepend Chat::UploadExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
@@ -189,7 +199,7 @@ after_initialize do
         "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists?
+      ).exists? || Chat::MessageHotlinkedMedia.where(upload_id: upload.id).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do
@@ -313,6 +323,46 @@ after_initialize do
   end
 
   add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
+
+  add_to_serializer(:user_option, :chat_channel_list_filter) { object.chat_channel_list_filter }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter) do
+    object.chat_channel_list_filter
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_dms) { object.chat_channel_list_sort_dms }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_dms) do
+    object.chat_channel_list_sort_dms
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
 
   add_to_serializer(:current_user_option, :chat_announce_new_messages) do
     object.chat_announce_new_messages
@@ -545,7 +595,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
@@ -571,6 +621,7 @@ after_initialize do
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
+  register_hashtag_content_store(Chat::MessageHashtagStore)
   register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
@@ -603,4 +654,100 @@ after_initialize do
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
+end
+
+after_initialize do
+  require_relative "lib/chat/mcp_tools"
+
+  register_mcp_tool(
+    "chat_channel_list",
+    title: "List chat channels",
+    description:
+      "Lists chat channels followed by the authenticated user, including direct-message channels.",
+    implementation: Chat::McpTools::ListChannels,
+    output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
+    description: "Reads a bounded page of messages from a visible chat channel.",
+    implementation: Chat::McpTools::ListMessages,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        page_size: {
+          type: "integer",
+          minimum: 1,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+      required: ["channel_id"],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_create",
+    title: "Create chat message",
+    description: "Creates a message in a chat channel as the authenticated user.",
+    implementation: Chat::McpTools::CreateMessage,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        message: {
+          type: "string",
+          minLength: 1,
+        },
+        thread_id: {
+          type: "integer",
+        },
+        reply_to_message_id: {
+          type: "integer",
+        },
+      },
+      required: %w[channel_id message],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.chat_enabled },
+  )
 end

@@ -19,6 +19,9 @@ export default class LazyIframe extends Component {
     switch (this.args.providerName) {
       case "youtube":
         let url = `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1&rel=0`;
+        if (this.args.listId) {
+          url += `&list=${encodeURIComponent(this.args.listId)}`;
+        }
         if (this.args.startTime) {
           url += `&start=${convertToSeconds(this.args.startTime)}`;
         }
@@ -35,13 +38,13 @@ export default class LazyIframe extends Component {
   <template>
     {{#if @providerName}}
       <iframe
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        frameborder="0"
+        scrolling="no"
+        seamless="seamless"
         src={{this.iframeSrc}}
         title={{@title}}
-        allowFullScreen
-        scrolling="no"
-        frameborder="0"
-        seamless="seamless"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
       ></iframe>
     {{/if}}
   </template>

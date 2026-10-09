@@ -35,17 +35,17 @@ export default class MoveSolutionConfirmationModal extends Component {
 
   <template>
     <DModal
+      class="move-solution-confirmation-modal"
       @closeModal={{this.cancel}}
       @title={{i18n "solved.confirm_move_solution_title"}}
-      class="move-solution-confirmation-modal"
     >
       <:body>
         <p>{{i18n "solved.confirm_move_solution" count=@model.count}}</p>
         <div class="control-group">
           <label class="checkbox-label move-solution-dont-show-again">
             <input
-              type="checkbox"
               checked={{this.dontShowAgain}}
+              type="checkbox"
               {{on "change" this.toggleDontShowAgain}}
             />
             {{i18n "solved.dont_show_again"}}
@@ -54,14 +54,14 @@ export default class MoveSolutionConfirmationModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.confirm}}
           @label={{this.confirmLabel}}
-          class="btn-primary"
         />
         <DButton
+          class="btn-transparent"
           @action={{this.cancel}}
           @label="solved.move_post_cancel"
-          class="btn-transparent"
         />
       </:footer>
     </DModal>

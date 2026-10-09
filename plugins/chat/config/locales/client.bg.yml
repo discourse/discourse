@@ -161,6 +161,10 @@ bg:
           latest: "Последни"
       channel_list:
         title: "Канали"
+        options:
+          filter: "Филтър"
+        filter:
+          mentions: "Споменавания"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"
@@ -236,3 +240,7 @@ bg:
         message: "Съобщение"
       chat_approval:
         message: "Съобщение"
+        value: "Стойност"
+        style_default: "По подразбиране"
+        style_primary: "Основен"
+        icon: "Икона"

@@ -91,6 +91,21 @@ describe UserNotifications do
         expect(html).to include(I18n.t("user_notifications.chat_summary.view_messages", count: 1))
       end
 
+      it "renders upload filenames as text in chat summary emails" do
+        upload =
+          Fabricate(
+            :upload,
+            original_filename: "<svg data-chat-summary-filename-xss='true'></svg>.png",
+          )
+        chat_mention.update!(message: "", cooked: "", uploads: [upload])
+
+        html = chat_summary_email.html_part.body.to_s
+        document = Nokogiri::HTML5.fragment(html)
+
+        expect(document.text).to include(upload.original_filename)
+        expect(document.css("svg[data-chat-summary-filename-xss='true']")).to be_empty
+      end
+
       it "sends a chat summary email with view more link" do
         create_message(followed_channel, "how are you...")
         create_message(followed_channel, "doing...")

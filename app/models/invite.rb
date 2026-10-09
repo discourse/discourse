@@ -55,6 +55,12 @@ class Invite < ActiveRecord::Base
 
   attribute :email_already_exists
 
+  def self.email_code_enabled?(user = nil)
+    UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, user) &&
+      SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
+      !SiteSetting.enable_discourse_connect
+  end
+
   def self.emailed_status_types
     @emailed_status_types ||=
       Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
@@ -237,6 +243,7 @@ class Invite < ActiveRecord::Base
     ip_address: nil,
     session: nil,
     email_token: nil,
+    email_verified: false,
     redeeming_user: nil
   )
     return if !redeemable?
@@ -251,6 +258,7 @@ class Invite < ActiveRecord::Base
       ip_address: ip_address,
       session: session,
       email_token: email_token,
+      email_verified: email_verified,
       redeeming_user: redeeming_user,
     ).redeem
   end
@@ -340,7 +348,9 @@ class Invite < ActiveRecord::Base
           end
         )
 
-      if email.present? && max_redemptions_allowed != 1
+      if (admin? || moderator?) && max_redemptions_allowed != 1
+        errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one_staff"))
+      elsif email.present? && max_redemptions_allowed != 1
         errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one"))
       elsif !max_redemptions_allowed.between?(1, limit)
         errors.add(
@@ -364,21 +374,27 @@ class Invite < ActiveRecord::Base
   end
 
   def ensure_valid_admin_invite
-    errors.add(:base, I18n.t("invite.admin_invite_requires_email")) if email.blank?
-
-    # only checked when the flag is set so that later saves (e.g. marking the
-    # invite redeemed) don't fail if the inviter has since been demoted
-    if (new_record? || will_save_change_to_admin?) && !invited_by&.admin?
+    # checked when the flag is set or the invite's reach changes (removing
+    # the email or domain restriction widens who can redeem it), but not on
+    # unrelated saves (e.g. marking the invite redeemed) so they don't fail
+    # if the inviter has since been demoted
+    if (
+         new_record? || will_save_change_to_admin? || will_save_change_to_email? ||
+           will_save_change_to_domain?
+       ) && !invited_by&.admin?
       errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
     end
   end
 
   def ensure_valid_moderator_invite
-    errors.add(:base, I18n.t("invite.moderator_invite_requires_email")) if email.blank?
-
-    # only checked when the flag is set so that later saves (e.g. marking the
-    # invite redeemed) don't fail if the inviter has since been demoted
-    if (new_record? || will_save_change_to_moderator?) && !invited_by&.staff?
+    # checked when the flag is set or the invite's reach changes (removing
+    # the email or domain restriction widens who can redeem it), but not on
+    # unrelated saves (e.g. marking the invite redeemed) so they don't fail
+    # if the inviter has since been demoted
+    if (
+         new_record? || will_save_change_to_moderator? || will_save_change_to_email? ||
+           will_save_change_to_domain?
+       ) && !invited_by&.staff?
       errors.add(:base, I18n.t("invite.moderator_invite_requires_staff_inviter"))
     end
   end

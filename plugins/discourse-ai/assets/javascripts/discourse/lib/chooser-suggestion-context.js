@@ -31,11 +31,20 @@ class ComposerSuggestionContext {
     return (this.model?.reply?.length ?? 0) > MIN_CHARACTER_COUNT;
   }
 
+  get categoryAvailable() {
+    return Boolean(this.model?.title?.trim()) || this.available;
+  }
+
   categoryRequestData() {
-    const text = this.model?.reply;
-    if (!text || text.length < MIN_CHARACTER_COUNT) {
+    if (!this.categoryAvailable) {
       return null;
     }
+
+    const text = [this.model?.title, this.model?.reply]
+      .map((part) => part?.trim())
+      .filter(Boolean)
+      .join("\n\n");
+
     return { text };
   }
 
@@ -74,6 +83,10 @@ class EditTopicSuggestionContext {
   }
 
   get available() {
+    return true;
+  }
+
+  get categoryAvailable() {
     return true;
   }
 

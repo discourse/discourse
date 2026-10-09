@@ -202,11 +202,23 @@ nl:
       post: "Bericht"
     discourse_workflows:
       nodes:
-        "action:assign_topic": "Topic toewijzen"
         "trigger:assigned": "Toegewezen"
+        "trigger:unassigned": "Niet toegewezen"
       assign_topic:
+        resource: "Bron"
+        resources:
+          topic: "Topic"
+          post: "Bericht"
         operations:
           assign: "Toewijzen"
           unassign: "Toewijzing opheffen"
         topic_id: "Topic-ID"
+        post_id: "Bericht-ID"
+        assignee: "Toegewezen persoon"
+      check_assignment:
+        target_types:
+          topic: "Topic"
+          post: "Bericht"
+        topic_id: "Topic-ID"
+        post_id: "Bericht-ID"
         assignee: "Toegewezen persoon"

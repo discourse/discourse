@@ -18,4 +18,13 @@ module("Integration | ui-kit | Helper | dEmoji", function (hooks) {
 
     assert.dom(`.emoji[title="${title}"]`).exists();
   });
+
+  test("it renders nothing when emoji are disabled", async function (assert) {
+    this.siteSettings.enable_emoji = false;
+
+    await render(<template>{{dEmoji "tada"}}</template>);
+
+    assert.dom(".emoji").doesNotExist();
+    assert.dom().doesNotIncludeText(":tada:");
+  });
 });

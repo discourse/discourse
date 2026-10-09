@@ -10,9 +10,26 @@ th:
       yaxis: "วันที่"
   discourse_ai:
     ai_bot:
+      navigation:
+        users:
+          title: "ผู้ใช้"
+        groups:
+          title: "กลุ่ม"
+        categories:
+          title: "หมวดหมู่"
+        tags:
+          title: "ป้าย"
+        themes:
+          title: "ธีม"
+        backups:
+          title: "สำรอง"
+      read_post:
+        unknown_post: "โพส"
       tool_summary:
         search: "ค้นหา"
         time: "เวลา"
+      tool_help:
+        create_category: "สร้างหมวดหมู่ใหม่"
     reviewables:
       ai_tool_action:
         approve:

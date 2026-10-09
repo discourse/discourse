@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+class RenameEditTagsToolToChangeTopicTags < ActiveRecord::Migration[8.0]
+  # The tool that tags a topic was renamed from EditTags to ChangeTopicTags to
+  # distinguish it from the new EditTag tool that edits a tag itself. Rename
+  # the stored entry so existing agents keep the tool.
+  def up
+    DB
+      .query("SELECT id, tools FROM ai_agents WHERE tools::text LIKE '%EditTags%'")
+      .each do |row|
+        tools = row.tools.is_a?(String) ? JSON.parse(row.tools) : row.tools
+        next if !tools.is_a?(Array)
+
+        names = tools.map { |tool| tool.is_a?(Array) ? tool.first : tool }
+        next if names.include?("ChangeTopicTags")
+
+        renamed =
+          tools.map do |tool|
+            if tool.is_a?(Array) && tool.first == "EditTags"
+              ["ChangeTopicTags", *tool.drop(1)]
+            elsif tool == "EditTags"
+              "ChangeTopicTags"
+            else
+              tool
+            end
+          end
+        next if renamed == tools
+
+        DB.exec(
+          "UPDATE ai_agents SET tools = :tools WHERE id = :id",
+          tools: renamed.to_json,
+          id: row.id,
+        )
+      end
+
+    # Pending approval actions replay by tool name; the parameters are
+    # unchanged by the rename.
+    execute "UPDATE ai_tool_actions SET tool_name = 'change_topic_tags' WHERE tool_name = 'edit_tags'"
+  end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
+end

@@ -19,6 +19,7 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
+import AiLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-llm-selector";
 import {
   isProviderParamHidden,
   normalizeProviderParams,
@@ -70,6 +71,8 @@ export default class AiLlmEditorForm extends Component {
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
         vision_enabled: modelInfo.vision_enabled || false,
+        vision_mode: modelInfo.vision_enabled ? "native" : "disabled",
+        vision_llm_model_id: null,
         cache_write_cost: modelInfo.cache_write_cost,
         allowed_attachment_types: [],
       };
@@ -87,6 +90,9 @@ export default class AiLlmEditorForm extends Component {
       name: model.name,
       provider: model.provider,
       vision_enabled: model.vision_enabled,
+      vision_mode:
+        model.vision_mode ?? (model.vision_enabled ? "native" : "disabled"),
+      vision_llm_model_id: model.vision_llm_model_id,
       input_cost: model.input_cost,
       output_cost: model.output_cost,
       cached_input_cost: model.cached_input_cost,
@@ -102,6 +108,23 @@ export default class AiLlmEditorForm extends Component {
 
   get availableSecrets() {
     return this.args.llms.resultSetMeta?.ai_secrets || [];
+  }
+
+  get nativeVisionModels() {
+    return this.args.llms.content
+      .filter(
+        (llm) =>
+          llm.id !== this.args.model.id &&
+          llm.vision_enabled &&
+          (llm.vision_mode ?? "native") === "native"
+      )
+      .map((llm) => ({
+        id: llm.id,
+        name: `${llm.display_name} — ${i18n(
+          `discourse_ai.llms.providers.${llm.provider}`
+        )}`,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
   }
 
   get selectedProviders() {
@@ -120,19 +143,6 @@ export default class AiLlmEditorForm extends Component {
     return this.args.llms.resultSetMeta.tokenizers.sort((a, b) =>
       a.name.localeCompare(b.name)
     );
-  }
-
-  fieldTypeForProviderParam(type) {
-    switch (type) {
-      case "enum":
-        return "select";
-      case "checkbox":
-        return "checkbox";
-      case "secret":
-        return "custom";
-      default:
-        return `input-${type}`;
-    }
   }
 
   get adminUser() {
@@ -179,6 +189,19 @@ export default class AiLlmEditorForm extends Component {
       settings: this.modulesUsingModel,
       count: this.args.model.used_by.length,
     });
+  }
+
+  fieldTypeForProviderParam(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "checkbox":
+        return "checkbox";
+      case "secret":
+        return "custom";
+      default:
+        return `input-${type}`;
+    }
   }
 
   computeProviderParams(provider, currentParams = {}) {
@@ -280,6 +303,14 @@ export default class AiLlmEditorForm extends Component {
   }
 
   @action
+  setVisionMode(mode, { set }) {
+    set("vision_mode", mode);
+    if (mode !== "delegated") {
+      set("vision_llm_model_id", null);
+    }
+  }
+
+  @action
   setProvider(provider, { set }) {
     set("provider_params", this.computeProviderParams(provider));
     set("provider", provider);
@@ -315,9 +346,9 @@ export default class AiLlmEditorForm extends Component {
 
   <template>
     <Form
-      @onSubmit={{this.save}}
-      @data={{this.formData}}
       class="ai-llm-editor"
+      @data={{this.formData}}
+      @onSubmit={{this.save}}
       as |form data|
     >
       {{#if this.modulesUsingModel}}
@@ -327,26 +358,26 @@ export default class AiLlmEditorForm extends Component {
       {{/if}}
 
       <form.Field
+        @disabled={{@model.seeded}}
+        @format="large"
         @name="display_name"
         @title={{i18n "discourse_ai.llms.display_name"}}
-        @validation="required|length:1,100"
-        @format="large"
         @tooltip={{i18n "discourse_ai.llms.hints.display_name"}}
-        @disabled={{@model.seeded}}
         @type="input"
+        @validation="required|length:1,100"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
+        @disabled={{@model.seeded}}
+        @format="large"
         @name="name"
         @title={{i18n "discourse_ai.llms.name"}}
         @tooltip={{i18n "discourse_ai.llms.hints.name"}}
-        @validation="required"
-        @format="large"
-        @disabled={{@model.seeded}}
         @type="input"
+        @validation="required"
         as |field|
       >
         <field.Control />
@@ -354,12 +385,12 @@ export default class AiLlmEditorForm extends Component {
 
       {{#unless @model.seeded}}
         <form.Field
-          @name="provider"
-          @title={{i18n "discourse_ai.llms.provider"}}
           @format="large"
-          @validation="required"
+          @name="provider"
           @onSet={{this.setProvider}}
+          @title={{i18n "discourse_ai.llms.provider"}}
           @type="select"
+          @validation="required"
           as |field|
         >
           <field.Control as |select|>
@@ -373,11 +404,11 @@ export default class AiLlmEditorForm extends Component {
 
         {{#if (this.canEditURL data.provider)}}
           <form.Field
+            @format="large"
             @name="url"
             @title={{i18n "discourse_ai.llms.url"}}
-            @validation="required"
-            @format="large"
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control />
@@ -385,17 +416,17 @@ export default class AiLlmEditorForm extends Component {
         {{/if}}
 
         <form.Field
+          @format="large"
           @name="ai_secret_id"
           @title={{i18n "discourse_ai.llms.api_key"}}
-          @format="large"
           @type="custom"
           as |field|
         >
           <field.Control>
             <AiSecretSelector
-              @value={{data.ai_secret_id}}
-              @secrets={{this.availableSecrets}}
               @onChange={{field.set}}
+              @secrets={{this.availableSecrets}}
+              @value={{data.ai_secret_id}}
             />
           </field.Control>
         </form.Field>
@@ -410,12 +441,12 @@ export default class AiLlmEditorForm extends Component {
                 (not (this.isProviderParamHidden params providerParamsData))
               }}
                 <object.Field
+                  @format="large"
+                  @helpText={{if params.helpText (i18n params.helpText)}}
                   @name={{name}}
+                  @showTitle={{not (eq params.type "checkbox")}}
                   @title={{i18n (providerParamLabel name params)}}
                   @tooltip={{if params.tooltip (i18n params.tooltip)}}
-                  @helpText={{if params.helpText (i18n params.helpText)}}
-                  @showTitle={{not (eq params.type "checkbox")}}
-                  @format="large"
                   @type={{this.fieldTypeForProviderParam params.type}}
                   as |field|
                 >
@@ -432,9 +463,9 @@ export default class AiLlmEditorForm extends Component {
                   {{else if (eq params.type "secret")}}
                     <field.Control>
                       <AiSecretSelector
-                        @value={{field.value}}
-                        @secrets={{this.availableSecrets}}
                         @onChange={{field.set}}
+                        @secrets={{this.availableSecrets}}
+                        @value={{field.value}}
                       />
                     </field.Control>
                   {{else}}
@@ -447,11 +478,11 @@ export default class AiLlmEditorForm extends Component {
         </form.Object>
 
         <form.Field
+          @format="large"
           @name="tokenizer"
           @title={{i18n "discourse_ai.llms.tokenizer"}}
-          @format="large"
-          @validation="required"
           @type="select"
+          @validation="required"
           as |field|
         >
           <field.Control as |select|>
@@ -464,100 +495,137 @@ export default class AiLlmEditorForm extends Component {
         </form.Field>
 
         <form.Field
+          @format="large"
           @name="max_prompt_tokens"
           @title={{i18n "discourse_ai.llms.max_prompt_tokens"}}
           @tooltip={{i18n "discourse_ai.llms.hints.max_prompt_tokens"}}
-          @validation="required"
-          @format="large"
           @type="input-number"
+          @validation="required"
           as |field|
         >
-          <field.Control step="any" min="0" lang="en" />
+          <field.Control lang="en" min="0" step="any" />
         </form.Field>
 
         <form.InputGroup as |inputGroup|>
           <inputGroup.Field
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @name="input_cost"
             @title={{i18n "discourse_ai.llms.cost_input"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_input"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @type="input-number"
             as |field|
           >
-            <field.Control step="any" min="0" lang="en" />
+            <field.Control lang="en" min="0" step="any" />
           </inputGroup.Field>
 
           <inputGroup.Field
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @name="output_cost"
             @title={{i18n "discourse_ai.llms.cost_output"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @type="input-number"
             as |field|
           >
-            <field.Control step="any" min="0" lang="en" />
+            <field.Control lang="en" min="0" step="any" />
           </inputGroup.Field>
         </form.InputGroup>
 
         <form.InputGroup as |inputGroup|>
           <inputGroup.Field
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @name="cached_input_cost"
             @title={{i18n "discourse_ai.llms.cost_cached_input"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @type="input-number"
             as |field|
           >
-            <field.Control step="any" min="0" lang="en" />
+            <field.Control lang="en" min="0" step="any" />
           </inputGroup.Field>
 
           <inputGroup.Field
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @name="cache_write_cost"
             @title={{i18n "discourse_ai.llms.cost_cache_write"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             @type="input-number"
             as |field|
           >
-            <field.Control step="any" min="0" lang="en" />
+            <field.Control lang="en" min="0" step="any" />
           </inputGroup.Field>
         </form.InputGroup>
 
         <form.Field
+          @format="large"
           @name="max_output_tokens"
           @title={{i18n "discourse_ai.llms.max_output_tokens"}}
           @tooltip={{i18n "discourse_ai.llms.hints.max_output_tokens"}}
-          @format="large"
           @type="input-number"
           as |field|
         >
-          <field.Control step="any" min="0" lang="en" />
+          <field.Control lang="en" min="0" step="any" />
         </form.Field>
 
         <form.Field
-          @name="vision_enabled"
-          @title={{i18n "discourse_ai.llms.vision_enabled"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
-          @showTitle={{false}}
           @format="large"
-          @type="checkbox"
+          @name="vision_mode"
+          @onSet={{this.setVisionMode}}
+          @title={{i18n "discourse_ai.llms.vision_mode"}}
+          @tooltip={{i18n "discourse_ai.llms.vision_mode_help"}}
+          @type="select"
+          @validation="required"
           as |field|
         >
-          <field.Control />
+          <field.Control as |select|>
+            <select.Option @value="disabled">
+              {{i18n "discourse_ai.llms.vision_modes.disabled.title"}}
+            </select.Option>
+            <select.Option @value="delegated">
+              {{i18n "discourse_ai.llms.vision_modes.delegated.title"}}
+            </select.Option>
+            <select.Option @value="native">
+              {{i18n "discourse_ai.llms.vision_modes.native.title"}}
+            </select.Option>
+          </field.Control>
         </form.Field>
 
+        {{#if (eq data.vision_mode "delegated")}}
+          <form.Field
+            @format="large"
+            @name="vision_llm_model_id"
+            @title={{i18n "discourse_ai.llms.vision_model"}}
+            @tooltip={{i18n "discourse_ai.llms.vision_model_help"}}
+            @type="custom"
+            @validation="required"
+            as |field|
+          >
+            <field.Control>
+              <AiLlmSelector
+                class="ai-llm-editor__vision-model-selector"
+                @llms={{this.nativeVisionModels}}
+                @onChange={{field.set}}
+                @value={{field.value}}
+              />
+            </field.Control>
+          </form.Field>
+          {{#unless this.nativeVisionModels.length}}
+            <form.Alert @icon="triangle-exclamation">
+              {{i18n "discourse_ai.llms.no_native_vision_models"}}
+            </form.Alert>
+          {{/unless}}
+        {{/if}}
+
         <form.Field
+          @format="large"
           @name="allowed_attachment_types"
           @title={{i18n "discourse_ai.llms.allowed_attachment_types"}}
           @tooltip={{i18n "discourse_ai.llms.hints.allowed_attachment_types"}}
-          @format="large"
           @type="custom"
           as |field|
         >
           <field.Control>
             <AiLlmAttachmentTypes
-              @value={{field.value}}
               @onChange={{field.set}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
@@ -566,12 +634,12 @@ export default class AiLlmEditorForm extends Component {
           <form.Container @title={{i18n "discourse_ai.llms.ai_bot_user"}}>
             <a
               class="avatar"
-              href={{@model.user.path}}
               data-user-card={{@model.user.username}}
+              href={{@model.user.path}}
             >
               {{dBoundAvatarTemplate @model.user.avatar_template "small"}}
             </a>
-            <LinkTo @route="adminUser" @model={{this.adminUser}}>
+            <LinkTo @model={{this.adminUser}} @route="adminUser">
               {{@model.user.username}}
             </LinkTo>
           </form.Container>
@@ -580,8 +648,8 @@ export default class AiLlmEditorForm extends Component {
 
       {{#if (gt data.llm_quotas.length 0)}}
         <form.Container
-          @title={{i18n "discourse_ai.llms.quotas.title"}}
           @format="full"
+          @title={{i18n "discourse_ai.llms.quotas.title"}}
         >
           <div class="ai-llm-quotas">
             <form.Collection
@@ -596,8 +664,8 @@ export default class AiLlmEditorForm extends Component {
                       }}</dt>
                     <dd class="ai-llm-quotas__group-name">
                       <a
-                        href={{groupPath collectionData.group_name}}
                         class="ai-llm-quotas__group-link"
+                        href={{groupPath collectionData.group_name}}
                       >
                         {{dIcon "users"}}
                         <span>{{collectionData.group_name}}</span>
@@ -606,9 +674,9 @@ export default class AiLlmEditorForm extends Component {
                   </dl>
 
                   <form.Button
-                    @icon="trash-can"
-                    @action={{fn collection.remove index}}
                     class="btn-danger ai-llm-quotas__delete-btn"
+                    @action={{fn collection.remove index}}
+                    @icon="trash-can"
                   />
                 </div>
 
@@ -653,15 +721,15 @@ export default class AiLlmEditorForm extends Component {
                   <collection.Field
                     @name="duration_seconds"
                     @title={{i18n "discourse_ai.llms.quotas.duration"}}
-                    @validation="required"
                     @type="custom"
+                    @validation="required"
                     as |field|
                   >
                     <field.Control>
                       <DurationSelector
-                        @value={{collectionData.duration_seconds}}
-                        @onChange={{field.set}}
                         class="ai-llm-quotas__duration"
+                        @onChange={{field.set}}
+                        @value={{collectionData.duration_seconds}}
                       />
                     </field.Control>
                   </collection.Field>
@@ -672,43 +740,43 @@ export default class AiLlmEditorForm extends Component {
         </form.Container>
 
         <form.Button
+          class="ai-llm-editor__add-quota-btn"
           @action={{fn
             this.openAddQuotaModal
             (fn form.addItemToCollection "llm_quotas")
           }}
           @icon="plus"
           @label="discourse_ai.llms.quotas.add"
-          class="ai-llm-editor__add-quota-btn"
         />
       {{/if}}
 
       <form.Actions>
         <form.Submit />
         <form.Button
+          class="btn-default"
           @action={{fn this.test data}}
           @disabled={{this.testRunning}}
           @label="discourse_ai.llms.tests.title"
-          class="btn-default"
         />
 
         {{#if (eq data.llm_quotas.length 0)}}
           <form.Button
+            class="btn-default ai-llm-editor__add-quota-btn"
             @action={{fn
               this.openAddQuotaModal
               (fn form.addItemToCollection "llm_quotas")
             }}
             @label="discourse_ai.llms.quotas.add"
-            class="btn-default ai-llm-editor__add-quota-btn"
           />
         {{/if}}
 
         {{#unless @model.isNew}}
           {{#unless @model.seeded}}
             <form.Button
-              @action={{this.delete}}
-              @label="discourse_ai.llms.delete"
-              @icon="trash-can"
               class="btn-danger"
+              @action={{this.delete}}
+              @icon="trash-can"
+              @label="discourse_ai.llms.delete"
             />
           {{/unless}}
         {{/unless}}
@@ -717,8 +785,8 @@ export default class AiLlmEditorForm extends Component {
       {{#if this.displayTestResult}}
         <form.Container @format="full">
           <DConditionalLoadingSpinner
-            @size="small"
             @condition={{this.testRunning}}
+            @size="small"
           >
             {{#if this.testResult}}
               <div class="ai-llm-editor-tests__success">
