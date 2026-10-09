@@ -87,8 +87,8 @@ class DiscourseSolved::UnacceptAnswer
   end
 
   def publish_unaccepted(post:, topic:, guardian:)
+    DiscourseEvent.trigger(:unaccepted_solution, post)
     DB.after_commit do
-      DiscourseEvent.trigger(:unaccepted_solution, post)
       MessageBus.publish(
         "/topic/#{topic.id}",
         {

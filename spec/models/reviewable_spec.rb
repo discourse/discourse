@@ -730,6 +730,7 @@ RSpec.describe Reviewable, type: :model do
         "/delete",
         "/user/#{post.user_id}",
         "/categories",
+        "/topic/#{topic.id}",
       )
     end
 

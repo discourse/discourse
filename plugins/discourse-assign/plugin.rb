@@ -911,11 +911,12 @@ after_initialize do
   on(:post_destroyed) do |post|
     if Assignment.active.exists?(target: post)
       post.assignment.deactivate!
+      topic = post.topic || Topic.with_deleted.find(post.topic_id)
       DB.after_commit do
         MessageBus.publish(
           "/topic/#{post.topic_id}",
           { reload_topic: true, refresh_stream: true },
-          post.topic.secure_audience_publish_messages,
+          topic.secure_audience_publish_messages,
         )
       end
     end
