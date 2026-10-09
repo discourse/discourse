@@ -347,6 +347,8 @@ en:
           name: "Exchange rate"
         stock_quote:
           name: "Stock quote (AlphaVantage)"
+        fxmacrodata:
+          name: "Macro indicators (FXMacroData)"
         image_generation_category:
           name: "Image generation..."
         image_generation_custom:
