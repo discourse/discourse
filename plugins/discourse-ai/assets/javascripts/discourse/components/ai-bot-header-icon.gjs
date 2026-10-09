@@ -16,6 +16,13 @@ export default class AiBotHeaderIcon extends Component {
   @service aiConversationsSidebarManager;
 
   get bots() {
+    if (
+      !this.siteSettings.ai_bot_enabled ||
+      !this.currentUser?.ai_available_llm_models
+    ) {
+      return [];
+    }
+
     const hasSelectableModel = this.currentUser.ai_available_llm_models?.length;
     return (this.currentUser.ai_enabled_agents || []).filter(
       (agent) =>
