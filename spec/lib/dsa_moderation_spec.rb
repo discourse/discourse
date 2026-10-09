@@ -45,6 +45,30 @@ RSpec.describe DsaModeration do
       ).to be_empty
     end
 
+    it "retains original content and media when staff keep an author deletion" do
+      raw = "Personal insults with an image.\n\n![Insult](/images/discourse-logo-sketch-small.png)"
+      post.revise(post.user, { raw: raw }, force_new_version: true, skip_validations: true)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      UserSilencer.silence(
+        post.user,
+        admin,
+        keep_posts: true,
+        post_id: post.id,
+        reason: "Personal attacks",
+      )
+      PostDestroyer.new(post.user, post).destroy
+
+      reviewable.reload.perform(admin, :agree_and_keep_deleted)
+      post.destroy!
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.content["raw"]).to eq(raw)
+      expect(statement.payload["content_type"]).to contain_exactly(
+        "CONTENT_TYPE_TEXT",
+        "CONTENT_TYPE_IMAGE",
+      )
+    end
+
     it "records each deleted topic item once, including replies from other authors" do
       reply = Fabricate(:post, topic: post.topic, post_number: 2)
       Fabricate(:post, topic: post.topic, post_number: 3, post_type: Post.types[:small_action])

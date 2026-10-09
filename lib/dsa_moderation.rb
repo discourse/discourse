@@ -450,13 +450,22 @@ class DsaModeration
   end
 
   def describe_content(target)
+    raw = target.respond_to?(:raw) ? target.raw : nil
+    cooked = target.respond_to?(:cooked) ? target.cooked : nil
+    if target.is_a?(Post) && target.user_deleted?
+      original_raw = target.revisions.last&.modifications&.dig("raw", 0)
+      if original_raw
+        raw = original_raw
+        cooked = PrettyText.cook(raw)
+      end
+    end
     result = {
       target_type: target&.class&.name || @reviewable.target_type || @reviewable.type,
       target_id: target&.id || @reviewable.target_id || @reviewable.id,
       content_date: target&.created_at&.to_date&.iso8601,
       evidence: {
-        raw: target.respond_to?(:raw) ? target.raw : nil,
-        cooked: target.respond_to?(:cooked) ? target.cooked : nil,
+        raw: raw,
+        cooked: cooked,
         title: target.is_a?(Post) ? target.topic&.title : nil,
       }.compact,
       recipient_id:
@@ -472,7 +481,7 @@ class DsaModeration
       result[:content_date] = target.joined_at&.to_date&.iso8601
       result[:content_type] = ["CONTENT_TYPE_AUDIO"]
     elsif target.respond_to?(:cooked)
-      result[:content_type] = media_types(target.cooked.to_s)
+      result[:content_type] = media_types(cooked.to_s)
       result[:content_type_other] = "Embedded content" if result[:content_type].include?(
         "CONTENT_TYPE_OTHER",
       )

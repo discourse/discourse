@@ -978,8 +978,8 @@ RSpec.describe PostDestroyer do
       it "triggers a extensibility event" do
         events = DiscourseEvent.track_events { destroyer }
 
-        expect(events[0][:event_name]).to eq(:post_destroyed)
-        expect(events[0][:params].first).to eq(post)
+        event = events.find { |tracked| tracked[:event_name] == :post_destroyed }
+        expect(event[:params].first).to eq(post)
       end
     end
   end
