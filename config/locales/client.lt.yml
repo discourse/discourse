@@ -16,6 +16,7 @@ lt:
       device:
         code: "Kodas"
         continue: "Tęsti"
+        return_to_cli: "Dabar galite grįžti prie savo terminalo ar programos."
     blocks:
       ghost:
         status: "Statusas"
@@ -26,6 +27,7 @@ lt:
       manage:
         access_permission_editor: "Redaguotojas"
         access_permission_remove: "Pašalinti"
+        disallowed: "Neleidžiama"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -205,6 +207,11 @@ lt:
         last_30_days: "Paskutinės 30 dienų"
         last_3_months: "Paskutiniai 3 mėnesiai"
         last_6_months: "Paskutiniai 6 mėnesiai"
+    languages:
+      bs_BA:
+        name: Bosnių
+      et:
+        name: Estų
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber} by @%{username}"
@@ -2837,6 +2844,7 @@ lt:
         dismiss_button: "Praleisti..."
         dismiss_tooltip: "Praleisti tik naujus įrašus ar nebesekti temos"
         also_dismiss_topics: "Nebesekti šių temų, kad jos niekada nebūtų rodomos, kaip neperskaitytos"
+        dismiss_all: "Atmesti visus"
         dismiss_new_topics_with_selected:
           one: "Atsisakyti (%{count})"
           few: "Atsisakyti (%{count})"
@@ -3898,6 +3906,7 @@ lt:
         reply_as_new_topic: "Atsakykite kaip susieta tema"
         reply_topic: "Atsakyti į temą"
         flag: "Vėliavų stulpas"
+        edit: "Redaguoti įrašą"
         mark_tracking: "Sekti temą"
         mark_watching: "Stebėjimo tema"
       search_menu:
