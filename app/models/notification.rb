@@ -255,11 +255,8 @@ class Notification < ActiveRecord::Base
   def self.filter_inaccessible_reviewable_notifications(guardian, notifications)
     reviewable_ids =
       notifications
-        .filter_map do |notification|
-          if notification.notification_type == types[:mentioned]
-            notification.data_hash[:reviewable_id]
-          end
-        end
+        .select(&:reviewable_mention?)
+        .map { |notification| notification.data_hash[:reviewable_id].to_i }
         .uniq
     return notifications if reviewable_ids.empty?
 
@@ -275,8 +272,7 @@ class Notification < ActiveRecord::Base
       end
 
     notifications.reject do |notification|
-      notification.notification_type == types[:mentioned] &&
-        notification.data_hash[:reviewable_id].present? &&
+      notification.reviewable_mention? &&
         !accessible_ids.include?(notification.data_hash[:reviewable_id].to_i)
     end
   end
@@ -316,10 +312,12 @@ class Notification < ActiveRecord::Base
       end
   end
 
+  def reviewable_mention?
+    notification_type == Notification.types[:mentioned] && data_hash[:reviewable_id].present?
+  end
+
   def url
-    if notification_type == Notification.types[:mentioned] && data_hash[:reviewable_id].present?
-      return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}"
-    end
+    return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}" if reviewable_mention?
 
     return if topic.blank?
     return consolidated_nested_replied_url if consolidated_nested_replied?

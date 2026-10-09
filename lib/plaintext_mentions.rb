@@ -2,9 +2,10 @@
 
 # Notes remain plaintext, so literal code and quote syntax use the same mention rules.
 class PlaintextMentions
-  MENTION_PATTERN = /(?<![^\s\p{P}\p{S}])@(\w[\w.-]{0,58}[^\W_]|\w)(?![^\s\p{P}\p{S}])/
+  MENTION_PATTERN =
+    /(?<![^\p{Space}\p{P}\p{S}])@(\w[\w.-]{0,58}[^\W_]|\w)(?![^\p{Space}\p{P}\p{S}])/
   UNICODE_MENTION_PATTERN =
-    /(?<![^\s\p{P}\p{S}])@([\p{Alphabetic}\p{M}\p{Nd}_][\p{Alphabetic}\p{M}\p{Nd}._-]{0,58}[\p{Alphabetic}\p{M}\p{Nd}]|[\p{Alphabetic}\p{M}\p{Nd}_])(?![^\s\p{P}\p{S}])/
+    /(?<![^\p{Space}\p{P}\p{S}])@([\p{Alphabetic}\p{M}\p{Nd}_][\p{Alphabetic}\p{M}\p{Nd}._-]{0,58}[\p{Alphabetic}\p{M}\p{Nd}]|[\p{Alphabetic}\p{M}\p{Nd}_])(?![^\p{Space}\p{P}\p{S}])/
 
   def self.known_usernames(contents)
     usernames = contents.flat_map { |content| new(content).usernames }.uniq
@@ -16,7 +17,7 @@ class PlaintextMentions
   end
 
   def usernames
-    matches.map { |match| match[1].downcase }.uniq
+    matches.map { |match| User.normalize_username(match[1]) }.uniq
   end
 
   def render(known_usernames: nil)
@@ -28,8 +29,9 @@ class PlaintextMentions
     cursor = 0
     matches.each do |match|
       result << ERB::Util.html_escape(content[cursor...match.begin(0)])
-      if users.include?(match[1].downcase)
-        href = "#{Discourse.base_path}/u/#{UrlHelper.encode_component(match[1].downcase)}"
+      username = User.normalize_username(match[1])
+      if users.include?(username)
+        href = "#{Discourse.base_path}/u/#{UrlHelper.encode_component(username)}"
         label = PrettyText::Helpers.format_username(match[0])
         result << "<a class=\"mention\" href=\"#{ERB::Util.html_escape(href)}\">#{ERB::Util.html_escape(label)}</a>"
       else
