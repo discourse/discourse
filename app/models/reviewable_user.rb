@@ -9,6 +9,11 @@ class ReviewableUser < Reviewable
 
   after_create :retain_avatar_snapshot
 
+  def title_for_notification(user)
+    target&.username || payload&.dig("username") ||
+      I18n.t("js.review.user_label", locale: user.effective_locale)
+  end
+
   def self.payload_for(user)
     profile = user.user_profile
     avatar = user.uploaded_avatar
