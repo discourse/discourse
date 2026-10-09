@@ -116,6 +116,24 @@ RSpec.describe BackupRestore::S3BackupStore do
     end
 
     describe "#files" do
+      it "does not cache a partial backup listing when a later page fails" do
+        @s3_client.stub_responses(
+          :list_objects_v2,
+          [
+            { contents: [@objects.first], is_truncated: true, next_continuation_token: "next" },
+            "AccessDenied",
+          ],
+        )
+        expect { store.files }.to raise_error(BackupRestore::BackupStore::StorageError) do |error|
+          expect(error.cause).to be_a(Aws::S3::Errors::AccessDenied)
+        end
+        @s3_client.stub_responses(
+          :list_objects_v2,
+          { contents: @objects.first(3), is_truncated: false },
+        )
+        expect(store.files.map(&:filename)).to contain_exactly("b.tar.gz", "a.tgz", "r.sql.gz")
+      end
+
       # Regression: the listing was wrapped in a bare `rescue StandardError`
       # whose body was the constant `NoMethodError` - it caught everything and
       # did nothing, so an AccessDenied returned an empty list. A site whose
@@ -125,13 +143,35 @@ RSpec.describe BackupRestore::S3BackupStore do
       it "raises StorageError when S3 denies the listing" do
         @s3_client.stub_responses(:list_objects_v2, "AccessDenied")
 
-        expect { store.files }.to raise_error(BackupRestore::BackupStore::StorageError)
+        expect { store.files }.to raise_error(BackupRestore::BackupStore::StorageError) do |error|
+          expect(error.cause).to be_a(Aws::S3::Errors::AccessDenied)
+        end
       end
 
       it "still returns an empty list when the bucket genuinely has no backups" do
         remove_backups
 
         expect(store.files).to eq([])
+      end
+    end
+
+    describe "#generate_upload_url" do
+      it "preserves the original SDK cause when wrapping inspection failures" do
+        @s3_client.stub_responses(:head_object, "AccessDenied")
+        expect { store.generate_upload_url("new.tar.gz") }.to raise_error(
+          BackupRestore::BackupStore::StorageError,
+        ) do |error|
+          expect(error.cause).to be_a(Aws::S3::Errors::AccessDenied)
+        end
+      end
+
+      it "continues to wrap errors from S3-specific CORS configuration" do
+        @s3_client.stub_responses(:get_bucket_cors, "AccessDenied")
+        expect { store.generate_upload_url("new.tar.gz") }.to raise_error(
+          BackupRestore::BackupStore::StorageError,
+        ) do |error|
+          expect(error.cause).to be_a(Aws::S3::Errors::AccessDenied)
+        end
       end
     end
   end

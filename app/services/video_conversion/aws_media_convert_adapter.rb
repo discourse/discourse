@@ -162,8 +162,8 @@ module VideoConversion
     end
 
     def find_temp_file(s3_store, temp_path)
-      temp_object = s3_store.s3_helper.object(temp_path)
-      if !temp_object.exists?
+      temp_object = s3_store.stat_file(temp_path)
+      if !temp_object
         Rails.logger.error(
           "MediaConvert temp file not found at #{temp_path} for upload #{@upload.id}",
         )
@@ -179,17 +179,20 @@ module VideoConversion
     end
 
     def copy_file_to_final_location(s3_store, temp_path, final_path)
-      s3_helper = s3_store.s3_helper
-
       destination_path = get_s3_path(final_path)
 
       copy_options = s3_store.default_s3_options(secure: @upload.secure?)
 
       begin
-        destination_path, etag = s3_helper.copy(temp_path, destination_path, options: copy_options)
+        destination_path, etag =
+          s3_store.copy_file(
+            source: temp_path,
+            destination: destination_path,
+            secure: @upload.secure?,
+          )
 
-        destination_object = s3_helper.object(destination_path)
-        if !destination_object.exists?
+        destination_object = s3_store.stat_file(destination_path)
+        if !destination_object
           Rails.logger.error(
             "MediaConvert copy completed but destination file not found at #{destination_path} for upload #{@upload.id}",
           )
@@ -266,13 +269,10 @@ module VideoConversion
     end
 
     def remove_temp_file(s3_store, temp_path)
-      s3_helper = s3_store.s3_helper
-      begin
-        s3_helper.remove(temp_path, false)
-      rescue => e
-        # Log but don't fail if deletion fails - file will be cleaned up later
-        Rails.logger.warn("Failed to delete temporary MediaConvert file #{temp_path}: #{e.message}")
-      end
+      s3_store.remove_temporary_file(temp_path)
+    rescue => e
+      # Log but don't fail if deletion fails - file will be cleaned up later
+      Rails.logger.warn("Failed to delete temporary MediaConvert file #{temp_path}: #{e.message}")
     end
 
     def build_file_url(s3_store, destination_path)

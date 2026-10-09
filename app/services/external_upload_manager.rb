@@ -31,8 +31,8 @@ class ExternalUploadManager
 
   def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
     store = store_for_upload_type(upload_type, guardian: current_user.guardian)
-    url, signed_headers = store.signed_request_for_temporary_upload(file_name, metadata: metadata)
-    key = store.s3_helper.path_from_url(url)
+    request = store.prepare_direct_upload(file_name, metadata: metadata)
+    key = request.key
 
     upload_stub =
       ExternalUploadStub.create!(
@@ -44,10 +44,10 @@ class ExternalUploadManager
       )
 
     {
-      url: url,
+      url: request.url,
       key: key,
       unique_identifier: upload_stub.unique_identifier,
-      signed_headers: signed_headers,
+      signed_headers: request.headers,
     }
   end
 
@@ -60,7 +60,7 @@ class ExternalUploadManager
   )
     content_type = MiniMime.lookup_by_filename(file_name)&.content_type
     store = store_for_upload_type(upload_type, guardian: current_user.guardian)
-    multipart_upload = store.create_multipart(file_name, content_type, metadata: metadata)
+    multipart_upload = store.prepare_multipart_upload(file_name, content_type, metadata: metadata)
 
     upload_stub =
       ExternalUploadStub.create!(
@@ -187,20 +187,21 @@ class ExternalUploadManager
     Struct.new(:errors).new([])
   end
 
-  def external_stub_object
-    @external_stub_object ||= @store.object_from_path(external_upload_stub.key)
+  def external_object_info
+    @external_object_info ||= @store.object_storage.stat(external_upload_stub.key)
+    @external_object_info || raise(DownloadFailedError, "Uploaded object is missing")
   end
 
   def external_etag
-    @external_etag ||= external_stub_object.etag
+    @external_etag ||= external_object_info.etag
   end
 
   def external_size
-    @external_size ||= external_stub_object.size
+    @external_size ||= external_object_info.size
   end
 
   def external_sha1
-    @external_sha1 ||= external_stub_object.metadata["sha1-checksum"]
+    @external_sha1 ||= external_object_info.metadata["sha1-checksum"]
   end
 
   def download(key, type)

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require "file_store/object_storage/s3"
+
 module BackupRestore
   class S3BackupStore < BackupStore
     UPLOAD_URL_EXPIRES_AFTER_SECONDS = 6.hours.to_i
 
+    # Legacy callers may depend on SDK response objects. Core uses object_storage.
     delegate :abort_multipart,
              :presign_multipart_part,
              :list_multipart_parts,
@@ -11,6 +14,7 @@ module BackupRestore
              to: :s3_helper
 
     def initialize(opts = {})
+      @object_storage = opts[:object_storage]
       @s3_options = S3Helper.s3_options(SiteSetting)
       @s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
     end
@@ -19,48 +23,64 @@ module BackupRestore
       @s3_helper ||= S3Helper.new(s3_bucket_name_with_prefix, "", @s3_options.clone)
     end
 
+    def object_storage
+      @object_storage ||= FileStore::ObjectStorage::S3.new(s3_helper)
+    end
+
     def remote?
       true
     end
 
     def file(filename, include_download_source: false)
-      obj = s3_helper.object(filename)
-      create_file_from_object(obj, include_download_source) if obj.exists?
+      obj = object_storage.stat(filename)
+      create_file_from_object(obj, include_download_source) if obj
+    rescue FileStore::ObjectStorage::Error => error
+      FileStore::ObjectStorage::S3.raise_legacy(error)
     end
 
     def delete_file(filename)
-      obj = s3_helper.object(filename)
-
-      if obj.exists?
-        obj.delete
+      if object_storage.stat(filename)
+        object_storage.delete(filename)
         reset_cache
       end
+    rescue FileStore::ObjectStorage::Error => error
+      FileStore::ObjectStorage::S3.raise_legacy(error)
     end
 
     def download_file(filename, destination_path, failure_message = nil)
-      s3_helper.download_file(filename, destination_path, failure_message)
+      object_storage.download(filename, destination_path, failure_message:)
+    rescue FileStore::ObjectStorage::Error => error
+      # Preserve the legacy store API while the adapter exposes typed failures.
+      raise error.message
+    rescue => error
+      raise failure_message&.to_s ||
+              "Failed to download #{filename} because #{error.message.presence || error.class}"
     end
 
     def upload_file(filename, source_path, content_type)
-      obj = s3_helper.object(filename)
-      raise BackupFileExists.new if obj.exists?
+      raise BackupFileExists.new if object_storage.stat(filename)
 
-      s3_helper.upload_file(filename, source_path, content_type: content_type)
+      object_storage.upload_file(
+        filename,
+        source_path,
+        visibility: :bucket_default,
+        headers: {
+          content_type:,
+        },
+      )
       reset_cache
+    rescue FileStore::ObjectStorage::Error => error
+      FileStore::ObjectStorage::S3.raise_legacy(error)
     end
 
     def generate_upload_url(filename)
-      obj = s3_helper.object(filename)
-      raise BackupFileExists.new if obj.exists?
+      raise BackupFileExists.new if object_storage.stat(filename)
 
-      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+      s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
 
-      presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
-    rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn(
-        "Failed to generate upload URL for S3: #{e.message.presence || e.class.name}",
-      )
-      raise StorageError.new(e.message.presence || e.class.name)
+      object_storage.upload_url(filename, expires_in: UPLOAD_URL_EXPIRES_AFTER_SECONDS)
+    rescue FileStore::ObjectStorage::Error, Aws::Errors::ServiceError => e
+      raise_backup_storage_error(e, "Failed to generate upload URL for S3")
     end
 
     def temporary_upload_path(file_name)
@@ -78,16 +98,16 @@ module BackupRestore
     end
 
     def create_multipart(file_name, content_type, metadata: {})
-      obj = object_from_path(file_name)
-      raise BackupFileExists.new if obj.exists?
+      prepare_multipart_upload(file_name, content_type, metadata:)
+    rescue FileStore::ObjectStorage::Error => error
+      FileStore::ObjectStorage::S3.raise_legacy(error)
+    end
+
+    def prepare_multipart_upload(file_name, content_type, metadata: {})
+      raise BackupFileExists.new if object_storage.stat(file_name)
       key = temporary_upload_path(file_name)
 
-      s3_helper.create_multipart(
-        key,
-        content_type,
-        metadata: metadata,
-        **FileStore::S3Store.default_s3_options(secure: true),
-      )
+      object_storage.create_multipart(key, content_type, metadata: metadata, visibility: :private)
     end
 
     def move_existing_stored_upload(
@@ -95,15 +115,16 @@ module BackupRestore
       original_filename: nil,
       content_type: nil
     )
-      s3_helper.copy(
+      object_storage.copy(
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
-        options: { apply_metadata_to_destination: true }.merge(
-          FileStore::S3Store.default_s3_options(secure: true),
-        ),
+        visibility: :private,
+        replace_metadata: true,
       )
 
-      s3_helper.delete_object(existing_external_upload_key)
+      object_storage.delete(existing_external_upload_key, exact: true)
+    rescue FileStore::ObjectStorage::Error => error
+      FileStore::ObjectStorage::S3.raise_legacy(error)
     end
 
     def object_from_path(path)
@@ -112,17 +133,28 @@ module BackupRestore
 
     private
 
+    def raise_backup_storage_error(error, message)
+      original = FileStore::ObjectStorage::S3.legacy_error(error)
+      # The legacy wrapper caught service errors, not transport or credential failures.
+      if FileStore::ObjectStorage::S3.sdk_error?(original) &&
+           !original.is_a?(Aws::Errors::ServiceError)
+        raise original, cause: original.cause
+      end
+      detail = original.message.presence || original.class.name
+      Rails.logger.warn("#{message}: #{detail}")
+      raise StorageError.new(detail), cause: original
+    end
+
     def unsorted_files
       objects = []
 
-      s3_helper.list.each do |obj|
+      object_storage.list.each do |obj|
         objects << create_file_from_object(obj) if obj.key.match?(file_regex)
       end
 
       objects
-    rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn("Failed to list backups from S3: #{e.message.presence || e.class.name}")
-      raise StorageError.new(e.message.presence || e.class.name)
+    rescue FileStore::ObjectStorage::Error => e
+      raise_backup_storage_error(e, "Failed to list backups from S3")
     end
 
     def create_file_from_object(obj, include_download_source = false)
@@ -131,12 +163,9 @@ module BackupRestore
         filename: File.basename(obj.key),
         size: obj.size,
         last_modified: obj.last_modified,
-        source: include_download_source ? presigned_url(obj, :get, expires) : nil,
+        source:
+          include_download_source ? object_storage.download_url(obj.key, expires_in: expires) : nil,
       )
-    end
-
-    def presigned_url(obj, method, expires_in_seconds)
-      obj.presigned_url(method, expires_in: expires_in_seconds)
     end
 
     def cleanup_allowed?

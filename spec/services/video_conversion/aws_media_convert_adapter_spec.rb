@@ -57,7 +57,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(FileStore::S3Store).to receive(:new).and_return(s3_store)
     allow(s3_store).to receive(:s3_bucket).and_return(s3_bucket)
     allow(s3_store).to receive(:object_from_path).and_return(s3_object)
-    allow(s3_object).to receive(:exists?).and_return(true)
+    allow(s3_object).to receive(:load).and_return(s3_object)
     allow(s3_object).to receive(:size).and_return(1024)
     allow(s3_object).to receive(:acl).and_return(acl_object)
     allow(acl_object).to receive(:put).with(acl: "public-read").and_return(true)
@@ -312,6 +312,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   end
 
   describe "#handle_completion" do
+    let(:s3_store) { FileStore::S3Store.new(s3_helper) }
     let(:job_id) { "job-123" }
     let(:temp_path) { "transcoded/#{new_sha1}.mp4" }
     let(:final_path) { "original/1X/#{new_sha1}.mp4" }
@@ -326,6 +327,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     let(:copy_result) { instance_double(Aws::S3::Types::CopyObjectResult, etag: '"etag123"') }
 
     before do
+      allow(Discourse).to receive(:store).and_return(s3_store)
       allow(s3_store).to receive(:s3_helper).and_return(s3_helper)
       allow(s3_store).to receive(:default_s3_options).and_return({})
       allow(s3_store).to receive(:absolute_base_url).and_return(
@@ -334,8 +336,23 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
       # Mock s3_helper.object for find_temp_file
       allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
-      allow(source_s3_object).to receive(:exists?).and_return(true)
+      allow(source_s3_object).to receive(:load).and_return(source_s3_object)
       allow(source_s3_object).to receive(:size).and_return(1024)
+      allow(source_s3_object).to receive_messages(
+        key: temp_path,
+        metadata: {
+        },
+        etag: "source",
+        last_modified: Time.now,
+      )
+      allow(destination_s3_object).to receive_messages(
+        key: final_path,
+        metadata: {
+        },
+        etag: "etag123",
+        last_modified: Time.now,
+        size: 1024,
+      )
 
       # Mock s3_helper.copy - it returns [destination_path, etag]
       # The destination path will have multisite prefix if in multisite mode
@@ -359,7 +376,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
           source_s3_object
         end
       end
-      allow(destination_s3_object).to receive(:exists?).and_return(true)
+      allow(destination_s3_object).to receive(:load).and_return(destination_s3_object)
 
       # Mock s3_helper.remove for remove_temp_file
       allow(s3_helper).to receive(:remove).with(temp_path, false)
@@ -389,14 +406,14 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       expect(result).to be true
       # Verify s3_helper operations
       expect(s3_helper).to have_received(:object).with(temp_path)
-      expect(source_s3_object).to have_received(:exists?)
+      expect(source_s3_object).to have_received(:load)
       expect(source_s3_object).to have_received(:size)
       expect(s3_helper).to have_received(:copy) do |source, dest, options: {}|
         expect(source).to eq(temp_path)
         expect(dest).to include(final_path)
       end
       expect(s3_helper).to have_received(:object).at_least(:once)
-      expect(destination_s3_object).to have_received(:exists?)
+      expect(destination_s3_object).to have_received(:load)
       expect(s3_helper).to have_received(:remove).with(temp_path, false)
       expect(s3_store).to have_received(:update_file_access_control).at_least(:once)
       # The hash passed to create_for uses symbol keys (from **options)
@@ -423,7 +440,9 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     context "when S3 object doesn't exist" do
       before do
         allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
-        allow(source_s3_object).to receive(:exists?).and_return(false)
+        allow(source_s3_object).to receive(:load).and_raise(
+          Aws::S3::Errors::NotFound.new(nil, "not found"),
+        )
       end
 
       it "returns false" do
@@ -433,8 +452,10 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
     context "when source object doesn't exist for copy" do
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(source_s3_object).to receive(:exists?).and_return(false)
+        allow(s3_object).to receive(:load).and_return(s3_object)
+        allow(source_s3_object).to receive(:load).and_raise(
+          Aws::S3::Errors::NotFound.new(nil, "not found"),
+        )
         allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
       end
 
@@ -452,7 +473,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
       before do
         allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
-        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:load).and_return(source_s3_object)
         allow(source_s3_object).to receive(:size).and_return(1024)
         allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
           raise error if source == temp_path && dest.include?(final_path)
@@ -488,12 +509,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
             source_s3_object
           end
         end
-        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:load).and_return(source_s3_object)
         allow(source_s3_object).to receive(:size).and_return(1024)
         allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
           [dest, "etag123"] if source == temp_path && dest.include?(final_path)
         end
-        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(destination_s3_object).to receive(:load).and_return(destination_s3_object)
         allow(s3_helper).to receive(:remove).with(temp_path, false).and_raise(delete_error)
         allow(OptimizedVideo).to receive(:create_for).and_return(true)
         allow(s3_store).to receive(:update_file_access_control)
@@ -520,12 +541,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
             source_s3_object
           end
         end
-        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:load).and_return(source_s3_object)
         allow(source_s3_object).to receive(:size).and_return(1024)
         allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
           [dest, "etag123"] if source == temp_path && dest.include?(final_path)
         end
-        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(destination_s3_object).to receive(:load).and_return(destination_s3_object)
         allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_return(false)
         allow(s3_store).to receive(:update_file_access_control)
@@ -552,12 +573,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
             source_s3_object
           end
         end
-        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:load).and_return(source_s3_object)
         allow(source_s3_object).to receive(:size).and_return(1024)
         allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
           [dest, "etag123"] if source == temp_path && dest.include?(final_path)
         end
-        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(destination_s3_object).to receive(:load).and_return(destination_s3_object)
         allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_raise(error)
         allow(s3_store).to receive(:update_file_access_control)

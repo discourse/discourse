@@ -93,23 +93,20 @@ RSpec.describe UploadRecovery do
         stub_s3_store
       end
 
+      def stub_recovery_listing(tombstone_key)
+        Discourse.store.s3_helper.s3_client.stub_responses(
+          :list_objects_v2,
+          [{ contents: [] }, { contents: [{ key: tombstone_key, size: 1 }] }],
+        )
+      end
+
       it "recovers the upload" do
         expect do upload.destroy! end.to change { post.reload.uploads.count }.from(1).to(0)
 
         original_key = Discourse.store.get_path_for_upload(upload)
         tombstone_key = original_key.sub("original", "tombstone/original")
 
-        tombstone_copy = stub
-        tombstone_copy.expects(:key).returns(tombstone_key)
-
-        Discourse.store.s3_helper.expects(:list).with("original").returns([])
-
-        Discourse
-          .store
-          .s3_helper
-          .expects(:list)
-          .with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original")
-          .returns([tombstone_copy])
+        stub_recovery_listing(tombstone_key)
 
         Discourse
           .store
@@ -137,17 +134,7 @@ RSpec.describe UploadRecovery do
           original_key = Discourse.store.get_path_for_upload(upload)
           tombstone_key = original_key.sub("original", "tombstone/original")
 
-          tombstone_copy = stub
-          tombstone_copy.expects(:key).returns(tombstone_key)
-
-          Discourse.store.s3_helper.expects(:list).with("original").returns([])
-
-          Discourse
-            .store
-            .s3_helper
-            .expects(:list)
-            .with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original")
-            .returns([tombstone_copy])
+          stub_recovery_listing(tombstone_key)
 
           Discourse
             .store
@@ -174,16 +161,7 @@ RSpec.describe UploadRecovery do
           original_key = Discourse.store.get_path_for_upload(upload)
           tombstone_key = original_key.sub("original", "tombstone/original")
 
-          tombstone_copy = stub
-          tombstone_copy.expects(:key).returns(tombstone_key)
-
-          Discourse.store.s3_helper.expects(:list).with("original").returns([])
-          Discourse
-            .store
-            .s3_helper
-            .expects(:list)
-            .with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original")
-            .returns([tombstone_copy])
+          stub_recovery_listing(tombstone_key)
           Discourse
             .store
             .s3_helper
@@ -200,6 +178,41 @@ RSpec.describe UploadRecovery do
             [post.reload.uploads.count, Upload.count]
           }
         end
+      end
+
+      [false, true].each do |multisite|
+        it "lists originals before tombstones with multisite=#{multisite}" do
+          Rails.configuration.stubs(:multisite).returns(multisite)
+          db = RailsMultisite::ConnectionManagement.current_db
+          prefixes =
+            if multisite
+              ["uploads/#{db}/original", "uploads/tombstone/#{db}/original"]
+            else
+              %w[original tombstone/original]
+            end
+          client = Discourse.store.s3_helper.s3_client
+          client.stub_responses(
+            :list_objects_v2,
+            prefixes.map { |prefix| { contents: [{ key: "#{prefix}/file.png", size: 1 }] } },
+          )
+
+          expect(upload_recovery.send(:s3_object_keys)).to eq(
+            prefixes.map { |prefix| "#{prefix}/file.png" },
+          )
+          listings =
+            client.api_requests.select { |request| request[:operation_name] == :list_objects_v2 }
+          expect(listings.map { |request| request[:params][:prefix] }).to eq(prefixes)
+        end
+      end
+
+      it "fails rather than recovering from a partial listing" do
+        Discourse.store.s3_helper.s3_client.stub_responses(
+          :list_objects_v2,
+          [{ contents: [{ key: "original/file.png", size: 1 }] }, "AccessDenied"],
+        )
+        expect { upload_recovery.send(:s3_object_keys) }.to raise_error(
+          Aws::S3::Errors::AccessDenied,
+        )
       end
     end
 

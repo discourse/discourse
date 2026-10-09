@@ -29,6 +29,40 @@ RSpec.describe ExternalUploadManager do
     stub_download_object_filehelper
   end
 
+  describe ".create_direct_upload" do
+    it "uses the signed request key without deriving it from a path-style URL" do
+      SiteSetting.s3_endpoint = "https://storage.example.test"
+      SiteSetting.s3_upload_bucket = "uploads/site"
+      S3Helper.unstub(:new)
+      client =
+        Aws::S3::Client.new(
+          endpoint: SiteSetting.s3_endpoint,
+          region: "us-east-1",
+          credentials: Aws::Credentials.new("test", "test"),
+          force_path_style: true,
+        )
+      store = FileStore::S3Store.new(S3Helper.new(SiteSetting.s3_upload_bucket, "", client:))
+      Discourse.stubs(:store).returns(store)
+
+      result =
+        described_class.create_direct_upload(
+          current_user: user,
+          file_name: "image.png",
+          file_size: 100,
+          upload_type: "composer",
+          metadata: {
+            "sha1-checksum" => "digest",
+          },
+        )
+
+      stub = ExternalUploadStub.find_by!(unique_identifier: result[:unique_identifier])
+      expect(result[:key]).to start_with("temp/site/")
+      expect(stub.key).to eq(result[:key])
+      expect(URI(result[:url]).path).to eq("/uploads/#{result[:key]}")
+      expect(result[:signed_headers]["x-amz-meta-sha1-checksum"]).to eq("digest")
+    end
+  end
+
   describe "#ban_user_from_external_uploads!" do
     after { Discourse.redis.flushdb }
 
@@ -46,6 +80,22 @@ RSpec.describe ExternalUploadManager do
   end
 
   describe "#transform!" do
+    context "when the uploaded object is missing" do
+      before { @fake_s3.bucket(s3_bucket_name).delete_object(external_upload_stub.key) }
+
+      it "reports a download failure and removes the stub without banning the user" do
+        expect { manager.transform! }.to raise_error(ExternalUploadManager::DownloadFailedError)
+        expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
+        expect(described_class.user_banned?(user)).to eq(false)
+      end
+
+      it "preserves the failed stub in debug mode" do
+        SiteSetting.enable_upload_debug_mode = true
+        expect { manager.transform! }.to raise_error(ExternalUploadManager::DownloadFailedError)
+        expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
+      end
+    end
+
     context "when stubbed upload is < DOWNLOAD_LIMIT (small enough to download + generate sha)" do
       let!(:external_upload_stub) do
         Fabricate(:image_external_upload_stub, created_by: user, filesize: object_size)
