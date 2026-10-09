@@ -2,31 +2,18 @@
 
 RSpec.describe(Tags::Search) do
   describe described_class::Contract, type: :model do
-    it "is valid with no limit" do
-      expect(described_class.new(limit: nil)).to be_valid
+    it "accepts a blank or in-range limit" do
+      [nil, 0, 3, SiteSetting.max_tag_search_results].each do |limit|
+        expect(described_class.new(limit:)).to be_valid
+      end
     end
 
-    it "is valid with a positive limit" do
-      expect(described_class.new(limit: 3)).to be_valid
-    end
-
-    it "rejects a negative limit" do
-      contract = described_class.new(limit: -1)
-      expect(contract.valid?).to be false
-      expect(contract.errors[:limit]).to be_present
-    end
-
-    it "rejects a non-numeric limit" do
-      contract = described_class.new
-      contract.assign_attributes(limit: "abc")
-      expect(contract.valid?).to be false
-      expect(contract.errors[:limit]).to be_present
-    end
-
-    it "rejects a limit exceeding max_tag_search_results" do
-      contract = described_class.new(limit: SiteSetting.max_tag_search_results + 1)
-      expect(contract.valid?).to be false
-      expect(contract.errors[:limit]).to be_present
+    it "rejects malformed or out-of-range limits" do
+      [-1, "abc", SiteSetting.max_tag_search_results + 1].each do |limit|
+        contract = described_class.new(limit:)
+        expect(contract).to be_invalid
+        expect(contract.errors[:limit]).to be_present
+      end
     end
   end
 
@@ -49,21 +36,10 @@ RSpec.describe(Tags::Search) do
     end
 
     context "when everything's ok" do
-      it { is_expected.to run_successfully }
-
-      it "returns matching tags" do
-        expect(result[:tags].map { |t| t[:name] }).to include("alpha")
-      end
-
-      it "does not return non-matching tags" do
-        expect(result[:tags].map { |t| t[:name] }).not_to include("beta")
-      end
-
-      it "sets forbidden to nil" do
+      it "returns matching tags without a forbidden result" do
+        expect(result).to run_successfully
+        expect(result[:tags].map { |tag| tag[:name] }).to contain_exactly("alpha")
         expect(result[:forbidden]).to be_nil
-      end
-
-      it "sets forbidden_message to nil" do
         expect(result[:forbidden_message]).to be_nil
       end
     end
@@ -71,9 +47,8 @@ RSpec.describe(Tags::Search) do
     context "with blank query" do
       let(:params) { {} }
 
-      it { is_expected.to run_successfully }
-
-      it "returns tags ordered by popularity" do
+      it "returns tags for the blank query" do
+        expect(result).to run_successfully
         expect(result[:tags]).to be_present
       end
     end
@@ -100,16 +75,13 @@ RSpec.describe(Tags::Search) do
         expect(names.index("recentb")).to be < names.index("popular")
       end
 
-      it "falls back to popularity ordering when the upcoming change is disabled" do
+      it "uses popularity ordering when recent-tag prioritization is unavailable" do
         SiteSetting.prioritize_recently_used_tags = false
         Fabricate(:topic, user: user, tags: [recent_tag_a])
 
         expect(tag_names(params).first).to eq("popular")
-      end
 
-      it "falls back to popularity ordering for anonymous users" do
-        Fabricate(:topic, user: user, tags: [recent_tag_a])
-
+        SiteSetting.prioritize_recently_used_tags = true
         expect(tag_names(params, guardian: Guardian.new).first).to eq("popular")
       end
 
@@ -126,13 +98,19 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "alpha", categoryId: category.id } }
 
-      it { is_expected.to run_successfully }
+      it "returns tags filtered for the category" do
+        expect(result).to run_successfully
+        expect(result[:tags].map { |tag| tag[:name] }).to contain_exactly("alpha")
+      end
     end
 
     context "with a non-existent category" do
       let(:params) { { q: "alpha", categoryId: -999 } }
 
-      it { is_expected.to run_successfully }
+      it "treats a non-existent category as no category filter" do
+        expect(result).to run_successfully
+        expect(result[:tags].map { |tag| tag[:name] }).to contain_exactly("alpha")
+      end
     end
 
     context "with filterForInput returning disabled tags for one_per_topic groups" do
@@ -143,17 +121,17 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "gamma", filterForInput: true, selected_tags: [tag1.name] } }
 
-      it { is_expected.to run_successfully }
+      it "returns the excluded tag with its conflicting tag in the reason" do
+        expect(result).to run_successfully
 
-      it "marks the excluded tag as disabled" do
-        disabled = result[:tags].select { |t| t[:disabled] }
-        expect(disabled.map { |t| t[:name] }).to include("gamma")
-      end
-
-      it "names the conflicting tag in the one_per_topic reason" do
-        disabled = result[:tags].find { |t| t[:name] == "gamma" && t[:disabled] }
-        expect(disabled[:title]).to eq(
-          I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "alpha"),
+        expect(result[:tags].find { |tag| tag[:name] == "gamma" }).to include(
+          disabled: true,
+          title:
+            I18n.t(
+              "tags.forbidden.one_tag_per_topic_group",
+              tag_group_name: tag_group.name,
+              tag_names: tag1.name,
+            ),
         )
       end
     end
@@ -180,10 +158,9 @@ RSpec.describe(Tags::Search) do
 
       it "uses a generic one_per_topic reason instead of leaking the hidden selected tag name" do
         disabled = result[:tags].find { |tag| tag[:name] == "public-sibling" && tag[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).not_to include(hidden_selected_tag.name)
-        expect(disabled[:title]).to eq(
-          I18n.t("tags.forbidden.one_tag_per_topic_group_without_names"),
+        expect(disabled).to include(
+          disabled: true,
+          title: I18n.t("tags.forbidden.one_tag_per_topic_group_without_names"),
         )
       end
     end
@@ -197,22 +174,25 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "childtag", filterForInput: true } }
 
-      it { is_expected.to run_successfully }
+      it "disables the child tag with a missing-parent reason" do
+        expect(result).to run_successfully
+        child = result[:tags].find { |tag| tag[:name] == child_tag.name }
 
-      it "marks the child tag as disabled" do
-        disabled = result[:tags].select { |t| t[:disabled] }
-        expect(disabled.map { |t| t[:name] }).to include("childtag")
-      end
-
-      it "includes the missing parent tag reason" do
-        disabled = result[:tags].find { |t| t[:name] == "childtag" && t[:disabled] }
-        expect(disabled[:title]).to include("parent")
+        expect(child).to include(
+          disabled: true,
+          title:
+            I18n.t(
+              "tags.forbidden.missing_parent_tag",
+              parent_tag_name: parent_tag.name,
+              tag_group_name: tag_group.name,
+            ),
+        )
       end
 
       it "does not surface the tag when the term only matches mid-word" do
         result =
           described_class.call(params: { q: "hildtag", filterForInput: true }, **dependencies)
-        expect(result[:tags].map { |t| t[:name] }).not_to include("childtag")
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include("childtag")
       end
     end
 
@@ -224,16 +204,50 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "restricted", filterForInput: true } }
 
-      it { is_expected.to run_successfully }
+      it "disables the tag with the category restriction reason" do
+        expect(result).to run_successfully
+        expect(result[:tags].find { |tag| tag[:name] == restricted_tag.name }).to include(
+          disabled: true,
+          title:
+            I18n.t(
+              "tags.forbidden.restricted_to",
+              count: 1,
+              tag_name: restricted_tag.name,
+              category_names: category.name,
+            ),
+        )
+      end
+    end
 
-      it "marks the category-restricted tag as disabled" do
-        disabled = result[:tags].select { |t| t[:disabled] }
-        expect(disabled.map { |t| t[:name] }).to include("restricted")
+    context "with a tag restricted to more than three accessible categories" do
+      fab!(:category_a) { Fabricate(:category, name: "Category A") }
+      fab!(:category_b) { Fabricate(:category, name: "Category B") }
+      fab!(:category_c) { Fabricate(:category, name: "Category C") }
+      fab!(:category_d) { Fabricate(:category, name: "Category D") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "many-categories") }
+
+      before do
+        [category_a, category_b, category_c, category_d].each do |category|
+          CategoryTag.create!(category:, tag: restricted_tag)
+        end
       end
 
-      it "includes the category name in the reason" do
-        disabled = result[:tags].find { |t| t[:name] == "restricted" && t[:disabled] }
-        expect(disabled[:title]).to include(category.name)
+      let(:params) { { q: restricted_tag.name, filterForInput: true } }
+
+      it "lists three category names and the number of additional categories" do
+        visible_category_names = [category_a, category_b, category_c, category_d].map(&:name).sort
+        expected_reason =
+          I18n.t(
+            "tags.forbidden.restricted_to_truncated",
+            tag_name: restricted_tag.name,
+            category_names: visible_category_names.first(3).join(", "),
+            more_count: 1,
+          )
+
+        expect(result[:tags].find { |tag| tag[:name] == restricted_tag.name }).to include(
+          disabled: true,
+          title: expected_reason,
+        )
       end
     end
 
@@ -246,31 +260,27 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "bots", filterForInput: true } }
 
-      it "does not leak the tag name to unauthorized users" do
-        names = result[:tags].map { |t| t[:name] }
-        expect(names).not_to include("bots-gone-mad")
+      it "hides the tag from users without access" do
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(secret_tag.name)
       end
 
-      it "still shows the tag to admins" do
+      it "shows the tag to admins" do
         admin = Fabricate(:admin)
-        admin_result =
-          described_class.call(params:, **dependencies.merge(guardian: Guardian.new(admin)))
-        expect(admin_result[:tags].map { |t| t[:name] }).to include("bots-gone-mad")
+        admin_result = described_class.call(params:, guardian: Guardian.new(admin))
+        expect(admin_result[:tags].map { |tag| tag[:name] }).to include(secret_tag.name)
       end
 
-      it "still shows the tag to users who can access the category" do
+      it "shows the tag to users who can access the category" do
         staff = Fabricate(:user)
         staff_group.add(staff)
-        staff_result =
-          described_class.call(params:, **dependencies.merge(guardian: Guardian.new(staff)))
-        expect(staff_result[:tags].map { |t| t[:name] }).to include("bots-gone-mad")
+        staff_result = described_class.call(params:, guardian: Guardian.new(staff))
+        expect(staff_result[:tags].map { |tag| tag[:name] }).to include(secret_tag.name)
       end
 
-      it "still shows the tag when it is also attached to a category the user can access" do
+      it "shows the tag when it is also attached to a category the user can access" do
         public_category = Fabricate(:category)
         CategoryTag.create!(category: public_category, tag: secret_tag)
-        names = result[:tags].map { |t| t[:name] }
-        expect(names).to include("bots-gone-mad")
+        expect(result[:tags].map { |tag| tag[:name] }).to include(secret_tag.name)
       end
     end
 
@@ -284,9 +294,8 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "insider", filterForInput: true } }
 
-      it "does not leak the tag name to unauthorized users" do
-        names = result[:tags].map { |t| t[:name] }
-        expect(names).not_to include("insider-info")
+      it "does not return the tag restricted by its group" do
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(secret_tag.name)
       end
     end
 
@@ -299,8 +308,8 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "bots" } }
 
-      it "does not leak the tag name as an allowed result" do
-        expect(result[:tags].map { |t| t[:name] }).not_to include("bots-gone-mad")
+      it "does not return the tag as an allowed result" do
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(secret_tag.name)
       end
     end
 
@@ -314,10 +323,12 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "alpha-global", categoryId: private_category.id } }
 
-      it "behaves as if the category did not exist (no enumeration vector)" do
-        blind =
-          described_class.call(params: { q: "alpha-global", categoryId: -999 }, **dependencies)
-        expect(result[:tags].map { |t| t[:name] }).to eq(blind[:tags].map { |t| t[:name] })
+      it "behaves as if the category did not exist" do
+        expect(result).to run_successfully
+        missing_category_result =
+          described_class.call(params: { q: global_tag.name, categoryId: -999 }, **dependencies)
+
+        expect(result[:tags]).to eq(missing_category_result[:tags])
       end
     end
 
@@ -327,10 +338,11 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "maintag2", filterForInput: true, excludeHasSynonyms: true } }
 
-      it "marks the tag as disabled with a synonyms reason" do
-        disabled = result[:tags].find { |t| t[:name] == "maintag2" && t[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).to include("synonyms")
+      it "disables the tag with a reason" do
+        expect(result[:tags].find { |tag| tag[:name] == target_with_syn.name }).to include(
+          disabled: true,
+          title: I18n.t("tags.forbidden.has_synonyms", tag_name: target_with_syn.name),
+        )
       end
     end
 
@@ -344,33 +356,17 @@ RSpec.describe(Tags::Search) do
       let(:dependencies) { { guardian: Guardian.new } }
       let(:params) { { q: "anon-secret", filterForInput: true } }
 
-      it "does not leak tags restricted to inaccessible categories" do
-        names = result[:tags].map { |t| t[:name] }
-        expect(names).not_to include("anon-secret")
-      end
-    end
-
-    context "with an admin guardian" do
-      fab!(:staff_group) { Group[:staff] }
-      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
-      fab!(:secret_tag) { Fabricate(:tag, name: "admin-visible") }
-
-      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
-
-      let(:dependencies) { { guardian: Guardian.new(Fabricate(:admin)) } }
-      let(:params) { { q: "admin-visible" } }
-
-      it "sees tags restricted to any category" do
-        expect(result[:tags].map { |t| t[:name] }).to include("admin-visible")
+      it "does not return tags restricted to inaccessible categories" do
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(secret_tag.name)
       end
     end
 
     context "with a global tag disabled inside a category that disallows globals" do
       fab!(:strict_category) do
-        Fabricate(:category).tap do |c|
-          c.update!(allow_global_tags: false)
+        Fabricate(:category).tap do |category_record|
+          category_record.update!(allow_global_tags: false)
           Fabricate(:tag_group, tags: [Fabricate(:tag, name: "strict-only")]).tap do |tg|
-            CategoryTagGroup.create!(category: c, tag_group: tg)
+            CategoryTagGroup.create!(category: category_record, tag_group: tg)
           end
         end
       end
@@ -378,10 +374,11 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "truly-global", filterForInput: true, categoryId: strict_category.id } }
 
-      it "uses the 'in this category' fallback wording" do
-        disabled = result[:tags].find { |t| t[:name] == "truly-global" && t[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).to include("this category")
+      it "explains that the global tag is unavailable in this category" do
+        expect(result[:tags].find { |tag| tag[:name] == global_tag.name }).to include(
+          disabled: true,
+          title: I18n.t("tags.forbidden.in_this_category", tag_name: global_tag.name),
+        )
       end
     end
 
@@ -395,10 +392,10 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "payload-syn" } }
 
-      it "does not leak the target tag name in the serialized payload" do
-        entry = result[:tags].find { |t| t[:name] == "payload-syn" }
-        expect(entry).to be_present
-        expect(entry[:target_tag]).to be_nil
+      it "omits the inaccessible target from the serialized payload" do
+        expect(result[:tags].find { |tag| tag[:name] == public_synonym.name }).to include(
+          target_tag: nil,
+        )
       end
     end
 
@@ -412,10 +409,10 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "public-syn", filterForInput: true, excludeSynonyms: true } }
 
-      it "does not leak the target tag name in the disabled reason" do
-        disabled = result[:tags].find { |t| t[:name] == "public-syn" && t[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).not_to include("secret-target")
+      it "does not expose the target in the disabled reason" do
+        disabled = result[:tags].find { |tag| tag[:name] == public_synonym.name }
+        expect(disabled).to include(disabled: true)
+        expect(disabled[:title]).not_to include(secret_target.name)
       end
     end
 
@@ -432,10 +429,11 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "orphan-tag", filterForInput: true } }
 
-      it "does not mention 'this category' when there is no category context" do
-        disabled = result[:tags].find { |t| t[:name] == "orphan-tag" && t[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).not_to include("this category")
+      it "uses the general restriction wording without category context" do
+        expect(result[:tags].find { |tag| tag[:name] == orphan_tag.name }).to include(
+          disabled: true,
+          title: I18n.t("tags.forbidden.not_allowed", tag_name: orphan_tag.name),
+        )
       end
     end
 
@@ -452,10 +450,10 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "public-child", filterForInput: true } }
 
-      it "does not leak the parent tag name in the disabled reason" do
-        disabled = result[:tags].find { |t| t[:name] == "public-child" && t[:disabled] }
-        expect(disabled).to be_present
-        expect(disabled[:title]).not_to include("secret-parent")
+      it "does not expose the parent in the disabled reason" do
+        disabled = result[:tags].find { |tag| tag[:name] == child_tag.name }
+        expect(disabled).to include(disabled: true)
+        expect(disabled[:title]).not_to include(secret_parent.name)
       end
     end
 
@@ -468,7 +466,8 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "bots-gone-mad", filterForInput: true } }
 
-      it "does not confirm the tag exists via forbidden_message" do
+      it "does not confirm the tag exists in results or the forbidden fields" do
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(secret_tag.name)
         expect(result[:forbidden]).to be_nil
         expect(result[:forbidden_message]).to be_nil
       end
@@ -488,9 +487,7 @@ RSpec.describe(Tags::Search) do
       let(:params) { { q: "alpha", filterForInput: true, selected_tags: [tag2.name] } }
 
       it "lists allowed tags before disabled tags" do
-        names = result[:tags].map { |t| t[:name] }
-        expect(names).to include("alpha", "alphablocked")
-        expect(names.index("alpha")).to be < names.index("alphablocked")
+        expect(result[:tags].map { |tag| tag[:name] }).to eq(%w[alpha alphablocked])
       end
     end
 
@@ -501,7 +498,7 @@ RSpec.describe(Tags::Search) do
       let(:params) { { q: "foomatch", filterForInput: true, limit: 1 } }
 
       it "does not mislabel allowed tags as disabled" do
-        disabled = result[:tags].select { |t| t[:disabled] }
+        disabled = result[:tags].select { |tag| tag[:disabled] }
         expect(disabled).to be_empty
       end
     end
@@ -525,22 +522,12 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "syntag", excludeSynonyms: true } }
 
-      it { is_expected.to run_successfully }
-
-      it "sets forbidden to the search query" do
+      it "returns the forbidden query and its synonym reason" do
+        expect(result).to run_successfully
         expect(result[:forbidden]).to eq("syntag")
-      end
-
-      it "sets forbidden_message explaining the synonym" do
-        expect(result[:forbidden_message]).to include("maintag")
-      end
-    end
-
-    context "when the forbidden tag is already in results" do
-      let(:params) { { q: "alpha" } }
-
-      it "does not set forbidden" do
-        expect(result[:forbidden]).to be_nil
+        expect(result[:forbidden_message]).to eq(
+          I18n.t("tags.forbidden.synonym", tag_name: target_tag.name),
+        )
       end
     end
 
@@ -550,17 +537,14 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "pmonly", categoryId: category.id, filterForInput: true, limit: 5 } }
 
-      it "returns the tag as selectable instead of mislabeling it as unusable" do
+      before { SiteSetting.display_personal_messages_tag_counts = true }
+
+      it "keeps the tag selectable without exposing its PM count" do
         row = result[:tags].find { |tag| tag[:name] == "pmonly" }
         expect(row).to be_present
         expect(row[:disabled]).to be_blank
         expect(result[:forbidden]).to be_nil
         expect(result[:forbidden_message]).to be_nil
-      end
-
-      it "does not expose the PM tag count to users who cannot tag PMs" do
-        SiteSetting.display_personal_messages_tag_counts = true
-        row = result[:tags].find { |tag| tag[:name] == "pmonly" }
         expect(row).not_to have_key(:pm_count)
       end
     end
@@ -572,14 +556,11 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { q: "secrethidden" } }
 
-      it { is_expected.to run_successfully }
-
-      it "does not expose the hidden tag as forbidden" do
+      it "does not expose a hidden tag in results or as forbidden" do
+        expect(result).to run_successfully
         expect(result[:forbidden]).to be_nil
-      end
-
-      it "does not include the hidden tag in results" do
-        expect(result[:tags].map { |t| t[:name] }).not_to include("secrethidden")
+        expect(result[:forbidden_message]).to be_nil
+        expect(result[:tags].map { |tag| tag[:name] }).not_to include(hidden_tag.name)
       end
     end
 
@@ -599,12 +580,89 @@ RSpec.describe(Tags::Search) do
 
       let(:params) { { filterForInput: true, categoryId: required_category.id } }
 
-      it { is_expected.to run_successfully }
-
       it "propagates the required_tag_group from the filter context" do
-        expect(result[:required_tag_group]).to be_present
-        expect(result[:required_tag_group][:name]).to eq("Required Group")
-        expect(result[:required_tag_group][:min_count]).to eq(1)
+        expect(result).to run_successfully
+        expect(result[:required_tag_group]).to include(name: required_tag_group.name, min_count: 1)
+      end
+    end
+
+    context "with an unsatisfied required tag group" do
+      fab!(:app_tag) { Fabricate(:tag, name: "app-desktop") }
+      fab!(:hosting_tag1) { Fabricate(:tag, name: "server-default-cloud") }
+      fab!(:hosting_tag2) { Fabricate(:tag, name: "server-other-cloud") }
+      fab!(:app_tag_group) { Fabricate(:tag_group, name: "Apps", tags: [app_tag]) }
+      fab!(:hosting_tag_group) do
+        Fabricate(:tag_group, name: "Hosting", tags: [hosting_tag1, hosting_tag2])
+      end
+      fab!(:required_category, :category)
+      fab!(:otherwise_allowed_tag) { Fabricate(:tag, name: "os-linux") }
+      fab!(:restricted_category) { Fabricate(:category, name: "Other category") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "other-only") }
+
+      before do
+        CategoryRequiredTagGroup.create!(
+          category: required_category,
+          tag_group: app_tag_group,
+          min_count: 1,
+          order: 1,
+        )
+        CategoryRequiredTagGroup.create!(
+          category: required_category,
+          tag_group: hosting_tag_group,
+          min_count: 2,
+          order: 2,
+        )
+        CategoryTag.create!(category: restricted_category, tag: restricted_tag)
+      end
+
+      let(:params) do
+        {
+          q: "os-linux",
+          filterForInput: true,
+          categoryId: required_category.id,
+          selected_tag_ids: [app_tag.id, hosting_tag1.id],
+        }
+      end
+
+      it "explains how many more required-group tags are needed" do
+        disabled = result[:tags].find { |tag| tag[:name] == otherwise_allowed_tag.name }
+
+        expect(disabled[:disabled]).to be true
+        expect(disabled[:title]).to eq(
+          I18n.t(
+            "tags.forbidden.required_tag_group",
+            count: 1,
+            tag_group_name: hosting_tag_group.name,
+          ),
+        )
+      end
+
+      it "keeps the category restriction reason for a genuinely restricted tag" do
+        restricted_result =
+          described_class.call(params: params.merge(q: restricted_tag.name), **dependencies)
+        disabled = restricted_result[:tags].find { |tag| tag[:name] == restricted_tag.name }
+
+        expect(disabled[:disabled]).to be true
+        expect(disabled[:title]).to eq(
+          I18n.t(
+            "tags.forbidden.restricted_to",
+            count: 1,
+            tag_name: restricted_tag.name,
+            category_names: restricted_category.name,
+          ),
+        )
+      end
+
+      it "allows other tags once the required group is satisfied" do
+        satisfied_result =
+          described_class.call(
+            params: params.merge(selected_tag_ids: [app_tag.id, hosting_tag1.id, hosting_tag2.id]),
+            **dependencies,
+          )
+        selectable = satisfied_result[:tags].find { |tag| tag[:name] == otherwise_allowed_tag.name }
+
+        expect(selectable).to be_present
+        expect(selectable[:disabled]).to be_blank
       end
     end
 
@@ -623,12 +681,12 @@ RSpec.describe(Tags::Search) do
 
       it "matches tags by their localized name in the current locale" do
         I18n.with_locale(:ja) do
-          expect(result[:tags].map { |t| t[:name] }).to contain_exactly("戦略")
+          expect(result[:tags].map { |tag| tag[:name] }).to contain_exactly("戦略")
         end
       end
 
       it "does not match localizations from other locales" do
-        I18n.with_locale(:en) { expect(result[:tags].map { |t| t[:name] }).to be_empty }
+        I18n.with_locale(:en) { expect(result[:tags].map { |tag| tag[:name] }).to be_empty }
       end
     end
   end

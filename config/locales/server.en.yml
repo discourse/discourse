@@ -6200,6 +6200,9 @@ en:
         one: 'Only available in the "%{category_names}" category'
         other: "Only available in: %{category_names}"
       restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      required_tag_group:
+        one: 'Select %{count} more tag from the "%{tag_group_name}" tag group before using this tag'
+        other: 'Select %{count} more tags from the "%{tag_group_name}" tag group before using this tag'
       synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
