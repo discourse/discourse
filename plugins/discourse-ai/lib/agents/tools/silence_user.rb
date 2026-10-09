@@ -151,6 +151,7 @@ module DiscourseAi
             )
 
           return error_response(silence_error_message(result)) if result.failure?
+          @restrictions = result[:restrictions]
 
           {
             status: "success",

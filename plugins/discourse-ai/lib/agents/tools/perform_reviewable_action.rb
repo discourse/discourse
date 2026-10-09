@@ -95,6 +95,7 @@ module DiscourseAi
                 action_id,
                 version: reviewable.version,
                 guardian: guardian,
+                decision_automation: context.reviewable_id ? :partial : :full,
               )
           rescue Reviewable::InvalidAction
             return(

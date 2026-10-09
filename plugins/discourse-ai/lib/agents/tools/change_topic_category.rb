@@ -127,6 +127,9 @@ module DiscourseAi
             )
           end
 
+          audience = Reviewable::Audience.new(topic)
+          restriction =
+            Reviewable::Restriction.new(kind: :audience_restricted, target: topic.first_post)
           revisor = PostRevisor.new(topic.first_post, topic)
           result =
             revisor.revise!(
@@ -137,6 +140,7 @@ module DiscourseAi
             )
 
           if result
+            @restrictions << restriction if audience.restricted_by?(topic)
             {
               status: "success",
               message: I18n.t("discourse_ai.ai_bot.change_topic_category.success"),

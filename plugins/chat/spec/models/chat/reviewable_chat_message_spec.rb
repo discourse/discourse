@@ -13,6 +13,21 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
   it { is_expected.to validate_length_of(:target_type).is_at_most(100) }
 
   describe "#perform" do
+    it "records the actual deleted chat message" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => chat_message.created_at.to_date.iso8601,
+      )
+      expect(statement.payload).not_to have_key("automated_detection")
+      expect(chat_message.reload).to be_trashed
+    end
+
     it "suspends the author and completes the deletion alias together" do
       reviewable.update!(target_created_by: user)
 

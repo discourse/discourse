@@ -64,6 +64,9 @@ module DiscourseAi
           opts = {}
           opts[:message] = reason if !!parameters[:public_reason]
           TopicStatusUpdater.new(topic, acting_user).update!("visible", !unlisted, opts)
+          if unlisted && !topic.reload.visible? && topic.first_post
+            @restrictions << Reviewable::Restriction.new(kind: :demoted, target: topic.first_post)
+          end
 
           { status: "success", message: I18n.t("discourse_ai.ai_bot.unlist_topic.success") }
         end

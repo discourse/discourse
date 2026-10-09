@@ -56,6 +56,7 @@ class PostDestroyer
       options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
+    [post, *replies].select(&:trashed?)
   end
 
   def initialize(user, post, opts = {})

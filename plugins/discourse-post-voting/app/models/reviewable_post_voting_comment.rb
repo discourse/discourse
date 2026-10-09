@@ -109,7 +109,11 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    ignore { comment.trash!(performed_by) }
+    ignore { comment.trash!(performed_by) }.tap do |result|
+      if comment.trashed?
+        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: comment)
+      end
+    end
   end
 
   private
@@ -117,6 +121,9 @@ class ReviewablePostVotingComment < Reviewable
   def agree
     yield if block_given?
     create_result(:success, :approved) do |result|
+      if comment.trashed?
+        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: comment)
+      end
       result.update_flag_stats = { status: :agreed, user_ids: flagged_by_user_ids }
       result.recalculate_score = true
     end

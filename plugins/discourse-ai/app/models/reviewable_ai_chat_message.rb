@@ -6,6 +6,7 @@ class ReviewableAiChatMessage < Reviewable
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_delete,
+      agree_and_keep_deleted: :agree_and_keep_message,
       agree_and_silence: :agree_and_delete,
       agree_and_suspend: :agree_and_delete,
       delete_and_agree: :agree_and_delete,
@@ -110,7 +111,11 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    ignore { chat_message.trash!(performed_by) }
+    ignore { chat_message.trash!(performed_by) }.tap do |result|
+      if chat_message.trashed?
+        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: chat_message)
+      end
+    end
   end
 
   private
@@ -118,6 +123,9 @@ class ReviewableAiChatMessage < Reviewable
   def agree
     yield if block_given?
     create_result(:success, :approved) do |result|
+      if chat_message.trashed?
+        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: chat_message)
+      end
       result.update_flag_stats = { status: :agreed, user_ids: flagged_by_user_ids }
       result.recalculate_score = true
     end

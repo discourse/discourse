@@ -95,11 +95,20 @@ class ReviewableAiPost < Reviewable
   def perform_agree_and_hide(performed_by, args)
     post.hide!(reviewable_scores.first.reviewable_score_type)
 
-    agree
+    agree.tap do |result|
+      result.restrictions << Restriction.new(kind: :disabled, target: post) if post.hidden?
+    end
   end
 
   def perform_agree_and_keep(_performed_by, _args)
-    agree
+    agree.tap do |result|
+      if post.trashed? || post.hidden?
+        result.restrictions << Restriction.new(
+          kind: post.trashed? ? :removed : :disabled,
+          target: post,
+        )
+      end
+    end
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -128,31 +137,43 @@ class ReviewableAiPost < Reviewable
   def perform_delete_and_ignore(performed_by, args)
     destroyer(performed_by).destroy
 
-    perform_ignore(performed_by, args)
+    perform_ignore(performed_by, args).tap do |result|
+      result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
+    end
   end
 
   def perform_delete_and_agree(performed_by, args)
     destroyer(performed_by).destroy
 
-    agree
+    agree.tap do |result|
+      result.restrictions << Restriction.new(kind: :removed, target: post) if post.trashed?
+    end
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    deleted_posts = PostDestroyer.delete_with_replies(performed_by, post, id)
 
-    perform_ignore(performed_by, args)
+    perform_ignore(performed_by, args).tap do |result|
+      result.restrictions =
+        deleted_posts.map { |deleted_post| Restriction.new(kind: :removed, target: deleted_post) }
+    end
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    deleted_posts = PostDestroyer.delete_with_replies(performed_by, post, id)
 
-    agree
+    agree.tap do |result|
+      result.restrictions =
+        deleted_posts.map { |deleted_post| Restriction.new(kind: :removed, target: deleted_post) }
+    end
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
+    user = post.user
+    restriction = Restriction.new(kind: :terminated, target: user)
+    UserDestroyer.new(performed_by).destroy(user, delete_opts.merge(reviewable_id: id))
 
-    agree
+    agree.tap { |result| result.restrictions << restriction if user.destroyed? }
   end
 
   def perform_delete_user_block(performed_by, args)
@@ -160,9 +181,11 @@ class ReviewableAiPost < Reviewable
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
+    user = post.user
+    restriction = Restriction.new(kind: :terminated, target: user)
+    UserDestroyer.new(performed_by).destroy(user, delete_options)
 
-    agree
+    agree.tap { |result| result.restrictions << restriction if user.destroyed? }
   end
 
   private

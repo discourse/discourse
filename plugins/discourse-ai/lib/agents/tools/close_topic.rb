@@ -64,6 +64,12 @@ module DiscourseAi
           opts = {}
           opts[:message] = reason if !!parameters[:public_reason]
           TopicStatusUpdater.new(topic, acting_user).update!("closed", closed, opts)
+          if closed && topic.reload.closed? && topic.first_post
+            @restrictions << Reviewable::Restriction.new(
+              kind: :interaction_restricted,
+              target: topic.first_post,
+            )
+          end
 
           { status: "success", message: I18n.t("discourse_ai.ai_bot.close_topic.success") }
         end

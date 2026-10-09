@@ -79,9 +79,14 @@ class ReviewableUser < Reviewable
   end
 
   def perform_remove_avatar(performed_by, args)
+    avatar = target.uploaded_avatar
     target.remove_avatar!(performed_by)
 
-    create_result(:success)
+    create_result(:success) do |result|
+      if avatar && target.uploaded_avatar_id.nil?
+        result.restrictions << Restriction.new(kind: :removed, target: avatar, content_kind: :image)
+      end
+    end
   end
 
   def perform_approve_user(performed_by, args)
@@ -134,7 +139,9 @@ class ReviewableUser < Reviewable
 
   def perform_delete_user(performed_by, args)
     # We'll delete the user if we can
-    if target.present?
+    user = target
+    restriction = Restriction.new(kind: :terminated, target: user) if user
+    if user.present?
       destroyer = UserDestroyer.new(performed_by)
 
       DiscourseEvent.trigger(:suspect_user_deleted, target) if is_a_suspect_user?
@@ -171,7 +178,9 @@ class ReviewableUser < Reviewable
       end
     end
 
-    create_result(:success, :rejected)
+    create_result(:success, :rejected) do |result|
+      result.restrictions << restriction if user&.destroyed?
+    end
   end
 
   def perform_delete_user_block(performed_by, args)

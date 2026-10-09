@@ -24,6 +24,20 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
   end
 
   describe "#perform" do
+    it "records the actual deleted content" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => comment.created_at.to_date.iso8601,
+      )
+      expect(comment.reload).to be_trashed
+    end
+
     it "suspends the author and completes the deletion alias together" do
       reviewable.update!(target_created_by: comment_poster)
 

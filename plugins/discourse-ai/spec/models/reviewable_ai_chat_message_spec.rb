@@ -10,6 +10,33 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
   before { enable_current_plugin }
 
   describe "#perform" do
+    it "records the decision to keep an already deleted message removed" do
+      SiteSetting.dsa_reporting_enabled = true
+      chat_message.trash!(moderator)
+
+      reviewable.perform(moderator, :agree_and_keep_deleted)
+
+      expect(reviewable.reload).to be_approved
+      expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+      )
+    end
+
+    it "records the actual deleted content" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      reviewable.perform(moderator, :agree_and_delete)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "content_type" => ["CONTENT_TYPE_TEXT"],
+        "content_date" => chat_message.created_at.to_date.iso8601,
+        "automated_detection" => "Yes",
+      )
+      expect(chat_message.reload).to be_trashed
+    end
+
     it "suspends the author and completes the deletion alias together" do
       reviewable.update!(target_created_by: user)
 

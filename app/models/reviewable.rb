@@ -424,20 +424,38 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      edited_post = perform_edit(guardian:, params: args[:edit]) if action&.client_action == "edit"
+      edit_result = perform_edit(guardian:, params: args[:edit]) if action&.client_action == "edit"
       if %w[suspend silence].include?(action&.client_action)
-        result =
+        penalty_result =
           perform_penalty(guardian:, penalty_type: action.client_action, params: args[:penalty])
       end
-      result ||= public_send(perform_method, performed_by, args)
+      result =
+        if penalty_result && !penalty_result.success?
+          penalty_result
+        else
+          public_send(perform_method, performed_by, args)
+        end
 
       raise ActiveRecord::Rollback unless result.success?
 
-      result.updated_post = edited_post if edited_post
+      result.restrictions = penalty_result.restrictions if penalty_result
+      if edit_result
+        result.updated_post = edit_result.updated_post
+        result.restrictions = edit_result.restrictions
+      end
+      if args[:resolution_cause] == :account_deleted || args[:post_was_deleted]
+        result.restrictions.clear
+      end
+      result.decision_automation = args[:decision_automation] if args[:decision_automation]
 
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
+      if SiteSetting.dsa_reporting_enabled
+        result.automated_detection ||=
+          DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, false, self)
+        DsaStatementRecorder.record(reviewable: self, result:)
+      end
     end
 
     result.after_commit.call if result && result.after_commit
@@ -1121,6 +1139,8 @@ class Reviewable < ActiveRecord::Base
     if params.key?(:bypass_bump) && guardian.can_update_bumped_at?
       options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(params[:bypass_bump])
     end
+    restriction = Restriction.new(kind: :edited, target: post)
+    audience = Audience.new(topic) if category_changed
     revisor = PostRevisor.new(post, topic)
     revisor.revise!(guardian.user, changes, options)
     raise ActiveRecord::RecordInvalid.new(post) if post.errors.present?
@@ -1136,7 +1156,13 @@ class Reviewable < ActiveRecord::Base
       raise ActiveRecord::RecordInvalid.new(topic)
     end
 
-    post
+    create_result(:success) do |result|
+      result.updated_post = post
+      result.restrictions << restriction if revisor.reviewable_content_changed?
+      if audience&.restricted_by?(topic)
+        result.restrictions << Restriction.new(kind: :audience_restricted, target: post)
+      end
+    end
   end
 
   def perform_penalty(guardian:, penalty_type:, params:)
@@ -1151,7 +1177,10 @@ class Reviewable < ActiveRecord::Base
       )
 
     service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
-      on_success { result = nil }
+      on_success do |restrictions:|
+        result = create_result(:success)
+        result.restrictions = restrictions
+      end
       on_failed_contract { |contract| result.errors = contract.errors }
       on_model_not_found(:user) { raise Discourse::NotFound }
       on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess }

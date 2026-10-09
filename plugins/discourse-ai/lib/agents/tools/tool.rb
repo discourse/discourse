@@ -72,7 +72,7 @@ module DiscourseAi
 
         # llm being public makes it a bit easier to test
         attr_accessor :custom_raw, :parameters, :llm, :provider_data
-        attr_reader :tool_call_id, :agent_options, :bot_user, :context, :agent
+        attr_reader :tool_call_id, :agent_options, :bot_user, :context, :agent, :restrictions
 
         def initialize(
           parameters,
@@ -84,6 +84,7 @@ module DiscourseAi
           provider_data: {},
           agent: nil
         )
+          @restrictions = []
           @parameters = parameters
           @tool_call_id = tool_call_id
           @agent_options =

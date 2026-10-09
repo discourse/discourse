@@ -91,6 +91,7 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
     end
 
     it "successfully performs agree_and_hide" do
+      SiteSetting.dsa_reporting_enabled = true
       PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
 
       result =
@@ -103,6 +104,12 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
       expect(result[:status]).to eq("success")
       expect(flagged_reviewable.reload.status).to eq("approved")
       expect(post.reload.hidden).to eq(true)
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: flagged_reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        "automated_decision" => "AUTOMATED_DECISION_FULLY",
+      )
+      expect(statement.payload).not_to have_key("automated_detection")
     end
 
     it "successfully performs disagree" do

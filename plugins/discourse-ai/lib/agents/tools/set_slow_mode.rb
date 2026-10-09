@@ -74,6 +74,14 @@ module DiscourseAi
             by_user: acting_user,
           )
 
+          if topic.slow_mode_seconds.positive? && topic.first_post
+            @restrictions << Reviewable::Restriction.new(
+              kind: :interaction_restricted,
+              target: topic.first_post,
+              expires_at: enabled_until,
+            )
+          end
+
           { status: "success", message: I18n.t("discourse_ai.ai_bot.set_slow_mode.success") }
         end
 

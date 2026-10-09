@@ -161,7 +161,9 @@ class ReviewableQueuedPost < Reviewable
 
     StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
 
-    create_result(:success, :rejected)
+    create_result(:success, :rejected) do |result|
+      result.restrictions << Restriction.new(kind: :disabled, target: self)
+    end
   end
 
   def perform_revise_and_reject_post(performed_by, args)
@@ -201,11 +203,15 @@ class ReviewableQueuedPost < Reviewable
       pm_translation_args,
     )
     StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
-    create_result(:success, :rejected)
+    create_result(:success, :rejected) do |result|
+      result.restrictions << Restriction.new(kind: :disabled, target: self)
+    end
   end
 
   def perform_delete(performed_by, args)
-    create_result(:success, :deleted)
+    create_result(:success, :deleted) do |result|
+      result.restrictions << Restriction.new(kind: :disabled, target: self)
+    end
   end
 
   def perform_delete_user(performed_by, args)

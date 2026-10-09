@@ -55,6 +55,12 @@ module DiscourseAi
 
           if !!parameters[:locked]
             locker.lock
+            if post.reload.locked?
+              @restrictions << Reviewable::Restriction.new(
+                kind: :interaction_restricted,
+                target: post,
+              )
+            end
           else
             locker.unlock
           end
