@@ -67,7 +67,9 @@ class Stat
       Stat.new("steps", stat_type: :onboarding) { Statistics.onboarding_steps },
       Stat.new("panel", stat_type: :onboarding) { Statistics.onboarding_panel },
       Stat.new("minutes_to", stat_type: :onboarding) { Statistics.onboarding_minutes_to },
-      Stat.new("categories", stat_type: :category_types) { Categories::TypeRegistry.counts },
+      Stat.new("categories", stat_type: :category_types) do
+        Categories::TypeRegistry.configured_counts
+      end,
     ]
 
     if SiteSetting.display_eu_visitor_stats
