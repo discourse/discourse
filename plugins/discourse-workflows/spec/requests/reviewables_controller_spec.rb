@@ -43,6 +43,72 @@ RSpec.describe ReviewablesController do
       )
     end
 
+    it "offers successfully attributed agents and filters posts and users after an agent rename" do
+      agent = Fabricate(:ai_agent)
+      other_agent = Fabricate(:ai_agent)
+      post_reviewable.update!(payload: { "workflow_review_agent_ids" => [agent.id.to_s] })
+      user_reviewable.update!(
+        payload: {
+          "workflow_review_agent_ids" => [agent.id.to_s, other_agent.id.to_s],
+        },
+      )
+      agent.update!(name: "Renamed agent")
+
+      get "/review.json", params: { score_type: "discourse_workflows:agent:#{agent.id}" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("meta", "score_types")).to include(
+        { "id" => "discourse_workflows:agent:#{agent.id}", "name" => agent.name },
+        { "id" => "discourse_workflows:agent:#{other_agent.id}", "name" => other_agent.name },
+      )
+      expect(
+        response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+      ).to contain_exactly(post_reviewable.id, user_reviewable.id)
+
+      get "/review.json",
+          params: {
+            type: "discourse_workflows:workflow",
+            score_type: "discourse_workflows:agent:#{other_agent.id}",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] }).to eq(
+        [user_reviewable.id],
+      )
+
+      SiteSetting.enable_discourse_workflows = false
+      get "/review.json"
+
+      expect(response.parsed_body.dig("meta", "score_types")).not_to include(
+        { "id" => "discourse_workflows:agent:#{agent.id}", "name" => agent.name },
+      )
+    end
+
+    it "omits agents without successful workflow flags from Reason" do
+      agent = Fabricate(:ai_agent)
+
+      get "/review.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("meta", "score_types")).not_to include(
+        { "id" => "discourse_workflows:agent:#{agent.id}", "name" => agent.name },
+      )
+    end
+
+    it "ignores malformed agent IDs" do
+      [true, [1], { id: 1 }, 0, 1.9, "1 OR 1=1 --"].each do |agent_id|
+        get "/review.json",
+            params: {
+              additional_filters: { workflow_review_agent_id: agent_id }.to_json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+        ).to contain_exactly(post_reviewable.id, user_reviewable.id, unrelated_reviewable.id)
+      end
+    end
+
     it "filters posts and users by workflow Type" do
       get "/review.json", params: { type: "discourse_workflows:workflow" }
 
