@@ -12,6 +12,23 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
   it { is_expected.to validate_length_of(:target_type).is_at_most(100) }
 
+  it "uses the channel title in reviewable note mention notifications" do
+    SiteSetting.enable_mentions = true
+    recipient = Fabricate(:admin)
+    chat_channel.update!(name: "Reviewable mention testing")
+
+    ReviewableNote.create!(
+      reviewable: reviewable,
+      user: moderator,
+      content: "@#{recipient.username}",
+    )
+
+    notification =
+      recipient.notifications.find_by!(notification_type: Notification.types[:mentioned])
+    expect(notification.data_hash["topic_title"]).to eq(chat_channel.name)
+    expect(notification.url).to eq("/review/#{reviewable.id}")
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the message" do
     reviewable.perform(moderator, :agree_and_keep_message)
 

@@ -235,6 +235,74 @@ describe DiscourseMcp::Tools do
   end
 
   describe DiscourseMcp::Tools::ListNotifications do
+    it "hides reviewable mentions after moderator access is revoked" do
+      SiteSetting.enable_mentions = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result.fetch(:notifications).size).to eq(1)
+
+      reviewable.update!(reviewable_by_moderator: false)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result.fetch(:notifications)).to be_empty
+    end
+
+    it "lists reviewable mentions only for tokens with the moderation scope" do
+      SiteSetting.enable_mentions = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      topic_notification = Fabricate(:notification, user: moderator)
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::MODERATION_READ,
+      ).and_return(false)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      expect(result.fetch(:notifications).pluck(:id)).to contain_exactly(topic_notification.id)
+    end
+
+    it "hides mentions on private message reviewables from tokens without the private messages scope" do
+      SiteSetting.enable_mentions = true
+      private_message_reviewable, trashed_private_message_reviewable =
+        Array.new(2) do
+          private_message_post = Fabricate(:private_message_post)
+          Fabricate(
+            :reviewable_flagged_post,
+            target: private_message_post,
+            topic: private_message_post.topic,
+          )
+        end
+      trashed_private_message_reviewable.topic.trash!
+      topic_reviewable = Fabricate(:reviewable_flagged_post)
+      other_admin = Fabricate(:admin)
+      [
+        private_message_reviewable,
+        trashed_private_message_reviewable,
+        topic_reviewable,
+      ].each do |reviewable|
+        ReviewableNote.create!(reviewable:, user: admin, content: "@#{other_admin.username}")
+      end
+      context = request_context(other_admin)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(false)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      expect(
+        result.fetch(:notifications).map { |notification| notification[:data][:reviewable_id] },
+      ).to contain_exactly(topic_reviewable.id)
+    end
+
     it "lists only the caller's notifications from visible topics" do
       visible_notification = Fabricate(:notification, user:)
       Fabricate(:notification, user: other_user)

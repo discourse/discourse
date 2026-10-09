@@ -420,11 +420,11 @@ module DiscourseWorkflows
         }.compact
 
         if ActiveModel::Type::Boolean.new.cast(whisper)
-          unless guardian.can_create_whisper?
-            raise Discourse::InvalidAccess.new(
-                    "invalid_whisper_access",
-                    nil,
-                    custom_message: "invalid_whisper_access",
+          if !guardian.can_create_whisper?
+            raise DiscourseWorkflows::NodeError,
+                  I18n.t(
+                    "discourse_workflows.errors.post.whisper_not_allowed",
+                    username: guardian.user.username,
                   )
           end
 

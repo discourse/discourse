@@ -90,6 +90,29 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
       expect(note.content).to eq("AI determined this violates policy")
     end
 
+    it "returns the note validation error without performing the action" do
+      SiteSetting.max_mentions_per_post = 1
+      agent_bot_user = Fabricate(:bot, trust_level: TrustLevel[4])
+      ctx = DiscourseAi::Agents::BotContext.new(user: admin)
+
+      result =
+        described_class.new(
+          {
+            reviewable_id: flagged_reviewable.id,
+            action_id: "agree_and_keep",
+            reason: "Reported by @alice and @bob",
+          },
+          bot_user: agent_bot_user,
+          llm: llm,
+          context: ctx,
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to eq(I18n.t("too_many_mentions", count: 1))
+      expect(flagged_reviewable.reload.status).to eq("pending")
+      expect(flagged_reviewable.reviewable_notes).to be_empty
+    end
+
     it "successfully performs agree_and_hide" do
       PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
 

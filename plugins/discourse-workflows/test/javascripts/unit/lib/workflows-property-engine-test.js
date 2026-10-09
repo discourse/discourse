@@ -20,6 +20,7 @@ import {
   propertyOptionLabel,
   propertyPlaceholder,
   propertySelectNoneKey,
+  pruneModeHiddenFields,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/property-engine";
 
 module("Unit | Utility | workflows property engine", function () {
@@ -31,6 +32,39 @@ module("Unit | Utility | workflows property engine", function () {
     identifier: "action:data_table",
     ui: { i18n_scope: "data_table_node" },
   };
+
+  test("pruneModeHiddenFields drops fields hidden by the current mode only", function (assert) {
+    const schema = {
+      resume: { type: "options" },
+      wait_amount: { display_options: { show: { resume: ["time_interval"] } } },
+      webhook_suffix: { display_options: { show: { resume: ["webhook"] } } },
+      channel_name: { ui: { hidden: true } },
+      notes: {},
+    };
+    const configuration = {
+      resume: "time_interval",
+      wait_amount: 2,
+      webhook_suffix: "abc",
+      channel_name: "Staff",
+      notes: "",
+      alwaysOutputData: false,
+    };
+
+    assert.deepEqual(pruneModeHiddenFields(schema, configuration), {
+      resume: "time_interval",
+      wait_amount: 2,
+      channel_name: "Staff",
+      notes: "",
+      alwaysOutputData: false,
+    });
+    assert.deepEqual(
+      pruneModeHiddenFields(schema, {
+        ...configuration,
+        resume: "={{ $json.mode }}",
+      }),
+      { ...configuration, resume: "={{ $json.mode }}" }
+    );
+  });
 
   test("derives the translation scope from the node identifier", function (assert) {
     assert.strictEqual(i18nScope("action:topic"), "topic");

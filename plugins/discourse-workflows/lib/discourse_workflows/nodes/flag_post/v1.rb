@@ -131,6 +131,8 @@ module DiscourseWorkflows
               )
             end
 
+          DiscourseWorkflows.record_review_agent(reviewable, exec_ctx, item_index:)
+
           output(post, flag_type, reviewable)
         end
 

@@ -122,6 +122,7 @@ module DiscourseWorkflows
           context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
           score_added = add_review_score(reviewable, actor, context)
           add_provenance_note(exec_ctx, reviewable, actor, config["reason"], item_index)
+          DiscourseWorkflows.record_review_agent(reviewable, exec_ctx, item_index:)
 
           output(
             user,

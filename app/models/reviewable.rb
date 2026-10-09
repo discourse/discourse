@@ -150,6 +150,14 @@ class Reviewable < ActiveRecord::Base
     self.type_source = Reviewable.source_for(type)
   end
 
+  def title_for_notification(user)
+    topic&.title.presence || payload&.dig("title").presence ||
+      I18n.t(
+        topic_id ? "js.review.topics.deleted" : "js.review.title",
+        locale: user.effective_locale,
+      )
+  end
+
   def created_new!
     self.created_new = true
     self.topic = target.topic if topic.blank? && target.is_a?(Post)

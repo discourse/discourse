@@ -57,6 +57,11 @@ class NotificationsController < ApplicationController
 
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.filter_inaccessible_reviewable_notifications(
+          current_user.guardian,
+          notifications,
+        )
       notifications = Notification.filter_disabled_badge_notifications(notifications)
 
       notifications = Notification.populate_acting_user(notifications)
@@ -89,6 +94,11 @@ class NotificationsController < ApplicationController
       notifications = notifications.offset(offset).limit(limit)
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.filter_inaccessible_reviewable_notifications(
+          current_user.guardian,
+          notifications,
+        )
       notifications = Notification.filter_disabled_badge_notifications(notifications)
 
       notifications = Notification.populate_acting_user(notifications)
