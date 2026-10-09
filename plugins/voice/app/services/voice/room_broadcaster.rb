@@ -32,25 +32,37 @@ module Voice
       )
     end
 
+    # Each entry carries the sender's own publish entitlements: mesh peers
+    # exchange media directly, so a receiver decides whether to play a video
+    # or screen-audio track from this, not from its own rights. Every roster
+    # a client can seed from goes through here so none of them lacks them.
+    def self.participant_entries(room, users, guardian:, metadata:)
+      entitlements = Voice::MediaEntitlements.for_users(room, users)
+
+      users.map do |user|
+        BasicUserSerializer
+          .new(user, scope: guardian, root: false)
+          .as_json
+          .merge(metadata[user.id] || {})
+          .merge(entitlements[user.id] || Voice::MediaEntitlements::NONE)
+      end
+    end
+
     def initialize(room)
       @room = room
     end
 
     def publish_participants(fingerprint: nil)
-      guardian = Guardian.new(nil)
-      all_metadata = Voice::ParticipantTracker.get_all_metadata(room.id)
       payload = {
         type: "participants",
         room_id: room.id,
         participants:
-          Voice::ParticipantTracker
-            .list(room.id)
-            .map do |user|
-              BasicUserSerializer
-                .new(user, scope: guardian, root: false)
-                .as_json
-                .merge(all_metadata[user.id] || {})
-            end,
+          self.class.participant_entries(
+            room,
+            Voice::ParticipantTracker.list(room.id),
+            guardian: Guardian.new(nil),
+            metadata: Voice::ParticipantTracker.get_all_metadata(room.id),
+          ),
       }
 
       MessageBus.publish(Voice.room_channel(room.id), payload, **room_message_bus_targets)

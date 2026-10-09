@@ -35,6 +35,11 @@ export async function generateCookFunction(options) {
   return await withEngine("generateCookFunction", options);
 }
 
+/**
+ * Loads the markdown engine and returns its link matcher for `options`.
+ *
+ * @returns {Promise<import("discourse/lib/link-matcher").LinkMatcher>}
+ */
 export async function generateLinkifyFunction(options) {
   return await withEngine("generateLinkifyFunction", options);
 }

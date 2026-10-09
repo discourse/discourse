@@ -48,6 +48,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       expect(output[:post][:username]).to eq(user.username)
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:topic][:title]).to eq(topic.title)
+      expect(output[:topic][:url]).to eq(topic.url)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)

@@ -53,7 +53,6 @@ module DiscourseAi
         quota_params.each { |quota| llm_model.llm_quotas.build(quota) } if quota_params
 
         if llm_model.save
-          llm_model.toggle_companion_user
           log_llm_model_creation(llm_model)
           render json: LlmModelSerializer.new(llm_model), status: :created
         else
@@ -100,7 +99,6 @@ module DiscourseAi
         end
 
         if llm_model.update(ai_llm_params(updating: llm_model))
-          llm_model.toggle_companion_user
           log_llm_model_update(llm_model, initial_attributes, initial_quotas)
           render json: LlmModelSerializer.new(llm_model)
         else
@@ -139,9 +137,6 @@ module DiscourseAi
           name: llm_model.name,
           provider: llm_model.provider,
         }
-
-        # Clean up companion users
-        llm_model.cleanup_companion_user
 
         if llm_model.destroy
           log_llm_model_deletion(model_details)

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
   fab!(:category)
@@ -37,6 +37,56 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
       expect(badge["data-id"]).to eq(subcategory.id.to_s)
       expect(badge["href"]).to eq(subcategory.url)
       expect(badge.text).to include(subcategory.name)
+    end
+  end
+
+  describe "#approval_details" do
+    it "shows the current and proposed values without applying the changes" do
+      category.update!(name: "Storm", description: "Old description")
+      category_tool =
+        tool(
+          category_id: category.id,
+          name: "Wind & Rain",
+          description: "<script>alert('test')</script>",
+          reason: "Rebranding",
+        )
+
+      cooked =
+        Nokogiri::HTML5.fragment(
+          Chat::Message.cook(category_tool.approval_details, user_id: admin.id),
+        )
+
+      expect(category_tool.summary).to eq("Edit category name and description")
+
+      expect(cooked.css("code").map(&:text)).to eq(
+        [
+          "name",
+          "Storm",
+          "Wind & Rain",
+          "description",
+          "Old description",
+          "<script>alert('test')</script>",
+        ],
+      )
+      expect(cooked.css("script")).to be_empty
+      expect(category_tool.approval_changes).to eq(
+        [
+          { label: "Changing name:", before: "Storm", after: "Wind & Rain" },
+          {
+            label: "Changing description:",
+            before: "Old description",
+            after: "<script>alert('test')</script>",
+          },
+        ],
+      )
+      expect(category_tool.approval_question).to eq("Do you want to make this change?")
+      expect(category.reload.name).to eq("Storm")
+
+      question =
+        Nokogiri::HTML5.fragment(
+          Chat::Message.cook(category_tool.approval_title, user_id: admin.id),
+        )
+      expect(question.at_css("a.hashtag-cooked")["data-id"]).to eq(category.id.to_s)
     end
   end
 
@@ -129,6 +179,46 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
 
     expect(result[:status]).to eq("error")
     expect(result[:error]).to include("At least one")
+  end
+
+  it "does not queue a category edit when the requested values are already applied" do
+    category_tool = tool(category_id: category.id, name: category.name, reason: "Repeat request")
+
+    expect(category_tool.validation_error).to include(status: "error")
+    expect(category_tool.approval_details).to be_empty
+  end
+
+  it "does not queue a description edit that only repeats stored HTML as Markdown" do
+    category.update_columns(description: "<p>Same description.</p>")
+    category_tool =
+      tool(category_id: category.id, description: "Same description.", reason: "Repeat request")
+
+    expect(category_tool.validation_error).to include(status: "error")
+    expect(category_tool.approval_details).to be_empty
+  end
+
+  it "previews the description's Markdown source rather than its cooked HTML" do
+    category_with_topic = Fabricate(:category_with_definition)
+    category_with_topic.update!(description: "Old **description**")
+    expect(category_with_topic.reload.description).to include("Old <strong>description</strong>")
+
+    category_tool =
+      tool(
+        category_id: category_with_topic.id,
+        description: "New description",
+        reason: "Rebranding",
+      )
+    expect(category_tool.approval_changes).to eq(
+      [{ label: "Changing description:", before: "Old **description**", after: "New description" }],
+    )
+
+    repeat_tool =
+      tool(
+        category_id: category_with_topic.id,
+        description: "Old **description**",
+        reason: "Repeat request",
+      )
+    expect(repeat_tool.validation_error).to include(status: "error")
   end
 
   it "returns an error when reason is blank" do

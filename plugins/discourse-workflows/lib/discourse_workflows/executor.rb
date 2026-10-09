@@ -45,7 +45,7 @@ module DiscourseWorkflows
           workflow: @workflow,
           trigger_data: @trigger_data,
           user: @options.user,
-          workflow_nodes: workflow_nodes,
+          workflow_nodes:,
           workflow_name: workflow_version&.name,
           workflow_call_caller: @options.workflow_call_caller,
         )
@@ -57,12 +57,7 @@ module DiscourseWorkflows
           options: @options,
         )
       @steps = []
-      @queue = []
-      @queue_index = 0
-      @waiting_inputs = {}
-      @waiting_input_sources = {}
-      @waiting_input_targets = {}
-      @input_wait_requirements = {}
+      reset_queue!
       @sandbox = nil
       @waiting_node = nil
       @waiting_step = nil
@@ -71,27 +66,27 @@ module DiscourseWorkflows
     end
 
     def self.resume(execution, response_items, user: nil, webhook_context: nil)
-      build_resume_executor(execution, user: user, webhook_context: webhook_context).resume_from(
+      build_resume_executor(execution, user:, webhook_context:).resume_from(
         execution,
         response_items,
       )
     end
 
     def self.resume_with_error(execution, error, user: nil)
-      build_resume_executor(execution, user: user).resume_from_error(execution, error)
+      build_resume_executor(execution, user:).resume_from_error(execution, error)
     end
 
     def self.build_resume_executor(execution, user:, webhook_context: nil)
       workflow_call_caller = WorkflowCallContinuation.caller_metadata_for(execution)
       options =
         ExecutionOptions.new(
-          user: user,
+          user:,
           execution_mode: execution.execution_mode.to_sym,
           workflow_snapshot: build_resume_snapshot!(execution),
-          webhook_context: webhook_context,
+          webhook_context:,
           workflow_call_stack: WorkflowCallContinuation.workflow_call_stack_for(execution),
           workflow_call_child: workflow_call_caller.present?,
-          workflow_call_caller: workflow_call_caller,
+          workflow_call_caller:,
         )
       new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
     end
@@ -120,11 +115,7 @@ module DiscourseWorkflows
     private_class_method :build_resume_snapshot!
 
     def run
-      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
-               @options.workflow_snapshot
-        return @store.create_execution_with_status(:skipped)
-      end
-      return @store.create_rate_limited_execution unless rate_limiter.within_limits?
+      return execution if @store.find_job_execution
 
       execute_flow(:start_execution!) do
         next prepare_step_flow! if step_mode?
@@ -170,10 +161,10 @@ module DiscourseWorkflows
         if (handled_outputs = continued_error_outputs(waiting_node, input_groups, error))
           handled_outputs = enforce_node_output_budget(handled_outputs, nil)
           all_items = handled_outputs.flatten(1)
-          step&.add_metadata("handled_error", error_metadata(error))
+          step&.add_metadata("handled_error", Item.error_metadata(error))
           step&.succeed!(output: all_items)
           step&.apply_updates!("error" => nil)
-          @store.publish_progress(step: step) if step
+          @store.publish_progress(step:) if step
           @context.store_node_output(waiting_node, all_items)
           @context.store_node_run(
             waiting_node,
@@ -185,7 +176,7 @@ module DiscourseWorkflows
           route_downstream(waiting_node, handled_outputs)
         else
           step&.fail!(error.message)
-          @store.publish_progress(step: step) if step
+          @store.publish_progress(step:) if step
           raise error
         end
       end
@@ -223,7 +214,7 @@ module DiscourseWorkflows
       step = record_step(node, [])
       step.succeed!(output: output_groups.flatten(1))
       step.add_metadata("cached", true)
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       route_downstream(node, output_groups)
     end
 
@@ -250,14 +241,21 @@ module DiscourseWorkflows
       stack.last == workflow_id ? stack : stack + [workflow_id]
     end
 
-    def execute_flow(setup_method, *setup_args, &block)
-      send(setup_method, *setup_args)
-      yield
-      process_queue
-      @store.finish!(steps: @steps)
-    rescue ExecutionPaused => e
-      begin_wait!(e.wait_request)
+    def execute_flow(setup_method, *setup_args)
+      begin
+        return execution if send(setup_method, *setup_args) == false
+        yield
+        process_queue
+        @store.finish!(steps: @steps)
+      rescue ExecutionPaused => e
+        begin_wait!(e.wait_request)
+      end
+    rescue Sidekiq::Shutdown => e
+      @store.fail!(error: e, steps: @steps) if @store.owns_execution?
+      raise
     rescue => e
+      raise unless @store.owns_execution?
+
       @store.fail!(error: e, steps: @steps)
     ensure
       commit_static_data!
@@ -382,6 +380,7 @@ module DiscourseWorkflows
         ports = node_type_class.ports(node.parameters)
         output_arrays = normalize_result(result, node, ports, input_groups)
         output_arrays = apply_always_output_data(output_arrays, node, input_groups)
+        output_arrays = route_failed_items(output_arrays, node, ports)
         output_arrays = enforce_node_output_budget(output_arrays, step_log)
         attach_step_log(step, step_log)
         all_items = output_arrays.flatten(1)
@@ -399,16 +398,20 @@ module DiscourseWorkflows
           inputs: input_groups_for_storage(input_groups),
           outputs: output_arrays,
           input_sources: input_sources_for_storage(input_sources, input_groups),
+          metadata: runtime_state.metadata,
         )
         route_downstream(node, output_arrays)
       rescue ExecutionPaused
+        raise
+      rescue Sidekiq::Shutdown => e
+        step.fail!(e.message)
         raise
       rescue => e
         if (handled_outputs = continued_error_outputs(node, input_groups, e))
           step_log = collect_step_log(exec_ctx, resolver)
           handled_outputs = enforce_node_output_budget(handled_outputs, step_log)
           attach_step_log(step, step_log)
-          step.add_metadata("handled_error", error_metadata(e))
+          step.add_metadata("handled_error", Item.error_metadata(e))
           all_items = handled_outputs.flatten(1)
           step.succeed!(output: all_items)
           step.apply_updates!("error" => nil)
@@ -434,7 +437,7 @@ module DiscourseWorkflows
         js_elapsed = (sandbox_budget_tracker.current_elapsed_ms - js_elapsed_before).round(1)
         step.add_metadata("js_elapsed_ms", js_elapsed) if js_elapsed > 0
         runtime_state.step_metadata.each { |key, value| step.add_metadata(key, value) }
-        @store.publish_progress(step: step)
+        @store.publish_progress(step:)
       end
     end
 
@@ -458,7 +461,7 @@ module DiscourseWorkflows
 
       step.add_metadata(
         DiscourseWorkflows::FormCompletion::METADATA_KEY,
-        DiscourseWorkflows::FormCompletion.for_node(node, resolver: resolver),
+        DiscourseWorkflows::FormCompletion.for_node(node, resolver:),
       )
     end
 
@@ -477,8 +480,8 @@ module DiscourseWorkflows
           "in workflow #{@context.workflow.id}, passing through node '#{node.name}'",
       )
       step = record_step(node, input_items)
-      step.skip!(output: input_items, reason: reason)
-      @store.publish_progress(step: step)
+      step.skip!(output: input_items, reason:)
+      @store.publish_progress(step:)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -487,8 +490,8 @@ module DiscourseWorkflows
     def handle_node_issues(node, input_items, issues)
       reason = issues.map { |i| "#{i[:path]}: #{i[:message]}" }.join(", ")
       step = record_step(node, input_items)
-      step.skip!(output: input_items, reason: reason)
-      @store.publish_progress(step: step)
+      step.skip!(output: input_items, reason:)
+      @store.publish_progress(step:)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -498,7 +501,7 @@ module DiscourseWorkflows
       step = record_step(node, input_items)
       step.succeed!(output: pinned_items)
       step.add_metadata("pinned", true)
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       @context.store_node_output(node, pinned_items)
       @context.store_node_run(
         node,
@@ -555,16 +558,16 @@ module DiscourseWorkflows
     )
       NodeExecutionContext.new(
         input_items: primary_input_items(input_groups),
-        input_groups: input_groups,
+        input_groups:,
         parameters: node.parameters,
         credentials: node.credentials,
         node_settings: DiscourseWorkflows::NodeData.direct_settings(node),
         webhook_id: node.webhook_id,
         property_schema: node_type_class.property_schema,
         credential_schema: node_type_class.credentials,
-        node_context: node_context,
+        node_context:,
         user: @options.user,
-        resolver: resolver,
+        resolver:,
         vars: preloaded_vars,
         workflow: @workflow,
         workflow_version: @options.workflow_version,
@@ -580,17 +583,17 @@ module DiscourseWorkflows
         workflow_snapshot: @snapshot,
         webhook_context: @options.webhook_context,
         workflow_call_stack: @workflow_call_stack,
-        runtime_state: runtime_state,
+        runtime_state:,
         static_data_state: @context.static_data_state,
       )
     end
 
     def normalize_result(result, node, ports, input_groups)
       source = "#{node.name} (#{node.type})"
-      ItemContract.validate_output_arrays!(result, source: source, ports: ports)
+      ItemContract.validate_output_arrays!(result, source:, ports:)
 
       apply_item_linking_defaults!(result, input_groups:)
-      ItemContract.validate_output_arrays!(result, source: source, ports: ports)
+      ItemContract.validate_output_arrays!(result, source:, ports:)
       result
     end
 
@@ -660,11 +663,10 @@ module DiscourseWorkflows
     end
 
     def sole_input_pair(input_groups)
-      pairs =
-        input_groups.flat_map do |input_index, items|
-          items.each_index.map { |item_index| pair_for(input: input_index, item: item_index) }
-        end
-      pairs.one? ? pairs.first : nil
+      return unless input_groups.sum { |_input_index, items| items.size } == 1
+
+      input_index = input_groups.find { |_input_index, items| items.one? }.first
+      pair_for(input: input_index, item: 0)
     end
 
     def pair_for(input:, item:, include_input: false)
@@ -705,9 +707,28 @@ module DiscourseWorkflows
       end
     end
 
+    def route_failed_items(output_arrays, node, ports)
+      if output_arrays.none? { |items| items.any? { |item| failed_item?(item) } }
+        return output_arrays
+      end
+
+      if ports.one? && node_error_mode(node) == "continueErrorOutput"
+        failed, succeeded = output_arrays[0].partition { |item| failed_item?(item) }
+        return succeeded, failed.map { |item| item.except(Item::FAILED_KEY) }
+      end
+
+      output_arrays.map do |items|
+        items.map { |item| failed_item?(item) ? item.except(Item::FAILED_KEY) : item }
+      end
+    end
+
+    def failed_item?(item)
+      item.key?(Item::FAILED_KEY)
+    end
+
     def node_error_mode(node)
       on_error = DiscourseWorkflows::NodeData.read(node, "onError").presence
-      return on_error if %w[continueRegularOutput continueErrorOutput].include?(on_error)
+      return on_error if NodeDataShape::CONTINUE_ON_ERROR_MODES.include?(on_error)
       return "stopWorkflow" if on_error == "stopWorkflow"
       return if on_error.present?
 
@@ -719,16 +740,11 @@ module DiscourseWorkflows
     end
 
     def error_output_items(input_items, error)
-      metadata = error_metadata(error)
-      return [{ "json" => {}, "error" => metadata }] if input_items.empty?
+      return [Item.with_error({ "json" => {} }, error, paired_item: nil)] if input_items.empty?
 
       input_items.map.with_index do |item, index|
-        item.deep_dup.merge("error" => metadata, "pairedItem" => pair_for(input: 0, item: index))
+        Item.with_error(item, error, paired_item: pair_for(input: 0, item: index))
       end
-    end
-
-    def error_metadata(error)
-      { "message" => error.message, "name" => error.class.name }
     end
 
     def route_downstream(node, output_arrays)
@@ -856,20 +872,14 @@ module DiscourseWorkflows
 
         if explicit_required_inputs.is_a?(Integer)
           {
-            connected_inputs: connected_inputs,
+            connected_inputs:,
             inputs_to_wait_for: [],
             minimum_input_count: explicit_required_inputs,
           }
         elsif explicit_required_inputs.present?
-          {
-            connected_inputs: connected_inputs,
-            inputs_to_wait_for: Array(explicit_required_inputs).map(&:to_i),
-          }
+          { connected_inputs:, inputs_to_wait_for: Array(explicit_required_inputs).map(&:to_i) }
         else
-          {
-            connected_inputs: connected_inputs,
-            inputs_to_wait_for: (required_inputs + connected_inputs).uniq,
-          }
+          { connected_inputs:, inputs_to_wait_for: (required_inputs + connected_inputs).uniq }
         end
       end
     end
@@ -899,17 +909,9 @@ module DiscourseWorkflows
     end
 
     def record_step(node, input_items, output: [], status: Step::RUNNING, error: nil)
-      step =
-        Step.build(
-          node: node,
-          position: @steps.size,
-          input: input_items,
-          output: output,
-          status: status,
-          error: error,
-        )
+      step = Step.build(node:, position: @steps.size, input: input_items, output:, status:, error:)
       @steps << step
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       step
     end
 
@@ -927,7 +929,7 @@ module DiscourseWorkflows
         "output" => response_items,
         "finished_at" => Time.current.iso8601,
       )
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
     end
 
     def begin_wait!(wait_request)
@@ -938,8 +940,6 @@ module DiscourseWorkflows
       else
         begin_timed_wait!(wait_request.waiting_until, timeout_action: wait_request.timeout_action)
       end
-    rescue => e
-      @store.fail!(error: e, steps: @steps)
     end
 
     def store_pending_wait_state!
@@ -960,7 +960,7 @@ module DiscourseWorkflows
         @store.pause_waiting_execution!(
           node: @waiting_node,
           waiting_until: resolved,
-          timeout_action: timeout_action,
+          timeout_action:,
           steps: @steps,
         )
 
@@ -968,6 +968,7 @@ module DiscourseWorkflows
         [resolved - now, 0].max,
         Jobs::DiscourseWorkflows::ResumeWaitingExecution,
         execution_id: @store.execution.id,
+        resume_token: execution.resume_token,
       )
       execution
     end
@@ -976,7 +977,7 @@ module DiscourseWorkflows
       execution = @store.pause_waiting_execution!(node: @waiting_node, steps: @steps)
 
       DiscourseWorkflows::WorkflowCallContinuation.begin_child_call!(
-        execution: execution,
+        execution:,
         node: @waiting_node,
         request: wait_request,
       )
@@ -984,29 +985,54 @@ module DiscourseWorkflows
     end
 
     def start_execution!
-      @store.start!
+      started =
+        if @options.job_id.present?
+          DistributedMutex.synchronize("discourse_workflows_job_#{@options.job_id}") do
+            create_execution!
+          end
+        else
+          create_execution!
+        end
+      return false unless started
+
       @snapshot = @store.workflow_snapshot
       @steps = []
-      @queue = []
-      @queue_index = 0
-      @waiting_inputs = {}
-      @waiting_input_sources = {}
-      @waiting_input_targets = {}
-      @input_wait_requirements = {}
+      reset_queue!
+    end
+
+    def create_execution!
+      return false if @store.find_job_execution
+
+      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
+               @options.workflow_snapshot
+        @store.create_execution_with_status(:skipped)
+        return false
+      end
+
+      if (rate_limit_message = rate_limiter.exceeded_limit_message)
+        @store.create_rate_limited_execution(error: rate_limit_message)
+        return false
+      end
+
+      @store.start!
     end
 
     def resume_execution!(execution)
       @store.resume!(execution)
       @snapshot = @store.workflow_snapshot
       @steps = restore_steps_from(execution)
+      reset_queue!
+      restore_pending_queue!
+      restore_pending_input_groups!
+    end
+
+    def reset_queue!
       @queue = []
       @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
-      restore_pending_queue!
-      restore_pending_input_groups!
     end
 
     def clear_waiting!
@@ -1116,11 +1142,7 @@ module DiscourseWorkflows
     def node_dependencies(node)
       parameters = NodeData.parameters(node)
       credentials =
-        NodeData.split(
-          parameters: parameters,
-          credentials: NodeData.credentials(node),
-          node_type: node.type,
-        )[
+        NodeData.split(parameters:, credentials: NodeData.credentials(node), node_type: node.type)[
           "credentials"
         ]
       dependencies = []

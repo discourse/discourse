@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
@@ -119,7 +120,7 @@ type NodeViewComponent = ComponentLike<{
     dom: HTMLElement;
     contentDOM?: HTMLElement;
     pluginParams: PluginParams;
-    options: Record<string, unknown>;
+    options?: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -153,7 +154,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
-  view: EditorView;
+  declare view: EditorView;
   declare parser: Parser;
   declare serializer: Serializer;
   declare textManipulation: TextManipulation;
@@ -311,8 +312,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         paste: (view, event) => {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
+          const { clipboardData } = event;
+          assert("A paste event carries clipboard data", clipboardData);
           if (
-            event.clipboardData.files.length > 0 &&
+            clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -330,9 +333,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
             return;
           }
 
-          if (
-            [...event.dataTransfer.items].some((item) => item.kind === "file")
-          ) {
+          const { dataTransfer } = event;
+          assert("A drop event carries a data transfer", dataTransfer);
+          if ([...dataTransfer.items].some((item) => item.kind === "file")) {
             // Skip processing the drop event (e.g. Safari cross-window content drag),
             // Uppy's DropTarget should handle that instead.
             return true;
@@ -348,7 +351,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       },
     });
 
-    this.textManipulation = new TextManipulation(getOwner(this), {
+    this.textManipulation = new TextManipulation(getOwner(this)!, {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,

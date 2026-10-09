@@ -18,6 +18,11 @@ module MarkdownEndpoint
       raise Discourse::NotFound if single_post? && posts.empty?
 
       buffer = String.new(header(posts.length))
+      unless single_post?
+        DiscoursePluginRegistry
+          .apply_modifier(:markdown_topic_header_sections, [], @topic_view, @guardian)
+          .each { |section| buffer << "\n\n" << section }
+      end
       posts.each_with_index do |post, index|
         buffer << (index.zero? ? "\n\n" : "\n\n---\n\n")
         buffer << render_post(post)

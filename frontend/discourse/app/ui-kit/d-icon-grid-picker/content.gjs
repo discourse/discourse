@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -94,6 +95,8 @@ export default class DIconGridPickerContent extends Component {
 
   @tracked hasMore = false;
   @tracked loadingMore = false;
+
+  /** @type {HTMLElement | null} */
   @tracked gridWrapper = null;
 
   registerGridWrapper = modifier((/** @type {HTMLElement} */ element) => {
@@ -367,7 +370,7 @@ export default class DIconGridPickerContent extends Component {
    * Loads the first page of icons. Used as the `@asyncData` callback for the
    * `AsyncContent` loader, which debounces it and aborts superseded searches.
    *
-   * @param {string} _filter - Tracked by `@context`; read from `this.filter`.
+   * @param {unknown} _filter - Tracked by `@context`; read from `this.filter`.
    * @param {{signal: AbortSignal}} options
    * @returns {Promise<Array<{id: string, symbol?: string}>>} The first page.
    */
@@ -403,7 +406,10 @@ export default class DIconGridPickerContent extends Component {
         return;
       }
 
-      this.icons = [...this.icons, ...icons];
+      // `hasMore` is only set together with the first page, so it is loaded here.
+      const loaded = this.icons;
+      assert("More icons load only after the first page", loaded);
+      this.icons = [...loaded, ...icons];
       this.hasMore = hasMore;
       this.#page++;
     } catch (error) {
@@ -423,13 +429,17 @@ export default class DIconGridPickerContent extends Component {
    * scroll into, and moves focus onto the first icon that arrives.
    */
   async loadMoreAndFocus() {
-    const next = this.icons.length;
+    const loadedIcons = this.icons;
+    assert("The keyboard pages a grid that has loaded", loadedIcons);
+    const next = loadedIcons.length;
     await this.loadMore();
 
     schedule("afterRender", () => {
+      const icons = this.icons;
+      assert("The keyboard pages a grid that has loaded", icons);
       /** @type {HTMLElement | undefined} */ (
         this.gridWrapper?.querySelector(
-          `.d-icon-grid-picker__grid [data-icon-id="${this.icons[next]?.id}"]`
+          `.d-icon-grid-picker__grid [data-icon-id="${icons[next]?.id}"]`
         )
       )?.focus();
     });

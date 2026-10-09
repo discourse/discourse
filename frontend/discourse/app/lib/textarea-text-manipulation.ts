@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
@@ -22,6 +23,7 @@ import type {
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import type { LinkMatcher } from "discourse/lib/link-matcher";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -63,18 +65,6 @@ interface InsertAtOptions {
 interface PlaceholderData {
   uploadPlaceholder: string;
   processingPlaceholder?: string;
-}
-
-interface LinkifyMatch {
-  index: number;
-  lastIndex: number;
-  raw: string;
-  url: string;
-}
-
-interface Linkify {
-  test(text: string): boolean;
-  match(text: string): LinkifyMatch[] | null;
 }
 
 const INDENT_DIRECTION_LEFT = "left";
@@ -127,7 +117,7 @@ export default class TextareaTextManipulation implements TextManipulation {
 
   state = trackedObject<ToolbarState & Record<string, unknown>>({});
 
-  _cachedLinkify?: Linkify;
+  _cachedLinkify?: LinkMatcher;
 
   constructor(
     owner: Owner,
@@ -172,6 +162,18 @@ export default class TextareaTextManipulation implements TextManipulation {
   insertText(text: string, options?: AddTextOptions): void {
     this.addText(this.getSelected(), text, options);
   }
+
+  /** Returns the current selection, including its line's text. */
+  getSelected(
+    trimLeading: boolean | null | "" | undefined,
+    opts: SelectionOptions & { lineVal: true }
+  ): SelectedText & { lineVal: string };
+
+  /** Returns the current selection. */
+  getSelected(
+    trimLeading?: boolean | null | "",
+    opts?: SelectionOptions
+  ): SelectedText;
 
   getSelected(
     trimLeading?: boolean | null | "",
@@ -504,7 +506,9 @@ export default class TextareaTextManipulation implements TextManipulation {
       !selectedValue.match(/\[\/?[a-z =]+?\]/g)
     ) {
       if (this._cachedLinkify.test(plainText)) {
-        const match = this._cachedLinkify.match(plainText)[0];
+        const matches = this._cachedLinkify.match(plainText);
+        assert("linkify matched text it just tested positive", matches);
+        const match = matches[0];
         if (
           match &&
           match.index === 0 &&
@@ -740,7 +744,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     const selected = this.getSelected();
     const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
-    if (isEmpty(captures)) {
+    if (!captures) {
       if (selected.pre.match(/\S$/)) {
         this.addText(selected, ` :${code}:`);
       } else {
@@ -1012,7 +1016,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
 
     const modifier = dAutocomplete.setupAutocomplete(
-      getOwner(this),
+      getOwner(this)!,
       this.textarea,
       this.autocompleteHandler,
       options
@@ -1334,6 +1338,13 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
   progressComplete(file: UppyFile): void {
     const placeholderData = this.#placeholders[file.id]!;
+
+    // A preprocessor can complete a file without reporting progress for it, in
+    // which case no processing placeholder was ever shown.
+    if (placeholderData.processingPlaceholder === undefined) {
+      return;
+    }
+
     this.textManipulation.replaceText(
       placeholderData.processingPlaceholder,
       placeholderData.uploadPlaceholder

@@ -1578,7 +1578,9 @@ class TopicsController < ApplicationController
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
-        store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        if set_layout == "application"
+          store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        end
         render :show
       end
 

@@ -89,6 +89,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.welcome_user
         test_mailer
         unsubscribe_mailer
+        user_notifications.account_associated
         user_notifications.account_created
         user_notifications.account_deleted
         user_notifications.account_exists

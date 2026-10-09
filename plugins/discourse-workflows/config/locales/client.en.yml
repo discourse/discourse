@@ -102,7 +102,12 @@ en:
       title: "Workflows"
       templates:
         title: "Templates"
-        description: "Start with a pre-built workflow template"
+        requires_plugin: "Requires the %{plugin} to be enabled"
+        plugin_link: "%{plugin} plugin"
+        missing_node: "Requires the %{node_type} node, which is not installed"
+        use_template: "Use template"
+        filter: "Filter by name or description"
+        no_results: "No templates match your filter"
       new_workflow: "New workflow"
       default_workflow_name: "My workflow"
       delete: "Delete"
@@ -201,6 +206,8 @@ en:
         description_placeholder: "Add a note about this step..."
         always_output_data: "Always output data"
         always_output_data_help: "If on, this node emits an empty item when it would otherwise produce no items, so the next node still runs."
+        continue_on_error: "Continue on error"
+        continue_on_error_help: "If on, the workflow keeps going when this node fails instead of stopping. The execution shows what went wrong."
         tabs:
           parameters: "Parameters"
           settings: "Settings"
@@ -1411,6 +1418,10 @@ en:
         output: "Output"
         no_output_data: "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab."
         items: "items"
+        handled_error: "The node failed but the workflow continued because of its error settings: %{message}"
+        item_error:
+          one: "An item failed but the workflow continued because of its error settings: %{message}"
+          other: "%{count} items failed but the workflow continued because of its error settings: %{message}"
         logs: "Console"
         workflow_call: "Workflow call"
         workflow_call_called_by: "Called by"

@@ -78,17 +78,6 @@ RSpec.describe Jobs::GenerateInferredConcepts do
 
         job.execute(item_type: "topics", item_ids: [topic.id, topic2.id], match_only: true)
       end
-
-      it "processes topics in batches" do
-        topics = Array.new(5) { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
-
-        # Should process in batches of 3
-        allow(Topic).to receive(:where).with(id: topic_ids[0..2]).and_call_original
-        allow(Topic).to receive(:where).with(id: topic_ids[3..4]).and_call_original
-
-        job.execute(item_type: "topics", item_ids: topic_ids, batch_size: 3, match_only: true)
-      end
     end
 
     context "with posts" do
@@ -146,15 +135,19 @@ RSpec.describe Jobs::GenerateInferredConcepts do
       job.execute(item_type: "topics", item_ids: [topic.id], match_only: true)
     end
 
-    it "uses default batch size of 100" do
-      topics = Array.new(150) { Fabricate(:topic) }
-      topic_ids = topics.map(&:id)
+    it "uses default batches of 100 IDs without loading absent topics" do
+      last_topic = Fabricate(:topic)
+      topic_ids = [topic.id, *Array.new(99) { |index| 1_000_000 + index }, last_topic.id]
 
-      # Should process in batches of 100
-      allow(Topic).to receive(:where).with(id: topic_ids[0..99]).and_call_original
-      allow(Topic).to receive(:where).with(id: topic_ids[100..149]).and_call_original
+      queries =
+        track_sql_queries do
+          job.execute(item_type: "topics", item_ids: topic_ids, match_only: true)
+        end
 
-      job.execute(item_type: "topics", item_ids: topic_ids, match_only: true)
+      expect(queries).to include(
+        a_string_including(%{"topics"."id" IN (#{topic_ids.first(100).join(", ")})}),
+        a_string_including(%{"topics"."id" = #{last_topic.id}}),
+      )
     end
 
     it "respects custom batch size" do

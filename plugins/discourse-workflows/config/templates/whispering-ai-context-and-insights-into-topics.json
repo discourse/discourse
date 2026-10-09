@@ -1,0 +1,134 @@
+{
+  "name": "Whispering AI context and insights into topics",
+  "description": "Asks an AI agent to research a new topic and posts its findings as a staff-only whisper.",
+  "nodes": [
+    {
+      "id": "topic-created",
+      "type": "trigger:topic_created",
+      "typeVersion": "1.0",
+      "name": "Topic created",
+      "parameters": {},
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "ai-agent",
+      "type": "action:ai_agent",
+      "typeVersion": "1.0",
+      "name": "AI agent",
+      "parameters": {
+        "agent_id": -1,
+        "agent_name": "Forum Helper",
+        "prompt": "=You help the community team triage new topics. Your reply is posted as a whisper that only staff can see.\n\nTopic: {{ $json.topic.title }} ({{ $json.topic.url }})\nAuthor: **{{ $json.post.username }}**\n\n{{ $json.post.raw }}\n\n## What to do\n\n1. Identify the core question or issue and how urgent it is.\n2. Search the community for topics that already answer it, and for official documentation. Use exact error messages, feature names, or technical terms. Search again with other terms if the first results are not relevant.\n3. Collect only the most relevant findings.\n\n## Response format\n\n### Summary\n- **Core issue**: one or two sentences\n- **Priority**: Critical / High / Medium / Low\n\n### Related topics and docs\n- [Title](URL) - why it is relevant\n(Include only the most relevant results. Do not include this topic itself.)\n\n### Suggested reply\nA draft reply that a staff member could send as is, based on what you found.\n\n### Notes for staff\nAdditional context that helps staff but should not be sent to the member, such as missing information to ask for or signs of a wider problem.\n\n## Guidelines\n\n- Be concise; staff need quick, actionable information.\n- Link directly to the topics and docs you used.\n- Do not @mention anyone; use bold for usernames instead.\n- Do not include personal information."
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "id": "post",
+      "type": "action:post",
+      "typeVersion": "1.0",
+      "name": "Whisper",
+      "parameters": {
+        "operation": "create",
+        "topic_id": "={{ $(\"Topic created\").item.json.topic.id }}",
+        "raw": "={{ $json.result }}",
+        "whisper": true,
+        "author_username": "system",
+        "bypass_permission_checks": true
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 480,
+        "y": 0
+      }
+    },
+    {
+      "id": "note-trigger",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Topic created\" to choose which categories or tags this runs on. Defaults to all topics; we recommend starting with your support category.",
+        "width": 220,
+        "height": 250,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": -20,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-agent",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click the agent node to pick another agent or to add links to your documentation and instructions on how to research questions.",
+        "width": 220,
+        "height": 250,
+        "color": "pink"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 220,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-whisper",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "The `whispers allowed groups` site setting must include at least one group, such as staff, for whispers to be posted.",
+        "width": 220,
+        "height": 250,
+        "color": "yellow"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 460,
+        "y": -110
+      }
+    }
+  ],
+  "connections": {
+    "Topic created": {
+      "main": [
+        [
+          {
+            "node": "AI agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI agent": {
+      "main": [
+        [
+          {
+            "node": "Whisper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

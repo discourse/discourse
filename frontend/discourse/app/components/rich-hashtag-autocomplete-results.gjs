@@ -30,6 +30,11 @@ export default class RichHashtagAutocompleteResults extends Component {
 
   @tracked isInitialRender = true;
 
+  /**
+   * @param {RichHashtagAutocompleteResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -48,6 +53,7 @@ export default class RichHashtagAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;

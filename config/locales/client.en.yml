@@ -398,6 +398,25 @@ en:
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
+    reorder:
+      announcement: "Moved %{label} to position %{position} of %{total}"
+      announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"
+      handle: "Reorder %{label}"
+      handle_description: "Use the arrow keys to move between rows. Press Enter for move options."
+      handle_description_drag_only: "Drag to move this row."
+      remove: "Remove %{label}"
+      removed: "Removed %{label}"
+      move_up: "Move up"
+      move_down: "Move down"
+      move_to_top: "Move to top"
+      move_to_bottom: "Move to bottom"
+      move_to_list: "Move to %{list}"
+      position: "%{position} of %{total}"
+      at_start: "%{label} is already first"
+      at_end: "%{label} is already last"
+      move_refused: "Could not move %{label}"
+      add_item: "Add an item"
+
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
@@ -1258,6 +1277,9 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
+        mentions_not_notified:
+          one: "%{usernames} will not be notified because they do not have access to this reviewable."
+          other: "%{usernames} will not be notified because they do not have access to this reviewable."
       topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
@@ -2847,6 +2869,7 @@ en:
     user_status:
       save: "Save"
       set_custom_status: "Set custom status"
+      edit_status: "Edit status"
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"

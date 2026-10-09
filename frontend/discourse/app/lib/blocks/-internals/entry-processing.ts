@@ -97,7 +97,7 @@ function getOrCreateLeafBlockComponent(
 ): ChildBlockResult {
   const { key } = debugContext;
   const cachedEntry = cache.get(key);
-  const hasChildren = entry.children?.length > 0;
+  const hasChildren = (entry.children?.length ?? 0) > 0;
 
   // Only cache leaf blocks (no children). Container blocks are always recreated
   // to ensure their children reflect current visibility state.
@@ -226,7 +226,7 @@ export function processBlockEntries({
     // creates the child components at the root level, so containers receive
     // pre-processed children via the `@children` arg instead of raw entries.
     let processedChildren: ChildBlockResult[] | undefined;
-    if (isContainer && entry.children?.length) {
+    if (containerPath !== undefined && entry.children?.length) {
       processedChildren = processBlockEntries({
         entries: entry.children,
         cache, // Same root cache for all levels.

@@ -39,7 +39,11 @@ module DiscourseAi
                     :current_agent_id,
                     :turn_token_budget,
                     :tool_invocation_counts,
-                    :completion_limit_reached
+                    :completion_limit_reached,
+                    :user_turn_count,
+                    :protected_message_count,
+                    :history_snapshot,
+                    :partial_raw_context
       def initialize(
         post: nil,
         topic: nil,

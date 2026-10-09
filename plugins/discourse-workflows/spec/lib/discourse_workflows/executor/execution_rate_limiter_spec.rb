@@ -14,28 +14,27 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionRateLimiter do
 
   let(:limiter) { described_class.new(workflow) }
 
-  describe "#within_limits?" do
-    it "returns true when under limits" do
-      SiteSetting.discourse_workflows_max_executions_per_minute = 10
-      SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 5
-
-      expect(limiter.within_limits?).to be(true)
-    end
-
-    it "returns false when per-workflow limit is exceeded" do
+  describe "#exceeded_limit_message" do
+    it "explains when the per-workflow limit is exceeded" do
       SiteSetting.discourse_workflows_max_executions_per_minute = 100
-      SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
+      SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 2
 
-      expect(limiter.within_limits?).to be(true)
-      expect(limiter.within_limits?).to be(false)
+      2.times { expect(limiter.exceeded_limit_message).to be_nil }
+
+      expect(limiter.exceeded_limit_message).to eq(
+        I18n.t("discourse_workflows.errors.rate_limited.per_workflow", count: 2),
+      )
     end
 
-    it "returns false when global limit is exceeded" do
-      SiteSetting.discourse_workflows_max_executions_per_minute = 1
+    it "explains when the global limit is exceeded" do
+      SiteSetting.discourse_workflows_max_executions_per_minute = 2
       SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 100
 
-      expect(limiter.within_limits?).to be(true)
-      expect(limiter.within_limits?).to be(false)
+      2.times { expect(limiter.exceeded_limit_message).to be_nil }
+
+      expect(limiter.exceeded_limit_message).to eq(
+        I18n.t("discourse_workflows.errors.rate_limited.global", count: 2),
+      )
     end
 
     it "tracks limits independently per workflow" do
@@ -44,9 +43,9 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionRateLimiter do
 
       other_limiter = described_class.new(other_workflow)
 
-      expect(limiter.within_limits?).to be(true)
-      expect(limiter.within_limits?).to be(false)
-      expect(other_limiter.within_limits?).to be(true)
+      expect(limiter.exceeded_limit_message).to be_nil
+      expect(limiter.exceeded_limit_message).to be_present
+      expect(other_limiter.exceeded_limit_message).to be_nil
     end
   end
 end

@@ -28,8 +28,22 @@ en:
       category_update_required: "At least one category field must be provided"
       draft_sequence_conflict: "Draft sequence conflict"
       draft_too_long: "Draft is too long"
+      group_create_failed: "The group could not be created"
+      group_delete_confirmation_required: "Group deletion must be confirmed"
+      group_delete_name_mismatch: "Group name does not match"
+      group_member_selector_required: "Provide exactly one of usernames, user_ids, or user_emails"
+      group_user_limit:
+        one: "Select no more than %{count} user."
+        other: "Select no more than %{count} users."
+      group_membership_request_not_found: "This user has no pending membership request for the group"
       group_not_found: "Group not found"
       group_post_single_cursor: "Provide either before_post_id or before, not both"
+      group_request_reason_required: "A reason is required to request group membership"
+      group_update_existing_users_required:
+        one: "This change also affects %{count} existing member. Call again with update_existing_users to decide whether to apply it to them."
+        other: "This change also affects %{count} existing members. Call again with update_existing_users to decide whether to apply it to them."
+      group_update_failed: "The group could not be updated"
+      group_update_required: "Provide at least one group field to update"
       invalid_date: "Invalid date"
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"
@@ -837,6 +851,8 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      users_not_found: "No user accounts match: %{values}"
+      conflicting_notification_defaults: "Each category or tag can have only one default notification level."
       cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
@@ -3138,8 +3154,8 @@ en:
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
-    enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -3287,6 +3303,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
+      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -5111,6 +5128,17 @@ en:
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
+    account_associated:
+      title: "New associated account"
+      subject_template: "[%{email_prefix}] New associated account"
+      subject_template_improved: "New associated account"
+      text_body_template: |
+        A %{provider_name} account was just linked to your account at %{site_name}. It can now be used to log in.
+
+        If this was you, there’s nothing else you need to do.
+
+        If this was not you, someone may have access to your account. [Review your associated accounts](%{base_url}/my/preferences/account), [review your existing sessions](%{base_url}/my/preferences/security), and consider changing your password.
+
     digest:
       why: "A brief summary of %{site_link} since %{since}"
       since_last_visit: "Since your last visit"
@@ -6173,6 +6201,9 @@ en:
         one: 'Only available in the "%{category_names}" category'
         other: "Only available in: %{category_names}"
       restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      required_tag_group:
+        one: 'Select %{count} more tag from the "%{tag_group_name}" tag group before using this tag'
+        other: 'Select %{count} more tags from the "%{tag_group_name}" tag group before using this tag'
       synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
@@ -6340,6 +6371,7 @@ en:
     unknown: "unknown"
     site_setting:
       update_existing_users: "update existing users? %{value}"
+      missing_category_reset: "Reset to its default because the category it pointed to (id %{category_id}) no longer exists."
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::CreateTag do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
 
@@ -17,6 +17,22 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateTag do
   def tool(params = nil, **kwargs)
     params ||= kwargs
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
+  end
+
+  it "previews the cleaned name in the heading and only additional properties in the body" do
+    tag_tool = tool(name: "Release Notes!", reason: "Setup")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(tag_tool.approval_title))
+    expect(title.at_css("code").text).to eq("release-notes")
+    expect(tag_tool.approval_question).to eq("Do you want to create this tag?")
+    expect(tag_tool.approval_show_description?).to eq(false)
+    expect(tag_tool.approval_parameters).to be_empty
+    expect(
+      tool(
+        name: "release-notes",
+        description: "Release announcements",
+        reason: "Setup",
+      ).approval_parameters,
+    ).to eq([{ label: "description", value: "Release announcements" }])
   end
 
   it "creates a tag with a description" do

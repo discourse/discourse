@@ -10,10 +10,12 @@ module DiscourseWorkflows
       suffix << (line_number ? ", for item #{item_index}" : " [item #{item_index}") if item_index
       suffix.presence&.<<("]")
 
-      full_message = +"#{message}#{suffix}"
-      full_message << ": #{description}" if description.present?
+      details = description.present? ? ": #{description}" : ""
 
-      raise DiscourseWorkflows::NodeError, full_message
+      raise DiscourseWorkflows::NodeError.new(
+              "#{message}#{suffix}#{details}",
+              summary: "#{message}#{details}",
+            )
     end
   end
 end
