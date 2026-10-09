@@ -2406,7 +2406,7 @@ RSpec.describe Admin::DashboardController do
 
       it "uses explicit dimensions to reset an existing report to its default size" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "fake_source", identifier: "a", rows: 3, cols: 2)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
 
         put "/admin/dashboard/reports/layout.json",
             params: {
@@ -2419,7 +2419,7 @@ RSpec.describe Admin::DashboardController do
 
       it "keeps the omitted dimension when resizing an existing report" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "fake_source", identifier: "a", rows: 3, cols: 2)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
 
         put "/admin/dashboard/reports/layout.json",
             params: {
@@ -2432,7 +2432,7 @@ RSpec.describe Admin::DashboardController do
 
       it "rejects an invalid size formed by an explicit column span and retained rows" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "fake_source", identifier: "a", rows: 3, cols: 2)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
 
         put "/admin/dashboard/reports/layout.json",
             params: {
@@ -2445,7 +2445,7 @@ RSpec.describe Admin::DashboardController do
 
       it "defaults a new report's size when another source has the same identifier" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "core_report", identifier: "signups", rows: 3, cols: 2)
+        Fabricate(:tall_admin_dashboard_report)
 
         put "/admin/dashboard/reports/layout.json",
             params: {

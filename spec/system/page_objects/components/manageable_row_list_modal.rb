@@ -29,6 +29,15 @@ module PageObjects
         all("#{@modal} #{ENABLED_ROW}").map { |el| el["data-identifier"] }
       end
 
+      def has_enabled_rows_in_order?(identifiers)
+        has_css?("#{@modal} #{ENABLED_ROW}", count: identifiers.size) &&
+          identifiers.each_with_index.all? do |identifier, index|
+            has_css?(
+              "#{@modal} #{ENABLED_ROW}:nth-child(#{index + 1})[data-identifier='#{identifier}']",
+            )
+          end
+      end
+
       def has_all_row?(identifier)
         has_css?("#{@modal} #{ROW}[data-identifier='#{identifier}']")
       end
