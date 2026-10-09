@@ -57,7 +57,7 @@ module DiscourseAi
         yield(@prompt) if block_given?
 
         child_agent = child_class.new
-        child_context = build_child_context(child_record, model)
+        child_context = build_child_context(child_record)
         response = collect_response(child_agent, child_context, model)
         return error("completion_limit", child_record) if child_context.completion_limit_reached
 
@@ -111,7 +111,7 @@ module DiscourseAi
         required_tools.empty? || (required_tools - Agent.all_available_tools).empty?
       end
 
-      def build_child_context(child_record, model)
+      def build_child_context(child_record)
         child_depth = @context.subagent_depth.to_i + 1
         feature_context =
           @context.feature_context.to_h.merge(
@@ -119,11 +119,7 @@ module DiscourseAi
             "subagent_agent_id" => child_record.id,
             "subagent_depth" => child_depth,
           )
-        child_budget =
-          Bot.effective_max_turn_tokens(
-            DiscourseAi::Completions::Llm.proxy(model),
-            child_record.max_turn_tokens,
-          )
+        child_budget = Bot.effective_max_turn_tokens(child_record.max_turn_tokens)
         effective_budget = [child_budget, @context.subagent_execution_state.remaining_tokens].min
 
         child_execution = @context.execution_context.dup

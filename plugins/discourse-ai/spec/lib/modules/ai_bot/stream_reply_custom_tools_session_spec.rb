@@ -1156,7 +1156,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it "defaults work to the model context window" do
+    it "defaults work to DEFAULT_MAX_TURN_TOKENS" do
       ai_agent.update!(max_turn_tokens: nil)
 
       tool_call =
@@ -1181,7 +1181,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           if (tracker = kwargs[:execution_context]&.token_usage_tracker)
             tracker.add_effective(request: 90_000, response: 30_000)
             kwargs[:execution_context].work_budget.debit(
-              llm.max_prompt_tokens,
+              DiscourseAi::Agents::Bot::DEFAULT_MAX_TURN_TOKENS,
               event_id: SecureRandom.uuid,
             )
           end

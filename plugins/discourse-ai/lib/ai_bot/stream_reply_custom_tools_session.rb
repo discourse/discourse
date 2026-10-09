@@ -308,7 +308,7 @@ module DiscourseAi
 
         @work_budget ||=
           DiscourseAi::Completions::TurnWorkBudget.new(
-            limit: DiscourseAi::Agents::Bot.effective_max_turn_tokens(llm, resolve_token_budget),
+            limit: DiscourseAi::Agents::Bot.effective_max_turn_tokens(resolve_token_budget),
           )
         token_usage_tracker =
           DiscourseAi::Completions::TokenUsageTracker.new(

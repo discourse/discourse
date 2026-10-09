@@ -25,27 +25,11 @@ RSpec.describe DiscourseAi::Agents::Bot do
   let(:llm_responses) { [function_call, response] }
 
   describe ".effective_max_turn_tokens" do
-    it "defaults to the model context window while keeping explicit allowances exact" do
-      [4096, 200_000, nil].each do |context_window|
-        model = instance_double(DiscourseAi::Completions::Llm, max_prompt_tokens: context_window)
-        default = context_window || described_class::FALLBACK_MAX_TURN_TOKENS
-        expect(described_class.effective_max_turn_tokens(model, 8000)).to eq(8000)
-        expect(described_class.effective_max_turn_tokens(model, 60_000)).to eq(60_000)
-        expect(described_class.effective_max_turn_tokens(model, 10)).to eq(10)
-        expect(described_class.default_max_turn_tokens(model)).to eq(default)
-        expect(
-          described_class.effective_max_turn_tokens(
-            model,
-            4000,
-            compression_threshold: 50,
-            max_tokens: 1,
-            thinking_effort: "high",
-          ),
-        ).to eq(4000)
-        expect(described_class.default_max_turn_tokens(model, compression_threshold: 50)).to eq(
-          default,
-        )
-      end
+    it "defaults to a fixed allowance while keeping explicit allowances exact" do
+      expect(described_class.effective_max_turn_tokens(8000)).to eq(8000)
+      expect(described_class.effective_max_turn_tokens(10)).to eq(10)
+      expect(described_class.effective_max_turn_tokens(nil)).to eq(500_000)
+      expect(described_class.effective_max_turn_tokens(0)).to eq(500_000)
     end
   end
 
@@ -630,7 +614,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       it "allows a final response when the tracker starts at the token budget" do
         tracker =
           DiscourseAi::Completions::TokenUsageTracker.new(
-            base_request: described_class.effective_max_turn_tokens(bot.llm, 5000),
+            base_request: described_class.effective_max_turn_tokens(5000),
             base_response: 0,
           )
         execution_context =
@@ -665,7 +649,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         )
       end
 
-      it "defaults the work allowance to the model context window" do
+      it "defaults the work allowance to DEFAULT_MAX_TURN_TOKENS" do
         no_budget_agent =
           Fabricate(
             :ai_agent,
@@ -675,8 +659,6 @@ RSpec.describe DiscourseAi::Agents::Bot do
           )
 
         klass = no_budget_agent.class_instance
-
-        expect(described_class.default_max_turn_tokens(bot.llm)).to eq(gpt_4.max_prompt_tokens)
 
         tool_call =
           DiscourseAi::Completions::ToolCall.new(id: "call_1", name: "categories", parameters: {})
@@ -698,7 +680,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
             if (tracker = kwargs[:execution_context]&.token_usage_tracker)
               tracker.add_effective(request: 90_000, response: 30_000)
               kwargs[:execution_context].work_budget.debit(
-                gpt_4.max_prompt_tokens,
+                described_class::DEFAULT_MAX_TURN_TOKENS,
                 event_id: SecureRandom.uuid,
               )
             end
@@ -726,9 +708,6 @@ RSpec.describe DiscourseAi::Agents::Bot do
           )
           expect(canned.completions).to eq(0)
         end
-        expect(described_class.default_max_turn_tokens(nil)).to eq(
-          described_class::FALLBACK_MAX_TURN_TOKENS,
-        )
       end
 
       it "retains a tool-heavy previous turn despite a small work allowance" do
@@ -821,7 +800,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           agent_bot.reply(context)
           llm = agent_bot.llm
           input, _, output = llm.prompt_capacity(prompts.last)
-          baseline = described_class.effective_max_turn_tokens(llm, 8000)
+          baseline = described_class.effective_max_turn_tokens(8000)
 
           expect(options.map { |option| option[:feature_name] }).to eq(%w[context_compression bot])
           expect(prompts.last.tool_choice).not_to eq(:none)

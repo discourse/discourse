@@ -77,8 +77,7 @@ module DiscourseAi
         available_tokens = capacity * threshold / 100 - size - PROMPT_TOKEN_RESERVE
         work_budget =
           DiscourseAi::Completions::TurnWorkBudget.new(
-            limit:
-              DiscourseAi::Agents::Bot.effective_max_turn_tokens(llm, agent.class.max_turn_tokens),
+            limit: DiscourseAi::Agents::Bot.effective_max_turn_tokens(agent.class.max_turn_tokens),
           )
         output_limit =
           work_budget.generation_options(
