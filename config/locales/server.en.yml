@@ -2707,7 +2707,7 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
-    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
+    allow_all_users_to_flag_illegal_content: "Let anyone report illegal content, including trust level 0 and silenced users. Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after {{setting:editing_grace_period}}?"

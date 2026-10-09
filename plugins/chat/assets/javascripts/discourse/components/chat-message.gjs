@@ -627,10 +627,6 @@ export default class ChatMessage extends Component {
 
     cancel(this._onMouseEnterMessageDebouncedHandler);
 
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
     if (!this.args.message.expanded) {
       return;
     }

@@ -4,6 +4,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -95,6 +96,7 @@ export default class ChatMessageInteractor {
 
   get canInteractWithMessage() {
     return (
+      this.#canParticipate &&
       !this.message?.deletedAt &&
       this.message?.channel?.canModifyMessages(this.currentUser) &&
       this.message?.channel?.isFollowing
@@ -113,7 +115,10 @@ export default class ChatMessageInteractor {
   }
 
   get canBookmark() {
-    return this.message?.channel?.canModifyMessages?.(this.currentUser);
+    return (
+      this.#canParticipate &&
+      this.message?.channel?.canModifyMessages?.(this.currentUser)
+    );
   }
 
   get canReply() {
@@ -128,6 +133,14 @@ export default class ChatMessageInteractor {
   }
 
   get canFlagMessage() {
+    if (!this.currentUser) {
+      return (
+        this.siteSettings.allow_all_users_to_flag_illegal_content &&
+        !this.message?.chatWebhookEvent &&
+        !this.message?.deletedAt
+      );
+    }
+
     return (
       this.currentUser.id !== this.message?.user?.id &&
       this.message?.userFlagStatus === undefined &&
@@ -172,6 +185,10 @@ export default class ChatMessageInteractor {
   }
 
   get secondaryActions() {
+    if (!this.#canParticipate) {
+      return this.#readOnlySecondaryActions;
+    }
+
     const buttons = [];
 
     buttons.push({
@@ -250,6 +267,31 @@ export default class ChatMessageInteractor {
         name: i18n("chat.rebake_message"),
         icon: "rotate",
       });
+    }
+
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+  }
+
+  // Visitors and silenced users can't post, but can still link to and report messages.
+  get #canParticipate() {
+    return this.currentUser && this.chat.userCanInteractWithChat;
+  }
+
+  get #readOnlySecondaryActions() {
+    const buttons = [
+      { id: "copyLink", name: i18n("chat.copy_link"), icon: "link" },
+    ];
+
+    if (this.site.mobileView) {
+      buttons.push({
+        id: "copyText",
+        name: i18n("chat.copy_text"),
+        icon: "clipboard",
+      });
+    }
+
+    if (this.canFlagMessage) {
+      buttons.push({ id: "flag", name: i18n("chat.flag"), icon: "flag" });
     }
 
     return buttons.filter((button) => !removedSecondaryActions.has(button.id));
@@ -394,7 +436,7 @@ export default class ChatMessageInteractor {
     const model = new ChatMessage(this.message.channel, this.message);
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
-    this.modal.show(FlagModal, {
+    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
         flagTarget: new ChatMessageFlag(getOwner(this)),
         flagModel: model,
