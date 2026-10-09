@@ -139,6 +139,15 @@ describe "Reviewables" do
         open_agree_and_edit
         composer.fill_content("This edit still belongs to the original review version.")
 
+        PostRevisor.new(post).revise!(
+          Fabricate(:admin),
+          raw: "A concurrent edit changed this post.",
+        )
+        composer.submit
+        expect(dialog).to have_content(I18n.t("edit_conflict"))
+        expect(composer.button_label).to have_text(I18n.t("js.composer.overwrite_edit"))
+        dialog.click_ok
+
         short_reviewable.perform(Fabricate(:admin), :unsilence_user)
         composer.submit
 

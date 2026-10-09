@@ -919,7 +919,28 @@ RSpec.describe ReviewablesController do
         expect(post.topic.reload.custom_fields["review_topic_field"]).to eq("topic value")
       ensure
         PostRevisor.tracked_topic_fields.delete("review_topic_field")
-        DiscoursePluginRegistry.reset!
+        Post.plugin_permitted_update_params.delete("review_post_field")
+      end
+
+      it "preserves tag parameter validation when a review edit changes category" do
+        SiteSetting.tagging_enabled = true
+        flagged = Fabricate(:reviewable_flagged_post)
+        category = Fabricate(:category)
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "A reviewed post with string tags.",
+                category_id: category.id,
+                tags: ["tagged"],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(flagged.target.topic.reload.category).to eq(category)
+        expect(flagged.target.topic.tags).to be_empty
       end
 
       it "rejects conflicting topic titles and tags without saving the review edit" do

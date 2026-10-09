@@ -270,6 +270,7 @@ class ReviewablesController < ApplicationController
           :original_title,
           :category_id,
           :featured_link,
+          :archetype,
           :reply_to_post_number,
           :bypass_bump,
           tags: %i[id name],
@@ -282,6 +283,7 @@ class ReviewablesController < ApplicationController
       args[:edit].merge!(
         params[:edit]
           .slice(*Post.plugin_permitted_update_params.keys, *PostRevisor.tracked_topic_fields.keys)
+          .except(:title, :category_id, :tags, :featured_link, :archetype)
           .permit!
           .to_h
           .deep_symbolize_keys,
