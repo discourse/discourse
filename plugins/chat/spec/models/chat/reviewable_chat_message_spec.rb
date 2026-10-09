@@ -142,7 +142,7 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
   end
 
   describe "#perform" do
-    it "retains the message restriction and marks it reversed when restored" do
+    it "retains the message restriction on its first handling" do
       SiteSetting.dsa_reporting_enabled = true
 
       reviewable.perform(moderator, :agree_and_delete)
@@ -153,10 +153,6 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         "content_type" => ["CONTENT_TYPE_TEXT"],
         "content_date" => chat_message.created_at.to_date.iso8601,
       )
-      reviewable.update!(status: :pending)
-      reviewable.perform(moderator, :disagree_and_restore)
-      expect(statement.reload.reversed_at).to be_present
-      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(1)
     end
   end
 

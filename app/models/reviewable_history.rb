@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableHistory < ActiveRecord::Base
+  after_create { DiscourseEvent.trigger(:reviewable_history_created, self) }
+
   belongs_to :reviewable
   belongs_to :created_by, class_name: "User"
 

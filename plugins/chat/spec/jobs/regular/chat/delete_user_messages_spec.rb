@@ -32,24 +32,27 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       flagger = Fabricate(:user, trust_level: TrustLevel[2])
       reviewable = PostActionCreator.spam(flagger, flagged_post).reviewable
       reviewable.perform(admin, :delete_user)
-      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id, target_type: "User")
+      statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
 
-      described_class.new.execute(user_id: author_id, dsa_decision_key: statement.decision_key)
+      described_class.new.execute(
+        user_id: author_id,
+        dsa_decision_key: statement.payload.fetch("puid"),
+      )
 
       removed_message =
-        DsaStatementOfRecord.find_by!(
-          reviewable_id: reviewable.id,
-          target_type: "Chat::Message",
-          target_id: message_id,
-        )
+        DsaStatementOfRecord.where(reviewable_id: reviewable.id).where.not(id: statement.id).sole
       expect(removed_message.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         "source_type" => "SOURCE_TYPE_OTHER_NOTIFICATION",
       )
       expect(removed_message).to be_pending
-      expect(removed_message.decision_key).to eq(statement.decision_key)
+      expect(removed_message.payload.fetch("puid")).to be_present
       expect(Reviewable.exists?(reviewable.id)).to eq(true)
       expect(Chat::Message.with_deleted.exists?(message_id)).to eq(false)
+      expect(removed_message.payload.fetch("puid")).to eq(removed_message.id)
+      expect {
+        described_class.new.execute(user_id: author_id, dsa_decision_key: statement.id)
+      }.not_to change { DsaStatementOfRecord.count }
     end
 
     it "deletes trashed messages" do

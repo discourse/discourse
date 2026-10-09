@@ -33,6 +33,7 @@ class StaffActionLogger
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:delete_user],
+        target_user_id: deleted_user.id,
         ip_address: deleted_user.ip_address.to_s,
         details: details,
       ),
@@ -210,6 +211,8 @@ class StaffActionLogger
       params(opts).merge(
         action: UserHistory.actions[opts[:locked] ? :post_locked : :post_unlocked],
         post_id: post.id,
+        previous_value: opts[:previous_value],
+        new_value: post.locked_by_id,
       ),
     )
   end

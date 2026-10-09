@@ -61,6 +61,7 @@ module DiscourseAi
           end
 
           slow_mode_seconds = parameters[:slow_mode_seconds].to_i
+          previous_seconds = topic.slow_mode_seconds
           topic.update!(slow_mode_seconds: slow_mode_seconds)
 
           enabled_until =
@@ -73,6 +74,14 @@ module DiscourseAi
             enabled_until,
             by_user: acting_user,
           )
+          if previous_seconds != slow_mode_seconds
+            StaffActionLogger.new(acting_user).log_topic_slow_mode(
+              topic,
+              enabled: slow_mode_seconds > 0,
+              seconds: slow_mode_seconds,
+              until: enabled_until,
+            )
+          end
 
           { status: "success", message: I18n.t("discourse_ai.ai_bot.set_slow_mode.success") }
         end

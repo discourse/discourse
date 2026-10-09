@@ -290,6 +290,11 @@ class PostRevisor
     @editor = editor
     @fields = fields.with_indifferent_access
     @opts = opts
+    if @opts[:reviewable_id]
+      reviewable = Reviewable.viewable_by(editor).find_by(id: @opts[:reviewable_id], target: @post)
+      raise Discourse::InvalidAccess unless reviewable
+      @opts = @opts.merge(force_new_version: true, skip_revision: false)
+    end
 
     @topic_changes = TopicChanges.new(@topic, editor)
 
@@ -412,7 +417,11 @@ class PostRevisor
                guardian.can_edit_category_description?(@post.topic.category)
            )
        ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
-      StaffActionLogger.new(@editor).log_post_edit(@post, old_raw: old_raw)
+      StaffActionLogger.new(@editor).log_post_edit(
+        @post,
+        old_raw: old_raw,
+        reviewable_id: @opts[:reviewable_id],
+      )
     end
 
     # WARNING: do not pull this into the transaction

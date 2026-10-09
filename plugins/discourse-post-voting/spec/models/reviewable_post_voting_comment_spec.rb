@@ -27,20 +27,14 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
 
       staff_reviewable.perform(admin, :delete_user)
 
-      statement =
-        DsaStatementOfRecord.find_by!(
-          reviewable_id: staff_reviewable.id,
-          target_type: "PostVotingComment",
-          target_id: comment_id,
-        )
-      expect(statement.recipient_id).to eq(author_id)
+      statement = DsaStatementOfRecord.where(reviewable_id: staff_reviewable.id).sole
       expect(statement.payload["decision_visibility"]).to eq(
         ["DECISION_VISIBILITY_CONTENT_REMOVED"],
       )
       expect(PostVotingComment.with_deleted.exists?(comment_id)).to eq(false)
     end
 
-    it "retains the comment restriction and marks it reversed when restored" do
+    it "retains the comment restriction on its first handling" do
       SiteSetting.dsa_reporting_enabled = true
 
       reviewable.perform(moderator, :agree_and_delete)
@@ -51,10 +45,6 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         "content_type" => ["CONTENT_TYPE_TEXT"],
         "content_date" => comment.created_at.to_date.iso8601,
       )
-      reviewable.update!(status: :pending)
-      reviewable.perform(moderator, :disagree_and_restore)
-      expect(statement.reload.reversed_at).to be_present
-      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(1)
     end
   end
 

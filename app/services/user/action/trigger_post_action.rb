@@ -34,6 +34,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
       { raw: params.post_edit },
       skip_validations: true,
       skip_revision: true,
+      reviewable_id: reviewable_id,
     )
   end
 end

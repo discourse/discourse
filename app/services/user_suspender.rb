@@ -55,17 +55,6 @@ class UserSuspender
   end
 
   def suspend
-    DsaModeration.capture_penalty(
-      reviewable_id: @reviewable_id,
-      actor: @by_user,
-      user: @user,
-      action_name: "suspend_user",
-    ) { apply_suspension }
-  end
-
-  private
-
-  def apply_suspension
     suspended_at = DateTime.now
 
     @user.suspended_till = @suspended_till

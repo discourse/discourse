@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+require "active_support/core_ext/digest/uuid"
 class DsaModeration
   class Context < ActiveSupport::CurrentAttributes
-    attribute :recorder, :automated_decision
+    attribute :recorder, :automated_decision, :skip_recording
   end
   private_constant :Context
 
@@ -41,45 +42,45 @@ class DsaModeration
 
   def self.capture(reviewable:, actor:, action_name:)
     return yield unless SiteSetting.dsa_reporting_enabled
+    if Context.skip_recording || reviewable.reviewable_histories.transitioned.exists? ||
+         DsaStatementOfRecord.exists?(reviewable_id: reviewable.id)
+      return Context.set(recorder: nil, skip_recording: true) { yield }
+    end
     recorder = new(reviewable: reviewable, actor: actor, action_name: action_name)
     Context.set(recorder: recorder) do
-      before = recorder.snapshot
       result = yield
       if !result.respond_to?(:success?) || result.success?
-        recorder.record_changes(before: before)
         recorder.flush unless recorder.nested?
       end
       result
     end
   end
 
-  def self.capture_penalty(reviewable_id:, actor:, user:, action_name:)
-    reviewable = Reviewable.find_by(id: reviewable_id) if SiteSetting.dsa_reporting_enabled &&
-      reviewable_id
-    return yield unless reviewable
-    return yield if Context.recorder
-    matches_user =
-      reviewable.target_created_by_id == user.id ||
-        reviewable.target_type == "User" && reviewable.target_id == user.id
-    return yield unless matches_user
+  def self.record_user_history(history)
+    return unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording
+    if Context.recorder
+      Context.recorder.add_history(history)
+      return
+    end
+    reviewable = Reviewable.find_by(id: history.reviewable_id) if history.reviewable_id
+    return unless reviewable && reviewable.reviewable_histories.transitioned.limit(2).count <= 1
 
-    ActiveRecord::Base.transaction do
-      capture(reviewable: reviewable, actor: actor, action_name: action_name) { yield }
+    recorder =
+      new(
+        reviewable: reviewable,
+        actor: history.acting_user,
+        action_name: UserHistory.actions.invert[history.action],
+      )
+    recorder.use_history_key!(history.id)
+    DB.after_commit do
+      recorder.record_history(history)
+      recorder.flush
     end
   end
 
-  def self.capture_edit(reviewable_id:, actor:, post:)
-    return yield unless SiteSetting.dsa_reporting_enabled && reviewable_id
-
-    reviewable =
-      Reviewable.viewable_by(actor).find_by(id: reviewable_id, target: post, status: :pending)
-    unless reviewable&.actions_for(actor.guardian)&.has?(:agree_and_edit)
-      raise Discourse::InvalidAccess
-    end
-
-    ActiveRecord::Base.transaction do
-      capture(reviewable: reviewable, actor: actor, action_name: :agree_and_edit) { yield }
-    end
+  def self.record_reviewable_history(history)
+    return unless history.transitioned?
+    Context.recorder&.record_transition(history)
   end
 
   def self.with_automated_decision(&block)
@@ -87,9 +88,7 @@ class DsaModeration
   end
 
   def self.record_removal(target)
-    recordable =
-      target.is_a?(Post) && target.post_type == Post.types[:regular] || target.is_a?(Upload) ||
-        target.class.name.in?(%w[Chat::Message PostVotingComment])
+    recordable = target.class.name.in?(%w[Chat::Message PostVotingComment])
     return unless recordable
 
     Context.recorder&.record_restriction(
@@ -113,16 +112,11 @@ class DsaModeration
   end
 
   def self.resume(decision_key:)
-    statement = DsaStatementOfRecord.find_by(decision_key: decision_key) if decision_key
+    statement = DsaStatementOfRecord.find_by(id: decision_key) if decision_key
     raise Discourse::NotFound if decision_key && !statement
     return yield unless statement
 
-    recorder =
-      new(
-        reviewable: statement.reviewable,
-        actor: statement.actor,
-        action_name: statement.action_name,
-      )
+    recorder = new(reviewable: statement.reviewable, actor: nil, action_name: :delete_user)
     recorder.resume!(statement)
     Context.set(recorder: recorder) do
       result = yield
@@ -132,59 +126,64 @@ class DsaModeration
   end
 
   def resume!(statement)
-    @decision_key = statement.decision_key
-    @actor_id = statement.actor_id
+    @decision_key = statement.id
+    @resuming = true
     @source_type = statement.payload["source_type"]
     @automated_detection = statement.payload["automated_detection"] == "Yes"
     @automated_decision = statement.payload["automated_decision"]
-    @application_date = statement.payload["application_date"]
   end
 
-  def self.record_topic_restoration(topic)
-    Context.recorder&.reverse_topic_restrictions(
-      topic: topic,
-      visibility: "DECISION_VISIBILITY_CONTENT_REMOVED",
-    )
-  end
-
-  def reverse_topic_restrictions(topic:, visibility:)
-    DsaStatementOfRecord
-      .where(
-        reviewable_id: reviewable_id,
-        target_type: "Post",
-        target_id: Post.where(topic_id: topic.id).select(:id),
-        reversed_at: nil,
-      )
-      .where("payload->'decision_visibility' ? :visibility", visibility: visibility)
-      .find_each(&:reverse!)
-  end
-
-  def self.record_edit(post:, changes:)
+  def self.record_edit(post:, revisor:)
+    changes = revisor.post_revision&.modifications || revisor.post_changes.merge(revisor.topic_diff)
     unless %w[raw title].any? { |field|
              changes[field] && changes[field].first != changes[field].last
            }
       return
     end
 
-    original_cooked =
-      changes.dig("cooked", 0) ||
-        (changes["raw"] ? PrettyText.cook(changes["raw"].first) : post.cooked)
-    Context.recorder&.record_edit(
+    recorder = Context.recorder
+    unless recorder
+      unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording &&
+               revisor.opts[:reviewable_id]
+        return
+      end
+      reviewable = Reviewable.find_by(id: revisor.opts[:reviewable_id])
+      return unless reviewable && reviewable.reviewable_histories.transitioned.limit(2).count <= 1
+      recorder = new(reviewable: reviewable, actor: revisor.editor, action_name: :agree_and_edit)
+      recorder.use_revision_key!(revisor.post_revision.id)
+    end
+    recorder.record_edit(
       post: post,
-      original_cooked: original_cooked,
-      original_raw: changes.dig("raw", 0),
-      original_title: changes.dig("title", 0),
+      original_cooked:
+        changes.dig("cooked", 0) || PrettyText.cook(changes.dig("raw", 0) || post.raw),
     )
+    recorder.flush unless Context.recorder
   end
 
-  def self.record_topic_removal(topic)
-    return unless Context.recorder
-    return if topic.deleted_at.blank?
-
+  def self.record_hidden_posts(post_ids, by_user:, reviewable_id:, unlisted_topic_ids: [])
+    return unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording
+    recorder = Context.recorder
+    unless recorder
+      reviewable = Reviewable.find_by(id: reviewable_id) if reviewable_id
+      return unless reviewable && reviewable.reviewable_histories.transitioned.limit(2).count <= 1
+      recorder = new(reviewable: reviewable, actor: by_user, action_name: :silence_user)
+    end
     Post
-      .with_deleted
-      .where(topic_id: topic.id, deleted_at: nil, post_type: Post.types[:regular])
-      .find_each { |post| record_removal(post) }
+      .where(id: post_ids, hidden: true)
+      .find_each do |post|
+        recorder.record_restriction(
+          target: post,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+          },
+        )
+      end
+    Topic
+      .where(id: unlisted_topic_ids, visible: false)
+      .find_each do |topic|
+        recorder.record_topic_posts(topic, "DECISION_VISIBILITY_CONTENT_DEMOTED")
+      end
+    recorder.flush unless Context.recorder
   end
 
   def self.record_topic_status(topic:, status:, enabled:)
@@ -196,12 +195,6 @@ class DsaModeration
       elsif status == "visible" && !enabled
         "DECISION_VISIBILITY_CONTENT_DEMOTED"
       end
-    if status == "visible" && enabled
-      Context.recorder.reverse_topic_restrictions(
-        topic: topic,
-        visibility: "DECISION_VISIBILITY_CONTENT_DEMOTED",
-      )
-    end
     return unless visibility
 
     Post
@@ -216,16 +209,11 @@ class DsaModeration
       end
   end
 
-  def self.record_account_restriction(user:, restriction:)
-    Context.recorder&.record_account_restriction(user: user, restriction: restriction)
-  end
-
   def initialize(reviewable:, actor:, action_name:)
     @parent = Context.recorder
     @records = @parent ? @parent.records : {}
+    @histories = @parent ? @parent.histories : []
     @reviewable = reviewable
-    @actor = actor
-    @actor_id = actor&.id
     @action_name = action_name.to_s
     @decision_key = Context.recorder&.decision_key || SecureRandom.uuid
     @automated_decision =
@@ -237,6 +225,7 @@ class DsaModeration
         "AUTOMATED_DECISION_NOT_AUTOMATED"
       end
     @content = content_snapshot
+    @avatar = User.find_by(id: @content[:recipient_id])&.uploaded_avatar
     @recipient_id = @content[:recipient_id] || @reviewable.target_created_by_id
     @source_type = detect_source_type
     @automated_detection = automated_detection?
@@ -247,23 +236,44 @@ class DsaModeration
     end
   end
 
-  attr_reader :decision_key, :records, :source_type, :automated_detection, :automated_decision
+  attr_reader :decision_key,
+              :records,
+              :histories,
+              :content,
+              :source_type,
+              :automated_detection,
+              :automated_decision
 
   def nested?
     @parent.present?
   end
 
   def flush
-    DsaStatementOfRecord.transaction do
-      Reviewable.where(id: reviewable_id).lock.pick(:id)
-      @records
-        .values
-        .each_slice(200) do |batch|
-          DsaStatementOfRecord.insert_all(
-            batch,
-            unique_by: :index_dsa_records_on_decision_and_target,
+    @histories.each { |recorder, history| recorder.record_history(history) }
+    @histories.clear
+    groups =
+      @records.values.group_by do |record|
+        [record[:recipient_id], record[:payload]["content_date"]]
+      end
+    rows =
+      groups.values.map.with_index do |items, index|
+        payload = items.first[:payload].except("puid")
+        items
+          .drop(1)
+          .each { |item| payload = merge_payloads(payload, item[:payload].except("puid")) }
+        payload["puid"] = if !@resuming && index.zero?
+          @decision_key
+        else
+          Digest::UUID.uuid_v5(
+            @decision_key,
+            items.map { |item| [item[:target_type], item[:target_id]] }.sort.to_json,
           )
         end
+        { id: payload.fetch("puid"), reviewable_id: reviewable_id, payload: payload }
+      end
+    DsaStatementOfRecord.transaction do
+      Reviewable.where(id: reviewable_id).lock.pick(:id)
+      rows.each_slice(200) { |batch| DsaStatementOfRecord.insert_all(batch, unique_by: :id) }
       @records.clear
     end
   end
@@ -272,131 +282,176 @@ class DsaModeration
     @parent ? @parent.reviewable_id : @reviewable.id
   end
 
-  def snapshot
-    user = User.find_by(id: @recipient_id)
-    target = target_snapshot
-    {
-      content: @content,
-      deleted:
-        target.respond_to?(:deleted_at) && target.deleted_at.present? ||
-          target.respond_to?(:user_deleted?) && target.user_deleted?,
-      hidden: target.respond_to?(:hidden?) && target.hidden?,
-      raw: target.respond_to?(:raw) ? target.raw : nil,
-      reviewable_status: @reviewable.status,
-      avatar: user&.uploaded_avatar,
-      account_exists: user.present?,
-      suspended_till: user&.suspended_till,
-      silenced_till: user&.silenced_till,
-      recent_posts:
-        (
-          if @action_name.include?("silence") && user
-            Post.where(user: user, hidden: false).where("created_at > ?", 24.hours.ago).pluck(:id)
-          else
-            []
-          end
-        ),
-    }
+  def add_history(history)
+    @histories << [self, history]
   end
 
-  def record_changes(before:)
-    after = snapshot
-    visibility = []
-    visibility << "DECISION_VISIBILITY_CONTENT_REMOVED" if after[:deleted] && !before[:deleted]
-    visibility << "DECISION_VISIBILITY_CONTENT_DISABLED" if after[:hidden] && !before[:hidden]
-    if before[:raw].present? && after[:raw].present? && before[:raw] != after[:raw]
-      visibility << "DECISION_VISIBILITY_CONTENT_REMOVED"
-    end
-    if @action_name.in?(
-         %w[
-           agree_and_keep
-           agree_and_keep_hidden
-           agree_and_keep_deleted
-           disagree_and_keep_deleted
-           reject_and_keep_deleted
-         ],
-       )
-      visibility << "DECISION_VISIBILITY_CONTENT_REMOVED" if after[:deleted]
-      visibility << "DECISION_VISIBILITY_CONTENT_DISABLED" if after[:hidden] && !after[:deleted]
-    end
-
-    if @reviewable.is_a?(ReviewableQueuedPost) &&
-         (
-           @reviewable.rejected? ||
-             @reviewable.deleted? && before[:reviewable_status].to_sym == :pending &&
-               @actor&.id != @reviewable.target_created_by_id
-         )
-      visibility << "DECISION_VISIBILITY_CONTENT_DISABLED"
-    end
-
-    if visibility.present?
-      record_snapshot(
-        content: before[:content],
-        restriction: {
-          "decision_visibility" => visibility.uniq,
-        },
+  def use_history_key!(id)
+    @decision_key =
+      Digest::UUID.uuid_v5(
+        Digest::UUID::DNS_NAMESPACE,
+        "#{Discourse.current_hostname}:user_history:#{id}",
       )
-    end
+  end
 
-    if before[:avatar] && !after[:avatar] && after[:account_exists]
-      record_restriction(
-        target: before[:avatar],
-        restriction: {
-          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
-        },
+  def use_revision_key!(id)
+    @decision_key =
+      Digest::UUID.uuid_v5(
+        Digest::UUID::DNS_NAMESPACE,
+        "#{Discourse.current_hostname}:post_revision:#{id}",
       )
-    end
+  end
 
-    if before[:account_exists] && !after[:account_exists]
-      record_account(restriction: { "decision_account" => "DECISION_ACCOUNT_TERMINATED" })
-    elsif after[:suspended_till] && before[:suspended_till] != after[:suspended_till]
-      record_account(
-        restriction: {
-          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
-          "end_date_account_restriction" => after[:suspended_till].to_date.iso8601,
-        },
-      )
-    elsif after[:silenced_till] && before[:silenced_till] != after[:silenced_till]
-      record_account(
-        restriction: {
-          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
-        },
-      )
-    end
-
-    Post
-      .where(id: before[:recent_posts], hidden: true)
-      .find_each do |post|
+  def record_history(history)
+    action = UserHistory.actions.invert[history.action]
+    case action
+    when :delete_post
+      post = Post.with_deleted.find_by(id: history.post_id)
+      if post&.trashed?
         record_restriction(
           target: post,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+          },
+        )
+      end
+    when :delete_topic
+      topic = Topic.with_deleted.find_by(id: history.topic_id)
+      record_topic_posts(topic, "DECISION_VISIBILITY_CONTENT_REMOVED") if topic&.trashed?
+    when :delete_user
+      return if User.exists?(history.target_user_id)
+      record_account_restriction(
+        user: User.new(id: history.target_user_id),
+        restriction: {
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        },
+      )
+    when :suspend_user, :silence_user
+      user = User.find_by(id: history.target_user_id)
+      return unless user
+      restriction =
+        (
+          if action == :suspend_user
+            { "decision_account" => "DECISION_ACCOUNT_SUSPENDED" }
+          else
+            { "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION" }
+          end
+        )
+      record_account_restriction(user: user, restriction: restriction)
+    when :removed_avatar
+      if @avatar
+        record_restriction(
+          target: @avatar,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+          },
+        )
+      end
+    when :post_locked
+      post = Post.find_by(id: history.post_id)
+      if post&.locked? && history.previous_value.blank?
+        record_restriction(
+          target: post,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+          },
+        )
+      end
+    when :topic_slow_mode_set
+      topic = Topic.find_by(id: history.topic_id)
+      if topic && topic.slow_mode_seconds > 0
+        record_topic_posts(topic, "DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED")
+      end
+    end
+  end
+
+  def record_transition(history)
+    reviewable = history.reviewable
+    if reviewable.is_a?(ReviewableQueuedPost) &&
+         (history.rejected? || history.deleted? && history.created_by_id != @recipient_id)
+      content =
+        (
+          if reviewable.id == @reviewable.id
+            @content
+          else
+            self
+              .class
+              .new(reviewable: reviewable, actor: history.created_by, action_name: @action_name)
+              .content
+          end
+        )
+      record_snapshot(
+        content: content,
+        restriction: {
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        },
+      )
+      return
+    end
+    target = target_snapshot(reviewable)
+    retained =
+      @action_name.in?(
+        %w[
+          agree_and_keep
+          agree_and_keep_hidden
+          agree_and_keep_deleted
+          disagree_and_keep_deleted
+          reject_and_keep_deleted
+        ],
+      )
+    if retained && target
+      if target.respond_to?(:deleted_at) && target.deleted_at ||
+           target.respond_to?(:user_deleted?) && target.user_deleted?
+        record_restriction(
+          target: target,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+          },
+        )
+      elsif target.respond_to?(:hidden?) && target.hidden?
+        record_restriction(
+          target: target,
           restriction: {
             "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
           },
         )
       end
-
-    if before[:deleted] && !after[:deleted] || before[:hidden] && !after[:hidden]
-      reverse_restrictions(
-        target_type: before[:content][:target_type],
-        target_id: before[:content][:target_id],
+    end
+    if @action_name.in?(%w[agree_and_hide hide_post]) && target.respond_to?(:hidden?) &&
+         target.hidden?
+      record_restriction(
+        target: target,
+        restriction: {
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        },
       )
     end
-    if before[:silenced_till] && !after[:silenced_till] ||
-         before[:suspended_till] && !after[:suspended_till]
-      reverse_restrictions(target_type: "User", target_id: @recipient_id)
-    end
+  end
+
+  def record_topic_posts(topic, visibility)
+    Post
+      .with_deleted
+      .where(topic_id: topic.id, post_type: Post.types[:regular])
+      .where("deleted_at IS NULL OR post_number = 1")
+      .find_each do |post|
+        record_restriction(target: post, restriction: { "decision_visibility" => [visibility] })
+      end
   end
 
   def record_restriction(target:, restriction:)
-    record_snapshot(content: describe_content(target), restriction: restriction)
+    content =
+      (
+        if target.class.name == @content[:target_type] && target.id == @content[:target_id]
+          @content
+        else
+          describe_content(target)
+        end
+      )
+    record_snapshot(content: content, restriction: restriction)
   end
 
-  def record_edit(post:, original_cooked:, original_raw:, original_title:)
+  def record_edit(post:, original_cooked:)
     content = describe_content(post).merge(content_type: media_types(original_cooked))
-    content[:evidence] = content[:evidence].merge(
-      raw: original_raw || post.raw,
-      cooked: original_cooked,
-      title: original_title || post.topic&.title,
-    ).compact
     content[:content_type_other] = "Embedded content" if content[:content_type].include?(
       "CONTENT_TYPE_OTHER",
     )
@@ -435,40 +490,29 @@ class DsaModeration
           content_type: media_types(PrettyText.cook(@reviewable.payload["raw"].to_s)),
           content_type_other: "Embedded content",
           recipient_id: @reviewable.target_created_by_id,
-          evidence: @reviewable.payload.slice("raw", "title"),
         }
       )
     end
     describe_content(target)
   end
 
-  def target_snapshot
-    target_class = @reviewable.target_type&.safe_constantize
-    return @reviewable.target unless target_class.respond_to?(:unscoped)
-
-    target_class.unscoped.find_by(id: @reviewable.target_id)
+  def target_snapshot(reviewable = @reviewable)
+    return unless reviewable.target_type
+    target_class = reviewable.class.polymorphic_class_for(reviewable.target_type)
+    target_class.unscoped.find_by(id: reviewable.target_id)
   end
 
   def describe_content(target)
-    raw = target.respond_to?(:raw) ? target.raw : nil
     cooked = target.respond_to?(:cooked) ? target.cooked : nil
     if target.is_a?(Post) && target.user_deleted?
       modifications = target.revisions.last&.modifications
       original_raw = modifications&.dig("raw", 0)
-      if original_raw
-        raw = original_raw
-        cooked = modifications&.dig("cooked", 0) || PrettyText.cook(raw)
-      end
+      cooked = modifications&.dig("cooked", 0) || PrettyText.cook(original_raw) if original_raw
     end
     result = {
       target_type: target&.class&.name || @reviewable.target_type || @reviewable.type,
       target_id: target&.id || @reviewable.target_id || @reviewable.id,
       content_date: target&.created_at&.to_date&.iso8601,
-      evidence: {
-        raw: raw,
-        cooked: cooked,
-        title: target.is_a?(Post) ? target.topic&.title : nil,
-      }.compact,
       recipient_id:
         target.respond_to?(:user_id) ? target.user_id : @reviewable.target_created_by_id,
     }
@@ -504,11 +548,6 @@ class DsaModeration
     types.presence || ["CONTENT_TYPE_TEXT"]
   end
 
-  def record_account(restriction:)
-    content = @content.merge(target_type: "User", target_id: @recipient_id)
-    record_snapshot(content: content, restriction: restriction)
-  end
-
   def record_snapshot(content:, restriction:)
     key = [content[:target_type], content[:target_id]]
     statement = @records[key]
@@ -523,13 +562,11 @@ class DsaModeration
       return
     end
 
-    puid = SecureRandom.uuid
     payload =
       restriction.merge(
-        "puid" => puid,
         "content_type" => content[:content_type],
         "content_date" => content[:content_date],
-        "application_date" => @application_date || Time.zone.today.iso8601,
+        "application_date" => Time.zone.today.iso8601,
         "territorial_scope" => TERRITORIES,
         "source_type" => @source_type,
         "automated_detection" => @automated_detection ? "Yes" : "No",
@@ -539,16 +576,11 @@ class DsaModeration
       payload["content_type_other"] = content[:content_type_other]
     end
     @records[key] = {
-      decision_key: @decision_key,
       target_type: content[:target_type],
       target_id: content[:target_id],
-      puid: puid,
       reviewable_id: @parent ? @parent.reviewable_id : @reviewable.id,
-      actor_id: @actor_id,
       recipient_id: content[:recipient_id] || @recipient_id,
-      action_name: @action_name,
       payload: payload,
-      content: content[:evidence] || {},
     }
   end
 
@@ -571,12 +603,12 @@ class DsaModeration
       end
   end
 
-  def reverse_restrictions(target_type:, target_id:)
-    DsaStatementOfRecord.where(
-      reviewable_id: @reviewable.id,
-      target_type: target_type,
-      target_id: target_id,
-      reversed_at: nil,
-    ).find_each(&:reverse!)
+  def merge_payloads(previous, incoming)
+    merged = previous.merge(incoming)
+    %w[content_type decision_visibility].each do |field|
+      values = (previous.fetch(field, []) + incoming.fetch(field, [])).uniq
+      merged[field] = values if values.present?
+    end
+    merged
   end
 end

@@ -5837,41 +5837,13 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 --
 
 CREATE TABLE public.dsa_statement_of_records (
-    id bigint NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     reviewable_id bigint NOT NULL,
-    decision_key character varying NOT NULL,
-    action_name character varying NOT NULL,
-    target_type character varying NOT NULL,
-    target_id bigint NOT NULL,
-    actor_id integer,
-    recipient_id integer,
     status integer DEFAULT 0 NOT NULL,
-    puid character varying NOT NULL,
     payload jsonb DEFAULT '{}'::jsonb NOT NULL,
-    content jsonb DEFAULT '{}'::jsonb NOT NULL,
-    reversed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
-
-
---
--- Name: dsa_statement_of_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.dsa_statement_of_records_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: dsa_statement_of_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.dsa_statement_of_records_id_seq OWNED BY public.dsa_statement_of_records.id;
 
 
 --
@@ -14827,13 +14799,6 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 
 
 --
--- Name: dsa_statement_of_records id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.dsa_statement_of_records ALTER COLUMN id SET DEFAULT nextval('public.dsa_statement_of_records_id_seq'::regclass);
-
-
---
 -- Name: email_change_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -20044,13 +20009,6 @@ CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_au
 
 
 --
--- Name: idx_on_reviewable_id_decision_key_08233caf4d; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_reviewable_id_decision_key_08233caf4d ON public.dsa_statement_of_records USING btree (reviewable_id, decision_key);
-
-
---
 -- Name: idx_on_sidebar_section_id_locale_271bd8ee1c; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21787,17 +21745,10 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
--- Name: index_dsa_records_on_decision_and_target; Type: INDEX; Schema: public; Owner: -
+-- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_dsa_records_on_decision_and_target ON public.dsa_statement_of_records USING btree (decision_key, target_type, target_id);
-
-
---
--- Name: index_dsa_statement_of_records_on_puid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_dsa_statement_of_records_on_puid ON public.dsa_statement_of_records USING btree (puid);
+CREATE INDEX index_dsa_statement_of_records_on_reviewable_id ON public.dsa_statement_of_records USING btree (reviewable_id);
 
 
 --

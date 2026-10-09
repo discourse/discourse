@@ -50,7 +50,7 @@ RSpec.describe ReviewableAiToolAction do
 
       reviewable.perform(admin, :approve)
 
-      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id, target_id: post.id)
+      statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
       expect(statement.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
         "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -71,13 +71,33 @@ RSpec.describe ReviewableAiToolAction do
         )
       unlist_reviewable.perform(admin, :approve)
       expect(
-        DsaStatementOfRecord.find_by!(
-          reviewable_id: unlist_reviewable.id,
-          target_id: post.id,
-        ).payload[
+        DsaStatementOfRecord.where(reviewable_id: unlist_reviewable.id).sole.payload[
           "decision_visibility"
         ],
       ).to eq(["DECISION_VISIBILITY_CONTENT_DEMOTED"])
+      {
+        "lock_post" => {
+          post_id: post.id,
+          locked: true,
+          reason: "Disruptive edits",
+        },
+        "set_slow_mode" => {
+          topic_id: topic.id,
+          slow_mode_seconds: 60,
+          reason: "Disruptive replies",
+        },
+      }.each do |name, params|
+        restriction_reviewable =
+          create_reviewable(create_tool_action(tool_name: name, params: params))
+
+        restriction_reviewable.perform(admin, :approve)
+
+        expect(
+          DsaStatementOfRecord.where(reviewable_id: restriction_reviewable.id).sole.payload[
+            "decision_visibility"
+          ],
+        ).to eq(["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"])
+      end
       rejected = create_reviewable(create_tool_action)
       rejected.perform(admin, :reject)
       expect(DsaStatementOfRecord.where(reviewable_id: rejected.id)).to be_empty
