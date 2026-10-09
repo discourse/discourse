@@ -77,6 +77,21 @@ RSpec.describe Voice::RoomBroadcaster do
 
       expect(messages.first.user_ids).to contain_exactly(private_room.creator_id, participant.id)
     end
+
+    it "stamps each participant with their own media entitlements" do
+      SiteSetting.voice_video_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      SiteSetting.voice_screen_share_allowed_groups = ""
+      Voice::ParticipantTracker.add(room.id, participant.id)
+
+      messages =
+        MessageBus.track_publish(Voice.room_channel(room.id)) do
+          described_class.publish_participants(room)
+        end
+
+      expect(messages.first.data[:participants]).to contain_exactly(
+        include(id: participant.id, can_publish_video: true, can_screen_share: false),
+      )
+    end
   end
 
   describe ".publish_hand_raise" do

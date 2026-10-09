@@ -109,35 +109,6 @@ RSpec.describe Voice::Room do
     end
   end
 
-  describe "#video_allowed?" do
-    before { SiteSetting.voice_video_enabled = true }
-
-    it "is true for a stage room with video enabled" do
-      room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE, video_enabled: true)
-
-      expect(room.video_allowed?).to eq(true)
-    end
-
-    it "is true for an open room with video enabled" do
-      room.update!(room_type: Voice::Room::ROOM_TYPE_OPEN, video_enabled: true)
-
-      expect(room.video_allowed?).to eq(true)
-    end
-
-    it "is false when the site setting is disabled" do
-      SiteSetting.voice_video_enabled = false
-      room.update!(video_enabled: true)
-
-      expect(room.video_allowed?).to eq(false)
-    end
-
-    it "is false when the room has video disabled" do
-      room.update!(video_enabled: false)
-
-      expect(room.video_allowed?).to eq(false)
-    end
-  end
-
   describe "membership predicates" do
     it "reuses loaded memberships" do
       creator = room.creator
