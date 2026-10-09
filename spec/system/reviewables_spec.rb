@@ -100,6 +100,10 @@ describe "Reviewables" do
 
         expect(dialog).to be_open
         expect(composer).to be_opened
+        expect(composer).to have_input_title("A replacement title from the review queue")
+        expect(composer).to have_value(
+          "This replacement should not survive a failed review action.",
+        )
         using_session(:other_moderator) do
           topic_page.visit_topic(post.topic)
           expect(topic_page).to have_topic_title(original_title)
@@ -108,6 +112,62 @@ describe "Reviewables" do
             content: original_raw,
           )
         end
+
+        dialog.click_ok
+        composer.close
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        topic_page.visit_topic(post.topic)
+        topic_page.click_post_action_button(post, :show_more)
+        topic_page.click_post_action_button(post, :edit)
+        expect(composer).to have_input_title("A replacement title from the review queue")
+        expect(composer).to have_value(
+          "This replacement should not survive a failed review action.",
+        )
+        composer.submit
+        expect(composer).to be_closed
+        expect(topic_page).to have_topic_title("A replacement title from the review queue")
+        expect(topic_page).to have_post_content(
+          post_number: post.post_number,
+          content: "This replacement should not survive a failed review action.",
+        )
+      end
+
+      it "keeps the save label when the review action version is stale" do
+        short_reviewable.update!(target_created_by: post.user)
+        post.user.update!(silenced_till: 1.day.from_now)
+        review_page.visit_reviewable(short_reviewable)
+        open_agree_and_edit
+        composer.fill_content("This edit still belongs to the original review version.")
+
+        short_reviewable.perform(Fabricate(:admin), :unsilence_user)
+        composer.submit
+
+        expect(dialog).to have_content(I18n.t("reviewables.conflict"))
+        expect(composer).to be_opened
+        expect(composer).to have_value("This edit still belongs to the original review version.")
+        expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+      end
+
+      it "resumes a review draft as an ordinary edit when opened from the topic" do
+        review_page.visit_reviewable(short_reviewable)
+        open_agree_and_edit
+        composer.fill_content("This draft is now an ordinary topic edit.")
+        composer.close
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+
+        topic_page.visit_topic(post.topic)
+        topic_page.click_post_action_button(post, :show_more)
+        topic_page.click_post_action_button(post, :edit)
+        expect(composer).to have_value("This draft is now an ordinary topic edit.")
+        composer.submit
+
+        expect(composer).to be_closed
+        expect(topic_page).to have_post_content(
+          post_number: post.post_number,
+          content: "This draft is now an ordinary topic edit.",
+        )
+        review_page.visit_reviewable(short_reviewable)
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
       end
 
       it "opens a modal when suspending a user" do

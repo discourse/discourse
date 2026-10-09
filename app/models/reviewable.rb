@@ -1047,6 +1047,7 @@ class Reviewable < ActiveRecord::Base
     raise Discourse::InvalidParameters.new(:edit) unless params&.key?(:raw)
     raise Discourse::InvalidAccess unless target_type == "Post"
 
+    params = params.with_indifferent_access
     post = Post.with_deleted.lock.find(target_id)
     guardian.ensure_can_edit!(post)
     topic = Topic.with_deleted.lock.find(post.topic_id)
@@ -1071,7 +1072,7 @@ class Reviewable < ActiveRecord::Base
         raise EditConflict
       end
 
-      topic_changes = params.slice(:title, :category_id, :tags, :featured_link)
+      topic_changes = params.slice(*PostRevisor.tracked_topic_fields.keys)
       topic_changes.delete(:title) if topic_changes[:title] == topic.title
       if topic_changes[:category_id].to_i == topic.category_id.to_i
         topic_changes.delete(:category_id)
@@ -1131,8 +1132,8 @@ class Reviewable < ActiveRecord::Base
       raise ActiveRecord::RecordInvalid.new(topic)
     end
     if revisor.successfully_saved_post_and_topic == false
-      post.errors.add(:base, :unable_to_update)
-      raise ActiveRecord::RecordInvalid.new(post)
+      topic.errors.add(:base, :unable_to_update)
+      raise ActiveRecord::RecordInvalid.new(topic)
     end
 
     post

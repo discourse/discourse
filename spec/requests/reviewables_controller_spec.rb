@@ -885,6 +885,192 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      it "preserves registered post and topic fields when saving a review edit" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        plugin = Plugin::Instance.new
+        plugin.add_permitted_post_update_param("review_post_field") do |edited_post, value|
+          edited_post.custom_fields["review_post_field"] = value
+          edited_post.save_custom_fields
+        end
+        PostRevisor.tracked_topic_fields["review_topic_field"] = ->(changes, value, _fields) do
+          changes.record_change(
+            "review_topic_field",
+            changes.topic.custom_fields["review_topic_field"],
+            value,
+          )
+          changes.topic.custom_fields["review_topic_field"] = value
+          changes.topic.save_custom_fields
+        end
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "A review edit with plugin fields.",
+                review_post_field: "post value",
+                review_topic_field: "topic value",
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(post.reload.custom_fields["review_post_field"]).to eq("post value")
+        expect(post.topic.reload.custom_fields["review_topic_field"]).to eq("topic value")
+      ensure
+        PostRevisor.tracked_topic_fields.delete("review_topic_field")
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "rejects conflicting topic titles and tags without saving the review edit" do
+        SiteSetting.tagging_enabled = true
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_raw = post.raw
+        stale_tag = Fabricate(:tag)
+        post.topic.update!(tags: [Fabricate(:tag)])
+
+        [
+          { original_title: "A title changed by another editor" },
+          { original_tags: [{ id: stale_tag.id }] },
+        ].each do |original_fields|
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+                edit: original_fields.merge(raw: "A stale replacement."),
+              }
+
+          expect(response).to have_http_status(:conflict)
+          expect(response.parsed_body["error_type"]).to eq("edit_conflict")
+          expect(flagged.reload).to be_pending
+          expect(post.reload.raw).to eq(original_raw)
+        end
+      end
+
+      it "distinguishes a reviewable version conflict from a content edit conflict" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        flagged.update!(version: 1)
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: 0,
+              edit: {
+                raw: "A stale review action.",
+              },
+            }
+
+        expect(response).to have_http_status(:conflict)
+        expect(response.parsed_body["error_type"]).to eq("reviewable_conflict")
+        expect(flagged.reload).to be_pending
+        expect(flagged.target.reload.raw).to eq("Hello world")
+      end
+
+      it "preserves the post when a category move is forbidden or violates tag rules" do
+        SiteSetting.tagging_enabled = true
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_raw = post.raw
+        original_category = post.topic.category
+        reviewer = Fabricate(:user, trust_level: 4, refresh_auto_groups: true)
+        group = Fabricate(:group, users: [reviewer])
+        Fabricate(:category_moderation_group, category: original_category, group:)
+        flagged.update!(category: original_category)
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(reviewer)
+        post.topic.update!(tags: [Fabricate(:tag)])
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted_category = Fabricate(:category)
+        restricted_category.allowed_tags = [Fabricate(:tag).name]
+
+        {
+          private_category => :forbidden,
+          restricted_category => :unprocessable_entity,
+        }.each do |category, status|
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+                edit: {
+                  raw: "An invalid category change.",
+                  category_id: category.id,
+                },
+              }
+
+          expect(response).to have_http_status(status)
+          expect(response.parsed_body["errors"]).to be_present
+          expect(flagged.reload).to be_pending
+          expect(post.reload.raw).to eq(original_raw)
+          expect(post.topic.reload.category).to eq(original_category)
+        end
+      end
+
+      it "updates a shared draft destination together with the review edit" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_category = post.topic.category
+        shared_draft = Fabricate(:shared_draft, topic: post.topic)
+        destination = Fabricate(:category)
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "The shared draft has been reviewed.",
+                category_id: destination.id,
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(post.reload.raw).to eq("The shared draft has been reviewed.")
+        expect(post.topic.reload.category).to eq(original_category)
+        expect(shared_draft.reload.category).to eq(destination)
+      end
+
+      it "rejects too many tags before applying a review edit" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.max_tags_per_topic = 1
+        flagged = Fabricate(:reviewable_flagged_post)
+        original_raw = flagged.target.raw
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "This edit has too many tags.",
+                tags: [{ name: "one" }, { name: "two" }],
+              },
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("tags.too_many_tags_for_topic", count: 1)],
+        )
+        expect(flagged.reload).to be_pending
+        expect(flagged.target.reload.raw).to eq(original_raw)
+      end
+
+      it "returns the existing topic error when a revision fails without model errors" do
+        SiteSetting.topic_featured_link_enabled = false
+        flagged = Fabricate(:reviewable_flagged_post)
+        original_raw = flagged.target.raw
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "An edit with a forbidden featured link.",
+                featured_link: "https://example.com",
+              },
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_update")],
+        )
+        expect(flagged.reload).to be_pending
+        expect(flagged.target.reload.raw).to eq(original_raw)
+      end
+
       it "saves a post edit and resolves the flag through one reviewable request" do
         SiteSetting.tagging_enabled = true
         flagged = Fabricate(:reviewable_flagged_post)

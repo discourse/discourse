@@ -281,7 +281,7 @@ class ReviewablesController < ApplicationController
         .deep_symbolize_keys
       args[:edit].merge!(
         params[:edit]
-          .slice(*Post.plugin_permitted_update_params.keys)
+          .slice(*Post.plugin_permitted_update_params.keys, *PostRevisor.tracked_topic_fields.keys)
           .permit!
           .to_h
           .deep_symbolize_keys,
@@ -333,9 +333,11 @@ class ReviewablesController < ApplicationController
         raise Discourse::InvalidAccess.new(e.message)
       end
     rescue Reviewable::UpdateConflict
-      return render_json_error(I18n.t("reviewables.conflict"), status: 409)
+      return(
+        render_json_error(I18n.t("reviewables.conflict"), status: 409, type: "reviewable_conflict")
+      )
     rescue Reviewable::EditConflict
-      return render_json_error(I18n.t("edit_conflict"), status: 409)
+      return render_json_error(I18n.t("edit_conflict"), status: 409, type: "edit_conflict")
     end
 
     if result.success?

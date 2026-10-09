@@ -1808,6 +1808,13 @@ export default class ComposerService extends Service {
     return true;
   }
 
+  clearReviewableAction() {
+    if (this.model?.reviewableAction) {
+      this.model.set("reviewableAction", null);
+      this.#onSaved = null;
+    }
+  }
+
   unshrink() {
     this.model.set("composeState", Composer.OPEN);
     document.documentElement.style.setProperty(
