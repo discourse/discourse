@@ -426,22 +426,29 @@ RSpec.describe DsaModeration do
       ).to eq(suspend_until.to_date.iso8601)
     end
 
-    it "records silence and all posts actually hidden, excluding unrelated direct penalties" do
+    it "records silence and its expiry without recording hidden posts or unlisted topics" do
+      freeze_time
       post.user.update!(trust_level: TrustLevel[0])
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      silence_until = 2.days.from_now
 
-      UserSilencer.silence(post.user, admin, reviewable_id: reviewable.id)
-
-      statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
-      expect(
-        statements.where("payload ? 'decision_provision'").sole.payload["decision_provision"],
-      ).to eq("DECISION_PROVISION_PARTIAL_SUSPENSION")
-      expect(
-        statements.where("payload ? 'decision_visibility'").sole.payload["decision_visibility"],
-      ).to contain_exactly(
-        "DECISION_VISIBILITY_CONTENT_DISABLED",
-        "DECISION_VISIBILITY_CONTENT_DEMOTED",
+      UserSilencer.silence(
+        post.user,
+        admin,
+        reviewable_id: reviewable.id,
+        silenced_till: silence_until,
       )
+
+      statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
+      expect(statement.payload).to include(
+        "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        "end_date_service_restriction" => silence_until.to_date.iso8601,
+        "content_date" => post.created_at.to_date.iso8601,
+        "application_date" => Time.zone.today.iso8601,
+      )
+      expect(statement.payload).not_to have_key("decision_visibility")
+      expect(post.reload).to be_hidden
+      expect(post.topic.reload).not_to be_visible
       expect { UserSilencer.silence(Fabricate(:user), admin) }.not_to change {
         DsaStatementOfRecord.count
       }

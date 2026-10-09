@@ -193,32 +193,6 @@ class DsaModeration
   end
   private_class_method :access_restricted?
 
-  def self.record_hidden_posts(post_ids, by_user:, reviewable_id:, unlisted_topic_ids: [])
-    return unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording
-    recorder = Context.recorder
-    unless recorder
-      reviewable = Reviewable.find_by(id: reviewable_id) if reviewable_id
-      return unless reviewable && reviewable.reviewable_histories.transitioned.limit(2).count <= 1
-      recorder = new(reviewable: reviewable, actor: by_user, action_name: :silence_user)
-    end
-    Post
-      .where(id: post_ids, hidden: true)
-      .find_each do |post|
-        recorder.record_restriction(
-          target: post,
-          restriction: {
-            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
-          },
-        )
-      end
-    Topic
-      .where(id: unlisted_topic_ids, visible: false)
-      .find_each do |topic|
-        recorder.record_topic_posts(topic, "DECISION_VISIBILITY_CONTENT_DEMOTED")
-      end
-    recorder.flush unless Context.recorder
-  end
-
   def self.record_topic_status(topic:, status:, enabled:)
     return unless Context.recorder
 

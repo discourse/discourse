@@ -76,46 +76,24 @@ class UserSilencer
   def hide_posts
     return unless @user.trust_level == TrustLevel[0]
 
-    hidden_posts =
-      DB.query(
-        <<~SQL,
-      WITH previous_posts AS (
-        SELECT id, hidden FROM posts
-        WHERE user_id = :user_id AND created_at > :since AND deleted_at IS NULL
-        FOR UPDATE
+    Post
+      .where(user_id: @user.id)
+      .where("created_at > ?", 24.hours.ago)
+      .update_all(
+        [
+          "hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)",
+          Post.hidden_reasons[:new_user_spam_threshold_reached],
+        ],
       )
-      UPDATE posts AS post
-      SET hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, :reason)
-      FROM previous_posts
-      WHERE post.id = previous_posts.id
-      RETURNING post.id, previous_posts.hidden AS previously_hidden
-    SQL
-        user_id: @user.id,
-        since: 24.hours.ago,
-        reason: Post.hidden_reasons[:new_user_spam_threshold_reached],
-      )
-    hidden_post_ids = hidden_posts.reject(&:previously_hidden).map(&:id)
     topic_ids =
       Post
         .where(user_id: @user.id, post_number: 1)
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
-    unlisted_topic_ids = []
     unless topic_ids.empty?
-      unlisted_topic_ids = DB.query_single(<<~SQL, topic_ids: topic_ids)
-        UPDATE topics SET visible = false
-        WHERE id IN (:topic_ids) AND visible = true AND deleted_at IS NULL
-        RETURNING id
-      SQL
+      Topic.where(id: topic_ids).update_all(visible: false)
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
     end
-    DiscourseEvent.trigger(
-      :posts_hidden,
-      hidden_post_ids,
-      by_user: @by_user,
-      reviewable_id: @opts[:reviewable_id],
-      unlisted_topic_ids: unlisted_topic_ids,
-    )
   end
 
   def unsilence

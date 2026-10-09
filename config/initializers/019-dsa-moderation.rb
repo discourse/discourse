@@ -8,10 +8,6 @@ DiscourseEvent.on(:reviewable_history_created) do |history|
   DsaModeration.record_reviewable_history(history)
 end
 
-DiscourseEvent.on(:posts_hidden) do |post_ids, **options|
-  DsaModeration.record_hidden_posts(post_ids, **options)
-end
-
 DiscourseEvent.on(:topic_status_updated) do |topic, status, enabled|
   DsaModeration.record_topic_status(topic: topic, status: status, enabled: enabled)
 end
