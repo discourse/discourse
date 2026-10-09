@@ -193,7 +193,8 @@ export default class SiteSettingComponent extends Component {
   }
 
   get showDependsOnNotice() {
-    return this.setting.depends_on?.length > 0;
+    // Inline dependents only appear under their parent once it is satisfied.
+    return !this.args.inline && this.setting.depends_on?.length > 0;
   }
 
   get dependsOnNoticeText() {

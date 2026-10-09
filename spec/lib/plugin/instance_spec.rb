@@ -1280,6 +1280,15 @@ TEXT
         plugin_instance.register_homepage(
           "other_homepage",
           name: "plugin.other_homepage",
+          path: "other",
+          route: "plugin#other",
+        )
+      end.to raise_error(ArgumentError, /path/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
           path: "/other",
           route: "plugin#other",
           available: true,
