@@ -4,13 +4,12 @@
 # sync_docs only uploads assets that a doc links to, so anything else in
 # assets/ is never published and only adds weight to the repo.
 
-# Keep in sync with the image pattern in LocalDoc#content_with_uploads
-IMAGE_PATTERN = /![^\]]+\]\(([^)]+)\)/
+require_relative "lib/local_doc"
 
 referenced =
   Dir
-    .glob("#{__dir__}/docs/**/*.md")
-    .flat_map { |path| File.read(path).scan(IMAGE_PATTERN).flatten }
+    .glob("#{LocalDoc::DOCS_DIR}/**/*.md")
+    .flat_map { |path| File.read(path).scan(LocalDoc::IMAGE_REGEX).flatten }
     .filter_map { |link| File.expand_path("#{__dir__}/#{link}") if link.start_with?("/assets/") }
     .to_set
 
