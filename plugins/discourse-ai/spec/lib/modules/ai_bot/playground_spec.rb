@@ -175,6 +175,112 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
     end
+
+    it "drops unsummarizable history, then resumes from that checkpoint on the next turn" do
+      first_post.update!(raw: "Remember QUARTZ-OTTER-731")
+      large_result = "Record: amber inventory checked. " * 4000
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      claude_2.update!(max_prompt_tokens: 16_000)
+      agent_record =
+        Fabricate(:ai_agent, max_turn_tokens: 4000, compression_threshold: 50, tools: [])
+      dropping_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(
+            bot_user,
+            agent: agent_record.class_instance.new,
+            model: claude_2,
+          ),
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["", "Answer without the old read", "Follow-up answer"],
+      ) do |_, _, prompts, options|
+        reply = dropping_playground.reply_to(third_post, stream_reply: false, auto_set_title: false)
+
+        expect(reply.raw).to eq("Answer without the old read")
+        checkpoint = reply.post_custom_prompt.custom_prompt.first
+        expect(checkpoint[0]).to include(
+          DiscourseAi::Completions::ContextPreparation::HISTORY_DROPPED_NOTICE,
+        )
+        expect(checkpoint[6]).to include("source_id" => third_post.id)
+
+        followup = Fabricate(:post, topic: pm, user: user, raw: "Repeat the codeword")
+        dropping_playground.reply_to(followup, stream_reply: false, auto_set_title: false)
+
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression bot bot],
+        )
+        [prompts[1], prompts.last].each do |prompt|
+          contents = prompt.messages.map { |message| message[:content].to_s }
+          expect(contents).to include(checkpoint[0])
+          expect(contents.join).not_to include(large_result)
+        end
+        expect(prompts.last.messages.map { |message| message[:content] }).to include(followup.raw)
+      end
+    end
+
+    it "persists a partially retained earlier turn once across the next turn" do
+      large_result = "Record: amber inventory checked. " * 4000
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      third_post.update!(raw: "Also remember AMBER-FOX-42")
+      recent_reply = Fabricate(:post, topic: pm, user: bot_user, raw: "Noted")
+      PostCustomPrompt.create!(
+        post_id: recent_reply.id,
+        custom_prompt: [
+          %w[{"arguments":{}} recent tool_call read],
+          ["AMBER-FOX-42 stored", "recent", "tool", "read"],
+          ["Noted", bot_user.username],
+        ],
+      )
+      question = Fabricate(:post, topic: pm, user: user, raw: "Which codeword is stored?")
+      claude_2.update!(max_prompt_tokens: 16_000)
+      agent_record =
+        Fabricate(:ai_agent, max_turn_tokens: 4000, compression_threshold: 50, tools: [])
+      dropping_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(
+            bot_user,
+            agent: agent_record.class_instance.new,
+            model: claude_2,
+          ),
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["", "AMBER-FOX-42", "Still AMBER-FOX-42"],
+      ) do |_, _, prompts, options|
+        dropping_playground.reply_to(question, stream_reply: false, auto_set_title: false)
+        followup = Fabricate(:post, topic: pm, user: user, raw: "Repeat it")
+        dropping_playground.reply_to(followup, stream_reply: false, auto_set_title: false)
+
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression bot bot],
+        )
+        [prompts[1], prompts.last].each do |prompt|
+          transcript = prompt.messages.to_s
+          expect(transcript).to include(
+            DiscourseAi::Completions::ContextPreparation::HISTORY_DROPPED_NOTICE,
+          )
+          expect(transcript.scan(third_post.raw).size).to eq(1)
+          expect(transcript.scan("AMBER-FOX-42 stored").size).to eq(1)
+          expect(transcript).not_to include(large_result)
+        end
+        expect(prompts.last.messages.to_s).to include(question.raw, followup.raw)
+      end
+    end
   end
 
   describe "#title_playground with a multipart model response" do

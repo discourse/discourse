@@ -135,10 +135,7 @@ module DiscourseAi
         work_budget =
           DiscourseAi::Completions::TurnWorkBudget.new(
             limit:
-              DiscourseAi::Agents::Bot.effective_max_turn_tokens(
-                llm,
-                bot.agent.class.max_turn_tokens,
-              ),
+              DiscourseAi::Agents::Bot.effective_max_turn_tokens(bot.agent.class.max_turn_tokens),
           )
         output_limit =
           work_budget.generation_options(
