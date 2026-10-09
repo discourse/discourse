@@ -4,9 +4,9 @@ class SetBrowserPageviewEventSourceDefaultToBeacon < ActiveRecord::Migration[8.0
   def up
     change_column_default :browser_pageview_events, :source, from: 1, to: 2
 
-    execute <<~SQL
-      CREATE SCHEMA IF NOT EXISTS discourse_functions;
+    Migration::BaseDropper.ensure_function_schema!
 
+    execute <<~SQL
       CREATE OR REPLACE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events()
       RETURNS trigger AS $$
       BEGIN
