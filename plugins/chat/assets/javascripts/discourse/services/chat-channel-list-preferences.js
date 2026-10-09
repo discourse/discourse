@@ -103,7 +103,7 @@ export default class ChatChannelListPreferences extends Service {
   }
 
   showAllChannels(section) {
-    if (SECTIONS[section] && !this.isSavingFilterFor(section)) {
+    if (SECTIONS[section]) {
       this._bypassedFilters = { ...this._bypassedFilters, [section]: true };
     }
   }
