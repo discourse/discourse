@@ -414,6 +414,17 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
+    if SiteSetting.dsa_reporting_enabled && !args.key?(:dsa_event_reviewable_context)
+      args =
+        args.merge(
+          dsa_event_reviewable_context: {
+            reviewable: self,
+            actor_id: performed_by.id,
+            decision_provenance: args[:decision_provenance],
+          },
+        )
+    end
+
     affected_candidate_ids =
       delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
 
@@ -429,8 +440,7 @@ class Reviewable < ActiveRecord::Base
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
 
-      if SiteSetting.dsa_reporting_enabled &&
-           !args.dig(:dsa_event_reviewable_context, :skip_recording)
+      if args[:dsa_event_reviewable_context]
         DiscourseEvent.trigger(
           :dsa_reviewable_action_performed,
           self,
@@ -947,11 +957,6 @@ class Reviewable < ActiveRecord::Base
   end
 
   protected
-
-  def dsa_event_reviewable_context(args = {})
-    args[:dsa_event_reviewable_context] ||
-      { reviewable: self, decision_provenance: args[:decision_provenance]&.to_s }
-  end
 
   def increment_version!(version = nil)
     version_result = nil

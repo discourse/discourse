@@ -101,7 +101,14 @@ RSpec.describe DsaModeration do
       post.replies << reply
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      PostDestroyer.delete_with_replies(admin, post, reviewable.id)
+      PostDestroyer.delete_with_replies(
+        admin,
+        post,
+        reviewable.id,
+        dsa_event_reviewable_context: {
+          reviewable: reviewable,
+        },
+      )
 
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
       expect(statements.map { |statement| statement.payload["content_date"] }).to contain_exactly(
@@ -208,6 +215,20 @@ RSpec.describe DsaModeration do
       expect(statements.pluck(:reviewable_id).uniq).to eq([reviewable.id])
     end
 
+    it "records only account termination when deleting a queued submission's author" do
+      %i[delete_user delete_and_block_user delete_user_block].each do |action|
+        user = Fabricate(:user)
+        queued = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        queued.perform(admin, action)
+
+        expect(User.exists?(user.id)).to eq(false)
+        payload = DsaStatementOfRecord.where(reviewable_id: queued.id).sole.payload
+        expect(payload["decision_account"]).to eq("DECISION_ACCOUNT_TERMINATED")
+        expect(payload).not_to have_key("decision_visibility")
+      end
+    end
+
     it "captures media from the restricted content before removal" do
       post.update!(
         cooked:
@@ -257,8 +278,13 @@ RSpec.describe DsaModeration do
 
     it "rolls back event recording when a queue action fails after removing content" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.define_singleton_method(:perform_delete_and_agree) do |actor, _args|
-        PostDestroyer.new(actor, target, reviewable_id: id).destroy
+      reviewable.define_singleton_method(:perform_delete_and_agree) do |actor, args|
+        PostDestroyer.new(
+          actor,
+          target,
+          reviewable_id: id,
+          dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
+        ).destroy
         create_result(:failure)
       end
 
@@ -279,9 +305,57 @@ RSpec.describe DsaModeration do
       expect(events.map { |event| event[:event_name] }.grep(/\Adsa_/)).to be_empty
       expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
     end
+
+    it "preserves ordinary actions while explicit nil context suppresses DSA events" do
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      args = { dsa_event_reviewable_context: nil }.freeze
+
+      events = DiscourseEvent.track_events { reviewable.perform(admin, :delete_and_agree, args) }
+
+      expect(post.reload).to be_trashed
+      expect(reviewable.reload).to be_approved
+      expect(events.map { |event| event[:event_name] }.grep(/\Adsa_/)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+    end
   end
 
   describe ".record_edit" do
+    it "records the deliberate edit selected in a suspension dialog" do
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      params =
+        User::Suspend::Contract.new(
+          post_action: "edit",
+          post_edit: "Removed private information.",
+          reviewable_id: reviewable.id,
+        )
+
+      User::Action::TriggerPostAction.call(guardian: admin.guardian, post: post, params: params)
+
+      expect(post.reload.raw).to eq(params.post_edit)
+      expect(
+        DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_REMOVED"])
+    end
+
+    it "emits no DSA events from a shared edit without context even with a reviewable ID" do
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      events =
+        DiscourseEvent.track_events do
+          PostRevisor.new(post).revise!(
+            admin,
+            { raw: "Removed private information." },
+            reviewable_id: reviewable.id,
+          )
+        end
+
+      expect(post.reload.raw).to eq("Removed private information.")
+      expect(events.map { |event| event[:event_name] }.grep(/\Adsa_/)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+    end
+
     it "records a linked category edit that restricts access without changing text" do
       category = Fabricate(:private_category, group: Group[:staff])
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
@@ -291,6 +365,9 @@ RSpec.describe DsaModeration do
         admin,
         { category_id: category.id },
         reviewable_id: reviewable.id,
+        dsa_event_reviewable_context: {
+          reviewable: reviewable,
+        },
       )
 
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
@@ -311,6 +388,9 @@ RSpec.describe DsaModeration do
         admin,
         { raw: "A revised contribution containing only text.", category_id: category.id },
         reviewable_id: reviewable.id,
+        dsa_event_reviewable_context: {
+          reviewable: reviewable,
+        },
       )
 
       statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
@@ -335,6 +415,9 @@ RSpec.describe DsaModeration do
         admin,
         { title: "A neutral replacement title", category_id: category.id },
         reviewable_id: reviewable.id,
+        dsa_event_reviewable_context: {
+          reviewable: reviewable,
+        },
       )
 
       statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
@@ -359,6 +442,9 @@ RSpec.describe DsaModeration do
         admin,
         { raw: "A revised contribution containing only text." },
         reviewable_id: reviewable.id,
+        dsa_event_reviewable_context: {
+          reviewable: reviewable,
+        },
       )
 
       statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
@@ -392,7 +478,7 @@ RSpec.describe DsaModeration do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
       application_date = Time.zone.today.iso8601
 
-      reviewable.perform(admin, :agree_and_hide, decision_provenance: :automated)
+      reviewable.perform(admin, :agree_and_hide, { decision_provenance: :automated }.freeze)
       PostLocker.new(post, admin).lock(reviewable_id: reviewable.id)
 
       freeze_time 1.day.from_now
@@ -550,7 +636,7 @@ RSpec.describe DsaModeration do
     it "records an AI decision under a staff actor while an ordinary staff API action remains human" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      reviewable.perform(admin, :agree_and_hide, decision_provenance: :automated)
+      reviewable.perform(admin, :agree_and_hide, { decision_provenance: :automated }.freeze)
 
       payload = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.payload
       expect(payload).to include(

@@ -18,12 +18,22 @@ class User::Action::TriggerPostAction < Service::ActionBase
 
   def delete
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.new(user, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(
+      user,
+      post,
+      reviewable_id: reviewable_id,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
+    ).destroy
   end
 
   def delete_replies
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.delete_with_replies(user, post, reviewable_id)
+    PostDestroyer.delete_with_replies(
+      user,
+      post,
+      reviewable_id,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
+    )
   end
 
   def edit
@@ -35,6 +45,13 @@ class User::Action::TriggerPostAction < Service::ActionBase
       skip_validations: true,
       skip_revision: true,
       reviewable_id: reviewable_id,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
     )
+  end
+
+  def dsa_event_reviewable_context
+    return unless SiteSetting.dsa_reporting_enabled && reviewable_id
+
+    { reviewable_id: reviewable_id }
   end
 end

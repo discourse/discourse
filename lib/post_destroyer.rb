@@ -51,7 +51,7 @@ class PostDestroyer
     post,
     reviewable_id = nil,
     defer_reply_flags: true,
-    dsa_event_reviewable_context: {}
+    dsa_event_reviewable_context: nil
   )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
@@ -107,15 +107,11 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
 
-    if SiteSetting.dsa_reporting_enabled &&
-         !@opts.dig(:dsa_event_reviewable_context, :skip_recording)
+    if @opts[:dsa_event_reviewable_context]
       DiscourseEvent.trigger(
         :dsa_post_destroyed,
         @post,
-        @opts
-          .except(:dsa_event_reviewable_context)
-          .compact
-          .merge(@opts[:dsa_event_reviewable_context] || {}),
+        @opts[:dsa_event_reviewable_context],
         @user,
       )
     end
@@ -247,13 +243,14 @@ class PostDestroyer
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context, :reviewable_id),
+            @opts.slice(:context, :reviewable_id).merge(dsa_event_reviewable_context: nil),
           )
         else
           logger.log_post_deletion(
             @post,
             **@opts.slice(:context, :reviewable_id),
             permanent: permanent?,
+            dsa_event_reviewable_context: nil,
           )
         end
       end

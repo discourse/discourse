@@ -81,7 +81,12 @@ module DiscourseAi
             return(error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.no_destination")))
           end
 
-          opts = { dsa_event_reviewable_context: { reviewable_id: context.reviewable_id } }
+          opts = {}
+
+          if SiteSetting.dsa_reporting_enabled && context.reviewable_id
+            opts[:dsa_event_reviewable_context] = { reviewable_id: context.reviewable_id }
+          end
+
           if destination_topic_id.present?
             opts[:destination_topic_id] = destination_topic_id
           else

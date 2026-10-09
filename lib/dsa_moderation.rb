@@ -37,13 +37,16 @@ class DsaModeration
   ].freeze
   private_constant :TERRITORIES
 
-  def self.recorder_for(reviewable_id:, actor: nil, metadata: {}, action_name: nil)
-    return unless SiteSetting.dsa_reporting_enabled
-    return if metadata[:skip_recording]
-    return unless metadata[:reviewable] || metadata[:reviewable_id] || reviewable_id
+  def self.recorder_for(actor: nil, metadata: nil, action_name: nil)
+    return unless metadata
 
-    reviewable =
-      metadata[:reviewable] || Reviewable.find_by(id: metadata[:reviewable_id] || reviewable_id)
+    reviewable = metadata[:reviewable]
+
+    unless reviewable
+      return unless metadata[:reviewable_id]
+
+      reviewable = Reviewable.find_by(id: metadata[:reviewable_id])
+    end
 
     return unless reviewable
 
@@ -56,10 +59,9 @@ class DsaModeration
   end
   private_class_method :recorder_for
 
-  def self.record_user_history(history, metadata = {})
+  def self.record_user_history(history, metadata = nil)
     recorder =
       recorder_for(
-        reviewable_id: history.reviewable_id,
         actor: history.acting_user,
         metadata: metadata,
         action_name: UserHistory.actions.invert[history.action],
@@ -76,12 +78,9 @@ class DsaModeration
 
     recorder =
       recorder_for(
-        reviewable_id: reviewable.id,
         actor: actor,
         action_name: action_name,
-        metadata:
-          args[:dsa_event_reviewable_context] ||
-            { reviewable: reviewable, decision_provenance: args[:decision_provenance] },
+        metadata: args[:dsa_event_reviewable_context],
       )
 
     return unless recorder
@@ -91,9 +90,8 @@ class DsaModeration
     recorder.flush
   end
 
-  def self.record_removal(target, actor = nil, metadata = {})
-    recorder =
-      recorder_for(reviewable_id: metadata[:reviewable_id], actor: actor, metadata: metadata)
+  def self.record_removal(target, actor = nil, metadata = nil)
+    recorder = recorder_for(actor: actor, metadata: metadata)
 
     return unless recorder
 
@@ -109,7 +107,7 @@ class DsaModeration
 
   def self.record_post_destroyed(post, options, actor)
     return unless post.trashed? && post.post_type == Post.types[:regular]
-    recorder = recorder_for(reviewable_id: options[:reviewable_id], actor: actor, metadata: options)
+    recorder = recorder_for(actor: actor, metadata: options)
     return unless recorder
 
     recorder.record_restriction(
@@ -124,7 +122,7 @@ class DsaModeration
 
   def self.record_post_hidden(post, metadata)
     return unless post.hidden?
-    recorder = recorder_for(reviewable_id: metadata[:reviewable_id], metadata: metadata)
+    recorder = recorder_for(metadata: metadata)
     return unless recorder
 
     recorder.record_restriction(
@@ -138,7 +136,7 @@ class DsaModeration
   end
 
   def self.record_edit(post:, revisor:)
-    return unless SiteSetting.dsa_reporting_enabled
+    return unless revisor.opts[:dsa_event_reviewable_context]
 
     changes = revisor.post_revision&.modifications || revisor.post_changes.merge(revisor.topic_diff)
 
@@ -153,9 +151,8 @@ class DsaModeration
 
     recorder =
       recorder_for(
-        reviewable_id: revisor.opts[:reviewable_id],
         actor: revisor.editor,
-        metadata: revisor.opts[:dsa_event_reviewable_context] || {},
+        metadata: revisor.opts[:dsa_event_reviewable_context],
         action_name: :agree_and_edit,
       )
 
@@ -182,15 +179,11 @@ class DsaModeration
     original_topic_id:,
     post_ids: [],
     copied: nil,
-    dsa_event_reviewable_context: {}
+    dsa_event_reviewable_context: nil
   )
     return if copied
 
-    recorder =
-      recorder_for(
-        reviewable_id: dsa_event_reviewable_context[:reviewable_id],
-        metadata: dsa_event_reviewable_context,
-      )
+    recorder = recorder_for(metadata: dsa_event_reviewable_context)
 
     return unless recorder
 
@@ -224,8 +217,8 @@ class DsaModeration
   end
   private_class_method :access_restricted?
 
-  def self.record_topic_status(topic:, status:, enabled:, metadata: {})
-    recorder = recorder_for(reviewable_id: metadata[:reviewable_id], metadata: metadata)
+  def self.record_topic_status(topic:, status:, enabled:, metadata: nil)
+    recorder = recorder_for(metadata: metadata)
     return unless recorder
 
     visibility =
@@ -347,6 +340,8 @@ class DsaModeration
   end
 
   def record_transition(history)
+    return if @action_name.in?(%w[delete_user delete_and_block_user delete_user_block])
+
     reviewable = history.reviewable
 
     if reviewable.is_a?(ReviewableQueuedPost) &&

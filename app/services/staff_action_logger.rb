@@ -1321,13 +1321,21 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
+    reviewable_id = opts[:reviewable_id] || opts.dig(:dsa_event_reviewable_context, :reviewable)&.id
+
+    dsa_event_reviewable_context = opts[:dsa_event_reviewable_context]
+
+    if SiteSetting.dsa_reporting_enabled && reviewable_id &&
+         !opts.key?(:dsa_event_reviewable_context)
+      dsa_event_reviewable_context = { reviewable_id: reviewable_id }
+    end
+
     {
       acting_user_id: @admin.id,
       context: opts[:context],
       details: opts[:details],
-      reviewable_id:
-        opts[:reviewable_id] || opts.dig(:dsa_event_reviewable_context, :reviewable)&.id,
-      dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
+      reviewable_id: reviewable_id,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
     }
   end
 

@@ -427,11 +427,11 @@ module Chat
       @parsed_mentions = nil
     end
 
-    def trash!(actor = nil, dsa_event_reviewable_context: {})
+    def trash!(actor = nil, dsa_event_reviewable_context: nil)
       already_deleted = trashed?
       result = super(actor)
 
-      if result && !already_deleted && SiteSetting.dsa_reporting_enabled
+      if result && !already_deleted && dsa_event_reviewable_context
         DiscourseEvent.trigger(:dsa_chat_message_deleted, self, actor, dsa_event_reviewable_context)
       end
 

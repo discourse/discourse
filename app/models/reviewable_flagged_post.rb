@@ -268,8 +268,7 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args) do |pa|
       post.hide!(
         pa.post_action_type_id,
-        dsa_event_reviewable_context:
-          dsa_event_reviewable_context(args).merge(actor_id: performed_by.id),
+        dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
       )
     end
   end
@@ -338,7 +337,7 @@ class ReviewableFlaggedPost < Reviewable
       performed_by,
       post,
       id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     result
@@ -357,7 +356,7 @@ class ReviewableFlaggedPost < Reviewable
       performed_by,
       post,
       id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     result
@@ -404,7 +403,7 @@ class ReviewableFlaggedPost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
   end
 

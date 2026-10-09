@@ -101,15 +101,18 @@ module DiscourseAi
           end
 
           revisor = PostRevisor.new(topic.first_post, topic)
+          dsa_event_reviewable_context =
+            if SiteSetting.dsa_reporting_enabled && context.reviewable_id
+              { reviewable_id: context.reviewable_id }
+            end
+
           result =
             revisor.revise!(
               guardian.user,
               { category_id: category.id }.tap do |f|
                 f[:edit_reason] = reason if !!parameters[:public_edit_reason]
               end,
-              dsa_event_reviewable_context: {
-                reviewable_id: context.reviewable_id,
-              },
+              dsa_event_reviewable_context: dsa_event_reviewable_context,
             )
 
           if result

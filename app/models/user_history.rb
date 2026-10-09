@@ -53,8 +53,8 @@ class UserHistory < ActiveRecord::Base
   attr_accessor :dsa_event_reviewable_context
 
   after_create do
-    if SiteSetting.dsa_reporting_enabled
-      DiscourseEvent.trigger(:dsa_user_history_created, self, dsa_event_reviewable_context || {})
+    if dsa_event_reviewable_context
+      DiscourseEvent.trigger(:dsa_user_history_created, self, dsa_event_reviewable_context)
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseEvent.on(:dsa_user_history_created) do |history, metadata = {}|
+DiscourseEvent.on(:dsa_user_history_created) do |history, metadata = nil|
   DsaModeration.record_user_history(history, metadata)
 end
 
@@ -26,7 +26,7 @@ DiscourseEvent.on(:dsa_post_voting_comment_deleted) do |comment, actor, metadata
   DsaModeration.record_removal(comment, actor, metadata)
 end
 
-DiscourseEvent.on(:dsa_topic_status_updated) do |topic, status, enabled, metadata = {}|
+DiscourseEvent.on(:dsa_topic_status_updated) do |topic, status, enabled, metadata = nil|
   DsaModeration.record_topic_status(
     topic: topic,
     status: status,

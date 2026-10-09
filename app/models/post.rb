@@ -654,7 +654,7 @@ class Post < ActiveRecord::Base
     post_action_type_id,
     reason = nil,
     custom_message: nil,
-    dsa_event_reviewable_context: {}
+    dsa_event_reviewable_context: nil
   )
     return if hidden?
 
@@ -676,7 +676,7 @@ class Post < ActiveRecord::Base
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
-      if SiteSetting.dsa_reporting_enabled
+      if dsa_event_reviewable_context
         DiscourseEvent.trigger(:dsa_post_hidden, self, dsa_event_reviewable_context)
       end
 

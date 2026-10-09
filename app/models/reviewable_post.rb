@@ -105,7 +105,7 @@ class ReviewablePost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     ).destroy
 
     create_result(:success, :rejected, [created_by_id], false)

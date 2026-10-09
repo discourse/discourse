@@ -64,14 +64,17 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.delete_topic.errors.not_found"))
           end
 
+          dsa_event_reviewable_context =
+            if SiteSetting.dsa_reporting_enabled && context.reviewable_id
+              { reviewable_id: context.reviewable_id }
+            end
+
           if !!parameters[:deleted]
             PostDestroyer.new(
               acting_user,
               first_post,
               context: reason,
-              dsa_event_reviewable_context: {
-                reviewable_id: context.reviewable_id,
-              },
+              dsa_event_reviewable_context: dsa_event_reviewable_context,
             ).destroy
           else
             PostDestroyer.new(acting_user, first_post, context: reason).recover

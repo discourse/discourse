@@ -61,7 +61,12 @@ module DiscourseAi
 
           closed = !!parameters[:closed]
 
-          opts = { dsa_event_reviewable_context: { reviewable_id: context.reviewable_id } }
+          opts = {}
+
+          if SiteSetting.dsa_reporting_enabled && context.reviewable_id
+            opts[:dsa_event_reviewable_context] = { reviewable_id: context.reviewable_id }
+          end
+
           opts[:message] = reason if !!parameters[:public_reason]
           TopicStatusUpdater.new(topic, acting_user).update!("closed", closed, opts)
 

@@ -22,13 +22,13 @@ TopicStatusUpdater =
         if changed
           DiscourseEvent.trigger(:topic_status_updated, topic, event_status, status.enabled?)
 
-          if SiteSetting.dsa_reporting_enabled
+          if opts[:dsa_event_reviewable_context]
             DiscourseEvent.trigger(
               :dsa_topic_status_updated,
               topic,
               event_status,
               status.enabled?,
-              { actor_id: user.id }.merge(opts[:dsa_event_reviewable_context] || {}),
+              opts[:dsa_event_reviewable_context].merge(actor_id: user.id),
             )
           end
         end

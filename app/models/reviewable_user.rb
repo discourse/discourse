@@ -81,7 +81,7 @@ class ReviewableUser < Reviewable
   def perform_remove_avatar(performed_by, args)
     target.remove_avatar!(
       performed_by,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     create_result(:success)
@@ -164,7 +164,7 @@ class ReviewableUser < Reviewable
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
         delete_args[:reviewable_id] = id
-        delete_args[:dsa_event_reviewable_context] = dsa_event_reviewable_context(args)
+        delete_args[:dsa_event_reviewable_context] = args[:dsa_event_reviewable_context]
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

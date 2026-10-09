@@ -270,6 +270,10 @@ class PostsController < ApplicationController
 
     opts[:reviewable_id] = params[:post][:reviewable_id]
 
+    if SiteSetting.dsa_reporting_enabled && opts[:reviewable_id]
+      opts[:dsa_event_reviewable_context] = { reviewable_id: opts[:reviewable_id] }
+    end
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 

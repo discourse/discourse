@@ -1321,7 +1321,7 @@ class User < ActiveRecord::Base
     UserAvatar.pick_for_user!(self, upload_id, type: type)
   end
 
-  def remove_avatar!(actor, dsa_event_reviewable_context: {})
+  def remove_avatar!(actor, dsa_event_reviewable_context: nil)
     return unless UserAvatar.remove_for_user!(self)
 
     StaffActionLogger.new(actor).log_removed_avatar(

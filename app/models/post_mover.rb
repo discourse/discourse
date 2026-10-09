@@ -158,14 +158,14 @@ class PostMover
       original_topic_id: original_topic.id,
     )
 
-    if SiteSetting.dsa_reporting_enabled
+    if @options[:dsa_event_reviewable_context]
       DiscourseEvent.trigger(
         :dsa_posts_moved,
         destination_topic_id: destination_topic.id,
         original_topic_id: original_topic.id,
         post_ids: @post_ids_after_move,
         copied: @options[:freeze_original],
-        dsa_event_reviewable_context: @options[:dsa_event_reviewable_context] || {},
+        dsa_event_reviewable_context: @options[:dsa_event_reviewable_context],
       )
     end
 

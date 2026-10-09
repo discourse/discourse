@@ -140,7 +140,7 @@ module Chat
       agree do
         chat_message.trash!(
           performed_by,
-          dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+          dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
         )
       end
     end
@@ -167,7 +167,7 @@ module Chat
       ignore do
         chat_message.trash!(
           performed_by,
-          dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+          dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
         )
       end
     end

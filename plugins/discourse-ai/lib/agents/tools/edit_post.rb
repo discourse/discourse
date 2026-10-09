@@ -70,14 +70,17 @@ module DiscourseAi
           fields[:raw] = raw if raw.present?
           fields[:title] = title if title.present?
 
+          dsa_event_reviewable_context =
+            if SiteSetting.dsa_reporting_enabled && context.reviewable_id
+              { reviewable_id: context.reviewable_id }
+            end
+
           revisor = PostRevisor.new(post, post.topic)
           result =
             revisor.revise!(
               acting_user,
               fields,
-              dsa_event_reviewable_context: {
-                reviewable_id: context.reviewable_id,
-              },
+              dsa_event_reviewable_context: dsa_event_reviewable_context,
             )
 
           if result

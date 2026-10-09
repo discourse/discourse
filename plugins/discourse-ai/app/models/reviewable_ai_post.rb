@@ -95,8 +95,7 @@ class ReviewableAiPost < Reviewable
   def perform_agree_and_hide(performed_by, args)
     post.hide!(
       reviewable_scores.first.reviewable_score_type,
-      dsa_event_reviewable_context:
-        dsa_event_reviewable_context(args).merge(actor_id: performed_by.id),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     agree
@@ -146,7 +145,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     perform_ignore(performed_by, args)
@@ -157,7 +156,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
 
     agree
@@ -168,7 +167,7 @@ class ReviewableAiPost < Reviewable
       post.user,
       delete_opts.merge(
         reviewable_id: id,
-        dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+        dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
       ),
     )
 
@@ -179,7 +178,7 @@ class ReviewableAiPost < Reviewable
     delete_options =
       delete_opts.merge(
         reviewable_id: id,
-        dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+        dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
       )
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
@@ -200,7 +199,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      dsa_event_reviewable_context: args[:dsa_event_reviewable_context],
     )
   end
 

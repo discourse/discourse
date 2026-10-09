@@ -429,6 +429,7 @@ class PostRevisor
         @post,
         old_raw: old_raw,
         reviewable_id: @opts[:reviewable_id],
+        dsa_event_reviewable_context: nil,
       )
     end
 
@@ -892,7 +893,7 @@ class PostRevisor
     @post.trigger_post_process
     DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)
 
-    if SiteSetting.dsa_reporting_enabled
+    if @opts[:dsa_event_reviewable_context]
       DiscourseEvent.trigger(:dsa_post_edited, @post, topic_changed?, self)
     end
   end
