@@ -54,7 +54,7 @@ module DiscourseAi
           locker = PostLocker.new(post, acting_user)
 
           if !!parameters[:locked]
-            locker.lock
+            locker.lock(reviewable_id: context.reviewable_id)
           else
             locker.unlock
           end

@@ -93,7 +93,10 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    post.hide!(reviewable_scores.first.reviewable_score_type)
+    post.hide!(
+      reviewable_scores.first.reviewable_score_type,
+      moderation: moderation_options(args).merge(actor_id: performed_by.id),
+    )
 
     agree
   end
@@ -126,37 +129,40 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    destroyer(performed_by).destroy
+    destroyer(performed_by, args).destroy
 
     perform_ignore(performed_by, args)
   end
 
   def perform_delete_and_agree(performed_by, args)
-    destroyer(performed_by).destroy
+    destroyer(performed_by, args).destroy
 
     agree
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(performed_by, post, id, moderation: moderation_options(args))
 
     perform_ignore(performed_by, args)
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(performed_by, post, id, moderation: moderation_options(args))
 
     agree
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
+    UserDestroyer.new(performed_by).destroy(
+      post.user,
+      delete_opts.merge(reviewable_id: id, moderation: moderation_options(args)),
+    )
 
     agree
   end
 
   def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts.merge(reviewable_id: id)
+    delete_options = delete_opts.merge(reviewable_id: id, moderation: moderation_options(args))
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
@@ -171,8 +177,8 @@ class ReviewableAiPost < Reviewable
     @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 
-  def destroyer(performed_by)
-    PostDestroyer.new(performed_by, post, reviewable_id: id)
+  def destroyer(performed_by, args = {})
+    PostDestroyer.new(performed_by, post, reviewable_id: id, moderation: moderation_options(args))
   end
 
   def agree

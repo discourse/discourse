@@ -134,6 +134,7 @@ RSpec.describe DsaModeration do
 
     it "excludes an author withdrawing their own queued submission" do
       queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
+      published = ReviewablePost.queue_for_review(post)
 
       queued.perform(post.user, :delete)
 
@@ -158,6 +159,7 @@ RSpec.describe DsaModeration do
 
     it "records a nested queued post rejection when deleting an author as a spammer" do
       queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
+      published = ReviewablePost.queue_for_review(post)
       Fabricate(
         :post,
         user: post.user,
@@ -171,6 +173,7 @@ RSpec.describe DsaModeration do
       reviewable.perform(admin, :delete_user)
 
       expect(queued.reload).to be_rejected
+      expect(published.reload).to be_rejected
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
       expect(statements.sole.payload["decision_visibility"]).to contain_exactly(
         "DECISION_VISIBILITY_CONTENT_DISABLED",
@@ -203,12 +206,7 @@ RSpec.describe DsaModeration do
       PostLocker.new(post, admin).lock
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      ReviewableActionContext.set(
-        reviewable: reviewable,
-        actor: admin,
-        action_name: :lock_post,
-        first_handling: true,
-      ) { PostLocker.new(post, admin).lock }
+      PostLocker.new(post, admin).lock(reviewable_id: reviewable.id)
 
       history = UserHistory.where(action: UserHistory.actions[:post_locked], post_id: post.id).last
       expect(history.previous_value).to be_nil
@@ -224,12 +222,8 @@ RSpec.describe DsaModeration do
       PostLocker.new(post, admin).lock
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      ReviewableActionContext.set(
-        reviewable: reviewable,
-        actor: admin,
-        action_name: :unlock_post,
-        first_handling: true,
-      ) { PostLocker.new(post, admin).unlock }
+      StaffActionLogger.new(admin).log_post_lock(post, locked: false, reviewable_id: reviewable.id)
+      PostLocker.new(post, admin).unlock
 
       expect(post.reload).not_to be_locked
       expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty

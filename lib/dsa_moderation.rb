@@ -41,7 +41,7 @@ class DsaModeration
 
     reviewable_id = metadata[:reviewable_id] || reviewable_id
     return unless reviewable_id
-    reviewable = ReviewableActionContext.reviewable
+    reviewable = metadata[:reviewable]
     reviewable = Reviewable.find_by(id: reviewable_id) unless reviewable&.id == reviewable_id
     previous = DsaStatementOfRecord.find_by(reviewable_id: reviewable_id) unless reviewable
     return unless reviewable || previous
@@ -76,9 +76,17 @@ class DsaModeration
     recorder.flush
   end
 
-  def self.record_action(reviewable, result, metadata)
+  def self.record_action(reviewable, result, actor, action_name, args)
     return unless result.success?
-    recorder = recorder_for(reviewable_id: reviewable.id, metadata: metadata)
+    recorder =
+      recorder_for(
+        reviewable_id: reviewable.id,
+        actor: actor,
+        action_name: action_name,
+        metadata:
+          args[:moderation] ||
+            { reviewable: reviewable, decision_provenance: args[:decision_provenance] },
+      )
     return unless recorder
 
     history = reviewable.reviewable_histories.transitioned.order(:id).last
@@ -136,7 +144,6 @@ class DsaModeration
     @reviewable_id = statement.reviewable_id
     @source_type = statement.payload["source_type"]
     @automated_detection = statement.payload["automated_detection"] == "Yes"
-    @automated_decision = statement.payload["automated_decision"]
   end
 
   def self.record_edit(post:, revisor:)
@@ -243,11 +250,12 @@ class DsaModeration
     @reviewable_id = reviewable&.id
     @action_name = action_name.to_s
     @automated_decision =
-      if decision_provenance.to_s == "automated" || decision_provenance.blank? && actor&.bot?
+      if decision_provenance.to_s == "automated"
         "AUTOMATED_DECISION_FULLY"
-      elsif decision_provenance.to_s == "assisted" ||
-            decision_provenance.blank? && reviewable&.type == "ReviewableAiToolAction"
+      elsif decision_provenance.to_s == "assisted" || reviewable&.type == "ReviewableAiToolAction"
         "AUTOMATED_DECISION_PARTIALLY"
+      elsif decision_provenance.blank? && actor&.bot?
+        "AUTOMATED_DECISION_FULLY"
       else
         "AUTOMATED_DECISION_NOT_AUTOMATED"
       end
@@ -275,7 +283,7 @@ class DsaModeration
       id =
         Digest::UUID.uuid_v5(
           Digest::UUID::DNS_NAMESPACE,
-          "#{Discourse.current_hostname}:reviewable:#{@reviewable_id}:#{recipient_id}:#{content_date}",
+          "#{Discourse.current_hostname}:reviewable:#{@reviewable_id}:#{recipient_id}:#{content_date}:#{payload["application_date"]}:#{payload["automated_decision"]}",
         )
       payload["puid"] = id
       DsaStatementOfRecord.transaction do

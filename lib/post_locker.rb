@@ -5,12 +5,12 @@ class PostLocker
     @post, @user = post, user
   end
 
-  def lock
+  def lock(opts = {})
     Guardian.new(@user).ensure_can_lock_post!(@post)
 
     Post.transaction do
       @post.update_column(:locked_by_id, @user.id)
-      StaffActionLogger.new(@user).log_post_lock(@post, locked: true)
+      StaffActionLogger.new(@user).log_post_lock(@post, opts.merge(locked: true))
     end
   end
 

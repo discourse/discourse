@@ -25,7 +25,7 @@ TopicStatusUpdater =
             topic,
             event_status,
             status.enabled?,
-            ReviewableActionContext.metadata,
+            { actor_id: user.id }.merge(opts[:moderation] || {}),
           )
         end
 

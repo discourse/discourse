@@ -79,7 +79,7 @@ class ReviewableUser < Reviewable
   end
 
   def perform_remove_avatar(performed_by, args)
-    target.remove_avatar!(performed_by)
+    target.remove_avatar!(performed_by, moderation: moderation_options(args))
 
     create_result(:success)
   end

@@ -65,7 +65,12 @@ module DiscourseAi
           end
 
           if !!parameters[:deleted]
-            PostDestroyer.new(acting_user, first_post, context: reason).destroy
+            PostDestroyer.new(
+              acting_user,
+              first_post,
+              context: reason,
+              reviewable_id: context.reviewable_id,
+            ).destroy
           else
             PostDestroyer.new(acting_user, first_post, context: reason).recover
           end

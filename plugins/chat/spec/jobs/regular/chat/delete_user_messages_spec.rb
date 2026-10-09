@@ -51,6 +51,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       expect(removed_message.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         "source_type" => "SOURCE_TYPE_OTHER_NOTIFICATION",
+        "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
       )
       expect(removed_message).to be_pending
       expect(removed_message.payload.fetch("puid")).to be_present

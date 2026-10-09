@@ -410,6 +410,7 @@ describe Chat::ReviewQueue do
         SiteSetting.chat_auto_silence_from_flags_duration = 1
         flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
 
+        automated_date = Date.current.iso8601
         queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 
         history =
@@ -422,19 +423,23 @@ describe Chat::ReviewQueue do
 
         reviewable = Chat::ReviewableMessage.find_by!(target: message)
         expect(reviewable).to be_pending
-        reviewable.perform(admin, :agree_and_delete)
+        freeze_time 1.day.from_now do
+          reviewable.perform(admin, :agree_and_delete)
+        end
 
         payloads = DsaStatementOfRecord.where(reviewable_id: reviewable.id).pluck(:payload)
         expect(payloads).to include(
           hash_including(
             "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
             "automated_decision" => "AUTOMATED_DECISION_FULLY",
+            "application_date" => automated_date,
           ),
         )
         expect(payloads).to include(
           hash_including(
             "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
             "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+            "application_date" => 1.day.from_now.to_date.iso8601,
           ),
         )
       end

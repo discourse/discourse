@@ -158,7 +158,7 @@ class PostMover
       original_topic_id: original_topic.id,
       post_ids: @post_ids_after_move,
       copied: @options[:freeze_original],
-      moderation: ReviewableActionContext.metadata,
+      moderation: @options[:moderation] || {},
     )
     destination_topic
   end

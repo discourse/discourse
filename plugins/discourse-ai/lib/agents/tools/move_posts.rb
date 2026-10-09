@@ -81,7 +81,7 @@ module DiscourseAi
             return(error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.no_destination")))
           end
 
-          opts = {}
+          opts = { moderation: { reviewable_id: context.reviewable_id } }
           if destination_topic_id.present?
             opts[:destination_topic_id] = destination_topic_id
           else

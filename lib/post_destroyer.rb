@@ -46,12 +46,28 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+  def self.delete_with_replies(
+    performed_by,
+    post,
+    reviewable_id = nil,
+    defer_reply_flags: true,
+    moderation: {}
+  )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(
+      performed_by,
+      post,
+      reviewable_id: reviewable_id,
+      moderation: moderation,
+    ).destroy
 
-    options = { defer_flags: defer_reply_flags, reviewable_id: reviewable_id, parent_post: post }
+    options = {
+      defer_flags: defer_reply_flags,
+      reviewable_id: reviewable_id,
+      parent_post: post,
+      moderation: moderation,
+    }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
       options[:notify_responders] = true
     end
@@ -91,7 +107,7 @@ class PostDestroyer
     DiscourseEvent.trigger(
       :post_destroyed,
       @post,
-      ReviewableActionContext.metadata.merge(@opts.compact),
+      @opts.except(:moderation).compact.merge(@opts[:moderation] || {}),
       @user,
     )
     if WebHook.active_web_hooks(:post_destroyed).exists?
@@ -221,12 +237,12 @@ class PostDestroyer
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context, :reviewable_id),
+            @opts.slice(:context, :reviewable_id, :moderation),
           )
         else
           logger.log_post_deletion(
             @post,
-            **@opts.slice(:context, :reviewable_id),
+            **@opts.slice(:context, :reviewable_id, :moderation),
             permanent: permanent?,
           )
         end

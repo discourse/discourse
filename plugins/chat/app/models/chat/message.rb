@@ -427,11 +427,11 @@ module Chat
       @parsed_mentions = nil
     end
 
-    def trash!(actor = nil)
+    def trash!(actor = nil, moderation: {})
       already_deleted = trashed?
-      result = super
+      result = super(actor)
       if result && !already_deleted
-        DiscourseEvent.trigger(:chat_message_deleted, self, actor, ReviewableActionContext.metadata)
+        DiscourseEvent.trigger(:chat_message_deleted, self, actor, moderation)
       end
       result
     end

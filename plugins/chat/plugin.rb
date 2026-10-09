@@ -643,8 +643,8 @@ after_initialize do
         Jobs::Chat::DeleteUserMessages,
         user_id: user.id,
         moderation:
-          ReviewableActionContext.metadata.merge(
-            reviewable_id: opts[:reviewable_id] || ReviewableActionContext.reviewable&.id,
+          (opts[:moderation] || {}).except(:reviewable).merge(
+            reviewable_id: opts[:reviewable_id],
             actor_id: guardian.user.id,
           ),
       )

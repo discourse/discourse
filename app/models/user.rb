@@ -1321,10 +1321,10 @@ class User < ActiveRecord::Base
     UserAvatar.pick_for_user!(self, upload_id, type: type)
   end
 
-  def remove_avatar!(actor)
+  def remove_avatar!(actor, moderation: {})
     return unless UserAvatar.remove_for_user!(self)
 
-    StaffActionLogger.new(actor).log_removed_avatar(self)
+    StaffActionLogger.new(actor).log_removed_avatar(self, moderation: moderation)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.

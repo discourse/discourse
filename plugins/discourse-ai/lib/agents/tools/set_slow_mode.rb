@@ -80,6 +80,7 @@ module DiscourseAi
               enabled: slow_mode_seconds > 0,
               seconds: slow_mode_seconds,
               until: enabled_until,
+              reviewable_id: context.reviewable_id,
             )
           end
 

@@ -4,8 +4,8 @@ DiscourseEvent.on(:user_history_created) do |history, metadata = {}|
   DsaModeration.record_user_history(history, metadata)
 end
 
-DiscourseEvent.on(:reviewable_action_performed) do |reviewable, result, metadata|
-  DsaModeration.record_action(reviewable, result, metadata)
+DiscourseEvent.on(:reviewable_action_performed) do |reviewable, result, actor, action_name, args|
+  DsaModeration.record_action(reviewable, result, actor, action_name, args)
 end
 
 DiscourseEvent.on(:post_destroyed) do |post, options, actor|

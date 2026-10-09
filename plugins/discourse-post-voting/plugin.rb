@@ -271,7 +271,7 @@ after_initialize do
           :post_voting_comment_deleted,
           comment,
           guardian.user,
-          ReviewableActionContext.metadata.merge(reviewable_id: opts[:reviewable_id]),
+          (opts[:moderation] || {}).merge(reviewable_id: opts[:reviewable_id]),
         )
       end
       ReviewablePostVotingComment.where(

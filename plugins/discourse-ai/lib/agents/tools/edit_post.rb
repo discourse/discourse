@@ -71,7 +71,14 @@ module DiscourseAi
           fields[:title] = title if title.present?
 
           revisor = PostRevisor.new(post, post.topic)
-          result = revisor.revise!(acting_user, fields)
+          result =
+            revisor.revise!(
+              acting_user,
+              fields,
+              moderation: {
+                reviewable_id: context.reviewable_id,
+              },
+            )
 
           if result
             { status: "success", message: I18n.t("discourse_ai.ai_bot.edit_post.success") }

@@ -41,7 +41,7 @@ class UserDestroyer
           cb.call(user, @guardian, opts)
         end
 
-        agree_with_flags(user) if opts[:delete_as_spammer]
+        agree_with_flags(user, opts) if opts[:delete_as_spammer]
         block_external_urls(user) if opts[:block_urls]
         delete_posts(user, category_topic_ids, opts)
       end
@@ -114,7 +114,7 @@ class UserDestroyer
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(
             user,
-            opts.slice(:context, :reviewable_id),
+            opts.slice(:context, :reviewable_id, :moderation),
           )
           if opts.slice(:context).blank?
             Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}")
@@ -142,14 +142,14 @@ class UserDestroyer
       end
   end
 
-  def agree_with_flags(user)
+  def agree_with_flags(user, opts = {})
     ReviewableFlaggedPost
       .where(target_created_by: user)
       .find_each do |reviewable|
         actions = reviewable.actions_for(@guardian)
 
         if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
-          reviewable.perform(@actor, :agree_and_keep)
+          reviewable.perform(@actor, :agree_and_keep, moderation: opts[:moderation])
         end
       end
 
@@ -157,7 +157,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
-          reviewable.perform(@actor, :reject_and_delete)
+          reviewable.perform(@actor, :reject_and_delete, moderation: opts[:moderation])
         end
       end
 
@@ -165,7 +165,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_post)
-          reviewable.perform(@actor, :reject_post)
+          reviewable.perform(@actor, :reject_post, moderation: opts[:moderation])
         end
       end
   end
@@ -193,6 +193,7 @@ class UserDestroyer
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
           reviewable_id: opts[:reviewable_id],
+          moderation: opts[:moderation],
         ).destroy
       end
 

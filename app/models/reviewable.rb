@@ -421,42 +421,21 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      ReviewableActionContext.set(
-        reviewable: ReviewableActionContext.reviewable || self,
-        actor: performed_by,
-        action_name: action_id,
-        first_handling:
-          (
-            if ReviewableActionContext.reviewable
-              ReviewableActionContext.first_handling
-            else
-              !reviewable_histories.transitioned.exists?
-            end
-          ),
-        decision_provenance:
-          args[:decision_provenance] || ReviewableActionContext.decision_provenance ||
-            (
-              if performed_by.bot?
-                :automated
-              else
-                (type == "ReviewableAiToolAction" ? :assisted : :human)
-              end
-            ),
-      ) do
-        result = public_send(perform_method, performed_by, args)
+      result = public_send(perform_method, performed_by, args)
 
-        raise ActiveRecord::Rollback unless result.success?
+      raise ActiveRecord::Rollback unless result.success?
 
-        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
-        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-        recalculate_score if result.recalculate_score
-        DiscourseEvent.trigger(
-          :reviewable_action_performed,
-          self,
-          result,
-          ReviewableActionContext.metadata,
-        )
-      end
+      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+      recalculate_score if result.recalculate_score
+      DiscourseEvent.trigger(
+        :reviewable_action_performed,
+        self,
+        result,
+        performed_by,
+        action_id,
+        args,
+      )
     end
 
     result.after_commit.call if result && result.after_commit
@@ -964,6 +943,16 @@ class Reviewable < ActiveRecord::Base
   end
 
   protected
+
+  def moderation_options(args = {})
+    args[:moderation] ||
+      {
+        reviewable_id: id,
+        reviewable: self,
+        first_handling: !reviewable_histories.transitioned.exists?,
+        decision_provenance: args[:decision_provenance]&.to_s,
+      }
+  end
 
   def increment_version!(version = nil)
     version_result = nil
