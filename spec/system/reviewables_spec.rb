@@ -9,6 +9,7 @@ describe "Reviewables" do
   let(:toasts) { PageObjects::Components::Toasts.new }
   let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before { sign_in(admin) }
 
@@ -31,6 +32,7 @@ describe "Reviewables" do
         expect(composer).to have_value(post.raw)
         expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
 
+        composer.fill_title("A title change that should be discarded")
         composer.fill_content("The moderator changed their mind about this.")
         composer.discard
 
@@ -40,25 +42,72 @@ describe "Reviewables" do
 
         expect(composer).to be_closed
         expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
-        expect(short_reviewable.reload).to be_pending
-        expect(post.reload.revisions.count).to eq(0)
+        topic_page.visit_topic(post.topic)
+        expect(topic_page).to have_topic_title(post.topic.title)
+        expect(topic_page).to have_post_content(post_number: post.post_number, content: post.raw)
       end
 
       it "agree_and_edit agrees with the flag once the edit is saved" do
+        SiteSetting.reviewable_claiming = "required"
         visit("/review")
+        review_page.click_claim_reviewable
 
         open_agree_and_edit
 
         expect(composer).to have_value(post.raw)
 
+        composer.fill_title("A topic title corrected by a moderator")
         composer.fill_content("This post has been edited by a moderator.")
         composer.submit
 
         expect(composer).to be_closed
         expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
         expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
-        expect(short_reviewable.reload).to be_approved
-        expect(post.reload.raw).to eq("This post has been edited by a moderator.")
+        topic_page.visit_topic(post.topic)
+        expect(topic_page).to have_topic_title("A topic title corrected by a moderator")
+        expect(topic_page).to have_post_content(
+          post_number: post.post_number,
+          content: "This post has been edited by a moderator.",
+        )
+      end
+
+      it "preserves a resumed edit when another moderator resolves the flag before saving" do
+        original_title = post.topic.title
+        original_raw = post.raw
+        other_admin = Fabricate(:admin)
+        visit("/review")
+        open_agree_and_edit
+        composer.fill_title("A replacement title from the review queue")
+        composer.fill_content("This replacement should not survive a failed review action.")
+        composer.close
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        PageObjects::Pages::UserActivityDrafts.new.visit(admin)
+        find(".resume-draft").click
+        expect(composer).to have_value(
+          "This replacement should not survive a failed review action.",
+        )
+
+        using_session(:other_moderator) do
+          sign_in(other_admin)
+          review_page.visit_reviewable(short_reviewable)
+          PageObjects::Components::SelectKit.new(
+            ".dropdown-select-box.post-agree-and-hide",
+          ).select_row_by_value("post-agree_and_keep")
+          expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        end
+
+        composer.submit
+
+        expect(dialog).to be_open
+        expect(composer).to be_opened
+        using_session(:other_moderator) do
+          topic_page.visit_topic(post.topic)
+          expect(topic_page).to have_topic_title(original_title)
+          expect(topic_page).to have_post_content(
+            post_number: post.post_number,
+            content: original_raw,
+          )
+        end
       end
 
       it "opens a modal when suspending a user" do

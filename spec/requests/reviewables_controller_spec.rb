@@ -885,6 +885,160 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      it "saves a post edit and resolves the flag through one reviewable request" do
+        SiteSetting.tagging_enabled = true
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        category = Fabricate(:category)
+        tag = Fabricate(:tag)
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "The moderator removed the abusive passage.",
+                original_text: post.raw,
+                title: "A revised title for the reviewed topic",
+                original_title: post.topic.title,
+                category_id: category.id,
+                tags: [{ id: tag.id }],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(post.reload.raw).to eq("The moderator removed the abusive passage.")
+        expect(post.topic.reload.title).to eq("A revised title for the reviewed topic")
+        expect(post.topic.category_id).to eq(category.id)
+        expect(post.topic.tags).to contain_exactly(tag)
+        expect(response.parsed_body.dig("post", "raw")).to eq(post.raw)
+        expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+      end
+
+      it "keeps the reviewable pending and preserves the topic when the post edit is invalid" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_raw = post.raw
+        original_title = post.topic.title
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "",
+                title: "This title must roll back with the invalid post",
+              },
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(flagged.reload).to be_pending
+        expect(flagged.version).to eq(0)
+        expect(post.reload.raw).to eq(original_raw)
+        expect(post.topic.reload.title).to eq(original_title)
+        expect(post.revisions).to be_empty
+      end
+
+      it "rejects a stale edit without resolving the flag or overwriting another editor" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_raw = post.raw
+        PostRevisor.new(post).revise!(Discourse.system_user, raw: "Another editor saved this text.")
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "The stale replacement must not be saved.",
+                original_text: original_raw,
+              },
+            }
+
+        expect(response).to have_http_status(:conflict)
+        expect(flagged.reload).to be_pending
+        expect(flagged.version).to eq(0)
+        expect(post.reload.raw).to eq("Another editor saved this text.")
+      end
+
+      it "rolls back the edit when the reviewable transition fails" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        original_raw = post.raw
+        original_title = post.topic.title
+        fail_transition = ->(status, reviewable) do
+          reviewable.errors.add(:base, "The review action failed")
+          raise ActiveRecord::RecordInvalid.new(reviewable)
+        end
+        DiscourseEvent.on(:reviewable_transitioned_to, &fail_transition)
+
+        messages =
+          MessageBus.track_publish do
+            put "/review/#{flagged.id}/perform/agree_and_edit.json",
+                params: {
+                  version: flagged.version,
+                  edit: {
+                    raw: "This edit must roll back.",
+                    title: "This title must also roll back",
+                  },
+                }
+          end
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(flagged.reload).to be_pending
+        expect(post.reload.raw).to eq(original_raw)
+        expect(post.topic.reload.title).to eq(original_title)
+        expect(post.revisions).to be_empty
+        expect(messages.map(&:channel)).not_to include("/topic/#{post.topic_id}")
+      ensure
+        DiscourseEvent.off(:reviewable_transitioned_to, &fail_transition)
+      end
+
+      it "resolves an unchanged edit without requiring a new revision" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "#{post.raw}  ",
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(post.revisions).to be_empty
+      end
+
+      it "rejects edits without permission and does not resolve the flag" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        SiteSetting.tos_topic_id = flagged.target.topic_id
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+              edit: {
+                raw: "A forbidden replacement.",
+              },
+            }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(flagged.reload).to be_pending
+        expect(flagged.target.reload.raw).to eq("Hello world")
+      end
+
+      it "does not resolve an edit action without an edit payload" do
+        flagged = Fabricate(:reviewable_flagged_post)
+
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+            params: {
+              version: flagged.version,
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(flagged.reload).to be_pending
+      end
+
       it "completes a suspension and selected post deletion through one reviewable request" do
         flagged_post = Fabricate(:post)
         flagged =

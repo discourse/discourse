@@ -94,6 +94,7 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _draft_serializer = {
+    reviewableAction: "reviewableAction",
     reply: "reply",
     action: "action",
     title: "title",
@@ -1069,6 +1070,7 @@ export default class Composer extends RestModel {
 
   clearState() {
     this.setProperties({
+      reviewableAction: null,
       originalText: null,
       originalTitle: null,
       originalTags: null,
@@ -1102,6 +1104,7 @@ export default class Composer extends RestModel {
     const post = this.post;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
+    let reviewableTopicProps = {};
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
@@ -1124,25 +1127,44 @@ export default class Composer extends RestModel {
         delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
-        if (this.action === EDIT_SHARED_DRAFT) {
+        if (this.action === EDIT_SHARED_DRAFT && !this.reviewableAction) {
           const destinationCategoryId = topicProps.categoryId;
           promise = promise.then(() =>
             topic.updateDestinationCategory(destinationCategoryId)
           );
           topicProps.categoryId = topic.get("category.id");
         }
-        promise = promise.then(() => Topic.update(topic, topicProps));
+        if (this.reviewableAction) {
+          reviewableTopicProps = topicProps;
+          if (!topic.isPrivateMessage) {
+            reviewableTopicProps.category_id = topicProps.categoryId;
+          }
+          delete reviewableTopicProps.categoryId;
+          if (Array.isArray(topicProps.tags)) {
+            reviewableTopicProps.tags = serializeTags(topicProps.tags);
+          }
+        } else {
+          promise = promise.then(() => Topic.update(topic, topicProps));
+        }
       } else if (topic.details.can_edit_tags) {
-        promise = promise.then(() => topic.updateTags(this.tags));
+        if (this.reviewableAction) {
+          reviewableTopicProps.tags = serializeTags(this.tags);
+        } else {
+          promise = promise.then(() => topic.updateTags(this.tags));
+        }
       }
     }
 
     let props = {
+      ...reviewableTopicProps,
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
     };
 
     this.serialize(_update_serializer, props);
+    if (this.reviewableAction) {
+      props.reviewableAction = this.reviewableAction;
+    }
 
     // Only send when changed; otherwise a stale composer value could
     // clobber a concurrent reply-target change by another editor.
@@ -1487,6 +1509,7 @@ export default class Composer extends RestModel {
 
     this.setProperties({
       draftKey: opts.draftKey,
+      reviewableAction: opts.reviewableAction ?? null,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,

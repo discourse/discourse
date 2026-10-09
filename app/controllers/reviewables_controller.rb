@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewablesController < ApplicationController
+  include TagParamLimit
+
   requires_login
 
   PER_PAGE = 10
@@ -254,6 +256,37 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    if params[:edit]
+      return if reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
+
+      args[:edit] = params
+        .require(:edit)
+        .permit(
+          :raw,
+          :original_text,
+          :edit_reason,
+          :locale,
+          :title,
+          :original_title,
+          :category_id,
+          :featured_link,
+          :reply_to_post_number,
+          :bypass_bump,
+          tags: %i[id name],
+          original_tags: %i[id name],
+          image_sizes: {
+          },
+        )
+        .to_h
+        .deep_symbolize_keys
+      args[:edit].merge!(
+        params[:edit]
+          .slice(*Post.plugin_permitted_update_params.keys)
+          .permit!
+          .to_h
+          .deep_symbolize_keys,
+      )
+    end
     if params[:penalty]
       args[:penalty] = params
         .require(:penalty)
@@ -301,10 +334,20 @@ class ReviewablesController < ApplicationController
       end
     rescue Reviewable::UpdateConflict
       return render_json_error(I18n.t("reviewables.conflict"), status: 409)
+    rescue Reviewable::EditConflict
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
     if result.success?
-      render_serialized(result, ReviewablePerformResultSerializer)
+      json = serialize_data(result, ReviewablePerformResultSerializer)
+      if post = result.updated_post
+        serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
+        serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
+        link_counts = TopicLink.counts_for(guardian, post.topic, [post])
+        serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
+        json[:post] = serializer.as_json
+      end
+      render_json_dump(json)
     else
       render_json_error(result)
     end
