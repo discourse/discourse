@@ -1,0 +1,130 @@
+.--voice-usage {
+  .phone-bill {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: 1em auto 2em;
+    padding: 1.5em 1.5em 2em;
+    box-sizing: border-box;
+    background: var(--rewind-beige);
+    color: var(--rewind-black);
+    font-family: "Courier New", Courier, monospace;
+    font-size: var(--font-down-1);
+    box-shadow: 4px 4px 0 rgb(0 0 0 / 0.3);
+    transform: rotate(-1deg);
+    z-index: 9; // above the scanlines
+
+    // Torn-paper bottom edge.
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -10px;
+      height: 10px;
+      background:
+        linear-gradient(-45deg, transparent 7px, var(--rewind-beige) 0),
+        linear-gradient(45deg, transparent 7px, var(--rewind-beige) 0);
+      background-size: 14px 10px;
+    }
+  }
+
+  .phone-bill__header {
+    text-align: center;
+    padding-bottom: 1em;
+    border-bottom: 2px dashed var(--rewind-grey);
+  }
+
+  .phone-bill__title {
+    font-size: var(--font-up-3);
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .phone-bill__subtitle {
+    color: var(--rewind-grey);
+  }
+
+  .phone-bill__total {
+    text-align: center;
+    padding: 1em 0;
+    border-bottom: 2px dashed var(--rewind-grey);
+  }
+
+  .phone-bill__total-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .phone-bill__total-value {
+    font-size: var(--font-up-5);
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  .phone-bill__total-calls {
+    color: var(--rewind-grey);
+  }
+
+  .phone-bill__section {
+    padding: 1em 0 0;
+  }
+
+  .phone-bill__section-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+  }
+
+  .phone-bill__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .phone-bill__item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    padding: 0.2em 0;
+  }
+
+  .phone-bill__item-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--rewind-black);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    .avatar {
+      flex-shrink: 0;
+    }
+  }
+
+  .phone-bill__item-leader {
+    flex: 1;
+    min-width: 1em;
+    border-bottom: 2px dotted var(--rewind-light-grey);
+  }
+
+  .phone-bill__item-value {
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+
+  .phone-bill__footer {
+    margin-top: 1.5em;
+    padding-top: 1em;
+    border-top: 2px dashed var(--rewind-grey);
+    text-align: center;
+    font-weight: bold;
+  }
+}
