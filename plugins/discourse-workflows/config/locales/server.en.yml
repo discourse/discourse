@@ -106,6 +106,7 @@ en:
         invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+        whisper_not_allowed: "%{username} cannot whisper. Check the whispers allowed groups site setting."
         edit_failed: "Failed to edit post."
         invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
