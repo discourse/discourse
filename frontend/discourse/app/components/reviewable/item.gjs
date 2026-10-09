@@ -10,6 +10,7 @@ import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
+import ReviewableDsaClassification from "discourse/components/reviewable/dsa-classification";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable/help-resources";
 import ReviewableInsights from "discourse/components/reviewable/insights";
@@ -102,6 +103,7 @@ export function registerReviewableTypeLabel(reviewableType, labelKey) {
 export default class ReviewableItem extends Component {
   @service dialog;
   @service modal;
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service composer;
@@ -145,7 +147,10 @@ export default class ReviewableItem extends Component {
     const { reviewable } = this.args;
     let classes = dasherize(reviewable?.type);
 
-    if (reviewable?.last_performing_username) {
+    if (
+      reviewable?.last_performing_username &&
+      !this.awaitingDsaClassification
+    ) {
       classes = `${classes} reviewable-stale`;
     }
 
@@ -230,6 +235,18 @@ export default class ReviewableItem extends Component {
     }
 
     return this.siteSettings?.reviewable_claiming !== "required";
+  }
+
+  get showDsaClassification() {
+    return (
+      this.siteSettings.enable_dsa_reporting &&
+      !!this.site.dsa_taxonomy &&
+      !!this.args.reviewable?.legal_basis
+    );
+  }
+
+  get awaitingDsaClassification() {
+    return this.showDsaClassification && !this.args.reviewable.dsa_category;
   }
 
   get primaryBundles() {
@@ -911,6 +928,10 @@ export default class ReviewableItem extends Component {
               </div>
             {{/if}}
           {{/unless}}
+
+          {{#if this.showDsaClassification}}
+            <ReviewableDsaClassification @reviewable={{@reviewable}} />
+          {{/if}}
 
           {{#if this.claimEnabled}}
             <div class="review-item__moderator-actions --extra">
