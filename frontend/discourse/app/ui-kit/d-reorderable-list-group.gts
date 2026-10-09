@@ -32,18 +32,19 @@ function follows(left: HTMLElement, right: HTMLElement): boolean {
   return Boolean(left.compareDocumentPosition(right) & FOLLOWING);
 }
 
-interface DReorderableListGroupSignature {
+interface DReorderableListGroupSignature<T> {
   Args: {
     /**
      * The single move callback for every member list: in-list moves and
      * cross-list moves alike arrive here, already normalized. Return `false`
-     * to veto the announcement.
+     * to veto the announcement. The item type it takes is the one every
+     * member list's `@items` must hold.
      */
-    onMove: (move: ReorderableMove) => void | false;
+    onMove: (move: ReorderableMove<T>) => void | false;
   };
   Blocks: {
     /** The member lists, each receiving the yielded API as `@group`. */
-    default: [group: ReorderableGroupApi];
+    default: [group: ReorderableGroupApi<T>];
   };
 }
 
@@ -70,7 +71,9 @@ interface DReorderableListGroupSignature {
  * </DReorderableListGroup>
  * ```
  */
-export default class DReorderableListGroup extends Component<DReorderableListGroupSignature> {
+export default class DReorderableListGroup<T> extends Component<
+  DReorderableListGroupSignature<T>
+> {
   /** Keeps registry writes out of the member-construction render pass. */
   @tracked generation = 0;
 
@@ -78,7 +81,7 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
    * The yielded API. Built once — members hold onto it across their whole
    * life, so its identity must not churn with renders.
    */
-  api: ReorderableGroupApi = {
+  api: ReorderableGroupApi<T> = {
     token: `d-reorderable-list-group:${guidFor(this)}`,
     generation: () => this.generation,
     registerMember: (member: ReorderableGroupMember) => {
@@ -141,7 +144,7 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
       }
       return ordered[direction === "next" ? index + 1 : index - 1];
     },
-    onMove: (move: ReorderableMove) => this.args.onMove(move),
+    onMove: (move: ReorderableMove<T>) => this.args.onMove(move),
   };
 
   /**

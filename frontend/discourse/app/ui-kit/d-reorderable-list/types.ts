@@ -150,9 +150,10 @@ export interface ReorderableGroupMember {
 /**
  * The API a `DReorderableListGroup` yields to its block. Member lists receive
  * it as `@group`; everything on it is wiring between the group and its
- * members rather than a consumer surface.
+ * members rather than a consumer surface. `T` is the item type the group's
+ * `@onMove` takes, which every member list's items must match.
  */
-export interface ReorderableGroupApi {
+export interface ReorderableGroupApi<T = unknown> {
   /**
    * The shared drag discriminator. Members adopt it in place of their own, so
    * drags travel freely inside the group and nowhere else.
@@ -197,7 +198,7 @@ export interface ReorderableGroupApi {
   ) => ReorderableGroupMember | undefined;
 
   /** The group's single move callback, shared by every member. */
-  onMove: (move: ReorderableMove) => void | false;
+  onMove: (move: ReorderableMove<T>) => void | false;
 }
 
 /**
@@ -290,9 +291,10 @@ export interface DReorderableListSignature<T> {
      * construction: a list that must change groups is re-created, not
      * re-pointed. Every member carrying a `@listLabel` also becomes a
      * destination in the other members' move menus, which is how a cross-list
-     * move is reachable without a pointer.
+     * move is reachable without a pointer. The group's item type must match
+     * `@items`, since the group's `@onMove` receives this list's moves.
      */
-    group?: ReorderableGroupApi;
+    group?: ReorderableGroupApi<NoInfer<T>>;
 
     /**
      * This member's identity inside its group. Required with `@group`, and

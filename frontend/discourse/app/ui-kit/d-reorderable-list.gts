@@ -718,6 +718,7 @@ export default class DReorderableList<T> extends Component<
     // without making the registry itself reactive during member construction.
     const groupGeneration = group?.generation();
     const hasGroupDestinations =
+      !!group &&
       groupGeneration !== undefined &&
       (group.siblings(this.listIdOrDefault).length > 0 ||
         (!!this.args.spill &&
