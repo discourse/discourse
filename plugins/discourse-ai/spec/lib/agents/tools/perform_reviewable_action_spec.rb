@@ -12,9 +12,9 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
     SiteSetting.ai_bot_enabled = true
   end
 
-  def tool(params = nil, user: admin, **kwargs)
+  def tool(params = nil, user: admin, context_options: {}, **kwargs)
     params ||= kwargs
-    ctx = DiscourseAi::Agents::BotContext.new(user: user)
+    ctx = DiscourseAi::Agents::BotContext.new(user: user, **context_options)
     described_class.new(params, bot_user: bot_user, llm: llm, context: ctx)
   end
 
@@ -99,6 +99,9 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
           reviewable_id: flagged_reviewable.id,
           action_id: "agree_and_hide",
           reason: "Hiding inappropriate content",
+          context_options: {
+            post: Fabricate(:post, user: admin),
+          },
         ).invoke
 
       expect(result[:status]).to eq("success")
@@ -107,9 +110,47 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
       statement = DsaStatementOfRecord.find_by!(reviewable_id: flagged_reviewable.id)
       expect(statement.payload).to include(
         "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
-        "automated_decision" => "AUTOMATED_DECISION_FULLY",
+        "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
       )
       expect(statement.payload).not_to have_key("automated_detection")
+    end
+
+    it "retains an automation trigger even when the tool acts under a human account" do
+      SiteSetting.dsa_reporting_enabled = true
+      PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
+
+      result =
+        tool(
+          reviewable_id: flagged_reviewable.id,
+          action_id: "agree_and_hide",
+          reason: "Automated moderation",
+          user: admin,
+          context_options: {
+            feature_context: {
+              automation_id: 123,
+            },
+          },
+        ).invoke
+
+      expect(result[:status]).to eq("success")
+      payload = DsaStatementOfRecord.find_by!(reviewable_id: flagged_reviewable.id).payload
+      expect(payload["automated_decision"]).to eq("AUTOMATED_DECISION_FULLY")
+    end
+
+    it "omits the automation degree when the invoking workflow is unknown" do
+      SiteSetting.dsa_reporting_enabled = true
+      PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
+
+      result =
+        tool(
+          reviewable_id: flagged_reviewable.id,
+          action_id: "agree_and_hide",
+          reason: "Moderation from a custom caller",
+        ).invoke
+
+      expect(result[:status]).to eq("success")
+      payload = DsaStatementOfRecord.find_by!(reviewable_id: flagged_reviewable.id).payload
+      expect(payload).not_to have_key("automated_decision")
     end
 
     it "successfully performs disagree" do

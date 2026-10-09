@@ -2,34 +2,45 @@
 
 class Reviewable::Audience
   def initialize(topic)
-    @topic = topic.dup
-    @topic.id = topic.id
+    @topic = Topic.instantiate(topic.attributes)
     @topic.category = topic.category
+    @message_readers = topic.all_allowed_users if topic.private_message?
   end
 
   def restricted_by?(destination)
     anonymous = Guardian.new
     return false if anonymous.can_see_topic?(destination, false)
     return true if anonymous.can_see_topic?(@topic, false)
-    if !@topic.private_message? && !destination.private_message? &&
-         @topic.category_id == destination.category_id
-      return false
-    end
 
-    readers =
-      if @topic.private_message?
-        @topic.all_allowed_users
+    previous_readers = @message_readers || readers(@topic)
+    previous_readers =
+      previous_readers.where(admin: false) unless SiteSetting.suppress_secured_categories_from_admin
+    previous_readers.where.not(id: readers(destination).select(:id)).exists?
+  end
+
+  private
+
+  def readers(topic)
+    return topic.all_allowed_users if topic.private_message?
+
+    category = topic.category
+    users =
+      if category.read_restricted?
+        User.where(id: GroupUser.where(group_id: category.secure_group_ids).select(:user_id))
       else
-        User.joins(:groups).where(groups: { id: @topic.category.secure_group_ids })
+        User.all
       end
-    candidates =
-      User
-        .where(id: readers.select(:id))
-        .or(User.where(id: @topic.user_id))
-        .or(User.where(staged: true))
-    candidates.find_each.any? do |user|
-      guardian = Guardian.new(user)
-      guardian.can_see_topic?(@topic, false) && !guardian.can_see_topic?(destination, false)
+    if category.read_restricted? && category.email_in.present? && category.email_in_allow_strangers
+      users = users.or(User.where(id: topic.user_id, staged: true))
     end
+    return users unless topic.shared_draft
+
+    groups = SiteSetting.shared_drafts_allowed_groups_map
+    return users if groups.include?(Group::AUTO_GROUPS[:logged_in_users])
+    if groups.include?(Group::AUTO_GROUPS[:everyone]) &&
+         !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+      return users
+    end
+    users.where(id: GroupUser.where(group_id: groups).select(:user_id))
   end
 end

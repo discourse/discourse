@@ -199,9 +199,10 @@ RSpec.describe ReviewableAiToolAction do
 
     it "records a category move only when readers lose access" do
       post = Fabricate(:post, topic:)
-      readers = Fabricate(:group, users: [Fabricate(:user)])
+      members = Fabricate.times(20, :user)
+      readers = Fabricate(:group, users: members)
       private_category = Fabricate(:private_category, group: readers)
-      same_readers = Fabricate(:private_category, group: readers)
+      same_readers = Fabricate(:private_category, group: Fabricate(:group, users: members))
       narrower =
         create_reviewable(
           create_tool_action(
@@ -234,10 +235,46 @@ RSpec.describe ReviewableAiToolAction do
           ),
         )
 
-      equivalent.perform(admin, :approve)
+      SiteSetting.dsa_reporting_enabled = false
+      result = nil
+      queries = track_sql_queries { result = equivalent.perform(admin, :approve) }
 
+      expect(queries.grep(/SELECT DISTINCT "categories"."id".*"category_groups"/).size).to be <= 2
+      expect(result.restrictions).to be_empty
       expect(topic.reload.category).to eq(same_readers)
       expect(DsaStatementOfRecord.where(reviewable_id: equivalent.id)).to be_empty
+    end
+
+    it "records a private message move when an original recipient loses access" do
+      reader = Fabricate(:user)
+      source = Fabricate(:private_message_topic, user: admin, recipient: reader)
+      destination = Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user))
+      Fabricate(:post, topic: source, user: admin)
+      post = Fabricate(:post, topic: source, user: admin)
+      Fabricate(:post, topic: destination, user: admin)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: source.id,
+              post_ids: [post.id],
+              destination_topic_id: destination.id,
+              reason: "Narrower recipients",
+            },
+          ),
+        )
+      expect(reader.guardian.can_see_topic?(source)).to eq(true)
+
+      reviewable.perform(admin, :approve)
+
+      expect(post.reload.topic_id).to eq(destination.id)
+      expect(reader.guardian.can_see_topic?(destination.reload)).to eq(false)
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+        "decision_visibility_other" => "Content audience restricted",
+      )
     end
 
     it "records the actual moved first post using its original content date" do

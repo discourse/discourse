@@ -113,7 +113,11 @@ class ReviewableAiChatMessage < Reviewable
   def perform_delete_and_ignore(performed_by, args)
     ignore { chat_message.trash!(performed_by) }.tap do |result|
       if chat_message.trashed?
-        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: chat_message)
+        result.restrictions << Reviewable::Restriction.new(
+          kind: :removed,
+          target: chat_message,
+          uploads: chat_message.uploads,
+        )
       end
     end
   end
@@ -124,7 +128,11 @@ class ReviewableAiChatMessage < Reviewable
     yield if block_given?
     create_result(:success, :approved) do |result|
       if chat_message.trashed?
-        result.restrictions << Reviewable::Restriction.new(kind: :removed, target: chat_message)
+        result.restrictions << Reviewable::Restriction.new(
+          kind: :removed,
+          target: chat_message,
+          uploads: chat_message.uploads,
+        )
       end
       result.update_flag_stats = { status: :agreed, user_ids: flagged_by_user_ids }
       result.recalculate_score = true

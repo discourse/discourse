@@ -452,8 +452,17 @@ class Reviewable < ActiveRecord::Base
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
       if SiteSetting.dsa_reporting_enabled
+        detected_automatically =
+          reviewable_scores.where(
+            user_id: Discourse::SYSTEM_USER_ID,
+            reason: %w[watched_word fast_typer auto_silence_regex email_spam],
+          ).exists?
         result.automated_detection ||=
-          DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, false, self)
+          DiscoursePluginRegistry.apply_modifier(
+            :reviewable_automated_detection,
+            detected_automatically,
+            self,
+          )
         DsaStatementRecorder.record(reviewable: self, result:)
       end
     end

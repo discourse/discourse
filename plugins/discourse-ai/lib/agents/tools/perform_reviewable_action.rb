@@ -95,7 +95,7 @@ module DiscourseAi
                 action_id,
                 version: reviewable.version,
                 guardian: guardian,
-                decision_automation: context.reviewable_id ? :partial : :full,
+                decision_automation: decision_automation,
               )
           rescue Reviewable::InvalidAction
             return(
@@ -135,6 +135,17 @@ module DiscourseAi
 
         def description_args
           { reviewable_id: parameters[:reviewable_id], action: parameters[:action_id] }
+        end
+
+        private
+
+        def decision_automation
+          return :partial if context.reviewable_id
+          if context.feature_context.key?(:automation_id) ||
+               %w[llm_triage llm_tagger ai_report ai_tool_action].include?(context.feature_name)
+            return :full
+          end
+          :partial if context.feature_name == "bot" && (context.post_id || context.message_id)
         end
       end
     end

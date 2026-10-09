@@ -643,6 +643,7 @@ RSpec.describe Reviewable, type: :model do
 
       it "combines explicit post deletion and suspension in one pending statement" do
         expiry = 2.days.from_now.change(usec: 0)
+        other_user = Fabricate(:user, created_at: post.created_at)
 
         reviewable.perform(
           moderator,
@@ -651,6 +652,7 @@ RSpec.describe Reviewable, type: :model do
             reason: "spam",
             suspend_until: expiry,
             post_action: "delete",
+            other_user_ids: [other_user.id],
           },
         )
 
@@ -664,6 +666,7 @@ RSpec.describe Reviewable, type: :model do
         )
         expect(post.reload).to be_trashed
         expect(post.user.reload).to be_suspended
+        expect(other_user.reload).to be_suspended
       end
 
       it "splits deleted replies only when their required content dates differ" do
@@ -695,7 +698,7 @@ RSpec.describe Reviewable, type: :model do
 
       it "records known language and actual media types without inventing classification fields" do
         post.update!(
-          locale: "fr",
+          locale: "zh_CN",
           cooked:
             '<p>Texte <img src="/image.png"><video src="/video.mp4"></video><audio src="/audio.mp3"></audio></p>',
         )
@@ -712,7 +715,7 @@ RSpec.describe Reviewable, type: :model do
             CONTENT_TYPE_AUDIO
             CONTENT_TYPE_TEXT
           ],
-          "content_language" => "FR",
+          "content_language" => "ZH",
           "content_date" => post.created_at.to_date.iso8601,
           "application_date" => Date.current.iso8601,
         )
@@ -810,6 +813,47 @@ RSpec.describe Reviewable, type: :model do
           "application_date" => Date.current.iso8601,
         )
         expect(Reviewable.pending.where(id: [other_flag.id, held_review.id, queued.id])).to be_empty
+      end
+
+      it "preserves known automatic detection without inferring it from a human moderator" do
+        automatic_review =
+          PostActionCreator.create(
+            Discourse.system_user,
+            post,
+            :inappropriate,
+            reason: :watched_word,
+          ).reviewable
+
+        automatic_review.perform(moderator, :agree_and_hide)
+
+        payload = DsaStatementOfRecord.find_by!(reviewable_id: automatic_review.id).payload
+        expect(payload["automated_detection"]).to eq("Yes")
+        expect(payload).not_to have_key("automated_decision")
+      end
+
+      it "combines bulk account restrictions unless required creation dates differ" do
+        post.user.update!(created_at: 4.days.ago)
+        same_date_user = Fabricate(:user, created_at: post.user.created_at)
+        other_date_user = Fabricate(:user, created_at: 2.days.ago)
+
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          penalty: {
+            reason: "Related accounts",
+            suspend_until: 2.days.from_now,
+            other_user_ids: [same_date_user.id, other_date_user.id],
+          },
+        )
+
+        statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+        expect(statements.count).to eq(2)
+        expect(statements.map { |statement| statement.payload["content_date"] }).to match_array(
+          [post.user.created_at, other_date_user.created_at].map { |date| date.to_date.iso8601 },
+        )
+        expect(
+          [post.user, same_date_user, other_date_user].map { |user| user.reload.suspended? },
+        ).to eq([true, true, true])
       end
 
       it "records rejected queued content but not its preparatory edit" do

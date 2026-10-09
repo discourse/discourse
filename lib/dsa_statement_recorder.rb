@@ -41,11 +41,7 @@ class DsaStatementRecorder
       group =
         groups.find do |candidates|
           related = candidates.any? { |candidate| candidate.account_id == account.account_id }
-          same_account_date =
-            candidates.all? do |candidate|
-              candidate.content_kind == :account &&
-                candidate.created_at.to_date == account.created_at.to_date
-            end
+          same_content_date = candidates.first.created_at.to_date == account.created_at.to_date
           compatible =
             candidates.all? do |candidate|
               candidate.content_kind != :account ||
@@ -55,7 +51,7 @@ class DsaStatementRecorder
                     candidate.expires_at&.to_date == account.expires_at&.to_date
                 )
             end
-          (related || same_account_date) && compatible
+          (related || same_content_date) && compatible
         end
       if group
         group << account
@@ -133,16 +129,21 @@ class DsaStatementRecorder
 
     cooked = subject.cooked.presence || PrettyText.cook(subject.raw.to_s)
     document = Nokogiri::HTML5.fragment(cooked)
-    types = []
+    types = subject.attachment_types.map { |type| "CONTENT_TYPE_#{type.to_s.upcase}" }
     types << "CONTENT_TYPE_IMAGE" if document.at_css("img")
     types << "CONTENT_TYPE_VIDEO" if document.at_css("video")
     types << "CONTENT_TYPE_AUDIO" if document.at_css("audio")
     types << "CONTENT_TYPE_TEXT" if document.text.strip.present?
-    types.presence || ["CONTENT_TYPE_OTHER"]
+    types.uniq.presence || ["CONTENT_TYPE_OTHER"]
   end
 
   def language(locale)
     code = locale.to_s.split(/[-_]/).first.to_s.upcase
-    code if code.match?(/\A[A-Z]{2}\z/) && LocaleSiteSetting.language_names.key?(code.downcase)
+    if code.match?(/\A[A-Z]{2}\z/) &&
+         LocaleSiteSetting.language_names.keys.any? { |known|
+           known.split("_").first.casecmp?(code)
+         }
+      code
+    end
   end
 end

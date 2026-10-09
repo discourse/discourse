@@ -39,6 +39,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     end
 
     it "suspends the author and completes the deletion alias together" do
+      SiteSetting.dsa_reporting_enabled = true
       reviewable.update!(target_created_by: comment_poster)
 
       result =
@@ -55,6 +56,9 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
       expect(comment_poster.reload).to be_suspended
       expect(comment.reload.deleted_at).to be_present
       expect(reviewable.reload).to be_approved
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["decision_account"]).to eq("DECISION_ACCOUNT_SUSPENDED")
+      expect(statement.payload).not_to have_key("decision_visibility")
     end
 
     it "keeps the content and reviewable unchanged when silence details are invalid" do
