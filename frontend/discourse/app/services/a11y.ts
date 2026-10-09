@@ -1,9 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, type Timer } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+
+/** Priority of an ARIA live-region announcement. */
+export type AnnouncementType = "polite" | "assertive";
 
 let clearAnnouncements = true;
 
@@ -15,10 +18,8 @@ let clearAnnouncements = true;
  * Used to restore default behavior where announcements auto-clear.
  *
  * USE ONLY FOR TESTING PURPOSES
-
- * @returns {void}
  */
-export function enableClearA11yAnnouncementsInTests() {
+export function enableClearA11yAnnouncementsInTests(): void {
   if (isTesting() || isRailsTesting()) {
     clearAnnouncements = true;
   }
@@ -32,18 +33,14 @@ export function enableClearA11yAnnouncementsInTests() {
  * Useful for testing that announcements persist for expected duration.
  *
  * USE ONLY FOR TESTING PURPOSES
- *
- * @returns {void}
  */
-export function disableClearA11yAnnouncementsInTests() {
+export function disableClearA11yAnnouncementsInTests(): void {
   if (isTesting() || isRailsTesting()) {
     clearAnnouncements = false;
   }
 }
 
 /**
- * @class A11yService
- *
  * Accessibility service that handles screen reader announcements and skip links.
  *
  * Key features:
@@ -63,43 +60,42 @@ export function disableClearA11yAnnouncementsInTests() {
 export default class A11y extends Service {
   /**
    * Flag to control visibility of skip links for keyboard navigation
-   * @type {boolean}
    */
-  @tracked showSkipLinks = true;
+  @tracked showSkipLinks: boolean = true;
 
   /**
    * Reference date used to determine if relative dates need to be updated.
    * When this value changes, all relative dates consuming this value will be re-rendered.
-   * @type {Date}
    */
-  @tracked autoUpdatingRelativeDateRef = new Date();
+  @tracked autoUpdatingRelativeDateRef: Date = new Date();
 
   #state = new (class {
     /**
      * Map of screen reader announcements by type
-     * @type {TrackedMap<string, string>}
      */
-    #messages = trackedMap();
+    #messages = trackedMap<AnnouncementType, string>();
 
     /**
      * Map of announcement clear timers by type
-     * @type {TrackedMap<string, EmberRunTimer>}
      */
-    #timers = trackedMap();
+    #timers = trackedMap<AnnouncementType, Timer>();
 
     /**
      * Map of pending repeat-restore timers by type
-     * @type {Map<string, EmberRunTimer>}
      */
-    #restores = new Map();
+    #restores = new Map<AnnouncementType, Timer>();
 
     /**
      * Sets an announcement message with auto-clearing
-     * @param {'polite'|'assertive'} type - Type of announcement
-     * @param {string} message - Message to announce
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement
+     * @param message - Message to announce
+     * @param clearDelay - Delay in ms before clearing
      */
-    setMessage(type, message, clearDelay) {
+    setMessage(
+      type: AnnouncementType,
+      message: string,
+      clearDelay: number
+    ): void {
       // Two announcements in one tick can queue a restore between this call being scheduled
       // and it running, so the request-time cancel in `announce` cannot be the only one.
       this.cancelRestore(type);
@@ -130,17 +126,17 @@ export default class A11y extends Service {
 
     /**
      * Gets the current announcement message of specified type
-     * @param {'polite'|'assertive'} type - Type of announcement to get
-     * @returns {string|undefined} The announcement message if exists
+     * @param type - Type of announcement to get
+     * @returns The announcement message if exists
      */
-    getMessage(type) {
+    getMessage(type: AnnouncementType): string | undefined {
       return this.#messages.get(type);
     }
 
     /**
      * Clears all pending announcement timers
      */
-    clearTimers() {
+    clearTimers(): void {
       this.#timers.forEach((timer) => {
         if (timer) {
           cancel(timer);
@@ -154,9 +150,9 @@ export default class A11y extends Service {
 
     /**
      * Cancels the pending repeat-restore for a type, if there is one
-     * @param {'polite'|'assertive'} type - Type of announcement
+     * @param type - Type of announcement
      */
-    cancelRestore(type) {
+    cancelRestore(type: AnnouncementType): void {
       const pendingRestore = this.#restores.get(type);
       if (pendingRestore) {
         cancel(pendingRestore);
@@ -166,11 +162,11 @@ export default class A11y extends Service {
 
     /**
      * Writes the message into the live region and arms its clear timer
-     * @param {'polite'|'assertive'} type - Type of announcement
-     * @param {string} message - Message to announce
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement
+     * @param message - Message to announce
+     * @param clearDelay - Delay in ms before clearing
      */
-    #write(type, message, clearDelay) {
+    #write(type: AnnouncementType, message: string, clearDelay: number): void {
       this.#messages.set(type, message);
 
       if (clearAnnouncements) {
@@ -180,10 +176,10 @@ export default class A11y extends Service {
 
     /**
      * Schedule clearing of an announcement after delay
-     * @param {'polite'|'assertive'} type - Type of announcement to clear
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement to clear
+     * @param clearDelay - Delay in ms before clearing
      */
-    #scheduleClear(type, clearDelay) {
+    #scheduleClear(type: AnnouncementType, clearDelay: number): void {
       const pendingTimer = this.#timers.get(type);
       if (pendingTimer) {
         cancel(pendingTimer);
@@ -205,36 +201,38 @@ export default class A11y extends Service {
   /**
    * Cleanup timers when service is destroyed
    */
-  willDestroy() {
-    super.willDestroy(...arguments);
+  willDestroy(): void {
+    super.willDestroy();
     this.#state.clearTimers();
   }
 
   /**
    * Gets the current assertive announcement message
-   * @type {string|undefined}
    */
-  get assertiveMessage() {
+  get assertiveMessage(): string | undefined {
     return this.#state.getMessage("assertive");
   }
 
   /**
    * Gets the current polite announcement message
-   * @type {string|undefined}
    */
-  get politeMessage() {
+  get politeMessage(): string | undefined {
     return this.#state.getMessage("polite");
   }
 
   /**
    * Announce a message to screen readers
-   * @param {string} message - The message to announce
-   * @param {'polite'|'assertive'} type - The announcement type
-   * @param {number} clearDelay - Delay in ms before clearing the message
-   * @throws {TypeError} If message is not a string
-   * @throws {Error} If clearDelay is not positive or type is invalid
+   * @param message - The message to announce
+   * @param type - The announcement type
+   * @param clearDelay - Delay in ms before clearing the message
+   * @throws TypeError - If message is not a string
+   * @throws Error - If clearDelay is not positive or type is invalid
    */
-  announce(message, type = "polite", clearDelay = 2000) {
+  announce(
+    message: string,
+    type: AnnouncementType = "polite",
+    clearDelay: number = 2000
+  ): void {
     if (typeof message !== "string") {
       throw new TypeError("The announced message must be a string");
     }
