@@ -529,6 +529,10 @@
     &.--empty {
       font-style: italic;
 
+      .user-status__description {
+        padding-inline-end: 0.15em;
+      }
+
       .d-icon {
         color: var(--primary-medium);
       }
