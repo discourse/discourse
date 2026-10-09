@@ -125,6 +125,19 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
         expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(-1)
       end
 
+      it "does not announce an unaccepted answer when the enclosing transaction rolls back" do
+        messages =
+          MessageBus.track_publish("/topic/#{topic.id}") do
+            DiscourseSolved::TopicAnswer.transaction do
+              result
+              raise ActiveRecord::Rollback
+            end
+          end
+
+        expect(DiscourseSolved::TopicAnswer.exists?(topic_answer.id)).to eq(true)
+        expect(messages).to be_empty
+      end
+
       context "when tracking/watching users have topic solved notifications" do
         fab!(:watching_user, :user)
 

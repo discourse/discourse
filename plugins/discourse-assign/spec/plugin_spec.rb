@@ -308,12 +308,16 @@ RSpec.describe DiscourseAssign do
     end
 
     describe "on 'post_destroyed'" do
+      subject(:destroy_post) do
+        PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy
+      end
+
       let!(:assignment) { Fabricate(:post_assignment) }
       let(:post) { assignment.target }
 
-      before { PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy }
-
       it "deactivates the existing assignment" do
+        destroy_post
+
         assignment.reload
         expect(assignment).not_to be_active
         expect_job_enqueued(
@@ -325,6 +329,20 @@ RSpec.describe DiscourseAssign do
             assigned_to_type: assignment.assigned_to_type,
           },
         )
+      end
+
+      it "preserves the assignment without publishing a reload when deletion rolls back" do
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            Post.transaction do
+              destroy_post
+              raise ActiveRecord::Rollback
+            end
+          end
+
+        expect(assignment.reload).to be_active
+        expect(post.reload).not_to be_trashed
+        expect(messages).to be_empty
       end
     end
 

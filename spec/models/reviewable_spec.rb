@@ -691,14 +691,23 @@ RSpec.describe Reviewable, type: :model do
     end
 
     it "does not publish a topic deletion when the reviewable action rolls back the penalty" do
+      topic = post.topic
       reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      user_action =
+        UserAction.log_action!(
+          action_type: UserAction::NEW_TOPIC,
+          user_id: post.user_id,
+          acting_user_id: post.user_id,
+          target_topic_id: topic.id,
+          target_post_id: post.id,
+        )
       reviewable.stubs(:perform_agree_and_keep).returns(
         Reviewable::PerformResult.new(reviewable, :failure),
       )
       result = nil
 
       messages =
-        MessageBus.track_publish("/delete") do
+        MessageBus.track_publish do
           result =
             reviewable.perform(
               moderator,
@@ -715,14 +724,20 @@ RSpec.describe Reviewable, type: :model do
       expect(reviewable.reload).to be_pending
       expect(post.user.reload).not_to be_suspended
       expect(post.reload).not_to be_trashed
-      expect(post.topic.reload).not_to be_trashed
-      expect(messages).to be_empty
+      expect(topic.reload).not_to be_trashed
+      expect(UserAction.exists?(user_action.id)).to eq(true)
+      expect(messages.map(&:channel)).not_to include(
+        "/delete",
+        "/user/#{post.user_id}",
+        "/categories",
+      )
     end
 
     it "rolls back every silence when a related user cannot be silenced" do
       reviewable = Fabricate(:reviewable_queued_post)
       author = reviewable.target_created_by
-      related_user = Fabricate(:user, silenced_till: 1.day.ago)
+      related_user = Fabricate(:user)
+      related_user.update_column(:username, "")
 
       expect do
         reviewable.perform(
@@ -734,13 +749,90 @@ RSpec.describe Reviewable, type: :model do
             other_user_ids: [related_user.id],
           },
         )
-      end.to raise_error(Discourse::InvalidParameters)
+      end.to raise_error(ActiveRecord::RecordInvalid)
 
       expect(author.reload).not_to be_silenced
       expect(reviewable.reload).to be_pending
       expect(
         UserHistory.where(target_user: author, action: UserHistory.actions[:silence_user]),
       ).to be_empty
+    end
+
+    it "silences related users whose silence expired and preserves an active silence" do
+      reviewable = Fabricate(:reviewable_queued_post)
+      expired_user = Fabricate(:user, silenced_till: 1.day.ago)
+      active_expiry = 3.days.from_now.change(usec: 0)
+      active_user = Fabricate(:user, silenced_till: active_expiry)
+      expiry = 2.days.from_now.change(usec: 0)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          penalty: {
+            reason: "spam",
+            silenced_till: expiry,
+            other_user_ids: [expired_user.id, active_user.id],
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_rejected
+      expect(reviewable.target_created_by.reload.silenced_till).to eq(expiry)
+      expect(expired_user.reload.silenced_till).to eq(expiry)
+      expect(active_user.reload.silenced_till).to eq(active_expiry)
+    end
+
+    it "rolls back a silence without publishing its event or creating its system message" do
+      reviewable = Fabricate(:reviewable_queued_post)
+      reviewable.stubs(:perform_reject_post).returns(
+        Reviewable::PerformResult.new(reviewable, :failure),
+      )
+      events = nil
+      result = nil
+
+      expect do
+        events =
+          DiscourseEvent.track_events(:user_silenced) do
+            result =
+              reviewable.perform(
+                moderator,
+                :reject_and_silence,
+                penalty: {
+                  reason: "spam",
+                  silenced_till: 2.days.from_now,
+                },
+              )
+          end
+      end.not_to change { Post.count }
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_silenced
+      expect(events).to be_empty
+    end
+
+    it "completes a suspension when the selected post edit leaves the text unchanged" do
+      reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      original_raw = post.raw
+
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          penalty: {
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+            post_action: "edit",
+            post_edit: "#{original_raw}  ",
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_approved
+      expect(post.user.reload).to be_suspended
+      expect(post.reload.raw).to eq(original_raw)
+      expect(post.revisions).to be_empty
     end
 
     it "rolls back the transaction when the action fails" do

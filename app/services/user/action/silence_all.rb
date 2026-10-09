@@ -16,6 +16,8 @@ class User::Action::SilenceAll < Service::ActionBase
 
   def silenced_users
     users.map do |user|
+      next if raise_on_failure && user.silenced?
+
       UserSilencer
         .new(
           user,
@@ -29,7 +31,7 @@ class User::Action::SilenceAll < Service::ActionBase
         )
         .tap do |silencer|
           unless silencer.silence
-            raise Discourse::InvalidParameters.new(:user_id) if raise_on_failure
+            raise ActiveRecord::RecordInvalid.new(user) if raise_on_failure
             next
           end
           Jobs.enqueue(

@@ -87,14 +87,17 @@ class DiscourseSolved::UnacceptAnswer
   end
 
   def publish_unaccepted(post:, topic:, guardian:)
-    DiscourseEvent.trigger(:unaccepted_solution, post)
-    MessageBus.publish(
-      "/topic/#{topic.id}",
-      {
-        type: :unaccepted_solution,
-        accepted_answers: DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian),
-      },
-      topic.secure_audience_publish_messages,
-    )
+    DB.after_commit do
+      DiscourseEvent.trigger(:unaccepted_solution, post)
+      MessageBus.publish(
+        "/topic/#{topic.id}",
+        {
+          type: :unaccepted_solution,
+          accepted_answers:
+            DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian),
+        },
+        topic.secure_audience_publish_messages,
+      )
+    end
   end
 end

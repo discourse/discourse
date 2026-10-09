@@ -35,13 +35,15 @@ class User::Action::TriggerPostAction < Service::ActionBase
     guardian.ensure_can_edit_post!(post) if raise_on_failure
     return unless guardian.can_edit_post?(post)
     # Take what the moderator edited in as gospel
-    revised =
-      PostRevisor.new(post).revise!(
-        user,
-        { raw: params.post_edit },
-        skip_validations: true,
-        skip_revision: true,
-      )
-    raise Discourse::InvalidParameters.new(:post_edit) if raise_on_failure && !revised
+    PostRevisor.new(post).revise!(
+      user,
+      { raw: params.post_edit },
+      skip_validations: true,
+      skip_revision: true,
+    )
+    if raise_on_failure
+      raise ActiveRecord::RecordInvalid.new(post) if post.errors.present?
+      raise ActiveRecord::RecordInvalid.new(post.topic) if post.topic.errors.present?
+    end
   end
 end

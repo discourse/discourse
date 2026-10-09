@@ -5,7 +5,7 @@ class ReviewableFlaggedPost < Reviewable
 
   scope :pending_and_default_visible, -> { pending.default_visible }
 
-  # Penalties are handled by the modal after the action is performed
+  # Penalties run before the aliased action in Reviewable#perform.
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_keep,
