@@ -199,6 +199,36 @@ RSpec.describe DsaModeration do
       expect(payload["content_type_other"]).to be_present
     end
 
+    it "records a queue lock even when the post was already locked" do
+      PostLocker.new(post, admin).lock
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      DsaModeration.capture(reviewable: reviewable, actor: admin, action_name: :lock_post) do
+        PostLocker.new(post, admin).lock
+      end
+
+      history = UserHistory.where(action: UserHistory.actions[:post_locked], post_id: post.id).last
+      expect(history.previous_value).to be_nil
+      expect(history.new_value).to be_nil
+      expect(
+        DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"])
+    end
+
+    it "excludes unlocking from restriction recording" do
+      PostLocker.new(post, admin).lock
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      DsaModeration.capture(reviewable: reviewable, actor: admin, action_name: :unlock_post) do
+        PostLocker.new(post, admin).unlock
+      end
+
+      expect(post.reload).not_to be_locked
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+    end
+
     it "leaves reporting inactive by default" do
       SiteSetting.dsa_reporting_enabled = false
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable

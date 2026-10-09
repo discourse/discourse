@@ -383,7 +383,7 @@ class DsaModeration
       end
     when :post_locked
       post = Post.find_by(id: history.post_id)
-      if post&.locked? && history.previous_value.blank?
+      if post
         record_restriction(
           target: post,
           restriction: {
