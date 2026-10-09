@@ -2186,6 +2186,49 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe ".legacy_recipient_for" do
+    it "rejects an ambiguous conversation when the preferred bot is no longer a participant" do
+      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      second_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      former_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, first_model_user.id)
+      opus_model.update_column(:user_id, second_model_user.id)
+      Fabricate(:llm_model).update_column(:user_id, former_model_user.id)
+      topic = Fabricate(:private_message_topic, user:, recipient: first_model_user)
+      topic.topic_allowed_users.create!(user: second_model_user)
+      topic.custom_fields[described_class::BOT_USER_PREF_ID_CUSTOM_FIELD] = former_model_user.id
+      topic.save_custom_fields
+
+      expect { described_class.legacy_recipient_for(topic, []) }.to raise_error(
+        DiscourseAi::AiBot::ConversationRoute::Error,
+        I18n.t("discourse_ai.ai_bot.errors.ambiguous_model"),
+      )
+    end
+
+    it "continues a legacy conversation with its preferred model recipient" do
+      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      preferred_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, first_model_user.id)
+      opus_model.update_column(:user_id, preferred_model_user.id)
+      toggle_enabled_bots(bots: [claude_2, opus_model])
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      general_agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
+      topic = Fabricate(:private_message_topic, user:, recipient: first_model_user)
+      topic.topic_allowed_users.create!(user: preferred_model_user)
+      topic.custom_fields[described_class::BOT_USER_PREF_ID_CUSTOM_FIELD] = preferred_model_user.id
+      topic.custom_fields["ai_agent"] = general_agent.name
+      topic.save_custom_fields
+      post = Fabricate(:post, topic:, user:)
+
+      expect_enqueued_with(
+        job: :create_ai_reply,
+        args: {
+          post_id: post.id,
+          agent_id: general_agent.id,
+          llm_model_id: opus_model.id,
+        },
+      ) { described_class.schedule_reply(post) }
+    end
+
     it "rejects a private message with multiple eligible agent recipients" do
       second_agent =
         Fabricate(
@@ -2206,6 +2249,52 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe ".reply_to_post" do
+    it "uses the automation agent model instead of the conversation model" do
+      post = Fabricate(:post, user:)
+      post.topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = opus_model.id
+      post.topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Automation response"]) do
+        described_class.reply_to_post(
+          post:,
+          agent_id: general_agent.id,
+          attributed_user: Discourse.system_user,
+        )
+      end
+
+      reply = post.topic.posts.order(:post_number).last
+      expect(reply.raw).to eq("Automation response")
+      expect(reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "uses the automation agent model instead of a previous reply model" do
+      post = Fabricate(:post, user:)
+      Fabricate(
+        :post,
+        topic: post.topic,
+        user: bot_user,
+        custom_fields: {
+          DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => opus_model.id,
+        },
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Automation response"]) do
+        described_class.reply_to_post(
+          post:,
+          agent_id: general_agent.id,
+          attributed_user: Discourse.system_user,
+        )
+      end
+
+      reply = post.topic.posts.order(:post_number).last
+      expect(reply.raw).to eq("Automation response")
+      expect(reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
     it "replies as the given user when the agent has no user" do
       post = Fabricate(:post, user: user)
       speaker = Fabricate(:user)
