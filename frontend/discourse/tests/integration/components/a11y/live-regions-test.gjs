@@ -423,4 +423,184 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       "teardown cancels the pending restore instead of letting it write and re-arm a timer"
     );
   });
+
+  // The record of what reached each live region, read by tooling that has to pair a delivery with
+  // the calls it contains. Text alone cannot do that once same-tick calls are combined.
+  module("announcementHistory", function () {
+    function snapshot(record) {
+      const { type, text, delivered, dropped, superseded } = record;
+      return { type, text, delivered, dropped, superseded };
+    }
+
+    test("announce returns increasing call ids, and a call that throws gets none", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const first = a11y.announce("One", "polite");
+      assert.throws(() => a11y.announce("Two", "nonsense"));
+      const second = a11y.announce("Three", "polite");
+      await settled();
+
+      assert.strictEqual(typeof first, "number", "a call id is returned");
+      assert.strictEqual(second, first + 1, "the call that threw used no id");
+    });
+
+    test("a lone message is recorded with its call", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const id = a11y.announce("Saved", "polite");
+      await settled();
+
+      const [record] = a11y.announcementHistory;
+      assert.strictEqual(typeof record.id, "number", "the record has an id");
+      assert.deepEqual(snapshot(record), {
+        type: "polite",
+        text: "Saved",
+        delivered: [id],
+        dropped: [],
+        superseded: false,
+      });
+    });
+
+    test("same-tick messages are one record holding every call", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const added = a11y.announce("Added Foo", "polite");
+      const count = a11y.announce("12 results", "polite");
+      await settled();
+
+      assert.deepEqual(a11y.announcementHistory.map(snapshot), [
+        {
+          type: "polite",
+          text: "Added Foo. 12 results",
+          delivered: [added, count],
+          dropped: [],
+          superseded: false,
+        },
+      ]);
+    });
+
+    test("identical same-tick messages each count as delivered", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const first = a11y.announce("3 results", "polite");
+      const second = a11y.announce("3 results", "polite");
+      await settled();
+
+      assert.deepEqual(
+        a11y.announcementHistory.map((record) => record.delivered),
+        [[first, second]],
+        "both calls are delivered by the one merged message"
+      );
+    });
+
+    test("a restated message is recorded as dropped", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      a11y.announce("3 results", "polite");
+      await settled();
+
+      const restated = a11y.announce("3 results", "polite");
+      const added = a11y.announce("Added Foo", "polite");
+      await settled();
+
+      assert.deepEqual(snapshot(a11y.announcementHistory.at(-1)), {
+        type: "polite",
+        text: "Added Foo",
+        delivered: [added],
+        dropped: [{ call: restated, reason: "restated" }],
+        superseded: false,
+      });
+    });
+
+    test("an empty announcement records the calls it discarded", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const stale = a11y.announce("Stale", "polite");
+      const clear = a11y.announce("", "polite");
+      await settled();
+
+      assert.deepEqual(a11y.announcementHistory.map(snapshot), [
+        {
+          type: "polite",
+          text: "",
+          delivered: [clear],
+          dropped: [{ call: stale, reason: "cleared" }],
+          superseded: false,
+        },
+      ]);
+    });
+
+    test("a repeat cancelled by a newer announcement is marked superseded", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      a11y.announce("1 result", "polite");
+      await settled();
+
+      // Same timing as the repeat test above: one tick in, the repeat has cleared the region
+      // and is waiting to write it back.
+      a11y.announce("1 result", "polite");
+      await new Promise((resolve) => next(resolve));
+      a11y.announce("2 results", "polite");
+      await settled();
+
+      assert.deepEqual(
+        a11y.announcementHistory.map((record) => [
+          record.text,
+          record.superseded,
+        ]),
+        [
+          ["1 result", false],
+          ["1 result", true],
+          ["2 results", false],
+        ]
+      );
+    });
+
+    test("the history keeps only the newest 50 records", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      for (let index = 1; index <= 51; index++) {
+        a11y.announce(`Message ${index}`, "polite");
+        await settled();
+      }
+
+      const texts = a11y.announcementHistory.map((record) => record.text);
+      assert.strictEqual(texts.length, 50, "capped at 50");
+      assert.strictEqual(texts[0], "Message 2", "the oldest record is dropped");
+      assert.strictEqual(texts.at(-1), "Message 51", "the newest is kept");
+    });
+
+    test("the records it returns cannot change the service", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const id = a11y.announce("Saved", "polite");
+      await settled();
+
+      const [record] = a11y.announcementHistory;
+      assert.true(Object.isFrozen(record), "the record is frozen");
+      assert.true(Object.isFrozen(record.delivered), "its call list is frozen");
+      assert.throws(() => record.delivered.push(99), "it cannot be changed");
+      assert.deepEqual(
+        a11y.announcementHistory[0].delivered,
+        [id],
+        "the service's own record is untouched"
+      );
+    });
+  });
 });

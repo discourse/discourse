@@ -1,10 +1,41 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, type Timer } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
+
+/** Priority of an ARIA live-region announcement. */
+export type AnnouncementType = "polite" | "assertive";
+
+/**
+ * One write the service made to a live region on behalf of `announce`, with the calls it
+ * carried. Same-tick calls are combined into one write, so text alone cannot say which calls a
+ * delivery answers; this does.
+ */
+export interface AnnouncementRecord {
+  /** Increases with every record. */
+  id: number;
+  /** The live region written to. */
+  type: AnnouncementType;
+  /** Exactly what was written; "" for a clear. */
+  text: string;
+  /** Call ids whose message is in `text`, including identical calls merged into one. */
+  delivered: readonly number[];
+  /** Calls from the same tick that did not make it into `text`, and why. */
+  dropped: readonly {
+    /** The call id. */
+    call: number;
+    /** Left out because it restated the region, or discarded by a later empty announcement. */
+    reason: "restated" | "cleared";
+  }[];
+  /** Whether a newer announcement cancelled this write before it was heard. */
+  superseded: boolean;
+}
+
+/** How many records `announcementHistory` keeps; the oldest are dropped first. */
+const ANNOUNCEMENT_HISTORY_LIMIT = 50;
 
 let clearAnnouncements = true;
 
@@ -16,10 +47,8 @@ let clearAnnouncements = true;
  * Used to restore default behavior where announcements auto-clear.
  *
  * USE ONLY FOR TESTING PURPOSES
-
- * @returns {void}
  */
-export function enableClearA11yAnnouncementsInTests() {
+export function enableClearA11yAnnouncementsInTests(): void {
   if (isTesting() || isRailsTesting()) {
     clearAnnouncements = true;
   }
@@ -33,18 +62,14 @@ export function enableClearA11yAnnouncementsInTests() {
  * Useful for testing that announcements persist for expected duration.
  *
  * USE ONLY FOR TESTING PURPOSES
- *
- * @returns {void}
  */
-export function disableClearA11yAnnouncementsInTests() {
+export function disableClearA11yAnnouncementsInTests(): void {
   if (isTesting() || isRailsTesting()) {
     clearAnnouncements = false;
   }
 }
 
 /**
- * @class A11yService
- *
  * Accessibility service that handles screen reader announcements and skip links.
  *
  * Key features:
@@ -64,49 +89,61 @@ export function disableClearA11yAnnouncementsInTests() {
 export default class A11y extends Service {
   /**
    * Flag to control visibility of skip links for keyboard navigation
-   * @type {boolean}
    */
-  @tracked showSkipLinks = true;
+  @tracked showSkipLinks: boolean = true;
 
   /**
    * Reference date used to determine if relative dates need to be updated.
    * When this value changes, all relative dates consuming this value will be re-rendered.
-   * @type {Date}
    */
-  @tracked autoUpdatingRelativeDateRef = new Date();
+  @tracked autoUpdatingRelativeDateRef: Date = new Date();
 
   /**
    * Untracked map of announcements waiting to be composed by type
-   * @type {Map<'polite'|'assertive', { messages: string[], clearDelay: number }>}
    */
-  #pendingAnnouncements = new Map();
+  #pendingAnnouncements = new Map<
+    AnnouncementType,
+    { calls: { id: number; text: string }[]; clearDelay: number }
+  >();
+
+  #history: AnnouncementRecord[] = [];
+
+  #nextCallId = 1;
+
+  #nextRecordId = 1;
 
   #state = new (class {
     /**
      * Map of screen reader announcements by type
-     * @type {TrackedMap<string, string>}
      */
-    #messages = trackedMap();
+    #messages = trackedMap<AnnouncementType, string>();
 
     /**
      * Map of announcement clear timers by type
-     * @type {TrackedMap<string, EmberRunTimer>}
      */
-    #timers = trackedMap();
+    #timers = trackedMap<AnnouncementType, Timer>();
 
     /**
-     * Map of pending repeat-restore timers by type
-     * @type {Map<string, EmberRunTimer>}
+     * Map of pending repeat-restores by type, with the record each one would deliver
      */
-    #restores = new Map();
+    #restores = new Map<
+      AnnouncementType,
+      { timer: Timer; record: AnnouncementRecord | undefined }
+    >();
 
     /**
      * Sets an announcement message with auto-clearing
-     * @param {'polite'|'assertive'} type - Type of announcement
-     * @param {string} message - Message to announce
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement
+     * @param message - Message to announce
+     * @param clearDelay - Delay in ms before clearing
+     * @param record - The history record this write delivers
      */
-    setMessage(type, message, clearDelay) {
+    setMessage(
+      type: AnnouncementType,
+      message: string,
+      clearDelay: number,
+      record?: AnnouncementRecord
+    ): void {
       // Two announcements in one tick can queue a restore between this call being scheduled
       // and it running, so the request-time cancel in `announce` cannot be the only one.
       this.cancelRestore(type);
@@ -122,13 +159,13 @@ export default class A11y extends Service {
       // later to give it a change it can act on.
       if (this.#messages.get(type) === message) {
         this.#messages.delete(type);
-        this.#restores.set(
-          type,
-          next(() => {
+        this.#restores.set(type, {
+          record,
+          timer: next(() => {
             this.#restores.delete(type);
             this.#write(type, message, clearDelay);
-          })
-        );
+          }),
+        });
         return;
       }
 
@@ -137,17 +174,17 @@ export default class A11y extends Service {
 
     /**
      * Gets the current announcement message of specified type
-     * @param {'polite'|'assertive'} type - Type of announcement to get
-     * @returns {string|undefined} The announcement message if exists
+     * @param type - Type of announcement to get
+     * @returns The announcement message if exists
      */
-    getMessage(type) {
+    getMessage(type: AnnouncementType): string | undefined {
       return this.#messages.get(type);
     }
 
     /**
      * Clears all pending announcement timers
      */
-    clearTimers() {
+    clearTimers(): void {
       this.#timers.forEach((timer) => {
         if (timer) {
           cancel(timer);
@@ -155,29 +192,33 @@ export default class A11y extends Service {
       });
       this.#timers.clear();
 
-      this.#restores.forEach((timer) => cancel(timer));
+      this.#restores.forEach(({ timer }) => cancel(timer));
       this.#restores.clear();
     }
 
     /**
      * Cancels the pending repeat-restore for a type, if there is one
-     * @param {'polite'|'assertive'} type - Type of announcement
+     * @param type - Type of announcement
      */
-    cancelRestore(type) {
+    cancelRestore(type: AnnouncementType): void {
       const pendingRestore = this.#restores.get(type);
       if (pendingRestore) {
-        cancel(pendingRestore);
+        cancel(pendingRestore.timer);
         this.#restores.delete(type);
+
+        if (pendingRestore.record) {
+          pendingRestore.record.superseded = true;
+        }
       }
     }
 
     /**
      * Writes the message into the live region and arms its clear timer
-     * @param {'polite'|'assertive'} type - Type of announcement
-     * @param {string} message - Message to announce
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement
+     * @param message - Message to announce
+     * @param clearDelay - Delay in ms before clearing
      */
-    #write(type, message, clearDelay) {
+    #write(type: AnnouncementType, message: string, clearDelay: number): void {
       this.#messages.set(type, message);
 
       if (clearAnnouncements) {
@@ -187,10 +228,10 @@ export default class A11y extends Service {
 
     /**
      * Schedule clearing of an announcement after delay
-     * @param {'polite'|'assertive'} type - Type of announcement to clear
-     * @param {number} clearDelay - Delay in ms before clearing
+     * @param type - Type of announcement to clear
+     * @param clearDelay - Delay in ms before clearing
      */
-    #scheduleClear(type, clearDelay) {
+    #scheduleClear(type: AnnouncementType, clearDelay: number): void {
       const pendingTimer = this.#timers.get(type);
       if (pendingTimer) {
         cancel(pendingTimer);
@@ -212,37 +253,57 @@ export default class A11y extends Service {
   /**
    * Cleanup timers when service is destroyed
    */
-  willDestroy() {
-    super.willDestroy(...arguments);
+  willDestroy(): void {
+    super.willDestroy();
     this.#pendingAnnouncements.clear();
     this.#state.clearTimers();
   }
 
   /**
    * Gets the current assertive announcement message
-   * @type {string|undefined}
    */
-  get assertiveMessage() {
+  get assertiveMessage(): string | undefined {
     return this.#state.getMessage("assertive");
   }
 
   /**
    * Gets the current polite announcement message
-   * @type {string|undefined}
    */
-  get politeMessage() {
+  get politeMessage(): string | undefined {
     return this.#state.getMessage("polite");
   }
 
   /**
-   * Announce a message to screen readers, composing same-type messages in one flush
-   * @param {string} message - The message to announce
-   * @param {'polite'|'assertive'} type - The announcement type
-   * @param {number} clearDelay - Delay in ms before clearing the message
-   * @throws {TypeError} If message is not a string
-   * @throws {Error} If clearDelay is not positive or type is invalid
+   * The newest writes made to the live regions, oldest first, as frozen copies.
    */
-  announce(message, type = "polite", clearDelay = 2000) {
+  get announcementHistory(): readonly AnnouncementRecord[] {
+    return Object.freeze(
+      this.#history.map((record) =>
+        Object.freeze({
+          ...record,
+          delivered: Object.freeze([...record.delivered]),
+          dropped: Object.freeze(
+            record.dropped.map((entry) => Object.freeze({ ...entry }))
+          ),
+        })
+      )
+    );
+  }
+
+  /**
+   * Announce a message to screen readers, composing same-type messages in one flush
+   * @param message - The message to announce
+   * @param type - The announcement type
+   * @param clearDelay - Delay in ms before clearing the message
+   * @returns The call id, which `announcementHistory` records against this call
+   * @throws TypeError - If message is not a string
+   * @throws Error - If clearDelay is not positive or type is invalid
+   */
+  announce(
+    message: string,
+    type: AnnouncementType = "polite",
+    clearDelay: number = 2000
+  ): number {
     if (typeof message !== "string") {
       throw new TypeError("The announced message must be a string");
     }
@@ -259,6 +320,7 @@ export default class A11y extends Service {
     }
 
     const trimmed = message.trim();
+    const callId = this.#nextCallId++;
 
     // Drop a pending repeat-restore as soon as a newer message is requested rather than a
     // tick later when the write below runs, because the restore is already queued ahead of
@@ -267,6 +329,7 @@ export default class A11y extends Service {
     this.#state.cancelRestore(type);
 
     if (trimmed === "") {
+      const discarded = this.#pendingAnnouncements.get(type)?.calls ?? [];
       this.#pendingAnnouncements.delete(type);
 
       next(() => {
@@ -274,22 +337,35 @@ export default class A11y extends Service {
           return;
         }
 
-        this.#state.setMessage(type, "", clearDelay);
+        this.#state.setMessage(
+          type,
+          "",
+          clearDelay,
+          this.#record(
+            type,
+            "",
+            [callId],
+            discarded.map(({ id }) => ({ call: id, reason: "cleared" }))
+          )
+        );
       });
-      return;
+      return callId;
     }
 
     const pendingAnnouncement = this.#pendingAnnouncements.get(type);
     if (pendingAnnouncement) {
-      pendingAnnouncement.messages.push(trimmed);
+      pendingAnnouncement.calls.push({ id: callId, text: trimmed });
       pendingAnnouncement.clearDelay = Math.max(
         pendingAnnouncement.clearDelay,
         clearDelay
       );
-      return;
+      return callId;
     }
 
-    const announcement = { messages: [trimmed], clearDelay };
+    const announcement = {
+      calls: [{ id: callId, text: trimmed }],
+      clearDelay,
+    };
     this.#pendingAnnouncements.set(type, announcement);
 
     // Defer the tracked-state write out of the current render. `announce` is often
@@ -311,7 +387,7 @@ export default class A11y extends Service {
 
       // Dedupe identical texts: repeating the same phrase in one atomic announcement
       // conveys nothing to a screen reader. A `Set` preserves first-occurrence order.
-      let messages = [...new Set(announcement.messages)];
+      let messages = [...new Set(announcement.calls.map(({ text }) => text))];
 
       // A message that only restates what the region already says is news to nobody once the
       // same flush carries something else, and composing it in reads the superseded value
@@ -322,12 +398,59 @@ export default class A11y extends Service {
         messages = messages.filter((text) => text !== current);
       }
 
+      const kept = new Set(messages);
+      // Translated because the sentence break differs by script, spacing included.
+      const text = messages.join(i18n("a11y_announcement_separator"));
+
       this.#state.setMessage(
         type,
-        // Translated because the sentence break differs by script, spacing included.
-        messages.join(i18n("a11y_announcement_separator")),
-        announcement.clearDelay
+        text,
+        announcement.clearDelay,
+        this.#record(
+          type,
+          text,
+          announcement.calls
+            .filter((call) => kept.has(call.text))
+            .map(({ id }) => id),
+          announcement.calls
+            .filter((call) => !kept.has(call.text))
+            .map(({ id }) => ({ call: id, reason: "restated" }))
+        )
       );
     });
+
+    return callId;
+  }
+
+  /**
+   * Appends a write to `announcementHistory`, dropping the oldest past the limit.
+   *
+   * @param type - The live region written to
+   * @param text - What is written
+   * @param delivered - Call ids whose message is in `text`
+   * @param dropped - Calls left out, and why
+   * @returns The record, so a later cancellation can mark it superseded
+   */
+  #record(
+    type: AnnouncementType,
+    text: string,
+    delivered: number[],
+    dropped: AnnouncementRecord["dropped"]
+  ): AnnouncementRecord {
+    const record: AnnouncementRecord = {
+      id: this.#nextRecordId++,
+      type,
+      text,
+      delivered,
+      dropped,
+      superseded: false,
+    };
+
+    this.#history.push(record);
+    if (this.#history.length > ANNOUNCEMENT_HISTORY_LIMIT) {
+      this.#history.shift();
+    }
+
+    return record;
   }
 }

@@ -54,6 +54,8 @@ Still open:
 
 - Taking the longest `clearDelay` is untested. `discourseLater` shortens every delay to 10 ms under
   test, and the value only reaches private state, so no QUnit test can observe it.
+- The dev-tools a11y inspector (#42289) misreads combined announcements as problems. Confirmed on a
+  temp merge 2026-10-08; the planned fix is in `A11Y-ANNOUNCEMENT-HISTORY.md`.
 - #42377's description overstated the change: only an empty message supersedes a pending buffer, an
   empty message still waits a tick, and two of the tests it listed predate it. Don't carry that text
   into a new PR.
