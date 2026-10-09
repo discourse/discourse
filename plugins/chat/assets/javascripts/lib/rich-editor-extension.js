@@ -1,6 +1,7 @@
-import getURL from "discourse/lib/get-url";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import { buildTranscriptHeader } from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -37,40 +38,32 @@ const extension = {
           wrapperElement.classList.add("chat-transcript-chained");
         }
 
-        let metaElement;
-        let channelLinkElement;
+        // only a transcript's first block names the channel; later blocks join
+        // its box, which the stylesheet finds through this attribute
+        let headerElement;
         if (node.attrs.channel) {
-          if (node.attrs.multiQuote) {
-            metaElement = document.createElement("div");
-            metaElement.classList.add("chat-transcript-meta");
+          wrapperElement.dataset.channelName = node.attrs.channel;
 
-            const channelLink = node.attrs.channelId
-              ? getURL(`/chat/c/-/${node.attrs.channelId}`)
-              : null;
-
-            metaElement.innerHTML = i18n("chat.quote.original_channel", {
-              channel: dReplaceEmoji(node.attrs.channel),
-              channelLink: "",
-            });
-
-            const metaLinkElement = metaElement.querySelector("a");
-            if (metaLinkElement && channelLink) {
-              metaLinkElement.href = channelLink;
+          const owner = getOwnerWithFallback();
+          headerElement = buildTranscriptHeader(
+            node.attrs.channel,
+            node.attrs.channelId,
+            {
+              site: owner.lookup("service:site"),
+              chatChannelsManager: owner.lookup(
+                "service:chat-channels-manager"
+              ),
             }
-          } else {
-            channelLinkElement = document.createElement("a");
-            channelLinkElement.classList.add("chat-transcript-channel");
-            channelLinkElement.href = getURL(
-              `/chat/c/-/${node.attrs.channelId}`
-            );
-            channelLinkElement.innerHTML = `#${dReplaceEmoji(
-              node.attrs.channel
-            )}`;
-          }
+          );
         }
 
         const userElement = document.createElement("div");
         userElement.classList.add("chat-transcript-user");
+
+        // avatars can't be looked up here, so this stays an empty placeholder
+        const avatarElement = document.createElement("div");
+        avatarElement.classList.add("chat-transcript-user-avatar");
+        userElement.appendChild(avatarElement);
 
         // TODO (martin) Need to use current user's timezone here when we have
         // that available.
@@ -91,14 +84,11 @@ const extension = {
         messagesElement.classList.add("chat-transcript-messages");
         messagesElement.innerHTML = node.attrs.html;
 
-        if (metaElement) {
-          wrapperElement.appendChild(metaElement);
+        if (headerElement) {
+          wrapperElement.appendChild(headerElement);
         }
 
         if (node.attrs.threadId) {
-          const threadDetailsElement = document.createElement("details");
-          const threadSummaryElement = document.createElement("summary");
-
           const threadElement = document.createElement("div");
           threadElement.classList.add("chat-transcript-thread");
 
@@ -120,27 +110,17 @@ const extension = {
           threadHeaderElement.appendChild(threadTitleElement);
           threadElement.appendChild(threadHeaderElement);
           threadElement.appendChild(userElement);
-
-          if (channelLinkElement) {
-            userElement.appendChild(channelLinkElement);
-          }
-
           threadElement.appendChild(messagesElement);
-          threadSummaryElement.appendChild(threadElement);
-          threadDetailsElement.appendChild(threadSummaryElement);
+          wrapperElement.appendChild(threadElement);
 
           if (node.attrs.threadHtml) {
-            threadDetailsElement.innerHTML += node.attrs.threadHtml;
+            wrapperElement.insertAdjacentHTML(
+              "beforeend",
+              node.attrs.threadHtml
+            );
           }
-
-          wrapperElement.appendChild(threadDetailsElement);
         } else {
           wrapperElement.appendChild(userElement);
-
-          if (channelLinkElement) {
-            userElement.appendChild(channelLinkElement);
-          }
-
           wrapperElement.appendChild(messagesElement);
         }
 

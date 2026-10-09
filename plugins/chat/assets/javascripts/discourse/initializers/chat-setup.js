@@ -10,6 +10,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
+import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -190,6 +191,11 @@ class ChatSetupInit {
           }
 
           dateTimeEl.dataset.dateFormatted = true;
+        });
+
+        groupChatTranscripts(elem, {
+          site: owner.lookup("service:site"),
+          chatChannelsManager: owner.lookup("service:chat-channels-manager"),
         });
       });
 
