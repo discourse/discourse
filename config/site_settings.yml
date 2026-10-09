@@ -4854,6 +4854,7 @@ experimental:
       status: "alpha"
       impact: "other,all_members"
       body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
   enable_composer_toolbar_customization:
     default: false
     client: true
