@@ -1,6 +1,11 @@
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import {
+  scan,
+  step,
+  type StepOutcome,
+  stepRow,
+} from "discourse/ui-kit/-internals/cursor/navigation";
 import type { DRovingFocusConfig } from "./config";
-import ItemScope from "./item-scope";
-import { scan, step, type StepOutcome, stepRow } from "./navigation";
 import type { DRovingFocusAxis, DRovingFocusStepResult } from "./types";
 
 /** Operations and state needed to step the cursor from the public API. */

@@ -1,4 +1,5 @@
-import type { Orientation } from "./types";
+/** The axes a cursor may travel. `"grid"` allows both; the other two allow one each. */
+export type Orientation = "grid" | "horizontal" | "vertical";
 
 /**
  * The result of one navigation step. A row edge consumes the key without leaving the group;
