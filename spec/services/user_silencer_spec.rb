@@ -85,6 +85,21 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
+    it "preserves the visibility of deleted posts and topics" do
+      deleted_post = Fabricate(:post, user: user)
+      deleted_post.trash!(admin)
+      deleted_topic_post = Fabricate(:post, user: user)
+      deleted_topic = deleted_topic_post.topic
+      deleted_topic.trash!(admin)
+
+      UserSilencer.silence(user, admin)
+
+      expect(post.reload).to be_hidden
+      expect(post.topic.reload).not_to be_visible
+      expect(deleted_post.reload).not_to be_hidden
+      expect(deleted_topic.reload).to be_visible
+    end
+
     it "links the staff action log to the reviewable when passed via opts" do
       reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
 

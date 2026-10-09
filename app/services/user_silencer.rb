@@ -81,7 +81,7 @@ class UserSilencer
         <<~SQL,
       WITH previous_posts AS (
         SELECT id, hidden FROM posts
-        WHERE user_id = :user_id AND created_at > :since
+        WHERE user_id = :user_id AND created_at > :since AND deleted_at IS NULL
         FOR UPDATE
       )
       UPDATE posts AS post
@@ -104,7 +104,7 @@ class UserSilencer
     unless topic_ids.empty?
       unlisted_topic_ids = DB.query_single(<<~SQL, topic_ids: topic_ids)
         UPDATE topics SET visible = false
-        WHERE id IN (:topic_ids) AND visible = true
+        WHERE id IN (:topic_ids) AND visible = true AND deleted_at IS NULL
         RETURNING id
       SQL
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
