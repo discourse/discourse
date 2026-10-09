@@ -530,6 +530,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
+      expect(
+        Jobs::SendSystemMessage.jobs.map { |job| job["args"].first["user_id"] },
+      ).not_to include(reply.user_id)
     end
 
     it "notifies users that responded to flagged post" do

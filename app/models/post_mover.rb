@@ -156,6 +156,8 @@ class PostMover
       :posts_moved,
       destination_topic_id: destination_topic.id,
       original_topic_id: original_topic.id,
+      post_ids: @post_ids_after_move,
+      copied: @options[:freeze_original],
     )
     destination_topic
   end

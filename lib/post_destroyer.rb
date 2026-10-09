@@ -51,9 +51,9 @@ class PostDestroyer
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
 
-    options = { defer_flags: defer_reply_flags, reviewable_id: reviewable_id }
+    options = { defer_flags: defer_reply_flags, reviewable_id: reviewable_id, parent_post: post }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ notify_responders: true, parent_post: post })
+      options[:notify_responders] = true
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -411,7 +411,7 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
-    if @opts[:reviewable_id]
+    if @opts[:reviewable_id] && (!@opts[:parent_post] || @opts[:notify_responders])
       handle_explicit_reviewable
     elsif @post.reviewable_flag
       handle_post_reviewable_flag

@@ -43,6 +43,99 @@ RSpec.describe ReviewableAiToolAction do
   end
 
   describe "#perform" do
+    it "records access restrictions from approved category changes and post moves" do
+      SiteSetting.dsa_reporting_enabled = true
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      author = Fabricate(:user)
+      post = Fabricate(:post, topic: topic, user: author)
+      category_reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: private_category.id,
+              reason: "Privacy",
+            },
+          ),
+        )
+
+      category_reviewable.perform(admin, :approve)
+
+      expect(author.guardian.can_see_post?(post.reload)).to eq(false)
+      expect(
+        DsaStatementOfRecord.where(reviewable_id: category_reviewable.id).sole.payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_DISABLED"])
+
+      public_post = Fabricate(:post)
+      reply = Fabricate(:post, topic: public_post.topic, user: author, post_number: 2)
+      move_reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: public_post.topic_id,
+              post_ids: [reply.id],
+              destination_topic_id: topic.id,
+              reason: "Privacy",
+            },
+          ),
+        )
+
+      move_reviewable.perform(admin, :approve)
+
+      expect(author.guardian.can_see_post?(reply.reload)).to eq(false)
+      expect(
+        DsaStatementOfRecord.where(reviewable_id: move_reviewable.id).sole.payload[
+          "decision_visibility"
+        ],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_DISABLED"])
+    end
+
+    it "records no access restriction when approved moves preserve public access" do
+      SiteSetting.dsa_reporting_enabled = true
+      post = Fabricate(:post, topic: topic)
+      category = Fabricate(:category)
+      reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: category.id,
+              reason: "Organisation",
+            },
+          ),
+        )
+
+      reviewable.perform(admin, :approve)
+
+      expect(post.user.guardian.can_see_post?(post.reload)).to eq(true)
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+
+      reply = Fabricate(:post, topic: topic, post_number: 2)
+      destination = Fabricate(:post)
+      move_reviewable =
+        create_reviewable(
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: topic.id,
+              post_ids: [reply.id],
+              destination_topic_id: destination.topic_id,
+              reason: "Organisation",
+            },
+          ),
+        )
+
+      move_reviewable.perform(admin, :approve)
+
+      expect(reply.user.guardian.can_see_post?(reply.reload)).to eq(true)
+      expect(DsaStatementOfRecord.where(reviewable_id: move_reviewable.id)).to be_empty
+    end
+
     it "records topic interaction and visibility restrictions applied by an approved tool" do
       SiteSetting.dsa_reporting_enabled = true
       post = Fabricate(:post, topic: topic)

@@ -19,3 +19,5 @@ end
 DiscourseEvent.on(:post_edited) do |post, _topic_changed, revisor|
   DsaModeration.record_edit(post: post, revisor: revisor)
 end
+
+DiscourseEvent.on(:posts_moved) { |options| DsaModeration.record_moved_posts(**options) }

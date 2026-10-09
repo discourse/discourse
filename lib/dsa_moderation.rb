@@ -134,6 +134,10 @@ class DsaModeration
 
   def self.record_edit(post:, revisor:)
     changes = revisor.post_revision&.modifications || revisor.post_changes.merge(revisor.topic_diff)
+    if Context.recorder && changes["category_id"] &&
+         access_restricted?(previous_category_id: changes["category_id"].first, topic: post.topic)
+      Context.recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
+    end
     unless %w[raw title].any? { |field|
              changes[field] && changes[field].first != changes[field].last
            }
@@ -158,6 +162,37 @@ class DsaModeration
     )
     recorder.flush unless Context.recorder
   end
+
+  def self.record_moved_posts(destination_topic_id:, original_topic_id:, post_ids: [], copied: nil)
+    return unless Context.recorder && !copied
+
+    destination = Topic.find_by(id: destination_topic_id)
+    original = Topic.with_deleted.find_by(id: original_topic_id)
+    unless destination && original &&
+             access_restricted?(previous_category_id: original.category_id, topic: destination)
+      return
+    end
+
+    Post
+      .where(id: post_ids, topic_id: destination.id, post_type: Post.types[:regular])
+      .find_each do |post|
+        Context.recorder.record_restriction(
+          target: post,
+          restriction: {
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+          },
+        )
+      end
+  end
+
+  def self.access_restricted?(previous_category_id:, topic:)
+    destination = topic.category
+    return false unless destination&.read_restricted?
+
+    previous = Category.find_by(id: previous_category_id)
+    !previous&.read_restricted? || (previous.secure_group_ids - destination.secure_group_ids).any?
+  end
+  private_class_method :access_restricted?
 
   def self.record_hidden_posts(post_ids, by_user:, reviewable_id:, unlisted_topic_ids: [])
     return unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording
