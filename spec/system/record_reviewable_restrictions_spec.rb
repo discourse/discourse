@@ -11,10 +11,8 @@ RSpec.describe "Record reviewable restrictions" do
   it "lets moderators finish a review without another classification step" do
     sign_in(admin)
     settings_page.visit("dsa_reporting_enabled")
-    expect(settings_page).to have_setting("dsa_reporting_enabled")
-    expect(settings_page.bool_setting_checkbox("dsa_reporting_enabled")).not_to be_checked
-    expect(page).to have_content("No statements are submitted automatically.")
-    settings_page.toggle_bool_setting("dsa_reporting_enabled")
+    expect(page).to have_no_css(settings_page.setting_row_selector("dsa_reporting_enabled"))
+    SiteSetting.dsa_reporting_enabled = true
     page.visit("/review")
 
     review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)

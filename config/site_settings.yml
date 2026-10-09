@@ -2932,9 +2932,6 @@ trust:
     refresh: true
     disallowed_groups: "4"
     area: "flags|group_permissions"
-  dsa_reporting_enabled:
-    default: false
-    area: "flags"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -4785,6 +4782,9 @@ dashboard:
     client: true
 
 experimental:
+  dsa_reporting_enabled:
+    default: false
+    hidden: true
   enable_markdown_endpoints:
     default: false
     hidden: true

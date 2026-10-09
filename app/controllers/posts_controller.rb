@@ -268,11 +268,12 @@ class PostsController < ApplicationController
       end
     end
 
+    opts[:reviewable_id] = params[:post][:reviewable_id]
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
     revisor = PostRevisor.new(post, topic)
-    opts[:reviewable_id] = params[:post][:reviewable_id]
     revisor.revise!(current_user, changes, opts)
 
     return render_json_error(post) if post.errors.present?

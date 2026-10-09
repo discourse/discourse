@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableHistory < ActiveRecord::Base
-  after_create { DiscourseEvent.trigger(:reviewable_history_created, self) }
-
   belongs_to :reviewable
   belongs_to :created_by, class_name: "User"
 
@@ -10,6 +8,8 @@ class ReviewableHistory < ActiveRecord::Base
 
   alias_attribute :type, :reviewable_history_type
   enum :type, { created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4 }
+
+  after_create { DiscourseEvent.trigger(:reviewable_history_created, self) }
 end
 
 # == Schema Information

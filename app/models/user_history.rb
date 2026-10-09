@@ -4,8 +4,6 @@
 # like deleting users, changing site settings, dismissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
 class UserHistory < ActiveRecord::Base
-  after_create { DiscourseEvent.trigger(:user_history_created, self) }
-
   belongs_to :acting_user, class_name: "User"
   belongs_to :target_user, class_name: "User"
 
@@ -51,6 +49,8 @@ class UserHistory < ActiveRecord::Base
   scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }
 
   before_save :set_admin_only
+
+  after_create { DiscourseEvent.trigger(:user_history_created, self) }
 
   def self.actions
     @actions ||=
