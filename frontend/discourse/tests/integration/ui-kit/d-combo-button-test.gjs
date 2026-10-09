@@ -199,6 +199,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
         <DComboButton @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}} @visibilityOptimizer="none" as |menu|>
+            <DButton class="inert" @translatedLabel="Inert" />
             <DButton
               class="close-from-content"
               @action={{menu.close}}
@@ -211,6 +212,12 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     await open();
 
     assert.dom(".close-from-content").exists("the content block rendered");
+
+    await click(".inert");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("a click inside the content alone does not close it");
 
     await click(".close-from-content");
 

@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
@@ -59,5 +60,41 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
     assert
       .dom(".empty-state__container")
       .hasAttribute("data-test-thing", "yes");
+  });
+
+  test("dynamic classes and @icon update without dropping its own classes", async function (assert) {
+    const state = new (class {
+      @tracked extra = "first";
+      @tracked icon = "gear";
+    })();
+
+    await render(
+      <template>
+        <DEmptyState
+          class={{state.extra}}
+          role="status"
+          @icon={{state.icon}}
+          @identifier="probe"
+          @title="Empty"
+        />
+      </template>
+    );
+
+    assert.dom(".empty-state__container").hasClass("--probe");
+    assert.dom(".empty-state__container").hasClass("--with-image");
+
+    state.extra = "second";
+    state.icon = null;
+    await rerender();
+
+    assert
+      .dom(".empty-state__container")
+      .hasClass("second")
+      .doesNotHaveClass("first")
+      .hasClass("--probe")
+      .hasClass("--text-only")
+      .doesNotHaveClass("--with-image")
+      .hasAttribute("role", "status");
+    assert.dom(".empty-state__image").doesNotExist();
   });
 });
