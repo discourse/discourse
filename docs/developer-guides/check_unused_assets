@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# sync_docs only uploads assets that a doc links to, so anything else in
+# assets/ is never published and only adds weight to the repo.
+
+# Keep in sync with the image pattern in LocalDoc#content_with_uploads
+IMAGE_PATTERN = /![^\]]+\]\(([^)]+)\)/
+
+referenced =
+  Dir
+    .glob("#{__dir__}/docs/**/*.md")
+    .flat_map { |path| File.read(path).scan(IMAGE_PATTERN).flatten }
+    .filter_map { |link| File.expand_path("#{__dir__}/#{link}") if link.start_with?("/assets/") }
+    .to_set
+
+unused =
+  Dir
+    .glob("#{__dir__}/assets/**/*")
+    .select { |path| File.file?(path) }
+    .reject { |path| referenced.include?(path) }
+    .sort
+
+if unused.empty?
+  puts "All assets are referenced by a doc."
+  exit 0
+end
+
+puts "These assets are not referenced by any doc. Remove them, or link to them from a doc:"
+unused.each { |path| puts "  #{path.delete_prefix("#{__dir__}/")}" }
+exit 1

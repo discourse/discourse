@@ -70,6 +70,8 @@ Images (e.g. screenshots) for docs can be stored in the `/assets` directory. To 
 
 The sync tool will automatically upload the images to Discourse, and replace the path with a discourse-specific `upload://` path. A mapping of repo-path to discourse-path will be persisted in an HTML comment at the end of the doc's topic.
 
+When a doc stops using an image, delete it from `/assets`. CI runs `./check_unused_assets` to catch any that are left behind.
+
 Avoid hotlinking images from other sources. If you do, Discourse may download them and update the topic content. This will cause the docs sync tool to detect a diff, and update the topic unnecessarily.
 
 ## Links between docs
