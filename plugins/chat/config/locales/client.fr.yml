@@ -846,15 +846,19 @@ fr:
         "action:chat_approval": "Approbation du chat"
         "trigger:chat_message_created": "Message de chat créé"
       node_descriptions:
-        "action:send_chat_message": "Envoyer un message à un canal de chat"
         "action:chat_approval": "Envoyer une demande de validation à un canal de chat et attendre une réponse"
         "trigger:chat_message_created": "Se déclenche lorsqu'un nouveau message de chat est créé"
       chat_message_created:
         channel_id: "Canal"
         channel_id_description: "Laissez ce champ vide pour déclencher l'action pour tous les canaux de chat."
       send_chat_message:
+        target: "Envoyer à"
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
+        target_usernames: "Destinataires"
         message: "Message"
+        actor_username: "Expéditeur"
       chat_approval:
         message: "Message"
         buttons: "Boutons"

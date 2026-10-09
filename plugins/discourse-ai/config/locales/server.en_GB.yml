@@ -12,3 +12,7 @@ en_GB:
           title: "Categories"
       read_post:
         unknown_post: "post"
+      chat_tool_approval:
+        category_fields:
+          description: "description"
+          color: "colour"

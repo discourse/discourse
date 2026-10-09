@@ -19,6 +19,7 @@ lt:
       link: "nuoroda"
   mcp:
     errors:
+      category_not_found: "Kategorijos nėra"
       topic_not_found: "Tema nerasta"
     oauth:
       deny: "Atsisakyti"

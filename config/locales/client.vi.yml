@@ -1840,7 +1840,6 @@ vi:
         upload_title: "Upload hình ảnh của bạn"
         image_is_not_a_square: "Cảnh báo: chúng tôi đã cắt hình ảnh của bạn; chiều rộng và chiều cao không bằng nhau."
         logo_small: "Logo nhỏ của trang web. Được sử dụng theo mặc định."
-        use_custom: "Hoặc tải lên hình đại diện tùy chỉnh:"
       change_profile_background:
         title: "Ảnh bìa"
         instructions: "Căn giữa, chiều rộng mặc định là 1110px."
@@ -2406,7 +2405,7 @@ vi:
       hide_forever: "không, cảm ơn"
       hidden_for_session: "OK, chúng tôi sẽ hỏi bạn vào ngày mai. Bạn luôn có thể sử dụng 'Đăng nhập' để tạo tài khoản."
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
-      value_prop: "Mệt mỏi khi cuộn phải cùng một tút? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các trả lời mới, đánh dấu chủ đề và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể cùng nhau làm cho cộng đồng này trở nên tuyệt vời. :heart:"
+      value_prop: "Mệt mỏi khi cuộn phải cùng một tút? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các trả lời mới, đánh dấu chủ đề và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể cùng nhau làm cho cộng đồng này trở nên tuyệt vời."
     offline_indicator:
       no_internet: "Không có kết nối internet."
       refresh_page: "Tải lại trang"
@@ -2833,8 +2832,7 @@ vi:
       discard: "Hủy bỏ"
       draft_saved: "Đã lưu bản nháp!"
       users_placeholder: "Thêm người dùng hoặc nhóm"
-      title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
-      title_placeholder_redesign: "Tiêu đề"
+      title_placeholder: "Tiêu đề"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
       edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
@@ -5383,6 +5381,7 @@ vi:
             block: "Khóa"
             presets:
               custom: "Tùy biến"
+            automatic: "Tự động"
           authorizations:
             user: "Người dùng"
             last_used: "Lần cuối sử dụng"
@@ -6917,8 +6916,8 @@ vi:
           upload: "Tải lên"
           select_component: "Chọn một thành phần…"
           unsaved_changes_alert: "Bạn chưa lưu các thay đổi của mình, bạn có muốn loại bỏ chúng và tiếp tục không?"
-          unsaved_parent_themes: "Bạn chưa gán thành phần cho các chủ đề, bạn có muốn tiếp tục không?"
           discard: "Hủy bỏ"
+          leave: "Rời nhóm"
           stay: "Ở lại"
           css_html: "Mã tùy chỉnh"
           edit_css_html: "Chỉnh sửa mã"

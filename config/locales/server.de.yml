@@ -20,6 +20,7 @@ de:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Kategorie nicht gefunden"
       draft_too_long: "Der Entwurf ist zu lang"
       post_not_found: "Beitrag nicht gefunden"
       topic_not_found: "Thema nicht gefunden"

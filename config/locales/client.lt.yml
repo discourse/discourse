@@ -16,6 +16,7 @@ lt:
       device:
         code: "Kodas"
         continue: "Tęsti"
+        return_to_cli: "Dabar galite grįžti prie savo terminalo ar programos."
     blocks:
       ghost:
         status: "Statusas"
@@ -26,6 +27,7 @@ lt:
       manage:
         access_permission_editor: "Redaguotojas"
         access_permission_remove: "Pašalinti"
+        disallowed: "Neleidžiama"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -205,6 +207,11 @@ lt:
         last_30_days: "Paskutinės 30 dienų"
         last_3_months: "Paskutiniai 3 mėnesiai"
         last_6_months: "Paskutiniai 6 mėnesiai"
+    languages:
+      bs_BA:
+        name: Bosnių
+      et:
+        name: Estų
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber} by @%{username}"
@@ -374,6 +381,17 @@ lt:
     admin_onboarding_banner:
       start_posting:
         back: "Atgal"
+        category_unavailable: "Šioje kategorijoje negalima skelbti pranešimų."
+        icebreakers:
+          plan_categories:
+            title: "Nuo kokių kategorijų turėtume pradėti?"
+            body: "Prieš pradėdami išsiaiškinkime, kaip viską suorganizuoti! Apie ką žmonės labiausiai norės kalbėti? Galime pradėti nuo kelių kategorijų ir vėliau pridėti daugiau."
+          plan_invites:
+            title: "Kokius narius turėtume pakviesti prieš pradėdami veiklą?"
+            body: "Visada maloniau prisijungti prie bendruomenės, kurioje jau yra keletas narių. Ką turėtume pakviesti pirmiausia? Pagalvokite apie žmones, kurie mėgsta bendrauti, padėti kitiems ir kurie džiaugtųsi galėdami prisijungti prie bendruomenės nuo pat pradžių."
+          write_your_own:
+            title: "Parašykite savo"
+            body: "Pradėkite pokalbį, pasirinkdami temą, pritaikytą jūsų bendruomenei."
     design_wizard:
       back: "Atgal"
       next: "Kitas"
@@ -1680,10 +1698,12 @@ lt:
         letter_based: "Sistema pridėjo profilio nuotrauką"
         uploaded_avatar: "Paveiksliukas"
         uploaded_avatar_empty: "Pridėti paveiksliuką"
+        current_avatar: "Dabartinis paveikslėlis"
+        associated_account: "%{provider} paveikslėlis"
         upload_title: "Įkelti savo nuotrauką"
         image_is_not_a_square: "Įspėjimas: jūs ką tik apkirpote nuotrauką, tačiau plotis ir ilgis nėra vienodi."
         logo_small: "Mažas svetainės logotipas. Naudojamas pagal numatytuosius nustatymus."
-        use_custom: "Arba įkelkite pasirinktinį avatarą:"
+        use_custom: "Arba pasirinkite kitą paveikslėlį:"
       change_profile_background:
         title: "Profilio antraštė"
         instructions: "Profilio antraštės bus centre ir numatytasis plotis bus 1110 taškų."
@@ -2053,6 +2073,7 @@ lt:
     user_status:
       save: "Saugoti"
       set_custom_status: "Nustatyti pasirinktinę būseną"
+      edit_status: "Redaguoti būseną"
       what_are_you_doing: "Ką darote?"
       pause_notifications: "Pristabdyti pranešimus"
     user_tips:
@@ -2180,6 +2201,7 @@ lt:
       hide_forever: "Ačiū ne!"
       hidden_for_session: "Gerai, paklausime rytoj. Jūs taip pat visada galite naudoti „Prisijungti“, kad sukurtumėte paskyrą."
       intro: "Sveiki! Panašu, kad jums patinka diskusija, tačiau dar nesate prisiregistravę prie paskyros."
+      value_prop: "Pavargote naršyti po tuos pačius įrašus? Susikūrę paskyrą, visada grįšite ten, kur sustojote. Turėdami paskyrą, taip pat galėsite gauti pranešimus apie naujus atsakymus, išsaugoti žymes ir naudoti „patinka“ mygtuką, kad padėkotumėte kitiems. Visi kartu galime prisidėti prie to, kad ši bendruomenė taptų puiki."
     offline_indicator:
       refresh_page: "Atnaujinti puslapį"
     summary:
@@ -2501,8 +2523,7 @@ lt:
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
       discard: "Išmesti"
-      title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
-      title_placeholder_redesign: "Antraštė"
+      title_placeholder: "Antraštė"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "Kodėl jūs redaguojate?"
       topic_featured_link_placeholder: "Įveskite nuorodą, rodomą su pavadinimu."
@@ -2837,6 +2858,7 @@ lt:
         dismiss_button: "Praleisti..."
         dismiss_tooltip: "Praleisti tik naujus įrašus ar nebesekti temos"
         also_dismiss_topics: "Nebesekti šių temų, kad jos niekada nebūtų rodomos, kaip neperskaitytos"
+        dismiss_all: "Atmesti visus"
         dismiss_new_topics_with_selected:
           one: "Atsisakyti (%{count})"
           few: "Atsisakyti (%{count})"
@@ -3570,6 +3592,7 @@ lt:
       posting_review_groups_placeholder: "Pasirinkite grupes..."
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
+      default_position: "Numatytoji padėtis"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
       none_subcategory_text: "Nieko"
       visibility:
@@ -3898,6 +3921,7 @@ lt:
         reply_as_new_topic: "Atsakykite kaip susieta tema"
         reply_topic: "Atsakyti į temą"
         flag: "Vėliavų stulpas"
+        edit: "Redaguoti įrašą"
         mark_tracking: "Sekti temą"
         mark_watching: "Stebėjimo tema"
       search_menu:
@@ -4103,6 +4127,7 @@ lt:
       more: "Daugiau"
       all_categories: "Visos kategorijos"
       categories_form_modal:
+        filter_placeholder: "Filtruoti kategorijas"
         show_more: "Rodyti daugiau"
       edit_navigation_modal_form:
         filter_dropdown:
@@ -4165,6 +4190,7 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
+      back_to_admin: "Grįžti į administratoriaus puslapį"
       search: "Paieška"
       footer:
         interface_color_selector:
@@ -4299,11 +4325,22 @@ lt:
             block: "Blokuoti"
             presets:
               custom: "Išskirtinės"
+            management: "Registracijos atnaujinimai"
+            manual: "Valdoma administratorių"
+            automatic: "Automatinės"
+            manual_description: "Administratoriai tvarko šio kliento pavadinimą ir nukreipimo URI. Metaduomenų atnaujinimas jų nepakeis, todėl užtikrinkite, kad jie būtų nuolat atnaujinami."
+            automatic_description: "Pavadinimas ir nukreipimo URI atnaujinami pagal paskelbtus kliento metaduomenis. Pakeitus bet kurį iš jų, abu perjungiami į administratoriaus valdymo režimą."
+            edit: "Redaguoti OAuth klientą"
+            updated: "Atnaujintas OAuth klientas."
           authorizations:
             user: "Narys"
             status: "Statusas"
             actions: "Veiksmai"
           activity:
+            description: "Peržiūrėkite MCP veiklą."
+            failed_tool_calls: "Nepavykę įrankio iškvietimai"
+            rate_limits: "Prašymai, kurių apdorojimo greitis ribojamas"
+            no_latency: "—"
             time: "Laikas"
             user: "Narys"
             duration: "Trukmė"
@@ -5064,8 +5101,9 @@ lt:
             must_be_unique: "Neteisingas kintamojo pavadinimas. Turi būti unikalus."
           upload: "Įkelti"
           unsaved_changes_alert: "Dar neišsaugojote pakeitimų, ar norite juos atmesti ir tęsti?"
-          unsaved_parent_themes: "Jūs nepriskyrėte komponento temoms, ar norite judėti toliau?"
+          unsaved_parent_themes: "Šio komponento nepridėjote prie jokių temų, todėl jis niekur nebus rodomas. Ar vis tiek norite išeiti?"
           discard: "Išmesti"
+          leave: "Palikti"
           stay: "Likti"
           delete_upload_confirm: "Ištrinti šį įkėlimą? (Tema CSS gali nustoti veikti!)"
           component_on_themes: "Įtraukite komponentą į šias temas"
@@ -5267,6 +5305,7 @@ lt:
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
           actions:
+            mcp_client_updated: "atnaujinti MCP OAuth klientą"
             delete_user: "ištrinti vartotoją"
             change_trust_level: "keisti pasitikėjimo lygį"
             change_username: "keisti vartotojo vardą"
@@ -5475,6 +5514,10 @@ lt:
           staged: "Inscenizuotas"
         activation_filter:
           activated: "aktyvuota"
+        account_type_filter:
+          human: "Žmonių paskyros"
+          bot: "Botų paskyros"
+          all: "Visos paskyros"
         approved: "Patvirtinta?"
         titles:
           pending: "Vartotojai laukiantys patvirtinimo"
@@ -5715,7 +5758,10 @@ lt:
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"
       site_text:
+        search: "Ieškoti teksto arba vertimo raktų"
         search_label: "Paieška"
+        theme: "Tema arba komponentas"
+        all_themes: "Visi svetainės tekstai"
         theme_disabled: "Uždrausta"
         filters: "Filtrai"
         edit: "Redaguoti"

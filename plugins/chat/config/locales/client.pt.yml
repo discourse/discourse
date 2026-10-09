@@ -257,8 +257,11 @@ pt:
       chat_message_created:
         channel_id: "Canal"
       send_chat_message:
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
         message: "Mensagem"
+        actor_username: "Remetente"
       chat_approval:
         message: "Mensagem"
         buttons: "Botões"

@@ -1528,8 +1528,7 @@ th:
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
-      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
-      title_placeholder_redesign: "ชื่อเรื่อง"
+      title_placeholder: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -2738,6 +2737,7 @@ th:
           clients:
             actions: "การกระทำ"
             block: "บล็อก"
+            automatic: "อัตโนมัติ"
           authorizations:
             user: "ผู้ใช้"
             status: "สถานะ"
@@ -3204,6 +3204,7 @@ th:
           collapse: ย่อ
           uploads: "อัปโหลด"
           upload: "อัปโหลด"
+          leave: "ออก"
           add_all: "เพิ่มทั้งหมด"
           install: "ติดตั้ง"
           installed: "ติดตั้งแล้ว"

@@ -301,13 +301,10 @@ ar:
       default_deny_label: "الرفض"
     errors:
       send_chat_message:
-        invalid_params: "معلمات غير صالحة: %{errors}"
         channel_not_found: "لم يتم العثور على القناة: %{channel_id}"
-        failed: "فشل إرسال رسالة الدردشة."
       chat_approval:
         channel_not_found: "فشل إرسال رسالة الدردشة: لم يتم العثور على القناة %{channel_id}."
         invalid_params: "فشل إرسال رسالة الدردشة: %{errors}"
-        failed: "فشل إرسال رسالة الدردشة: %{steps}"
         timeout_must_be_positive: "يجب أن تكون مدة المهلة الزمنية بالدقائق أكبر من 0."
   reviewable_score_types:
     needs_review:

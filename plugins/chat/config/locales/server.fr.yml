@@ -249,13 +249,10 @@ fr:
       default_deny_label: "Refuser"
     errors:
       send_chat_message:
-        invalid_params: "Paramètres non valides : %{errors}"
         channel_not_found: "Canal introuvable : %{channel_id}"
-        failed: "Échec de l'envoi du message de chat."
       chat_approval:
         channel_not_found: "Échec de l'envoi du message de chat : canal %{channel_id} introuvable."
         invalid_params: "Échec de l'envoi du message de chat : %{errors}"
-        failed: "Échec de l'envoi du message de chat : %{steps}"
         timeout_must_be_positive: "Le délai d'expiration, en minutes, doit être supérieur à 0."
   reviewable_score_types:
     needs_review:

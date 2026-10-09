@@ -732,8 +732,12 @@ hu:
       chat_message_created:
         channel_id: "Csatorna"
       send_chat_message:
+        targets:
+          channel: "Csatorna"
         channel_id: "Csatorna"
+        target_usernames: "Címzettek"
         message: "Üzenet"
+        actor_username: "Feladó"
       chat_approval:
         message: "Üzenet"
         buttons: "Gombok"

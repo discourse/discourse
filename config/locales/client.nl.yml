@@ -2033,7 +2033,6 @@ nl:
         upload_title: "Upooad je afbeelding"
         image_is_not_a_square: "Waarschuwing: we hebben je afbeelding bijgesneden; de breedte en hoogte waren niet gelijk."
         logo_small: "Het kleine logo van de website. Standaard gebruikt."
-        use_custom: "Of upload een eigen avatar:"
       change_profile_background:
         title: "Profielkoptekst"
         instructions: "Profielkopteksten worden gecentreerd en hebben een standaardbreedte van 1110 pixels."
@@ -2615,7 +2614,7 @@ nl:
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, we vragen het je morgen. Je kunt ook altijd 'Aanmelden' gebruiken om een account te maken."
       intro: "Hallo! Zo te zien heb je plezier aan de discussie, maar heb je je nog niet geregistreerd voor een account."
-      value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken. :heart:"
+      value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken."
     offline_indicator:
       no_internet: "Geen internetverbinding."
       refresh_page: "Pagina vernieuwen"
@@ -3061,8 +3060,7 @@ nl:
       cancel_edit: "Bewerken annuleren"
       draft_saved: "Concept opgeslagen!"
       users_placeholder: "Voeg gebruikers of groepen toe"
-      title_placeholder: "Waar gaat deze discussie over in één korte zin?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
       edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
@@ -5927,6 +5925,7 @@ nl:
             use_preset: "Instellen"
             presets:
               custom: "Aangepast"
+            automatic: "Automatisch"
           authorizations:
             user: "Gebruiker"
             scopes: "Toegekende bereiken"
@@ -7467,8 +7466,8 @@ nl:
           upload: "Upload"
           select_component: "Selecteer een onderdeel…"
           unsaved_changes_alert: "Je hebt je wijzigingen nog niet opgeslagen. Wil je ze negeren en verder gaan?"
-          unsaved_parent_themes: "Je hebt het onderdeel niet toegewezen aan thema's. Wil je verder gaan?"
           discard: "Weggooien"
+          leave: "Verlaten"
           stay: "Blijven"
           css_html: "Aangepaste code"
           edit_css_html: "Code bewerken"

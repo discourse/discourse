@@ -37,6 +37,29 @@ hu:
           title: "Biztonsági mentések"
       read_post:
         unknown_post: "bejegyzéssel"
+      chat_tool_approval:
+        topic_states:
+          open: "Megnyitás"
+          closed: "Lezárva"
+          active: "Aktív"
+          deleted: "Törölve"
+        solution_post: "Bejegyzés #%{number}"
+        duration_label: "Időtartam:"
+        user_duration:
+          one: "%{count} nap"
+          other: "%{count} nap"
+        post_states:
+          locked: "Zárva"
+        posts_label: "Bejegyzések:"
+        category_label: "Kategória"
+        category_fields:
+          name: "név"
+          description: "leírás"
+          color: "szín"
+          text_color: "szöveg színe"
+        approve_label: "Igen"
+        reject_label: "Nem"
+        empty_value: "Üres"
       tool_summary:
         suspend_user: "Felhasználó felfüggesztése"
         silence_user: "Felhasználó némítása"

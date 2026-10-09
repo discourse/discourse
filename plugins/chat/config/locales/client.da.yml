@@ -344,6 +344,8 @@ da:
       chat_message_created:
         channel_id: "Kanal"
       send_chat_message:
+        targets:
+          channel: "Kanal"
         channel_id: "Kanal"
         message: "Meddelelse"
       chat_approval:

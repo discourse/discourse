@@ -11,6 +11,10 @@ bg:
         all: "Всички"
       main_reaction:
         add: "Харесайте тази публикация"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Добавено"
+        changes_removed: "Премахнато"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

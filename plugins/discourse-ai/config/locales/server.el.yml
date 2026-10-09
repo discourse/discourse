@@ -59,6 +59,29 @@ el:
           title: "Αντίγραφα ασφαλέιας"
       read_post:
         unknown_post: "ανάρτηση"
+      chat_tool_approval:
+        topic_states:
+          open: "Άνοιγμα"
+          closed: "Κλειστή"
+          active: "Ενεργό"
+          deleted: "Διαγράφηκε"
+        solution_post: "Ανάρτηση #%{number}"
+        duration_label: "Διάρκεια:"
+        user_duration:
+          one: "%{count} ημέρα"
+          other: "%{count} ημέρες"
+        post_states:
+          locked: "Κλειδωμένη"
+        posts_label: "Αναρτήσεις"
+        category_label: "Κατηγορία"
+        category_fields:
+          name: "όνομα"
+          description: "περιγραφή"
+          color: "χρώμα"
+          text_color: "χρώμα κειμένου"
+        approve_label: "Ναι "
+        reject_label: "Όχι"
+        empty_value: "Κενό"
       agents:
         post_raw_translator:
           name: "Μεταφραστής ανάρτησης"

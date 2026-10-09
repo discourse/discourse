@@ -263,6 +263,26 @@ fi:
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:
         unknown_post: "viesti"
+      chat_tool_approval:
+        topic_states:
+          open: "Avoinna"
+          closed: "Suljettu"
+          active: "Aktiivinen"
+          deleted: "Poistettu"
+        solution_post: "%{number}. Viesti"
+        duration_label: "Kesto:"
+        user_duration:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
+        posts_label: "Viestit"
+        category_label: "Luokka"
+        category_fields:
+          name: "nimi"
+          description: "kuvaus"
+          color: "väri"
+          text_color: "tekstin väri"
+        approve_label: "Kyllä"
+        reject_label: "Ei"
       agents:
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:

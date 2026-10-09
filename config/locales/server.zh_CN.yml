@@ -14,17 +14,28 @@ zh_CN:
     next_page: "下一页"
     empty: "没有要显示的条目。"
     replies: "回复"
+    post_author: "作者： %{author}"
+    post_date: "发布日期： %{timestamp}"
     last_updated: "最近更新："
     event:
       name: "活动"
+      start: "开始"
+      end: "结束"
       location: "位置"
       link: "链接"
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "无法创建类别。"
+      category_delete_confirmation_required: "类别删除必须得到确认"
+      category_delete_name_mismatch: "类别名称不匹配"
+      category_not_found: "未找到类别"
+      category_update_failed: "类别无法更新"
+      category_update_required: "必须至少提供一个类别字段。"
       draft_sequence_conflict: "草稿序号冲突"
       draft_too_long: "草稿太长了"
       group_not_found: "未找到群组"
+      group_post_single_cursor: "请提供 before_post_id 或 before，不要同时提供两者。"
       invalid_date: "无效日期"
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
@@ -67,13 +78,19 @@ zh_CN:
       site_setting_value_forbidden: "重置站点设置时，请勿提供值。"
       site_setting_value_required: "设置站点设置时，请提供值"
       site_setting_verification_failed: "无法验证站点设置更新。"
+      theme_create_failed: "主题创建失败。"
+      theme_not_found: "主题未找到"
+      theme_update_failed: "主题无法更新"
+      theme_update_required: "至少提供一个主题字段以供更新"
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
       upload_not_found: "未找到上传文件"
       upload_too_large: "上传文件过大"
-      user_update_required: "至少提供一个个人资料字段以供更新"
+      user_create_failed: "无法创建用户"
+      user_deactivation_pending_review: "在停用该账户之前，请查看该用户的待批准情况。"
       user_not_found: "用户未找到"
+      user_update_required: "至少提供一个个人资料字段以供更新"
     oauth:
       authorize_title: "授权 MCP 客户端"
       client_request: "%{client_name} 请求访问 %{site_name}。"
@@ -1817,6 +1834,8 @@ zh_CN:
         total_users: "活跃用户帐户总数"
       description: "显示按登录提供商分组的关联帐户数量。仅在启用社交登录方法时适用。"
   dashboard:
+    reports:
+      cap_reached: "仪表盘已显示最大报告数量 %{max} 。请先移除一个报告，然后再添加另一个。"
     problem:
       twitter_login: 'X 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">站点设置</a>中检查凭据。'
       group_email_credentials: '群组“<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>”的电子邮件凭据存在问题。在解决此问题之前，不会从群组收件箱发送任何电子邮件。%{error}'
@@ -2756,6 +2775,7 @@ zh_CN:
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
     enable_composer_redesign: "启用重新设计的编辑器。"
+    enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2815,7 +2835,9 @@ zh_CN:
     improved_crawler_detection: "启用改进的爬虫跟踪功能，从而可更精准地识别疑似爬虫，并确保流量统计的准确性。"
     enable_invite_modal_with_roles: "启用重新设计的邀请流程，管理员可以直接以管理员身份邀请他人。受邀者注册后即成为版主，在邀请人通过电子邮件确认后，受邀者将成为管理员。"
     update_pending_users_reminder_default: "我们将{{setting:pending_users_reminder_delay_minutes}}设置的默认值更新为 30 分钟，以便管理人员在有新成员等待审批时能够及时收到通知。如果您之前更改过此设置，则此次更改不会生效。"
+    sidebar_user_navigation: "将用户页面（个人资料、活动、通知、消息、邀请和偏好设置）的导航从水平标签栏移至独立的侧边栏面板，与管理后台的导航方式相同。在移动设备上，该面板可通过汉堡菜单访问。"
     enable_generated_llms_txt: "当未上传自定义文件时，生成简洁的 /llms.txt 文件。该文档描述了公共发现路径、首选的 Discourse MCP 接口以及负责的代理访问权限。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
+    enable_markdown_endpoints: "支持以 Markdown 格式提供主题和主题列表，通过 .md URL 和带有 Accept: text/markdown 标头的请求来实现。常规的可见性和个人资料隐私规则始终适用。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_date: "日期格式无效。请输入有效日期。"
@@ -3190,6 +3212,7 @@ zh_CN:
     wrong_invite_code: "您输入的邀请码不正确。"
     reserved_username: "不允许使用该用户名。"
     missing_user_field: "您尚未填写所有必填用户字段"
+    missing_user_field_details: "填写必填的用户字段 '%{name}' (ID: %{id})。"
     missing_username: "请输入一个用户名"
     missing_full_name: "请输入您的全名"
     auth_complete: "身份验证完成。"
@@ -5424,6 +5447,7 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
+    admin_onboarding_topic_option: "已选选项： %{option}\n选项 ID： %{option_id}"
     redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"

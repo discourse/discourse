@@ -11,5 +11,9 @@ hy:
         all: "Բոլոր"
       main_reaction:
         add: "Հավանել այս գրառումը"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Ավելացված"
+        changes_removed: "Հեռացվել է"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

@@ -11,6 +11,10 @@ lt:
         all: "Visi"
       main_reaction:
         add: "Mėgti šį įrašą"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Pridėta"
+        changes_removed: "Pašalintas"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

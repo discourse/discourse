@@ -47,6 +47,26 @@ ur:
           title: "بیک اَپس"
       read_post:
         unknown_post: "دھاگہ"
+      chat_tool_approval:
+        topic_states:
+          open: "کھولیں"
+          closed: "بند کیا"
+          active: "فعال"
+          deleted: "مٹائیں"
+        solution_post: "دھاگہ #%{number}"
+        duration_label: "دورانیہ:"
+        user_duration:
+          one: "%{count} دن"
+          other: "%{count} دن"
+        posts_label: "دھاگے"
+        category_label: "زُمرَہ"
+        category_fields:
+          name: "نام"
+          description: "تفصیل"
+          color: "رنگ"
+          text_color: "متن کا رنگ"
+        approve_label: "جی ہاں"
+        reject_label: "نہیں "
       tool_options:
         update_artifact:
           editor_llm:

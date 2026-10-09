@@ -19,6 +19,7 @@ tr_TR:
       link: "Bağlantı"
   mcp:
     errors:
+      category_not_found: "Kategori bulunamadı"
       draft_too_long: "Taslak fazla uzun"
       post_not_found: "Gönderi bulunamadı"
       topic_not_found: "Konu bulunamadı."

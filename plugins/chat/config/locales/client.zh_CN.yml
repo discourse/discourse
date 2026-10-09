@@ -840,15 +840,19 @@ zh_CN:
         "action:chat_approval": "聊天审批"
         "trigger:chat_message_created": "已创建聊天消息"
       node_descriptions:
-        "action:send_chat_message": "向聊天频道发送消息"
         "action:chat_approval": "向聊天频道发送审批请求并等待回复"
         "trigger:chat_message_created": "创建新聊天消息时触发"
       chat_message_created:
         channel_id: "频道"
         channel_id_description: "留空可触发所有聊天频道。"
       send_chat_message:
+        target: "发送至"
+        targets:
+          channel: "频道"
         channel_id: "频道"
+        target_usernames: "收件人"
         message: "消息"
+        actor_username: "发送人"
       chat_approval:
         message: "消息"
         buttons: "按钮"

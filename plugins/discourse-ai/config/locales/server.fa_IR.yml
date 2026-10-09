@@ -43,6 +43,25 @@ fa_IR:
           title: "نسخه‌های پشتیبان"
       read_post:
         unknown_post: "نوشته"
+      chat_tool_approval:
+        topic_states:
+          open: "باز"
+          closed: "بسته شده"
+          active: "فعال"
+          deleted: "حذف شده"
+        solution_post: "نوشته #%{number}"
+        duration_label: "مدت زمان"
+        user_duration:
+          one: "%{count} روز"
+          other: "%{count} روز"
+        posts_label: "فرسته‌ها"
+        category_label: "دسته‌بندی"
+        category_fields:
+          name: "نام"
+          description: "توضیح"
+          color: "رنگ"
+        approve_label: "بله"
+        reject_label: "خیر"
       agents:
         dall_e3:
           name: "DALL-E 3"

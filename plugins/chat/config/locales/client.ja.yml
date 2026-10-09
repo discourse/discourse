@@ -730,8 +730,12 @@ ja:
       chat_message_created:
         channel_id: "チャンネル"
       send_chat_message:
+        targets:
+          channel: "チャンネル"
         channel_id: "チャンネル"
+        target_usernames: "受信者"
         message: "メッセージ"
+        actor_username: "送信者"
       chat_approval:
         message: "メッセージ"
         buttons: "ボタン"

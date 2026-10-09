@@ -2101,7 +2101,6 @@ fr:
         upload_title: "Envoyer votre photo"
         image_is_not_a_square: "Attention : nous avons découpé votre image. La largeur et la hauteur n'étaient pas égales."
         logo_small: "Logo du site en petit format. Sera utilisé par défaut."
-        use_custom: "Ou téléversez un avatar personnalisé :"
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
@@ -2704,7 +2703,7 @@ fr:
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
-      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
+      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable."
     offline_indicator:
       no_internet: "Aucune connexion à Internet."
       refresh_page: "Actualiser la page"
@@ -3265,8 +3264,7 @@ fr:
       cancel_edit: "Annuler la modification"
       draft_saved: "Brouillon enregistré !"
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
-      title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
-      title_placeholder_redesign: "Titre"
+      title_placeholder: "Titre"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "Quelle est la raison de la modification ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
@@ -6339,6 +6337,7 @@ fr:
             use_preset: "Configurer"
             presets:
               custom: "Personnalisé"
+            automatic: "Automatique"
           authorizations:
             user: "Utilisateur"
             scopes: "Portées accordées"
@@ -8109,8 +8108,8 @@ fr:
           upload: "Envoyer"
           select_component: "Sélectionnez un composant…"
           unsaved_changes_alert: "Vous n'avez pas encore enregistré vos modifications, souhaitez-vous les abandonner et passer à autre chose ?"
-          unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
+          leave: "Quitter"
           stay: "Rester"
           css_html: "Code personnalisé"
           edit_css_html: "Modifier le code"

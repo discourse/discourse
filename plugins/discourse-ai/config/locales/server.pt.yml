@@ -34,6 +34,26 @@ pt:
           title: "Fazer Cópias de Segurança"
       read_post:
         unknown_post: "publicação"
+      chat_tool_approval:
+        topic_states:
+          open: "Abrir"
+          closed: "Fechado"
+          active: "Ativo"
+          deleted: "Eliminado"
+        solution_post: "Publicação #%{number}"
+        duration_label: "Duração:"
+        user_duration:
+          one: "%{count} dia"
+          other: "%{count} dias"
+        posts_label: "Publicações"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrição"
+          color: "cor"
+          text_color: "cor do texto"
+        approve_label: "Sim"
+        reject_label: "Não"
       agents:
         custom_prompt:
           name: "Janela personalizada"

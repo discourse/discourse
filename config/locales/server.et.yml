@@ -16,6 +16,7 @@ et:
       location: "Asukoht"
   mcp:
     errors:
+      category_not_found: "Kategooriat ei leitud"
       draft_too_long: "Mustand on liiga pikk"
       topic_not_found: "Teemat ei leitud"
     oauth:

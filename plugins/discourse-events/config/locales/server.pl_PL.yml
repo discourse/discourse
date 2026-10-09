@@ -93,6 +93,7 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
+    calendar_upcoming_events_default_category: "Kategoria dla nowych wydarzeń utworzonych z kalendarza nadchodzących wydarzeń. Jeśli kategoria jest pusta lub użytkownik nie może tworzyć tematów w tej kategorii, używa {{setting:default_composer_category}}."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
     enable_improved_event_reminders: "Umożliwia członkom wybór, czy przypomnienia o wydarzeniach będą wysyłane jako wiadomości osobiste, powiadomienia, czy w ogóle."
     livestream_allowed_hosts: "Organizatorzy, których można używać do transmisji wydarzeń na żywo."

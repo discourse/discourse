@@ -24,6 +24,10 @@ ja:
         remove: "この「いいね！」を削除する"
         cant_remove: "「いいね！」を削除できなくなりました"
         unauthenticated: "この投稿に「いいね！」するには登録またはログインしてください"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "追加済み"
+        changes_removed: "削除"
     notifications:
       reaction_1_user_multiple_posts:
         other: "があなたの %{count} 件の投稿にリアクションしました"

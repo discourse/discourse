@@ -47,6 +47,30 @@ cs:
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
       read_post:
         unknown_post: "příspěvek"
+      chat_tool_approval:
+        topic_states:
+          open: "Otevřeno"
+          closed: "Zavřeno"
+          active: "Aktivní"
+          deleted: "Smazáno"
+        solution_post: "Příspěvek #%{number}"
+        duration_label: "Doba trvání:"
+        user_duration:
+          one: "%{count} den"
+          few: "%{count} dny"
+          many: "%{count} dní"
+          other: "%{count} dní"
+        post_states:
+          locked: "Uzamčeno"
+        posts_label: "Příspěvky"
+        category_label: "Kategorie"
+        category_fields:
+          name: "názvu"
+          description: "popis"
+          color: "barva"
+          text_color: "barva textu"
+        approve_label: "Ano"
+        reject_label: "Ne"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"

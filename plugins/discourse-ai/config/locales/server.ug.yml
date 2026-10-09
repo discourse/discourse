@@ -39,6 +39,26 @@ ug:
           title: "زاپاس"
       read_post:
         unknown_post: "يازما"
+      chat_tool_approval:
+        topic_states:
+          open: "ئاچ"
+          closed: "تاقالدى"
+          active: "ئاكتىپ"
+        solution_post: "يازما #%{number}"
+        duration_label: "داۋاملىشىش ۋاقتى:"
+        user_duration:
+          one: "%{count} كۈن"
+          other: "%{count} كۈن"
+        posts_label: "يازما"
+        category_label: "سەھىپە"
+        category_fields:
+          name: "ئىسمى"
+          description: "چۈشەندۈرۈش"
+          color: "رەڭ"
+          text_color: "تېكىست رەڭگى"
+        approve_label: "ھەئە"
+        reject_label: "ياق"
+        empty_value: "بوش"
       agents:
         titles_generator:
           name: "ماۋزۇ ھاسىللىغۇچ"

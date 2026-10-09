@@ -31,6 +31,23 @@ et:
           title: "Varukoopiad"
       read_post:
         unknown_post: "postitus"
+      chat_tool_approval:
+        topic_states:
+          open: "Ava"
+          closed: "Suletud"
+          active: "Aktiivne"
+        solution_post: "Post nr%{number}"
+        user_duration:
+          one: "%{count} päev"
+          other: "%{count} päeva"
+        posts_label: "Postitust"
+        category_label: "Kategooriad"
+        category_fields:
+          name: "nimi"
+          description: "kirjeldus"
+          color: "värv"
+        approve_label: "Jah"
+        reject_label: "Ei"
       tool_summary:
         search: "Otsi"
         time: "Aeg"

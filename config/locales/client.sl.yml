@@ -2100,8 +2100,7 @@ sl:
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
       discard: "Zavrzi"
-      title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
-      title_placeholder_redesign: "Naziv"
+      title_placeholder: "Naziv"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "Zakaj spreminjate prispevek?"
       topic_featured_link_placeholder: "Vnesite povezavo prikazano z naslovom."
@@ -3856,6 +3855,7 @@ sl:
             block: "Blokiraj"
             presets:
               custom: "Po meri"
+            automatic: "Samodejno"
           authorizations:
             user: "Uporabnik"
             status: "Status"
@@ -4468,6 +4468,7 @@ sl:
           upload: "Prenesi"
           unsaved_changes_alert: "Niste shranili sprememb - ali jih želite zavreči in nadaljevati?"
           discard: "Zavrzi"
+          leave: "Zapusti"
           direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"

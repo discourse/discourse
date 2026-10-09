@@ -1905,8 +1905,7 @@ gl:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
-      title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -3539,6 +3538,7 @@ gl:
             block: "Bloquear"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             status: "Estado"
@@ -4308,8 +4308,8 @@ gl:
             must_be_unique: "O nome da variábel non é correcto. Debe ser exclusivo."
           upload: "Cargar"
           unsaved_changes_alert: "Aínda non gardou os cambios. Quere desbotalos e continuar?"
-          unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
+          leave: "Abandonar"
           stay: "Deixar"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"

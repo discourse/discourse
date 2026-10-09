@@ -542,6 +542,9 @@ ur:
       chat_message_created:
         channel_id: "چَینل"
       send_chat_message:
+        target: "کو بھیجیں"
+        targets:
+          channel: "چَینل"
         channel_id: "چَینل"
         message: "پیغام"
       chat_approval:

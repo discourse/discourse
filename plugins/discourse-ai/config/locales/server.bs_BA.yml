@@ -29,6 +29,26 @@ bs_BA:
           title: "Backups"
       read_post:
         unknown_post: "objava"
+      chat_tool_approval:
+        topic_states:
+          open: "Otvori"
+          closed: "Zatvoreno"
+          active: "Active"
+          deleted: "Isbrisano"
+        solution_post: "Dijeli post #%{number}"
+        duration_label: "Trajanje:"
+        user_duration:
+          one: "%{count} dan"
+          few: "Par dana"
+          other: "%{count} dana"
+        posts_label: "Objave"
+        category_label: "Kategorija"
+        category_fields:
+          name: "ime"
+          description: "opis"
+          color: "color"
+        approve_label: "Da"
+        reject_label: "Ne"
       tool_summary:
         search: "Pretraži"
         time: "Vrijeme"

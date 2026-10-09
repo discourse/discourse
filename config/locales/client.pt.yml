@@ -437,6 +437,17 @@ pt:
     admin_onboarding_banner:
       start_posting:
         back: "Anterior"
+        category_unavailable: "Esta categoria não está disponível para publicação."
+        icebreakers:
+          plan_categories:
+            title: "Por que categorias devemos começar?"
+            body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
+          plan_invites:
+            title: "Que membros devemos convidar antes do lançamento?"
+            body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
+          write_your_own:
+            title: "Escreva o seu próprio"
+            body: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"
@@ -1851,10 +1862,12 @@ pt:
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
+        current_avatar: "Imagem atual"
+        associated_account: "Imagem %{provider} "
         upload_title: "Carregar a sua foto"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou carregue um avatar personalizado:"
+        use_custom: "Ou escolha outra imagem:"
       change_profile_background:
         title: "Cabeçalho do Perfil"
         instructions: "Os cabeçalhos do perfil serão centrados e com uma largura padrão de 1110px."
@@ -2422,7 +2435,7 @@ pt:
       hide_forever: "não, obrigado"
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
-      value_prop: "Estás cansado de percorrer as mesmas mensagens? Ao criares uma conta, voltarás sempre ao ponto onde paraste. Com uma conta, também podes ser notificado de novas respostas, guardar favoritos e utilizar os gostos para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade fantástica. :heart:"
+      value_prop: "Estás cansado de percorrer as mesmas mensagens? Ao criares uma conta, voltarás sempre ao ponto onde paraste. Com uma conta, também podes ser notificado de novas respostas, guardar favoritos e utilizar os gostos para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade fantástica."
     offline_indicator:
       no_internet: "Não tens ligação à Internet."
       refresh_page: "Actualiza a página"
@@ -2815,8 +2828,7 @@ pt:
       discard: "Descartar"
       draft_saved: "Rascunho guardado!"
       users_placeholder: "Adicionar utilizadores ou grupos"
-      title_placeholder: "Numa breve frase, de que se trata esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
       topic_featured_link_placeholder: "Inserir hiperligação mostrada com o título."
@@ -4555,6 +4567,7 @@ pt:
               content: "Revisão"
             invite:
               content: "Convidar"
+      back_to_admin: "Voltar ao painel de administração"
       no_results:
         title: "Sem resultados"
       search: "Pesquisar"
@@ -4686,6 +4699,13 @@ pt:
             block: "Bloquear"
             presets:
               custom: "Personalizar"
+            management: "Atualizações de inscrição"
+            manual: "Gerido por administradores"
+            automatic: "Automático"
+            manual_description: "Os administradores gerem o nome deste cliente e os URIs de redirecionamento. As atualizações de metadados não os alterarão, por isso mantenha-os atualizados."
+            automatic_description: "O nome e os URI de redirecionamento são atualizados a partir dos metadados do cliente publicado. Alterar qualquer um deles alterna ambos para a gestão administrativa."
+            edit: "Editar cliente OAuth"
+            updated: "Cliente OAuth atualizado."
           authorizations:
             user: "Utilizador"
             status: "Estado"
@@ -5477,6 +5497,7 @@ pt:
           uploads: "Uploads"
           upload: "Carregar"
           discard: "Descartar"
+          leave: "Sair"
           direct_install_tip: "Tem a certeza que pretende instalar <strong>%{name}</strong> do repositório listado abaixo?"
           install: "Instalar"
           installed: "Instalado"

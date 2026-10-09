@@ -24,6 +24,10 @@ cs:
         remove: "Odeberte toto Líbí se"
         cant_remove: "Své Líbí se již nelze odebrat"
         unauthenticated: "Chcete-li dát Líbí se na tento příspěvek, zaregistrujte se nebo se přihlaste"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Přidáno"
+        changes_removed: "Odstraněno"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagoval/a na váš příspěvek"

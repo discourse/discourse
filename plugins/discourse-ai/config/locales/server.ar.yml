@@ -138,7 +138,6 @@ ar:
     ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
     ai_summary_gists_agent: "الوكيل المُستخدَم لإنشاء ملخصات موجزة للموضوعات. يستخدم إنشاء الملخصات الموجزة دائمًا أداة إنشاء الملخص النهائي المضمَّنة؛ ويتم تجاهل الأدوات الأخرى وتنسيقات الاستجابة المنظَّمة المهيَّأة للوكيل."
-    ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المراد ملؤها رجعيًا في الساعة. يُحتسَب كل ملخص موجز تم توطينه ضمن هذا الحد."
     ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
     ai_bot_enabled_llms: "نماذج اللغات الكبيرة المتوفرة للاختيار لإدارة محادثات روبوتات الذكاء الاصطناعي"
     ai_bot_enable_chat_warning: "عرض تحذير عند بدء الدردشة في رسالة خاصة. يمكن تجاوزه عن طريق تعديل سلسلة الترجمة: discourse_ai.ai_bot.pm_warning"
@@ -438,6 +437,32 @@ ar:
       read_post:
         unknown_post: "منشور"
       chat_tool_approval:
+        topic_states:
+          open: "فتح"
+          closed: "مغلق"
+          active: "نشط"
+          deleted: "تم الحذف"
+        solution_post: "المنشور #%{number}"
+        duration_label: "المدة:"
+        user_duration:
+          zero: "%{count} من الأيام"
+          one: "يوم واحد (%{count})"
+          two: "يومان (%{count})"
+          few: "%{count} أيام"
+          many: "%{count} يومًا"
+          other: "%{count} من الأيام"
+        post_states:
+          locked: "مغلق"
+        posts_label: "المنشورات"
+        category_label: "الفئة"
+        category_fields:
+          name: "الاسم"
+          description: "الوصف"
+          color: "اللون"
+          text_color: "لون النص"
+        approve_label: "نعم"
+        reject_label: "لا"
+        empty_value: "فارغ"
         approved: "تمت الموافقة عليه من قِبل @%{username}."
         rejected: "تم رفضه من قِبل @%{username}."
         failed: "تعذَّر إكمال الإجراء: %{error}"

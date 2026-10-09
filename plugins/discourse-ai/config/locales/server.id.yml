@@ -60,6 +60,23 @@ id:
       default_pm_prefix: "[PM bot AI tanpa judul]"
       read_post:
         unknown_post: "post"
+      chat_tool_approval:
+        topic_states:
+          open: "Buka"
+          closed: "Tertutup"
+          active: "Aktif"
+          deleted: "Dihapus"
+        solution_post: "Post #%{number}"
+        duration_label: "Durasi:"
+        user_duration:
+          other: "%{count} hari"
+        posts_label: "Pos"
+        category_label: "Kategori"
+        category_fields:
+          name: "nama"
+          description: "deskripsi"
+        approve_label: "Ya"
+        reject_label: "Tidak"
       tool_options:
         search:
           search_private:

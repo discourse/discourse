@@ -333,6 +333,28 @@ pt_BR:
       read_post:
         unknown_post: "postar"
       chat_tool_approval:
+        topic_states:
+          open: "Aberto (open)"
+          closed: "Fechado (closed)"
+          active: "Ativo(a)"
+          deleted: "Excluído"
+        solution_post: "Postagem #%{number}"
+        duration_label: "Duração:"
+        user_duration:
+          one: "%{count} dia"
+          other: "%{count} dias"
+        post_states:
+          locked: "Bloqueado"
+        posts_label: "Postagens"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrição"
+          color: "cor"
+          text_color: "cor do texto"
+        approve_label: "Sim"
+        reject_label: "Não"
+        empty_value: "Vazio"
         unexpected_error: "ocorreu um erro inesperado."
       agents:
         cannot_have_duplicate_tools: "Não pode haver ferramentas duplicadas"

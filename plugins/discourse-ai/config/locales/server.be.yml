@@ -23,6 +23,24 @@ be:
           title: "Рэзервовыя копіі"
       read_post:
         unknown_post: "пост"
+      chat_tool_approval:
+        topic_states:
+          closed: "Закрыта"
+          active: "Актыўныя"
+        solution_post: "Паведамленне #%{number}"
+        user_duration:
+          one: "%{count} дзень"
+          few: "%{count} дні"
+          many: "%{count} дзён"
+          other: "%{count} дзён"
+        posts_label: "Допісы"
+        category_label: "Катэгорыя"
+        category_fields:
+          name: "назве"
+          description: "апісанне"
+          color: "колер"
+        approve_label: "Так"
+        reject_label: "Не"
       tool_summary:
         search: "Пошук"
       tool_help:

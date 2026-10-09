@@ -31,6 +31,10 @@ pt_BR:
         remove: "Remova essa curtida"
         cant_remove: "Você não pode mais remover sua curtida"
         unauthenticated: "Cadastre-se ou faça login para curtir esta postagem"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Adicionado"
+        changes_removed: "Removido(a)"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagiu a %{count} da sua postagem"

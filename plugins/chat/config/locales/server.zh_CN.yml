@@ -240,13 +240,10 @@ zh_CN:
       default_deny_label: "拒绝"
     errors:
       send_chat_message:
-        invalid_params: "无效参数： %{errors}"
         channel_not_found: "未找到频道： %{channel_id}"
-        failed: "无法发送聊天消息。"
       chat_approval:
         channel_not_found: "聊天消息发送失败：未找到频道 %{channel_id}。"
         invalid_params: "聊天消息发送失败： %{errors}"
-        failed: "聊天消息发送失败： %{steps}"
         timeout_must_be_positive: "超时时长必须大于 0 分钟。"
         invalid_timeout_action: "无效的超时操作： %{action}。"
         buttons_required: "至少需要一个聊天批准按钮。"

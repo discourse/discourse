@@ -2066,7 +2066,6 @@ zh_TW:
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
         logo_small: "網站的小標誌。預設使用。"
-        use_custom: "或上傳自訂頭像："
       change_profile_background:
         title: "個人檔案標頭"
         instructions: "個人檔案標頭將會置中以及預設1110px的寬度。"
@@ -2631,7 +2630,6 @@ zh_TW:
       hide_forever: "不了"
       hidden_for_session: "好的，我們明天再問您。您也可以隨時使用「登入」來建立帳號。"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
-      value_prop: "厭倦了捲動相同的貼文？當您建立帳號後，您就可以隨時回到您離開的地方。有了帳號，您也可以收到新回覆的通知、儲存書籤，以及使用讚來感謝他人。我們可以一起努力，讓這個社群變得更美好。 :heart:"
     offline_indicator:
       no_internet: "沒有網際網路連線。"
       refresh_page: "重新整理頁面"
@@ -3205,8 +3203,7 @@ zh_TW:
       cancel_edit: "取消編輯"
       draft_saved: "草稿已儲存！"
       users_placeholder: "新增使用者或群組"
-      title_placeholder: "用一個簡短的句子來描述想討論的內容。"
-      title_placeholder_redesign: "標題"
+      title_placeholder: "標題"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
       topic_featured_link_placeholder: "在標題裡輸入連結"
@@ -6167,6 +6164,7 @@ zh_TW:
             use_preset: "設置"
             presets:
               custom: "客製"
+            automatic: "自動建立"
           authorizations:
             user: "使用者"
             scopes: "授予的作用域"
@@ -8087,8 +8085,8 @@ zh_TW:
           upload: "上傳"
           select_component: "選擇要上傳的資產（png、woff2 等…)"
           unsaved_changes_alert: "您尚未儲存變更的內容，您是否要棄用內容並繼續進行？"
-          unsaved_parent_themes: "您尚未將元件分配給主題，是否要繼續？"
           discard: "捨棄"
+          leave: "離開"
           stay: "保留"
           css_html: "自訂程式碼"
           edit_css_html: "編輯程式碼"

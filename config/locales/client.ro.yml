@@ -2343,8 +2343,7 @@ ro:
       discard: "Renunță"
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
-      title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
-      title_placeholder_redesign: "Titlu"
+      title_placeholder: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -4074,6 +4073,7 @@ ro:
             block: "Blochează"
             presets:
               custom: "Personalizat"
+            automatic: "Automat"
           authorizations:
             user: "Utilizator"
             last_used: "Ultima utilizare"
@@ -5053,6 +5053,7 @@ ro:
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
           discard: "Renunță"
+          leave: "Părăsește"
           installed: "Instalată"
           install_popular: "Populare"
           installing_message: "Se configurează noua ta temă…"

@@ -236,13 +236,10 @@ zh_TW:
       default_deny_label: "拒絕"
     errors:
       send_chat_message:
-        invalid_params: "無效參數： %{errors}"
         channel_not_found: "未找到頻道： %{channel_id}"
-        failed: "無法發送聊天消息。"
       chat_approval:
         channel_not_found: "聊天消息發送失敗：未找到頻道 %{channel_id}。"
         invalid_params: "聊天消息發送失敗： %{errors}"
-        failed: "聊天消息發送失敗： %{steps}"
         timeout_must_be_positive: "超時時長必須大于 0 分鐘。"
         invalid_timeout_action: "無效的逾時操作：%{action}。"
         buttons_required: "至少需要一個聊天核准按鈕。"

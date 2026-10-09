@@ -31,6 +31,10 @@ zh_TW:
         remove: "刪除這個喜歡"
         cant_remove: "您已無法移除您的讚"
         unauthenticated: "請註冊或登入以對此貼文按讚"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "已新增"
+        changes_removed: "已移除"
     notifications:
       reaction_1_user_multiple_posts:
         other: "對您的 %{count} 篇貼文作出反應"

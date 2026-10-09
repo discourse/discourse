@@ -965,15 +965,24 @@ pl_PL:
         "action:chat_approval": "Zatwierdzenie czatu"
         "trigger:chat_message_created": "Utworzona wiadomość czatu"
       node_descriptions:
-        "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
+        "action:send_chat_message": "Wyślij wiadomość na kanał czatu lub wiadomość bezpośrednią do jednego lub większej liczby użytkowników"
         "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
         "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
       chat_message_created:
         channel_id: "Kanał"
         channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
       send_chat_message:
+        target: "Wyślij do"
+        targets:
+          channel: "Kanał"
+          user: "Użytkownicy (każdy z osobna wiadomość)"
+          group: "Grupa (jedna wiadomość bezpośrednia do wszystkich)"
         channel_id: "Kanał"
+        target_usernames: "Odbiorcy"
+        target_usernames_description: "Użytkownicy do wysłania wiadomości. Użyj wyrażenia takiego jak $trigger.user.username, aby wybrać użytkowników z każdego elementu."
         message: "Wiadomość"
+        actor_username: "Nadawca"
+        actor_username_description: "Wiadomości bezpośrednie wysyłane są w imieniu tego użytkownika, a odbiorcy widzą je jako napisane przez niego."
       chat_approval:
         message: "Wiadomość"
         buttons: "Przyciski"

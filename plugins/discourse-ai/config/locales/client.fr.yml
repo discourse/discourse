@@ -719,8 +719,6 @@ fr:
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
         use_parent_llm: "Utiliser le modèle de langage de l'agent"
-        max_turn_tokens: "Nombre maximal de jetons par tour"
-        max_turn_tokens_help: "Nombre maximal total de jetons (entrée + sortie) consommés par l'ensemble des appels au LLM au cours d'une même réponse du bot. Laissez ce champ vide pour utiliser par défaut la moitié de la fenêtre de contexte du modèle."
         compression_threshold: "Seuil de compression"
         compression_threshold_help: "Pourcentage d'utilisation du contexte (20 à 99) à partir duquel la compression automatique se déclenche. Une valeur plus faible déclenche la compression plus tôt et conserve davantage de marge disponible."
         vision_enabled: Inclure les images téléversées

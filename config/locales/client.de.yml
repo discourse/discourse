@@ -2101,7 +2101,6 @@ de:
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
         logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
-        use_custom: "Oder lade einen eigenen Avatar hoch:"
       change_profile_background:
         title: "Profil-Kopfzeile"
         instructions: "Profil-Kopfzeilen werden zentriert und haben eine Standardbreite von 1110 px."
@@ -2705,7 +2704,7 @@ de:
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
-      value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit „Gefällt mir“ danken. Wir können alle zusammenarbeiten, um diese Community zu etwas Großartigem zu machen. :heart:"
+      value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit „Gefällt mir“ danken. Wir können alle zusammenarbeiten, um diese Community zu etwas Großartigem zu machen."
     offline_indicator:
       no_internet: "Keine Internetverbindung."
       refresh_page: "Seite aktualisieren"
@@ -3264,8 +3263,7 @@ de:
       cancel_edit: "Bearbeiten abbrechen"
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
-      title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
       topic_featured_link_placeholder: "Link zum Titel eingeben."
@@ -6340,6 +6338,7 @@ de:
             use_preset: "Einrichten"
             presets:
               custom: "Benutzerdefiniert"
+            automatic: "Automatisch"
           authorizations:
             user: "Nutzer"
             scopes: "Gewährte Bereiche"
@@ -8111,8 +8110,8 @@ de:
           upload: "Hochladen"
           select_component: "Komponente auswählen …"
           unsaved_changes_alert: "Du hast deine Änderungen noch nicht gespeichert, möchtest du sie verwerfen und weitermachen?"
-          unsaved_parent_themes: "Du hast die Komponente keinen Themes zugeordnet, willst du fortfahren?"
           discard: "Verwerfen"
+          leave: "Verlassen"
           stay: "Bleiben"
           css_html: "Benutzerdefinierter Code"
           edit_css_html: "Code bearbeiten"

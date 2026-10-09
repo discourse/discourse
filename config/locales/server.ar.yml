@@ -18,6 +18,7 @@ ar:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "لم يتم العثور على الفئة"
       draft_too_long: "المسودة طويلة للغاية"
       post_not_found: "المنشور غير موجود"
       topic_not_found: "الموضوع غير موجود"

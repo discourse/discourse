@@ -1845,7 +1845,6 @@ ja:
         upload_title: "写真をアップロードする"
         image_is_not_a_square: "警告: 幅と高さが等しくないため、画像をトリミングしました。"
         logo_small: "サイトの小さなロゴ。デフォルトで使用されます。"
-        use_custom: "またはカスタムアバターをアップロード:"
       change_profile_background:
         title: "プロファイルヘッダー"
         instructions: "プロファイルヘッダーは中央揃えで、デフォルトの幅は 1110 px です。"
@@ -2392,7 +2391,6 @@ ja:
       hide_forever: "いいえ、結構です"
       hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、アカウント登録はまだのようです。"
-      value_prop: "同じ投稿をスクロールするのにうんざりしていませんか？アカウントを作成すると、中断した場所にいつでも戻ることができます。アカウントを使うと、新しい返信の通知を受け取ったり、ブックマークを保存したり、「いいね！」を使って感謝の気持ちを伝えたりすることも可能です。このコミュニティーを一緒に盛り上げていきましょう。:heart:"
     offline_indicator:
       no_internet: "インターネット接続がありません。"
       refresh_page: "ページを更新"
@@ -2804,8 +2802,7 @@ ja:
       discard: "破棄"
       draft_saved: "下書きが保存されました！"
       users_placeholder: "ユーザーまたはグループを追加"
-      title_placeholder: "トピックのタイトルを入力してください"
-      title_placeholder_redesign: "タイトル"
+      title_placeholder: "タイトル"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
       edit_reason_placeholder: "編集する理由は？"
       topic_featured_link_placeholder: "タイトルに表示されるリンクを入力してください。"
@@ -5341,6 +5338,7 @@ ja:
             use_preset: "セットアップ"
             presets:
               custom: "カスタム"
+            automatic: "自動作成"
           authorizations:
             user: "ユーザー"
             last_used: "最後の使用"
@@ -6841,8 +6839,8 @@ ja:
           upload: "アップロード"
           select_component: "コンポーネントを選択してください…"
           unsaved_changes_alert: "変更内容を保存していません。変更を破棄して続行しますか？"
-          unsaved_parent_themes: "テーマにコンポーネントを割り当てていません。続行しますか？"
           discard: "破棄"
+          leave: "退出"
           stay: "移動しない"
           css_html: "カスタムコード"
           edit_css_html: "コードを編集"

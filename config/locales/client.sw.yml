@@ -1337,8 +1337,7 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
-      title_placeholder_redesign: "Kichwa cha Habari"
+      title_placeholder: "Kichwa cha Habari"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "Kwa nini unahariri?"
       topic_featured_link_placeholder: "Ingiza linki inayoonyeshwa na kichwa"
@@ -2533,6 +2532,7 @@ sw:
             block: "Zuia"
             presets:
               custom: "Binafsi"
+            automatic: "otomatiki"
           authorizations:
             user: "Mtumiaji"
             actions: "Vitendo"
@@ -3093,6 +3093,7 @@ sw:
           variable_name: "Jina la SCSS:"
           variable_name_invalid: "Jina lililoandikwa sio sahihi. Namba na herufi tu zinaruhusiwa. Lazima ianze na herufi. Lazima iwe ya kipekee."
           upload: "Pakia"
+          leave: "Ondoka"
           delete_upload_confirm: "Futa upakiaji huu (CSS ya Mandhari inaweza kuacha kufanya kazi!)"
           import_web_tip: "Hifadhi yenye mandhari"
           is_private: "Mandhari ipo ndani ya hifadhi binafsi ya git"
