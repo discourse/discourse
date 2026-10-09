@@ -172,7 +172,6 @@ export default <template>
     <ModalContainer />
     <DesignWizardPanel />
     <DialogHolder />
-    <ComposerContainer />
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}
