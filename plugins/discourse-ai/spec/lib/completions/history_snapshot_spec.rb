@@ -8,6 +8,85 @@ RSpec.describe DiscourseAi::Completions::HistorySnapshot do
 
   before { enable_current_plugin }
 
+  it "does not replay saved public requests after a compressed answer" do
+    original = Fabricate(:post, user: user, raw: "Original request 猫")
+    entries = checkpoint(post_snapshot(original))
+    entries.insert(2, ["Latest post is by user who just posted: Original request 猫", nil, "user"])
+    entries.insert(
+      3,
+      ["Retained historical attachments", nil, "user"],
+      ["The preceding attachments are retained historical evidence.", nil, "model"],
+    )
+    post_snapshot(original).stamp!(entries)
+    reply = Fabricate(:post, topic: original.topic, user: bot_user, raw: "Visible answer")
+    PostCustomPrompt.create!(post_id: reply.id, custom_prompt: entries)
+    latest = Fabricate(:post, topic: original.topic, user: user, raw: "New request")
+    messages =
+      DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
+        latest,
+        guardian: user.guardian,
+        max_posts: 40,
+        bot_usernames: [bot_user.username],
+        history_snapshot: post_snapshot(latest),
+      )
+    expect(messages.to_s.scan("Original request 猫").length).to eq(1)
+    expect(messages.first[:content].to_s).not_to include("Latest post is by")
+    expect(messages.to_s).not_to include(
+      "The preceding attachments are retained historical evidence.",
+    )
+    expect(messages.to_s).to include(reply.raw)
+  end
+
+  it "does not replay saved public chat requests after a compressed answer" do
+    channel = Fabricate(:category_channel)
+    original = Fabricate(:chat_message, chat_channel: channel, user: user, message: "Old request 猫")
+    snapshot = described_class.chat(original, guardian: user.guardian, bot_user_ids: [bot_user.id])
+    entries = checkpoint(snapshot)
+    entries.insert(2, ["Old request 猫", nil, "user"])
+    entries.insert(
+      3,
+      ["Retained historical attachments", nil, "user"],
+      ["The preceding attachments are retained historical evidence.", nil, "model"],
+    )
+    snapshot.stamp!(entries)
+    reply =
+      Fabricate(:chat_message, chat_channel: channel, user: bot_user, message: "Visible answer")
+    ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: entries)
+    latest = Fabricate(:chat_message, chat_channel: channel, user: user, message: "Next request")
+    expect(chat_messages(latest, channel).to_s).not_to include("Old request 猫")
+    expect(chat_messages(latest, channel).to_s).not_to include(
+      "The preceding attachments are retained historical evidence.",
+    )
+    expect(chat_messages(latest, channel).to_s).to include(reply.message)
+  end
+
+  it "treats repeated public channel and thread mentions as independent invocations" do
+    channel = Fabricate(:category_channel, threading_enabled: true)
+    first = Fabricate(:chat_message, chat_channel: channel, user: user)
+    latest = Fabricate(:chat_message, chat_channel: channel, user: other_user)
+    snapshot =
+      described_class.chat(latest, guardian: other_user.guardian, bot_user_ids: [bot_user.id])
+    expect(snapshot.user_turn_count).to eq(1)
+    thread = Fabricate(:chat_thread, channel: channel, original_message: first)
+    first.update!(thread: thread)
+    latest.update!(thread: thread)
+    snapshot =
+      described_class.chat(latest, guardian: other_user.guardian, bot_user_ids: [bot_user.id])
+    expect(snapshot.user_turn_count).to eq(1)
+  end
+
+  it "keeps public channel history separate from the current request" do
+    channel = Fabricate(:category_channel)
+    old = Fabricate(:chat_message, chat_channel: channel, user: user)
+    latest =
+      Fabricate(:chat_message, chat_channel: channel, user: user, message: "Latest request 猫")
+    messages = chat_messages(latest, channel)
+    expect(messages.length).to eq(2)
+    expect(messages.first[:content].to_s).to include(old.message)
+    expect(messages.last[:content].to_s).to include(latest.message)
+    expect(messages.last[:content].to_s).not_to include(old.message)
+  end
+
   def post_snapshot(post, reader = user)
     described_class.post(post, guardian: reader.guardian, bot_usernames: [bot_user.username])
   end

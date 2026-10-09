@@ -173,9 +173,9 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
       )
     bot = DiscourseAi::Agents::Bot.as(user, agent: parent.class_instance.new, model: claude)
     expect(bot.reply(context).last.first).to eq("Parent answer")
-    expect(bodies.first(2).map { |body| body["max_tokens"] }).to eq([16_000, 16_000])
+    expect(bodies.first(2).map { |body| body["max_tokens"] }).to eq([16_000, 15_940])
     expect(bodies.first(2).map { |body| body.dig("thinking", "budget_tokens") }).to eq(
-      [14_976, 14_976],
+      [14_976, 14_916],
     )
     expect(bodies.last["messages"].to_json).to include("Child evidence")
     expect(context.execution_context.work_budget.limit).to eq(32_000)

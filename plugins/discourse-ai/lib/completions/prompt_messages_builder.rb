@@ -157,7 +157,10 @@ module DiscourseAi
               allowed_attachment_types: allowed_attachment_types,
             )
           end
-          custom_prompts.transform_values! { |entries| without_checkpoint(entries) }
+          custom_prompts.transform_values! do |entries|
+            entries = without_checkpoint(entries)
+            public_context ? without_public_requests(entries) : entries
+          end
         end
 
         messages.each do |m|
@@ -360,7 +363,11 @@ module DiscourseAi
               allowed_attachment_types: allowed_attachment_types,
             )
           end
-          context.each { |row| row[2] = without_checkpoint(row[2]) if row[2] }
+          context.each do |row|
+            next if !row[2]
+            row[2] = without_checkpoint(row[2])
+            row[2] = without_public_requests(row[2]) if public_context
+          end
         end
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
@@ -516,6 +523,20 @@ module DiscourseAi
           entries.slice!(index, 2)
         end
         entries
+      end
+
+      def self.without_public_requests(entries)
+        entries.each_with_index.filter_map do |entry, index|
+          next if entry[2] == "user"
+          previous = entries[index - 1] if index > 0
+          if entry[2] == "model" &&
+               entry[0] == "The preceding attachments are retained historical evidence." &&
+               previous&.dig(2) == "user" &&
+               Array(previous[0]).first.to_s.start_with?("Retained historical attachments")
+            next
+          end
+          entry
+        end
       end
 
       def prepend_scope_notice!(limit)
@@ -1166,6 +1187,16 @@ module DiscourseAi
           end
         end
 
+        history = []
+        if preserve_history && raw_messages.present?
+          history << {
+            type: :user,
+            content:
+              compress_messages_buffer(content_array.flatten, max_uploads: MAX_TOPIC_UPLOADS),
+          }
+          content_array = []
+        end
+
         if last_user_message
           content_array << "Latest post is by #{last_user_message[:id] || "User"} who just posted:\n"
           content_array << last_user_message[:content]
@@ -1176,7 +1207,7 @@ module DiscourseAi
 
         user_message = { type: :user, content: content_array }
 
-        [user_message]
+        [*history, user_message]
       end
 
       def chat_array(limit:)
@@ -1204,13 +1235,21 @@ module DiscourseAi
         end
 
         last_message = raw_messages[-1]
+        history = []
+        if preserve_history && raw_messages.length > 1
+          history << {
+            type: :user,
+            content: compress_messages_buffer(buffer.flatten, max_uploads: MAX_CHAT_UPLOADS),
+          }
+          buffer = []
+        end
         buffer << "#{last_message[:id] || "User"}: "
         buffer << last_message[:content]
 
         buffer = compress_messages_buffer(buffer.flatten, max_uploads: MAX_CHAT_UPLOADS)
 
         message = { type: :user, content: buffer }
-        [message]
+        [*history, message]
       end
 
       # caps uploads to maximum uploads allowed in message stream

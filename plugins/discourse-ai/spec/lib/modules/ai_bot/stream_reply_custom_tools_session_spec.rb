@@ -671,12 +671,15 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         expect(options.map { |option| option[:feature_name] }.first(4)).to eq(
           %w[bot context_compression context_compression bot],
         )
-        protected_request = prompts[3].messages.select { |message| message[:type] == :user }.last
-        expect(Array(protected_request[:content])).to include(
+        user_messages = prompts[3].messages.select { |message| message[:type] == :user }
+        expect(user_messages.map { |message| message[:content] }).to include(
           "Remember QUARTZ-OTTER-731 and read",
           DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT,
         )
         reply = Post.where(user_id: ai_agent.user_id).order(:id).last
+        expect(reply.post_custom_prompt.custom_prompt.flatten.grep(String).join).not_to include(
+          DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+        )
         checkpoint = reply.post_custom_prompt.custom_prompt.first
         expect(checkpoint[0]).to include("<compressed_context>")
         expect(checkpoint[6]).to include(
@@ -774,6 +777,54 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
   end
 
   describe "token budget enforcement" do
+    it "does not replay an incomplete reasoning-only response before the final answer" do
+      ai_agent.update!(max_turn_tokens: 3000)
+      llm.update!(max_output_tokens: 4000)
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Unfinished reasoning")
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [[thinking], "Final answer", "Title"],
+      ) do |canned|
+        allow(canned).to receive(:output_limit_reached?).and_return(true, false)
+        sent_messages = []
+        allow(canned).to receive(
+          :perform_completion!,
+        ).and_wrap_original do |method, dialect, *args, **options, &block|
+          sent_messages << dialect.prompt.messages.deep_dup
+          method.call(dialect, *args, **options, &block)
+        end
+        collect_events(build_session)
+        expect(sent_messages.second.select { |message| message[:type] == :model }).to be_empty
+      end
+    end
+
+    it "appends one continuation to a budget-limited caller-tool response" do
+      ai_agent.update!(max_turn_tokens: 3000)
+      llm.update!(max_output_tokens: 4000)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Partial ", "Partial answer", "Title"],
+      ) do |canned, _, prompts|
+        allow(canned).to receive(:output_limit_reached?).and_return(true, false)
+        events = collect_events(build_session)
+        expect(events.select { |type, _| type == :partial }.map(&:last).join).to eq(
+          "Partial answer",
+        )
+        expect(events.select { |type, _| type == :tool_calls }).to be_empty
+        expect(prompts.second.tool_choice).to eq(:none)
+        reply = Post.where(user_id: ai_agent.user_id).order(:id).last
+        expect(reply.raw).to include("Partial answer")
+        expect(
+          reply
+            .post_custom_prompt
+            .custom_prompt
+            .select { |entry| entry[2] == "model" }
+            .map(&:first),
+        ).to eq(["Partial answer"])
+        expect(reply.post_custom_prompt.custom_prompt.flatten.grep(String).join).not_to include(
+          DiscourseAi::Completions::ResponseContinuation::INSTRUCTION,
+        )
+      end
+    end
+
     it "hands a batch of 50 caller tools out for execution" do
       calls =
         50.times.map do |index|
@@ -1119,8 +1170,46 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
+    it "finishes a resumed turn when its remaining work cannot fit a final answer" do
+      llm.update!(provider: "open_ai", url: "https://api.openai.com/v1/responses")
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_tool",
+          parameters: {
+            input: "read",
+          },
+          id: "read",
+        )
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, "Complete final answer", "Test title"],
+      ) do |_, _, prompts, options|
+        event = collect_events(build_session).find { |type, _| type == :tool_calls }
+        resume_token = event[1][:resume_token]
+        key = described_class.redis_key(resume_token)
+        state = JSON.parse(Discourse.redis.get(key))
+        state["work_budget"]["used"] = 4990
+        Discourse.redis.setex(key, described_class::RESUME_STATE_TTL_SECONDS, state.to_json)
+
+        events =
+          collect_events(
+            build_session(
+              resume_token: resume_token,
+              tool_results: [{ tool_call_id: "read", content: "Read result" }],
+            ),
+          )
+
+        expect(events.select { |type, _| type == :partial }.map(&:last).join).to eq(
+          "Complete final answer",
+        )
+        expect(events.select { |type, _| type == :tool_calls }).to be_empty
+        expect(prompts.second.tool_choice).to eq(:none)
+        expect(options.second[:max_tokens]).to eq(2048)
+        expect(options.second[:thinking_effort]).to eq("none")
+      end
+    end
+
     it "triggers synthetic tool errors + final text when budget exhausted mid-round" do
-      ai_agent.update!(max_turn_tokens: 1)
+      ai_agent.update!(max_turn_tokens: 2500)
 
       tool_call =
         DiscourseAi::Completions::ToolCall.new(
@@ -1142,6 +1231,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           result = original.call(*args, **kwargs, &blk)
           if (tracker = kwargs[:execution_context]&.token_usage_tracker)
             tracker.add_effective(request: 120_000, response: 500)
+            kwargs[:execution_context].work_budget.debit(2500, event_id: SecureRandom.uuid)
           end
           result
         end

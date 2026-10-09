@@ -400,6 +400,83 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
   end
 
   describe "streaming completion" do
+    ["max_tokens", "end_turn", nil].each do |stop_reason|
+      it "handles incomplete SDK tool arguments with stop reason #{stop_reason.inspect}" do
+        stub_sdk_client do |listeners|
+          fire_message_start(listeners)
+          fire_event(
+            listeners,
+            :content_block_start,
+            Aws::BedrockRuntime::Types::ContentBlockStartEvent.new(
+              start:
+                Aws::BedrockRuntime::Types::ContentBlockStart.new(
+                  tool_use:
+                    Aws::BedrockRuntime::Types::ToolUseBlockStart.new(
+                      name: "search",
+                      tool_use_id: "read",
+                    ),
+                ),
+              content_block_index: 0,
+            ),
+          )
+          fire_event(
+            listeners,
+            :content_block_delta,
+            Aws::BedrockRuntime::Types::ContentBlockDeltaEvent.new(
+              delta:
+                Aws::BedrockRuntime::Types::ContentBlockDelta.new(
+                  tool_use:
+                    Aws::BedrockRuntime::Types::ToolUseBlockDelta.new(
+                      input: '{"query":"unfinished',
+                    ),
+                ),
+              content_block_index: 0,
+            ),
+          )
+          fire_content_block_stop(listeners)
+          if stop_reason
+            fire_event(
+              listeners,
+              :message_stop,
+              Aws::BedrockRuntime::Types::MessageStopEvent.new(stop_reason: stop_reason),
+            )
+          end
+        end
+        status = {}
+        if stop_reason == "max_tokens"
+          parts = []
+          model
+            .to_llm
+            .generate("Read", user: user, completion_status: status) { |part| parts << part }
+          expect(parts).to be_empty
+          expect(status[:output_limit_reached]).to eq(true)
+        else
+          expect {
+            model.to_llm.generate("Read", user: user, completion_status: status) { |_part| }
+          }.to raise_error(JSON::ParserError)
+        end
+      end
+    end
+
+    it "reports an output limit from the SDK message stop event" do
+      stub_sdk_client do |listeners|
+        fire_message_start(listeners)
+        fire_content_block_delta(listeners, text: "Partial answer")
+        fire_content_block_stop(listeners)
+        fire_event(
+          listeners,
+          :message_stop,
+          Aws::BedrockRuntime::Types::MessageStopEvent.new(stop_reason: "max_tokens"),
+        )
+        fire_metadata(listeners)
+      end
+
+      status = {}
+      model.to_llm.generate("hello", user: user, completion_status: status) { |_partial| }
+
+      expect(status[:output_limit_reached]).to eq(true)
+    end
+
     it "streams text responses" do
       described_class.any_instance.stubs(:monotonic_milliseconds).returns(1_000, 1_090, 9_999)
       partials = []

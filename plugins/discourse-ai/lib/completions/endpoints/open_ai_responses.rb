@@ -6,6 +6,10 @@ module DiscourseAi
       class OpenAiResponses < Base
         include OpenAiShared
 
+        def minimum_output_tokens
+          16
+        end
+
         def self.can_contact?(llm_model)
           %w[open_ai azure].include?(llm_model.provider) &&
             llm_model.url.to_s.include?("/v1/responses")

@@ -234,6 +234,17 @@ module DiscourseAi
 
         attr_reader :llm_model
 
+        def minimum_output_tokens
+          1
+        end
+
+        def output_limit_reached?
+          reason = @stop_reason
+          reason ||= processor.stop_reason if respond_to?(:processor, true) &&
+            processor.respond_to?(:stop_reason)
+          %w[length max_tokens max_output_tokens MAX_TOKENS MAX_OUTPUT_TOKENS].include?(reason)
+        end
+
         # Extra HTTP headers contributed by registered providers for this
         # request. Endpoints that want them merge the result into their request
         # headers. Provider failures are isolated so they can never break a

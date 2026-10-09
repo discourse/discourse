@@ -65,11 +65,14 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     @thinking = nil
   end
 
+  attr_reader :stop_reason
+
   def to_tool_calls
     @tool_calls.map { |tool_call| tool_call.to_tool_call }
   end
 
   def finish
+    raise @tool_parse_error if @tool_parse_error && @stop_reason != "max_tokens"
     return [] if !@output_thinking
 
     [build_anthropic_content_blocks_thinking].compact
@@ -80,7 +83,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     if parsed[:type] == "content_block_start" && parsed.dig(:content_block, :type) == "tool_use"
       tool_name = parsed.dig(:content_block, :name)
       tool_id = parsed.dig(:content_block, :id)
-      result = @current_tool_call.to_tool_call if @current_tool_call
+      result = complete_tool_call if @current_tool_call
       @current_tool_call =
         AnthropicToolCall.new(
           tool_name,
@@ -193,8 +196,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
           ) if @output_thinking
         @current_server_tool_use = nil
       elsif @current_tool_call
-        result = @current_tool_call.to_tool_call
-        @current_tool_call = nil
+        result = complete_tool_call
       elsif @current_anthropic_thinking_block
         @current_anthropic_thinking_block = nil
       end
@@ -204,6 +206,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
       @cache_creation_input_tokens = usage[:cache_creation_input_tokens]
       @cache_read_input_tokens = usage[:cache_read_input_tokens]
     elsif parsed[:type] == "message_delta"
+      @stop_reason = parsed.dig(:delta, :stop_reason)
       @output_tokens =
         parsed.dig(:usage, :output_tokens) || parsed.dig(:delta, :usage, :output_tokens)
     elsif parsed[:type] == "message_stop"
@@ -221,6 +224,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     result = ""
     parsed = payload
     parsed = JSON.parse(payload, symbolize_names: true) if payload.is_a?(String)
+    @stop_reason = parsed[:stop_reason]
 
     content = parsed.dig(:content)
     @anthropic_content_blocks = content.deep_dup if content.is_a?(Array)
@@ -275,6 +279,15 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
   end
 
   private
+
+  def complete_tool_call
+    @current_tool_call.to_tool_call
+  rescue JSON::ParserError => error
+    @tool_parse_error ||= error
+    nil
+  ensure
+    @current_tool_call = nil
+  end
 
   def build_native_tool_thinking(tool_use, include_provider_info: true)
     provider_info = include_provider_info ? anthropic_content_blocks_provider_info : {}

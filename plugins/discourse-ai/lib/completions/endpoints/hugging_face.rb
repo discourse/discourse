@@ -65,6 +65,7 @@ module DiscourseAi
 
         def decode(response_raw)
           parsed = JSON.parse(response_raw, symbolize_names: true)
+          @stop_reason = parsed.dig(:choices, 0, :finish_reason)
           text = parsed.dig(:choices, 0, :message, :content)
           if text.to_s.empty?
             [""]
@@ -77,6 +78,7 @@ module DiscourseAi
           @json_decoder ||= JsonStreamDecoder.new
           (@json_decoder << chunk)
             .map do |parsed|
+              @stop_reason = parsed.dig(:choices, 0, :finish_reason) || @stop_reason
               text = parsed.dig(:choices, 0, :delta, :content)
               if text.to_s.empty?
                 nil

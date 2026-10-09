@@ -320,6 +320,43 @@ RSpec.describe DiscourseAi::Completions::Llm do
   end
 
   describe "#generate" do
+    it "does not expose tool calls from an output-limited generation to the consumer" do
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(id: "read", name: "categories", parameters: {})
+      DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) do |canned|
+        allow(canned).to receive(:output_limit_reached?).and_return(true)
+        parts = []
+        status = {}
+        result =
+          model
+            .to_llm
+            .generate("Read", user: user, completion_status: status) { |part| parts << part }
+        expect(parts).to be_empty
+        expect(Array(result)).to be_empty
+        expect(status[:output_limit_reached]).to eq(true)
+      end
+    end
+
+    it "preserves thinking and text order around buffered complete tools" do
+      call = DiscourseAi::Completions::ToolCall.new(id: "first", name: "search", parameters: {})
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Next thought")
+      second = DiscourseAi::Completions::ToolCall.new(id: "second", name: "search", parameters: {})
+      response = ["Before", call, thinking, second, "After"]
+      DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+        parts = []
+        model.to_llm.generate("Read", user: user, completion_status: {}) { |part| parts << part }
+        expect(
+          parts
+            .map do |part|
+              part.is_a?(String) ?
+                part :
+                part.is_a?(DiscourseAi::Completions::ToolCall) ? part.id : part.message
+            end
+            .join,
+        ).to eq("BeforefirstNext thoughtsecondAfter")
+      end
+    end
+
     context "with different prompt formats" do
       before { stub_response(body: success_body(content: "world")) }
 

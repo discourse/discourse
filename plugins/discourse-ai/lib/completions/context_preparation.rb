@@ -138,8 +138,12 @@ module DiscourseAi
           if prompt.messages.none? { |message|
                message[:type] == :tool_call && message[:id].blank?
              } && (pending_ids - result_ids).empty?
-            source += tail.reject { |message| message[:type] == :user }
-            tail = normalize_users(tail.select { |message| message[:type] == :user })
+            continuing = tail.any? { |message| ResponseContinuation.hint?(message[:content]) }
+            partial_answer = tail.reverse.find { |message| message[:type] == :model } if continuing
+            retained, completed =
+              tail.partition { |message| message[:type] == :user || message.equal?(partial_answer) }
+            source += completed
+            tail = normalize_users(retained)
           end
         end
         if size > capacity && !fits?(prompt, [prompt.messages.first, *tail], **options)
@@ -310,7 +314,8 @@ module DiscourseAi
 
       def normalize_users(messages)
         messages.each_with_object([]) do |message, result|
-          if result.last&.dig(:type) == :user && message[:type] == :user
+          if result.last&.dig(:type) == :user && message[:type] == :user &&
+               !transient_hint?(result.last) && !transient_hint?(message)
             previous = result.pop
             result << previous.merge(
               content: [*Array(previous[:content]), "\n", *Array(message[:content])],
@@ -416,7 +421,10 @@ module DiscourseAi
 
       def transient_hint?(message)
         message[:type] == :user &&
-          DiscourseAi::Agents::Bot::TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content])
+          (
+            DiscourseAi::Agents::Bot::TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content]) ||
+              ResponseContinuation.hint?(message[:content])
+          )
       end
     end
   end

@@ -34,6 +34,160 @@ RSpec.describe DiscourseAi::Agents::Bot do
   end
 
   describe "#reply" do
+    it "finishes a budget-limited Anthropic reply after an incomplete streamed tool call" do
+      model = Fabricate(:anthropic_model, max_output_tokens: 4096)
+      record = Fabricate(:ai_agent, max_turn_tokens: 32, tools: [["ListCategories", nil, false]])
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "Read categories" }],
+        )
+      initial = [
+        { type: "message_start", message: { usage: { input_tokens: 10, output_tokens: 1 } } },
+        { type: "content_block_start", index: 0, content_block: { type: "text", text: "" } },
+        {
+          type: "content_block_delta",
+          index: 0,
+          delta: {
+            type: "text_delta",
+            text: "Partial answer",
+          },
+        },
+        { type: "content_block_stop", index: 0 },
+        {
+          type: "content_block_start",
+          index: 1,
+          content_block: {
+            type: "tool_use",
+            id: "read",
+            name: "categories",
+            input: {
+            },
+          },
+        },
+        {
+          type: "content_block_delta",
+          index: 1,
+          delta: {
+            type: "input_json_delta",
+            partial_json: '{"query":"unfinished',
+          },
+        },
+        { type: "content_block_stop", index: 1 },
+        {
+          type: "message_delta",
+          delta: {
+            stop_reason: "max_tokens",
+          },
+          usage: {
+            output_tokens: 16,
+          },
+        },
+        { type: "message_stop" },
+      ]
+      final = [
+        { type: "message_start", message: { usage: { input_tokens: 30, output_tokens: 1 } } },
+        { type: "content_block_start", index: 0, content_block: { type: "text", text: "" } },
+        {
+          type: "content_block_delta",
+          index: 0,
+          delta: {
+            type: "text_delta",
+            text: "Partial answer completed.",
+          },
+        },
+        { type: "content_block_stop", index: 0 },
+        { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 5 } },
+        { type: "message_stop" },
+      ]
+      requests = []
+      stub_request(:post, model.url).with(
+        body:
+          proc do |body|
+            requests << JSON.parse(body)
+            true
+          end,
+      ).to_return(
+        *[initial, final].map do |events|
+          { body: events.map { |event| "event: #{event[:type]}\ndata: #{event.to_json}\n\n" }.join }
+        end,
+      )
+      streamed = +""
+      raw =
+        described_class
+          .as(bot_user, agent: record.class_instance.new, model: model)
+          .reply(context) { |text| streamed << text.to_s }
+      expect(streamed).to eq("Partial answer completed.")
+      expect(raw.last.first).to eq(streamed)
+      expect(requests.map { |request| request["max_tokens"] }).to eq([16, 2048])
+      expect(requests.last["tool_choice"]).to eq({ "type" => "none" })
+      expect(requests.last["messages"].to_s).not_to include("tool_use", "tool_result")
+    end
+
+    it "runs required tools on public mentions after unrelated human discussion" do
+      agent_record =
+        Fabricate(:ai_agent, tools: [["ListCategories", {}, true]], forced_tool_count: 1)
+      first = Fabricate(:post, user: user)
+      latest = Fabricate(:post, topic: first.topic, user: user)
+      snapshot =
+        DiscourseAi::Completions::HistorySnapshot.post(
+          latest,
+          guardian: user.guardian,
+          bot_usernames: [],
+        )
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages:
+            DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
+              latest,
+              max_posts: 40,
+              bot_usernames: [],
+              history_snapshot: snapshot,
+            ),
+        )
+      context.user_turn_count = snapshot.user_turn_count
+      agent_bot = described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Answer"]) do |_, _, prompts|
+        agent_bot.reply(context)
+        expect(prompts.first.tool_choice).to eq("categories")
+      end
+    end
+
+    it "summarizes old public discussion while retaining the latest question" do
+      gpt_4.update!(max_prompt_tokens: 4096, max_output_tokens: 512)
+      first = Fabricate(:post, user: user)
+      first.update_columns(raw: "historical evidence " * 5000)
+      latest = Fabricate(:post, topic: first.topic, user: user, raw: "What should we check next 猫?")
+      snapshot =
+        DiscourseAi::Completions::HistorySnapshot.post(
+          latest,
+          guardian: user.guardian,
+          bot_usernames: [],
+        )
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages:
+            DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
+              latest,
+              max_posts: 40,
+              bot_usernames: [],
+              history_snapshot: snapshot,
+            ),
+        )
+      context.protected_message_count = 1
+      agent_record = Fabricate(:ai_agent, tools: [])
+      agent_bot = described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(20, "Short summary"),
+      ) do |_, _, prompts, options|
+        expect { agent_bot.reply(context) }.not_to raise_error
+        expect(options.map { |o| o[:feature_name] }).to include("context_compression")
+        expect(prompts.last.messages.last[:content].to_s).to include(latest.raw)
+      end
+    end
+
     it "sets top_p, temperature, and thinking_effort params" do
       SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
@@ -320,6 +474,224 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       let(:agent_class) { agent_record.class_instance }
+
+      it "gives a nearly exhausted root turn room for a complete final answer" do
+        gpt_4.update!(url: "https://api.openai.com/v1/responses")
+        execution =
+          DiscourseAi::Completions::ExecutionContext.new(
+            work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 5000, used: 4999),
+          )
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Explain the results" }],
+          )
+        agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Complete final answer"],
+        ) do |canned, _, prompts, options|
+          expect(agent_bot.reply(context, execution_context: execution).last.first).to eq(
+            "Complete final answer",
+          )
+          expect(canned.completions).to eq(1)
+          expect(options.first[:max_tokens]).to eq(2048)
+          expect(options.first[:thinking_effort]).to eq("none")
+          expect(prompts.first.tool_choice).to eq(:none)
+          expect(execution.work_budget.snapshot[:final_answer_claimed]).to eq(true)
+        end
+      end
+
+      it "allows tools when a small work budget can still fund a valid call" do
+        agent_record.update!(max_turn_tokens: 1000)
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Read categories" }],
+          )
+        call =
+          DiscourseAi::Completions::ToolCall.new(id: "read", name: "categories", parameters: {})
+        DiscourseAi::Completions::Llm.with_prepared_responses([call, "Answer"]) do |_, _, prompts|
+          described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          expect(prompts.first.tool_choice).not_to eq(:none)
+          expect(prompts.second.messages.any? { |m| m[:type] == :tool }).to eq(true)
+        end
+      end
+
+      it "continues budget-limited text once and saves one combined answer" do
+        agent_record.update!(max_turn_tokens: 3000, tools: [])
+        gpt_4.update!(max_output_tokens: 4000)
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Explain" }],
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Start of an ", "Start of an answer."],
+        ) do |canned, _, prompts, options|
+          allow(canned).to receive(:output_limit_reached?).and_return(true)
+          streamed = +""
+          raw =
+            described_class
+              .as(bot_user, agent: agent_class.new, model: gpt_4)
+              .reply(context) { |text| streamed << text.to_s }
+          expect(streamed).to eq("Start of an answer.")
+          expect(raw.last.first).to eq(streamed)
+          expect(canned.completions).to eq(2)
+          expect(prompts.last.tool_choice).to eq(:none)
+          expect(options.map { |o| o[:max_tokens] }).to eq([3000, 2048])
+        end
+      end
+
+      [false, true].each do |output_limited|
+        it "does not add a continuation when #{output_limited ? "an explicit output cap stops the reply" : "the reply finishes naturally"}" do
+          agent_record.update!(max_turn_tokens: 3000, tools: [])
+          gpt_4.update!(max_output_tokens: 4000)
+          context =
+            DiscourseAi::Agents::BotContext.new(
+              user: user,
+              messages: [{ type: :user, content: "Explain" }],
+            )
+          DiscourseAi::Completions::Llm.with_prepared_responses(["Answer"]) do |canned|
+            allow(canned).to receive(:output_limit_reached?).and_return(output_limited)
+            described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(
+              context,
+              llm_args: output_limited ? { max_tokens: 16 } : {},
+            )
+            expect(canned.completions).to eq(1)
+          end
+        end
+      end
+
+      it "retains the streamed partial answer when its continuation fails" do
+        agent_record.update!(max_turn_tokens: 16, tools: [])
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Explain" }],
+          )
+        failure = DiscourseAi::Completions::ContextPreparation::Error.new("hard_overflow")
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Partial answer", failure],
+        ) do |canned|
+          allow(canned).to receive(:output_limit_reached?).and_return(true)
+          expect {
+            described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          }.to raise_error(failure.class)
+          expect(context.partial_raw_context.flatten).to include("Partial answer")
+        end
+      end
+
+      it "keeps one exact partial answer when preparing the continuation requires compression" do
+        agent_record.update!(max_turn_tokens: 16, tools: [], compression_threshold: 99)
+        gpt_4.update!(max_prompt_tokens: 4096, max_output_tokens: 2500)
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [
+              { type: :user, content: "evidence " * 2200 },
+              { type: :model, content: "Previous reply" },
+              { type: :user, content: "Explain" },
+            ],
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Partial answer", "Summary", "Partial answer completed"],
+        ) do |canned, _, prompts, options|
+          allow(canned).to receive(:output_limit_reached?).and_return(true, false, false)
+          raw = described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          expect(options.map { |o| o[:feature_name] }).to eq(%w[bot context_compression bot])
+          expect(
+            prompts.last.messages.any? do |m|
+              m[:type] == :model && m[:content] == "Partial answer"
+            end,
+          ).to eq(true)
+          expect(raw.flatten.grep(String).join.scan("Partial answer").size).to eq(1)
+          expect(raw.last.first).to eq("Partial answer completed")
+        end
+      end
+
+      it "retains partial text when no root final completion is available" do
+        agent_record.update!(max_turn_tokens: 16, tools: [])
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Explain" }],
+          )
+        allow_any_instance_of(DiscourseAi::Agents::SubagentExecutionState).to receive(
+          :reserve_root_final_completion,
+        ).and_return(false)
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Partial answer"]) do |canned|
+          allow(canned).to receive(:output_limit_reached?).and_return(true)
+          raw = described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          expect(raw.last.first).to eq("Partial answer")
+          expect(canned.completions).to eq(1)
+        end
+      end
+
+      it "requests a final answer without an empty assistant message after invisible output" do
+        agent_record.update!(max_turn_tokens: 16, tools: [])
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Explain" }],
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["", "Final answer"],
+        ) do |canned, _, prompts|
+          allow(canned).to receive(:output_limit_reached?).and_return(true, false)
+          described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          expect(prompts.second.messages.last[:content]).to eq(
+            described_class::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+          )
+          expect(
+            prompts.second.messages.any? { |m| m[:type] == :model && m[:content].blank? },
+          ).to eq(false)
+        end
+      end
+
+      it "reports budget-truncated subagent output as incomplete" do
+        agent_record.update!(max_turn_tokens: 16, tools: [])
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            subagent_depth: 1,
+            messages: [{ type: :user, content: "Explain" }],
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Partial child answer"]) do |canned|
+          allow(canned).to receive(:output_limit_reached?).and_return(true)
+          expect {
+            described_class.as(bot_user, agent: agent_class.new, model: gpt_4).reply(context)
+          }.to raise_error(
+            DiscourseAi::Completions::ContextPreparation::Error,
+            /turn_budget_exhausted/,
+          )
+          expect(canned.completions).to eq(1)
+        end
+      end
+
+      it "does not save temporary budget instructions when compressing current tool evidence" do
+        gpt_4.update!(max_prompt_tokens: 4096, max_output_tokens: 512)
+        agent_record.update!(max_turn_tokens: 4000)
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            user: user,
+            messages: [{ type: :user, content: "Read the category evidence" }],
+          )
+        allow_any_instance_of(DiscourseAi::Agents::Tools::ListCategories).to receive(
+          :invoke,
+        ).and_return({ evidence: "external evidence " * 3000 })
+        call =
+          DiscourseAi::Completions::ToolCall.new(id: "read", name: "categories", parameters: {})
+        agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [call, "Summary", "Summary", "Summary", "Final answer"],
+        ) do
+          history = agent_bot.reply(context).flatten.grep(String).join
+          expect(history).to include("Read the category evidence")
+          expect(history).not_to include(described_class::TOKEN_BUDGET_FINAL_ANSWER_HINT)
+        end
+      end
 
       %i[text tools final].each do |mode|
         it "prepares tight-window #{mode} calls with their admitted output instead of the model ceiling" do
@@ -818,7 +1190,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         small_budget_agent =
           Fabricate(
             :ai_agent,
-            max_turn_tokens: 2000,
+            max_turn_tokens: 2400,
             compression_threshold: 80,
             tools: [["ListCategories", nil, false]],
           )

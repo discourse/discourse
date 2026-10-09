@@ -166,6 +166,7 @@ module DiscourseAi
               end
 
               unless cancelled
+                processor.finish.each { |partial| blk.call(partial) }
                 if structured_output
                   structured_output.finish
                   if structured_output.broken?
@@ -205,6 +206,7 @@ module DiscourseAi
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
+            @stop_reason = processor&.stop_reason
             should_log = log && (call_status != :cancelled || partials_raw.present?)
 
             if should_log
@@ -471,7 +473,10 @@ module DiscourseAi
 
           handler.on_message_start_event { |_event| cancel_check.call }
 
-          handler.on_message_stop_event { |_event| cancel_check.call }
+          handler.on_message_stop_event do |event|
+            cancel_check.call
+            processor.process_streamed_message(event_to_parsed(:message_stop, event))
+          end
 
           handler.on_metadata_event do |event|
             usage = event.usage
@@ -510,6 +515,8 @@ module DiscourseAi
           parsed = { type: type }
 
           case type
+          when :message_stop
+            parsed[:stop_reason] = event.stop_reason
           when :content_block_start
             start_data = event.start
             if start_data.respond_to?(:tool_use) && start_data.tool_use

@@ -156,6 +156,12 @@ module DiscourseAi
         @llm_model = llm_model
       end
 
+      def minimum_output_tokens
+        (gateway_klass || Endpoints::Base.endpoint_for(llm_model)).new(
+          llm_model,
+        ).minimum_output_tokens
+      end
+
       # @param generic_prompt { DiscourseAi::Completions::Prompt } - Our generic prompt object
       # @param user { User } - User requesting the summary.
       # @param temperature { Float - Optional } - The temperature to use for the completion.
@@ -196,6 +202,7 @@ module DiscourseAi
         execution_context: nil,
         work_generation_admitted: false,
         max_tokens_is_total: false,
+        completion_status: nil,
         &partial_read_blk
       )
         self.class.record_prompt(
@@ -262,7 +269,7 @@ module DiscourseAi
               { thinking_effort: thinking_effort, response_format: response_format },
               maximum: max_tokens || llm_model.max_output_tokens.presence || 2500,
             )
-          if helper_options[:max_tokens] <= 0
+          if helper_options[:max_tokens] < minimum_output_tokens
             raise ContextPreparation::Error.new("turn_budget_exhausted")
           end
           _, _, provider_output = prompt_capacity(prompt, **helper_options)
@@ -298,11 +305,17 @@ module DiscourseAi
         elsif call_context
           call_context.generated_output = nil
         end
+        pending_parts = []
         read_block =
           if partial_read_blk
             proc do |partial, *args|
               call_context&.generated_output&.<<(partial)
-              partial_read_blk.call(partial, *args)
+              if completion_status &&
+                   (pending_parts.present? || (partial.is_a?(ToolCall) && !partial.partial?))
+                pending_parts << [partial.dup, args]
+              else
+                partial_read_blk.call(partial, *args)
+              end
             end
           end
 
@@ -320,6 +333,17 @@ module DiscourseAi
             &read_block
           )
         Array(result).each { |part| call_context&.generated_output&.<<(part) } if !partial_read_blk
+        if completion_status
+          completion_status[:output_limit_reached] = gateway.output_limit_reached?
+          if completion_status[:output_limit_reached] || cancel_manager&.cancelled?
+            result = Array(result).reject { |part| part.is_a?(ToolCall) }
+          end
+          pending_parts.each do |part, args|
+            break if cancel_manager&.cancelled?
+            next if completion_status[:output_limit_reached] && part.is_a?(ToolCall)
+            partial_read_blk.call(part, *args)
+          end
+        end
         result
       ensure
         call_context&.settle_generation(tokenizer: tokenizer)

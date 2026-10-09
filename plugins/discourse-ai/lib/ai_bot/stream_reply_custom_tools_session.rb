@@ -338,7 +338,11 @@ module DiscourseAi
             elapsed_seconds: @preparation_elapsed_seconds.to_f,
           )
         # Work admission is independent of history length and cache usage.
-        if @work_budget.remaining <= 0
+        if @work_budget.final_answer_needed?(
+             maximum: @bot.model.max_output_tokens.presence || 2500,
+             minimum: llm.minimum_output_tokens,
+             tools: @prompt.tools.present?,
+           )
           DiscourseAi::Agents::Bot.inject_token_budget_final_answer_hint(@prompt)
           @prompt.tool_choice = :none
 
@@ -362,8 +366,13 @@ module DiscourseAi
           return
         end
 
+        completion_status = {}
         result =
-          generate_with_work_budget!(execution_context, generate_options) do |partial|
+          generate_with_work_budget!(
+            execution_context,
+            generate_options,
+            completion_status: completion_status,
+          ) do |partial|
             if partial.is_a?(String)
               next if partial.empty?
 
@@ -376,6 +385,7 @@ module DiscourseAi
 
         @accumulated_reply << turn_reply
         normalized_result = normalize_result(result)
+        normalized_result.reject! { |part| part.is_a?(String) && part.empty? }
         tool_calls = unique_tool_calls(streamed_tool_calls + extract_tool_calls(normalized_result))
 
         if tool_calls.present?
@@ -406,8 +416,11 @@ module DiscourseAi
         end
 
         if tool_calls.present?
-          if @work_budget.remaining <= 0 ||
-               tool_calls.size > DiscourseAi::Agents::Bot::MAX_TOOL_CALLS_PER_COMPLETION
+          if @work_budget.final_answer_needed?(
+               maximum: @bot.model.max_output_tokens.presence || 2500,
+               minimum: llm.minimum_output_tokens,
+               tools: @prompt.tools.present?,
+             ) || tool_calls.size > DiscourseAi::Agents::Bot::MAX_TOOL_CALLS_PER_COMPLETION
             # Budget exhausted — can't hand tools to client. Push synthetic
             # "not executed" results and give the model one final text-only call.
             tool_calls.each do |call|
@@ -470,11 +483,51 @@ module DiscourseAi
           return
         end
 
+        if completion_status[:output_limit_reached] && completion_status[:budget_limited]
+          partial_response = @prompt.messages.last if turn_reply.present?
+          continuation =
+            DiscourseAi::Completions::ResponseContinuation.new(turn_reply) if turn_reply.present?
+          @prompt.push(
+            type: :user,
+            content:
+              (
+                if continuation
+                  continuation.hint
+                else
+                  DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT
+                end
+              ),
+          )
+          final_hint = @prompt.messages.last
+          @prompt.tool_choice = :none
+          final_text = +""
+          generate_with_work_budget!(execution_context, generate_options, final: true) do |partial|
+            if partial.is_a?(String)
+              text = continuation ? continuation << partial : partial
+              final_text << text
+              @accumulated_reply << text
+              yield(:partial, text) if !text.empty?
+            end
+          end
+          @prompt.messages.delete(final_hint)
+          if partial_response
+            partial_response[:content] = turn_reply + final_text
+          else
+            @prompt.push_model_response(final_text) if final_text.present?
+          end
+        end
+
         persist_reply_post!
         clear_resume_state!
       end
 
-      def generate_with_work_budget!(execution_context, options, final: false, &block)
+      def generate_with_work_budget!(
+        execution_context,
+        options,
+        final: false,
+        completion_status: nil,
+        &block
+      )
         options =
           @work_budget.generation_options(
             options,
@@ -484,6 +537,10 @@ module DiscourseAi
             root: true,
           )
         prepare_prompt!(execution_context, options)
+        if completion_status
+          completion_status[:budget_limited] = options[:max_tokens] <
+            (@bot.model.max_output_tokens.presence || 2500)
+        end
         _, _, provider_output =
           @bot.llm.prompt_capacity(
             @prompt,
@@ -499,7 +556,13 @@ module DiscourseAi
         if !reservation
           raise DiscourseAi::Completions::ContextPreparation::Error.new("turn_budget_exhausted")
         end
-        @bot.llm.generate(@prompt, **options, work_generation_admitted: true, &block)
+        @bot.llm.generate(
+          @prompt,
+          **options,
+          work_generation_admitted: true,
+          completion_status: completion_status,
+          &block
+        )
       ensure
         @work_budget.release_output(reservation)
         tracker = execution_context.token_usage_tracker

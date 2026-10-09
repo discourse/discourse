@@ -44,6 +44,8 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     end
   end
 
+  attr_reader :stop_reason
+
   attr_reader :tool_calls,
               :input_tokens,
               :output_tokens,
@@ -64,6 +66,11 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     @tool_calls.map { |tool_call| tool_call.to_tool_call }
   end
 
+  def finish
+    raise @tool_parse_error if @tool_parse_error && @stop_reason != "max_tokens"
+    []
+  end
+
   # Processes a streamed event from the Converse API.
   # Events are hashes with symbolized keys matching the SDK event structure.
   def process_streamed_message(parsed)
@@ -77,7 +84,7 @@ class DiscourseAi::Completions::ConverseMessageProcessor
       start_data = parsed[:start]
       if start_data&.dig(:tool_use)
         tool = start_data[:tool_use]
-        result = @current_tool_call.to_tool_call if @current_tool_call
+        result = complete_tool_call if @current_tool_call
         @current_tool_call =
           ConverseToolCall.new(
             tool[:name],
@@ -140,11 +147,10 @@ class DiscourseAi::Completions::ConverseMessageProcessor
         result = @thinking
         @thinking = nil
       elsif @current_tool_call
-        result = @current_tool_call.to_tool_call
-        @current_tool_call = nil
+        result = complete_tool_call
       end
     when :message_stop
-      # nothing to do
+      @stop_reason = parsed[:stop_reason]
     when :metadata
       usage = parsed[:usage]
       if usage
@@ -164,6 +170,7 @@ class DiscourseAi::Completions::ConverseMessageProcessor
   def process_message(payload)
     parsed = payload
     parsed = JSON.parse(payload, symbolize_names: true) if payload.is_a?(String)
+    @stop_reason = parsed[:stop_reason] || parsed[:stopReason]
 
     result = []
     content = parsed.dig(:output, :message, :content)
@@ -216,5 +223,16 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     end
 
     result
+  end
+
+  private
+
+  def complete_tool_call
+    @current_tool_call.to_tool_call
+  rescue JSON::ParserError => error
+    @tool_parse_error ||= error
+    nil
+  ensure
+    @current_tool_call = nil
   end
 end
