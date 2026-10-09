@@ -234,7 +234,6 @@ export default class FilterNavigationMenu extends Component {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
-      maxWidth: 2000,
       matchTriggerWidth: true,
       visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
       constrainHeightToViewport: true,
