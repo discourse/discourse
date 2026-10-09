@@ -807,7 +807,7 @@ class Reviewable < ActiveRecord::Base
 
     data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
 
-    MessageBus.publish("/dsa_event_reviewable_context", data, group_ids: group_ids.to_a)
+    MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
   end
 
   def self.scores_with_topics
