@@ -102,7 +102,12 @@ en:
       title: "Workflows"
       templates:
         title: "Templates"
-        description: "Start with a pre-built workflow template"
+        requires_plugin: "Requires the %{plugin} to be enabled"
+        plugin_link: "%{plugin} plugin"
+        missing_node: "Requires the %{node_type} node, which is not installed"
+        use_template: "Use template"
+        filter: "Filter by name or description"
+        no_results: "No templates match your filter"
       new_workflow: "New workflow"
       default_workflow_name: "My workflow"
       delete: "Delete"
