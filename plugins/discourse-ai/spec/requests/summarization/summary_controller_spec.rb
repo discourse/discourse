@@ -100,9 +100,10 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
 
       it "returns a fresh cached summary" do
         summary = create_cached_summary(topic)
-        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        queries = track_sql_queries { get "/discourse-ai/summarization/t/#{topic.id}.json" }
 
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "llm_models"/)).to be_empty
 
         response_summary = response.parsed_body
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(

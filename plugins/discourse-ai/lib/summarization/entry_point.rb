@@ -10,7 +10,7 @@ module DiscourseAi
               topic_view,
               guardian: controller.guardian,
             )
-          next if !publication.summary
+          next if !publication.summary&.summarized_cooked.present?
 
           controller.render_to_string(
             partial: "discourse_ai/summarization/published_summary",
@@ -18,6 +18,21 @@ module DiscourseAi
               publication:,
             },
           )
+        end
+
+        # markdown is a machine format, so agents get the summary whatever their user agent
+        plugin.register_modifier(
+          :markdown_topic_header_sections,
+        ) do |sections, topic_view, guardian|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian:,
+              crawler_only: false,
+            )
+          next sections if !publication.summary
+
+          sections + [publication.markdown]
         end
 
         plugin.add_to_serializer(:current_user, :can_request_gists) { scope.can_request_gists? }
