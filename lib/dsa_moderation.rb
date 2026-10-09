@@ -148,15 +148,15 @@ class DsaModeration
       recorder = new(reviewable: reviewable, actor: revisor.editor, action_name: :agree_and_edit)
       recorder.use_revision_key!(revisor.post_revision.id)
     end
-    if restricted_category
-      recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
-    end
     if edited
       recorder.record_edit(
         post: post,
         original_cooked:
           changes.dig("cooked", 0) || PrettyText.cook(changes.dig("raw", 0) || post.raw),
       )
+    end
+    if restricted_category
+      recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
     end
     recorder.flush unless Context.recorder
   end
