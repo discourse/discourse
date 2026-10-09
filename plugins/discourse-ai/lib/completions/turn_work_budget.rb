@@ -58,6 +58,10 @@ module DiscourseAi
         resolved
       end
 
+      def final_answer_needed?(maximum:, minimum: 1, tools: false)
+        generation_options({}, maximum: maximum, tools: tools)[:max_tokens] < minimum
+      end
+
       # Capacity/history checks must precede the root-final claim; a duplicate claim returns nil.
       def reserve_generation_output(provider_output, max_tokens:, final: false, root: false)
         maximum = [provider_output.to_i, max_tokens].max

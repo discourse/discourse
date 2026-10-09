@@ -7,6 +7,37 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAiResponses do
     Fabricate(:llm_model, provider: "open_ai", url: "https://api.openai.com/v1/responses")
   end
 
+  it "reports output exhaustion through the LLM for complete and streaming responses" do
+    response = {
+      status: "incomplete",
+      incomplete_details: {
+        reason: "max_output_tokens",
+      },
+      output: [{ type: "message", content: [{ type: "output_text", text: "Partial" }] }],
+    }
+    stub_request(:post, model.url).to_return(body: response.to_json)
+    status = {}
+    result = model.to_llm.generate("Read", user: Discourse.system_user, completion_status: status)
+    expect(DiscourseAi::Completions::Llm.text_from_response(result)).to eq("Partial")
+    expect(status[:output_limit_reached]).to eq(true)
+
+    body =
+      [
+        { type: "response.output_text.delta", delta: "Partial" },
+        { type: "response.incomplete", response: response },
+      ].map { |event| "data: #{event.to_json}\n\n" }.join
+    stub_request(:post, model.url).to_return(body: body)
+    status = {}
+    text = +""
+    model
+      .to_llm
+      .generate("Read", user: Discourse.system_user, completion_status: status) do |part|
+        text << part if part.is_a?(String)
+      end
+    expect(text).to eq("Partial")
+    expect(status[:output_limit_reached]).to eq(true)
+  end
+
   it "uses total Responses output once including invisible reasoning and tool arguments" do
     response = {
       output: [

@@ -24,12 +24,18 @@ module DiscourseAi
           model_params[:max_output_tokens] = model_params.delete(:max_tokens) if model_params[
             :max_tokens
           ]
+          @requested_output_tokens = model_params[:max_output_tokens]
           if thinking_configured? || llm_model.lookup_custom_param("disable_temperature")
             model_params.delete(:temperature)
           end
           model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
           strip_unsupported_gemini_3_8_params!(model_params)
           model_params
+        end
+
+        def output_limit_reached?
+          @interaction_status == "incomplete" && @requested_output_tokens.to_i > 0 &&
+            processor.completion_tokens.to_i >= @requested_output_tokens
         end
 
         def resolve_thinking_config(model_params)
@@ -164,6 +170,7 @@ module DiscourseAi
 
         def decode(response_raw)
           payload = JSON.parse(response_raw, symbolize_names: true)
+          @interaction_status = payload[:status]
           raise_interaction_error!(payload) if %w[failed cancelled].include?(payload[:status])
           processor.process_message(payload)
         end
@@ -197,9 +204,11 @@ module DiscourseAi
           when "error"
             raise_interaction_error!(event)
           when "interaction.status_update"
+            @interaction_status = event[:status]
             raise_interaction_error!(event) if %w[failed cancelled].include?(event[:status])
           when "interaction.completed"
             interaction = event[:interaction] || {}
+            @interaction_status = interaction[:status]
             if %w[failed cancelled].include?(interaction[:status])
               raise_interaction_error!(interaction)
             end

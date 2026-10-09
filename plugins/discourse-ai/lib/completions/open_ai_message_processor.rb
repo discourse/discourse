@@ -2,6 +2,7 @@
 module DiscourseAi::Completions
   class OpenAiMessageProcessor
     attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
+    attr_reader :stop_reason
 
     def initialize(partial_tool_calls: false)
       @tools = {}
@@ -14,13 +15,14 @@ module DiscourseAi::Completions
     end
 
     def process_message(json)
+      @stop_reason = json.dig(:choices, 0, :finish_reason)
       result = []
       tool_calls = json.dig(:choices, 0, :message, :tool_calls)
 
       message = json.dig(:choices, 0, :message, :content)
       result << message if message.present?
 
-      if tool_calls.present?
+      if tool_calls.present? && @stop_reason != "length"
         tool_calls.each do |tool_call|
           id = tool_call.dig(:id)
           name = tool_call.dig(:function, :name)
@@ -36,6 +38,7 @@ module DiscourseAi::Completions
     end
 
     def process_streamed_message(json)
+      @stop_reason = json.dig(:choices, 0, :finish_reason) || @stop_reason
       result = []
       tool_calls = json.dig(:choices, 0, :delta, :tool_calls)
       content = json.dig(:choices, 0, :delta, :content)
@@ -105,6 +108,10 @@ module DiscourseAi::Completions
     end
 
     def finish
+      if @stop_reason == "length"
+        @tools.clear
+        return []
+      end
       result = @tools.values.uniq.map(&:finish)
       @tools.clear
       @current_tool_key = nil

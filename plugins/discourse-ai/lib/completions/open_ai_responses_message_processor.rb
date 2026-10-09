@@ -4,6 +4,7 @@ module DiscourseAi::Completions
     PROVIDER_KEY = :open_ai_responses
 
     attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
+    attr_reader :stop_reason
 
     def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
@@ -27,6 +28,7 @@ module DiscourseAi::Completions
     # @return [Array<String,ToolCall>] pieces in the order they were produced
     def process_message(json)
       json = normalize_provider_payload(json)
+      @stop_reason = json.dig(:incomplete_details, :reason)
       result = []
 
       pending_reasonings = []
@@ -45,7 +47,7 @@ module DiscourseAi::Completions
             result << thinking
           end
         when "function_call"
-          result << build_tool_call_from_item(item)
+          result << build_tool_call_from_item(item) if item[:status] != "incomplete"
         when "web_search_call"
           if @output_thinking
             result << build_native_tool_thinking(item, include_provider_info: true)
@@ -94,7 +96,7 @@ module DiscourseAi::Completions
         item = json[:item]
         if item
           track_response_output_item(item)
-          if item[:type] == "function_call"
+          if item[:type] == "function_call" && item[:status] != "incomplete"
             handle_tool_stream(:done, item) { |finished| rval = finished }
           elsif item[:type] == "reasoning" && @output_thinking
             return finalize_reasoning_context(item)
@@ -106,6 +108,9 @@ module DiscourseAi::Completions
         end
       when "response.completed"
         track_completed_response(json[:response])
+      when "response.incomplete"
+        @stop_reason = json.dig(:response, :incomplete_details, :reason)
+        @tool = nil
       end
 
       update_usage(json)

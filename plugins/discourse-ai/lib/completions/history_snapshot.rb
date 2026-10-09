@@ -70,6 +70,9 @@ module DiscourseAi
       end
 
       def user_turn_count
+        return 1 if @kind == :post && !@source.topic.private_message?
+        return 1 if @kind == :chat && !@source.chat_channel.direct_message_channel?
+
         relation = source_relation(@source.id, full: true)
         if @kind == :post
           relation.joins(:user).where.not(users: { username: @bots }).count

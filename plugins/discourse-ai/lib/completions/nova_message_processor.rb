@@ -43,6 +43,8 @@ class DiscourseAi::Completions::NovaMessageProcessor
     end
   end
 
+  attr_reader :stop_reason
+
   attr_reader :tool_calls, :input_tokens, :output_tokens
 
   def initialize(streaming_mode:, partial_tool_calls: false)
@@ -57,11 +59,13 @@ class DiscourseAi::Completions::NovaMessageProcessor
   end
 
   def finish
+    raise @tool_parse_error if @tool_parse_error && @stop_reason != "max_tokens"
     []
   end
 
   def process_streamed_message(parsed)
     return if !parsed
+    @stop_reason = parsed.dig(:messageStop, :stopReason) || @stop_reason
 
     result = nil
 
@@ -73,7 +77,7 @@ class DiscourseAi::Completions::NovaMessageProcessor
       @current_tool_call.append(tool_progress)
     end
 
-    result = @current_tool_call.to_tool_call if parsed[:contentBlockStop] && @current_tool_call
+    result = complete_tool_call if parsed[:contentBlockStop] && @current_tool_call
 
     if metadata = parsed[:metadata]
       @input_tokens = metadata.dig(:usage, :inputTokens)
@@ -87,6 +91,7 @@ class DiscourseAi::Completions::NovaMessageProcessor
     result = []
     parsed = payload
     parsed = JSON.parse(payload, symbolize_names: true) if payload.is_a?(String)
+    @stop_reason = parsed[:stop_reason] || parsed[:stopReason]
 
     result << parsed.dig(:output, :message, :content, 0, :text)
 
@@ -94,5 +99,16 @@ class DiscourseAi::Completions::NovaMessageProcessor
     @output_tokens = parsed.dig(:usage, :outputTokens)
 
     result
+  end
+
+  private
+
+  def complete_tool_call
+    @current_tool_call.to_tool_call
+  rescue JSON::ParserError => error
+    @tool_parse_error ||= error
+    nil
+  ensure
+    @current_tool_call = nil
   end
 end

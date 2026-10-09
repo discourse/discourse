@@ -414,6 +414,7 @@ module DiscourseAi
           update_usage(json)
 
           candidate = json.dig(:candidates, 0)
+          @stop_reason = candidate&.dig(:finishReason)
           parts = candidate&.dig(:content, :parts)
           batch_token = current_batch_token_for(parts)
 
@@ -428,6 +429,7 @@ module DiscourseAi
               check_for_failure!(parsed)
               update_usage(parsed)
               candidate = parsed.dig(:candidates, 0)
+              @stop_reason = candidate&.dig(:finishReason) || @stop_reason
               parts = candidate&.dig(:content, :parts)
               batch_token = current_batch_token_for(parts)
               decode_parts(parts, batch_token:, streaming: true) +

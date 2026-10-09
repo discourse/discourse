@@ -66,12 +66,18 @@ module DiscourseAi
         def decode_chunk(chunk)
           # Native tool calls are not working right in streaming mode, use XML
           @json_decoder ||= JsonStreamDecoder.new(line_regex: /^\s*({.*})$/)
-          (@json_decoder << chunk).map { |parsed| parsed.dig(:message, :content) }.compact
+          (@json_decoder << chunk)
+            .map do |parsed|
+              @stop_reason = parsed[:done_reason] || @stop_reason
+              parsed.dig(:message, :content)
+            end
+            .compact
         end
 
         def decode(response_raw)
           rval = []
           parsed = JSON.parse(response_raw, symbolize_names: true)
+          @stop_reason = parsed[:done_reason]
           content = parsed.dig(:message, :content)
           rval << content if !content.to_s.empty?
 

@@ -19,6 +19,10 @@ module DiscourseAi
 
         attr_reader :responses, :completions, :dialect, :model_params
 
+        def output_limit_reached?
+          false
+        end
+
         def prompt_messages
           dialect.prompt.messages
         end

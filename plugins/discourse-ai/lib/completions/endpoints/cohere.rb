@@ -53,6 +53,7 @@ module DiscourseAi
           rval = []
 
           parsed = JSON.parse(response_raw, symbolize_names: true)
+          @stop_reason = parsed[:finish_reason] || parsed.dig(:response, :finish_reason)
 
           text = parsed[:text]
           rval << parsed[:text] if !text.to_s.empty? # also allow " "
@@ -69,6 +70,8 @@ module DiscourseAi
           @json_decoder ||= JsonStreamDecoder.new(line_regex: /^\s*({.*})$/)
           (@json_decoder << chunk)
             .map do |parsed|
+              @stop_reason =
+                (parsed[:finish_reason] || parsed.dig(:response, :finish_reason)) || @stop_reason
               update_usage(parsed)
               rval = []
 

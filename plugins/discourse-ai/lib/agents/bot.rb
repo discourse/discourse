@@ -248,6 +248,18 @@ module DiscourseAi
 
         final_answer_requested = false
         tool_invocation_budget_exhausted = false
+        maximum_output_tokens = llm_kwargs[:max_tokens] || model.max_output_tokens.presence || 2500
+        if model.max_output_tokens.to_i > 0
+          maximum_output_tokens = [maximum_output_tokens, model.max_output_tokens].min
+        end
+        if maximum_output_tokens < current_llm.minimum_output_tokens
+          raise DiscourseAi::Completions::ContextPreparation::Error.new("output_limit_too_small")
+        end
+        continue_final_answer = false
+        continuation = nil
+        unfinished_reply = +""
+        pending_answer = nil
+        continuation_messages = []
 
         while ongoing_chain
           if final_answer_requested
@@ -262,12 +274,22 @@ module DiscourseAi
             tool_invocation_budget_exhausted = false
           end
 
-          budget_exhausted = work_budget.remaining <= 0
+          budget_exhausted =
+            work_budget.final_answer_needed?(
+              maximum: maximum_output_tokens,
+              minimum: current_llm.minimum_output_tokens,
+              tools: prompt.tools.present? && prompt.tool_choice != :none,
+            )
           if budget_exhausted && context.subagent_depth.to_i > 0
             raise DiscourseAi::Completions::ContextPreparation::Error.new("turn_budget_exhausted")
           end
-          if !final_answer_requested && budget_exhausted
-            self.class.inject_token_budget_final_answer_hint(prompt)
+          if !final_answer_requested && context.subagent_depth.to_i.zero? &&
+               (budget_exhausted || continue_final_answer)
+            if continuation
+              prompt.push(type: :user, content: continuation.hint)
+            else
+              self.class.inject_token_budget_final_answer_hint(prompt)
+            end
             prompt.tool_choice = :none
             final_answer_requested = true
           end
@@ -316,7 +338,7 @@ module DiscourseAi
           generation_options =
             work_budget.generation_options(
               llm_kwargs,
-              maximum: llm_kwargs[:max_tokens] || model.max_output_tokens.presence || 2500,
+              maximum: maximum_output_tokens,
               final: final_answer_requested,
               tools: prompt.tools.present? && prompt.tool_choice != :none,
               root: root_generation,
@@ -341,7 +363,15 @@ module DiscourseAi
             )
           if compression_result == :compressed
             protected_user_message = prompt.messages[preparation.protected_user_index]
-            raw_context.replace(messages_to_raw_context(prompt.messages.drop(1)))
+            retained_messages =
+              prompt
+                .messages
+                .drop(1)
+                .reject do |message|
+                  continuation_messages.any? { |partial| partial.equal?(message) }
+                end
+            raw_context.replace(messages_to_raw_context(retained_messages))
+            raw_context << pending_answer if pending_answer
           end
           break if context.cancel_manager.cancelled?
           context.history_snapshot&.verify!
@@ -355,6 +385,7 @@ module DiscourseAi
             )
           break if !reservation
           tool_batch_count = 0
+          completion_status = {}
 
           begin
             result =
@@ -365,6 +396,7 @@ module DiscourseAi
                 output_thinking: true,
                 work_generation_admitted: true,
                 cancel_manager: context.cancel_manager,
+                completion_status: completion_status,
                 **generation_options,
               ) do |partial|
                 tool =
@@ -453,7 +485,10 @@ module DiscourseAi
                       if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
                         update_blk.call(partial, nil, :structured_output)
                       else
-                        update_blk.call(partial)
+                        text =
+                          continuation && partial.is_a?(String) ? continuation << partial : partial
+                        pending_answer[0] << text if continuation && text.is_a?(String)
+                        update_blk.call(text) unless text.is_a?(String) && text.empty?
                       end
                     end
                   end
@@ -464,15 +499,48 @@ module DiscourseAi
           end
 
           if !tool_found
-            if defer_forced_tool && !fallback_force_required && !final_answer_requested
+            if !root_generation && completion_status[:output_limit_reached] &&
+                 generation_options[:max_tokens] < maximum_output_tokens
+              raw_context << [
+                DiscourseAi::Completions::Llm.text_from_response(result),
+                bot_user&.username,
+              ]
+              raise DiscourseAi::Completions::ContextPreparation::Error.new("turn_budget_exhausted")
+            end
+            if !final_answer_requested && root_generation &&
+                 completion_status[:output_limit_reached] &&
+                 generation_options[:max_tokens] < maximum_output_tokens &&
+                 !llm_kwargs[:response_format] && !context.cancel_manager.cancelled?
+              unfinished_reply << DiscourseAi::Completions::Llm.text_from_response(result)
+              if unfinished_reply.present?
+                continuation = DiscourseAi::Completions::ResponseContinuation.new(unfinished_reply)
+                pending_answer = [unfinished_reply.dup, bot_user&.username]
+                raw_context << pending_answer
+                response_start = prompt.messages.length
+                prompt.push_model_response(result)
+                continuation_messages = prompt.messages[response_start..]
+              end
+              continue_final_answer = true
+            elsif defer_forced_tool && !fallback_force_required && !final_answer_requested
               fallback_force_required = true
               prompt.tool_choice = nil
               ongoing_chain = true
             else
               ongoing_chain = false
               # we must strip out thinking and other types of blocks
-              text = DiscourseAi::Completions::Llm.text_from_response(result)
-              raw_context << [text, bot_user&.username]
+              text =
+                (
+                  if continuation
+                    continuation.text
+                  else
+                    DiscourseAi::Completions::Llm.text_from_response(result)
+                  end
+                )
+              if pending_answer
+                pending_answer[0] = unfinished_reply + text
+              else
+                raw_context << [text, bot_user&.username]
+              end
             end
           end
         end
@@ -887,7 +955,11 @@ module DiscourseAi
       end
 
       def transient_prompt_hint?(message)
-        message[:type] == :user && TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content])
+        message[:type] == :user &&
+          (
+            TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content]) ||
+              DiscourseAi::Completions::ResponseContinuation.hint?(message[:content])
+          )
       end
 
       def thinking_context(message)

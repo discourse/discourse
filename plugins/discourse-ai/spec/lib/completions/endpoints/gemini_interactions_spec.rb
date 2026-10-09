@@ -20,6 +20,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
 
   before { enable_current_plugin }
 
+  %w[completed incomplete].each do |status|
+    it "distinguishes a #{status} interaction at its output ceiling" do
+      body =
+        interaction_response(
+          steps: [{ type: "text", text: "Partial" }],
+          status: status,
+          usage: {
+            total_input_tokens: 10,
+            total_output_tokens: 16,
+          },
+        )
+      stub_request(:post, url).to_return(body: body.to_json)
+      details = {}
+      llm.generate("Read", user: user, max_tokens: 16, completion_status: details)
+      expect(details[:output_limit_reached]).to eq(status == "incomplete")
+    end
+  end
+
   def interaction_response(steps:, usage: nil, status: "completed")
     {
       object: "interaction",
