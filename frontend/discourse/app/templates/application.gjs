@@ -148,7 +148,9 @@ export default <template>
       state, so its DOM location here does not affect normal positioning —
       however this relies on #main-outlet-wrapper never establishing a containing
       block (no transform/filter/contain/will-change/perspective). }}
-      <ComposerContainer />
+      {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+        <ComposerContainer />
+      {{/if}}
     </div>
 
     <PluginOutlet
@@ -172,6 +174,9 @@ export default <template>
     <ModalContainer />
     <DesignWizardPanel />
     <DialogHolder />
+    {{#unless @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+      <ComposerContainer />
+    {{/unless}}
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}
