@@ -1,17 +1,13 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
+import { dimColor } from "discourse/lib/chart-legend-icon";
+import { getCSSColors } from "discourse/lib/css-color";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import Chart from "./chart";
 
 const DOTTED_LINE = [5, 5];
-
-function getCSSColor(varName) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim();
-}
 
 export function isInCurrentPeriod(timestamp, grouping) {
   // Report data uses UTC dates, so compare in UTC
@@ -54,10 +50,16 @@ export default class AdminReportChart extends Component {
       options.chartGrouping
     );
 
-    const incompleteColor = getCSSColor("--primary-medium");
-    const tertiaryRgb = getCSSColor("--tertiary-rgb");
-    const primaryColor = `rgb(${tertiaryRgb})`;
-    const secondaryColor = `rgba(${tertiaryRgb}, 0.1)`;
+    const colors = getCSSColors([
+      "--primary",
+      "--primary-low",
+      "--primary-medium",
+      "--secondary",
+      "--tertiary",
+    ]);
+    const incompleteColor = colors["--primary-medium"];
+    const primaryColor = colors["--tertiary"];
+    const secondaryColor = dimColor(primaryColor, 0.1);
     let pointColors = primaryColor;
     let segment;
 
@@ -115,10 +117,10 @@ export default class AdminReportChart extends Component {
       options: {
         plugins: {
           tooltip: {
-            backgroundColor: getCSSColor("--primary"),
-            titleColor: getCSSColor("--secondary"),
-            bodyColor: getCSSColor("--secondary"),
-            footerColor: getCSSColor("--secondary"),
+            backgroundColor: colors["--primary"],
+            titleColor: colors["--secondary"],
+            bodyColor: colors["--secondary"],
+            footerColor: colors["--secondary"],
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {
@@ -173,7 +175,7 @@ export default class AdminReportChart extends Component {
               text: model.y_axis_title,
             },
 
-            grid: { color: getCSSColor("--primary-low") },
+            grid: { color: colors["--primary-low"] },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
