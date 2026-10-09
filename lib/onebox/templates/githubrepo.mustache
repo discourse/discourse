@@ -6,4 +6,25 @@
   {{#description}}
     <p><span class="github-repo-description">{{description}}</span></p>
   {{/description}}
+
+  {{#has_metadata}}
+    <div class="github-repo-metadata">
+      {{#language}}
+        <span class="github-repo-metadata__item github-repo-metadata__language">{{language}}</span>
+      {{/language}}
+      {{#stars}}
+        <span class="github-repo-metadata__item github-repo-metadata__stars">
+          <svg class="github-repo-metadata__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0.25 10.4 5.1l5.35.78-3.88 3.78.92 5.34L8 12.48l-4.79 2.52.92-5.34L.25 5.88 5.6 5.1Z"></path></svg>
+          {{stars}}
+        </span>
+      {{/stars}}
+      {{#forks}}
+        <span class="github-repo-metadata__item github-repo-metadata__forks">
+          <svg class="github-repo-metadata__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3a2 2 0 1 0-2 2v1a3 3 0 0 0 3 3h1v2.27a2 2 0 1 0 2 0V9h1a3 3 0 0 0 3-3V5a2 2 0 1 0-2-2v3a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Zm-1-1a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm8 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM8 12a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"></path></svg>
+          {{forks}}
+        </span>
+      {{/forks}}
+      <span class="github-repo-metadata__snapshot">({{i18n.snapshot}}: <span class="discourse-local-date" data-format="lll" data-date="{{snapshot_at_date}}" data-time="{{snapshot_at_time}}" data-timezone="UTC">{{snapshot_at}}</span>)</span>
+    </div>
+  {{/has_metadata}}
 </div>

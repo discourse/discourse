@@ -57,6 +57,16 @@ module Onebox
         result["description"] = description
         result["title"] = title
         result["is_private"] = result["private"]
+        result["language"] = result["language"].presence
+        result["stars"] = repository_count("stars", result["stargazers_count"])
+        result["forks"] = repository_count("forks", result["forks_count"])
+        result["has_metadata"] = result["language"].present? || result["stars"].present? ||
+          result["forks"].present?
+        snapshot_at = Time.now.utc
+        result["snapshot_at"] = snapshot_at.strftime("%I:%M%p - %d %b %y %Z")
+        result["snapshot_at_date"] = snapshot_at.strftime("%F")
+        result["snapshot_at_time"] = snapshot_at.strftime("%T")
+        result["i18n"] = { snapshot: I18n.t("onebox.github.snapshot") }
 
         # The SecureRandom part of this doesn't matter, it's just used for caching the
         # repo thumbnail which is generated on the fly by GitHub. There isn't detail
@@ -67,6 +77,30 @@ module Onebox
           "thumbnail"
         ] = "https://opengraph.githubassets.com/#{SecureRandom.hex}/#{match[:org]}/#{match[:repository]}"
         result
+      end
+
+      def repository_count(key, count)
+        return unless count.to_i.positive?
+
+        I18n.t("onebox.github.#{key}", count: count, number: compact_repository_count(count))
+      end
+
+      def compact_repository_count(count)
+        return count.to_s if count < 1000
+
+        # Promote counts that would round to 1000.0k to the next unit.
+        divisor, unit = count.round(-2) >= 1_000_000 ? [1_000_000, "millions"] : [1000, "thousands"]
+        number =
+          ActiveSupport::NumberHelper.number_to_rounded(
+            count.to_f / divisor,
+            precision: 1,
+            significant: false,
+            strip_insignificant_zeros: false,
+            separator: I18n.t("js.number.format.separator"),
+            delimiter: "",
+          )
+
+        I18n.t("js.number.short.#{unit}", number: number)
       end
     end
   end
