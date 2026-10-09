@@ -1,6 +1,6 @@
 ---
 name: discourse-writing-typescript
-description: Write TypeScript for Discourse core, plugins, and themes. Use when authoring new .ts/.gts files (components, modifiers, helpers, services, utils), typing an existing public API, or converting existing .js/.gjs files to .ts/.gts. Covers the component/modifier/plain-class Signature patterns, TSDoc for Signatures, typing untyped dependencies, compile-time type tests, the strict-grade bar under the loose global tsconfig, and the faithful-port and rename pitfalls that the type-checker does NOT catch.
+description: Write TypeScript for Discourse core, plugins, and themes. Use when authoring new .ts/.gts files (components, modifiers, helpers, services, utils), typing an existing public API, or converting existing .js/.gjs files to .ts/.gts. Covers the component/modifier/plain-class Signature patterns, TSDoc for Signatures, typing untyped dependencies, compile-time type tests, the strict bar enforced by `pnpm types:strict`, and the faithful-port and rename pitfalls that the type-checker does NOT catch.
 ---
 
 # Writing TypeScript for Discourse
@@ -13,9 +13,14 @@ and
 [`frontend/discourse/float-kit/components/d-tooltip.gts`](../../frontend/discourse/float-kit/components/d-tooltip.gts)
 (typed `@service declare` injection, `Element`, several documented `Blocks`, an option bag
 derived from a shared type); the developer guide is
-[`27-types.md`](../../docs/developer-guides/docs/03-code-internals/27-types.md). **The
-global tsconfig is deliberately NOT strict** (it extends the repo-root `tsconfig-base.json`,
-which sets no `strict` and no `checkJs`); tightening it is a separate, repo-wide effort.
+[`27-types.md`](../../docs/developer-guides/docs/03-code-internals/27-types.md).
+
+**Two type checks run, and CI requires both.** `pnpm lint:types` builds with the global
+tsconfig, which is deliberately NOT strict (the repo-root `tsconfig-base.json` sets no
+`strict` and no `checkJs`). That build also emits the published `@discourse/types`
+declarations, and `strict` would change what they infer from JavaScript. `pnpm types:strict`
+checks the same code, core plus every bundled plugin and theme, under `strict` and emits
+nothing.
 
 **Converting an existing `.js`/`.gjs` file?** Read
 [references/js-to-ts-conversion.md](references/js-to-ts-conversion.md) first (the faithful-port
@@ -28,14 +33,17 @@ claiming any file or subsystem converted.
 1. **A conversion is a types-only port.** Types are erased; runtime behavior is not. Never
    change runtime code to satisfy a type. The full rule and the catalogue of changes that
    pass `lint:types` but alter behavior are in the conversion reference.
-2. **Write strict-grade TS anyway.** The loose global tsconfig is not a licence for
-   sloppiness. Author as if `strict` were on: **no `any`** (implicit or explicit), **no
-   `@ts-ignore`/`@ts-nocheck`/`@ts-expect-error`**, no `{{! @glint-nocheck }}`. Proper
-   `null`/`undefined` handling, real generics, precise `Signature`s. A documented `as` cast
-   at a genuine DOM or loose-runtime boundary is fine; blanket suppression is not.
-3. **Never tighten the global tsconfig** in a feature PR; the blast radius is the whole repo.
-4. **The type-checker is necessary but NOT sufficient.** `pnpm lint:types` green does not
-   mean the code runs. Always also run the tests (see "Verification").
+2. **Write strict TS.** `pnpm types:strict` fails on what `strict` rejects, such as implicit
+   `any`, unhandled `null`/`undefined` and unsound callback parameters, even where
+   `pnpm lint:types` passes. Beyond what it checks: **no explicit `any`**, **no
+   `@ts-ignore`/`@ts-nocheck`/`@ts-expect-error`**, no `{{! @glint-nocheck }}`. Real
+   narrowing, real generics, precise `Signature`s. A documented `as` cast at a genuine DOM or
+   loose-runtime boundary is fine; blanket suppression is not.
+3. **Never turn on `strict` in the global tsconfig.** It changes the declarations
+   `lint:types` emits for every consumer of `@discourse/types`. `pnpm types:strict` is where
+   strictness is enforced.
+4. **The type-checker is necessary but NOT sufficient.** Green type checks do not mean the
+   code runs. Always also run the tests (see "Verification").
 5. **A `Signature` is a contract for ALL consumers, across time, not just the type-checked
    ones.** `checkJs` is off, so untyped `.gjs`/`.js` consumers are not "safe", merely
    *unchecked for now*; they will be measured against today's `Signature` when they convert.
@@ -297,11 +305,16 @@ type), assert them at compile time with `expect-type` (a devDependency of
   `type-tests/ui-kit/d-drag-and-drop-adoption-test.gts` vs `...-adoption-errors-test.gts`).
   A short comment at the top of the positives file ("keep this file free of
   `@glint-expect-error`") stops someone reintroducing one.
-- **Non-strict gotchas** (type-level results diverge from the strict mental model): a
+- **Type tests run under both checks**, so every assertion must hold with and without
+  `strict`. Non-strict results diverge from the strict mental model: a
   `Conditional<null>`/`<undefined>` often resolves to `true` not `false`; a `const`-inferred
   object or tuple return carries `readonly`, which `toEqualTypeOf` treats as a mismatch; and
   `string | undefined` collapses to `string`. Assert the **robust, real** cases; avoid
   `null`/`undefined`-literal and object-return edge assertions that only hold under strict.
+  A negative that fails only under `strict` leaves its `@glint-expect-error` unused in the
+  non-strict build, so leave that case out. Keep each negative invocation on **one line**:
+  the two checks can report a multi-line invocation's error on different lines, and a
+  directive covers only the line after it.
 
 ## Glint directives: avoid in production code
 
@@ -364,15 +377,16 @@ member together with its comments and decorators, but an arrow-function field
 template-referenced callbacks (auto-bound AND sorted into the methods bucket). **Re-read the
 file after `bin/lint --fix`** to confirm the placement still reads well.
 
-## Verification (all three, in order)
+## Verification (all four, in order)
 
 1. `bin/lint --fix <files>`: clean.
-2. `pnpm lint:types` from the **repo root** (composite `ember-tsc -b`): **0 errors**. This
-   is the type gate; it also surfaces consumer fallout when you tighten a previously loose
-   type (e.g. an untyped helper's return).
-3. `bin/qunit` for the touched files' tests: behavior plus the runtime module-resolution
+2. `pnpm lint:types` from the **repo root** (composite `ember-tsc -b`): **0 errors**. It
+   also surfaces consumer fallout when you tighten a previously loose type (e.g. an untyped
+   helper's return).
+3. `pnpm types:strict` from the **repo root**: **0 errors** in every project it lists.
+4. `bin/qunit` for the touched files' tests: behavior plus the runtime module-resolution
    check in the conversion reference.
 
-Green on `lint:types` alone is **not** done: a run that hangs or reports a single "Global
+Green type checks alone are **not** done: a run that hangs or reports a single "Global
 error ... Failed to resolve module specifier" is the runtime pitfall described in the
 conversion reference.

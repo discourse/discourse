@@ -10,15 +10,21 @@ Much of this will be automatically consumed by IDEs with TypeScript/JavaScript s
 
 ## Writing TypeScript
 
-Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types`) both understand these files.
+Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types` and `pnpm types:strict`) both understand these files.
+
+## Strict checking
+
+TypeScript in core and in the bundled plugins and themes must pass TypeScript's `strict` mode. `pnpm lint:types` builds without `strict`, because it also generates the published `@discourse/types` declarations, and `strict` would change them. `pnpm types:strict` checks the same code under `strict` without emitting anything. CI runs both.
+
+Plugins and themes outside this repository are not affected. They can run the same check with `ember-tsc --strict --noEmit`.
 
 ## Type tests
 
-Types whose meaning a runtime test can't capture (a generic's resolved type, an overload pick, a return type derived from arguments) can be asserted at compile time with [`expect-type`](https://github.com/mmkal/expect-type), in `.ts`/`.gts` files under `frontend/discourse/type-tests/` (e.g. `type-tests/truth-helpers/`). They are checked by `pnpm lint:types` but kept out of the test and production bundles.
+Types whose meaning a runtime test can't capture (a generic's resolved type, an overload pick, a return type derived from arguments) can be asserted at compile time with [`expect-type`](https://github.com/mmkal/expect-type), in `.ts`/`.gts` files under `frontend/discourse/type-tests/` (e.g. `type-tests/truth-helpers/`). They are checked by `pnpm lint:types` and `pnpm types:strict`, so each assertion must hold both with and without `strict`. They are kept out of the test and production bundles.
 
 ## Usage
 
-- **CLI**: Run `pnpm lint:types`
+- **CLI**: Run `pnpm lint:types`, and `pnpm types:strict` for the strict check
 
 - **VSCode**: Install the [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extension. This is part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
 
