@@ -228,6 +228,15 @@ export default class PeerManager {
     return PeerManager.videoTransceiverFor(pc)?.receiver?.track || null;
   }
 
+  remoteScreenAudioTrack(roomId, userId) {
+    const pc = this.get(roomId, userId);
+    if (!pc) {
+      return null;
+    }
+
+    return PeerManager.screenAudioTransceiverFor(pc)?.receiver?.track || null;
+  }
+
   allPeerConnections() {
     return this.#peerConnections;
   }

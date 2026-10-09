@@ -23,6 +23,7 @@ module Voice
                :visit_count,
                :video_enabled,
                :video_allowed,
+               :screen_share_allowed,
                :chat_channel_id,
                :chat_idle_minutes,
                :chat_available,
@@ -73,12 +74,12 @@ module Voice
     end
 
     def active_participants
-      tracked_participants.map do |user|
-        BasicUserSerializer
-          .new(user, scope: scope, root: false)
-          .as_json
-          .merge(participant_metadata[user.id] || {})
-      end
+      Voice::RoomBroadcaster.participant_entries(
+        object,
+        tracked_participants,
+        guardian: scope,
+        metadata: participant_metadata,
+      )
     end
 
     def room_type
@@ -110,8 +111,24 @@ module Voice
       scope.user.present? && @options[:include_visit_count]
     end
 
+    # Per-user publish rights, so they are omitted from the anonymously-scoped
+    # directory broadcasts (the client keeps the ones it already knows). The
+    # room's own video_enabled and the stage role are left out: broadcasts
+    # carry both live and the client combines them with these.
     def video_allowed
-      object.video_allowed?
+      scope.eligible_to_publish_video_in_voice_room?(object)
+    end
+
+    def include_video_allowed?
+      scope.user.present?
+    end
+
+    def screen_share_allowed
+      scope.eligible_to_screen_share_in_voice_room?(object)
+    end
+
+    def include_screen_share_allowed?
+      scope.user.present?
     end
 
     def chat_available

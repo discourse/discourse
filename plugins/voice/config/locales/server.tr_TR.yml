@@ -14,7 +14,6 @@ tr_TR:
     voice_idle_threshold_minutes: "Sesli oda katılımcısının boşta olarak işaretlenmesi için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
     voice_afk_auto_mute_threshold_minutes: "Sesli oda katılımcısının mikrofonunun otomatik kapatılması için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
     voice_afk_disconnect_threshold_minutes: "Sesli oda katılımcısının bağlantısının otomatik kesilmesi için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
-    voice_video_enabled: "Sesli odalarda kamera videosunu ve ekran paylaşımını etkinleştir. Her oda kendi ayarlarından bunları kapatabilir."
     voice_video_max_publishers: "Bir odada aynı anda video veya ekran paylaşabilen en fazla katılımcı sayısı. Eşler arası odalarda yüksek değerler tüm izleyicilerin işlemci ve bant genişliği yükünü artırır; LiveKit medya sunucusu kullanan odalarda ise ağırlıklı olarak sunucu yükünü artırır."
     voice_video_background_blur_enabled: "Katılımcıların kamera arka planını bulanıklaştırmasına izin ver. Bölümleme, yayıncının aygıtında MediaPipe ile çalışır ve kamera açıkken işlemci/GPU yükünü artırır."
     voice_subtitles_enabled: "Katılımcıların diğer kişilerin konuşmaları için canlı altyazıları açmasına izin ver. Yazıya aktarma tamamen izleyicinin aygıtında NVIDIA Parakeet konuşmadan metne modeliyle çalışır (yaklaşık 2,5 GB, ilk kullanımda indirilir, WebGPU gerekir); ses tarayıcıdan dışarı çıkmaz."

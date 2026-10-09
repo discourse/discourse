@@ -282,7 +282,7 @@ export default class VoiceWebrtcService extends Service {
       getFirstActiveRoomId: () => this.#firstActiveRoomId(),
       getActiveRoomId: () => this.activeRoomId,
       getRoom: (roomId) => this.voiceRooms?.roomById(roomId),
-      canPublishVideo: (roomId) => this.canPublishVideo(roomId),
+      canPublish: (kind, roomId) => this.canPublish(kind, roomId),
       getCameraQuality: (roomId) => this.effectiveCameraQuality(roomId),
       getScreenQuality: (roomId) => this.effectiveScreenQuality(roomId),
       getScreenContent: () => this.screenContent,
@@ -393,6 +393,8 @@ export default class VoiceWebrtcService extends Service {
         this.#remoteStreamRegistry.userIdsFor(roomId),
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
+      removeRemoteMedia: (roomId, userId, options) =>
+        this.#remoteStreamRegistry.removeMedia(roomId, userId, options),
       removeAllRemoteStreams: (roomId) => this.#removeAllRemoteStreams(roomId),
       getLocalVideoKind: () => this.localVideoKind,
       syncVideoSenders: (roomId) => this.#localVideo.syncSenders(roomId),
@@ -1171,11 +1173,11 @@ export default class VoiceWebrtcService extends Service {
   }
 
   videoAllowedIn(room) {
-    return !!(
-      this.siteSettings.voice_video_enabled &&
-      room?.video_enabled &&
-      (room?.room_type !== "stage" || this.#canSpeakInRoom(room))
-    );
+    return this.#mediaAllowedIn(room, room?.video_allowed);
+  }
+
+  screenShareAllowedIn(room) {
+    return this.#mediaAllowedIn(room, room?.screen_share_allowed);
   }
 
   videoPublisherCount(roomId) {
@@ -1186,21 +1188,20 @@ export default class VoiceWebrtcService extends Service {
     ).length;
   }
 
-  canPublishVideo(roomId) {
-    const room = this.voiceRooms?.roomById(roomId);
-    if (!room || !this.videoAllowedIn(room)) {
-      return false;
-    }
-    if (!this.#activeRoomIds.has(roomId)) {
-      return false;
-    }
-    if (this.localVideoKind) {
-      return true;
-    }
-    return (
-      this.videoPublisherCount(roomId) <
-      this.siteSettings.voice_video_max_publishers
+  canPublishCamera(roomId) {
+    return this.#canPublishIn(roomId, (room) => this.videoAllowedIn(room));
+  }
+
+  canPublishScreen(roomId) {
+    return this.#canPublishIn(roomId, (room) =>
+      this.screenShareAllowedIn(room)
     );
+  }
+
+  canPublish(kind, roomId) {
+    return kind === "screen"
+      ? this.canPublishScreen(roomId)
+      : this.canPublishCamera(roomId);
   }
 
   async toggleCamera() {
@@ -1413,6 +1414,35 @@ export default class VoiceWebrtcService extends Service {
     return participantCanSpeak(room, this.currentUser?.id);
   }
 
+  // The server-computed right, re-checked against the two things a broadcast
+  // can change under a live call: the room's own media flag (a per-user right
+  // is absent from anonymously-scoped broadcasts, so it survives them stale)
+  // and the caller's stage role.
+  #mediaAllowedIn(room, allowed) {
+    return !!(
+      allowed &&
+      room?.video_enabled &&
+      (room?.room_type !== "stage" || this.#canSpeakInRoom(room))
+    );
+  }
+
+  #canPublishIn(roomId, allowedIn) {
+    const room = this.voiceRooms?.roomById(roomId);
+    if (!room || !allowedIn(room)) {
+      return false;
+    }
+    if (!this.#activeRoomIds.has(roomId)) {
+      return false;
+    }
+    if (this.localVideoKind) {
+      return true;
+    }
+    return (
+      this.videoPublisherCount(roomId) <
+      this.siteSettings.voice_video_max_publishers
+    );
+  }
+
   #isMeshRoom(roomId) {
     return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
   }
@@ -1460,7 +1490,7 @@ export default class VoiceWebrtcService extends Service {
       this.watchingRoomId !== roomId ||
       this.localVideoKind ||
       !this.#cameraPreferred(userId) ||
-      !this.canPublishVideo(roomId)
+      !this.canPublishCamera(roomId)
     ) {
       return;
     }
@@ -1474,7 +1504,7 @@ export default class VoiceWebrtcService extends Service {
           this.watchingRoomId === roomId &&
           (!this.localVideoKind || this.localVideoKind === "camera") &&
           this.#cameraPreferred(userId) &&
-          this.canPublishVideo(roomId),
+          this.canPublishCamera(roomId),
       })
       .catch(() => {
         voiceLog.warn("[voice] failed to restore preferred camera state");
@@ -1565,7 +1595,12 @@ export default class VoiceWebrtcService extends Service {
     }
 
     const room = this.voiceRooms?.roomById(roomId);
-    if (room && !this.videoAllowedIn(room)) {
+    const stillAllowed =
+      this.localVideoKind === "screen"
+        ? this.screenShareAllowedIn(room)
+        : this.videoAllowedIn(room);
+
+    if (room && !stillAllowed) {
       this.#localVideo.stop().catch(() => {});
       this.toasts.default({
         duration: 5000,
@@ -1750,18 +1785,25 @@ export default class VoiceWebrtcService extends Service {
   }
 
   // Mesh receive-side media boundary: only register (and therefore play) a
-  // remote track the sender's server-attested role and the room's media
-  // policy allow. On LiveKit the SFU enforces publish permissions instead.
+  // remote track the sender's server-attested role, entitlements and the
+  // room's media policy allow. On LiveKit the SFU enforces publish
+  // permissions instead.
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!remoteTrackAllowed(room, userId, track, streams)) {
+    const mesh = this.#isMeshRoom(roomId);
+    if (!remoteTrackAllowed(room, userId, track, streams, { mesh })) {
       voiceLog.warn(
         `[voice] dropping ${track?.kind} track from peer: not allowed to publish in room ${roomId}`
       );
-      try {
-        track?.stop();
-      } catch {
-        // a remote track may already be ended
+      // A pre-negotiated video or screen-audio receiver keeps one track for
+      // the connection's lifetime, so stopping it would leave the sender dark
+      // even once allowed. Left unregistered, it is never played.
+      if (track?.kind === "audio" && streams?.length) {
+        try {
+          track.stop();
+        } catch {
+          // a remote track may already be ended
+        }
       }
       return;
     }

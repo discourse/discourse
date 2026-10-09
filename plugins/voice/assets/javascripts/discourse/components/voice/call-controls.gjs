@@ -63,6 +63,10 @@ export default class VoiceCallControls extends Component {
     return this.voiceWebrtc.videoAllowedIn(this.room);
   }
 
+  get screenShareAllowed() {
+    return this.voiceWebrtc.screenShareAllowedIn(this.room);
+  }
+
   get cameraActive() {
     return this.voiceWebrtc.localVideoKind === "camera";
   }
@@ -73,19 +77,19 @@ export default class VoiceCallControls extends Component {
 
   get cameraDisabled() {
     return (
-      !this.cameraActive && !this.voiceWebrtc.canPublishVideo(this.room?.id)
+      !this.cameraActive && !this.voiceWebrtc.canPublishCamera(this.room?.id)
     );
   }
 
   get screenShareDisabled() {
     return (
       !this.screenShareActive &&
-      !this.voiceWebrtc.canPublishVideo(this.room?.id)
+      !this.voiceWebrtc.canPublishScreen(this.room?.id)
     );
   }
 
   get showScreenShare() {
-    return this.videoAllowed && this.voiceWebrtc.screenShareSupported;
+    return this.screenShareAllowed && this.voiceWebrtc.screenShareSupported;
   }
 
   get #ownParticipant() {
