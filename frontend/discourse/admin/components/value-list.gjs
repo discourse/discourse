@@ -17,6 +17,8 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 
 @classNames("value-list")
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `value-list-reorderable.gjs` replaces it.
 export default class ValueList extends Component {
   @autoTrackedArray collection = null;
 

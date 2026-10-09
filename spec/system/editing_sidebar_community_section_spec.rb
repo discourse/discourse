@@ -56,6 +56,77 @@ RSpec.describe "Editing Sidebar Community Section" do
     )
   end
 
+  # TODO (ui-kit-reorderable-list-cleanup) fold this over the example above
+  # once the change ships.
+  context "when enable_new_reordering_controls is enabled" do
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "lets an admin reorder and reset the Community section" do
+      sign_in(admin)
+
+      visit("/latest")
+
+      expect(sidebar.primary_section_icons("community")).to eq(
+        %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
+      )
+
+      modal = sidebar.click_community_section_more_button.click_customize_community_section_button
+      modal.fill_link("Topics", "/latest", "paper-plane")
+      drag_and_drop(
+        source: ".sidebar-section-form-link:has(.draggable[data-link-name='Topics'])",
+        # Press the grip, not the row centre: the centre is a text input, and a
+        # text-selection drag stalls after dragstart.
+        source_position: {
+          x: 16,
+          y: 20,
+        },
+        target: ".sidebar-section-form-link:has(.draggable[data-link-name='My messages'])",
+        target_position: {
+          x: 100,
+          y: 55,
+        },
+      )
+      try_until_success do
+        expect(modal.link_names).to eq(
+          ["My posts", "My messages", "Topics", "Review", "Admin", "Invite"],
+        )
+      end
+      modal.save
+      modal.confirm_update
+
+      page.refresh
+
+      try_until_success do
+        expect(sidebar.primary_section_links("community")).to eq(
+          ["My posts", "My messages", "Topics", "Review", "Admin", "Invite", "More"],
+        )
+      end
+
+      try_until_success do
+        expect(sidebar.primary_section_icons("community")).to eq(
+          %w[user inbox paper-plane flag wrench paper-plane ellipsis-vertical],
+        )
+      end
+
+      modal = sidebar.click_community_section_more_button.click_customize_community_section_button
+      modal.reset
+
+      expect(sidebar).to have_section("Community")
+
+      try_until_success do
+        expect(sidebar.primary_section_links("community")).to eq(
+          ["Topics", "My posts", "My messages", "Review", "Admin", "Invite", "More"],
+        )
+      end
+
+      try_until_success do
+        expect(sidebar.primary_section_icons("community")).to eq(
+          %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
+        )
+      end
+    end
+  end
+
   it "lets an admin localize manually created Community section links" do
     SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_supported_locales = "ja"

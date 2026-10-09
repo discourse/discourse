@@ -17,6 +17,8 @@ import { i18n } from "discourse-i18n";
 const UP = "up";
 const DOWN = "down";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `edit-user-directory-columns-reorderable.gjs` replaces it.
 export default class EditUserDirectoryColumns extends Component {
   @tracked loading = true;
   @tracked columns;

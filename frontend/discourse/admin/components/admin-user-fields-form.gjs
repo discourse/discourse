@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import ValueList from "discourse/admin/components/value-list";
+import ValueListReorderable from "discourse/admin/components/value-list-reorderable";
 import UserField from "discourse/admin/models/user-field";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,6 +20,7 @@ export default class AdminUserFieldsForm extends Component {
   @service adminUserFields;
   @service adminCustomUserFields;
   @service toasts;
+  @service siteSettings;
 
   @tracked
   editableDisabled = this.args.userField.requirement === "for_all_users";
@@ -195,11 +197,21 @@ export default class AdminUserFieldsForm extends Component {
           as |field|
         >
           <field.Control>
-            <ValueList
-              @inputType="array"
-              @onChange={{field.set}}
-              @values={{transientData.options}}
-            />
+            {{! TODO (ui-kit-reorderable-list-cleanup) drop the branch and the
+                legacy component once the change ships. }}
+            {{#if this.siteSettings.enable_new_reordering_controls}}
+              <ValueListReorderable
+                @inputType="array"
+                @onChange={{field.set}}
+                @values={{transientData.options}}
+              />
+            {{else}}
+              <ValueList
+                @inputType="array"
+                @onChange={{field.set}}
+                @values={{transientData.options}}
+              />
+            {{/if}}
           </field.Control>
         </form.Field>
       {{/if}}

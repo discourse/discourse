@@ -4,12 +4,14 @@ import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
+import EditUserDirectoryColumnsModalReorderable from "discourse/components/modal/edit-user-directory-columns-reorderable";
 import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
 
 export default class UsersController extends Controller {
   @service modal;
+  @service siteSettings;
 
   @tracked period = "weekly";
 
@@ -110,7 +112,13 @@ export default class UsersController extends Controller {
 
   @action
   showEditColumnsModal() {
-    this.modal.show(EditUserDirectoryColumnsModal);
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? EditUserDirectoryColumnsModalReorderable
+      : EditUserDirectoryColumnsModal;
+
+    this.modal.show(Modal);
   }
 
   @action

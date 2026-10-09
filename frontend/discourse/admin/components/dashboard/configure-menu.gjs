@@ -12,6 +12,9 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `configure-menu-reorderable.gjs`
+// replaces it.
 class ConfigureRow extends Component {
   @service site;
 
