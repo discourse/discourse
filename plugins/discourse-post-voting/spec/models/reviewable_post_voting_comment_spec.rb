@@ -23,6 +23,38 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     end
   end
 
+  describe "#perform" do
+    it "suspends the author and completes the deletion alias together" do
+      reviewable.update!(target_created_by: comment_poster)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          penalty: {
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          },
+        )
+
+      expect(result).to be_success
+      expect(comment_poster.reload).to be_suspended
+      expect(comment.reload.deleted_at).to be_present
+      expect(reviewable.reload).to be_approved
+    end
+
+    it "keeps the content and reviewable unchanged when silence details are invalid" do
+      reviewable.update!(target_created_by: comment_poster)
+
+      result = reviewable.perform(moderator, :agree_and_silence, penalty: { reason: "spam" })
+
+      expect(result).not_to be_success
+      expect(comment_poster.reload).not_to be_silenced
+      expect(comment.reload.deleted_at).to be_nil
+      expect(reviewable.reload).to be_pending
+    end
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the comment" do
     reviewable.perform(moderator, :agree_and_keep_comment)
 

@@ -169,7 +169,7 @@ class Category < ActiveRecord::Base
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
   after_save :publish_discourse_stylesheet
-  after_save :publish_category
+  after_commit :publish_category, on: %i[create update]
 
   after_save do
     if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? ||

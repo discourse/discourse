@@ -885,6 +885,47 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      it "completes a suspension and selected post deletion through one reviewable request" do
+        flagged_post = Fabricate(:post)
+        flagged =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: flagged_post,
+            target_created_by: flagged_post.user,
+          )
+        expiry = 2.days.from_now.change(usec: 0)
+
+        put "/review/#{flagged.id}/perform/agree_and_suspend.json",
+            params: {
+              version: flagged.version,
+              penalty: {
+                reason: "Repeated spam",
+                suspend_until: expiry.iso8601,
+                post_action: "delete",
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(flagged_post.user.reload.suspended_till).to eq(expiry)
+        expect(flagged_post.reload).to be_trashed
+        expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+      end
+
+      it "rejects missing penalty details without resolving the reviewable" do
+        flagged = Fabricate(:reviewable_flagged_post)
+
+        put "/review/#{flagged.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged.version,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(flagged.reload).to be_pending
+        expect(flagged.target_created_by.reload).not_to be_silenced
+      end
+
       it "returns 404 to category moderators for an inaccessible whisper" do
         SiteSetting.enable_category_group_moderation = true
         group_user = Fabricate(:group_user)
@@ -1019,7 +1060,7 @@ RSpec.describe ReviewablesController do
         expect(like.reload).to be_trashed
       end
 
-      it "releases a deleted topic's claim when agreeing before a silence" do
+      it "releases a deleted topic's claim when agreeing and silencing" do
         SiteSetting.reviewable_claiming = "optional"
         admin = Fabricate(:admin)
         flagger = Fabricate(:user, refresh_auto_groups: true)
@@ -1032,6 +1073,10 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged_reviewable.id}/perform/agree_and_silence.json",
             params: {
               version: flagged_reviewable.reload.version,
+              penalty: {
+                reason: "Repeated spam",
+                silenced_till: 1.day.from_now,
+              },
             }
 
         expect(response).to have_http_status(:ok)

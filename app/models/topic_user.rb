@@ -152,7 +152,7 @@ class TopicUser < ActiveRecord::Base
     def notification_level_change(user_id, topic_id, notification_level, reason_id)
       message = { notification_level_change: notification_level }
       message[:notifications_reason_id] = reason_id if reason_id
-      MessageBus.publish("/topic/#{topic_id}", message, user_ids: [user_id])
+      DB.after_commit { MessageBus.publish("/topic/#{topic_id}", message, user_ids: [user_id]) }
 
       DiscourseEvent.trigger(
         :topic_notification_level_changed,

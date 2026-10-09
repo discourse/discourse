@@ -3,6 +3,37 @@
 RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
+  describe "Reviewable#perform" do
+    it "completes a penalty that deletes a topic and an assigned reply" do
+      admin = Fabricate(:admin)
+      topic = Fabricate(:topic_with_op)
+      first_post = topic.first_post
+      reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+      PostReply.create!(post: first_post, reply: reply)
+      reply_assignment = Fabricate(:post_assignment, target: reply, topic: topic)
+      reviewable =
+        Fabricate(:reviewable_flagged_post, target: first_post, target_created_by: first_post.user)
+
+      result =
+        reviewable.perform(
+          admin,
+          :agree_and_suspend,
+          penalty: {
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+            post_action: "delete_replies",
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_approved
+      expect(first_post.user.reload).to be_suspended
+      expect(topic.reload).to be_trashed
+      expect(reply.reload).to be_trashed
+      expect(reply_assignment.reload).not_to be_active
+    end
+  end
+
   describe "discourse-assign topics_filter_options modifier" do
     let(:user) { Fabricate(:user) }
 
@@ -308,12 +339,16 @@ RSpec.describe DiscourseAssign do
     end
 
     describe "on 'post_destroyed'" do
+      subject(:destroy_post) do
+        PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy
+      end
+
       let!(:assignment) { Fabricate(:post_assignment) }
       let(:post) { assignment.target }
 
-      before { PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy }
-
       it "deactivates the existing assignment" do
+        destroy_post
+
         assignment.reload
         expect(assignment).not_to be_active
         expect_job_enqueued(
@@ -325,6 +360,20 @@ RSpec.describe DiscourseAssign do
             assigned_to_type: assignment.assigned_to_type,
           },
         )
+      end
+
+      it "preserves the assignment without publishing a reload when deletion rolls back" do
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            Post.transaction do
+              destroy_post
+              raise ActiveRecord::Rollback
+            end
+          end
+
+        expect(assignment.reload).to be_active
+        expect(post.reload).not_to be_trashed
+        expect(messages).to be_empty
       end
     end
 

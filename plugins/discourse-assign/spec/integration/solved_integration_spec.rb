@@ -20,6 +20,53 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
     group.add(user)
   end
 
+  describe "Reviewable#perform" do
+    fab!(:admin)
+
+    it "rolls back the penalty and assignment changes when a solution callback fails" do
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: admin.guardian)
+      topic_assignment =
+        Fabricate(
+          :topic_assignment,
+          target: topic,
+          topic: topic,
+          assigned_to: admin,
+          status: "Done",
+        )
+      reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      author = post.user
+      callback = ->(_post) { raise Discourse::InvalidParameters }
+      DiscourseEvent.on(:unaccepted_solution, &callback)
+
+      messages =
+        MessageBus.track_publish do
+          expect do
+            reviewable.perform(
+              admin,
+              :agree_and_suspend,
+              penalty: {
+                reason: "spam",
+                suspend_until: 2.days.from_now,
+                post_action: "delete",
+              },
+            )
+          end.to raise_error(Discourse::InvalidParameters)
+        end
+
+      expect(reviewable.reload).to be_pending
+      expect(author.reload).not_to be_suspended
+      expect(post.reload).not_to be_trashed
+      expect(DiscourseSolved::TopicAnswer.exists?(answer_post_id: post.id)).to eq(true)
+      expect(topic_assignment.reload.status).to eq("Done")
+      expect(messages.map(&:channel)).not_to include(
+        "/staff/topic-assignment",
+        "/topic/#{topic.id}",
+      )
+    ensure
+      DiscourseEvent.off(:unaccepted_solution, &callback) if callback
+    end
+  end
+
   describe "updating assignment status on solve" do
     it "updates all assignments to assignment_status_on_solve status when a post is accepted" do
       assigner = Assigner.new(topic, user)

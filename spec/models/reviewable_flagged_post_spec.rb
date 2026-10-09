@@ -295,14 +295,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "agree_and_suspend agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_suspend)
+      reviewable.perform(
+        moderator,
+        :agree_and_suspend,
+        penalty: {
+          reason: "spam",
+          suspend_until: 2.days.from_now,
+        },
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden
     end
 
     it "agree_and_silence agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_silence)
+      reviewable.perform(
+        moderator,
+        :agree_and_silence,
+        penalty: {
+          reason: "spam",
+          silenced_till: 2.days.from_now,
+        },
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden

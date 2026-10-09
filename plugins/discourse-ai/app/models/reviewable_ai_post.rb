@@ -3,7 +3,7 @@
 require_dependency "reviewable"
 
 class ReviewableAiPost < Reviewable
-  # Penalties are handled by the modal after the action is performed
+  # Penalties run before the aliased action in Reviewable#perform.
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_keep,

@@ -412,7 +412,7 @@ class Reviewable < ActiveRecord::Base
     perform_method = :"perform_#{aliases[action_id] || action_id}"
     guardian = args[:guardian] || Guardian.new(performed_by)
 
-    validate_action!(guardian, action_id, perform_method, args)
+    action = validate_action!(guardian, action_id, perform_method, args)
 
     affected_candidate_ids =
       delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
@@ -421,7 +421,11 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      result = public_send(perform_method, performed_by, args)
+      if %w[suspend silence].include?(action&.client_action)
+        result =
+          perform_penalty(guardian:, penalty_type: action.client_action, params: args[:penalty])
+      end
+      result ||= public_send(perform_method, performed_by, args)
 
       raise ActiveRecord::Rollback unless result.success?
 
@@ -1033,6 +1037,29 @@ class Reviewable < ActiveRecord::Base
     self.class.action_aliases
   end
 
+  def perform_penalty(guardian:, penalty_type:, params:)
+    service = penalty_type == "suspend" ? User::Suspend : User::Silence
+    result = create_result(:failure)
+    result.errors = ActiveModel::Errors.new(self)
+    penalty_params =
+      (params || {}).merge(
+        user_id: target_user&.id,
+        post_id: target_type == "Post" ? target_id : target.try(:post_id),
+        reviewable_id: id,
+      )
+
+    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+      on_success { result = nil }
+      on_failed_contract { |contract| result.errors = contract.errors }
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess }
+      on_failed_policy(:not_suspended_already) { |policy| result.errors.add(:base, policy.reason) }
+      on_failed_policy(:not_silenced_already) { |policy| result.errors.add(:base, policy.reason) }
+    end
+    result
+  end
+
   def validate_action!(guardian, action_id, perform_method, args)
     # Support this action or any aliases
     action_aliases = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
@@ -1043,6 +1070,8 @@ class Reviewable < ActiveRecord::Base
     if action_aliases.none? { |a| actions.has?(a) } || !respond_to?(perform_method)
       raise InvalidAction.new(action_id, self.class)
     end
+
+    actions.to_a.find { |action| action.server_action == action_id.to_s }
   end
 
   def update_flag_stats(status:, user_ids:)

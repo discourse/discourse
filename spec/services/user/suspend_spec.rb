@@ -63,20 +63,18 @@ RSpec.describe User::Suspend do
     end
 
     context "when everything's ok" do
-      before { allow(User::Action::TriggerPostAction).to receive(:call) }
-
       it "suspends all provided users" do
         result
         expect([user, other_user].map(&:reload)).to all be_suspended
       end
 
-      it "triggers a post action" do
+      it "deletes the selected post" do
+        post = Fabricate(:post, user:)
+        params.merge!(post_id: post.id, post_action: "delete")
+
         result
-        expect(User::Action::TriggerPostAction).to have_received(:call).with(
-          guardian:,
-          post: nil,
-          params: result[:params],
-        )
+
+        expect(post.reload).to be_trashed
       end
 
       it "exposes the full reason in the result object" do

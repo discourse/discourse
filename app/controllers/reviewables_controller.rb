@@ -254,6 +254,21 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    if params[:penalty]
+      args[:penalty] = params
+        .require(:penalty)
+        .permit(
+          :reason,
+          :message,
+          :suspend_until,
+          :silenced_till,
+          :post_action,
+          :post_edit,
+          other_user_ids: [],
+        )
+        .to_h
+        .symbolize_keys
+    end
 
     result = nil
     begin

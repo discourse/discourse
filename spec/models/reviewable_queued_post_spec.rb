@@ -515,28 +515,42 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(actions.has?(:reject_and_suspend)).to eq(false)
     end
 
-    it "rejects the post and keeps the author, letting the client apply the suspension" do
+    it "rejects the post and suspends the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_suspend) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_suspend,
+            penalty: {
+              reason: "spam",
+              suspend_until: 2.days.from_now,
+            },
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.suspended?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_suspended
     end
 
-    it "rejects the post and keeps the author, letting the client apply the silencing" do
+    it "rejects the post and silences the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_silence) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_silence,
+            penalty: {
+              reason: "spam",
+              silenced_till: 2.days.from_now,
+            },
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.silenced?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_silenced
     end
   end
 end

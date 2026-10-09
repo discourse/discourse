@@ -72,36 +72,38 @@ class UserSuspender
           reviewable_id: @reviewable_id,
         )
     end
-    @user.log_out!
+    DB.after_commit do
+      @user.log_out!
 
-    Jobs.enqueue_at(
-      @user.suspended_till,
-      :user_suspension_expired,
-      user_id: @user.id,
-      suspended_at: @user.suspended_at.iso8601(TIMESTAMP_PRECISION),
-      suspended_till: @user.suspended_till.iso8601(TIMESTAMP_PRECISION),
-    )
-
-    if @message.present?
-      Jobs.enqueue(
-        Jobs::CriticalUserEmail,
-        type: "account_suspended",
+      Jobs.enqueue_at(
+        @user.suspended_till,
+        :user_suspension_expired,
         user_id: @user.id,
-        user_history_id: @user_history.id,
+        suspended_at: @user.suspended_at.iso8601(TIMESTAMP_PRECISION),
+        suspended_till: @user.suspended_till.iso8601(TIMESTAMP_PRECISION),
+      )
+
+      if @message.present?
+        Jobs.enqueue(
+          Jobs::CriticalUserEmail,
+          type: "account_suspended",
+          user_id: @user.id,
+          user_history_id: @user_history.id,
+        )
+      end
+
+      DiscourseEvent.trigger(
+        :user_suspended,
+        user: @user,
+        by_user: @by_user,
+        reason: @reason,
+        message: @message,
+        user_history: @user_history,
+        post_id: @post_id,
+        suspended_till: @suspended_till,
+        suspended_at: suspended_at,
       )
     end
-
-    DiscourseEvent.trigger(
-      :user_suspended,
-      user: @user,
-      by_user: @by_user,
-      reason: @reason,
-      message: @message,
-      user_history: @user_history,
-      post_id: @post_id,
-      suspended_till: @suspended_till,
-      suspended_at: suspended_at,
-    )
     nil
   end
 end

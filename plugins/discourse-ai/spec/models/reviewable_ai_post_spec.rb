@@ -136,6 +136,23 @@ describe ReviewableAiPost do
       )
     end
 
+    it "completes the suspension alias without hiding the post" do
+      result =
+        reviewable.perform(
+          admin,
+          :agree_and_suspend,
+          penalty: {
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          },
+        )
+
+      expect(result).to be_success
+      expect(target.user.reload).to be_suspended
+      expect(target.reload).not_to be_hidden
+      expect(reviewable.reload).to be_approved
+    end
+
     describe "agree variations" do
       it "hides the topic when performing the agree_and_hide action" do
         result = reviewable.perform(admin, :agree_and_hide)

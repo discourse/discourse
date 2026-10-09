@@ -361,11 +361,13 @@ class UserAction < ActiveRecord::Base
     )
     if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
-      MessageBus.publish(
-        "/user/#{action.user_id}",
-        { user_action_id: action.id, remove: true },
-        user_ids: [action.user_id],
-      )
+      DB.after_commit do
+        MessageBus.publish(
+          "/user/#{action.user_id}",
+          { user_action_id: action.id, remove: true },
+          user_ids: [action.user_id],
+        )
+      end
     end
 
     if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?

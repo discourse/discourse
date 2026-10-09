@@ -43,6 +43,10 @@ module PageObjects
         find(".perform-penalize").click
       end
 
+      def has_validation_error?
+        has_css?("#modal-alert", text: "Reason is too long")
+      end
+
       def has_error_message?(message)
         expect(find("#modal-alert").text).to eq(message)
       end
