@@ -261,23 +261,9 @@ after_initialize do
   end
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new do |user, guardian, opts|
-      comments = PostVotingComment.where(user_id: user.id).to_a
-      post_voting_comment_ids = comments.map(&:id)
+    Proc.new do |user|
+      post_voting_comment_ids = PostVotingComment.where(user_id: user.id).pluck(:id)
       PostVotingComment.where(id: post_voting_comment_ids).delete_all
-
-      comments.each do |comment|
-        next unless SiteSetting.dsa_reporting_enabled
-        next if comment.deleted_at
-
-        DiscourseEvent.trigger(
-          :dsa_post_voting_comment_deleted,
-          comment,
-          guardian.user,
-          (opts[:dsa_event_reviewable_context] || {}).merge(reviewable_id: opts[:reviewable_id]),
-        )
-      end
-
       ReviewablePostVotingComment.where(
         target_id: post_voting_comment_ids,
         target_type: "PostVotingComment",

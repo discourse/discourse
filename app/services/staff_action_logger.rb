@@ -1326,8 +1326,7 @@ class StaffActionLogger
       context: opts[:context],
       details: opts[:details],
       reviewable_id:
-        opts.dig(:dsa_event_reviewable_context, :reviewable)&.id ||
-          opts.dig(:dsa_event_reviewable_context, :reviewable_id) || opts[:reviewable_id],
+        opts[:reviewable_id] || opts.dig(:dsa_event_reviewable_context, :reviewable)&.id,
       dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
     }
   end

@@ -429,7 +429,8 @@ class Reviewable < ActiveRecord::Base
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
 
-      if SiteSetting.dsa_reporting_enabled
+      if SiteSetting.dsa_reporting_enabled &&
+           !args.dig(:dsa_event_reviewable_context, :skip_recording)
         DiscourseEvent.trigger(
           :dsa_reviewable_action_performed,
           self,

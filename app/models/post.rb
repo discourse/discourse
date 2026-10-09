@@ -688,10 +688,7 @@ class Post < ActiveRecord::Base
           "visible",
           false,
           Discourse.system_user,
-          {
-            visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached],
-            dsa_event_reviewable_context: dsa_event_reviewable_context,
-          },
+          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
         )
         should_update_user_stat = false
       end

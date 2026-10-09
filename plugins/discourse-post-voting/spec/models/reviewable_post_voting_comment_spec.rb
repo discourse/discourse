@@ -18,7 +18,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
   end
 
   describe "#perform" do
-    it "records related comments removed when a flagged author is deleted" do
+    it "records account termination without recording associated comment cleanup" do
       SiteSetting.dsa_reporting_enabled = true
       author_id = comment_poster.id
       comment_id = comment.id
@@ -29,9 +29,8 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
       staff_reviewable.perform(admin, :delete_user)
 
       statement = DsaStatementOfRecord.where(reviewable_id: staff_reviewable.id).sole
-      expect(statement.payload["decision_visibility"]).to eq(
-        ["DECISION_VISIBILITY_CONTENT_REMOVED"],
-      )
+      expect(statement.payload["decision_account"]).to eq("DECISION_ACCOUNT_TERMINATED")
+      expect(statement.payload).not_to have_key("decision_visibility")
       expect(PostVotingComment.with_deleted.exists?(comment_id)).to eq(false)
       expect(Reviewable.exists?(comment_reviewable.id)).to eq(false)
     end

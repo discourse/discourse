@@ -107,7 +107,8 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
 
-    if SiteSetting.dsa_reporting_enabled
+    if SiteSetting.dsa_reporting_enabled &&
+         !@opts.dig(:dsa_event_reviewable_context, :skip_recording)
       DiscourseEvent.trigger(
         :dsa_post_destroyed,
         @post,
@@ -246,12 +247,12 @@ class PostDestroyer
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context, :reviewable_id, :dsa_event_reviewable_context),
+            @opts.slice(:context, :reviewable_id),
           )
         else
           logger.log_post_deletion(
             @post,
-            **@opts.slice(:context, :reviewable_id, :dsa_event_reviewable_context),
+            **@opts.slice(:context, :reviewable_id),
             permanent: permanent?,
           )
         end

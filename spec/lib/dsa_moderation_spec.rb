@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe DsaModeration do
   fab!(:admin)
   fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -70,17 +71,18 @@ RSpec.describe DsaModeration do
       )
     end
 
-    it "records each deleted topic item once, including replies from other authors" do
+    it "records the main topic removal without separate statements for replies" do
       freeze_time
-      reply = Fabricate(:post, topic: post.topic, post_number: 2)
-      same_author_reply =
-        Fabricate(
-          :post,
-          topic: post.topic,
-          post_number: 3,
-          user: post.user,
-          created_at: post.created_at,
-        )
+      Fabricate(:post, topic: post.topic, post_number: 2)
+
+      Fabricate(
+        :post,
+        topic: post.topic,
+        post_number: 3,
+        user: post.user,
+        created_at: post.created_at,
+      )
+
       Fabricate(:post, topic: post.topic, post_number: 4, post_type: Post.types[:small_action])
       PostActionCreator.like(admin, post)
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
@@ -89,7 +91,26 @@ RSpec.describe DsaModeration do
 
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
       expect(statements.pluck(:reviewable_id).uniq).to eq([reviewable.id])
-      expect(statements.count).to eq(2)
+      expect(statements.count).to eq(1)
+    end
+
+    it "keeps separate payloads when deliberately deleted replies have different content dates" do
+      freeze_time
+      reply = Fabricate(:reply, topic: post.topic, reply_to_post_number: post.post_number)
+      reply.update!(created_at: 1.day.ago)
+      post.replies << reply
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      PostDestroyer.delete_with_replies(admin, post, reviewable.id)
+
+      statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+      expect(statements.map { |statement| statement.payload["content_date"] }).to contain_exactly(
+        post.created_at.to_date.iso8601,
+        reply.created_at.to_date.iso8601,
+      )
+      expect(statements.map { |statement| statement.payload["decision_visibility"] }.uniq).to eq(
+        [["DECISION_VISIBILITY_CONTENT_REMOVED"]],
+      )
     end
 
     it "records restrictions without excluding reopened reviewables" do
@@ -163,7 +184,7 @@ RSpec.describe DsaModeration do
       expect(DsaStatementOfRecord.where(reviewable_id: existing_author.id)).to be_empty
     end
 
-    it "records a nested queued post rejection when deleting an author as a spammer" do
+    it "records account termination without statements for automatic content cleanup" do
       queued = Fabricate(:reviewable_queued_post_topic, target_created_by: post.user)
       published = ReviewablePost.queue_for_review(post)
       Fabricate(
@@ -181,10 +202,9 @@ RSpec.describe DsaModeration do
       expect(queued.reload).to be_rejected
       expect(published.reload).to be_rejected
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
-      expect(statements.sole.payload["decision_visibility"]).to contain_exactly(
-        "DECISION_VISIBILITY_CONTENT_DISABLED",
-        "DECISION_VISIBILITY_CONTENT_REMOVED",
-      )
+      expect(statements.sole.payload["decision_account"]).to eq("DECISION_ACCOUNT_TERMINATED")
+      expect(statements.sole.payload).not_to have_key("decision_visibility")
+      expect(DsaStatementOfRecord.where(reviewable_id: [queued.id, published.id])).to be_empty
       expect(statements.pluck(:reviewable_id).uniq).to eq([reviewable.id])
     end
 
@@ -274,7 +294,7 @@ RSpec.describe DsaModeration do
       )
 
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
-      expect(statements.count).to eq(2)
+      expect(statements.count).to eq(1)
       expect(statements.map { |statement| statement.payload["decision_visibility"] }.uniq).to eq(
         [["DECISION_VISIBILITY_CONTENT_DISABLED"]],
       )
@@ -329,7 +349,7 @@ RSpec.describe DsaModeration do
       expect(flagger.guardian.can_see_post?(post.reload)).to eq(false)
     end
 
-    it "retains the original media and automatic lock when a queue edit removes an image" do
+    it "retains the removed media without recording the automatic edit lock" do
       SiteSetting.staff_edit_locks_post = true
       post.update!(cooked: '<p>Original text</p><img src="/image.png">')
       original_raw = post.raw
@@ -358,16 +378,46 @@ RSpec.describe DsaModeration do
           .where(action: UserHistory.actions[:post_locked], post_id: post.id)
           .sole
           .reviewable_id,
-      ).to eq(reviewable.id)
-      expect(statement.payload["decision_visibility"]).to contain_exactly(
-        "DECISION_VISIBILITY_CONTENT_REMOVED",
-        "DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED",
+      ).to be_nil
+      expect(statement.payload["decision_visibility"]).to eq(
+        ["DECISION_VISIBILITY_CONTENT_REMOVED"],
       )
       expect(post.revisions.last.modifications["raw"].first).to eq(original_raw)
     end
   end
 
   describe ".record_user_history" do
+    it "keeps separate payloads when application dates or automated decisions differ" do
+      freeze_time
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      application_date = Time.zone.today.iso8601
+
+      reviewable.perform(admin, :agree_and_hide, decision_provenance: :automated)
+      PostLocker.new(post, admin).lock(reviewable_id: reviewable.id)
+
+      freeze_time 1.day.from_now
+
+      UserSuspender.new(
+        post.user,
+        by_user: admin,
+        reason: "Personal attacks",
+        suspended_till: 1.day.from_now,
+        reviewable_id: reviewable.id,
+      ).suspend
+
+      payloads = DsaStatementOfRecord.where(reviewable_id: reviewable.id).pluck(:payload)
+      expect(
+        payloads.map { |payload| payload.values_at("application_date", "automated_decision") },
+      ).to contain_exactly(
+        [application_date, "AUTOMATED_DECISION_FULLY"],
+        [application_date, "AUTOMATED_DECISION_NOT_AUTOMATED"],
+        [Time.zone.today.iso8601, "AUTOMATED_DECISION_NOT_AUTOMATED"],
+      )
+      expect(payloads.map { |payload| payload["content_date"] }.uniq).to eq(
+        [post.created_at.to_date.iso8601],
+      )
+    end
+
     it "records a later suspension when applied, with its own decision and the original content date" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
       reviewable.perform(admin, :agree_and_suspend)
@@ -428,7 +478,11 @@ RSpec.describe DsaModeration do
           .sole
           .reviewable_id,
       ).to eq(reviewable.id)
-      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(2)
+      payload = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.payload
+      expect(payload).to include(
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+      )
     end
 
     it "links the suspension dialog restrictions and finite duration to the same reviewable" do
@@ -498,9 +552,11 @@ RSpec.describe DsaModeration do
 
       reviewable.perform(admin, :agree_and_hide, decision_provenance: :automated)
 
-      expect(
-        DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload["automated_decision"],
-      ).to eq("AUTOMATED_DECISION_FULLY")
+      payload = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.payload
+      expect(payload).to include(
+        "automated_decision" => "AUTOMATED_DECISION_FULLY",
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+      )
       second_post = Fabricate(:post)
       reviewable = PostActionCreator.inappropriate(flagger, second_post).reviewable
       reviewable.perform(admin, :delete_and_agree)

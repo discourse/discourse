@@ -23,7 +23,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       expect(user_2_message.reload).to be_present
     end
 
-    it "retains review queue reporting for deferred account deletion" do
+    it "keeps the account statement without recording deferred message cleanup" do
       SiteSetting.dsa_reporting_enabled = true
       admin = Fabricate(:admin)
       chat_message.update!(created_at: 1.day.ago)
@@ -38,35 +38,17 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
       reviewable.destroy!
 
-      dsa_event_reviewable_context = {
-        reviewable_id: reviewable.id,
-        actor_id: admin.id,
-        decision_provenance: :human,
-      }
-      described_class.new.execute(
-        user_id: author_id,
-        dsa_event_reviewable_context: dsa_event_reviewable_context,
-      )
+      described_class.new.execute(user_id: author_id)
 
-      removed_message =
-        DsaStatementOfRecord.where(reviewable_id: reviewable.id).where.not(id: statement.id).sole
-      expect(removed_message.payload).to include(
-        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
-        "source_type" => "SOURCE_TYPE_OTHER_NOTIFICATION",
-        "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
-      )
-      expect(removed_message).to be_pending
-      expect(removed_message.payload.fetch("puid")).to be_present
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole.id).to eq(statement.id)
+      expect(statement.reload.payload["decision_account"]).to eq("DECISION_ACCOUNT_TERMINATED")
+      expect(statement.payload).not_to have_key("decision_visibility")
       expect(Reviewable.exists?(reviewable.id)).to eq(false)
       expect(Chat::Message.with_deleted.exists?(message_id)).to eq(false)
       expect(Reviewable.exists?(message_reviewable.id)).to eq(false)
-      expect(removed_message.payload.fetch("puid")).to eq(removed_message.id)
-      expect {
-        described_class.new.execute(
-          user_id: author_id,
-          dsa_event_reviewable_context: dsa_event_reviewable_context,
-        )
-      }.not_to change { DsaStatementOfRecord.count }
+      expect { described_class.new.execute(user_id: author_id) }.not_to change {
+        DsaStatementOfRecord.count
+      }
     end
 
     it "deletes trashed messages" do

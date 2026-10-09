@@ -41,7 +41,7 @@ class UserDestroyer
           cb.call(user, @guardian, opts)
         end
 
-        agree_with_flags(user, opts) if opts[:delete_as_spammer]
+        agree_with_flags(user) if opts[:delete_as_spammer]
         block_external_urls(user) if opts[:block_urls]
         delete_posts(user, category_topic_ids, opts)
       end
@@ -142,7 +142,7 @@ class UserDestroyer
       end
   end
 
-  def agree_with_flags(user, opts = {})
+  def agree_with_flags(user)
     ReviewableFlaggedPost
       .where(target_created_by: user)
       .find_each do |reviewable|
@@ -152,7 +152,9 @@ class UserDestroyer
           reviewable.perform(
             @actor,
             :agree_and_keep,
-            dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
+            dsa_event_reviewable_context: {
+              skip_recording: true,
+            },
           )
         end
       end
@@ -164,7 +166,9 @@ class UserDestroyer
           reviewable.perform(
             @actor,
             :reject_and_delete,
-            dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
+            dsa_event_reviewable_context: {
+              skip_recording: true,
+            },
           )
         end
       end
@@ -176,7 +180,9 @@ class UserDestroyer
           reviewable.perform(
             @actor,
             :reject_post,
-            dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
+            dsa_event_reviewable_context: {
+              skip_recording: true,
+            },
           )
         end
       end
@@ -205,7 +211,9 @@ class UserDestroyer
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
           reviewable_id: opts[:reviewable_id],
-          dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
+          dsa_event_reviewable_context: {
+            skip_recording: true,
+          },
         ).destroy
       end
 

@@ -35,31 +35,25 @@ class DsaModeration
     SI
     SK
   ].freeze
-
   private_constant :TERRITORIES
 
   def self.recorder_for(reviewable_id:, actor: nil, metadata: {}, action_name: nil)
     return unless SiteSetting.dsa_reporting_enabled
+    return if metadata[:skip_recording]
+    return unless metadata[:reviewable] || metadata[:reviewable_id] || reviewable_id
 
-    reviewable = metadata[:reviewable]
-    reviewable_id = reviewable&.id || metadata[:reviewable_id] || reviewable_id
-    return unless reviewable_id
-    reviewable = Reviewable.find_by(id: reviewable_id) unless reviewable&.id == reviewable_id
-    previous = DsaStatementOfRecord.find_by(reviewable_id: reviewable_id) unless reviewable
-    return unless reviewable || previous
+    reviewable =
+      metadata[:reviewable] || Reviewable.find_by(id: metadata[:reviewable_id] || reviewable_id)
 
-    recorder =
-      new(
-        reviewable: reviewable,
-        actor: actor || User.find_by(id: metadata[:actor_id]),
-        action_name: action_name || metadata[:action_name],
-        decision_provenance: metadata[:decision_provenance],
-      )
+    return unless reviewable
 
-    recorder.restore_origin(previous) if previous
-    recorder
+    new(
+      reviewable: reviewable,
+      actor: actor || User.find_by(id: metadata[:actor_id]),
+      action_name: action_name || metadata[:action_name],
+      decision_provenance: metadata[:decision_provenance],
+    )
   end
-
   private_class_method :recorder_for
 
   def self.record_user_history(history, metadata = {})
@@ -118,16 +112,12 @@ class DsaModeration
     recorder = recorder_for(reviewable_id: options[:reviewable_id], actor: actor, metadata: options)
     return unless recorder
 
-    if post.is_first_post? && post.topic&.trashed?
-      recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_REMOVED")
-    else
-      recorder.record_restriction(
-        target: post,
-        restriction: {
-          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
-        },
-      )
-    end
+    recorder.record_restriction(
+      target: post,
+      restriction: {
+        "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+      },
+    )
 
     recorder.flush
   end
@@ -145,12 +135,6 @@ class DsaModeration
     )
 
     recorder.flush
-  end
-
-  def restore_origin(statement)
-    @reviewable_id = statement.reviewable_id
-    @source_type = statement.payload["source_type"]
-    @automated_detection = statement.payload["automated_detection"] == "Yes"
   end
 
   def self.record_edit(post:, revisor:)
@@ -187,7 +171,7 @@ class DsaModeration
     end
 
     if restricted_category
-      recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
+      recorder.record_topic_restriction(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
     end
 
     recorder.flush
@@ -238,7 +222,6 @@ class DsaModeration
     previous = Category.find_by(id: previous_category_id)
     !previous&.read_restricted? || (previous.secure_group_ids - destination.secure_group_ids).any?
   end
-
   private_class_method :access_restricted?
 
   def self.record_topic_status(topic:, status:, enabled:, metadata: {})
@@ -254,29 +237,20 @@ class DsaModeration
 
     return unless visibility
 
-    Post
-      .where(topic_id: topic.id, post_type: Post.types[:regular])
-      .find_each do |post|
-        recorder.record_restriction(
-          target: post,
-          restriction: {
-            "decision_visibility" => [visibility],
-          },
-        )
-      end
+    recorder.record_topic_restriction(topic, visibility)
     recorder.flush
   end
 
   def initialize(reviewable:, actor:, action_name:, decision_provenance: nil)
     @records = {}
     @reviewable = reviewable
-    @reviewable_id = reviewable&.id
+    @reviewable_id = reviewable.id
     @action_name = action_name.to_s
 
     @automated_decision =
       if decision_provenance.to_s == "automated"
         "AUTOMATED_DECISION_FULLY"
-      elsif decision_provenance.to_s == "assisted" || reviewable&.type == "ReviewableAiToolAction"
+      elsif decision_provenance.to_s == "assisted" || reviewable.type == "ReviewableAiToolAction"
         "AUTOMATED_DECISION_PARTIALLY"
       elsif decision_provenance.blank? && actor&.bot?
         "AUTOMATED_DECISION_FULLY"
@@ -284,35 +258,23 @@ class DsaModeration
         "AUTOMATED_DECISION_NOT_AUTOMATED"
       end
 
-    @content = reviewable ? content_snapshot : {}
+    @content = content_snapshot
 
     @avatar =
-      Upload.find_by(id: reviewable&.payload&.dig("avatar_upload_id")) ||
+      Upload.find_by(id: reviewable.payload&.dig("avatar_upload_id")) ||
         User.find_by(id: @content[:recipient_id])&.uploaded_avatar
 
-    @recipient_id = @content[:recipient_id] || @reviewable&.target_created_by_id
-    @source_type = detect_source_type if reviewable
-    @automated_detection = automated_detection? if reviewable
+    @recipient_id = @content[:recipient_id] || @reviewable.target_created_by_id
+    @source_type = detect_source_type
+    @automated_detection = automated_detection?
   end
 
-  attr_reader :content
-
   def flush
-    groups =
-      @records.values.group_by do |record|
-        [record[:recipient_id], record[:payload]["content_date"]]
-      end
-
-    groups.each do |(recipient_id, content_date), items|
-      payload =
-        items
-          .map { |item| item[:payload] }
-          .reduce { |previous, incoming| merge_payloads(previous, incoming) }
-
+    @records.each_value do |payload|
       id =
         Digest::UUID.uuid_v5(
           Digest::UUID::DNS_NAMESPACE,
-          "#{Discourse.current_hostname}:reviewable:#{@reviewable_id}:#{recipient_id}:#{content_date}:#{payload["application_date"]}:#{payload["automated_decision"]}",
+          "#{Discourse.current_hostname}:reviewable:#{@reviewable_id}:#{payload["content_date"]}:#{payload["application_date"]}:#{payload["automated_decision"]}",
         )
 
       payload["puid"] = id
@@ -379,7 +341,7 @@ class DsaModeration
       topic = Topic.find_by(id: history.topic_id)
 
       if topic && topic.slow_mode_seconds > 0
-        record_topic_posts(topic, "DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED")
+        record_topic_restriction(topic, "DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED")
       end
     end
   end
@@ -389,18 +351,8 @@ class DsaModeration
 
     if reviewable.is_a?(ReviewableQueuedPost) &&
          (history.rejected? || history.deleted? && history.created_by_id != @recipient_id)
-      content =
-        if reviewable.id == @reviewable.id
-          @content
-        else
-          self
-            .class
-            .new(reviewable: reviewable, actor: history.created_by, action_name: @action_name)
-            .content
-        end
-
       record_snapshot(
-        content: content,
+        content: @content,
         restriction: {
           "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
         },
@@ -452,14 +404,11 @@ class DsaModeration
     end
   end
 
-  def record_topic_posts(topic, visibility)
-    Post
-      .with_deleted
-      .where(topic_id: topic.id, post_type: Post.types[:regular])
-      .where("deleted_at IS NULL OR post_number = 1")
-      .find_each do |post|
-        record_restriction(target: post, restriction: { "decision_visibility" => [visibility] })
-      end
+  def record_topic_restriction(topic, visibility)
+    post = Post.with_deleted.find_by(topic_id: topic.id, post_number: 1)
+    return unless post
+
+    record_restriction(target: post, restriction: { "decision_visibility" => [visibility] })
   end
 
   def record_restriction(target:, restriction:)
@@ -542,11 +491,11 @@ class DsaModeration
     end
 
     result = {
-      target_type: target&.class&.name || @reviewable&.target_type || @reviewable&.type,
-      target_id: target&.id || @reviewable&.target_id || @reviewable_id,
+      target_type: target&.class&.name || @reviewable.target_type || @reviewable.type,
+      target_id: target&.id || @reviewable.target_id || @reviewable_id,
       content_date: target&.created_at&.to_date&.iso8601,
       recipient_id:
-        target.respond_to?(:user_id) ? target.user_id : @reviewable&.target_created_by_id,
+        target.respond_to?(:user_id) ? target.user_id : @reviewable.target_created_by_id,
     }
 
     if target.is_a?(User)
@@ -584,22 +533,6 @@ class DsaModeration
   end
 
   def record_snapshot(content:, restriction:)
-    key = [content[:target_type], content[:target_id]]
-    statement = @records[key]
-
-    if statement
-      payload = statement[:payload].merge(restriction)
-
-      if restriction["decision_visibility"]
-        payload["decision_visibility"] = (
-          statement[:payload].fetch("decision_visibility", []) + restriction["decision_visibility"]
-        ).uniq
-      end
-
-      statement[:payload] = payload
-      return
-    end
-
     payload =
       restriction.merge(
         "content_type" => content[:content_type],
@@ -615,13 +548,8 @@ class DsaModeration
       payload["content_type_other"] = content[:content_type_other]
     end
 
-    @records[key] = {
-      target_type: content[:target_type],
-      target_id: content[:target_id],
-      reviewable_id: @reviewable_id,
-      recipient_id: content[:recipient_id] || @recipient_id,
-      payload: payload,
-    }
+    key = payload.values_at("content_date", "application_date", "automated_decision")
+    @records[key] = merge_payloads(@records[key] || {}, payload)
   end
 
   def detect_source_type

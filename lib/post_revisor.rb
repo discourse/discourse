@@ -414,9 +414,7 @@ class PostRevisor
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
          @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
-      PostLocker.new(@post, @editor).lock(
-        @opts.slice(:reviewable_id, :dsa_event_reviewable_context),
-      )
+      PostLocker.new(@post, @editor).lock
     end
 
     # We log staff/group moderator edits to posts
@@ -431,7 +429,6 @@ class PostRevisor
         @post,
         old_raw: old_raw,
         reviewable_id: @opts[:reviewable_id],
-        dsa_event_reviewable_context: @opts[:dsa_event_reviewable_context],
       )
     end
 
