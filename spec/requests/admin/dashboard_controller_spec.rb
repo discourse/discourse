@@ -2404,6 +2404,63 @@ RSpec.describe Admin::DashboardController do
         expect(rows).to eq([["a", 3, 2], ["b", 1, 1]])
       end
 
+      it "uses explicit dimensions to reset an existing report to its default size" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 1, cols: 1 }],
+            }
+
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.pluck(:rows, :cols)).to eq([[1, 1]])
+      end
+
+      it "keeps the omitted dimension when resizing an existing report" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 2 }],
+            }
+
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.pluck(:rows, :cols)).to eq([[2, 2]])
+      end
+
+      it "rejects an invalid size formed by an explicit column span and retained rows" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        Fabricate(:tall_admin_dashboard_report, source: "fake_source", identifier: "a")
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", cols: 1 }],
+            }
+
+        expect(response.status).to eq(400)
+        expect(AdminDashboardReport.pluck(:rows, :cols)).to eq([[3, 2]])
+      end
+
+      it "defaults a new report's size when another source has the same identifier" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        Fabricate(:tall_admin_dashboard_report)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                { source: "core_report", identifier: "signups" },
+                { source: "fake_source", identifier: "signups" },
+              ],
+            }
+
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.order(:position).pluck(:source, :rows, :cols)).to eq(
+          [["core_report", 3, 2], ["fake_source", 1, 1]],
+        )
+      end
+
       it "persists a single-row card that spans the full width" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
 
