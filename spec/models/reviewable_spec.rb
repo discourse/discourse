@@ -690,6 +690,35 @@ RSpec.describe Reviewable, type: :model do
       expect(messages).to be_empty
     end
 
+    it "does not publish a topic deletion when the reviewable action rolls back the penalty" do
+      reviewable = Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      reviewable.stubs(:perform_agree_and_keep).returns(
+        Reviewable::PerformResult.new(reviewable, :failure),
+      )
+      result = nil
+
+      messages =
+        MessageBus.track_publish("/delete") do
+          result =
+            reviewable.perform(
+              moderator,
+              :agree_and_suspend,
+              penalty: {
+                reason: "spam",
+                suspend_until: 2.days.from_now,
+                post_action: "delete",
+              },
+            )
+        end
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(post.user.reload).not_to be_suspended
+      expect(post.reload).not_to be_trashed
+      expect(post.topic.reload).not_to be_trashed
+      expect(messages).to be_empty
+    end
+
     it "rolls back every silence when a related user cannot be silenced" do
       reviewable = Fabricate(:reviewable_queued_post)
       author = reviewable.target_created_by

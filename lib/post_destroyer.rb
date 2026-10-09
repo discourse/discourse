@@ -254,7 +254,9 @@ class PostDestroyer
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
     if @post.topic && @post.post_number == 1
-      TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @post.topic)
+      DB.after_commit do
+        TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @post.topic)
+      end
     end
   end
 
