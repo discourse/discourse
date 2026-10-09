@@ -106,11 +106,11 @@ describe Chat::TranscriptService do
     an extremely insightful response :)
     [/chat]
 
-    [chat quote="brucechat;#{message2.id};#{message2.created_at.iso8601}" chained="true"]
+    [chat quote="brucechat;#{message2.id};#{message2.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     says you!
     [/chat]
 
-    [chat quote="martinchat;#{message3.id};#{message3.created_at.iso8601}" chained="true"]
+    [chat quote="martinchat;#{message3.id};#{message3.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     aw :(
     [/chat]
     MARKDOWN
@@ -173,11 +173,11 @@ describe Chat::TranscriptService do
     an extremely insightful response :)
     [/chat]
 
-    [chat quote="brucechat;#{message2.id};#{message2.created_at.iso8601}" chained="true"]
+    [chat quote="brucechat;#{message2.id};#{message2.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     says you!
     [/chat]
 
-    [chat quote="martinchat;#{message3.id};#{message3.created_at.iso8601}" chained="true"]
+    [chat quote="martinchat;#{message3.id};#{message3.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     aw :(
     [/chat]
     MARKDOWN
@@ -280,7 +280,7 @@ describe Chat::TranscriptService do
     wow so tru
     [/chat]
 
-    [chat quote="brucechat;#{message3.id};#{message3.created_at.iso8601}" chained="true" reactions="sob:ivar"]
+    [chat quote="brucechat;#{message3.id};#{message3.created_at.iso8601}" channelId="#{channel.id}" chained="true" reactions="sob:ivar"]
     a new perspective
     [/chat]
     MARKDOWN
@@ -486,7 +486,7 @@ describe Chat::TranscriptService do
     #{regular_message.message}
     [/chat]
 
-    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channelId="#{channel.id}" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     #{thread.original_message.message}
 
     [chat quote="martinchat;#{reply.id};#{reply.created_at.iso8601}"]
@@ -542,7 +542,7 @@ describe Chat::TranscriptService do
 
     [/chat]
 
-    [chat quote="martinchat;#{empty_thread.original_message.id};#{empty_thread.original_message.created_at.iso8601}" chained="true"]
+    [chat quote="martinchat;#{empty_thread.original_message.id};#{empty_thread.original_message.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     no replies
     [/chat]
     MARKDOWN
@@ -610,7 +610,7 @@ describe Chat::TranscriptService do
     I need ideas
     [/chat]
 
-    [chat quote="brucechat;#{thread_1_om.id};#{thread_1_om.created_at.iso8601}" chained="true" threadId="#{thread_1.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    [chat quote="brucechat;#{thread_1_om.id};#{thread_1_om.created_at.iso8601}" channelId="#{channel.id}" chained="true" threadId="#{thread_1.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     this is my idea
 
     [chat quote="martinchat;#{thread_1_message.id};#{thread_1_message.created_at.iso8601}" chained="true"]
@@ -619,11 +619,11 @@ describe Chat::TranscriptService do
 
     [/chat]
 
-    [chat quote="brucechat;#{channel_message_2.id};#{channel_message_2.created_at.iso8601}" chained="true"]
+    [chat quote="brucechat;#{channel_message_2.id};#{channel_message_2.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
     more?
     [/chat]
 
-    [chat quote="brucechat;#{thread_2_om.id};#{thread_2_om.created_at.iso8601}" chained="true" threadId="#{thread_2.id}" threadTitle="the second idea"]
+    [chat quote="brucechat;#{thread_2_om.id};#{thread_2_om.created_at.iso8601}" channelId="#{channel.id}" chained="true" threadId="#{thread_2.id}" threadTitle="the second idea"]
     another one
 
     [chat quote="martinchat;#{thread_2_message_1.id};#{thread_2_message_1.created_at.iso8601}" chained="true"]

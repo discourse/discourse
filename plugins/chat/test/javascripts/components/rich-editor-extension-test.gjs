@@ -54,12 +54,10 @@ haha **ok** _cool_
         .dom(".chat-transcript-user .chat-transcript-datetime", rootElement)
         .exists();
       assert
-        .dom(".chat-transcript-channel", rootElement)
-        .hasText("#design gems");
-      assert
-        .dom(".chat-transcript-channel", rootElement)
+        .dom(".chat-transcript-group__channel", rootElement)
+        .hasText("design gems")
         .hasAttribute("href", "/chat/c/-/95");
-      assert.dom(".chat-transcript-channel img[title='tada']").exists();
+      assert.dom(".chat-transcript-group__channel img[title='tada']").exists();
 
       assert.strictEqual(value, singleMessageSingleUserMarkdown);
     });
@@ -101,10 +99,11 @@ haha **ok** _cool_
       assert
         .dom(".chat-transcript:nth-of-type(1)")
         .hasClass("chat-transcript-chained");
+      assert.dom(".chat-transcript-group__header").exists({ count: 1 });
       assert
-        .dom(".chat-transcript-meta")
-        .hasText("Originally sent in design gems");
-      assert.dom(".chat-transcript-meta img[title='tada']").exists();
+        .dom(".chat-transcript:nth-of-type(1) .chat-transcript-group__channel")
+        .hasText("design gems");
+      assert.dom(".chat-transcript-group__channel img[title='tada']").exists();
 
       let rootElement = document.querySelector(
         ".ProseMirror .chat-transcript:nth-of-type(1)"
@@ -140,16 +139,14 @@ thread other message
 [/chat]
 `;
       const [{ value }] = await setupRichEditor(assert, threadMessagesMarkdown);
+      assert.dom(".chat-transcript-group__channel").hasText("design gems");
+      assert.dom(".chat-transcript-group__channel img[title='tada']").exists();
       assert
-        .dom(".chat-transcript-meta")
-        .hasText("Originally sent in design gems");
-      assert.dom(".chat-transcript-meta img[title='tada']").exists();
-      assert
-        .dom(".chat-transcript details summary .chat-transcript-thread")
-        .exists();
+        .dom(".chat-transcript details")
+        .doesNotExist("the thread is shown expanded");
 
       let rootElement = document.querySelector(
-        ".ProseMirror .chat-transcript details summary .chat-transcript-thread"
+        ".ProseMirror .chat-transcript > .chat-transcript-thread"
       );
       assert
         .dom(
@@ -168,20 +165,20 @@ thread other message
         .dom(".chat-transcript-messages", rootElement)
         .hasHtml(
           "<p>thread op message</p>",
-          "the thread op message is inside the summary element"
+          "the thread op message is inside the thread element"
         );
       assert
         .dom(".chat-transcript-user .chat-transcript-username", rootElement)
         .hasText("martin");
 
       rootElement = document.querySelector(
-        ".ProseMirror .chat-transcript details .chat-transcript"
+        ".ProseMirror .chat-transcript > .chat-transcript"
       );
       assert
         .dom(".chat-transcript-messages", rootElement)
         .hasHtml(
           "<p>thread other message</p>",
-          "the other thread messages are inside the details element"
+          "the other thread messages are nested in the thread's transcript"
         );
       assert
         .dom(".chat-transcript-user .chat-transcript-username", rootElement)

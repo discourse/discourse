@@ -41,17 +41,28 @@
   }
 
   .chat-transcript-username {
-    color: var(--primary-high-or-secondary-low);
+    color: var(--secondary-low);
     font-weight: bold;
   }
 
   .chat-transcript-datetime {
     color: var(--primary-high);
-    font-size: var(--font-down-2-rem);
+    font-size: var(--font-down-1);
     padding: 0 0.5rem;
+
+    // mirrors the nested date + time sizing in chat
+    > a,
+    > span {
+      font-size: var(--font-down-2);
+    }
 
     a {
       color: var(--primary-high);
+
+      &:hover,
+      &:focus {
+        color: var(--primary);
+      }
     }
   }
 
@@ -69,28 +80,6 @@
       max-width: calc(150px / 9 * 16);
       margin: 1em 0 0.5em 0;
       padding: 0;
-    }
-  }
-
-  .topic-body .cooked & {
-    > details {
-      padding: 0.5rem;
-
-      > summary {
-        display: flex;
-
-        &::before {
-          line-height: 1;
-        }
-
-        .chat-transcript-thread {
-          min-width: 0;
-
-          &-header {
-            margin-bottom: 0.5rem;
-          }
-        }
-      }
     }
   }
 
@@ -135,8 +124,220 @@
   }
 }
 
+.chat-transcript-group {
+  margin: 1rem 0;
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  &__channel {
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__thread {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+
+    // gives way before the channel name does
+    flex: 0 100 auto;
+    color: var(--primary-high);
+
+    &::before {
+      content: "›" / "";
+      color: var(--primary-medium);
+    }
+
+    // the glyph fills more of its box than the channel icon, so it runs smaller
+    .d-icon {
+      flex-shrink: 0;
+      width: 0.75em;
+      height: 0.75em;
+      color: var(--primary-medium);
+    }
+
+    .chat-transcript-thread-header__title {
+      @include ellipsis;
+    }
+
+    a {
+      color: inherit;
+    }
+  }
+
+  &__label {
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__body {
+    max-height: 30rem;
+    overflow-y: auto;
+
+    // inset, as the group clips anything outside it
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  .chat-transcript {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    min-height: 0;
+    background: none;
+    border: none;
+  }
+
+  .chat-transcript-user-avatar a {
+    display: block;
+  }
+
+  .chat-transcript-username a {
+    color: inherit;
+  }
+
+  .chat-transcript .chat-transcript {
+    width: auto;
+    margin: 0 0.75rem 0
+      calc(0.75rem + var(--chat-transcript-avatar-size) / 2 - 1px);
+    padding: 0.375rem 0.5rem 0.375rem
+      calc(var(--chat-transcript-avatar-size) / 2 + 0.75rem - 1px);
+    border-left: 2px solid var(--content-border-color);
+  }
+
+  // a thread's replies are nested in it, so its hover moves to its own message
+  // to keep each message highlighting on its own
+  .chat-transcript:has(> .chat-transcript-thread) {
+    padding: 0 0 0.5rem;
+  }
+
+  .chat-transcript-thread {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .no-touch & .chat-transcript:has(> .chat-transcript-thread):hover {
+    background: none;
+  }
+
+  .no-touch & .chat-transcript-thread:hover {
+    background: var(--d-hover);
+  }
+}
+
+.chat-transcript-group,
+.ProseMirror {
+  --chat-transcript-avatar-size: 24px;
+
+  .chat-transcript-user,
+  .chat-transcript-messages {
+    padding-left: calc(var(--chat-transcript-avatar-size) + 0.75rem);
+  }
+
+  .chat-transcript-user {
+    position: relative;
+  }
+
+  .chat-transcript-messages p:first-of-type {
+    margin-top: 0.1em;
+  }
+
+  .chat-transcript-user-avatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-right: 0;
+  }
+
+  .chat-transcript-user-avatar .avatar,
+  .chat-transcript-user .chat-transcript-user-avatar:not(:has(img)) {
+    width: var(--chat-transcript-avatar-size);
+    height: var(--chat-transcript-avatar-size);
+  }
+
+  .chat-transcript-user .chat-transcript-user-avatar:not(:has(img)) {
+    padding: 0;
+    border-radius: 50%;
+    background: var(--primary-low);
+  }
+
+  .chat-transcript-thread-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
 .ProseMirror {
   .chat-transcript {
     white-space: normal;
+  }
+
+  > .chat-transcript {
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    min-height: 0;
+    background: none;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius-large);
+
+    > .chat-transcript-group__header {
+      margin: -0.5rem -0.75rem 0.5rem;
+    }
+  }
+
+  > .chat-transcript + .chat-transcript:not([data-channel-name]) {
+    margin-top: 0;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  > .chat-transcript:has(+ .chat-transcript:not([data-channel-name])) {
+    margin-bottom: 0;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .chat-transcript .chat-transcript {
+    margin: 0 0 0 calc(var(--chat-transcript-avatar-size) / 2 - 1px);
+    padding: 0.375rem 0 0.375rem
+      calc(var(--chat-transcript-avatar-size) / 2 + 0.75rem - 1px);
+    min-height: 0;
+    background: none;
+    border-left: 2px solid var(--content-border-color);
+  }
+
+  .no-touch & .chat-transcript:hover {
+    background: none;
   }
 }
