@@ -453,10 +453,11 @@ class DsaModeration
     raw = target.respond_to?(:raw) ? target.raw : nil
     cooked = target.respond_to?(:cooked) ? target.cooked : nil
     if target.is_a?(Post) && target.user_deleted?
-      original_raw = target.revisions.last&.modifications&.dig("raw", 0)
+      modifications = target.revisions.last&.modifications
+      original_raw = modifications&.dig("raw", 0)
       if original_raw
         raw = original_raw
-        cooked = PrettyText.cook(raw)
+        cooked = modifications&.dig("cooked", 0) || PrettyText.cook(raw)
       end
     end
     result = {
