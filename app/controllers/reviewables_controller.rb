@@ -257,6 +257,21 @@ class ReviewablesController < ApplicationController
   def perform
     args = { version: params[:version].to_i }
     if params[:edit]
+      %i[tags original_tags].each do |key|
+        tags = params[:edit][key]
+        next if tags.nil?
+        valid =
+          tags.is_a?(Array) &&
+            tags.all? do |tag|
+              tag.is_a?(ActionController::Parameters) &&
+                (
+                  tag[:id].nil? || (tag[:id].is_a?(Integer) && tag[:id].positive?) ||
+                    (tag[:id].is_a?(String) && tag[:id].match?(/\A[1-9]\d*\z/))
+                ) && (tag[:name].nil? || tag[:name].is_a?(String)) &&
+                (tag[:id].present? || tag[:name].present?)
+            end
+        raise Discourse::InvalidParameters.new(key) unless valid
+      end
       return if reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
 
       args[:edit] = params

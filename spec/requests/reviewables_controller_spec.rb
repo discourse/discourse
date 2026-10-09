@@ -922,25 +922,41 @@ RSpec.describe ReviewablesController do
         Post.plugin_permitted_update_params.delete("review_post_field")
       end
 
-      it "preserves tag parameter validation when a review edit changes category" do
+      it "rejects unsupported tag shapes without changing the post or review" do
         SiteSetting.tagging_enabled = true
         flagged = Fabricate(:reviewable_flagged_post)
+        post = flagged.target
+        tag = Fabricate(:tag)
+        post.topic.update!(tags: [tag])
         category = Fabricate(:category)
+        original_raw = post.raw
+        original_category = post.topic.category
 
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              edit: {
-                raw: "A reviewed post with string tags.",
-                category_id: category.id,
-                tags: ["tagged"],
-              },
-            }
+        %i[tags original_tags].each do |key|
+          [
+            [tag.name],
+            [{ id: false }],
+            [{ id: "invalid" }],
+            [{ name: { nested: "value" } }],
+          ].each do |tags|
+            put "/review/#{flagged.id}/perform/agree_and_edit.json",
+                params: {
+                  version: flagged.version,
+                  edit: {
+                    :raw => "A reviewed post with unsupported tags.",
+                    :category_id => category.id,
+                    key => tags,
+                  },
+                },
+                as: :json
 
-        expect(response).to have_http_status(:ok)
-        expect(flagged.reload).to be_approved
-        expect(flagged.target.topic.reload.category).to eq(category)
-        expect(flagged.target.topic.tags).to be_empty
+            expect(response).to have_http_status(:bad_request)
+            expect(flagged.reload).to be_pending
+            expect(post.reload.raw).to eq(original_raw)
+            expect(post.topic.reload.category).to eq(original_category)
+            expect(post.topic.tags).to contain_exactly(tag)
+          end
+        end
       end
 
       it "rejects conflicting topic titles and tags without saving the review edit" do
