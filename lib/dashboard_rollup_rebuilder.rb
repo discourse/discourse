@@ -54,7 +54,13 @@ class DashboardRollupRebuilder
   end
 
   def rebuild_browser_pageview_session_engagement
-    aggregate_browser_pageviews(BrowserPageviewSessionEngagementDailyRollup)
+    start_date = earliest_event_date
+    return log("  no browser pageview events, skipping") if start_date.nil?
+
+    BrowserPageviewSessionRollupSummary.reconcile_manual_rebuild!(
+      start_date: start_date,
+      end_date: Time.zone.today,
+    )
   end
 
   def rebuild_browser_pageview_crawler
