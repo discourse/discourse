@@ -68,6 +68,16 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "whispers_allowed_groups" do
+    it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.update_whispers_allowed_groups_default = true
+      expect(SiteSetting.whispers_allowed_groups).to eq(Group::AUTO_GROUPS[:staff].to_s)
+      expect(Fabricate(:moderator)).to be_a_whisperer
+    end
+  end
+
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do
