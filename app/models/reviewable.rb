@@ -35,13 +35,6 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
-  scope :for_cleanup,
-        -> do
-          where
-            .not(id: DsaStatementOfRecord.select(:reviewable_id))
-            .where.not(id: DsaModeration.active_reviewable_ids)
-        end
-
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
   attribute :sensitivity, :integer

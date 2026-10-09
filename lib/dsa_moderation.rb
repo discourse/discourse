@@ -98,10 +98,6 @@ class DsaModeration
     )
   end
 
-  def self.active_reviewable_ids
-    Context.recorder ? [Context.recorder.reviewable_id] : []
-  end
-
   def self.flush
     Context.recorder&.flush
   end
@@ -127,39 +123,41 @@ class DsaModeration
   def resume!(statement)
     @decision_key = statement.id
     @resuming = true
+    @reviewable_id = statement.reviewable_id
     @source_type = statement.payload["source_type"]
     @automated_detection = statement.payload["automated_detection"] == "Yes"
     @automated_decision = statement.payload["automated_decision"]
   end
 
   def self.record_edit(post:, revisor:)
+    return unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording
+
     changes = revisor.post_revision&.modifications || revisor.post_changes.merge(revisor.topic_diff)
-    if Context.recorder && changes["category_id"] &&
-         access_restricted?(previous_category_id: changes["category_id"].first, topic: post.topic)
-      Context.recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
-    end
-    unless %w[raw title].any? { |field|
-             changes[field] && changes[field].first != changes[field].last
-           }
-      return
-    end
+    edited =
+      %w[raw title].any? { |field| changes[field] && changes[field].first != changes[field].last }
+    restricted_category =
+      changes["category_id"] &&
+        access_restricted?(previous_category_id: changes["category_id"].first, topic: post.topic)
+    return unless edited || restricted_category
 
     recorder = Context.recorder
     unless recorder
-      unless SiteSetting.dsa_reporting_enabled && !Context.skip_recording &&
-               revisor.opts[:reviewable_id]
-        return
-      end
+      return unless revisor.opts[:reviewable_id]
       reviewable = Reviewable.find_by(id: revisor.opts[:reviewable_id])
       return unless reviewable && reviewable.reviewable_histories.transitioned.limit(2).count <= 1
       recorder = new(reviewable: reviewable, actor: revisor.editor, action_name: :agree_and_edit)
       recorder.use_revision_key!(revisor.post_revision.id)
     end
-    recorder.record_edit(
-      post: post,
-      original_cooked:
-        changes.dig("cooked", 0) || PrettyText.cook(changes.dig("raw", 0) || post.raw),
-    )
+    if restricted_category
+      recorder.record_topic_posts(post.topic, "DECISION_VISIBILITY_CONTENT_DISABLED")
+    end
+    if edited
+      recorder.record_edit(
+        post: post,
+        original_cooked:
+          changes.dig("cooked", 0) || PrettyText.cook(changes.dig("raw", 0) || post.raw),
+      )
+    end
     recorder.flush unless Context.recorder
   end
 
@@ -248,21 +246,22 @@ class DsaModeration
     @records = @parent ? @parent.records : {}
     @histories = @parent ? @parent.histories : []
     @reviewable = reviewable
+    @reviewable_id = reviewable&.id
     @action_name = action_name.to_s
     @decision_key = Context.recorder&.decision_key || SecureRandom.uuid
     @automated_decision =
       if Context.automated_decision || actor&.bot?
         "AUTOMATED_DECISION_FULLY"
-      elsif reviewable.type == "ReviewableAiToolAction"
+      elsif reviewable&.type == "ReviewableAiToolAction"
         "AUTOMATED_DECISION_PARTIALLY"
       else
         "AUTOMATED_DECISION_NOT_AUTOMATED"
       end
-    @content = content_snapshot
+    @content = reviewable ? content_snapshot : {}
     @avatar = User.find_by(id: @content[:recipient_id])&.uploaded_avatar
-    @recipient_id = @content[:recipient_id] || @reviewable.target_created_by_id
-    @source_type = detect_source_type
-    @automated_detection = automated_detection?
+    @recipient_id = @content[:recipient_id] || @reviewable&.target_created_by_id
+    @source_type = detect_source_type if reviewable
+    @automated_detection = automated_detection? if reviewable
     if @parent
       @source_type = @parent.source_type
       @automated_detection = @parent.automated_detection
@@ -313,7 +312,7 @@ class DsaModeration
   end
 
   def reviewable_id
-    @parent ? @parent.reviewable_id : @reviewable.id
+    @parent ? @parent.reviewable_id : @reviewable_id
   end
 
   def add_history(history)
@@ -544,11 +543,11 @@ class DsaModeration
       cooked = modifications&.dig("cooked", 0) || PrettyText.cook(original_raw) if original_raw
     end
     result = {
-      target_type: target&.class&.name || @reviewable.target_type || @reviewable.type,
-      target_id: target&.id || @reviewable.target_id || @reviewable.id,
+      target_type: target&.class&.name || @reviewable&.target_type || @reviewable&.type,
+      target_id: target&.id || @reviewable&.target_id || @reviewable_id,
       content_date: target&.created_at&.to_date&.iso8601,
       recipient_id:
-        target.respond_to?(:user_id) ? target.user_id : @reviewable.target_created_by_id,
+        target.respond_to?(:user_id) ? target.user_id : @reviewable&.target_created_by_id,
     }
     if target.is_a?(User)
       result[:recipient_id] = target.id
@@ -612,7 +611,7 @@ class DsaModeration
     @records[key] = {
       target_type: content[:target_type],
       target_id: content[:target_id],
-      reviewable_id: @parent ? @parent.reviewable_id : @reviewable.id,
+      reviewable_id: @parent ? @parent.reviewable_id : @reviewable_id,
       recipient_id: content[:recipient_id] || @recipient_id,
       payload: payload,
     }

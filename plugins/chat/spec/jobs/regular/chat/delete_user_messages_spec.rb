@@ -30,9 +30,12 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       author_id = user_1.id
       flagged_post = Fabricate(:post, user: user_1)
       flagger = Fabricate(:user, trust_level: TrustLevel[2])
+      message_reviewable =
+        Fabricate(:chat_reviewable_message, target: chat_message, created_by: flagger)
       reviewable = PostActionCreator.spam(flagger, flagged_post).reviewable
       reviewable.perform(admin, :delete_user)
       statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
+      reviewable.destroy!
 
       described_class.new.execute(
         user_id: author_id,
@@ -47,8 +50,9 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       )
       expect(removed_message).to be_pending
       expect(removed_message.payload.fetch("puid")).to be_present
-      expect(Reviewable.exists?(reviewable.id)).to eq(true)
+      expect(Reviewable.exists?(reviewable.id)).to eq(false)
       expect(Chat::Message.with_deleted.exists?(message_id)).to eq(false)
+      expect(Reviewable.exists?(message_reviewable.id)).to eq(false)
       expect(removed_message.payload.fetch("puid")).to eq(removed_message.id)
       expect {
         described_class.new.execute(user_id: author_id, dsa_decision_key: statement.id)

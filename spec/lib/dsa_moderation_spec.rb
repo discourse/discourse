@@ -7,7 +7,7 @@ RSpec.describe DsaModeration do
   before { SiteSetting.dsa_reporting_enabled = true }
 
   describe ".capture" do
-    it "retains the actual removal and its metadata after the post and flagger disappear" do
+    it "retains removal metadata after ordinary post and flagger cleanup" do
       freeze_time
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
@@ -31,7 +31,7 @@ RSpec.describe DsaModeration do
       expect(reviewable.reviewable_notes).to be_empty
       UserDestroyer.new(admin).destroy(flagger)
       post.destroy!
-      expect(Reviewable.exists?(reviewable.id)).to eq(true)
+      expect(Reviewable.exists?(reviewable.id)).to eq(false)
       expect(statement.reload.payload["content_date"]).to eq(post.created_at.to_date.iso8601)
       expect(
         statement.payload.keys &
@@ -210,6 +210,26 @@ RSpec.describe DsaModeration do
   end
 
   describe ".record_edit" do
+    it "records a linked category edit that restricts access without changing text" do
+      category = Fabricate(:private_category, group: Group[:staff])
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reply = Fabricate(:post, topic: post.topic, post_number: 2)
+
+      PostRevisor.new(post, post.topic).revise!(
+        admin,
+        { category_id: category.id },
+        reviewable_id: reviewable.id,
+      )
+
+      statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+      expect(statements.count).to eq(2)
+      expect(statements.map { |statement| statement.payload["decision_visibility"] }.uniq).to eq(
+        [["DECISION_VISIBILITY_CONTENT_DISABLED"]],
+      )
+      expect(flagger.guardian.can_see_post?(post.reload)).to eq(false)
+      expect(flagger.guardian.can_see_post?(reply.reload)).to eq(false)
+    end
+
     it "retains the original media when a queue edit removes an image" do
       post.update!(cooked: '<p>Original text</p><img src="/image.png">')
       original_raw = post.raw

@@ -22,6 +22,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
       SiteSetting.dsa_reporting_enabled = true
       author_id = comment_poster.id
       comment_id = comment.id
+      comment_reviewable = reviewable
       flagged_post = Fabricate(:post, user: comment_poster)
       staff_reviewable = PostActionCreator.spam(flagger, flagged_post).reviewable
 
@@ -32,6 +33,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         ["DECISION_VISIBILITY_CONTENT_REMOVED"],
       )
       expect(PostVotingComment.with_deleted.exists?(comment_id)).to eq(false)
+      expect(Reviewable.exists?(comment_reviewable.id)).to eq(false)
     end
 
     it "retains the comment restriction on its first handling" do

@@ -266,10 +266,10 @@ after_initialize do
       post_voting_comment_ids = comments.map(&:id)
       PostVotingComment.where(id: post_voting_comment_ids).delete_all
       comments.each { |comment| DsaModeration.record_removal(comment) }
-      ReviewablePostVotingComment
-        .for_cleanup
-        .where(target_id: post_voting_comment_ids, target_type: "PostVotingComment")
-        .delete_all
+      ReviewablePostVotingComment.where(
+        target_id: post_voting_comment_ids,
+        target_type: "PostVotingComment",
+      ).delete_all
       PostVoting::VoteManager.bulk_remove_votes_by(user)
     end,
   )

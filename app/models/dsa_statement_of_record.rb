@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DsaStatementOfRecord < ActiveRecord::Base
-  belongs_to :reviewable
+  belongs_to :reviewable, optional: true
 
   enum :status, { pending: 0 }
 end
