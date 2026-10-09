@@ -8,8 +8,6 @@ class ReviewableHistory < ActiveRecord::Base
 
   alias_attribute :type, :reviewable_history_type
   enum :type, { created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4 }
-
-  after_create { DiscourseEvent.trigger(:reviewable_history_created, self) }
 end
 
 # == Schema Information

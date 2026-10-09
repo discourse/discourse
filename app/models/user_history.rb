@@ -50,7 +50,11 @@ class UserHistory < ActiveRecord::Base
 
   before_save :set_admin_only
 
-  after_create { DiscourseEvent.trigger(:user_history_created, self) }
+  before_validation { self.reviewable_id ||= ReviewableActionContext.reviewable&.id }
+
+  after_create do
+    DiscourseEvent.trigger(:user_history_created, self, ReviewableActionContext.metadata)
+  end
 
   def self.actions
     @actions ||=

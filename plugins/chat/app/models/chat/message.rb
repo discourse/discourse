@@ -427,6 +427,15 @@ module Chat
       @parsed_mentions = nil
     end
 
+    def trash!(actor = nil)
+      already_deleted = trashed?
+      result = super
+      if result && !already_deleted
+        DiscourseEvent.trigger(:chat_message_deleted, self, actor, ReviewableActionContext.metadata)
+      end
+      result
+    end
+
     private
 
     def upload_filename_excerpt

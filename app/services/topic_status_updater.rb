@@ -20,7 +20,13 @@ TopicStatusUpdater =
         end
 
         if changed
-          DiscourseEvent.trigger(:topic_status_updated, topic, event_status, status.enabled?)
+          DiscourseEvent.trigger(
+            :topic_status_updated,
+            topic,
+            event_status,
+            status.enabled?,
+            ReviewableActionContext.metadata,
+          )
         end
 
         updated

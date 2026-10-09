@@ -670,6 +670,7 @@ class Post < ActiveRecord::Base
       should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
+      DiscourseEvent.trigger(:post_hidden, self, ReviewableActionContext.metadata)
 
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])

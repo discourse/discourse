@@ -43,6 +43,20 @@ class PostVotingComment < ActiveRecord::Base
     "#{Discourse.base_url}#{url}"
   end
 
+  def trash!(actor = nil)
+    already_deleted = trashed?
+    result = super
+    if result && !already_deleted
+      DiscourseEvent.trigger(
+        :post_voting_comment_deleted,
+        self,
+        actor,
+        ReviewableActionContext.metadata,
+      )
+    end
+    result
+  end
+
   private
 
   def cook_raw

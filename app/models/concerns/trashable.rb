@@ -32,9 +32,6 @@ module Trashable
   private
 
   def trash_update(deleted_at, deleted_by_id)
-    previously_trashed = trashed?
-    updated = update_columns(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
-    DiscourseEvent.trigger(:model_trashed, self) if updated && deleted_at && !previously_trashed
-    updated
+    update_columns(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
   end
 end

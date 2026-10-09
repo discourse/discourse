@@ -638,11 +638,15 @@ after_initialize do
   }
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new do |user|
+    Proc.new do |user, guardian, opts|
       Jobs.enqueue(
         Jobs::Chat::DeleteUserMessages,
         user_id: user.id,
-        dsa_decision_key: DsaModeration.deferred_decision_key,
+        moderation:
+          ReviewableActionContext.metadata.merge(
+            reviewable_id: opts[:reviewable_id] || ReviewableActionContext.reviewable&.id,
+            actor_id: guardian.user.id,
+          ),
       )
     end,
   )

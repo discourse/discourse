@@ -421,7 +421,28 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      DsaModeration.capture(reviewable: self, actor: performed_by, action_name: action_id) do
+      ReviewableActionContext.set(
+        reviewable: ReviewableActionContext.reviewable || self,
+        actor: performed_by,
+        action_name: action_id,
+        first_handling:
+          (
+            if ReviewableActionContext.reviewable
+              ReviewableActionContext.first_handling
+            else
+              !reviewable_histories.transitioned.exists?
+            end
+          ),
+        decision_provenance:
+          args[:decision_provenance] || ReviewableActionContext.decision_provenance ||
+            (
+              if performed_by.bot?
+                :automated
+              else
+                (type == "ReviewableAiToolAction" ? :assisted : :human)
+              end
+            ),
+      ) do
         result = public_send(perform_method, performed_by, args)
 
         raise ActiveRecord::Rollback unless result.success?
@@ -429,7 +450,12 @@ class Reviewable < ActiveRecord::Base
         update_count = transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
         recalculate_score if result.recalculate_score
-        result
+        DiscourseEvent.trigger(
+          :reviewable_action_performed,
+          self,
+          result,
+          ReviewableActionContext.metadata,
+        )
       end
     end
 

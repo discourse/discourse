@@ -6,7 +6,7 @@ RSpec.describe DsaModeration do
 
   before { SiteSetting.dsa_reporting_enabled = true }
 
-  describe ".capture" do
+  describe ".record_action" do
     it "retains removal metadata after ordinary post and flagger cleanup" do
       freeze_time
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
@@ -203,9 +203,12 @@ RSpec.describe DsaModeration do
       PostLocker.new(post, admin).lock
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      DsaModeration.capture(reviewable: reviewable, actor: admin, action_name: :lock_post) do
-        PostLocker.new(post, admin).lock
-      end
+      ReviewableActionContext.set(
+        reviewable: reviewable,
+        actor: admin,
+        action_name: :lock_post,
+        first_handling: true,
+      ) { PostLocker.new(post, admin).lock }
 
       history = UserHistory.where(action: UserHistory.actions[:post_locked], post_id: post.id).last
       expect(history.previous_value).to be_nil
@@ -221,12 +224,30 @@ RSpec.describe DsaModeration do
       PostLocker.new(post, admin).lock
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      DsaModeration.capture(reviewable: reviewable, actor: admin, action_name: :unlock_post) do
-        PostLocker.new(post, admin).unlock
-      end
+      ReviewableActionContext.set(
+        reviewable: reviewable,
+        actor: admin,
+        action_name: :unlock_post,
+        first_handling: true,
+      ) { PostLocker.new(post, admin).unlock }
 
       expect(post.reload).not_to be_locked
       expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+    end
+
+    it "rolls back event recording when a queue action fails after removing content" do
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.define_singleton_method(:perform_delete_and_agree) do |actor, _args|
+        PostDestroyer.new(actor, target, reviewable_id: id).destroy
+        create_result(:failure)
+      end
+
+      result = reviewable.perform(admin, :delete_and_agree)
+
+      expect(result).not_to be_success
+      expect(post.reload).not_to be_trashed
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+      expect(UserHistory.where(reviewable_id: reviewable.id)).to be_empty
     end
 
     it "leaves reporting inactive by default" do
@@ -394,7 +415,7 @@ RSpec.describe DsaModeration do
           .sole
           .reviewable_id,
       ).to eq(reviewable.id)
-      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(3)
+      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id).count).to eq(2)
     end
 
     it "links the suspension dialog restrictions and finite duration to the same reviewable" do
@@ -417,7 +438,10 @@ RSpec.describe DsaModeration do
 
       expect(result).to be_success
       statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
-      expect(statements.count).to eq(2)
+      expect(statements.count).to eq(1)
+      expect(statements.sole.payload["decision_visibility"]).to eq(
+        ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+      )
       expect(statements.pluck(:reviewable_id).uniq).to eq([reviewable.id])
       expect(
         statements.where("payload ? 'decision_account'").sole.payload[
@@ -455,11 +479,11 @@ RSpec.describe DsaModeration do
     end
   end
 
-  describe ".with_automated_decision" do
+  describe ".record_post_hidden" do
     it "records an AI decision under a staff actor while an ordinary staff API action remains human" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      described_class.with_automated_decision { reviewable.perform(admin, :agree_and_hide) }
+      reviewable.perform(admin, :agree_and_hide, decision_provenance: :automated)
 
       expect(
         DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload["automated_decision"],

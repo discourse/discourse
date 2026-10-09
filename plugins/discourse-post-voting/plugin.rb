@@ -261,11 +261,19 @@ after_initialize do
   end
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new do |user|
+    Proc.new do |user, guardian, opts|
       comments = PostVotingComment.where(user_id: user.id).to_a
       post_voting_comment_ids = comments.map(&:id)
       PostVotingComment.where(id: post_voting_comment_ids).delete_all
-      comments.each { |comment| DsaModeration.record_removal(comment) }
+      comments.each do |comment|
+        next if comment.deleted_at
+        DiscourseEvent.trigger(
+          :post_voting_comment_deleted,
+          comment,
+          guardian.user,
+          ReviewableActionContext.metadata.merge(reviewable_id: opts[:reviewable_id]),
+        )
+      end
       ReviewablePostVotingComment.where(
         target_id: post_voting_comment_ids,
         target_type: "PostVotingComment",

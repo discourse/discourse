@@ -88,7 +88,12 @@ class PostDestroyer
 
     UserActionManager.post_destroyed(@post)
 
-    DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+    DiscourseEvent.trigger(
+      :post_destroyed,
+      @post,
+      ReviewableActionContext.metadata.merge(@opts.compact),
+      @user,
+    )
     if WebHook.active_web_hooks(:post_destroyed).exists?
       payload = WebHook.generate_payload(:post, @post)
       WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)

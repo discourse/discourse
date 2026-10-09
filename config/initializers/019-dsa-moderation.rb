@@ -1,15 +1,36 @@
 # frozen_string_literal: true
 
-DiscourseEvent.on(:model_trashed) { |target| DsaModeration.record_removal(target) }
-
-DiscourseEvent.on(:user_history_created) { |history| DsaModeration.record_user_history(history) }
-
-DiscourseEvent.on(:reviewable_history_created) do |history|
-  DsaModeration.record_reviewable_history(history)
+DiscourseEvent.on(:user_history_created) do |history, metadata = {}|
+  DsaModeration.record_user_history(history, metadata)
 end
 
-DiscourseEvent.on(:topic_status_updated) do |topic, status, enabled|
-  DsaModeration.record_topic_status(topic: topic, status: status, enabled: enabled)
+DiscourseEvent.on(:reviewable_action_performed) do |reviewable, result, metadata|
+  DsaModeration.record_action(reviewable, result, metadata)
+end
+
+DiscourseEvent.on(:post_destroyed) do |post, options, actor|
+  DsaModeration.record_post_destroyed(post, options, actor)
+end
+
+DiscourseEvent.on(:post_hidden) do |post, metadata|
+  DsaModeration.record_post_hidden(post, metadata)
+end
+
+DiscourseEvent.on(:chat_message_deleted) do |message, actor, metadata|
+  DsaModeration.record_removal(message, actor, metadata)
+end
+
+DiscourseEvent.on(:post_voting_comment_deleted) do |comment, actor, metadata|
+  DsaModeration.record_removal(comment, actor, metadata)
+end
+
+DiscourseEvent.on(:topic_status_updated) do |topic, status, enabled, metadata = {}|
+  DsaModeration.record_topic_status(
+    topic: topic,
+    status: status,
+    enabled: enabled,
+    metadata: metadata,
+  )
 end
 
 DiscourseEvent.on(:post_edited) do |post, _topic_changed, revisor|

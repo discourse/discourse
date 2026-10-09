@@ -290,6 +290,9 @@ class PostRevisor
     @editor = editor
     @fields = fields.with_indifferent_access
     @opts = opts
+    if ReviewableActionContext.reviewable
+      @opts = @opts.merge(moderation: ReviewableActionContext.metadata)
+    end
     if @opts[:reviewable_id]
       reviewable = Reviewable.viewable_by(editor).find_by(id: @opts[:reviewable_id])
       matches_post =

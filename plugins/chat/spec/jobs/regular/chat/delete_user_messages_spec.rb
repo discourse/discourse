@@ -26,6 +26,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
     it "retains review queue reporting for deferred account deletion" do
       SiteSetting.dsa_reporting_enabled = true
       admin = Fabricate(:admin)
+      chat_message.update!(created_at: 1.day.ago)
       message_id = chat_message.id
       author_id = user_1.id
       flagged_post = Fabricate(:post, user: user_1)
@@ -37,10 +38,13 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
       reviewable.destroy!
 
-      described_class.new.execute(
-        user_id: author_id,
-        dsa_decision_key: statement.payload.fetch("puid"),
-      )
+      moderation = {
+        reviewable_id: reviewable.id,
+        actor_id: admin.id,
+        first_handling: true,
+        decision_provenance: :human,
+      }
+      described_class.new.execute(user_id: author_id, moderation: moderation)
 
       removed_message =
         DsaStatementOfRecord.where(reviewable_id: reviewable.id).where.not(id: statement.id).sole
@@ -55,7 +59,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       expect(Reviewable.exists?(message_reviewable.id)).to eq(false)
       expect(removed_message.payload.fetch("puid")).to eq(removed_message.id)
       expect {
-        described_class.new.execute(user_id: author_id, dsa_decision_key: statement.id)
+        described_class.new.execute(user_id: author_id, moderation: moderation)
       }.not_to change { DsaStatementOfRecord.count }
     end
 

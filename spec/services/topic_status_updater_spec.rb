@@ -23,7 +23,7 @@ RSpec.describe TopicStatusUpdater do
         described_class.new(topic, admin).update!("closed", true)
       end
 
-    expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+    expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true, {}]])
   ensure
     DiscourseEvent.off(:topic_status_updated, &handler) if handler
   end
