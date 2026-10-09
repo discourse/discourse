@@ -25,7 +25,7 @@ describe "Ember route-scroll-manager service" do
     topic_list_scroll_y = current_scroll_y
     expect(topic_list_scroll_y).to be > 0
 
-    find(".sidebar-section-link[data-link-name='all-categories']").click
+    find(".sidebar-section-link[data-link-name='all-categories']").send_keys(:enter)
 
     expect(page).to have_css("body.navigation-categories")
     expect(current_scroll_y).to eq(0)
