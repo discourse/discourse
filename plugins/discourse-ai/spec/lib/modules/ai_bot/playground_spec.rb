@@ -175,6 +175,112 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
     end
+
+    it "drops unsummarizable history, then resumes from that checkpoint on the next turn" do
+      first_post.update!(raw: "Remember QUARTZ-OTTER-731")
+      large_result = "Record: amber inventory checked. " * 4000
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      claude_2.update!(max_prompt_tokens: 16_000)
+      agent_record =
+        Fabricate(:ai_agent, max_turn_tokens: 4000, compression_threshold: 50, tools: [])
+      dropping_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(
+            bot_user,
+            agent: agent_record.class_instance.new,
+            model: claude_2,
+          ),
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["", "Answer without the old read", "Follow-up answer"],
+      ) do |_, _, prompts, options|
+        reply = dropping_playground.reply_to(third_post, stream_reply: false, auto_set_title: false)
+
+        expect(reply.raw).to eq("Answer without the old read")
+        checkpoint = reply.post_custom_prompt.custom_prompt.first
+        expect(checkpoint[0]).to include(
+          DiscourseAi::Completions::ContextPreparation::HISTORY_DROPPED_NOTICE,
+        )
+        expect(checkpoint[6]).to include("source_id" => third_post.id)
+
+        followup = Fabricate(:post, topic: pm, user: user, raw: "Repeat the codeword")
+        dropping_playground.reply_to(followup, stream_reply: false, auto_set_title: false)
+
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression bot bot],
+        )
+        [prompts[1], prompts.last].each do |prompt|
+          contents = prompt.messages.map { |message| message[:content].to_s }
+          expect(contents).to include(checkpoint[0])
+          expect(contents.join).not_to include(large_result)
+        end
+        expect(prompts.last.messages.map { |message| message[:content] }).to include(followup.raw)
+      end
+    end
+
+    it "persists a partially retained earlier turn once across the next turn" do
+      large_result = "Record: amber inventory checked. " * 4000
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      third_post.update!(raw: "Also remember AMBER-FOX-42")
+      recent_reply = Fabricate(:post, topic: pm, user: bot_user, raw: "Noted")
+      PostCustomPrompt.create!(
+        post_id: recent_reply.id,
+        custom_prompt: [
+          %w[{"arguments":{}} recent tool_call read],
+          ["AMBER-FOX-42 stored", "recent", "tool", "read"],
+          ["Noted", bot_user.username],
+        ],
+      )
+      question = Fabricate(:post, topic: pm, user: user, raw: "Which codeword is stored?")
+      claude_2.update!(max_prompt_tokens: 16_000)
+      agent_record =
+        Fabricate(:ai_agent, max_turn_tokens: 4000, compression_threshold: 50, tools: [])
+      dropping_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(
+            bot_user,
+            agent: agent_record.class_instance.new,
+            model: claude_2,
+          ),
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["", "AMBER-FOX-42", "Still AMBER-FOX-42"],
+      ) do |_, _, prompts, options|
+        dropping_playground.reply_to(question, stream_reply: false, auto_set_title: false)
+        followup = Fabricate(:post, topic: pm, user: user, raw: "Repeat it")
+        dropping_playground.reply_to(followup, stream_reply: false, auto_set_title: false)
+
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression bot bot],
+        )
+        [prompts[1], prompts.last].each do |prompt|
+          transcript = prompt.messages.to_s
+          expect(transcript).to include(
+            DiscourseAi::Completions::ContextPreparation::HISTORY_DROPPED_NOTICE,
+          )
+          expect(transcript.scan(third_post.raw).size).to eq(1)
+          expect(transcript.scan("AMBER-FOX-42 stored").size).to eq(1)
+          expect(transcript).not_to include(large_result)
+        end
+        expect(prompts.last.messages.to_s).to include(question.raw, followup.raw)
+      end
+    end
   end
 
   describe "#title_playground with a multipart model response" do
@@ -2186,6 +2292,49 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe ".legacy_recipient_for" do
+    it "rejects an ambiguous conversation when the preferred bot is no longer a participant" do
+      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      second_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      former_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, first_model_user.id)
+      opus_model.update_column(:user_id, second_model_user.id)
+      Fabricate(:llm_model).update_column(:user_id, former_model_user.id)
+      topic = Fabricate(:private_message_topic, user:, recipient: first_model_user)
+      topic.topic_allowed_users.create!(user: second_model_user)
+      topic.custom_fields[described_class::BOT_USER_PREF_ID_CUSTOM_FIELD] = former_model_user.id
+      topic.save_custom_fields
+
+      expect { described_class.legacy_recipient_for(topic, []) }.to raise_error(
+        DiscourseAi::AiBot::ConversationRoute::Error,
+        I18n.t("discourse_ai.ai_bot.errors.ambiguous_model"),
+      )
+    end
+
+    it "continues a legacy conversation with its preferred model recipient" do
+      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      preferred_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, first_model_user.id)
+      opus_model.update_column(:user_id, preferred_model_user.id)
+      toggle_enabled_bots(bots: [claude_2, opus_model])
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      general_agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
+      topic = Fabricate(:private_message_topic, user:, recipient: first_model_user)
+      topic.topic_allowed_users.create!(user: preferred_model_user)
+      topic.custom_fields[described_class::BOT_USER_PREF_ID_CUSTOM_FIELD] = preferred_model_user.id
+      topic.custom_fields["ai_agent"] = general_agent.name
+      topic.save_custom_fields
+      post = Fabricate(:post, topic:, user:)
+
+      expect_enqueued_with(
+        job: :create_ai_reply,
+        args: {
+          post_id: post.id,
+          agent_id: general_agent.id,
+          llm_model_id: opus_model.id,
+        },
+      ) { described_class.schedule_reply(post) }
+    end
+
     it "rejects a private message with multiple eligible agent recipients" do
       second_agent =
         Fabricate(
@@ -2206,6 +2355,52 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe ".reply_to_post" do
+    it "uses the automation agent model instead of the conversation model" do
+      post = Fabricate(:post, user:)
+      post.topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = opus_model.id
+      post.topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Automation response"]) do
+        described_class.reply_to_post(
+          post:,
+          agent_id: general_agent.id,
+          attributed_user: Discourse.system_user,
+        )
+      end
+
+      reply = post.topic.posts.order(:post_number).last
+      expect(reply.raw).to eq("Automation response")
+      expect(reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "uses the automation agent model instead of a previous reply model" do
+      post = Fabricate(:post, user:)
+      Fabricate(
+        :post,
+        topic: post.topic,
+        user: bot_user,
+        custom_fields: {
+          DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => opus_model.id,
+        },
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Automation response"]) do
+        described_class.reply_to_post(
+          post:,
+          agent_id: general_agent.id,
+          attributed_user: Discourse.system_user,
+        )
+      end
+
+      reply = post.topic.posts.order(:post_number).last
+      expect(reply.raw).to eq("Automation response")
+      expect(reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
     it "replies as the given user when the agent has no user" do
       post = Fabricate(:post, user: user)
       speaker = Fabricate(:user)

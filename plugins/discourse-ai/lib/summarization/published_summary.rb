@@ -3,14 +3,14 @@
 module DiscourseAi
   module Summarization
     class PublishedSummary
-      def initialize(topic_view, guardian:)
+      def initialize(topic_view, guardian:, crawler_only: true)
         @topic_view = topic_view
         @guardian = guardian
+        @crawler_only = crawler_only
       end
 
       def eligible?
-        request = @guardian.request
-        return false if !request || !Middleware::AnonymousCache::Helper.new(request.env).is_crawler?
+        return false if @crawler_only && !crawler_request?
 
         topic = @topic_view.topic
         SiteSetting.ai_summaries_for_crawlers && SiteSetting.ai_summarization_enabled &&
@@ -31,7 +31,7 @@ module DiscourseAi
             nil,
             scope: @guardian,
           ).cached_summary
-        if cached_summary&.summarized_cooked.present? &&
+        if cached_summary&.summarized_text.present? &&
              Guardian.new.can_see_summary?(@topic_view.topic, cached_summary:)
           @summary = cached_summary
         end
@@ -40,6 +40,18 @@ module DiscourseAi
 
       def cooked
         summary.summarized_cooked
+      end
+
+      def markdown
+        heading = I18n.t("discourse_ai.summarization.published_summary_heading")
+        "## #{heading}\n\n#{summary.summarized_text}"
+      end
+
+      private
+
+      def crawler_request?
+        request = @guardian.request
+        request.present? && Middleware::AnonymousCache::Helper.new(request.env).is_crawler?
       end
     end
   end

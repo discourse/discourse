@@ -1,9 +1,19 @@
+import type { Node, ResolvedPos, Slice } from "prosemirror-model";
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
-import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import type { EditorProps, EditorView } from "prosemirror-view";
+import type {
+  PluginParams,
+  RichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
 import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
+
+/** ProseMirror's `isText`, narrowing `text` to the string every text node has. */
+function isTextNode(node: Node): node is Node & { text: string } {
+  return node.isText;
+}
 
 const extension: RichEditorExtension = {
   markSpec: {
@@ -143,17 +153,27 @@ const extension: RichEditorExtension = {
       }
     ),
   ],
-  plugins: ({ pmState: { Plugin }, utils }) =>
-    new Plugin({
-      props: {
-        // Auto-linkify plain-text pasted URLs over a selection
-        clipboardTextParser(text, $context, plain, view) {
-          if (view.state.selection.empty || !utils.getLinkify().test(text)) {
-            return;
-          }
+  plugins: ({ pmState: { Plugin }, utils }) => {
+    // Auto-linkify plain-text pasted URLs over a selection
+    function parseClipboardText(
+      text: string,
+      $context: ResolvedPos,
+      plain: boolean,
+      view: EditorView
+    ): Slice | undefined {
+      if (view.state.selection.empty || !utils.getLinkify().test(text)) {
+        return;
+      }
 
-          return addLinkMark(view, text, utils);
-        },
+      return addLinkMark(view, text, utils);
+    }
+
+    return new Plugin({
+      props: {
+        // prosemirror-view keeps the first truthy result and otherwise uses its
+        // default parser, but types this hook as always returning a Slice.
+        clipboardTextParser:
+          parseClipboardText as EditorProps["clipboardTextParser"],
         // Auto-linkify pasted rich content with a single text node that is a URL over a selection
         transformPasted(slice, view) {
           if (view.state.selection.empty) {
@@ -163,14 +183,15 @@ const extension: RichEditorExtension = {
           let node = null;
 
           if (slice.content.childCount === 1) {
-            if (slice.content.firstChild.isText) {
-              node = slice.content.firstChild;
+            const only = slice.content.child(0);
+            if (only.isText) {
+              node = only;
             } else if (
-              slice.content.firstChild.type.name === "paragraph" &&
-              slice.content.firstChild.childCount === 1 &&
-              slice.content.firstChild.firstChild.isText
+              only.type.name === "paragraph" &&
+              only.childCount === 1 &&
+              only.child(0).isText
             ) {
-              node = slice.content.firstChild.firstChild;
+              node = only.child(0);
             }
           }
 
@@ -222,7 +243,7 @@ const extension: RichEditorExtension = {
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (
               visited.has(node) ||
-              !node.isText ||
+              !isTextNode(node) ||
               node.marks.some(
                 (mark) =>
                   (mark.type.name === "link" &&
@@ -257,7 +278,8 @@ const extension: RichEditorExtension = {
 
             if (
               wordStart === 0 &&
-              nodeBefore?.isText &&
+              nodeBefore &&
+              isTextNode(nodeBefore) &&
               !utils.isWhiteSpace(
                 nodeBefore.text[nodeBefore.text.length - 1]
               ) &&
@@ -274,7 +296,8 @@ const extension: RichEditorExtension = {
             let textAfter = "";
             if (
               wordEnd === text.length &&
-              nodeAfter?.isText &&
+              nodeAfter &&
+              isTextNode(nodeAfter) &&
               !utils.isWhiteSpace(text[text.length - 1]) &&
               !utils.isWhiteSpace(nodeAfter.text[0]) &&
               nodeAfter.marks.length === 1 &&
@@ -324,10 +347,15 @@ const extension: RichEditorExtension = {
 
         return tr;
       },
-    }),
+    });
+  },
 };
 
-function addLinkMark(view, text, utils) {
+function addLinkMark(
+  view: EditorView,
+  text: string,
+  utils: PluginParams["utils"]
+): Slice | undefined {
   const matches = utils.getLinkify().match(text);
   const isFullMatch = matches?.length === 1 && matches[0].raw === text;
 

@@ -60,6 +60,24 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       it { is_expected.to fail_a_policy(:meets_or_exceeds_status) }
     end
 
+    context "when remove_and_replace_uncategorized is promoted" do
+      let!(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
+      let(:setting_name) { :remove_and_replace_uncategorized }
+      let(:changes_already_notified_about_promotion) do
+        UpcomingChangeEvent.change_names_with_event(:admins_notified_automatic_promotion)
+      end
+
+      it "snapshots the site state before dispatching the change" do
+        expect(result).to run_successfully
+        expect(
+          UpcomingChangeEvent.find_by(
+            event_type: :automatically_promoted,
+            upcoming_change_name: setting_name,
+          ).event_data,
+        ).to include("uncategorized_category_id" => uncategorized.id)
+      end
+    end
+
     context "when the change is owned by a plugin that is not configurable" do
       let(:setting_name) { :enable_experimental_sample_plugin_feature }
 

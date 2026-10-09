@@ -7,6 +7,14 @@ module DiscourseAi
       MAX_OUTPUT_TOKENS = 2048
       MAX_SECONDS = 90
       MAX_ALLOWANCE_TOKENS = 1_000_000
+      RETAINED_ATTACHMENTS_ACK = "The preceding attachments are retained historical evidence."
+      HISTORY_DROPPED_NOTICE = <<~TEXT.squish
+        Part of the earlier conversation was omitted because it could not be summarized to fit
+        the context window. Tool actions in the omitted part may already have been completed;
+        do not repeat them unless the user asks.
+      TEXT
+      PREVIOUS_SUMMARY_LABEL =
+        "\nSummary from an earlier checkpoint (it does not cover messages omitted after it):\n"
 
       class Budget
         attr_reader :calls, :spent_tokens, :elapsed_seconds
@@ -118,6 +126,10 @@ module DiscourseAi
         # when retaining it would prevent hard fit.
         source = prompt.messages[1...protected_user_index]
         tail = prompt.messages[protected_user_index..]
+        # Captured before completed current-turn evidence can move into the summary
+        # source: dropping may only cut earlier turns, never actions that already ran.
+        history = source.reject { |message| transient_hint?(message) }
+        current_turn = tail
         if size > capacity && !fits?(prompt, [prompt.messages.first, *tail], **options)
           pending_ids =
             prompt.messages.filter_map { |message| message[:id] if message[:type] == :tool_call }
@@ -144,13 +156,11 @@ module DiscourseAi
                 message[:type] == :user &&
                   Array(message[:content]).first.to_s.start_with?(
                     "Retained historical attachments",
-                  ) &&
-                  acknowledgement&.dig(:content) ==
-                    "The preceding attachments are retained historical evidence."
+                  ) && acknowledgement&.dig(:content) == RETAINED_ATTACHMENTS_ACK
               end
         if source.empty? || checkpoint_only
-          raise Error.new("hard_overflow") if size > capacity
-          return :not_needed
+          return :not_needed if size <= capacity
+          return drop_oldest_history!(prompt, history, current_turn, "hard_overflow", **options)
         end
 
         begin
@@ -167,21 +177,8 @@ module DiscourseAi
             )
           messages = [
             prompt.messages.first,
-            {
-              type: :user,
-              content:
-                "#{PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX}#{summary}#{PromptMessagesBuilder::COMPRESSED_CONTEXT_SUFFIX}",
-            },
-            { type: :model, content: PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK },
-            *attachments.flat_map do |message|
-              [
-                message,
-                {
-                  type: :model,
-                  content: "The preceding attachments are retained historical evidence.",
-                },
-              ]
-            end,
+            *checkpoint_messages(summary),
+            *attachment_messages(attachments),
             *tail,
           ]
           candidate = copy_prompt(prompt, messages)
@@ -198,15 +195,98 @@ module DiscourseAi
         rescue => error
           reason = error.is_a?(Error) ? error.reason : "summary_failed"
           if !error.is_a?(Error)
-            Rails.logger.warn("DiscourseAi: context_preparation reason=#{reason}")
+            Rails.logger.warn(
+              "DiscourseAi: context_preparation reason=#{reason} error=#{error.class}: #{error.message}",
+            )
           end
           return :cancelled if cancel_manager&.cancelled?
-          raise Error.new(reason) if size > capacity
-          :skipped
+          return :skipped if size <= capacity
+          drop_oldest_history!(prompt, history, current_turn, reason, **options)
         end
       end
 
       private
+
+      # Last resort when summarizing cannot make the prompt fit. The notice is
+      # written as a checkpoint so later replies resume after the dropped history.
+      # Priority: recent turns, then the previous summary, then dropped attachments.
+      def drop_oldest_history!(prompt, history, tail, reason, **options)
+        raise Error.new(reason) if history.empty?
+
+        build =
+          lambda do |notice, start, attachments = []|
+            [
+              prompt.messages.first,
+              *checkpoint_messages(notice),
+              *attachment_messages(attachments),
+              *history[start..],
+              *tail,
+            ]
+          end
+        # Agent examples precede a restored checkpoint, so only cut after it; any
+        # user message there keeps tool calls with their results.
+        checkpoint_index = PromptMessagesBuilder.compression_checkpoint_index(history)
+        first_cut = checkpoint_index ? checkpoint_index + 2 : 0
+        starts =
+          (first_cut...history.length).select do |index|
+            history[index][:type] == :user && !transient_hint?(history[index])
+          end
+        starts << history.length
+        start =
+          starts.bsearch do |candidate|
+            fits?(prompt, build.call(HISTORY_DROPPED_NOTICE, candidate), **options)
+          end
+        raise Error.new(reason) if start.nil?
+
+        notice = HISTORY_DROPPED_NOTICE
+        if checkpoint_index
+          # Unwrap an earlier drop notice so repeated drops don't nest notices.
+          previous_summary =
+            PromptMessagesBuilder
+              .message_text(history[checkpoint_index])
+              .delete_prefix(PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX)
+              .delete_suffix(PromptMessagesBuilder::COMPRESSED_CONTEXT_SUFFIX)
+              .delete_prefix(HISTORY_DROPPED_NOTICE)
+              .delete_prefix(PREVIOUS_SUMMARY_LABEL)
+          if previous_summary.present?
+            with_summary = "#{HISTORY_DROPPED_NOTICE}#{PREVIOUS_SUMMARY_LABEL}#{previous_summary}"
+            notice = with_summary if fits?(prompt, build.call(with_summary, start), **options)
+          end
+        end
+
+        retained = []
+        @llm
+          .context_attachments(history[0...start])
+          .reverse_each do |attachment|
+            candidate = [attachment, *retained]
+            retained = candidate if fits?(prompt, build.call(notice, start, candidate), **options)
+          end
+
+        Rails.logger.warn(
+          "DiscourseAi: context_preparation reason=history_dropped original_reason=#{reason} dropped_history_messages=#{start}",
+        )
+        messages = build.call(notice, start, retained)
+        @protected_user_index = messages.length - tail.length
+        prompt.messages.replace(messages)
+        :compressed
+      end
+
+      def checkpoint_messages(summary)
+        [
+          {
+            type: :user,
+            content:
+              "#{PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX}#{summary}#{PromptMessagesBuilder::COMPRESSED_CONTEXT_SUFFIX}",
+          },
+          { type: :model, content: PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK },
+        ]
+      end
+
+      def attachment_messages(attachments)
+        attachments.flat_map do |message|
+          [message, { type: :model, content: RETAINED_ATTACHMENTS_ACK }]
+        end
+      end
 
       def fits?(prompt, messages, **options)
         size, capacity = @llm.prompt_capacity(copy_prompt(prompt, messages), **options)

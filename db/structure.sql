@@ -20233,6 +20233,13 @@ CREATE INDEX idx_user_actions_speed_up_user_all ON public.user_actions USING btr
 
 
 --
+-- Name: idx_user_badges_granted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_badges_granted_at ON public.user_badges USING btree (granted_at DESC);
+
+
+--
 -- Name: idx_user_chat_thread_memberships_on_thread_id_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25583,6 +25590,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261009144947'),
+('20261009130230'),
+('20261009121104'),
 ('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),
@@ -25592,6 +25602,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260928103925'),
 ('20260925155026'),
 ('20260925054715'),
+('20260923174053'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

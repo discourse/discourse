@@ -270,7 +270,6 @@ module DiscourseAi
             modality: :automation,
             agent_id:,
             llm_model_id:,
-            topic: post.topic,
             speaker: user,
             selection_source: :snapshot,
             allow_general_fallback: false,
@@ -307,6 +306,11 @@ module DiscourseAi
         agent_user_ids = participant_ids & mentionables.map { |agent| agent[:user_id] }
         model_user_ids = participant_ids & LlmModel.with_user.pluck(:user_id)
         recipient_ids = (agent_user_ids + model_user_ids).uniq
+
+        preferred_user_id = topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD].to_i
+        if agent_user_ids.empty? && model_user_ids.include?(preferred_user_id)
+          return User.find_by(id: preferred_user_id)
+        end
 
         if recipient_ids.many?
           key = agent_user_ids.any? ? "ambiguous_agent" : "ambiguous_model"

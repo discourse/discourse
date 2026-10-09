@@ -946,7 +946,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect do
         ctx.create_post(user: user, raw: "Unauthorized whisper", topic_id: topic.id, whisper: true)
-      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+      end.to raise_error(DiscourseWorkflows::NodeError).and not_change { topic.posts.count }
     end
 
     it "requires the user to see the topic" do

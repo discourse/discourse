@@ -66,6 +66,7 @@ export default class ChatMessage {
   @tracked pinned;
   @tracked isAction;
   @tracked blocks;
+  @tracked aiLlmName;
   @autoTrackedArray reactions;
 
   @tracked _deletedAt;
@@ -110,6 +111,7 @@ export default class ChatMessage {
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
     this.blocks = args.blocks;
+    this.aiLlmName = args.ai_llm_name;
     this.threadTitle = args.thread_title;
     this.threadId = args.thread_id;
 

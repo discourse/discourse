@@ -13,6 +13,8 @@ const USER_GATED_ROOM_FIELDS = [
   "chat_channel_id",
   "chat_idle_minutes",
   "livekit_enabled",
+  "video_allowed",
+  "screen_share_allowed",
 ];
 
 // Participant broadcasts arrive in arbitrary database order, so every list

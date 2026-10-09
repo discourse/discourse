@@ -45,3 +45,24 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+  unused-assets:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    defaults:
+      run:
+        working-directory: docs/developer-guides
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Check for unused assets
+        run: ./check_unused_assets

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .modal-user-status {
   .d-modal {
     &__footer {
@@ -27,7 +29,11 @@
   }
 
   .user-card {
-    width: 80%;
+    width: 100%;
+
+    @include viewport.from("sm") {
+      width: 80%;
+    }
     margin: var(--space-8) auto;
     border-radius: var(--d-border-radius-large);
   }

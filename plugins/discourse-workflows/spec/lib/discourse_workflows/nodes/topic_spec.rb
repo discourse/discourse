@@ -206,6 +206,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
         expect(result["topic"]["id"]).to eq(topic.id)
         expect(result["topic"]["title"]).to eq(topic.title)
+        expect(result["topic"]["url"]).to eq(topic.url)
         expect(result["topic"]["category_id"]).to eq(category.id)
         expect(result["topic"]["tags"]).to eq([])
         expect(result["post"]).to include(

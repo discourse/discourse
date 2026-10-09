@@ -5,7 +5,7 @@ module DiscourseAi
     class Bot
       BOT_NOT_FOUND = Class.new(StandardError)
 
-      FALLBACK_MAX_TURN_TOKENS = 32_000
+      DEFAULT_MAX_TURN_TOKENS = 500_000
       MAX_DISCOVERED_IMAGE_REFERENCES = 20
       MAX_TOOL_CALLS_PER_COMPLETION = 50
       MAX_FINAL_ANSWER_TOKENS = DiscourseAi::Completions::TurnWorkBudget::MAX_FINAL_ANSWER_TOKENS
@@ -64,15 +64,8 @@ module DiscourseAi
         inject_token_budget_final_answer_hint(prompt)
       end
 
-      def self.default_max_turn_tokens(llm, compression_threshold: 80)
-        effective_max_turn_tokens(llm)
-      end
-
-      def self.effective_max_turn_tokens(llm, requested = nil, **_options)
-        return requested.to_i if requested.to_i > 0
-
-        context_window = llm&.max_prompt_tokens.to_i
-        context_window > 0 ? context_window : FALLBACK_MAX_TURN_TOKENS
+      def self.effective_max_turn_tokens(requested = nil)
+        requested.to_i > 0 ? requested.to_i : DEFAULT_MAX_TURN_TOKENS
       end
 
       def self.as(bot_user, agent: DiscourseAi::Agents::General.new, model: nil)
@@ -175,7 +168,6 @@ module DiscourseAi
         current_llm = llm
         token_budget =
           self.class.effective_max_turn_tokens(
-            current_llm,
             context.turn_token_budget.presence || agent.class.max_turn_tokens.presence,
           )
         execution_context ||=
