@@ -170,7 +170,7 @@ acceptance("composer", function (needs) {
     assert.dom("input.format-input").hasValue("LTS");
 
     // Insert the date
-    await click(".btn-primary");
+    await click(".discourse-local-dates-create-modal .btn-primary");
 
     // Verify the format is preserved in the output (not changed to LL)
     assert

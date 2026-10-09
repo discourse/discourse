@@ -31,12 +31,13 @@ import {
   typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import {
+  applySchemaDefaults,
   credentialSlotAnchorField,
   credentialSlotVisible,
   credentialTypesForSlot,
-  fieldType,
   findNodeType,
   getPropertySchema,
+  pruneModeHiddenFields,
 } from "../../../lib/workflows/property-engine";
 import { runExecuteStep } from "../canvas/canvas-execute-step";
 import { shouldShowExecuteStep } from "../canvas/workflow-node";
@@ -263,9 +264,15 @@ export default class NodeConfigurator extends Component {
   get isDirty() {
     const nameDirty = this.nodeName !== this.initialNodeName;
     const configurationDirty =
-      JSON.stringify(this.configuration) !==
-      JSON.stringify(this.initialConfiguration);
+      JSON.stringify(this.persistedConfiguration) !==
+      JSON.stringify(
+        pruneModeHiddenFields(this.propertySchema, this.initialConfiguration)
+      );
     return nameDirty || configurationDirty;
+  }
+
+  get persistedConfiguration() {
+    return pruneModeHiddenFields(this.propertySchema, this.configuration);
   }
 
   get showSaveStatus() {
@@ -397,7 +404,7 @@ export default class NodeConfigurator extends Component {
     if (this.isDirty) {
       cancel(this.autosaveTimer);
       this.args.model.onSave(
-        this.configuration,
+        this.persistedConfiguration,
         this.trimmedNodeName || this.initialNodeName
       );
     }
@@ -422,30 +429,8 @@ export default class NodeConfigurator extends Component {
 
   async #loadTypes() {
     this.nodeTypes = await this.workflowsNodeTypes.load();
-    this.#applyDefaults();
+    applySchemaDefaults(this.propertySchema, this.initialConfiguration);
     this.#setSavedBaseline(this.configuration, this.initialNodeName);
-  }
-
-  #applyDefaults() {
-    const config = this.initialConfiguration;
-
-    for (const [key, fs] of Object.entries(this.propertySchema)) {
-      if (config[key] != null) {
-        continue;
-      }
-      if (fs.default !== undefined) {
-        config[key] = fs.default;
-      } else if (
-        fieldType(fs) === "collection" ||
-        fieldType(fs) === "fixed_collection"
-      ) {
-        config[key] = {};
-      } else if (fieldType(fs) === "assignment_collection") {
-        config[key] = { assignments: [] };
-      } else if (fieldType(fs) === "array") {
-        config[key] = [];
-      }
-    }
   }
 
   #cancelTimers() {
@@ -492,7 +477,7 @@ export default class NodeConfigurator extends Component {
       return;
     }
 
-    const configuration = structuredClone(this.configuration);
+    const configuration = structuredClone(this.persistedConfiguration);
     const nodeName = this.trimmedNodeName || this.initialNodeName;
 
     this.#setSavingStatus();

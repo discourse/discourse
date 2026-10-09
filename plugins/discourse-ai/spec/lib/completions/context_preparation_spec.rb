@@ -24,6 +24,17 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
     )
   end
 
+  def expect_history_dropped(prompt, retained: [])
+    expect(prompt.messages.map { |message| message[:type] }).to eq(
+      [:system, :user, :model, *retained.map { |message| message[:type] }, :user],
+    )
+    expect(prompt.messages[1][:content]).to start_with(
+      "<compressed_context>#{described_class::HISTORY_DROPPED_NOTICE}",
+    )
+    expect(prompt.messages[3...-1]).to eq(retained)
+    expect(prompt.messages.last[:content]).to eq("What codeword?")
+  end
+
   describe "#prepare!" do
     it "shares maintenance bounds across contexts forked before their first preparation" do
       stub_const(described_class, :MAX_CALLS, 2) do
@@ -98,17 +109,163 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "fails hard overflow without publishing a partial checkpoint or answering" do
+    it "drops the oldest history when an unusable summary leaves the prompt over capacity" do
       prompt = history_prompt(repetitions: 4000)
-      original = prompt.messages.deep_dup
       DiscourseAi::Completions::Llm.with_prepared_responses([""]) do |canned|
         llm = DiscourseAi::Completions::Llm.proxy(model)
+        preparation = described_class.new(llm)
+
+        expect(preparation.prepare!(prompt)).to eq(:compressed)
+        expect(canned.completions).to eq(1)
+        expect_history_dropped(prompt)
+        expect(preparation.protected_user_index).to eq(prompt.messages.length - 1)
+      end
+    end
+
+    it "keeps the newest complete earlier turns that fit when dropping history" do
+      prompt = history_prompt(repetitions: 4000)
+      # Merged consecutive user messages lose their id but are still turn boundaries.
+      recent_turn = [
+        { type: :user, content: "Also remember AMBER-FOX-42" },
+        { type: :tool_call, id: "recent", name: "read", content: '{"arguments":{}}' },
+        { type: :tool, id: "recent", name: "read", content: "AMBER-FOX-42 stored" },
+        { type: :model, content: "Noted." },
+      ]
+      prompt.messages.insert(-2, *recent_turn.deep_dup)
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect_history_dropped(prompt, retained: recent_turn)
+      end
+    end
+
+    it "carries a previous checkpoint summary restored behind agent examples" do
+      prompt = history_prompt(repetitions: 4000)
+      prompt.messages.insert(
+        1,
+        { type: :user, content: "Example question" },
+        { type: :model, content: "Example answer" },
+        { type: :user, content: "<compressed_context>Earlier summary</compressed_context>" },
+        {
+          type: :model,
+          content: DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
+        },
+      )
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect_history_dropped(prompt)
+        expect(prompt.messages[1][:content]).to include("Earlier summary")
+        expect(prompt.messages.to_s).not_to include("Example question")
+        expect(
+          DiscourseAi::Completions::PromptMessagesBuilder.compression_checkpoint_index(
+            prompt.messages,
+          ),
+        ).to eq(1)
+      end
+    end
+
+    it "does not nest notices when dropping history again" do
+      prompt = history_prompt(repetitions: 4000)
+      previous =
+        "#{described_class::HISTORY_DROPPED_NOTICE}#{described_class::PREVIOUS_SUMMARY_LABEL}Earlier summary"
+      prompt.messages.insert(
+        1,
+        { type: :user, content: "<compressed_context>#{previous}</compressed_context>" },
+        {
+          type: :model,
+          content: DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
+        },
+      )
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect(prompt.messages[1][:content]).to eq(
+          "<compressed_context>#{previous}</compressed_context>",
+        )
+      end
+    end
+
+    it "prefers recent turns over a previous summary when both do not fit" do
+      prompt = history_prompt(repetitions: 4000)
+      prompt.messages.insert(
+        1,
+        {
+          type: :user,
+          content: "<compressed_context>#{"summary detail " * 4000}</compressed_context>",
+        },
+        {
+          type: :model,
+          content: DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
+        },
+      )
+      recent_turn = [
+        { type: :user, content: "recent evidence " * 4000, id: "alice" },
+        { type: :model, content: "Noted." },
+      ]
+      prompt.messages.insert(-2, *recent_turn.deep_dup)
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect_history_dropped(prompt, retained: recent_turn)
+        expect(prompt.messages[1][:content]).not_to include("summary detail")
+      end
+    end
+
+    it "keeps the current turn's completed tool batch while dropping earlier history" do
+      prompt = history_prompt(repetitions: 4000)
+      current_batch = [
+        { type: :tool_call, id: "now", name: "read", content: '{"arguments":{}}' },
+        { type: :tool, id: "now", name: "read", content: "Side effect completed" },
+      ]
+      prompt.messages.concat(current_batch.deep_dup)
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+        preparation = described_class.new(llm)
+
+        expect(preparation.prepare!(prompt)).to eq(:compressed)
+        expect(prompt.messages.map { |message| message[:type] }).to eq(
+          %i[system user model user tool_call tool],
+        )
+        expect(prompt.messages.last(2)).to eq(current_batch)
+        expect(preparation.protected_user_index).to eq(3)
+      end
+    end
+
+    it "fails rather than dropping current-turn evidence that cannot fit without history" do
+      prompt = history_prompt(repetitions: 10)
+      prompt.push(type: :tool_call, id: "large", name: "read", content: '{"arguments":{}}')
+      prompt.push(type: :tool, id: "large", name: "read", content: "large result " * 20_000)
+      original = prompt.messages.deep_dup
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
         expect { described_class.new(llm).prepare!(prompt) }.to raise_error(
           described_class::Error,
           /unusable_summary/,
         )
-        expect(canned.completions).to eq(1)
         expect(prompt.messages).to eq(original)
+      end
+    end
+
+    it "retains attachments from dropped history when they fit" do
+      prompt = history_prompt(repetitions: 4000)
+      image = { encoded_upload: { kind: :image, mime_type: "image/png", base64: "image-data" } }
+      prompt.messages[1][:content] = ["Remember this image", image]
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect(prompt.messages.map { |message| message[:type] }).to eq(
+          %i[system user model user model user],
+        )
+        expect(prompt.messages[3][:content]).to include(image)
+        expect(prompt.messages[4][:content]).to eq(described_class::RETAINED_ATTACHMENTS_ACK)
+        expect(prompt.messages.last[:content]).to eq("What codeword?")
       end
     end
 
@@ -163,16 +320,12 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       expect(logs.last.prev_log_id).to eq(logs[-2].id)
     end
 
-    it "bounds maintenance calls and leaves hard-overflow history intact on exhaustion" do
+    it "bounds maintenance calls and drops hard-overflow history on exhaustion" do
       prompt = history_prompt(repetitions: 5000)
-      original = prompt.messages.deep_dup
       DiscourseAi::Completions::Llm.with_prepared_responses(["summary"]) do |canned|
         llm = DiscourseAi::Completions::Llm.proxy(model)
-        expect { described_class.new(llm, calls: 8).prepare!(prompt) }.to raise_error(
-          described_class::Error,
-          /preparation_budget_exhausted/,
-        )
-        expect(prompt.messages).to eq(original)
+        expect(described_class.new(llm, calls: 8).prepare!(prompt)).to eq(:compressed)
+        expect_history_dropped(prompt)
         expect(canned.completions).to eq(0)
       end
     end
@@ -256,7 +409,7 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "falls back intact when completion reservation fails softly and rejects hard overflow" do
+    it "falls back intact when completion reservation fails softly and drops history on hard overflow" do
       tracker = DiscourseAi::Completions::TokenUsageTracker.new
       execution = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
       state =
@@ -277,12 +430,11 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         ).to eq(:skipped)
         expect(soft_prompt.messages).to eq(original)
         expect(soft_prompt.skip_trim).to eq(true)
-        expect {
-          described_class.new(llm).prepare!(
-            history_prompt(repetitions: 4000),
-            subagent_execution_state: state,
-          )
-        }.to raise_error(described_class::Error, /completion_limit/)
+        hard_prompt = history_prompt(repetitions: 4000)
+        expect(
+          described_class.new(llm).prepare!(hard_prompt, subagent_execution_state: state),
+        ).to eq(:compressed)
+        expect_history_dropped(hard_prompt)
         expect(canned.completions).to eq(0)
         expect(state.reserve_root_final_completion).to eq(true)
       end
@@ -417,14 +569,10 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
 
         child_preparation = described_class.new(llm, threshold: 20)
         prompt = history_prompt(repetitions: 4000)
-        original = prompt.messages.deep_dup
-        expect { child_preparation.prepare!(prompt, execution_context: execution) }.to raise_error(
-          described_class::Error,
-          /preparation_budget_exhausted/,
-        )
+        expect(child_preparation.prepare!(prompt, execution_context: execution)).to eq(:compressed)
         expect(child_preparation.calls).to eq(8)
         expect(child_preparation.spent_tokens).to eq(preparation.spent_tokens)
-        expect(prompt.messages).to eq(original)
+        expect_history_dropped(prompt)
         expect(canned.completions).to eq(1)
       end
     end

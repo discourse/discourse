@@ -152,10 +152,9 @@ export interface TooltipOptions {
   hoverGracePeriod: number;
 
   /**
-   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
-   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
-   * silently wins over the matched width and a trigger wider than the cap gets a narrower
-   * overlay.
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Ignored
+   * when `matchTriggerWidth` is set, since the trigger then decides the width; only the viewport
+   * bounds it.
    *
    * A number is additionally capped to the width the viewport leaves the float, so it can never
    * overflow the document; a string is applied verbatim and gets no such cap.

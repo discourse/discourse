@@ -1277,6 +1277,9 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
+        mentions_not_notified:
+          one: "%{usernames} will not be notified because they do not have access to this reviewable."
+          other: "%{usernames} will not be notified because they do not have access to this reviewable."
       topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"

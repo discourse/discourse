@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiBotDockedComposer from "../components/ai-bot-docked-composer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
+import AiChatModelLabel from "../components/ai-chat-model-label";
 import AiAgentFlair from "../components/post/ai-agent-flair";
 import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
@@ -280,26 +281,6 @@ function initializeFooterButtonsVisibility(api) {
   );
 }
 
-function initializeChatModelAttribution(api) {
-  if (!api.decorateChatMessage) {
-    return;
-  }
-
-  api.decorateChatMessage((element, _helper, message) => {
-    if (
-      !message?.ai_llm_name ||
-      element.querySelector(".ai-chat-message__model")
-    ) {
-      return;
-    }
-
-    const label = document.createElement("span");
-    label.classList.add("ai-chat-message__model");
-    label.textContent = message.ai_llm_name;
-    element.append(label);
-  });
-}
-
 export default {
   name: "discourse-ai-bot-replies",
 
@@ -318,7 +299,7 @@ export default {
       api.serializeOnCreate("ai_llm_model_id", "aiLlmModelId");
       attachHeaderIcon(api);
       initializeAIBotReplies(api);
-      initializeChatModelAttribution(api);
+      api.renderInOutlet("chat-message-after", AiChatModelLabel);
       initializeDebugButton(api, container);
       initializeShareButton(api, container);
       initializeFooterButtonsVisibility(api);

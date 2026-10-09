@@ -3154,8 +3154,8 @@ en:
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
-    enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -3303,6 +3303,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
+      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -6200,6 +6201,9 @@ en:
         one: 'Only available in the "%{category_names}" category'
         other: "Only available in: %{category_names}"
       restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      required_tag_group:
+        one: 'Select %{count} more tag from the "%{tag_group_name}" tag group before using this tag'
+        other: 'Select %{count} more tags from the "%{tag_group_name}" tag group before using this tag'
       synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
@@ -6367,6 +6371,7 @@ en:
     unknown: "unknown"
     site_setting:
       update_existing_users: "update existing users? %{value}"
+      missing_category_reset: "Reset to its default because the category it pointed to (id %{category_id}) no longer exists."
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."

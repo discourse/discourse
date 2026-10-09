@@ -887,7 +887,7 @@ en:
         no_llm_selected: "No language model selected"
         use_parent_llm: "Use agent's language model"
         max_turn_tokens: "Turn work allowance"
-        max_turn_tokens_help: "Limits new output and tool results per reply, shared with child agents. Previous conversation does not count. This is not a spending limit. Leave empty to use the model’s context window."
+        max_turn_tokens_help: "Limits new output and tool results per reply, shared with child agents. Previous conversation does not count. This is not a spending limit. Leave empty to use 500,000 tokens."
         compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads

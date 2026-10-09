@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
@@ -161,6 +162,18 @@ export default class TextareaTextManipulation implements TextManipulation {
   insertText(text: string, options?: AddTextOptions): void {
     this.addText(this.getSelected(), text, options);
   }
+
+  /** Returns the current selection, including its line's text. */
+  getSelected(
+    trimLeading: boolean | null | "" | undefined,
+    opts: SelectionOptions & { lineVal: true }
+  ): SelectedText & { lineVal: string };
+
+  /** Returns the current selection. */
+  getSelected(
+    trimLeading?: boolean | null | "",
+    opts?: SelectionOptions
+  ): SelectedText;
 
   getSelected(
     trimLeading?: boolean | null | "",
@@ -493,7 +506,9 @@ export default class TextareaTextManipulation implements TextManipulation {
       !selectedValue.match(/\[\/?[a-z =]+?\]/g)
     ) {
       if (this._cachedLinkify.test(plainText)) {
-        const match = this._cachedLinkify.match(plainText)[0];
+        const matches = this._cachedLinkify.match(plainText);
+        assert("linkify matched text it just tested positive", matches);
+        const match = matches[0];
         if (
           match &&
           match.index === 0 &&
@@ -729,7 +744,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     const selected = this.getSelected();
     const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
-    if (isEmpty(captures)) {
+    if (!captures) {
       if (selected.pre.match(/\S$/)) {
         this.addText(selected, ` :${code}:`);
       } else {
@@ -1001,7 +1016,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
 
     const modifier = dAutocomplete.setupAutocomplete(
-      getOwner(this),
+      getOwner(this)!,
       this.textarea,
       this.autocompleteHandler,
       options

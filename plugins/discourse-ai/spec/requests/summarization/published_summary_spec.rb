@@ -87,14 +87,79 @@ describe TopicsController do
       expect(document.at_css("#post_1 .post").text).to include(first_post.raw)
     end
 
-    it "leaves crawler Markdown responses unchanged" do
+    it "adds the summary before the posts in Markdown for crawlers and agents" do
       create_summary
+      heading = "## #{I18n.t("discourse_ai.summarization.published_summary_heading")}"
+
+      [
+        ["#{topic.relative_url}.md", crawler_headers],
+        ["#{topic.relative_url}.md", browser_headers],
+        [topic.relative_url, browser_headers.merge("Accept" => "text/markdown")],
+      ].each do |path, headers|
+        get path, headers: headers
+
+        expect(response.status).to eq(200)
+        body = response.body
+        expect(body).to include("#{heading}\n\nA **#{summary_phrase}** of this discussion.")
+        expect(body.index(heading)).to be < body.index(first_post.raw)
+      end
+    end
+
+    it "publishes the stored Markdown without requiring cooked content" do
+      text = "An overview of 猫.\n\n[Reference][source]\n\n[source]: https://example.com"
+      summary = create_summary(text:)
+
+      get "#{topic.relative_url}.md", headers: browser_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(text)
+
+      summary.update_columns(summarized_cooked: nil)
+
+      get "#{topic.relative_url}.md", headers: browser_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(text)
+      expect(summary.reload.summarized_cooked).to be_nil
+    end
+
+    it "reads the Markdown summary with one query and no LLM lookup whether or not one exists" do
+      path = "#{topic.relative_url}.md"
+
+      queries = track_sql_queries { get path, headers: browser_headers }
+
+      expect(response.status).to eq(200)
+      expect(queries.grep(/FROM "ai_summaries"/).size).to eq(1)
+
+      create_summary
+      queries = track_sql_queries { get path, headers: browser_headers }
+
+      expect(response.body).to include(summary_phrase)
+      expect(queries.grep(/FROM "ai_summaries"/).size).to eq(1)
+      expect(queries.grep(/FROM "llm_models"/)).to be_empty
+    end
+
+    it "leaves the summary out of later Markdown pages and single posts" do
+      2.upto(TopicView::CHUNK_SIZE + 1) { |post_number| Fabricate(:post, topic:, post_number:) }
+      topic.update!(highest_post_number: TopicView::CHUNK_SIZE + 1)
+      create_summary
+
+      ["#{topic.relative_url}.md?page=2", "#{topic.relative_url}/1.md"].each do |path|
+        get path, headers: crawler_headers
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(summary_phrase)
+      end
+    end
+
+    it "leaves an outdated summary out of Markdown" do
+      summary = create_summary
+      first_post.update!(last_version_at: summary.updated_at + 1.minute)
 
       get "#{topic.relative_url}.md", headers: crawler_headers
 
       expect(response.status).to eq(200)
-      expect(response.body).not_to include("## AI-generated summary", summary_phrase)
-      expect(response.body).to include(first_post.raw)
+      expect(response.body).not_to include(summary_phrase)
     end
 
     it "uses the same crawler classification as the anonymous cache" do

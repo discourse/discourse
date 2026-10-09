@@ -46,7 +46,7 @@ export default class LocalVideoManager {
   #getFirstActiveRoomId;
   #getActiveRoomId;
   #getRoom;
-  #canPublishVideo;
+  #canPublish;
   #getCameraQuality;
   #getScreenQuality;
   #getScreenContent;
@@ -66,7 +66,7 @@ export default class LocalVideoManager {
     this.#getFirstActiveRoomId = options.getFirstActiveRoomId;
     this.#getActiveRoomId = options.getActiveRoomId;
     this.#getRoom = options.getRoom;
-    this.#canPublishVideo = options.canPublishVideo;
+    this.#canPublish = options.canPublish;
     this.#getCameraQuality = options.getCameraQuality;
     this.#getScreenQuality = options.getScreenQuality;
     this.#getScreenContent = options.getScreenContent;
@@ -162,7 +162,7 @@ export default class LocalVideoManager {
       return;
     }
 
-    if (!this.#canPublishVideo(roomId)) {
+    if (!this.#canPublish(kind, roomId)) {
       if (!silent) {
         this.#showError("voice.video.publisher_limit");
       }

@@ -7,6 +7,16 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 module("Unit | Models | chat-message", function (hooks) {
   setupTest(hooks);
 
+  test("preserves model attribution from the server", function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    const message = ChatMessage.create(channel, {
+      id: 1,
+      ai_llm_name: "Model 猫",
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
   test(".persisted", function (assert) {
     const channel = new ChatFabricators(getOwner(this)).channel();
     let message = ChatMessage.create(channel, { id: null });

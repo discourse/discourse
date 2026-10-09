@@ -139,7 +139,7 @@ RSpec.describe Voice::Livekit::EgressClient do
     end
 
     it "POSTs the room name and file output with a roomRecord-granted token" do
-      SiteSetting.voice_video_enabled = false
+      room.update!(video_enabled: false)
       stub = twirp_stub("StartRoomCompositeEgress").to_return(body: { egressId: "EG_1" }.to_json)
 
       result = described_class.start_room_composite(room, filepath: "voice/test-abc123")
@@ -167,7 +167,6 @@ RSpec.describe Voice::Livekit::EgressClient do
     end
 
     it "requests a full composite for a room with video enabled" do
-      SiteSetting.voice_video_enabled = true
       room.update!(video_enabled: true)
       twirp_stub("StartRoomCompositeEgress").to_return(body: "{}")
 

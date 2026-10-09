@@ -43,14 +43,15 @@ module DiscourseAi
       # Finds a summary matching the target and strategy. Marks it as outdated if the strategy found newer content
       def existing_summary
         if !defined?(@existing_summary)
-          summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type)
-          summary = summaries.find_by(locale: strategy.locale)
+          summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type).to_a
+          summary = summaries.find { |candidate| candidate.locale == strategy.locale }
 
           if summary.blank? && strategy.locale.present?
             summary =
-              summaries
-                .where.not(locale: nil)
-                .find { |candidate| LocaleNormalizer.is_same?(candidate.locale, strategy.locale) }
+              summaries.find do |candidate|
+                candidate.locale.present? &&
+                  LocaleNormalizer.is_same?(candidate.locale, strategy.locale)
+              end
           end
 
           if summary
@@ -135,10 +136,7 @@ module DiscourseAi
         work_budget =
           DiscourseAi::Completions::TurnWorkBudget.new(
             limit:
-              DiscourseAi::Agents::Bot.effective_max_turn_tokens(
-                llm,
-                bot.agent.class.max_turn_tokens,
-              ),
+              DiscourseAi::Agents::Bot.effective_max_turn_tokens(bot.agent.class.max_turn_tokens),
           )
         output_limit =
           work_budget.generation_options(

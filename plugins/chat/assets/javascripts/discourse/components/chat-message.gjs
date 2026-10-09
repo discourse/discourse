@@ -10,6 +10,8 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import EmojiPicker from "discourse/components/emoji-picker";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -786,6 +788,11 @@ export default class ChatMessage extends Component {
                 <ChatMessageBlocks
                   @decorate={{this.decorateCookedMessage}}
                   @message={{@message}}
+                />
+
+                <PluginOutlet
+                  @name="chat-message-after"
+                  @outletArgs={{lazyHash message=@message}}
                 />
 
                 {{#if this.shouldRenderReactions}}

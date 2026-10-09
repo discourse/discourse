@@ -1240,10 +1240,15 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
 
     this.room.room_type = "open";
     this.room.membership.role_name = "participant";
-    this.room.video_allowed = false;
+    this.room.video_enabled = false;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "participant" },
-      { id: 2, role: "participant" },
+      {
+        id: 2,
+        role: "participant",
+        is_video_on: true,
+        can_publish_video: true,
+      },
     ];
 
     try {
@@ -1261,7 +1266,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
         "video is dropped while the room's media policy disallows it"
       );
 
-      this.room.video_allowed = true;
+      this.room.video_enabled = true;
       pc.ontrack({ streams: [], track: createFakeTrack("real-cam", "video") });
       await wait(10);
 
@@ -1272,6 +1277,267 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
             stream.getTracks().some((track) => track.id === "real-cam")
           ),
         "video registers once the room allows it"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  module("mesh media entitlements on the roster", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.room.room_type = "open";
+      this.room.membership.role_name = "participant";
+      this.room.video_enabled = true;
+
+      this.emitPeer = (peer) => {
+        const participants = [
+          { id: this.currentUser.id, role: "participant" },
+          { id: 2, role: "participant", ...peer },
+        ];
+        this.room.active_participants = participants;
+        this.rooms.emit(1, { type: "participants", participants });
+      };
+
+      this.peerTrackIds = () => ({
+        // Registration order depends on when the roster lands relative to
+        // ontrack, which isn't what these tests are about.
+        media: (this.subject.remoteStreamFor(1, 2)?.getTracks() || [])
+          .map((track) => track.id)
+          .sort(),
+        screenAudio: this.subject.remoteScreenAudioStreams
+          .flatMap((stream) => stream.getTracks())
+          .map((track) => track.id),
+      });
+
+      this.audioEnvironment = installFakeAudioEnvironment({
+        rawStream: createFakeStream("raw-stream", createFakeTrack("raw-track")),
+        processedStream: createFakeStream(
+          "processed-stream",
+          createFakeTrack("processed-track")
+        ),
+      });
+    });
+
+    nestedHooks.afterEach(function () {
+      this.audioEnvironment.restore();
+    });
+
+    // Roster handling is async; compare as strings so a failure reports the
+    // actual track ids rather than "[object Object]".
+    async function assertPeerTracks(context, assert, expected, label) {
+      const matches = () =>
+        JSON.stringify(context.peerTrackIds()) === JSON.stringify(expected);
+      await waitUntil(matches, 500).catch(() => {});
+
+      assert.strictEqual(
+        JSON.stringify(context.peerTrackIds()),
+        JSON.stringify(expected),
+        label
+      );
+    }
+
+    async function joinWithSharingPeer(context) {
+      context.room.active_participants = [
+        { id: context.currentUser.id, role: "participant" },
+        {
+          id: 2,
+          role: "participant",
+          is_screen_sharing: true,
+          can_publish_video: true,
+          can_screen_share: true,
+        },
+      ];
+
+      await context.subject.join(context.room);
+      await wait(50);
+
+      const pc = await answerRemoteOffer(context, 2);
+      const micTrack = createFakeTrack("peer-2-mic");
+      pc.ontrack({
+        streams: [createFakeStream("peer-2-stream", micTrack)],
+        track: micTrack,
+      });
+
+      context.emitPeer({
+        is_screen_sharing: true,
+        can_publish_video: true,
+        can_screen_share: true,
+      });
+    }
+
+    test("a lost entitlement drops video and screen audio but keeps the mic", async function (assert) {
+      assert.timeout(2000);
+      await joinWithSharingPeer(this);
+
+      await assertPeerTracks(
+        this,
+        assert,
+        {
+          media: ["peer-2-mic", "video-receiver-1"],
+          screenAudio: ["audio-receiver-2"],
+        },
+        "an entitled sharer's screen and its audio play"
+      );
+
+      this.emitPeer({ is_screen_sharing: true });
+
+      await assertPeerTracks(
+        this,
+        assert,
+        { media: ["peer-2-mic"], screenAudio: [] },
+        "only the microphone survives losing both entitlements"
+      );
+    });
+
+    test("losing only screen sharing while sharing drops the screen, not the mic", async function (assert) {
+      assert.timeout(2000);
+      await joinWithSharingPeer(this);
+
+      this.emitPeer({ is_screen_sharing: true, can_publish_video: true });
+
+      await assertPeerTracks(
+        this,
+        assert,
+        { media: ["peer-2-mic"], screenAudio: [] },
+        "the video m-line is carrying the screen, so it goes too"
+      );
+
+      this.emitPeer({ is_video_on: true, can_publish_video: true });
+
+      await assertPeerTracks(
+        this,
+        assert,
+        { media: ["peer-2-mic", "video-receiver-1"], screenAudio: [] },
+        "switching to the still-allowed camera brings the video back"
+      );
+    });
+
+    test("a sender who only stops publishing keeps its idle tracks", async function (assert) {
+      assert.timeout(2000);
+      await joinWithSharingPeer(this);
+
+      this.emitPeer({ can_publish_video: true, can_screen_share: true });
+
+      await assertPeerTracks(
+        this,
+        assert,
+        {
+          media: ["peer-2-mic", "video-receiver-1"],
+          screenAudio: ["audio-receiver-2"],
+        },
+        "nothing is revoked, so the tracks stay registered for the next share"
+      );
+    });
+
+    test("screen audio comes back when a revoked entitlement is restored", async function (assert) {
+      assert.timeout(2000);
+      await joinWithSharingPeer(this);
+
+      this.emitPeer({ is_screen_sharing: true, can_publish_video: true });
+      await assertPeerTracks(
+        this,
+        assert,
+        { media: ["peer-2-mic"], screenAudio: [] },
+        "revoked"
+      );
+
+      this.emitPeer({
+        is_screen_sharing: true,
+        can_publish_video: true,
+        can_screen_share: true,
+      });
+
+      await assertPeerTracks(
+        this,
+        assert,
+        {
+          media: ["peer-2-mic", "video-receiver-1"],
+          screenAudio: ["audio-receiver-2"],
+        },
+        "the pre-negotiated screen and its audio are registered again"
+      );
+    });
+  });
+
+  test("re-enabling a room's media restores publishing without a fresh payload", function (assert) {
+    this.room.room_type = "open";
+    this.room.membership.role_name = "participant";
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
+    this.room.video_enabled = false;
+
+    assert.false(this.subject.videoAllowedIn(this.room), "off with the room");
+    assert.false(this.subject.screenShareAllowedIn(this.room));
+
+    this.room.video_enabled = true;
+
+    assert.true(
+      this.subject.videoAllowedIn(this.room),
+      "the per-user right was kept, so the room flag alone turns it back on"
+    );
+    assert.true(this.subject.screenShareAllowedIn(this.room));
+  });
+
+  test("keeps a pre-negotiated video track alive until its sender may publish", async function (assert) {
+    assert.timeout(2000);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: createFakeStream(
+        "processed-stream",
+        createFakeTrack("processed-track")
+      ),
+    });
+
+    this.room.room_type = "open";
+    this.room.membership.role_name = "participant";
+    this.room.video_enabled = true;
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant" },
+      { id: 2, role: "participant" },
+    ];
+
+    try {
+      await this.subject.join(this.room);
+      await wait(50);
+
+      const pc = await answerRemoteOffer(this, 2);
+
+      let stopped = false;
+      const idleTrack = createFakeTrack("idle-cam", "video");
+      idleTrack.stop = () => (stopped = true);
+      pc.ontrack({ streams: [], track: idleTrack });
+      await wait(10);
+
+      assert.strictEqual(
+        this.subject.remoteStreamsFor(1).length,
+        0,
+        "an unentitled sender's video is not registered"
+      );
+      assert.false(
+        stopped,
+        "the receiver track survives, since the transceiver never delivers another"
+      );
+
+      this.room.active_participants = [
+        { id: this.currentUser.id, role: "participant" },
+        { id: 2, role: "participant", can_publish_video: true },
+      ];
+      pc.ontrack({
+        streams: [],
+        track: createFakeTrack("entitled-idle-cam", "video"),
+      });
+      await wait(10);
+
+      assert.true(
+        this.subject
+          .remoteStreamsFor(1)
+          .some((stream) =>
+            stream.getTracks().some((track) => track.id === "entitled-idle-cam")
+          ),
+        "an entitled sender's video registers before it starts publishing"
       );
     } finally {
       audioEnvironment.restore();
@@ -2087,7 +2353,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("leaving the room page stops an active camera publication", async function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.siteSettings.voice_video_max_publishers = 8;
 
     this.room.room_type = "open";
@@ -2214,7 +2481,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   }
 
   function setupCameraRoom(context) {
-    context.siteSettings.voice_video_enabled = true;
+    context.room.video_allowed = true;
+    context.room.screen_share_allowed = true;
     context.siteSettings.voice_video_max_publishers = 8;
 
     context.room.room_type = "open";
@@ -3026,14 +3294,12 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   test("remote camera start exposes the negotiated video track without a refresh", async function (assert) {
     assert.timeout(2000);
 
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.siteSettings.voice_video_max_publishers = 8;
 
     this.room.room_type = "open";
     this.room.video_enabled = true;
-    // The serializer's combined room+site flag; the receive-side track
-    // policy consults it before registering the remote video track.
-    this.room.video_allowed = true;
     this.room.membership = { role_name: "participant" };
     this.room.active_participants = [
       { id: this.currentUser.id, role: "participant" },
@@ -3071,6 +3337,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
             role: "participant",
             is_video_on: true,
             is_screen_sharing: false,
+            can_publish_video: true,
           },
         ],
       });
@@ -3091,7 +3358,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn denies a stage listener", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "listener" },
@@ -3105,7 +3373,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn allows a stage speaker", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "speaker" },
@@ -3119,7 +3388,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn allows a stage moderator", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.video_enabled = true;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "moderator" },
@@ -3133,7 +3403,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn still requires the room's video flag for a stage speaker", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
     this.room.video_enabled = false;
     this.room.active_participants = [
       { id: this.currentUser.id, role: "speaker" },
@@ -3147,7 +3417,8 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   });
 
   test("videoAllowedIn does not role-gate open rooms", function (assert) {
-    this.siteSettings.voice_video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
     this.room.room_type = "open";
     this.room.video_enabled = true;
     this.room.active_participants = [
@@ -3159,6 +3430,47 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
       this.subject.videoAllowedIn(this.room),
       "open-room participants can publish video regardless of role"
     );
+  });
+
+  test("camera and screen sharing are allowed independently", function (assert) {
+    this.room.room_type = "open";
+    this.room.video_enabled = true;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = false;
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant" },
+    ];
+
+    assert.true(
+      this.subject.videoAllowedIn(this.room),
+      "the camera follows its own server-granted right"
+    );
+    assert.false(
+      this.subject.screenShareAllowedIn(this.room),
+      "screen sharing follows its own server-granted right"
+    );
+
+    this.room.video_allowed = false;
+    this.room.screen_share_allowed = true;
+
+    assert.false(this.subject.videoAllowedIn(this.room), "camera revoked");
+    assert.true(
+      this.subject.screenShareAllowedIn(this.room),
+      "screen sharing granted"
+    );
+  });
+
+  test("a room with media disabled overrides both granted rights", function (assert) {
+    this.room.room_type = "open";
+    this.room.video_enabled = false;
+    this.room.video_allowed = true;
+    this.room.screen_share_allowed = true;
+    this.room.active_participants = [
+      { id: this.currentUser.id, role: "participant" },
+    ];
+
+    assert.false(this.subject.videoAllowedIn(this.room));
+    assert.false(this.subject.screenShareAllowedIn(this.room));
   });
 
   function createDeviceTrack(id, deviceId) {

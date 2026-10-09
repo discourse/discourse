@@ -115,7 +115,6 @@ describe "Voice rooms" do
       end
 
       it "can publish a fake camera stream on the room page" do
-        SiteSetting.voice_video_enabled = true
         install_voice_fake_media
 
         visit("/voice/r/#{room.slug}")
@@ -131,7 +130,6 @@ describe "Voice rooms" do
       end
 
       it "switches between presentation and tiled layouts from the menu" do
-        SiteSetting.voice_video_enabled = true
         install_voice_fake_media
 
         visit("/voice/r/#{room.slug}")
@@ -147,7 +145,6 @@ describe "Voice rooms" do
       end
 
       it "keeps the active call in a widget after switching to widget mode" do
-        SiteSetting.voice_video_enabled = true
         install_voice_fake_media
 
         visit("/voice/r/#{room.slug}")
@@ -174,7 +171,6 @@ describe "Voice rooms" do
       end
 
       it "can stop video and leave the call from the persistent widget" do
-        SiteSetting.voice_video_enabled = true
         install_voice_fake_media
 
         visit("/voice/r/#{room.slug}")
@@ -194,7 +190,6 @@ describe "Voice rooms" do
       end
 
       it "opens room actions from the widget overflow menu" do
-        SiteSetting.voice_video_enabled = true
         install_voice_fake_media
 
         visit("/voice/r/#{room.slug}")
@@ -215,7 +210,6 @@ describe "Voice rooms" do
       end
 
       it "shows remote fake video when another user publishes a camera stream" do
-        SiteSetting.voice_video_enabled = true
         other_user.activate
         other_user.update!(trust_level: TrustLevel[2])
         Group.refresh_automatic_groups!
@@ -270,7 +264,6 @@ describe "Voice rooms" do
       end
 
       it "keeps remote video attached in widget mode" do
-        SiteSetting.voice_video_enabled = true
         other_user.activate
         other_user.update!(trust_level: TrustLevel[2])
         Group.refresh_automatic_groups!
@@ -333,10 +326,7 @@ describe "Voice rooms" do
         )
       end
 
-      before do
-        other_user.activate
-        SiteSetting.voice_video_enabled = true
-      end
+      before { other_user.activate }
 
       it "lets a joined moderator publish camera video while a listener gets no capture buttons" do
         using_session(:moderator) do
