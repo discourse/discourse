@@ -247,6 +247,16 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def account_associated(user, opts = {})
+    build_email(
+      user.email,
+      template: "user_notifications.account_associated",
+      locale: user_locale(user),
+      provider_name: opts[:provider_name],
+      recipient_user: user,
+    )
+  end
+
   def account_second_factor_disabled(user, opts = {})
     build_email(
       user.email,
@@ -282,40 +292,56 @@ class UserNotifications < ActionMailer::Base
           )
       end
 
-      @popular_topics = topics_for_digest[0, SiteSetting.digest_topics]
+      posts_for_digest =
+        if SiteSetting.digest_topics > 0 && topics_for_digest.present? &&
+             SiteSetting.digest_posts > 0
+          Post
+            .order("posts.score DESC")
+            .for_mailing_list(user, @since)
+            .where("posts.post_type = ?", Post.types[:regular])
+            .where(
+              "posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false",
+            )
+            .where(
+              "posts.post_number > ? AND posts.score > ?",
+              1,
+              ScoreCalculator.default_score_weights[:like_score] * 5.0,
+            )
+            .where("posts.created_at < ?", (SiteSetting.editing_grace_period || 0).seconds.ago)
+            .limit(SiteSetting.digest_posts)
+        else
+          []
+        end
 
-      if @popular_topics.present?
-        @other_new_for_you =
-          (
-            if topics_for_digest.size > SiteSetting.digest_topics
-              topics_for_digest[SiteSetting.digest_topics..-1]
-            else
-              []
-            end
-          )
+      # Replacement topics/posts must be authorized and bounded before Core prepares them.
+      # Custom templates receive template_locals in both HTML and text formats.
+      content =
+        DiscoursePluginRegistry.apply_modifier(
+          :user_digest_content,
+          {
+            topics: topics_for_digest,
+            posts: posts_for_digest,
+            template: nil,
+            template_locals: {
+            },
+            subject_key: nil,
+            has_custom_content: false,
+          },
+          user,
+          @since,
+        )
+      topics_for_digest = content[:topics].to_a
+      ActiveRecord::Associations::Preloader.new(
+        records: topics_for_digest,
+        associations: :first_post,
+      ).call
+      @popular_topics = topics_for_digest.first(SiteSetting.digest_topics)
+      @other_new_for_you = topics_for_digest.drop(SiteSetting.digest_topics)
+      @popular_posts = content[:posts].to_a
 
-        @popular_posts =
-          if SiteSetting.digest_posts > 0
-            Post
-              .order("posts.score DESC")
-              .for_mailing_list(user, @since)
-              .where("posts.post_type = ?", Post.types[:regular])
-              .where(
-                "posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false",
-              )
-              .where(
-                "posts.post_number > ? AND posts.score > ?",
-                1,
-                ScoreCalculator.default_score_weights[:like_score] * 5.0,
-              )
-              .where("posts.created_at < ?", (SiteSetting.editing_grace_period || 0).seconds.ago)
-              .limit(SiteSetting.digest_posts)
-          else
-            []
-          end
-
+      if @popular_topics.present? || @popular_posts.present? || content[:has_custom_content]
         @digest_best_posts = @popular_topics.to_h { |topic| [topic.id, topic.best_post] }
-        prepare_digest_localizations(user, topics_for_digest.to_a)
+        prepare_digest_localizations(user, topics_for_digest)
         @excerpts = {}
 
         @popular_topics.each do |t|
@@ -376,7 +402,7 @@ class UserNotifications < ActionMailer::Base
 
         @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
 
-        subject_key = "user_notifications.digest.subject_template"
+        subject_key = content[:subject_key] || "user_notifications.digest.subject_template"
 
         if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
           subject_key += "_improved"
@@ -387,12 +413,21 @@ class UserNotifications < ActionMailer::Base
           subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
           add_unsubscribe_link: !opts[:skip_unsubscribe_links],
           unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
-          topic_ids: topics_for_digest.pluck(:id),
-          post_ids:
-            topics_for_digest.joins(:posts).where(posts: { post_number: 1 }).pluck("posts.id"),
+          topic_ids: topics_for_digest.map(&:id),
+          post_ids: topics_for_digest.filter_map { |topic| topic.first_post&.id },
         }
 
         opts[:recipient_user] = user
+
+        if content[:template]
+          render_options = {
+            template: content[:template],
+            locals: content[:template_locals],
+            layout: false,
+          }
+          opts[:html_override] = render_to_string(**render_options, formats: [:html])
+          opts[:body] = render_to_string(**render_options, formats: [:text])
+        end
 
         build_email(user.email, opts)
       end

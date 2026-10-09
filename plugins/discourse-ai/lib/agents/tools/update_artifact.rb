@@ -155,6 +155,7 @@ module DiscourseAi
                   artifact_version: artifact_version,
                   instructions: instructions,
                   cancel_manager: context.cancel_manager,
+                  execution_context: context.execution_context,
                 )
                 .apply do |progress|
                   partial_response << progress

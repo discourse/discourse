@@ -137,7 +137,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 

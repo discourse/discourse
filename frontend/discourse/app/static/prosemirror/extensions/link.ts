@@ -184,7 +184,9 @@ const extension: RichEditorExtension = {
             return slice;
           }
 
-          return addLinkMark(view, node.text, utils);
+          // Every transformPasted hook receives the previous one's result, so
+          // hand the slice on unchanged when the text is not a lone link.
+          return addLinkMark(view, node.text, utils) ?? slice;
         },
       },
 

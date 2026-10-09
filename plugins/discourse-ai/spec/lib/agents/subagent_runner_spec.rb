@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Agents::SubagentRunner do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:model, :fake_model)
   fab!(:child) do
     Fabricate(
@@ -25,12 +25,277 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
     )
   end
 
-  before do
-    enable_current_plugin
-    Group.refresh_automatic_groups!
-  end
+  before { enable_current_plugin }
 
   after { AiAgent.agent_cache.flush! }
+
+  it "admits a same-model thinking child while the streaming root retains its output reservation" do
+    claude =
+      Fabricate(
+        :anthropic_model,
+        max_prompt_tokens: 200_000,
+        max_output_tokens: 64_000,
+        provider_params: {
+          enable_reasoning: true,
+          reasoning_tokens: 32_768,
+        },
+      )
+    parent.update!(default_llm_id: claude.id, max_turn_tokens: 32_000, thinking_effort: "high")
+    child.update!(default_llm_id: claude.id, max_turn_tokens: 32_000, thinking_effort: "high")
+    spawn = { agent_id: child.id, prompt: "Check this claim" }
+    bodies = []
+    responses =
+      [
+        [
+          {
+            type: "message_start",
+            message: {
+              role: "assistant",
+              content: [],
+              usage: {
+                input_tokens: 100,
+                output_tokens: 1,
+              },
+            },
+          },
+          {
+            type: "content_block_start",
+            index: 0,
+            content_block: {
+              type: "tool_use",
+              id: "spawn_work",
+              name: "spawn_agent",
+              input: {
+              },
+            },
+          },
+          {
+            type: "content_block_delta",
+            index: 0,
+            delta: {
+              type: "input_json_delta",
+              partial_json: spawn.to_json,
+            },
+          },
+          { type: "content_block_stop", index: 0 },
+          {
+            type: "message_delta",
+            delta: {
+              stop_reason: "tool_use",
+            },
+            usage: {
+              output_tokens: 60,
+            },
+          },
+          { type: "message_stop" },
+        ],
+        [
+          {
+            type: "message_start",
+            message: {
+              role: "assistant",
+              content: [],
+              usage: {
+                input_tokens: 100,
+                output_tokens: 1,
+              },
+            },
+          },
+          { type: "content_block_start", index: 0, content_block: { type: "text", text: "" } },
+          {
+            type: "content_block_delta",
+            index: 0,
+            delta: {
+              type: "text_delta",
+              text: "Child evidence",
+            },
+          },
+          { type: "content_block_stop", index: 0 },
+          {
+            type: "message_delta",
+            delta: {
+              stop_reason: "end_turn",
+            },
+            usage: {
+              output_tokens: 40,
+            },
+          },
+          { type: "message_stop" },
+        ],
+        [
+          {
+            type: "message_start",
+            message: {
+              role: "assistant",
+              content: [],
+              usage: {
+                input_tokens: 100,
+                output_tokens: 1,
+              },
+            },
+          },
+          { type: "content_block_start", index: 0, content_block: { type: "text", text: "" } },
+          {
+            type: "content_block_delta",
+            index: 0,
+            delta: {
+              type: "text_delta",
+              text: "Parent answer",
+            },
+          },
+          { type: "content_block_stop", index: 0 },
+          {
+            type: "message_delta",
+            delta: {
+              stop_reason: "end_turn",
+            },
+            usage: {
+              output_tokens: 30,
+            },
+          },
+          { type: "message_stop" },
+        ],
+      ].map do |events|
+        events.map { |event| "event: #{event[:type]}\ndata: #{event.to_json}\n\n" }.join
+      end
+    request =
+      stub_request(:post, claude.url).with(
+        body:
+          proc do |body|
+            bodies << JSON.parse(body)
+            true
+          end,
+      ).to_return(*responses.map { |body| { body: body } })
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        messages: [{ type: :user, content: "Check the claim" }],
+      )
+    bot = DiscourseAi::Agents::Bot.as(user, agent: parent.class_instance.new, model: claude)
+    expect(bot.reply(context).last.first).to eq("Parent answer")
+    expect(bodies.first(2).map { |body| body["max_tokens"] }).to eq([16_000, 16_000])
+    expect(bodies.first(2).map { |body| body.dig("thinking", "budget_tokens") }).to eq(
+      [14_976, 14_976],
+    )
+    expect(bodies.last["messages"].to_json).to include("Child evidence")
+    expect(context.execution_context.work_budget.limit).to eq(32_000)
+    expect(context.execution_context.work_budget.used).to be >= 130
+    expect(context.execution_context.work_budget.used).to be < 200
+    expect(context.execution_context.token_usage_tracker.response).to eq(130)
+    expect(request).to have_been_requested.times(3)
+  end
+
+  it "charges child output, not imported task input, against the shared root work" do
+    model.update!(max_prompt_tokens: 50_000)
+    child.update!(max_turn_tokens: 8000, compression_threshold: 80)
+    tracker = DiscourseAi::Completions::TokenUsageTracker.new
+    execution = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution,
+        root_token_budget: 5000,
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        execution_context: execution,
+        subagent_execution_state: state,
+      )
+    runner =
+      described_class.new(
+        parent_agent: parent.class_instance.new,
+        child_id: child.id,
+        prompt: "Check the evidence",
+        context: context,
+        parent_llm: DiscourseAi::Completions::Llm.proxy(model),
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["Child evidence"]) do |canned|
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ).and_wrap_original do |generate, *args, **options, &block|
+        result = generate.call(*args, **options, &block)
+        options[:execution_context].token_usage_tracker.add_effective(request: 4000, response: 0)
+        result
+      end
+      expect(runner.run[:response]).to eq("Child evidence")
+      expect(state.root_token_budget).to eq(5000)
+      expect(state.remaining_tokens).to eq(5000 - model.to_llm.tokenizer.size("Child evidence"))
+      expect(canned.completions).to eq(1)
+      expect(tracker.total).to eq(4000)
+      expect(child.reload.max_turn_tokens).to eq(8000)
+    end
+  end
+
+  it "reserves parent output atomically before admitting a child" do
+    model.update!(max_prompt_tokens: 50_000)
+    child.update!(max_turn_tokens: 8000, compression_threshold: 80)
+    tracker = DiscourseAi::Completions::TokenUsageTracker.new
+    execution = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution,
+        root_token_budget: 5000,
+      )
+    reservation = execution.work_budget.reserve_output(5000)
+    expect(reservation.tokens).to eq(5000)
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        execution_context: execution,
+        subagent_execution_state: state,
+      )
+    runner =
+      described_class.new(
+        parent_agent: parent.class_instance.new,
+        child_id: child.id,
+        prompt: "Check the evidence",
+        context: context,
+        parent_llm: DiscourseAi::Completions::Llm.proxy(model),
+      )
+    DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
+      expect(runner.run[:error]).to eq(I18n.t("discourse_ai.ai_bot.subagent_errors.token_limit"))
+      expect(canned.completions).to eq(0)
+      expect(state.remaining_tokens).to eq(0)
+      expect(state.root_token_budget).to eq(5000)
+    end
+    execution.work_budget.release_output(reservation)
+    expect(state.remaining_tokens).to eq(5000)
+  end
+
+  it "allows child tools when new work fits regardless of full prompt reservation" do
+    child.update!(tools: [["ListCategories", nil, false]])
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+      )
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution,
+        root_token_budget: 5000,
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        execution_context: execution,
+        subagent_execution_state: state,
+      )
+    runner =
+      described_class.new(
+        parent_agent: parent.class_instance.new,
+        child_id: child.id,
+        prompt: "Check the evidence",
+        context: context,
+        parent_llm: model.to_llm,
+      )
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      ["Bounded child answer"],
+    ) do |_, _, prompts|
+      expect(runner.run[:response]).to eq("Bounded child answer")
+      expect(prompts.first.tool_choice).not_to eq(:none)
+      expect(state.root_token_budget).to eq(5000)
+    end
+  end
 
   it "exposes one strict server-owned tool only when delegation is usable" do
     agent = parent.class_instance.new
@@ -196,6 +461,21 @@ RSpec.describe DiscourseAi::Agents::SubagentRunner do
         "subagent_depth" => 1,
       )
       expect(prompt_options[1][:feature_context]).not_to have_key("source")
+      tokenizer = model.to_llm.tokenizer
+      generation_tokens =
+        [spawn_call, "The Moon orbits Earth.", "The claim is verified."].sum do |part|
+          output = DiscourseAi::Completions::GeneratedOutput.new
+          output << part
+          output.size(tokenizer)
+        end
+      wrapper =
+        JSON
+          .parse(prompts.last.messages.find { |message| message[:type] == :tool }[:content])
+          .except("response")
+          .to_json
+      expect(context.execution_context.work_budget.used).to eq(
+        generation_tokens + tokenizer.size(wrapper),
+      )
     end
 
     thinking_updates = updates.select { |update| update[2] == :thinking }.flatten.compact.join

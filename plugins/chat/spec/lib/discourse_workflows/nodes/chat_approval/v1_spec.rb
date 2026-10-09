@@ -201,5 +201,24 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
       )
       expect(dm_channel.chat_messages).to be_empty
     end
+
+    it "explains why the channel refused the approval message" do
+      channel.update!(status: :read_only)
+      config = { "message" => "Approve?", "channel_id" => channel.id.to_s }
+      instance = described_class.new(parameters: config)
+      # Only open channels are selectable, so simulate a status change after selection.
+      allow(instance).to receive(:selectable_chat_channel).and_return(channel)
+
+      expect { instance.execute(build_exec_ctx(config)) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(
+          :channel_blocked,
+          scope: :chat_approval,
+          channel_id: channel.id,
+          reason: I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
+        ),
+      )
+      expect(channel.chat_messages).to be_empty
+    end
   end
 end

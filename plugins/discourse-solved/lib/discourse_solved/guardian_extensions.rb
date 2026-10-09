@@ -62,7 +62,7 @@ module DiscourseSolved
       return false if topic.solved.present? && !SiteSetting.solved_allow_multiple_solutions
       return false unless topic_in_support_category?(topic)
       return false unless shared_issues_enabled_for_category?(topic)
-      return false unless current_user.upcoming_change_enabled?(:enable_solved_shared_issues)
+      return false unless SiteSetting.enable_solved_shared_issues
       can_see_topic?(topic)
     end
 
@@ -73,9 +73,7 @@ module DiscourseSolved
       return false if topic.trashed?
       return false unless topic_in_support_category?(topic)
       return false unless shared_issues_enabled_for_category?(topic)
-      unless UpcomingChanges.enabled_for_user?(:enable_solved_shared_issues, current_user)
-        return false
-      end
+      return false unless SiteSetting.enable_solved_shared_issues
       true
     end
 

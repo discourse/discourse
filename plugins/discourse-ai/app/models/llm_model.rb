@@ -99,14 +99,16 @@ class LlmModel < ActiveRecord::Base
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
   has_many :llm_feature_credit_costs, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :ai_secret, optional: true
   belongs_to :vision_llm_model, class_name: "LlmModel", optional: true
   has_many :vision_dependents, class_name: "LlmModel", foreign_key: :vision_llm_model_id
 
   attr_accessor :requested_vision_mode
 
+  before_update :preserve_legacy_user_identity, if: :will_save_change_to_user_id?
   before_destroy :ensure_no_vision_dependents
+  before_destroy :preserve_legacy_user_identity
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
@@ -125,6 +127,7 @@ class LlmModel < ActiveRecord::Base
             },
             allow_nil: true
   validate :required_provider_params
+  validate :user_association_is_legacy_only
   validate :valid_vision_configuration
   validate :vision_dependents_require_native_vision
   validates :requested_vision_mode,
@@ -513,50 +516,6 @@ class LlmModel < ActiveRecord::Base
     "#{id}"
   end
 
-  def toggle_companion_user
-    return if name == "fake" && Rails.env.production?
-
-    enable_check = SiteSetting.ai_bot_enabled && enabled_chat_bot?
-
-    if enable_check
-      if !user
-        new_user =
-          User.new(
-            id: DiscourseAi::BotUser.next_id,
-            email: "no_email_#{SecureRandom.hex}",
-            name: name.titleize,
-            username: UserNameSuggester.suggest(name),
-            active: true,
-            approved: true,
-            admin: true,
-            moderator: true,
-            trust_level: TrustLevel[4],
-          )
-        new_user.save!(validate: false)
-        update!(user: new_user)
-      else
-        user.active = true
-        user.save!(validate: false)
-      end
-    else
-      cleanup_companion_user
-    end
-  end
-
-  def cleanup_companion_user
-    return unless user
-
-    # will include deleted
-    has_posts = DB.query_single("SELECT 1 FROM posts WHERE user_id = #{user.id} LIMIT 1").present?
-
-    if has_posts
-      user.update!(active: false) if user.active
-    else
-      user.destroy!
-      update!(user: nil)
-    end
-  end
-
   def tokenizer_class
     tokenizer.constantize
   end
@@ -648,6 +607,26 @@ class LlmModel < ActiveRecord::Base
   end
 
   private
+
+  def preserve_legacy_user_identity
+    legacy_user_id = user_id.presence || user_id_in_database
+    return if legacy_user_id.blank? || !User.exists?(legacy_user_id)
+
+    field =
+      UserCustomField.find_or_initialize_by(
+        user_id: legacy_user_id,
+        name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+      )
+    field.value = "true"
+    field.save! if field.changed?
+  end
+
+  def user_association_is_legacy_only
+    return if !will_save_change_to_user_id?
+    return if user_id.nil?
+
+    errors.add(:user_id, I18n.t("discourse_ai.llm.user_association_is_legacy_only"))
+  end
 
   def valid_vision_configuration
     if requested_vision_mode == "delegated" && vision_llm_model_id.blank?

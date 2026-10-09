@@ -5370,7 +5370,8 @@ CREATE TABLE public.discourse_workflows_executions (
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    job_id character varying
 );
 
 
@@ -19658,6 +19659,13 @@ CREATE UNIQUE INDEX idx_dwf_execution_stats_on_workflow_id_and_date ON public.di
 
 
 --
+-- Name: idx_dwf_executions_on_job_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_executions_on_job_id ON public.discourse_workflows_executions USING btree (job_id) WHERE (job_id IS NOT NULL);
+
+
+--
 -- Name: idx_dwf_executions_on_resume_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20019,6 +20027,13 @@ CREATE INDEX idx_posts_created_at_topic_id ON public.posts USING btree (created_
 --
 
 CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post_number) WHERE (deleted_at IS NOT NULL);
+
+
+--
+-- Name: idx_posts_search_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_posts_search_covering ON public.posts USING btree (id) INCLUDE (topic_id, post_number, post_type) WHERE ((deleted_at IS NULL) AND (NOT hidden));
 
 
 --
@@ -25568,6 +25583,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),
@@ -25588,6 +25604,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260918062145'),
 ('20260918061735'),
 ('20260917145657'),
+('20260916113851'),
+('20260916113806'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

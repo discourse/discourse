@@ -59,11 +59,24 @@ interface DDragAndDropAutoScrollSignature {
  * {@link registerDragAndDropAutoScroll} imperatively rather than through the
  * modifier.
  */
-export type DragAndDropAutoScrollArgs =
-  DDragAndDropAutoScrollSignature["Args"]["Named"] & {
-    /** The scroll container. Required when `target` is `"element"`. */
-    element?: HTMLElement;
-  };
+export type DragAndDropAutoScrollArgs = Omit<
+  DDragAndDropAutoScrollSignature["Args"]["Named"],
+  "target"
+> &
+  (
+    | {
+        /** Scrolls the window, so no container is needed. */
+        target: "window";
+        /** Ignored when the window is the target. */
+        element?: HTMLElement;
+      }
+    | {
+        /** Scrolls `element`. The default. */
+        target?: "element";
+        /** The scroll container. */
+        element: HTMLElement;
+      }
+  );
 
 /**
  * Imperative auto-scroll registration; the `dDragAndDropAutoScroll` modifier

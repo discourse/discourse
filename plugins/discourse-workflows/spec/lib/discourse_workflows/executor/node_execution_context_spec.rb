@@ -295,6 +295,134 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#add_execution_hints" do
+    it "keeps a repeated hint only once" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      ctx.add_execution_hints({ message: "Same", location: "outputPane" })
+      ctx.add_execution_hints(
+        { message: "Same", location: "outputPane" },
+        { message: "Other", location: "outputPane" },
+      )
+
+      expect(ctx.execution_hints.map { |hint| hint["message"] }).to eq(%w[Same Other])
+    end
+  end
+
+  describe "#guard_item" do
+    let(:item) { { "json" => { "id" => 1 } } }
+    let(:error) { DiscourseWorkflows::NodeError.new("Boom [item 0]", summary: "Boom") }
+
+    def continuing_context(**args)
+      described_class.new(
+        input_items: [item],
+        resolver: nil,
+        node_settings: {
+          "onError" => "continueRegularOutput",
+        },
+        **args,
+      )
+    end
+
+    it "re-raises node errors when the node stops on error" do
+      ctx = described_class.new(input_items: [item], resolver: nil)
+
+      expect { ctx.guard_item(item, 0) { raise error } }.to raise_error(error)
+    end
+
+    it "lets other errors through even when continuing" do
+      expect { continuing_context.guard_item(item, 0) { raise ArgumentError } }.to raise_error(
+        ArgumentError,
+      )
+    end
+
+    it "turns a node error into a marked failed item when continuing", :aggregate_failures do
+      ctx = continuing_context
+
+      failed = ctx.guard_item(item, 3) { raise error }
+
+      expect(failed).to eq(
+        "json" => {
+          "id" => 1,
+        },
+        "error" => {
+          "message" => "Boom [item 0]",
+          "name" => "DiscourseWorkflows::NodeError",
+        },
+        "pairedItem" => {
+          "item" => 3,
+        },
+        DiscourseWorkflows::Item::FAILED_KEY => true,
+      )
+      expect(item).not_to have_key("error")
+      expect(ctx.metadata["item_errors"]).to eq([{ "message" => "Boom", "items" => [3] }])
+    end
+
+    it "groups item errors by summary, up to a limit" do
+      ctx = continuing_context
+      other_error = DiscourseWorkflows::NodeError.new("Bang [item 2]", summary: "Bang")
+      ignored_error = DiscourseWorkflows::NodeError.new("Ignored")
+
+      stub_const(described_class::RuntimeState, :MAX_ITEM_ERROR_GROUPS, 2) do
+        ctx.guard_item(item, 0) { raise error }
+        ctx.guard_item(item, 1) { raise error }
+        ctx.guard_item(item, 2) { raise other_error }
+        ctx.guard_item(item, 3) { raise ignored_error }
+      end
+
+      expect(ctx.metadata["item_errors"]).to eq(
+        [{ "message" => "Boom", "items" => [0, 1] }, { "message" => "Bang", "items" => [2] }],
+      )
+    end
+
+    it "keeps a failed item's expression errors from failing the whole step", :aggregate_failures do
+      ctx, resolver, sandbox =
+        build_parameter_context(
+          { "recipient" => "={{ $json.missing.name }}" },
+          node_settings: {
+            "onError" => "continueRegularOutput",
+          },
+        )
+
+      ctx.guard_item(ctx.input_items.first, 0) do
+        ctx.get_node_parameter("recipient", 0)
+        raise error
+      end
+
+      expect(resolver.expression_errors).to be_empty
+      expect(ctx.log.errors?).to eq(false)
+      expect(ctx.log.entries.sole).to include(
+        "level" => "warn",
+        "message" => a_string_including("$json.missing.name", "[item 0]"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+  end
+
+  describe "#each_item" do
+    it "pairs the outputs of each item with it unless already paired", :aggregate_failures do
+      items = [{ "json" => { "id" => 1 } }, { "json" => { "id" => 2 } }]
+      ctx = described_class.new(input_items: items, resolver: nil)
+
+      output =
+        ctx.each_item do |item, index|
+          next { "json" => { "sent" => item["json"]["id"] } } if index == 0
+
+          [{ "json" => {}, "pairedItem" => { "item" => 0 } }, { "json" => {} }]
+        end
+
+      expect(output).to eq(
+        [
+          { "json" => { "sent" => 1 }, "pairedItem" => { "item" => 0 } },
+          { "json" => {}, "pairedItem" => { "item" => 0 } },
+          { "json" => {}, "pairedItem" => { "item" => 1 } },
+        ],
+      )
+    end
+  end
+
   describe "#set_metadata" do
     it "merges execution metadata with string keys" do
       ctx = described_class.new(input_items: [], resolver: nil)
@@ -609,7 +737,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.find_user(username: "nonexistent_user") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 
@@ -618,7 +746,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.find_user(id: -999) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User with id -999 not found",
+        node_error_message(:id_not_found, scope: :actor, id: -999),
       )
     end
 
@@ -636,15 +764,51 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#actor_from" do
+    it "suffixes an unknown actor with the item index" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect { ctx.actor_from(username: "ghost", item_index: 1) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(:not_found, scope: :actor, item_index: 1, username: "ghost"),
+      )
+    end
+
+    it "rejects actors with restricted account states with a reason" do
+      staged_user = Fabricate(:user, staged: true, active: false)
+      silenced_user = Fabricate(:user, silenced_till: 1.year.from_now)
+      suspended_user = Fabricate(:user, suspended_till: 1.year.from_now)
+      inactive_user = Fabricate(:user, active: false)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      aggregate_failures do
+        {
+          staged: staged_user,
+          silenced: silenced_user,
+          suspended: suspended_user,
+          inactive: inactive_user,
+        }.each do |reason, actor|
+          expect { ctx.actor_from(username: actor.username, item_index: 2) }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            node_error_message(
+              "restricted.#{reason}",
+              scope: :actor,
+              item_index: 2,
+              username: actor.username,
+            ),
+          )
+        end
+      end
+    end
+  end
+
   describe "#actor_from_parameter" do
     fab!(:user)
 
-    it "resolves actor fields through the central actor policy" do
+    it "resolves the actor from the parameter" do
       resolver_context = { "$json" => { "actor" => user.username } }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
-      policy = instance_spy(DiscourseWorkflows::Executor::ActorPolicy)
-      allow(DiscourseWorkflows::Executor::ActorPolicy).to receive(:new).and_return(policy)
       ctx =
         described_class.new(
           input_items: [{ "json" => { "actor" => user.username } }],
@@ -656,39 +820,9 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         )
 
       expect(ctx.actor_from_parameter("actor_username")).to eq(user)
-      expect(policy).to have_received(:ensure_allowed!).with(
-        user,
-        field: "actor_username",
-        item_index: 0,
-        source: :expression,
-        purpose: "action:post",
-      )
     ensure
       resolver&.dispose
       sandbox&.dispose
-    end
-
-    it "rejects actors with restricted account states" do
-      staged_user = Fabricate(:user, staged: true)
-      silenced_user = Fabricate(:user, silenced_till: 1.year.from_now)
-      suspended_user = Fabricate(:user, suspended_till: 1.year.from_now)
-      inactive_user = Fabricate(:user, active: false)
-      ctx = described_class.new(input_items: [], resolver: nil)
-
-      aggregate_failures do
-        expect { ctx.actor_from(username: staged_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: silenced_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: suspended_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-        expect { ctx.actor_from(username: inactive_user.username) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
-      end
     end
 
     it "defaults to the system user when the actor field is not configured" do
@@ -718,7 +852,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+        node_error_message(:blank, scope: :actor, item_index: 0, field: "actor_username"),
       )
     ensure
       resolver&.dispose
@@ -740,7 +874,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+        node_error_message(:blank, scope: :actor, item_index: 0, field: "actor_username"),
       )
     ensure
       resolver&.dispose
@@ -1133,6 +1267,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     parameters = nil,
     schema: {},
     input_items: [{ "json" => {} }],
+    node_settings: {},
     **keyword_parameters
   )
     parameters ||= keyword_parameters
@@ -1145,6 +1280,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         parameters: parameters,
         property_schema: schema,
         resolver: resolver,
+        node_settings: node_settings,
       )
     [ctx, resolver, sandbox]
   end

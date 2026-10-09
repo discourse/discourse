@@ -13,20 +13,21 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
   fab!(:opus_model, :anthropic_model)
 
+  fab!(:general_agent) do
+    AiAgent
+      .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+      .tap do |agent|
+        agent.update!(default_llm: claude_2)
+        agent.ensure_user!
+      end
+  end
   fab!(:bot_user) do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
-    claude_2.reload.user
+    prepare_ai_bot_fixtures(bots: [claude_2])
+    general_agent.user
   end
 
   fab!(:bot) do
-    agent =
-      AiAgent
-        .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
-        .class_instance
-        .new
-    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: general_agent.class_instance.new, model: claude_2)
   end
 
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
@@ -60,13 +61,120 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   before do
-    enable_current_plugin
+    prepare_ai_bot_fixtures(bots: [claude_2])
     SiteSetting.ai_embeddings_enabled = false
+    SiteSetting.ai_bot_enabled = true
   end
 
   after do
     # we must reset cache on agent cause data can be rolled back
     AiAgent.agent_cache.flush!
+  end
+
+  describe "#reply_to context preservation" do
+    it "preserves the full tool-heavy PM turn without unnecessary compaction" do
+      first_post.update!(raw: "Remember QUARTZ-OTTER-731")
+      large_result = "Record: amber inventory checked. " * 2000
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      claude_2.update!(max_prompt_tokens: 200_000)
+      agent_record =
+        Fabricate(:ai_agent, max_turn_tokens: 4000, compression_threshold: 50, tools: [])
+      preserving_bot =
+        DiscourseAi::Agents::Bot.as(
+          bot_user,
+          agent: agent_record.class_instance.new,
+          model: claude_2,
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["QUARTZ-OTTER-731"],
+      ) do |canned, _, prompts|
+        reply =
+          described_class.new(preserving_bot).reply_to(
+            third_post,
+            stream_reply: false,
+            auto_set_title: false,
+          )
+
+        expect(reply.raw).to eq("QUARTZ-OTTER-731")
+        expect(canned.completions).to eq(1)
+        expect(prompts.first.messages.map { |message| message[:content] }).to include(
+          first_post.raw,
+          large_result,
+          third_post.raw,
+        )
+        expect(prompts.first.skip_trim).to eq(true)
+      end
+    end
+
+    it "persists and restores a validated checkpoint on a subsequent PM turn" do
+      first_post.update!(raw: "Remember QUARTZ-OTTER-731")
+      large_result = "Record: amber inventory checked. " * 1600
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          %w[{"arguments":{}} read tool_call read],
+          [large_result, "read", "tool", "read"],
+          ["DATA READ", bot_user.username],
+        ],
+      )
+      claude_2.update!(max_prompt_tokens: 16_000)
+      agent_record =
+        Fabricate(
+          :ai_agent,
+          max_turn_tokens: 4000,
+          compression_threshold: 50,
+          tools: [["ListCategories", {}, true]],
+          forced_tool_count: 2,
+        )
+      preserving_bot =
+        DiscourseAi::Agents::Bot.as(
+          bot_user,
+          agent: agent_record.class_instance.new,
+          model: claude_2,
+        )
+      preserving_playground = described_class.new(preserving_bot)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          "Remember QUARTZ-OTTER-731; the read succeeded.",
+          "QUARTZ-OTTER-731",
+          "Still QUARTZ-OTTER-731",
+        ],
+      ) do |_, _, prompts, options|
+        reply =
+          preserving_playground.reply_to(third_post, stream_reply: false, auto_set_title: false)
+        checkpoint = reply.post_custom_prompt.custom_prompt.first
+        expect(checkpoint[6]).to include(
+          "version" => DiscourseAi::Completions::HistorySnapshot::VERSION,
+          "source_id" => third_post.id,
+          "user_id" => user.id,
+        )
+        followup = Fabricate(:post, topic: pm, user: user, raw: "Repeat the codeword")
+        preserving_playground.reply_to(followup, stream_reply: false, auto_set_title: false)
+
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression bot bot],
+        )
+        expect(prompts[1].tool_choice).to eq("categories")
+        expect(prompts.last.tool_choice).to be_nil
+        expect(prompts.first.messages.last[:content]).to include(first_post.raw, large_result)
+        expect(prompts.last.messages.map { |message| message[:content] }).to include(
+          checkpoint[0],
+          followup.raw,
+        )
+        expect(prompts.last.messages.map { |message| message[:content] }).not_to include(
+          large_result,
+        )
+      end
+    end
   end
 
   describe "#title_playground with a multipart model response" do
@@ -89,7 +197,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   end
 
   describe "custom tool integration" do
-    let!(:custom_tool) do
+    fab!(:custom_tool) do
       AiTool.create!(
         name: "search",
         tool_name: "search",
@@ -102,7 +210,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
-    let!(:ai_agent) { Fabricate(:ai_agent, tools: ["custom-#{custom_tool.id}"]) }
+    fab!(:ai_agent) { Fabricate(:ai_agent, tools: ["custom-#{custom_tool.id}"]) }
     let(:tool_call) do
       DiscourseAi::Completions::ToolCall.new(
         name: "search",
@@ -113,7 +221,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
-    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new) }
+    let(:bot) do
+      DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: claude_2)
+    end
 
     let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
 
@@ -159,7 +269,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       private_message = Fabricate(:private_message_topic, user: user)
 
       DiscourseAi::Completions::Llm.with_prepared_responses(responses) do |_, _, _prompts|
-        new_post = Fabricate(:post, raw: "Can you use the custom tool?", topic: private_message)
+        new_post =
+          Fabricate(:post, user: user, raw: "Can you use the custom tool?", topic: private_message)
         reply_post = playground.reply_to(new_post)
         prompts = _prompts
       end
@@ -172,7 +283,13 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       responses = ["no tool call here"]
 
       DiscourseAi::Completions::Llm.with_prepared_responses(responses) do |_, _, _prompts|
-        new_post = Fabricate(:post, raw: "Will you use the custom tool?", topic: reply_post.topic)
+        new_post =
+          Fabricate(
+            :post,
+            user: user,
+            raw: "Will you use the custom tool?",
+            topic: reply_post.topic,
+          )
         _reply_post = playground.reply_to(new_post)
         prompts = _prompts
       end
@@ -184,7 +301,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "separates consecutive thinking messages" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new, model: claude_2)
       playground = described_class.new(bot)
       responses = [
         [
@@ -212,7 +329,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "closes a fenced thinking block before rendering visible content" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new, model: claude_2)
       playground = described_class.new(bot)
       responses = [
         [
@@ -240,7 +357,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "keeps trailing thinking outside the response text" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new, model: claude_2)
       playground = described_class.new(bot)
       responses = [
         ["Done", DiscourseAi::Completions::Thinking.new(message: "Web search: OpenAI news")],
@@ -261,7 +378,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new, model: claude_2)
       playground = described_class.new(bot)
 
       responses = [tool_call, "custom tool did stuff (maybe)"]
@@ -296,15 +413,20 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           nil,
         ],
         ["\"Custom tool result: Can you use the custom tool\"", "666", "tool", "search"],
-        ["custom tool did stuff (maybe)", "claude-2"],
+        ["custom tool did stuff (maybe)", bot_user.username],
       ]
 
-      expect(custom_prompt).to eq(expected_prompt)
+      expect(
+        custom_prompt.map.with_index { |entry, index| entry.take(expected_prompt[index].length) },
+      ).to eq(expected_prompt)
+      expect(custom_prompt.map { |entry| entry[7]["user_id"] }.uniq).to eq(
+        [reply_post.topic.posts.first.user_id],
+      )
 
       custom_tool.update!(enabled: false)
       # so we pick up new cache
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new, model: claude_2)
       playground = DiscourseAi::AiBot::Playground.new(bot)
 
       responses = ["custom tool did stuff (maybe)", tool_call]
@@ -412,7 +534,6 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       before do
         SiteSetting.ai_bot_enabled = true
         SiteSetting.chat_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
-        Group.refresh_automatic_groups!
         agent.update!(allow_chat_channel_mentions: true, default_llm_id: opus_model.id)
       end
 
@@ -475,7 +596,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expected = <<~TEXT.strip
           You are replying inside a Discourse chat channel. Here is a summary of the conversation so far:
           {{{
-          #{user.username}: (a magic thread)
+          #{user.username}: Public context is scoped to the latest 40 visible source messages. Earlier public history is not included.
+          (a magic thread)
           thread 1 message 1
           #{user.username}: thread 2 message 1
           }}}
@@ -637,7 +759,6 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
       before do
         SiteSetting.chat_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
-        Group.refresh_automatic_groups!
         agent.update!(
           allow_chat_direct_messages: true,
           allow_topic_mentions: false,
@@ -648,6 +769,71 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       let(:guardian) { Guardian.new(user) }
+
+      it "restores a compacted tool-heavy chat turn on the next follow-up" do
+        opus_model.update!(max_prompt_tokens: 16_000)
+        agent.update!(
+          max_turn_tokens: 500_000,
+          compression_threshold: 25,
+          tools: [["Read", {}, false]],
+        )
+        SiteSetting.max_post_length = 100_000
+        source = Fabricate(:post, user: user)
+        source.update!(raw: "Record: amber inventory checked. " * 1500)
+        call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "read",
+            parameters: {
+              topic_id: source.topic_id,
+            },
+            id: "read",
+          )
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [
+            call,
+            "DATA READ",
+            "Remember QUARTZ-OTTER-731; the read succeeded.",
+            "QUARTZ-OTTER-731",
+            "Still QUARTZ-OTTER-731",
+          ],
+        ) do |_, _, prompts, options|
+          message =
+            ChatSDK::Message.create(
+              raw: "Remember QUARTZ-OTTER-731 and read the topic",
+              channel_id: dm_channel.id,
+              guardian: guardian,
+            )
+          message.reload
+          ChatSDK::Message.create(
+            raw: "What codeword?",
+            channel_id: dm_channel.id,
+            thread_id: message.thread_id,
+            guardian: guardian,
+          )
+          checkpoint_reply =
+            Chat::Message
+              .where(chat_channel_id: dm_channel.id, user_id: agent.user_id)
+              .order(:id)
+              .last
+          checkpoint =
+            ChatMessageCustomPrompt.find_by!(message_id: checkpoint_reply.id).custom_prompt.first
+          ChatSDK::Message.create(
+            raw: "Repeat the codeword",
+            channel_id: dm_channel.id,
+            thread_id: message.thread_id,
+            guardian: guardian,
+          )
+
+          expect(options.map { |option| option[:feature_name] }).to eq(
+            %w[bot bot context_compression bot bot],
+          )
+          expect(checkpoint[6]).to include("kind" => "chat", "user_id" => user.id)
+          expect(prompts.last.messages.map { |entry| entry[:content] }).to include(
+            checkpoint[0],
+            "Repeat the codeword",
+          )
+        end
+      end
 
       it "can supply context" do
         post = Fabricate(:post, raw: "this is post content")
@@ -670,7 +856,92 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         message.reload
         reply = ChatSDK::Thread.messages(thread_id: message.thread_id, guardian: guardian).last
         expect(reply.message).to eq("World")
+        expect(reply.custom_fields).to include(
+          DiscourseAi::AiBot::CHAT_MESSAGE_AI_LLM_NAME_FIELD => opus_model.display_name,
+          DiscourseAi::AiBot::CHAT_MESSAGE_AI_LLM_MODEL_ID_FIELD => opus_model.id.to_s,
+          DiscourseAi::AiBot::CHAT_MESSAGE_AI_AGENT_ID_FIELD => agent.id.to_s,
+          DiscourseAi::AiBot::CHAT_MESSAGE_AI_AGENT_AUTHORIZATION_USER_ID_FIELD => user.id.to_s,
+        )
+        serialized = Chat::MessageSerializer.new(reply, scope: guardian, root: false).as_json
+        expect(serialized).to include(
+          ai_llm_name: opus_model.display_name,
+          ai_llm_model_id: opus_model.id,
+          ai_agent_id: agent.id,
+        )
         expect(message.thread_id).to be_present
+      end
+
+      it "posts a visible error when no model can be resolved before scheduling" do
+        agent.update!(default_llm: nil)
+        SiteSetting.ai_default_llm_model = ""
+
+        ChatSDK::Message.create(channel_id: dm_channel.id, raw: "Hello", guardian: guardian)
+
+        error_message = Chat::Message.where(chat_channel_id: dm_channel.id).order(:id).last
+        expect(error_message.user).to eq(agent.user)
+        expect(error_message.message).to include(
+          I18n.t("discourse_ai.ai_bot.errors.no_model_available"),
+        )
+      end
+
+      it "posts a visible error when a queued model is no longer selectable" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        SiteSetting.ai_bot_enabled_llms = claude_2.id.to_s
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            model_selection_source: :request,
+            authorization_user_id: user.id,
+          )
+        }.to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }.by(1)
+
+        error_message = Chat::Message.where(chat_channel_id: dm_channel.id).order(:id).last
+        expect(error_message.user).to eq(agent.user)
+        expect(error_message.message).to include(
+          I18n.t("discourse_ai.ai_bot.errors.model_not_selectable"),
+        )
+        expect(error_message.custom_fields).not_to have_key(
+          DiscourseAi::AiBot::CHAT_MESSAGE_AI_LLM_NAME_FIELD,
+        )
+      end
+
+      it "posts a visible error through the captured speaker when the queued agent is disabled" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        speaker = agent.user
+        agent.update!(enabled: false)
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            bot_user_id: speaker.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            authorization_user_id: user.id,
+          )
+        }.to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }.by(1)
+
+        error_message = Chat::Message.where(chat_channel_id: dm_channel.id).order(:id).last
+        expect(error_message.user).to eq(speaker)
+        expect(error_message.message).to include(
+          I18n.t("discourse_ai.ai_bot.errors.invalid_agent_id"),
+        )
       end
 
       it "can run tools" do
@@ -794,27 +1065,22 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(thread_messages.length).to eq(2)
         expect(thread_messages.last.message).to eq("World")
 
-        # it also needs to include history per config - first feed some history
-        agent.update!(enabled: false)
-        agent_guardian = Guardian.new(agent.user)
-
-        4.times do |i|
-          ChatSDK::Message.create(
-            channel_id: dm_channel.id,
-            thread_id: message.thread_id,
-            raw: "request #{i}",
-            guardian: guardian,
+        4.times do |index|
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel,
+            thread: message.thread,
+            message: "request #{index}",
+            user: user,
           )
-
-          ChatSDK::Message.create(
-            channel_id: dm_channel.id,
-            thread_id: message.thread_id,
-            raw: "response #{i}",
-            guardian: agent_guardian,
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel,
+            thread: message.thread,
+            message: "response #{index}",
+            user: agent.user,
           )
         end
-
-        agent.update!(enabled: true)
 
         prompts = nil
         DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -909,8 +1175,86 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(post.topic.posts.last.post_number).to eq(1)
     end
 
-    it "allows swapping a llm mid conversation using a mention" do
-      SiteSetting.ai_bot_enabled = true
+    it "normalizes a public legacy model mention to the topic agent" do
+      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, legacy_user.id)
+      toggle_enabled_bots(bots: [claude_2])
+      agent.update!(allow_topic_mentions: true)
+
+      post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Legacy model response"]) do
+        post =
+          create_post(
+            user: admin,
+            title: "Legacy model mention",
+            raw: "@#{legacy_user.username} please answer this",
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+            },
+          )
+      end
+
+      expect(post.mentions).to include(legacy_user.username_lower)
+
+      response = post.topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("Legacy model response")
+      expect(response.user).to eq(agent.user)
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "normalizes a reply to a public legacy model post to the topic agent" do
+      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, legacy_user.id)
+      toggle_enabled_bots(bots: [claude_2])
+      agent.update!(allow_topic_mentions: true)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.save_custom_fields
+      legacy_post = Fabricate(:post, topic:, user: legacy_user)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Legacy reply response"]) do
+        create_post(
+          user: admin,
+          topic:,
+          raw: "Please expand on that",
+          reply_to_post_number: legacy_post.post_number,
+        )
+      end
+
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("Legacy reply response")
+      expect(response.user).to eq(agent.user)
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "reports an unavailable public legacy model mention through the topic agent" do
+      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, legacy_user.id)
+      toggle_enabled_bots(bots: [opus_model])
+      agent.update!(allow_topic_mentions: true)
+
+      post =
+        create_post(
+          user: admin,
+          title: "Unavailable legacy model mention",
+          raw: "@#{legacy_user.username} please answer this",
+          custom_fields: {
+            DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+          },
+        )
+
+      response = post.topic.reload.posts.order(:post_number).last
+      expect(response.user).to eq(agent.user)
+      expect(response.raw).to include(I18n.t("discourse_ai.ai_bot.errors.model_not_selectable"))
+    end
+
+    it "allows switching models mid-conversation without changing the agent participant" do
+      llm2 = Fabricate(:llm_model)
+      toggle_enabled_bots(bots: [claude_2, llm2])
 
       post = nil
       DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -921,62 +1265,145 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           create_post(
             title: "I just made a PM",
             raw: "Hey there #{agent.user.username}, can you help me?",
-            target_usernames: "#{user.username},#{agent.user.username},#{claude_2.user.username}",
+            target_usernames: "#{user.username},#{agent.user.username}",
             archetype: Archetype.private_message,
             user: admin,
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+              DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => claude_2.id,
+            },
           )
       end
 
-      # note that this is a string due to custom field shananigans
-      post.topic.custom_fields["ai_agent_id"] = agent.id.to_s
-      post.topic.save_custom_fields
-
-      llm2 = Fabricate(:llm_model)
-      SiteSetting.ai_bot_enabled_llms = llm2.id.to_s
-      llm2.toggle_companion_user
-
       DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot two"], llm: llm2) do
         create_post(
           user: admin,
-          raw: "hi @#{llm2.user.username.capitalize} how are you",
+          raw: "Please use the other model",
           topic_id: post.topic_id,
+          ai_agent_id: agent.id,
+          ai_llm_model_id: llm2.id,
         )
       end
 
       last_post = post.topic.reload.posts.order("id desc").first
       expect(last_post.raw).to eq("Hi from bot two")
       expect(last_post.user_id).to eq(agent.user_id)
+      expect(last_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        llm2.id,
+      )
+      expect(last_post.topic.allowed_users.pluck(:user_id)).to include(agent.user_id)
+    end
 
-      current_users = last_post.topic.reload.topic_allowed_users.joins(:user).pluck(:username)
-      expect(current_users).to include(llm2.user.username)
+    it "switches the conversation agent and replaces the inherited model for a forced agent" do
+      forced_model = Fabricate(:llm_model, display_name: "Forced model")
+      toggle_enabled_bots(bots: [claude_2, forced_model])
+      forced_agent =
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          allow_personal_messages: true,
+          default_llm: forced_model,
+          force_default_llm: true,
+        )
+      forced_agent.ensure_user!
 
-      # subseqent replies should come from the new llm
-      DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot two"], llm: llm2) do
+      topic = Fabricate(:private_message_topic, user: admin, recipient: agent.user)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+      topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Forced response"],
+        llm: forced_model,
+      ) do
         create_post(
+          topic:,
           user: admin,
-          raw: "just confirming everything switched",
-          topic_id: post.topic_id,
+          raw: "Please answer this using the selected agent",
+          ai_agent_id: forced_agent.id,
         )
       end
 
-      last_post = post.topic.reload.posts.order("id desc").first
-      expect(last_post.raw).to eq("Hi from bot two")
-      expect(last_post.user_id).to eq(agent.user_id)
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.user).to eq(forced_agent.user)
+      expect(response.raw).to eq("Forced response")
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD].to_i).to eq(
+        forced_agent.id,
+      )
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        forced_model.id,
+      )
+    end
 
-      # tether llm, so it can no longer be switched
-      agent.update!(force_default_llm: true, default_llm_id: claude_2.id)
+    it "does not replace conversation defaults for a per-turn agent mention" do
+      forced_model = Fabricate(:llm_model, display_name: "Forced model")
+      toggle_enabled_bots(bots: [claude_2, forced_model])
+      agent.update!(allow_topic_mentions: true)
+      forced_agent =
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          allow_topic_mentions: true,
+          default_llm: forced_model,
+          force_default_llm: true,
+        ).tap(&:ensure_user!)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+      topic.save_custom_fields
 
-      DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot one"], llm: claude_2) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["One-turn response"],
+        llm: forced_model,
+      ) { create_post(topic:, user: admin, raw: "@#{forced_agent.user.username} answer this turn") }
+
+      topic.reload
+      response = topic.posts.order(:post_number).last
+      expect(response.user).to eq(forced_agent.user)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD].to_i).to eq(agent.id)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "persists a missing model default when continuing an existing agent conversation" do
+      topic = Fabricate(:private_message_topic, user: admin, recipient: agent.user)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Normalized response"]) do
+        create_post(topic:, user: admin, raw: "Continue this conversation")
+      end
+
+      expect(
+        topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i,
+      ).to eq(claude_2.id)
+    end
+
+    it "accepts a configured topic default sent back unchanged by the client" do
+      selectable_model = Fabricate(:llm_model)
+      toggle_enabled_bots(bots: [selectable_model])
+      topic = Fabricate(:private_message_topic, user: admin, recipient: agent.user)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+      topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Configured response"]) do
         create_post(
+          topic:,
           user: admin,
-          raw: "hi @#{llm2.user.username.capitalize} how are you",
-          topic_id: post.topic_id,
+          raw: "Continue with the configured model",
+          ai_agent_id: agent.id,
+          ai_llm_model_id: claude_2.id,
         )
       end
 
-      last_post = post.topic.reload.posts.order("id desc").first
-      expect(last_post.raw).to eq("Hi from bot one")
-      expect(last_post.user_id).to eq(agent.user_id)
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("Configured response")
+      expect(response.user).to eq(agent.user)
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
     end
 
     it "allows PMing a agent even when no particular bots are enabled" do
@@ -1023,7 +1450,6 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "can tether a agent unconditionally to an llm" do
       gpt_35_turbo = Fabricate(:llm_model, name: "gpt-3.5-turbo")
 
-      # If you start a PM with GPT 3.5 bot, replies should come from it, not from Claude
       SiteSetting.ai_bot_enabled = true
       toggle_enabled_bots(bots: [gpt_35_turbo, claude_2])
 
@@ -1038,7 +1464,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           create_post(
             title: "I just made a PM",
             raw: "hello world",
-            target_usernames: "#{user.username},#{claude_2.user.username}",
+            target_usernames: "#{user.username},#{agent.user.username}",
             archetype: Archetype.private_message,
             user: admin,
             custom_fields: {
@@ -1064,7 +1490,6 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       toggle_enabled_bots(bots: [gpt_35_turbo, claude_2])
 
       post = nil
-      gpt3_5_bot_user = gpt_35_turbo.reload.user
       messages = nil
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -1077,9 +1502,13 @@ RSpec.describe DiscourseAi::AiBot::Playground do
               create_post(
                 title: "I just made a PM",
                 raw: "Hey @#{agent.user.username}, can you help me?",
-                target_usernames: "#{user.username},#{gpt3_5_bot_user.username}",
+                target_usernames: "#{user.username},#{agent.user.username}",
                 archetype: Archetype.private_message,
                 user: admin,
+                custom_fields: {
+                  DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+                  DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => gpt_35_turbo.id,
+                },
               )
           end
       end
@@ -1382,7 +1811,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
     it "supports disabling thinking" do
       agent = Fabricate(:ai_agent, show_thinking: false, tools: ["Search"])
-      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.class_instance.new)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.class_instance.new, model: claude_2)
       playground = described_class.new(bot)
 
       response1 =
@@ -1427,7 +1856,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(custom_prompt.length).to eq(3)
       expect(custom_prompt.to_s).not_to include("<details>")
       expect(custom_prompt.last.first).to eq(response2)
-      expect(custom_prompt.last.last).to eq(bot_user.username)
+      expect(custom_prompt.last[1]).to eq(bot_user.username)
     end
 
     it "sends credit limit error message when credit limit is exceeded in PM" do
@@ -1609,7 +2038,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     let!(:ai_agent) { Fabricate(:ai_agent, tools: ["custom-#{custom_tool.id}"]) }
-    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new) }
+    let(:bot) do
+      DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: claude_2)
+    end
     let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
 
     it "injects custom context into the prompt" do
@@ -1651,7 +2082,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     let!(:ai_agent) { Fabricate(:ai_agent, tools: ["custom-#{custom_tool.id}"]) }
-    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new) }
+    let(:bot) do
+      DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: claude_2)
+    end
     let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
 
     it "injects custom system message into the system prompt" do
@@ -1696,7 +2129,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     let!(:ai_agent) { Fabricate(:ai_agent, tools: ["custom-#{custom_tool.id}"]) }
-    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new) }
+    let(:bot) do
+      DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: claude_2)
+    end
     let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
 
     it "injects both hooks into the correct prompt locations" do
@@ -1750,6 +2185,232 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     }.not_to raise_error
   end
 
+  describe ".legacy_recipient_for" do
+    it "rejects a private message with multiple eligible agent recipients" do
+      second_agent =
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          allow_personal_messages: true,
+          default_llm: claude_2,
+        ).tap(&:ensure_user!)
+      topic = Fabricate(:private_message_topic, user:, recipient: general_agent.user)
+      topic.topic_allowed_users.create!(user: second_agent.user)
+      mentionables = [{ user_id: general_agent.user_id }, { user_id: second_agent.user_id }]
+
+      expect { described_class.legacy_recipient_for(topic, mentionables) }.to raise_error(
+        DiscourseAi::AiBot::ConversationRoute::Error,
+        I18n.t("discourse_ai.ai_bot.errors.ambiguous_agent"),
+      )
+    end
+  end
+
+  describe ".reply_to_post" do
+    it "replies as the given user when the agent has no user" do
+      post = Fabricate(:post, user: user)
+      speaker = Fabricate(:user)
+      agent_without_user = Fabricate(:ai_agent, default_llm: claude_2, user_id: nil)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Reply from override"]) do
+        described_class.reply_to_post(post:, user: speaker, agent_id: agent_without_user.id)
+      end
+
+      reply = post.topic.reload.posts.order(:post_number).last
+      expect(reply.raw).to eq("Reply from override")
+      expect(reply.user).to eq(speaker)
+    end
+  end
+
+  describe "regenerated reply history" do
+    it "replaces old evidence on plain, thinking and tool regeneration before the next turn" do
+      %i[plain thinking tools].each do |kind|
+        source =
+          Fabricate(
+            :private_message_post,
+            user: user,
+            recipient: bot_user,
+            raw: "Please answer this request",
+          )
+        old_thinking = DiscourseAi::Completions::Thinking.new(message: "Obsolete private reasoning")
+        reply = nil
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [[old_thinking, "Obsolete answer"]],
+        ) { reply = playground.reply_to(source, auto_set_title: false) }
+        responses =
+          case kind
+          when :plain
+            ["Replacement answer"]
+          when :thinking
+            [
+              [
+                DiscourseAi::Completions::Thinking.new(message: "Replacement reasoning"),
+                "Replacement answer",
+              ],
+            ]
+          when :tools
+            [
+              DiscourseAi::Completions::ToolCall.new(
+                name: "read",
+                parameters: {
+                  topic_id: source.topic_id,
+                  post_numbers: [1],
+                },
+                id: "replacement-read",
+              ),
+              "Replacement answer",
+            ]
+          end
+        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+          playground.reply_to(source, existing_reply_post: reply, auto_set_title: false)
+        end
+        reply.reload
+        expect(reply.raw).to include("Replacement answer")
+        expect(reply.post_custom_prompt).to be_nil if kind == :plain
+        latest = Fabricate(:post, topic: source.topic, user: user, raw: "What did you answer?")
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Next answer"]) do |_, _, prompts|
+          playground.reply_to(latest, auto_set_title: false)
+          expect(prompts.first.messages.to_s).to include("Replacement answer")
+          expect(prompts.first.messages.to_s).not_to include(
+            "Obsolete answer",
+            old_thinking.message,
+          )
+        end
+      end
+    end
+
+    it "retains old and new evidence on append, and preserves the old checkpoint after a failed regeneration" do
+      source =
+        Fabricate(
+          :private_message_post,
+          user: user,
+          recipient: bot_user,
+          raw: "Please answer this request",
+        )
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Original reasoning")
+      reply = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([[thinking, "Original answer"]]) do
+        reply = playground.reply_to(source, auto_set_title: false)
+      end
+      original_context = reply.post_custom_prompt.custom_prompt.deep_dup
+      claude_2.update!(max_prompt_tokens: 16_000)
+      source.update_columns(raw: "Oversized request " * 8000)
+      small_window_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(bot_user, agent: bot.agent, model: claude_2),
+        )
+      DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do
+        small_window_playground.reply_to(source, existing_reply_post: reply, auto_set_title: false)
+      end
+      expect(reply.reload.post_custom_prompt.custom_prompt).to eq(original_context)
+      expect(reply.raw).to include("Original answer")
+      source.update!(raw: "Please extend the original answer")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Appended answer"]) do
+        playground.reply_to(
+          source,
+          existing_reply_post: reply,
+          append_to_existing_reply: true,
+          auto_set_title: false,
+        )
+      end
+      latest = Fabricate(:post, topic: source.topic, user: user, raw: "What did you answer?")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Next answer"]) do |_, _, prompts|
+        playground.reply_to(latest, auto_set_title: false)
+        expect(prompts.first.messages.to_s).to include(
+          "Original answer",
+          "Appended answer",
+          thinking.message,
+        )
+      end
+    end
+
+    it "preserves partial output and executed tool evidence after hard maintenance failure" do
+      SiteSetting.max_post_length = 150_000
+      claude_2.update!(max_prompt_tokens: 16_000)
+      small_window_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(bot_user, agent: bot.agent, model: claude_2),
+        )
+      source =
+        Fabricate(
+          :private_message_post,
+          user: user,
+          recipient: bot_user,
+          raw: "requirement " * 10_000,
+        )
+      data = Fabricate(:post, raw: "Important tool evidence " * 5000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          parameters: {
+            topic_id: data.topic_id,
+            post_numbers: [1],
+          },
+          id: "executed-read",
+        )
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [["Partial answer before the action", call], ""],
+      ) { small_window_playground.reply_to(source, auto_set_title: false) }
+      reply = source.topic.posts.order(:post_number).last
+      expect(reply.raw).to include("Partial answer before the action", "unusable_summary")
+      entries = reply.post_custom_prompt.custom_prompt
+      expect(entries.find { |entry| entry[2] == "tool" }[1]).to eq(call.id)
+      expect(entries.to_s).to include("Important tool evidence")
+      expect(entries.to_s).not_to include("<compressed_context>")
+    end
+
+    it "preserves non-streamed tool evidence when maintenance hits a quota failure" do
+      SiteSetting.max_post_length = 150_000
+      claude_2.update!(max_prompt_tokens: 16_000)
+      limited_playground =
+        described_class.new(
+          DiscourseAi::Agents::Bot.as(bot_user, agent: bot.agent, model: claude_2),
+        )
+      source =
+        Fabricate(
+          :private_message_post,
+          user: user,
+          recipient: bot_user,
+          raw: "requirement " * 10_000,
+        )
+      data = Fabricate(:post, raw: "Important tool evidence " * 5000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          parameters: {
+            topic_id: data.topic_id,
+            post_numbers: [1],
+          },
+          id: "quota-read",
+        )
+      quota_error = LlmQuotaUsage::QuotaExceededError.new("Quota exhausted")
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [["Partial answer before the action", call], quota_error],
+      ) do
+        expect {
+          limited_playground.reply_to(source, stream_reply: false, auto_set_title: false)
+        }.to raise_error(LlmQuotaUsage::QuotaExceededError)
+      end
+      reply = source.topic.posts.order(:post_number).last
+      expect(reply.raw).to include("Partial answer before the action", quota_error.message)
+      expect(reply.post_custom_prompt.custom_prompt.find { |entry| entry[2] == "tool" }[1]).to eq(
+        call.id,
+      )
+    end
+
+    it "stops cancellation normally while retaining the partial answer" do
+      cancel_manager = DiscourseAi::Completions::CancelManager.new
+      reply = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Partial answer"]) do
+        reply =
+          playground.reply_to(third_post, cancel_manager: cancel_manager, auto_set_title: false) do
+            cancel_manager.cancel!
+          end
+      end
+      expect(reply.raw).to eq("Partial answer")
+      expect(reply.raw).not_to include("cancelled", "prepare this conversation")
+    end
+  end
+
   describe "retrying a reply in a public topic" do
     fab!(:public_topic, :topic)
     fab!(:prompt_post) do
@@ -1782,10 +2443,39 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it "raises when the existing reply belongs to a different user" do
-      expect { playground.reply_to(prompt_post, existing_reply_post: prompt_post) }.to raise_error(
+    it "preserves the existing author when retrying a historical reply" do
+      historical_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      historical_model = Fabricate(:llm_model)
+      historical_model.update_column(:user_id, historical_user.id)
+      historical_reply =
+        Fabricate(
+          :post,
+          topic: public_topic,
+          user: historical_user,
+          raw: "Old answer",
+          custom_fields: {
+            DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => historical_model.display_name,
+          },
+        )
+
+      historical_model.destroy!
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Regenerated answer"]) do
+        playground.reply_to(prompt_post, existing_reply_post: historical_reply)
+      end
+
+      expect(historical_reply.reload.raw).to eq("Regenerated answer")
+      expect(historical_reply.user).to eq(historical_user)
+    end
+
+    it "rejects retrying an arbitrary human post" do
+      human_reply = Fabricate(:post, topic: public_topic, user: user, raw: "Human answer")
+
+      expect { playground.reply_to(prompt_post, existing_reply_post: human_reply) }.to raise_error(
         Discourse::InvalidParameters,
       )
+
+      expect(human_reply.reload.raw).to eq("Human answer")
     end
   end
 end

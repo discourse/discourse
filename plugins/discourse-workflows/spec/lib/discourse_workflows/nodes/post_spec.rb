@@ -196,7 +196,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
           },
           item: item,
         )
-      end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
+      end.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(:not_found, scope: :actor, item_index: 0, username: "nonexistent_user"),
+      )
     end
 
     it "raises when the create author cannot see the topic" do

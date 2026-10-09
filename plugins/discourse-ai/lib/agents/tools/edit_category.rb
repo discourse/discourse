@@ -10,7 +10,7 @@ module DiscourseAi
           {
             name: name,
             description:
-              "Edits an existing category's name, description, or colors. At least one editable field must be provided.",
+              "Edits an existing category's name, description, or colors. Only include fields the administrator explicitly asked to change; omit other fields. At least one editable field must be provided.",
             parameters: [
               {
                 name: "category_id",
@@ -98,10 +98,84 @@ module DiscourseAi
           }
         end
 
+        def summary
+          return super if changes.empty?
+
+          fields =
+            changes.keys.map do |field|
+              I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_fields.#{field}")
+            end
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.category_summary",
+            fields: fields.to_sentence,
+          )
+        end
+
+        def approval_title
+          return super if !previewable?(category)
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.category_title",
+            category: "##{category.slug_ref}::category",
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(category)
+
+          changes.map do |field, value|
+            change = {
+              label:
+                I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_change_label.#{field}"),
+              before:
+                current_value(field).presence ||
+                  I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
+              after:
+                value.to_s.presence || I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
+            }
+            if %i[color text_color].include?(field)
+              change[:before_color] = category.public_send(field)
+              change[:after_color] = value
+            end
+            change
+          end
+        end
+
+        def approval_details
+          return super if !previewable?(category)
+
+          changes
+            .map do |field, value|
+              I18n.t(
+                "discourse_ai.ai_bot.chat_tool_approval.category_change",
+                field: I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_fields.#{field}"),
+                before: DiscourseAi::AiBot::ChatToolApproval.format_value(current_value(field)),
+                after: DiscourseAi::AiBot::ChatToolApproval.format_value(value),
+              )
+            end
+            .join("\n\n")
+        end
+
+        def approval_parameters
+          []
+        end
+
         private
 
         def category
           @category ||= Category.find_by(id: parameters[:category_id])
+        end
+
+        def current_value(field)
+          field == :description ? current_description : category.public_send(field).to_s
+        end
+
+        # `description` stores cooked HTML; the editable source is the
+        # definition topic's first post, which this tool replaces wholesale.
+        def current_description
+          return "" if category.description.blank?
+
+          category.topic&.first_post&.raw.presence || category.plain_text_description.to_s
         end
 
         def changes
@@ -116,6 +190,8 @@ module DiscourseAi
                   next if value.blank?
                 end
                 value = value.to_s.delete_prefix("#") if %i[color text_color].include?(param)
+                next if category && current_value(param).strip == value.to_s.strip
+
                 [param, value]
               end
               .to_h

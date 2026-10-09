@@ -6,14 +6,17 @@ module Jobs
       def execute(args)
         ::DiscourseWorkflows::Workflow::Execute.call(
           params:
-            args.slice(
-              :workflow_id,
-              :workflow_version_id,
-              :trigger_node_id,
-              :trigger_data,
-              :execution_mode,
-              :user_id,
-            ).compact,
+            args
+              .slice(
+                :workflow_id,
+                :workflow_version_id,
+                :trigger_node_id,
+                :trigger_data,
+                :execution_mode,
+                :user_id,
+              )
+              .merge(job_id: jid)
+              .compact,
         )
       end
     end

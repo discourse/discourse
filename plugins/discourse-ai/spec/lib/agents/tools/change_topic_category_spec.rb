@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicCategory do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
   fab!(:category)
@@ -19,6 +19,28 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicCategory do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews the topic title and category names and colors without moving it" do
+    topic = post.topic
+    topic.update!(title: "A [draft] *topic*", category: category)
+    category_tool = tool(topic_id: topic.id, category_id: target_category.id, reason: "Better fit")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(category_tool.approval_title))
+    expect(title.at_css("a").text).to eq(topic.title)
+    expect(title.at_css("a")["href"]).to eq(topic.url)
+    expect(category_tool.approval_changes).to eq(
+      [
+        {
+          label: "Changing category:",
+          before: category.name,
+          after: target_category.name,
+          before_color: category.color,
+          after_color: target_category.color,
+        },
+      ],
+    )
+    expect(category_tool.approval_parameters).to be_empty
+    expect(topic.reload.category_id).to eq(category.id)
+  end
 
   it "moves the topic to a different category" do
     topic = post.topic

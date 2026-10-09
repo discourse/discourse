@@ -8,18 +8,14 @@ import { modifier } from "ember-modifier";
 import {
   isVirtualizationEnabled,
   keyFor,
+  type VirtualItem,
+  type VirtualKey,
+  type VirtualRange,
+  type VisibleRange,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
-
-/** A single measured/positioned row as published by the engine. */
-interface VirtualItem {
-  key: number | string | bigint;
-  index: number;
-  start: number;
-  size: number;
-}
 
 /**
  * The positioning modifier, applied as `{{row.place row.start row.index}}`. Its
@@ -44,7 +40,7 @@ type PlaceModifier = ModifierLike<{
 interface RowContext<T> {
   item: T;
   index: number;
-  key: number | string | bigint;
+  key: VirtualKey;
   start: number;
   size: number;
   /**
@@ -61,7 +57,7 @@ interface RowContext<T> {
    * AFTER {@link place} — a row reached before its `data-index` is stamped cannot be
    * identified, so it is skipped and keeps rendering at `@estimateSize`.
    */
-  measure: ModifierLike<HTMLElement>;
+  measure: ModifierLike<{ Element: HTMLElement }>;
   /**
    * The row's `aria-posinset`, or undefined when `@itemRole` is not a role that
    * defines it. Meaningful only when every entry in `@items` is a real row: a
@@ -157,16 +153,6 @@ export interface DVirtualListApi {
 
   /** Whether the viewport is mid-scroll. */
   readonly isScrolling: boolean;
-}
-
-interface VisibleRange {
-  startIndex: number;
-  endIndex: number;
-}
-
-interface VirtualRange extends VisibleRange {
-  overscan: number;
-  count: number;
 }
 
 /** The visible range plus the total item count, passed to an edge callback. */
@@ -627,7 +613,7 @@ export default class DVirtualList<T> extends Component<
   #rowContext(
     item: T,
     index: number,
-    key: number | string | bigint,
+    key: VirtualKey,
     start: number,
     size: number
   ): RowContext<T> {

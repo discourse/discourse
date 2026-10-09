@@ -158,12 +158,33 @@ module DiscourseWorkflows
           ],
           "action:send_personal_message" => [
             {
-              name: "DM a post link to an admin",
+              name: "Send a personal message with a post link to an admin",
               parameters: {
                 recipient_usernames: ["admin"],
                 title: "=New post from @{{ $json.post.username }}",
                 raw: "=A group member posted: {{ $json.post.post_url }}",
                 sender_username: "system",
+              },
+            },
+          ],
+          "action:send_chat_message" => [
+            {
+              # Signups are inactive and TL0 when `user_created` fires, so they can't chat yet.
+              name: "Welcome a user who reached trust level 1 with a chat DM",
+              parameters: {
+                target: "user",
+                target_usernames: "={{ $json.user.username }}",
+                message: "=Welcome to the community, @{{ $json.user.username }}!",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Ping the moderators in one group chat DM about a flagged post",
+              parameters: {
+                target: "group",
+                target_usernames: %w[alice bob],
+                message: "=Please review {{ $json.post.post_url }}",
+                actor_username: "system",
               },
             },
           ],
@@ -257,6 +278,7 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_personal_message" => "dm direct message pm personal private message",
+          "action:send_chat_message" => "chat channel dm direct message",
           "action:send_chat_integration_message" =>
             "external chat integration notification slack discord telegram mattermost matrix zulip rocket chat gitter groupme teams power automate webex google chat guilded",
           "action:ai_agent" =>

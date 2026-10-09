@@ -48,6 +48,14 @@ describe DiscourseAi::TopicSummarization do
         I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
       expect(original_service.cached_summary).to eq(english_summary)
     end
+
+    it "reads a cached summary without building the summarization bot" do
+      cached_summary = create_cached_summary(topic)
+      allow(DiscourseAi::Summarization).to receive(:build_bot).and_call_original
+
+      expect(described_class.for(topic, nil).cached_summary).to eq(cached_summary)
+      expect(DiscourseAi::Summarization).not_to have_received(:build_bot)
+    end
   end
 
   describe "#summarize" do

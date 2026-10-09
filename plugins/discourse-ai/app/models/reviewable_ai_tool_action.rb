@@ -70,6 +70,13 @@ class ReviewableAiToolAction < Reviewable
     resolution_result(:rejected, args)
   end
 
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
+  end
+
   private
 
   def resolution_result(status, args, tool_result: nil)
@@ -163,17 +170,19 @@ class ReviewableAiToolAction < Reviewable
       message&.blocks.to_a.any? do |block|
         block["elements"].to_a.any? { |element| element["action_id"] == action_id }
       end
+    valid_context =
+      !source ||
+        (
+          source.chat_channel_id == message&.chat_channel_id &&
+            (
+              source.thread_id == message&.thread_id ||
+                (message&.thread_id.nil? && source.thread&.original_message_id == source.id)
+            )
+        )
 
     if !message || !message.chat_channel.direct_message_channel? ||
          ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
-         !valid_block ||
-         (
-           source &&
-             (
-               source.chat_channel_id != message.chat_channel_id ||
-                 source.thread_id != message.thread_id
-             )
-         )
+         !valid_block || !valid_context
       raise Discourse::InvalidAccess
     end
   end

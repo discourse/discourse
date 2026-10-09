@@ -103,8 +103,74 @@ module DiscourseAi
           end
         end
 
+        def approval_title
+          return super if !previewable?(source_topic)
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(source_topic),
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(source_topic)
+
+          destination_title =
+            if parameters[:destination_topic_id].present?
+              destination = Topic.find_by(id: parameters[:destination_topic_id])
+              destination.title if previewable?(destination)
+            else
+              parameters[:new_title]
+            end
+          return [] if destination_title.blank?
+
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.posts_destination_label"),
+              before: source_topic.title,
+              after: destination_title,
+            },
+          ]
+        end
+
+        def approval_parameters
+          return [] if !previewable?(source_topic)
+
+          topic = source_topic
+          numbers =
+            topic.posts.where(id: parameters[:post_ids]).order(:post_number).pluck(:post_number)
+          details = [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.posts_label"),
+              value:
+                numbers
+                  .map do |number|
+                    I18n.t("discourse_ai.ai_bot.chat_tool_approval.solution_post", number: number)
+                  end
+                  .join(", "),
+            },
+          ]
+          if parameters[:destination_topic_id].blank? && parameters[:category_id].present?
+            category = Category.find_by(id: parameters[:category_id])
+            if category
+              details << {
+                label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.category_label"),
+                value: category.name,
+                color: category.color,
+              }
+            end
+          end
+          details
+        end
+
         def description_args
           { topic_id: parameters[:topic_id], post_ids: (parameters[:post_ids] || []).join(", ") }
+        end
+
+        private
+
+        def source_topic
+          @source_topic ||= Topic.find_by(id: parameters[:topic_id])
         end
       end
     end

@@ -80,9 +80,10 @@ export interface ArgSchema {
 
   /**
    * Required class (or a `"model:*"` string, resolved via the registry) for an
-   * `object` argument's value. Mutually exclusive with `properties`.
+   * `object` argument's value. Mutually exclusive with `properties`. Any class is
+   * accepted; `never[]` is what lets a constructor of any shape fit.
    */
-  instanceOf?: (abstract new (...args: unknown[]) => object) | string;
+  instanceOf?: (abstract new (...args: never[]) => object) | string;
 
   /**
    * Human-readable class name used in error messages when `instanceOf` is a
