@@ -74,6 +74,7 @@ module DiscourseAi
             enabled_until,
             by_user: acting_user,
           )
+
           if previous_seconds != slow_mode_seconds
             StaffActionLogger.new(acting_user).log_topic_slow_mode(
               topic,

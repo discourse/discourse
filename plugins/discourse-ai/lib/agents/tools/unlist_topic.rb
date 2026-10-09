@@ -61,7 +61,7 @@ module DiscourseAi
 
           unlisted = !!parameters[:unlisted]
 
-          opts = { reviewable_action: { reviewable_id: context.reviewable_id } }
+          opts = { dsa_event_reviewable_context: { reviewable_id: context.reviewable_id } }
           opts[:message] = reason if !!parameters[:public_reason]
           TopicStatusUpdater.new(topic, acting_user).update!("visible", !unlisted, opts)
 

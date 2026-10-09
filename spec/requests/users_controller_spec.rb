@@ -369,7 +369,7 @@ RSpec.describe UsersController do
             put "/u/password-reset/#{email_token.token}", params: { password: "hg9ow8yhg98o" }
           end
 
-        expect(events.map { |event| event[:event_name] }).to include(
+        expect(events.map { |event| event[:event_name] }).to contain_exactly(
           :user_logged_in,
           :user_first_logged_in,
           :user_confirmed_email,
@@ -5007,7 +5007,7 @@ RSpec.describe UsersController do
 
         event =
           DiscourseEvent
-            .track_events(:user_updated) do
+            .track_events do
               expect {
                 put "/u/#{user1.username}/preferences/primary-email.json",
                     params: {
@@ -5075,7 +5075,7 @@ RSpec.describe UsersController do
 
         event =
           DiscourseEvent
-            .track_events(:user_updated) do
+            .track_events do
               expect {
                 delete "/u/#{user1.username}/preferences/email.json",
                        params: {

@@ -138,7 +138,10 @@ module Chat
 
     def perform_agree_and_delete(performed_by, args)
       agree do
-        chat_message.trash!(performed_by, reviewable_action: reviewable_action_options(args))
+        chat_message.trash!(
+          performed_by,
+          dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+        )
       end
     end
 
@@ -162,7 +165,10 @@ module Chat
 
     def perform_delete_and_ignore(performed_by, args)
       ignore do
-        chat_message.trash!(performed_by, reviewable_action: reviewable_action_options(args))
+        chat_message.trash!(
+          performed_by,
+          dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+        )
       end
     end
 

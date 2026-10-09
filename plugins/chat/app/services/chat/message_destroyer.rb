@@ -2,7 +2,7 @@
 
 module Chat
   class MessageDestroyer
-    def destroy_in_batches(chat_messages_query, batch_size: 200, reviewable_action: {})
+    def destroy_in_batches(chat_messages_query, batch_size: 200, dsa_event_reviewable_context: {})
       chat_messages_query
         .in_batches(of: batch_size)
         .each do |relation|
@@ -12,9 +12,16 @@ module Chat
               messages.filter_map do |message|
                 removed = message.deleted_at.present?
                 next unless message.destroy
+
                 if !removed && SiteSetting.dsa_reporting_enabled
-                  DiscourseEvent.trigger(:dsa_chat_message_deleted, message, nil, reviewable_action)
+                  DiscourseEvent.trigger(
+                    :dsa_chat_message_deleted,
+                    message,
+                    nil,
+                    dsa_event_reviewable_context,
+                  )
                 end
+
                 [message.id, message.chat_channel_id]
               end
             destroyed_message_ids = destroyed_ids.map(&:first).uniq

@@ -93,7 +93,9 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def perform_agree_and_delete(performed_by, args)
-    agree { comment.trash!(performed_by, reviewable_action: reviewable_action_options(args)) }
+    agree do
+      comment.trash!(performed_by, dsa_event_reviewable_context: dsa_event_reviewable_context(args))
+    end
   end
 
   def perform_disagree_and_restore(performed_by, args)
@@ -109,7 +111,9 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    ignore { comment.trash!(performed_by, reviewable_action: reviewable_action_options(args)) }
+    ignore do
+      comment.trash!(performed_by, dsa_event_reviewable_context: dsa_event_reviewable_context(args))
+    end
   end
 
   private

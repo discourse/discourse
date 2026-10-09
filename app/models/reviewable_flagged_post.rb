@@ -268,7 +268,8 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args) do |pa|
       post.hide!(
         pa.post_action_type_id,
-        reviewable_action: reviewable_action_options(args).merge(actor_id: performed_by.id),
+        dsa_event_reviewable_context:
+          dsa_event_reviewable_context(args).merge(actor_id: performed_by.id),
       )
     end
   end
@@ -332,11 +333,12 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
+
     PostDestroyer.delete_with_replies(
       performed_by,
       post,
       id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
 
     result
@@ -350,12 +352,14 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
+
     PostDestroyer.delete_with_replies(
       performed_by,
       post,
       id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
+
     result
   end
 
@@ -400,7 +404,7 @@ class ReviewableFlaggedPost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
   end
 

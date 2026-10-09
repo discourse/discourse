@@ -1364,9 +1364,7 @@ RSpec.describe TagsController do
     it "triggers a extensibility event" do
       event =
         DiscourseEvent
-          .track_events(:tag_updated) do
-            put "/tag/#{tag.name}.json", params: { tag: { name: "hello" } }
-          end
+          .track_events { put "/tag/#{tag.name}.json", params: { tag: { name: "hello" } } }
           .last
 
       expect(event[:event_name]).to eq(:tag_updated)

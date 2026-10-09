@@ -55,11 +55,12 @@ RSpec.describe Chat::TrashChannel do
       end
 
       it "triggers the chat_channel_trashed event" do
-        events = DiscourseEvent.track_events { result }
-        expect(events).to include(
-          event_name: :chat_channel_trashed,
-          params: [result[:channel], current_user],
+        DiscourseEvent.expects(:trigger).with(
+          "chat_channel_trashed",
+          result[:channel],
+          current_user,
         )
+        result
       end
 
       it "queues a job to delete channel relations" do

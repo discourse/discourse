@@ -50,11 +50,11 @@ class UserHistory < ActiveRecord::Base
 
   before_save :set_admin_only
 
-  attr_accessor :reviewable_action
+  attr_accessor :dsa_event_reviewable_context
 
   after_create do
     if SiteSetting.dsa_reporting_enabled
-      DiscourseEvent.trigger(:dsa_user_history_created, self, reviewable_action || {})
+      DiscourseEvent.trigger(:dsa_user_history_created, self, dsa_event_reviewable_context || {})
     end
   end
 

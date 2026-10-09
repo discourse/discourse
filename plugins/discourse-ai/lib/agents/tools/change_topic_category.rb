@@ -107,7 +107,7 @@ module DiscourseAi
               { category_id: category.id }.tap do |f|
                 f[:edit_reason] = reason if !!parameters[:public_edit_reason]
               end,
-              reviewable_action: {
+              dsa_event_reviewable_context: {
                 reviewable_id: context.reviewable_id,
               },
             )

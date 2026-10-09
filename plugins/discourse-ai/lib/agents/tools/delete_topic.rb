@@ -69,7 +69,7 @@ module DiscourseAi
               acting_user,
               first_post,
               context: reason,
-              reviewable_action: {
+              dsa_event_reviewable_context: {
                 reviewable_id: context.reviewable_id,
               },
             ).destroy

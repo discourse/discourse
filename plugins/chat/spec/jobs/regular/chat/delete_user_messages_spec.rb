@@ -38,12 +38,15 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       statement = DsaStatementOfRecord.where(reviewable_id: reviewable.id).sole
       reviewable.destroy!
 
-      reviewable_action = {
+      dsa_event_reviewable_context = {
         reviewable_id: reviewable.id,
         actor_id: admin.id,
         decision_provenance: :human,
       }
-      described_class.new.execute(user_id: author_id, reviewable_action: reviewable_action)
+      described_class.new.execute(
+        user_id: author_id,
+        dsa_event_reviewable_context: dsa_event_reviewable_context,
+      )
 
       removed_message =
         DsaStatementOfRecord.where(reviewable_id: reviewable.id).where.not(id: statement.id).sole
@@ -59,7 +62,10 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       expect(Reviewable.exists?(message_reviewable.id)).to eq(false)
       expect(removed_message.payload.fetch("puid")).to eq(removed_message.id)
       expect {
-        described_class.new.execute(user_id: author_id, reviewable_action: reviewable_action)
+        described_class.new.execute(
+          user_id: author_id,
+          dsa_event_reviewable_context: dsa_event_reviewable_context,
+        )
       }.not_to change { DsaStatementOfRecord.count }
     end
 

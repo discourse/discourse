@@ -95,7 +95,8 @@ class ReviewableAiPost < Reviewable
   def perform_agree_and_hide(performed_by, args)
     post.hide!(
       reviewable_scores.first.reviewable_score_type,
-      reviewable_action: reviewable_action_options(args).merge(actor_id: performed_by.id),
+      dsa_event_reviewable_context:
+        dsa_event_reviewable_context(args).merge(actor_id: performed_by.id),
     )
 
     agree
@@ -145,7 +146,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
 
     perform_ignore(performed_by, args)
@@ -156,7 +157,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
 
     agree
@@ -165,7 +166,10 @@ class ReviewableAiPost < Reviewable
   def perform_delete_user(performed_by, args)
     UserDestroyer.new(performed_by).destroy(
       post.user,
-      delete_opts.merge(reviewable_id: id, reviewable_action: reviewable_action_options(args)),
+      delete_opts.merge(
+        reviewable_id: id,
+        dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      ),
     )
 
     agree
@@ -173,7 +177,10 @@ class ReviewableAiPost < Reviewable
 
   def perform_delete_user_block(performed_by, args)
     delete_options =
-      delete_opts.merge(reviewable_id: id, reviewable_action: reviewable_action_options(args))
+      delete_opts.merge(
+        reviewable_id: id,
+        dsa_event_reviewable_context: dsa_event_reviewable_context(args),
+      )
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
@@ -193,7 +200,7 @@ class ReviewableAiPost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      reviewable_action: reviewable_action_options(args),
+      dsa_event_reviewable_context: dsa_event_reviewable_context(args),
     )
   end
 

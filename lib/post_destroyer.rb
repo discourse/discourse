@@ -51,22 +51,23 @@ class PostDestroyer
     post,
     reviewable_id = nil,
     defer_reply_flags: true,
-    reviewable_action: {}
+    dsa_event_reviewable_context: {}
   )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
+
     PostDestroyer.new(
       performed_by,
       post,
       reviewable_id: reviewable_id,
-      reviewable_action: reviewable_action,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
     ).destroy
 
     options = {
       defer_flags: defer_reply_flags,
       reviewable_id: reviewable_id,
       parent_post: post,
-      reviewable_action: reviewable_action,
+      dsa_event_reviewable_context: dsa_event_reviewable_context,
     }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
       options[:notify_responders] = true
@@ -105,11 +106,15 @@ class PostDestroyer
     UserActionManager.post_destroyed(@post)
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+
     if SiteSetting.dsa_reporting_enabled
       DiscourseEvent.trigger(
         :dsa_post_destroyed,
         @post,
-        @opts.except(:reviewable_action).compact.merge(@opts[:reviewable_action] || {}),
+        @opts
+          .except(:dsa_event_reviewable_context)
+          .compact
+          .merge(@opts[:dsa_event_reviewable_context] || {}),
         @user,
       )
     end
@@ -241,12 +246,12 @@ class PostDestroyer
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context, :reviewable_id, :reviewable_action),
+            @opts.slice(:context, :reviewable_id, :dsa_event_reviewable_context),
           )
         else
           logger.log_post_deletion(
             @post,
-            **@opts.slice(:context, :reviewable_id, :reviewable_action),
+            **@opts.slice(:context, :reviewable_id, :dsa_event_reviewable_context),
             permanent: permanent?,
           )
         end
@@ -425,7 +430,7 @@ class PostDestroyer
         @user,
         :agree_and_keep,
         post_was_deleted: true,
-        reviewable_action: @opts[:reviewable_action],
+        dsa_event_reviewable_context: @opts[:dsa_event_reviewable_context],
         guardian: Discourse.system_user.guardian,
       )
     reviewable.transition_to(result.transition_to, @user)

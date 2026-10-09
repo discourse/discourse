@@ -428,6 +428,7 @@ class Reviewable < ActiveRecord::Base
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
+
       if SiteSetting.dsa_reporting_enabled
         DiscourseEvent.trigger(
           :dsa_reviewable_action_performed,
@@ -806,7 +807,7 @@ class Reviewable < ActiveRecord::Base
 
     data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
 
-    MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
+    MessageBus.publish("/dsa_event_reviewable_context", data, group_ids: group_ids.to_a)
   end
 
   def self.scores_with_topics
@@ -946,9 +947,9 @@ class Reviewable < ActiveRecord::Base
 
   protected
 
-  def reviewable_action_options(args = {})
-    args[:reviewable_action] ||
-      { reviewable_id: id, reviewable: self, decision_provenance: args[:decision_provenance]&.to_s }
+  def dsa_event_reviewable_context(args = {})
+    args[:dsa_event_reviewable_context] ||
+      { reviewable: self, decision_provenance: args[:decision_provenance]&.to_s }
   end
 
   def increment_version!(version = nil)

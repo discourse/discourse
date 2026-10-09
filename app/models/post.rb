@@ -650,7 +650,12 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil, reviewable_action: {})
+  def hide!(
+    post_action_type_id,
+    reason = nil,
+    custom_message: nil,
+    dsa_event_reviewable_context: {}
+  )
     return if hidden?
 
     reason ||=
@@ -670,8 +675,9 @@ class Post < ActiveRecord::Base
       should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
+
       if SiteSetting.dsa_reporting_enabled
-        DiscourseEvent.trigger(:dsa_post_hidden, self, reviewable_action)
+        DiscourseEvent.trigger(:dsa_post_hidden, self, dsa_event_reviewable_context)
       end
 
       any_visible_posts_in_topic =
@@ -684,7 +690,7 @@ class Post < ActiveRecord::Base
           Discourse.system_user,
           {
             visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached],
-            reviewable_action: reviewable_action,
+            dsa_event_reviewable_context: dsa_event_reviewable_context,
           },
         )
         should_update_user_stat = false

@@ -75,7 +75,7 @@ module DiscourseAi
             revisor.revise!(
               acting_user,
               fields,
-              reviewable_action: {
+              dsa_event_reviewable_context: {
                 reviewable_id: context.reviewable_id,
               },
             )

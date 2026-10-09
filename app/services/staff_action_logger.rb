@@ -1325,8 +1325,10 @@ class StaffActionLogger
       acting_user_id: @admin.id,
       context: opts[:context],
       details: opts[:details],
-      reviewable_id: opts.dig(:reviewable_action, :reviewable_id) || opts[:reviewable_id],
-      reviewable_action: opts[:reviewable_action],
+      reviewable_id:
+        opts.dig(:dsa_event_reviewable_context, :reviewable)&.id ||
+          opts.dig(:dsa_event_reviewable_context, :reviewable_id) || opts[:reviewable_id],
+      dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
     }
   end
 

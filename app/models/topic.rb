@@ -1412,7 +1412,7 @@ class Topic < ActiveRecord::Base
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
         options: {
           freeze_original: opts[:freeze_original],
-          reviewable_action: opts[:reviewable_action],
+          dsa_event_reviewable_context: opts[:dsa_event_reviewable_context],
         },
       )
 
