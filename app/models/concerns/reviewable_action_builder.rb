@@ -90,7 +90,7 @@ module ReviewableActionBuilder
     if target_user
       delete_user(
         target_user,
-        delete_opts.merge(moderation: moderation_options(args)),
+        delete_opts.merge(reviewable_action: reviewable_action_options(args)),
         performed_by,
       )
     end
@@ -98,7 +98,7 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
-    delete_options = delete_opts.merge(moderation: moderation_options(args))
+    delete_options = delete_opts.merge(reviewable_action: reviewable_action_options(args))
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
     delete_user(target_user, delete_options, performed_by) if target_user
@@ -110,7 +110,7 @@ module ReviewableActionBuilder
       performed_by,
       target_post,
       reviewable_id: id,
-      moderation: moderation_options(args),
+      reviewable_action: reviewable_action_options(args),
     ).destroy
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -118,7 +118,7 @@ module ReviewableActionBuilder
   def perform_hide_post(performed_by, args)
     target_post.hide!(
       PostActionType.types[:inappropriate],
-      moderation: moderation_options(args).merge(actor_id: performed_by.id),
+      reviewable_action: reviewable_action_options(args).merge(actor_id: performed_by.id),
     )
     create_result(:success, :rejected, [created_by_id], false)
   end

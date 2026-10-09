@@ -43,11 +43,11 @@ class PostVotingComment < ActiveRecord::Base
     "#{Discourse.base_url}#{url}"
   end
 
-  def trash!(actor = nil, moderation: {})
+  def trash!(actor = nil, reviewable_action: {})
     already_deleted = trashed?
     result = super(actor)
-    if result && !already_deleted
-      DiscourseEvent.trigger(:post_voting_comment_deleted, self, actor, moderation)
+    if result && !already_deleted && SiteSetting.dsa_reporting_enabled
+      DiscourseEvent.trigger(:dsa_post_voting_comment_deleted, self, actor, reviewable_action)
     end
     result
   end

@@ -114,7 +114,7 @@ class UserDestroyer
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(
             user,
-            opts.slice(:context, :reviewable_id, :moderation),
+            opts.slice(:context, :reviewable_id, :reviewable_action),
           )
           if opts.slice(:context).blank?
             Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}")
@@ -149,7 +149,7 @@ class UserDestroyer
         actions = reviewable.actions_for(@guardian)
 
         if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
-          reviewable.perform(@actor, :agree_and_keep, moderation: opts[:moderation])
+          reviewable.perform(@actor, :agree_and_keep, reviewable_action: opts[:reviewable_action])
         end
       end
 
@@ -157,7 +157,11 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
-          reviewable.perform(@actor, :reject_and_delete, moderation: opts[:moderation])
+          reviewable.perform(
+            @actor,
+            :reject_and_delete,
+            reviewable_action: opts[:reviewable_action],
+          )
         end
       end
 
@@ -165,7 +169,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_post)
-          reviewable.perform(@actor, :reject_post, moderation: opts[:moderation])
+          reviewable.perform(@actor, :reject_post, reviewable_action: opts[:reviewable_action])
         end
       end
   end
@@ -193,7 +197,7 @@ class UserDestroyer
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
           reviewable_id: opts[:reviewable_id],
-          moderation: opts[:moderation],
+          reviewable_action: opts[:reviewable_action],
         ).destroy
       end
 

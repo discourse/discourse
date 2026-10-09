@@ -50,9 +50,13 @@ class UserHistory < ActiveRecord::Base
 
   before_save :set_admin_only
 
-  attr_accessor :moderation
+  attr_accessor :reviewable_action
 
-  after_create { DiscourseEvent.trigger(:user_history_created, self, moderation || {}) }
+  after_create do
+    if SiteSetting.dsa_reporting_enabled
+      DiscourseEvent.trigger(:dsa_user_history_created, self, reviewable_action || {})
+    end
+  end
 
   def self.actions
     @actions ||=

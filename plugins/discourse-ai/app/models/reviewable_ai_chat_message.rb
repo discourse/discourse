@@ -94,7 +94,7 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def perform_agree_and_delete(performed_by, args)
-    agree { chat_message.trash!(performed_by, moderation: moderation_options(args)) }
+    agree { chat_message.trash!(performed_by, reviewable_action: reviewable_action_options(args)) }
   end
 
   def perform_disagree_and_restore(performed_by, args)
@@ -110,7 +110,7 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    ignore { chat_message.trash!(performed_by, moderation: moderation_options(args)) }
+    ignore { chat_message.trash!(performed_by, reviewable_action: reviewable_action_options(args)) }
   end
 
   private

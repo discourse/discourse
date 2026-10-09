@@ -428,14 +428,16 @@ class Reviewable < ActiveRecord::Base
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
-      DiscourseEvent.trigger(
-        :reviewable_action_performed,
-        self,
-        result,
-        performed_by,
-        action_id,
-        args,
-      )
+      if SiteSetting.dsa_reporting_enabled
+        DiscourseEvent.trigger(
+          :dsa_reviewable_action_performed,
+          self,
+          result,
+          performed_by,
+          action_id,
+          args,
+        )
+      end
     end
 
     result.after_commit.call if result && result.after_commit
@@ -944,14 +946,9 @@ class Reviewable < ActiveRecord::Base
 
   protected
 
-  def moderation_options(args = {})
-    args[:moderation] ||
-      {
-        reviewable_id: id,
-        reviewable: self,
-        first_handling: !reviewable_histories.transitioned.exists?,
-        decision_provenance: args[:decision_provenance]&.to_s,
-      }
+  def reviewable_action_options(args = {})
+    args[:reviewable_action] ||
+      { reviewable_id: id, reviewable: self, decision_provenance: args[:decision_provenance]&.to_s }
   end
 
   def increment_version!(version = nil)

@@ -37,7 +37,6 @@ class DsaModeration
 
   def self.recorder_for(reviewable_id:, actor: nil, metadata: {}, action_name: nil)
     return unless SiteSetting.dsa_reporting_enabled
-    return if metadata[:first_handling] == false
 
     reviewable_id = metadata[:reviewable_id] || reviewable_id
     return unless reviewable_id
@@ -45,10 +44,6 @@ class DsaModeration
     reviewable = Reviewable.find_by(id: reviewable_id) unless reviewable&.id == reviewable_id
     previous = DsaStatementOfRecord.find_by(reviewable_id: reviewable_id) unless reviewable
     return unless reviewable || previous
-    if reviewable && metadata[:first_handling].nil?
-      return if reviewable.reviewable_histories.transitioned.limit(2).count > 1
-      return if reviewable.pending? && reviewable.reviewable_histories.transitioned.exists?
-    end
 
     recorder =
       new(
@@ -84,7 +79,7 @@ class DsaModeration
         actor: actor,
         action_name: action_name,
         metadata:
-          args[:moderation] ||
+          args[:reviewable_action] ||
             { reviewable: reviewable, decision_provenance: args[:decision_provenance] },
       )
     return unless recorder
@@ -161,7 +156,7 @@ class DsaModeration
       recorder_for(
         reviewable_id: revisor.opts[:reviewable_id],
         actor: revisor.editor,
-        metadata: revisor.opts[:moderation] || {},
+        metadata: revisor.opts[:reviewable_action] || {},
         action_name: :agree_and_edit,
       )
     return unless recorder
@@ -184,10 +179,11 @@ class DsaModeration
     original_topic_id:,
     post_ids: [],
     copied: nil,
-    moderation: {}
+    reviewable_action: {}
   )
     return if copied
-    recorder = recorder_for(reviewable_id: moderation[:reviewable_id], metadata: moderation)
+    recorder =
+      recorder_for(reviewable_id: reviewable_action[:reviewable_id], metadata: reviewable_action)
     return unless recorder
 
     destination = Topic.find_by(id: destination_topic_id)

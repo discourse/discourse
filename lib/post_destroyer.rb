@@ -51,7 +51,7 @@ class PostDestroyer
     post,
     reviewable_id = nil,
     defer_reply_flags: true,
-    moderation: {}
+    reviewable_action: {}
   )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
@@ -59,14 +59,14 @@ class PostDestroyer
       performed_by,
       post,
       reviewable_id: reviewable_id,
-      moderation: moderation,
+      reviewable_action: reviewable_action,
     ).destroy
 
     options = {
       defer_flags: defer_reply_flags,
       reviewable_id: reviewable_id,
       parent_post: post,
-      moderation: moderation,
+      reviewable_action: reviewable_action,
     }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
       options[:notify_responders] = true
@@ -104,12 +104,16 @@ class PostDestroyer
 
     UserActionManager.post_destroyed(@post)
 
-    DiscourseEvent.trigger(
-      :post_destroyed,
-      @post,
-      @opts.except(:moderation).compact.merge(@opts[:moderation] || {}),
-      @user,
-    )
+    DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+    if SiteSetting.dsa_reporting_enabled
+      DiscourseEvent.trigger(
+        :dsa_post_destroyed,
+        @post,
+        @opts.except(:reviewable_action).compact.merge(@opts[:reviewable_action] || {}),
+        @user,
+      )
+    end
+
     if WebHook.active_web_hooks(:post_destroyed).exists?
       payload = WebHook.generate_payload(:post, @post)
       WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
@@ -237,12 +241,12 @@ class PostDestroyer
           logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context, :reviewable_id, :moderation),
+            @opts.slice(:context, :reviewable_id, :reviewable_action),
           )
         else
           logger.log_post_deletion(
             @post,
-            **@opts.slice(:context, :reviewable_id, :moderation),
+            **@opts.slice(:context, :reviewable_id, :reviewable_action),
             permanent: permanent?,
           )
         end
@@ -421,6 +425,7 @@ class PostDestroyer
         @user,
         :agree_and_keep,
         post_was_deleted: true,
+        reviewable_action: @opts[:reviewable_action],
         guardian: Discourse.system_user.guardian,
       )
     reviewable.transition_to(result.transition_to, @user)

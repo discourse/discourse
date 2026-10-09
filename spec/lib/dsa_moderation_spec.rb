@@ -92,7 +92,7 @@ RSpec.describe DsaModeration do
       expect(statements.count).to eq(2)
     end
 
-    it "records only the first handling decision" do
+    it "records restrictions without excluding reopened reviewables" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
       reviewable.perform(admin, :agree_and_keep)
       reviewable.update!(status: :pending)
@@ -100,7 +100,9 @@ RSpec.describe DsaModeration do
       reviewable.perform(admin, :delete_and_agree)
 
       expect(post.reload).to be_trashed
-      expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
+      expect(
+        DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload["decision_visibility"],
+      ).to eq(["DECISION_VISIBILITY_CONTENT_REMOVED"])
     end
 
     it "records retaining an existing hidden restriction on the first decision" do
@@ -143,12 +145,16 @@ RSpec.describe DsaModeration do
     end
 
     it "records an actual user termination and excludes a deletion that fails because posts exist" do
-      user = Fabricate(:user, approved: false)
+      user = Fabricate(:user, approved: false, created_at: 3.days.ago)
       reviewable = ReviewableUser.create_for(user)
-      reviewable.perform(admin, :delete_user)
-      expect(
-        DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload["decision_account"],
-      ).to eq("DECISION_ACCOUNT_TERMINATED")
+
+      reviewable.perform(admin, :delete_user, decision_provenance: :automated)
+
+      expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload).to include(
+        "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        "content_date" => user.created_at.to_date.iso8601,
+        "automated_decision" => "AUTOMATED_DECISION_FULLY",
+      )
 
       existing_author = ReviewableUser.create_for(post.user)
       existing_author.perform(admin, :delete_user)
@@ -248,8 +254,9 @@ RSpec.describe DsaModeration do
       SiteSetting.dsa_reporting_enabled = false
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
 
-      reviewable.perform(admin, :delete_and_agree)
+      events = DiscourseEvent.track_events { reviewable.perform(admin, :delete_and_agree) }
 
+      expect(events.map { |event| event[:event_name] }.grep(/\Adsa_/)).to be_empty
       expect(DsaStatementOfRecord.where(reviewable_id: reviewable.id)).to be_empty
     end
   end
@@ -322,7 +329,8 @@ RSpec.describe DsaModeration do
       expect(flagger.guardian.can_see_post?(post.reload)).to eq(false)
     end
 
-    it "retains the original media when a queue edit removes an image" do
+    it "retains the original media and automatic lock when a queue edit removes an image" do
+      SiteSetting.staff_edit_locks_post = true
       post.update!(cooked: '<p>Original text</p><img src="/image.png">')
       original_raw = post.raw
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
@@ -344,6 +352,17 @@ RSpec.describe DsaModeration do
           .sole
           .reviewable_id,
       ).to eq(reviewable.id)
+      expect(post.reload).to be_locked
+      expect(
+        UserHistory
+          .where(action: UserHistory.actions[:post_locked], post_id: post.id)
+          .sole
+          .reviewable_id,
+      ).to eq(reviewable.id)
+      expect(statement.payload["decision_visibility"]).to contain_exactly(
+        "DECISION_VISIBILITY_CONTENT_REMOVED",
+        "DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED",
+      )
       expect(post.revisions.last.modifications["raw"].first).to eq(original_raw)
     end
   end

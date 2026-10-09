@@ -136,6 +136,44 @@ RSpec.describe ReviewableAiToolAction do
       expect(DsaStatementOfRecord.where(reviewable_id: move_reviewable.id)).to be_empty
     end
 
+    it "resolves existing flags when an approved tool deletes a topic" do
+      SiteSetting.notify_users_after_responses_deleted_on_flagged_post = false
+      [false, true].each do |reporting_enabled|
+        SiteSetting.dsa_reporting_enabled = reporting_enabled
+        post = Fabricate(:post)
+        flagger = Fabricate(:user, trust_level: TrustLevel[2])
+        flag = PostActionCreator.inappropriate(flagger, post).reviewable
+        reviewable =
+          create_reviewable(
+            create_tool_action(
+              tool_name: "delete_topic",
+              params: {
+                topic_id: post.topic_id,
+                deleted: true,
+                reason: "Community rule violation",
+              },
+              post_id: post.id,
+            ),
+          )
+
+        reviewable.perform(admin, :approve)
+
+        expect(post.reload).to be_trashed
+        expect(flag.reload).to be_approved
+        expect(PostAction.with_deleted.where(post_id: post.id).sole.agreed_at).to be_present
+        expect(DsaStatementOfRecord.where(reviewable_id: flag.id)).to be_empty
+        statements = DsaStatementOfRecord.where(reviewable_id: reviewable.id)
+        if reporting_enabled
+          expect(statements.sole.payload).to include(
+            "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+            "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+          )
+        else
+          expect(statements).to be_empty
+        end
+      end
+    end
+
     it "records topic interaction and visibility restrictions applied by an approved tool" do
       SiteSetting.dsa_reporting_enabled = true
       post = Fabricate(:post, topic: topic)

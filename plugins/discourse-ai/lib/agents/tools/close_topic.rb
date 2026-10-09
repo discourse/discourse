@@ -61,7 +61,7 @@ module DiscourseAi
 
           closed = !!parameters[:closed]
 
-          opts = { moderation: { reviewable_id: context.reviewable_id } }
+          opts = { reviewable_action: { reviewable_id: context.reviewable_id } }
           opts[:message] = reason if !!parameters[:public_reason]
           TopicStatusUpdater.new(topic, acting_user).update!("closed", closed, opts)
 

@@ -75,7 +75,7 @@ module DiscourseAi
             revisor.revise!(
               acting_user,
               fields,
-              moderation: {
+              reviewable_action: {
                 reviewable_id: context.reviewable_id,
               },
             )

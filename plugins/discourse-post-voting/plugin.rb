@@ -266,12 +266,13 @@ after_initialize do
       post_voting_comment_ids = comments.map(&:id)
       PostVotingComment.where(id: post_voting_comment_ids).delete_all
       comments.each do |comment|
+        next unless SiteSetting.dsa_reporting_enabled
         next if comment.deleted_at
         DiscourseEvent.trigger(
-          :post_voting_comment_deleted,
+          :dsa_post_voting_comment_deleted,
           comment,
           guardian.user,
-          (opts[:moderation] || {}).merge(reviewable_id: opts[:reviewable_id]),
+          (opts[:reviewable_action] || {}).merge(reviewable_id: opts[:reviewable_id]),
         )
       end
       ReviewablePostVotingComment.where(

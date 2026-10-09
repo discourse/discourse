@@ -414,7 +414,7 @@ class PostRevisor
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
          @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
-      PostLocker.new(@post, @editor).lock
+      PostLocker.new(@post, @editor).lock(@opts.slice(:reviewable_id, :reviewable_action))
     end
 
     # We log staff/group moderator edits to posts
@@ -429,7 +429,7 @@ class PostRevisor
         @post,
         old_raw: old_raw,
         reviewable_id: @opts[:reviewable_id],
-        moderation: @opts[:moderation],
+        reviewable_action: @opts[:reviewable_action],
       )
     end
 
@@ -892,6 +892,9 @@ class PostRevisor
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
     DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)
+    if SiteSetting.dsa_reporting_enabled
+      DiscourseEvent.trigger(:dsa_post_edited, @post, topic_changed?, self)
+    end
   end
 
   def alert_users(old_raw)

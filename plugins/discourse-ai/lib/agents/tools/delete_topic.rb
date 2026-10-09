@@ -69,7 +69,9 @@ module DiscourseAi
               acting_user,
               first_post,
               context: reason,
-              reviewable_id: context.reviewable_id,
+              reviewable_action: {
+                reviewable_id: context.reviewable_id,
+              },
             ).destroy
           else
             PostDestroyer.new(acting_user, first_post, context: reason).recover

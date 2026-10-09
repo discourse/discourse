@@ -642,8 +642,8 @@ after_initialize do
       Jobs.enqueue(
         Jobs::Chat::DeleteUserMessages,
         user_id: user.id,
-        moderation:
-          (opts[:moderation] || {}).except(:reviewable).merge(
+        reviewable_action:
+          (opts[:reviewable_action] || {}).except(:reviewable).merge(
             reviewable_id: opts[:reviewable_id],
             actor_id: guardian.user.id,
           ),

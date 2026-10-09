@@ -1054,14 +1054,12 @@ RSpec.describe PostMover do
                 topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
               end
 
-            expect(events.sole[:params].sole).to include(
-              destination_topic_id: destination_topic.id,
-              original_topic_id: topic.id,
-              copied: nil,
-            )
-            expect(events.sole[:params].sole[:post_ids]).to contain_exactly(
-              *MovedPost.where(old_post_id: [p1.id, p2.id, p3.id, p4.id]).pluck(:new_post_id),
-            )
+            expect(
+              events.detect do |e|
+                e[:params] ==
+                  [{ destination_topic_id: destination_topic.id, original_topic_id: topic.id }]
+              end,
+            ).to be_present
           end
 
           it "does not try to move small action posts" do

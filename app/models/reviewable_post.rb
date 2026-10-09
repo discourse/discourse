@@ -105,7 +105,7 @@ class ReviewablePost < Reviewable
       performed_by,
       post,
       reviewable_id: id,
-      moderation: moderation_options(args),
+      reviewable_action: reviewable_action_options(args),
     ).destroy
 
     create_result(:success, :rejected, [created_by_id], false)
