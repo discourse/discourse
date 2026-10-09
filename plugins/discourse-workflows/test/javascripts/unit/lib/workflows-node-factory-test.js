@@ -45,6 +45,29 @@ module("Unit | lib | discourse-workflows | node-factory", function (hooks) {
     );
   });
 
+  test("createNode materializes schema defaults when node types are known", function (assert) {
+    const nodeTypes = [
+      {
+        identifier: "flow:wait",
+        properties: {
+          wait_amount: { type: "integer", default: 1 },
+          wait_unit: { type: "options", default: "hours" },
+          webhook_suffix: { type: "string" },
+        },
+      },
+    ];
+
+    const node = createNode("flow:wait", [], null, {
+      nodeTypes,
+      configOverrides: { wait_amount: 2 },
+    });
+
+    assert.deepEqual(node.configuration, {
+      wait_amount: 2,
+      wait_unit: "hours",
+    });
+  });
+
   test("createNode returns a node with correct type and default version", function (assert) {
     const node = createNode("trigger:webhook", []);
     assert.strictEqual(node.type, "trigger:webhook");
