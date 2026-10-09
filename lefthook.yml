@@ -211,3 +211,5 @@ lints:
       run: bundle exec ruby script/i18n_lint.rb {all_files}
     glint:
       run: pnpm lint:types
+    strict-types:
+      run: pnpm types:strict

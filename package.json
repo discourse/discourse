@@ -36,6 +36,7 @@
     "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}') 'themes/**/*.{js,gjs,ts,gts,cjs,mjs,scss}'",
     "lint:types": "NODE_OPTIONS=--max-old-space-size=8192 ember-tsc -b",
     "types:generate": "pnpm --dir=frontend/discourse-i18n ember-tsc && pnpm --dir=frontend/discourse-types generate-external",
+    "types:strict": "script/check_strict_types",
     "types:watch": "pnpm types:generate && NODE_OPTIONS=--max-old-space-size=8192 pnpm ember-tsc -b --watch --preserveWatchOutput",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",

@@ -107,8 +107,9 @@ Checks:
 When you run `bin/lint` with no file arguments, the full-repo lint also runs:
 
 - `pnpm lint:types`
+- `pnpm types:strict`
 
-This is the Glint/TypeScript-style check for Discourse's JavaScript type information.
+These are the Glint/TypeScript-style checks for Discourse's type information. `lint:types` builds without `strict` and generates the published declarations. `types:strict` checks core and the bundled plugins and themes under `strict`.
 
 > :information_source: `bin/lint path/to/file` and the pre-commit hook do **not** run the full type check. Use plain `bin/lint` when you want the complete repo-wide lint pass.
 

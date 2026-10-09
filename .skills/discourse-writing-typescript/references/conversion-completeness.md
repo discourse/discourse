@@ -13,16 +13,16 @@ subset of checks.
    across the boundary. Suffix the imported service class binding with `Service`; leave the
    injection property and module path unchanged.
 2. Type public fields, method parameters, and returns precisely. Type private state where
-   inference would be null-only, empty-collection-only, or otherwise misleading. Do not rely
-   on the loose repository tsconfig to accept implicit `any`.
+   inference would be null-only, empty-collection-only, or otherwise misleading. Do not leave
+   implicit `any`: `pnpm types:strict` rejects it, even though `pnpm lint:types` accepts it.
 3. Add useful TSDoc to the typed public API: exported type fields, service
    fields/methods/parameters, and every component `Signature` arg, block, nested arg field,
    and yielded tuple value.
 4. Remove redundant legacy `@param {Type}`, `@returns {Type}`, `@type`, and `@property
    {Type}` tags. Preserve useful prose as untyped TSDoc tags.
-5. Search for bare `@service`, explicit or implicit `any`, suppression directives, stale
-   typed JSDoc, and undocumented casts. Passing `ember-tsc` does not prove these are absent
-   under the loose global configuration.
+5. Search for explicit `any`, suppression directives, stale typed JSDoc, and undocumented
+   casts. `pnpm types:strict` catches implicit `any`, including a bare `@service` in a
+   `.ts`/`.gts` file, but neither type check catches these.
 6. Inspect each core dependency before defining a local type. Prefer the canonical type,
    including one inferred from unconverted JavaScript. If a verified runtime field is
    missing, use the narrowest extension and a `TODO(typescript-pending)` naming the gap and
@@ -50,6 +50,6 @@ subset of checks.
   consumer is not strict-grade while a dependency method it calls still leaks `any`.
 - Do not count a subsystem complete until every file in its planned inventory satisfies the
   per-file checklist.
-- Final acceptance still requires clean full lint and type-check, stale-import and
+- Final acceptance still requires clean full lint and both type checks, stale-import and
   suppression audits, and relevant runtime tests. Targeted green checks never substitute for
   these full gates.
