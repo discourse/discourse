@@ -1500,6 +1500,8 @@ RSpec.describe User do
   end
 
   describe "update_timezone_if_missing" do
+    subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago, timezone: nil) }
+
     let(:timezone) { nil }
 
     it "does nothing if timezone is nil" do

@@ -40,6 +40,7 @@ describe "Composer - ProseMirror - Container" do
   end
 
   it "handles uploads and disables the editor toggle while uploading" do
+    current_user.user_option.update!(timezone: nil)
     open_composer
 
     file_path = file_from_fixtures("logo.png", "images").path
