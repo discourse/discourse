@@ -91,17 +91,17 @@ module CapybaraPlaywrightBasePatch
   private
 
   def execute_async_client_settled_script(session)
-    result = session.evaluate_async_script(<<~JS)
-        const done = arguments[0];
-
-        if (window.clientSettled) {
-          window.clientSettled(#{Capybara.default_max_wait_time * 1000})
-            .then(done)
-            .catch((error) => { done(error.message) });
-        } else {
-          done();
+    result =
+      session.driver.with_playwright_page do |playwright_page|
+        playwright_page.capybara_current_frame.evaluate(<<~JS)
+        () => {
+          if (window.clientSettled) {
+            return window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+              .catch((error) => error.message);
+          }
         }
       JS
+      end
 
     raise result if result.is_a? String
   end
