@@ -132,8 +132,4 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       )
     end
   end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-  end
 end

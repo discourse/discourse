@@ -82,6 +82,31 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_workflow("My workflow")
   end
 
+  it "lets an admin scope a post trigger to specific topics" do
+    topic = Fabricate(:post).topic
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "post-created",
+            "type" => "trigger:post_created",
+            "typeVersion" => "1.0",
+            "name" => "Post created",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, "post-created")
+    editor_page.filter_by_topic(topic)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_topic_filter(topic)
+  end
+
   it "lets an admin add fixed event triggers while keeping existing status filters editable" do
     category = Fabricate(:category)
     node_id = "existing-status"

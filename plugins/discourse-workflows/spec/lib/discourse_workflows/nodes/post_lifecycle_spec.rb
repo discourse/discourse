@@ -18,10 +18,6 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
     topic.tags << tag
   end
 
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-  end
-
   describe "#valid?" do
     it "accepts a regular post, including once it is deleted" do
       expect(trigger).to be_valid

@@ -765,6 +765,8 @@ en:
         fixed: "Fixed"
         plain: "Plain"
         dynamic: "Dynamic"
+      topic_control:
+        unavailable_topic: "Topic #%{id}"
       expression_preview:
         result: "Result"
         empty: "Empty"
@@ -871,6 +873,9 @@ en:
           reviewable_types_placeholder: "All types"
           tag_names: "Tags"
           tag_names_description: "Only trigger for topics that have at least one of these tags"
+          topic_ids: "Topics"
+          topic_ids_description: "Only trigger for these topics. Leave empty to match all topics."
+          topic_ids_placeholder: "All topics"
         dynamic_values:
           badge_id: "a badge ID"
           boolean: "true or false"
@@ -885,6 +890,7 @@ en:
           option_value: "an option value"
           query_id: "a query ID"
           tag_names: "tag names"
+          topic_ids: "topic IDs"
           username: "a username"
           usernames: "usernames"
           user_or_group_name: "a username or group name"
@@ -1010,6 +1016,7 @@ en:
         category_ids_description: "Only trigger for posts in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
+        topic_ids_description: "Only trigger for posts in these topics. Leave empty to match all topics."
       post_lifecycle:
         topic_type: "Topic type"
         topic_type_description: "Choose whether topics, personal messages, or both should trigger the workflow"
@@ -1019,10 +1026,12 @@ en:
         category_ids_description: "Only trigger for posts in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
+        topic_ids_description: "Only trigger for posts in these topics. Leave empty to match all topics."
       post_edited:
         category_ids_description: "Only trigger for posts in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
+        topic_ids_description: "Only trigger for posts in these topics. Leave empty to match all topics."
         post_scope: "Post scope"
         post_scope_description: "Choose which posts should trigger the workflow"
         post_scope_first_post: "First post"
@@ -1035,6 +1044,8 @@ en:
         category_ids_description: "Only trigger for posts moved into these categories. Leave empty to match all categories."
         tag_names: "Destination tags"
         tag_names_description: "Only trigger for posts moved into topics that have at least one of these tags"
+        topic_ids: "Destination topics"
+        topic_ids_description: "Only trigger for posts moved into these topics. Leave empty to match all topics."
       topic_created:
         topic_type: "Topic type"
         topic_type_description: "Choose whether topics, personal messages, or both should trigger the workflow"

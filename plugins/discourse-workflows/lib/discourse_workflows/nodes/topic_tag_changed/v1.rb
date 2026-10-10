@@ -54,11 +54,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_category_ids?(
-            @topic.category_id,
-            category_ids_parameter(trigger_ctx),
-            include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          )
+          matches_topic_filters?(@topic, trigger_ctx)
         end
 
         private

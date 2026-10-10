@@ -10,7 +10,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLikeChanged::V1 do
   fab!(:tag)
 
   describe "#matches?" do
-    it "filters changes, categories, and tags" do
+    it "filters changes, categories, tags, and topics" do
       SiteSetting.tagging_enabled = true
       topic.tags << tag
       trigger = described_class.from_event(:like_created, PostAction.new(post:, user: liker))
@@ -19,9 +19,15 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLikeChanged::V1 do
       expect(trigger.matches?(trigger_context(changes: ["unliked"]))).to eq(false)
       expect(trigger.matches?(trigger_context(category_ids: [other_category.id]))).to eq(false)
       expect(trigger.matches?(trigger_context(tag_names: ["missing"]))).to eq(false)
+      expect(trigger.matches?(trigger_context(topic_ids: [topic.id + 1]))).to eq(false)
       expect(
         trigger.matches?(
-          trigger_context(changes: ["liked"], category_ids: [category.id], tag_names: [tag.name]),
+          trigger_context(
+            changes: ["liked"],
+            category_ids: [category.id],
+            tag_names: [tag.name],
+            topic_ids: [topic.id],
+          ),
         ),
       ).to eq(true)
     end

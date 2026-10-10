@@ -137,6 +137,19 @@ module PageObjects
           self
         end
 
+        def filter_by_topic(topic)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='topic_ids'] .topic-selector")
+          selector.expand
+          selector.search(topic.id.to_s)
+          selector.select_row_by_value(topic.id)
+          self
+        end
+
+        def has_topic_filter?(topic)
+          page.has_css?("[data-name='topic_ids'] .select-kit-header", text: topic.title)
+        end
+
         def has_fixed_topic_filters?(category)
           page.has_css?("[data-name='category_ids'] .select-kit-header", text: category.name) &&
             page.has_css?("[data-name='include_subcategories']") &&
