@@ -31,8 +31,7 @@ module DiscourseWorkflows
               default: [],
               options: CHANGES.values,
             },
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
 

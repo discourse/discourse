@@ -159,6 +159,8 @@ function dynamicValueKey(schema = {}, fieldName) {
         : "group_id";
     case "tags":
       return "tag_names";
+    case "topic":
+      return "topic_ids";
     case "user":
       return ui.multiple ? "usernames" : "username";
     case "user_or_group":

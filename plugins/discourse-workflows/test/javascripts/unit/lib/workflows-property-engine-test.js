@@ -120,6 +120,10 @@ module("Unit | Utility | workflows property engine", function () {
       "Include subcategories"
     );
     assert.strictEqual(
+      propertyLabel("trigger:post_created", "topic_ids"),
+      "Topics"
+    );
+    assert.strictEqual(
       propertyLabel("trigger:user_updated", "group_ids"),
       "Groups"
     );

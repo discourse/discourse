@@ -126,6 +126,7 @@ module DiscourseWorkflows
       textarea
       time
       timezone
+      topic
       url_preview
       user
       user_seen_trigger_options

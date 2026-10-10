@@ -286,27 +286,23 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
-  describe ".normalize_category_ids" do
+  describe ".normalize_ids" do
     it "coerces scalars, arrays, and mixed values to unique integer ids" do
-      expect(described_class.normalize_category_ids(nil)).to eq([])
-      expect(described_class.normalize_category_ids("")).to eq([])
-      expect(described_class.normalize_category_ids([])).to eq([])
-      expect(described_class.normalize_category_ids("12")).to eq([12])
-      expect(described_class.normalize_category_ids(12)).to eq([12])
-      expect(described_class.normalize_category_ids(["12", 3, " 12 "])).to eq([12, 3])
-      expect(described_class.normalize_category_ids([nil, ""])).to eq([])
+      expect(described_class.normalize_ids(nil)).to eq([])
+      expect(described_class.normalize_ids("")).to eq([])
+      expect(described_class.normalize_ids([])).to eq([])
+      expect(described_class.normalize_ids("12")).to eq([12])
+      expect(described_class.normalize_ids(12)).to eq([12])
+      expect(described_class.normalize_ids(["12", 3, " 12 "])).to eq([12, 3])
+      expect(described_class.normalize_ids([nil, ""])).to eq([])
     end
 
     it "coerces unresolved expression strings to a non-matching id" do
-      expect(described_class.normalize_category_ids(["=$json.category_id"])).to eq([0])
+      expect(described_class.normalize_ids(["=$json.category_id"])).to eq([0])
     end
   end
 
   describe ".category_ids_parameter" do
-    def trigger_context(parameters)
-      DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-    end
-
     it "reads category_ids when present" do
       expect(
         described_class.category_ids_parameter(trigger_context("category_ids" => %w[1 2])),
@@ -329,6 +325,55 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "returns an empty list when neither parameter is set" do
       expect(described_class.category_ids_parameter(trigger_context({}))).to eq([])
+    end
+  end
+
+  describe "#matches_topic_filters?" do
+    fab!(:topic)
+
+    let(:node_class) { Class.new(described_class) { public :matches_topic_filters? } }
+
+    def node_declaring(properties)
+      node_class.description(properties:)
+      node_class.new
+    end
+
+    it "ignores filters the node does not declare" do
+      node = node_declaring(described_class::TAG_FILTER_PROPERTIES)
+      stray_filters = { topic_ids: [topic.id + 1], category_ids: [topic.category_id + 1] }
+
+      expect(node.matches_topic_filters?(topic, trigger_context(stray_filters))).to eq(true)
+    end
+
+    it "declares the topic filter only on triggers whose event repeats inside a topic",
+       :aggregate_failures do
+      repeating = %w[
+        post_created
+        post_edited
+        post_destroyed
+        post_recovered
+        post_moved
+        post_like_changed
+      ]
+      once_per_topic = %w[
+        topic_created
+        topic_closed
+        topic_published
+        topic_timer_changed
+        stale_topic
+        topic_tag_changed
+      ]
+
+      repeating.each do |name|
+        expect(
+          DiscourseWorkflows::Registry.find_node_type("trigger:#{name}").properties,
+        ).to have_key(:topic_ids)
+      end
+      once_per_topic.each do |name|
+        expect(
+          DiscourseWorkflows::Registry.find_node_type("trigger:#{name}").properties,
+        ).not_to have_key(:topic_ids)
+      end
     end
   end
 

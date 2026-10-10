@@ -60,8 +60,4 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
       ).to eq(false)
     end
   end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-  end
 end

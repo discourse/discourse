@@ -70,14 +70,10 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_topic_type?(@topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(@topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category_ids?(
-              @topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(@topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+          return false if !matches_topic_type?(@topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(@topic, trigger_ctx)
+
+          matches_group_inbox?(@topic, trigger_ctx.get_node_parameter("group_inbox_id"))
         end
 
         private
