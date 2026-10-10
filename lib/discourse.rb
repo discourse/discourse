@@ -1052,6 +1052,11 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    resume_after_fork
+    Scheduler::Defer.pause
+    Scheduler::ThreadPool.pause
+    ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
+
     DiscourseVips.before_fork
 
     if GlobalSetting.mini_racer_single_threaded
@@ -1062,34 +1067,45 @@ module Discourse
     end
   end
 
-  # Called in web worker processes after fork to apply worker-specific
-  # database variable overrides (e.g. a stricter statement_timeout for
-  # web requests than for sidekiq jobs). Configured via GlobalSettings
-  # with the `unicorn_worker_db_variables_` prefix.
-  def self.apply_worker_db_variables_overrides
+  # Called after fork so each process uses the database variables for its role:
+  # web workers may override some (e.g. a stricter statement_timeout for web
+  # requests than for sidekiq jobs), configured via GlobalSettings with the
+  # `unicorn_worker_db_variables_` prefix. Other processes, including those
+  # forked from a web worker, use the defaults.
+  def self.apply_db_variables_overrides(web:)
     variables_overrides = {}
-    prefix = "unicorn_worker_db_variables_"
 
-    GlobalSetting.provider.keys.each do |key|
-      if key.start_with?(prefix)
-        variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
-          key,
-        )
+    if web
+      prefix = "unicorn_worker_db_variables_"
+      GlobalSetting.provider.keys.each do |key|
+        if key.start_with?(prefix)
+          variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
+            key,
+          )
+        end
       end
     end
 
-    if variables_overrides.any?
-      ActiveRecord::Base.configurations =
-        Rails.application.config.database_configuration(variables_overrides:)
-      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
-      ActiveRecord::Base.establish_connection
-    end
+    return if variables_overrides == (@db_variables_overrides || {})
+
+    RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+    @db_variables_overrides = variables_overrides
+    ActiveRecord::Base.configurations =
+      Rails.application.config.database_configuration(variables_overrides:)
+    ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+    ActiveRecord::Base.establish_connection
+  end
+
+  def self.resume_after_fork
+    Scheduler::Defer.resume
+    Scheduler::ThreadPool.resume
   end
 
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    resume_after_fork
     Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
 
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414

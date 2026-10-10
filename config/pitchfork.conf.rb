@@ -3,6 +3,15 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"]
+
+refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
+if refork_after_setting
+  raise "APP_SERVER_REFORK_AFTER requires Linux" if !Pitchfork::REFORKING_AVAILABLE
+  refork_after(
+    refork_after_setting.split(",").map { |limit| limit.strip == "false" ? false : Integer(limit) },
+  )
+end
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
@@ -57,38 +66,42 @@ before_fork do |server|
 
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
+
+  Discourse.before_fork
 end
 
 after_mold_fork do |server, mold|
-  if mold.generation.zero?
-    Discourse.preload_rails!
+  if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
+    raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
+  end
 
-    supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  Discourse.preload_rails!
+  Discourse.apply_db_variables_overrides(web: false)
 
-    if supervisor > 0
-      Thread.new do
-        while true
-          unless File.exist?("/proc/#{supervisor}")
-            server.logger.error "Kill self, supervisor is gone"
-            Process.kill "TERM", Process.pid
-          end
-          sleep 2
+  GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
+
+  supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+
+  if supervisor > 0
+    Thread.new do
+      while true
+        unless File.exist?("/proc/#{supervisor}")
+          server.logger.error "Kill self, supervisor is gone"
+          Process.kill "TERM", Process.pid
         end
+        sleep 2
       end
     end
   end
 
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
-  Discourse.before_fork
   Process.warmup
 end
 
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
-
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
-  Discourse.apply_worker_db_variables_overrides
+  Discourse.apply_db_variables_overrides(web: true)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 
@@ -101,7 +114,15 @@ if oob_gc_enabled
   end
 end
 
+before_worker_exit do |_server, _worker|
+  Discourse.resume_after_fork
+  Scheduler::ThreadPool.wait_for_idle(timeout: 10)
+  Scheduler::Defer.stop!(finish_work: true)
+end
+
 before_service_worker_ready do |server, service_worker|
+  Discourse.resume_after_fork
+
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"

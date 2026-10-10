@@ -67,7 +67,96 @@ RSpec.describe Discourse do
     end
   end
 
-  describe ".apply_worker_db_variables_overrides" do
+  describe ".before_fork" do
+    after { Discourse.resume_after_fork }
+
+    it "drains deferred jobs accumulated between forks" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      completed = Queue.new
+      Discourse.before_fork
+      Scheduler::Defer.later { completed << :completed }
+
+      Discourse.before_fork
+
+      expect(completed.pop(timeout: 0.1)).to eq(:completed)
+      expect(Scheduler::Defer.length).to eq(0)
+    ensure
+      Discourse.resume_after_fork
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+
+    it "retains deferred jobs submitted by draining pools for the parent" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
+      pool.post do
+        started << true
+        release.pop
+        Scheduler::Defer.later { completed << :completed }
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      preparing = Thread.new { Discourse.before_fork }
+      wait_for(timeout: 5) { Scheduler::ThreadPool.paused? }
+      release << true
+
+      expect(preparing.join(5)).to eq(preparing)
+      expect(Scheduler::Defer.length).to eq(1)
+      Discourse.resume_after_fork
+      expect(completed.pop(timeout: 5)).to eq(:completed)
+    ensure
+      release&.push(true)
+      Discourse.resume_after_fork
+      preparing&.join(5)
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+
+    it "keeps pools available while draining deferred work" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 1, max_threads: 1)
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+      Scheduler::Defer.later do
+        pool.post { completed << :completed }
+        completed.pop
+      end
+      wait_for(timeout: 5) { pool.stats[:queued_tasks] == 1 }
+
+      preparing = Thread.new { Discourse.before_fork }
+      wait_for(timeout: 5) { preparing.status == "sleep" || !preparing.alive? }
+      expect(preparing.join(0.1)).to eq(nil)
+      release << true
+
+      expect(preparing.join(5)).to eq(preparing)
+      expect(Scheduler::Defer.length).to eq(0)
+      expect(Scheduler::ThreadPool.paused?).to eq(true)
+    ensure
+      release&.push(true)
+      Discourse.resume_after_fork
+      preparing&.join(5)
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+  end
+
+  describe ".apply_db_variables_overrides" do
     around do |example|
       original_env = ENV.to_hash
       original_config = ActiveRecord::Base.configurations
@@ -92,7 +181,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "applies worker-specific database variable overrides in a production environment" do
+    it "applies the overrides for web workers and the defaults elsewhere" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
       temp_discourse_conf = Tempfile.new("discourse.conf")
@@ -108,11 +197,17 @@ RSpec.describe Discourse do
       GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
       GlobalSetting.load_defaults
 
-      Discourse.apply_worker_db_variables_overrides
+      Discourse.apply_db_variables_overrides(web: true)
 
       expect(
         ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
       ).to eq("100s")
+
+      Discourse.apply_db_variables_overrides(web: false)
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("10s")
     ensure
       %i[
         db_variables_statement_timeout
