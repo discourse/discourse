@@ -485,6 +485,7 @@ export default class DFilterControls extends Component {
     this._textFilterFromUrl = this.currentSearchParams.get(
       this.args.textFilterQueryParam
     );
+    this.textFilter = this.initialTextFilterValue;
   }
 
   <template>

@@ -1212,10 +1212,13 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     });
   }
 
-  test("seeds the text filter on real route changes", async function (assert) {
+  test("seeds the text filter on real navigation after local edits", async function (assert) {
     this.owner.unregister("service:router");
     this.owner.register("service:router", RouterStub);
     const router = this.owner.lookup("service:router");
+    sinon
+      .stub(DiscourseURL, "replaceState")
+      .callsFake((url) => router.replaceURL(url));
     router.changeURL("/admin/example?filter=first");
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
@@ -1239,6 +1242,17 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".d-filter-controls__input").hasValue("first", "seeds on mount");
     assert.dom(".item").hasText("First Item", "applies the initial URL filter");
 
+    await fillIn(".d-filter-controls__input", "second");
+    assert.dom(".item").hasText("Second Item", "applies a local edit");
+
+    router.changeURL("/admin/example?filter=first");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("first", "restores the earlier URL filter after editing");
+    assert.dom(".item").hasText("First Item", "shows the destination match");
+
     router.changeURL("/admin/example?filter=second");
     await settled();
 
@@ -1256,6 +1270,17 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".item")
       .exists({ count: 3 }, "shows all items after navigation");
+
+    await fillIn(".d-filter-controls__input", "first");
+    assert.dom(".item").hasText("First Item", "applies another local edit");
+
+    router.changeURL("/admin/example");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("", "restores an absent URL filter after editing");
+    assert.dom(".item").exists({ count: 3 }, "shows all destination items");
   });
 
   test("reveals a URL-owned dropdown activated by a route change", async function (assert) {
