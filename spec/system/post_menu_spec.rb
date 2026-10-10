@@ -165,11 +165,6 @@ describe "Post menu" do
   describe "bookmark" do
     before { SiteSetting.post_menu_hidden_items = "" }
 
-    it "does not display the bookmark button when the user is anonymous" do
-      topic_page.visit_topic(post.topic)
-      expect(topic_page).to have_no_post_action_button(post, :bookmark)
-    end
-
     it "works as expected" do
       sign_in(user)
 
@@ -200,15 +195,20 @@ describe "Post menu" do
     end
   end
 
-  describe "delete / recover" do
+  describe "action visibility" do
     before { SiteSetting.post_menu_hidden_items = "" }
 
-    it "displays the delete button only when the user can delete the post" do
+    it "shows post action buttons according to the user's permissions" do
       # do not display the edit button when unlogged
       topic_page.visit_topic(post.topic)
 
       expect(topic_page).to have_no_post_action_button(post, :delete)
       expect(topic_page).to have_no_post_action_button(post2, :delete)
+
+      # do not display the edit button when unlogged
+      expect(topic_page).to have_no_post_action_button(post, :flag)
+      expect(topic_page).to have_no_post_action_button(post2, :flag)
+      expect(topic_page).to have_no_post_action_button(post, :bookmark)
 
       # display the delete button only for the post that `user` can delete
       sign_in(user)
@@ -218,6 +218,10 @@ describe "Post menu" do
       expect(topic_page).to have_no_post_action_button(post, :delete)
       expect(topic_page).to have_post_action_button(post2, :delete)
 
+      # display the flag button only for the post that `user` can flag
+      expect(topic_page).to have_post_action_button(post, :flag)
+      expect(topic_page).to have_post_action_button(post2, :flag)
+
       # display the delete button for the all the posts because an admin is logged
       sign_in(admin)
 
@@ -225,7 +229,15 @@ describe "Post menu" do
 
       expect(topic_page).to have_post_action_button(post, :delete)
       expect(topic_page).to have_post_action_button(post2, :delete)
+
+      # display the flag button for the all the posts because an admin is logged
+      expect(topic_page).to have_post_action_button(post, :flag)
+      expect(topic_page).to have_post_action_button(post2, :flag)
     end
+  end
+
+  describe "delete / recover" do
+    before { SiteSetting.post_menu_hidden_items = "" }
 
     it "displays the recover button only when the user can recover the post" do
       PostDestroyer.new(user, post2).destroy
@@ -413,30 +425,6 @@ describe "Post menu" do
 
   describe "flag" do
     before { SiteSetting.post_menu_hidden_items = "" }
-
-    it "displays the flag button only when the user can flag the post" do
-      # do not display the edit button when unlogged
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_no_post_action_button(post, :flag)
-      expect(topic_page).to have_no_post_action_button(post2, :flag)
-
-      # display the flag button only for the post that `user` can flag
-      sign_in(user)
-
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_post_action_button(post, :flag)
-      expect(topic_page).to have_post_action_button(post2, :flag)
-
-      # display the flag button for the all the posts because an admin is logged
-      sign_in(admin)
-
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_post_action_button(post, :flag)
-      expect(topic_page).to have_post_action_button(post2, :flag)
-    end
 
     it "works as expected" do
       sign_in(user)
