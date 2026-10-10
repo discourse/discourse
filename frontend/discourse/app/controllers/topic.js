@@ -921,6 +921,8 @@ export default class TopicController extends Controller {
           opts.reply = data.reply;
         }
 
+        // An edit draft left on the topic key would be overwritten by a reply
+        // sharing that key, so resume the edit instead.
         if (Composer.isEditDraft(data)) {
           opts.draft = { ...data, reply: opts.reply };
           opts.topic = topic;
@@ -2036,8 +2038,7 @@ export default class TopicController extends Controller {
     const opts = {
       post,
       action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: Composer.editDraftKey(post),
     };
 
     if (editingSharedDraft) {
@@ -2056,11 +2057,10 @@ export default class TopicController extends Controller {
     }
 
     const draftData = await Draft.get(opts.draftKey);
-    const data = draftData.draft && JSON.parse(draftData.draft);
+    opts.draftSequence = draftData.draft_sequence;
 
-    if (Composer.isEditDraft(data) && data.postId === post.id) {
-      opts.draft = data;
-      opts.draftSequence = draftData.draft_sequence;
+    if (draftData.draft) {
+      opts.draft = JSON.parse(draftData.draft);
       opts.topic = topic;
     }
 

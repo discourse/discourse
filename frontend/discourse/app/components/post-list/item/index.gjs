@@ -68,6 +68,8 @@ export default class PostListItem extends Component {
       return "envelope";
     } else if (key.startsWith("new_topic")) {
       return "layer-group";
+    } else if (key.startsWith("post_")) {
+      return "pencil";
     } else {
       return "reply";
     }

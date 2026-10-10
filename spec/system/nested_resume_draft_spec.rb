@@ -30,4 +30,20 @@ RSpec.describe "Nested view resuming a draft from the user activity page" do
     expect(composer).to be_opened
     expect(composer).to have_content("Resumed nested draft body")
   end
+
+  it "opens the composer as an edit when resuming a nested post edit draft" do
+    Draft.set(
+      user,
+      op.edit_draft_key,
+      0,
+      { reply: "Resumed nested edit body", action: "edit", postId: op.id }.to_json,
+    )
+
+    drafts_page.visit(user)
+    page.find(".user-stream-item", text: "Resumed nested edit body").find(".resume-draft").click
+
+    expect(nested_view).to have_nested_view
+    expect(composer).to have_content("Resumed nested edit body")
+    expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+  end
 end
