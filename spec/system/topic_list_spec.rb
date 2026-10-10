@@ -123,9 +123,16 @@ describe "Topic list" do
     sign_in(admin)
 
     users =
-      8.times.map do
-        Fabricate(:user, username: Faker::Internet.username(specifier: 6..15, separators: %w[_ .]))
-      end
+      %w[
+        reader
+        member_one
+        member.two
+        guest_three
+        guest.four
+        visitor_five
+        visitor.six
+        long_readername
+      ].map { |username| Fabricate(:user, username:) }
 
     categories = 5.times.map { Fabricate(:category) }
 
