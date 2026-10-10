@@ -3,6 +3,10 @@
 describe "Composer - ProseMirror - Keyboard shortcuts" do
   include_context "with prosemirror editor"
 
+  fab!(:category_with_emoji) do
+    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
+  end
+
   it "supports Ctrl + B to create a bold text" do
     open_composer
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
