@@ -80,13 +80,21 @@ export default class DFilterControls extends Component {
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
   @resettableTracked textFilter = this.initialTextFilterValue;
-
   dropdownFilters = trackedObject();
+
+  @tracked
+  _textFilterFromUrl = this.args.textFilterQueryParam
+    ? this.currentSearchParams.get(this.args.textFilterQueryParam)
+    : null;
 
   constructor() {
     super(...arguments);
 
     this.applyDropdownValues();
+
+    if (this.args.textFilterQueryParam) {
+      this.router.on("routeDidChange", this._applyTextFilterFromUrl);
+    }
 
     if (this.hasUrlOwnedDropdowns) {
       // keep URL-owned dropdowns in sync across real transitions (e.g. a
@@ -98,6 +106,9 @@ export default class DFilterControls extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.args.textFilterQueryParam) {
+      this.router.off("routeDidChange", this._applyTextFilterFromUrl);
+    }
     if (this.hasUrlOwnedDropdowns) {
       this.router.off("routeDidChange", this.applyDropdownsFromUrl);
     }
@@ -108,11 +119,11 @@ export default class DFilterControls extends Component {
       return "";
     }
 
-    // reading router.currentURL makes this getter re-evaluate on transitions,
-    // so same-route links carrying the query param re-seed the input
+    // Real route transitions re-seed the input; our own URL writes
+    // must not overwrite edits made while a write was pending.
     const fromUrl =
       this.args.textFilterQueryParam && this.showFilters
-        ? this.currentSearchParams.get(this.args.textFilterQueryParam)
+        ? this._textFilterFromUrl
         : null;
 
     if (fromUrl !== null) {
@@ -467,6 +478,13 @@ export default class DFilterControls extends Component {
     return value !== null && options.some((option) => option.value === value)
       ? value
       : null;
+  }
+
+  @action
+  _applyTextFilterFromUrl() {
+    this._textFilterFromUrl = this.currentSearchParams.get(
+      this.args.textFilterQueryParam
+    );
   }
 
   <template>
