@@ -62,8 +62,13 @@ export function shouldShowExecuteStep(node) {
   return Boolean(node?.type) && !node.type.startsWith("trigger:");
 }
 
-export function shouldEnableManualTrigger(node, nodeType, session) {
-  if (!node?.type?.startsWith("trigger:")) {
+export function shouldEnableManualTrigger(
+  node,
+  nodeType,
+  session,
+  submissionWorkflow = false
+) {
+  if (submissionWorkflow || !node?.type?.startsWith("trigger:")) {
     return false;
   }
 
@@ -71,6 +76,10 @@ export function shouldEnableManualTrigger(node, nodeType, session) {
     nodeTypeIsManuallyTriggerable(nodeType, node.typeVersion) ||
     session?.isNodePinned(node.name)
   );
+}
+
+export function shouldEnableExecuteStep(node, submissionWorkflow = false) {
+  return !submissionWorkflow && shouldShowExecuteStep(node);
 }
 
 export default class WorkflowNode extends Component {
@@ -172,11 +181,16 @@ export default class WorkflowNode extends Component {
     return i18n("discourse_workflows.node_unavailable.short");
   }
 
+  get submissionWorkflow() {
+    return Boolean(this.args.isSubmissionWorkflow);
+  }
+
   get isManuallyTriggerable() {
     return shouldEnableManualTrigger(
       this.data,
       this.resolvedNodeType,
-      this.args.session
+      this.args.session,
+      this.submissionWorkflow
     );
   }
 
@@ -185,9 +199,20 @@ export default class WorkflowNode extends Component {
   }
 
   get manualTriggerLabel() {
+    if (this.submissionWorkflow) {
+      return i18n("discourse_workflows.submission_check.run_hint");
+    }
+
     return this.isManuallyTriggerable
       ? i18n("discourse_workflows.manual_trigger.run")
       : i18n("discourse_workflows.manual_trigger.needs_pin_data");
+  }
+
+  get isExecuteStepEnabled() {
+    return (
+      !this.isUnavailable &&
+      shouldEnableExecuteStep(this.data, this.submissionWorkflow)
+    );
   }
 
   get showExecuteStep() {
@@ -195,7 +220,9 @@ export default class WorkflowNode extends Component {
   }
 
   get executeStepLabel() {
-    return i18n("discourse_workflows.execute_step.run");
+    return this.submissionWorkflow
+      ? i18n("discourse_workflows.submission_check.run_hint")
+      : i18n("discourse_workflows.execute_step.run");
   }
 
   get dataTableId() {
@@ -317,9 +344,9 @@ export default class WorkflowNode extends Component {
                     aria-label={{this.executeStepLabel}}
                     class={{dConcatClass
                       "workflow-canvas-toolbar__btn --success"
-                      (if this.isUnavailable "is-disabled")
+                      (if this.isExecuteStepEnabled "" "is-disabled")
                     }}
-                    disabled={{if this.isUnavailable true false}}
+                    disabled={{if this.isExecuteStepEnabled false true}}
                     type="button"
                     {{on "pointerdown" this.stopPropagation}}
                     {{on "click" this.handleExecuteStep}}

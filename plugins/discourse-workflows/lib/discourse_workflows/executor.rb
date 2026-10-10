@@ -40,6 +40,10 @@ module DiscourseWorkflows
         else
           @workflow.published_nodes
         end
+      if SubmissionCheck::Graph.restricted?(workflow_nodes)
+        raise SubmissionCheck::Graph::Invalid,
+              "Submission checks cannot run in the ordinary executor"
+      end
       @context =
         ExecutionContext.new(
           workflow: @workflow,

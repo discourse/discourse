@@ -40,6 +40,7 @@ module DiscourseWorkflows
 
       validate_connections
       validate_workflow_call_dependencies
+      validate_submission_check if workflow.errors.empty?
       workflow.errors.empty?
     end
 
@@ -54,6 +55,22 @@ module DiscourseWorkflows
     private
 
     attr_reader :nodes_data, :connections_data
+
+    def validate_submission_check
+      return unless SubmissionCheck::Graph.restricted?(nodes)
+
+      SubmissionCheck::Graph
+        .new(nodes: nodes, connections: connections_data)
+        .validate_draft!
+        .validate_draft_connections!
+      if normalized_nodes_data.any? { |node|
+           node[:credentials].present? || !SubmissionCheck::Graph.inert_direct_settings?(node)
+         }
+        raise SubmissionCheck::Graph::Invalid
+      end
+    rescue SubmissionCheck::Graph::Invalid
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_submission_check"))
+    end
 
     def validate_payload_shape
       unless nodes_data.is_a?(Array)

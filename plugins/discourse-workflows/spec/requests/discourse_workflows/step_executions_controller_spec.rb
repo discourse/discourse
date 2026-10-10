@@ -47,6 +47,38 @@ RSpec.describe DiscourseWorkflows::StepExecutionsController do
       )
     end
 
+    it "returns 422 without a pending execution or job for a submission check" do
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "submission-trigger", "trigger:before_post_submission"
+          builder.node "submission-reject",
+                       "action:reject_submission",
+                       configuration: {
+                         "message" => "Wait.",
+                       }
+          builder.chain "submission-trigger", "submission-reject"
+        end
+      check = Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+
+      expect do
+        post "/admin/plugins/discourse-workflows/step-executions.json",
+             params: {
+               workflow_id: check.id,
+               node_id: "submission-reject",
+             }
+      end.not_to change {
+        [
+          DiscourseWorkflows::Execution.count,
+          Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.size,
+        ]
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_workflows.errors.submission_check.cannot_run"),
+      )
+    end
+
     it "returns 422 with an error message when the node has no input data" do
       post "/admin/plugins/discourse-workflows/step-executions.json",
            params: {

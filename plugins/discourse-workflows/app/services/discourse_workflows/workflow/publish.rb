@@ -36,6 +36,8 @@ module DiscourseWorkflows
 
     def publish_workflow(workflow:, guardian:)
       workflow.publish!(user: guardian.user)
+    rescue SubmissionCheck::Graph::Invalid
+      fail!(I18n.t("discourse_workflows.errors.invalid_submission_check"))
     end
 
     def expire_workflow_caches

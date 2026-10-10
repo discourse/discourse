@@ -75,6 +75,11 @@ en:
       already_resumed: "This execution has already been resumed."
       javascript_execution_failed: "JavaScript execution failed"
       storage_limit_exceeded: "Data table storage limit exceeded."
+      invalid_submission_check: "Submission checks may only use one Before post submission trigger, If conditions, Reject submission actions, and notes. Check the connections, settings, and fixed rejection messages."
+      submission_check:
+        unavailable: "This submission could not be checked right now. Please try again later."
+        cannot_run: "Submission checks run only when a topic or reply is submitted."
+        error_workflow_not_allowed: "cannot be set for a submission check"
       invalid_nodes: "Nodes must be an array of workflow node objects."
       invalid_connections: "Connections must be a workflow connection map."
       invalid_node_fields: "Nodes must use supported node field shapes."

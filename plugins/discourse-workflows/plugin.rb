@@ -243,6 +243,19 @@ after_initialize do
     MessageBus.last_id(DiscourseWorkflows::Nodes::Modal::V1.user_channel(object.id))
   end
 
+  on(:before_create_post) do |post, opts|
+    if (message = DiscourseWorkflows::SubmissionCheck::Runner.check(post: post, opts: opts))
+      post.errors.add(:base, message)
+    end
+  end
+
+  on(:validate_queued_topic) do |user, args, errors|
+    post = Post.new(user: user, raw: args[:raw])
+    if (message = DiscourseWorkflows::SubmissionCheck::Runner.check(post: post, opts: args))
+      errors.add(:base, message)
+    end
+  end
+
   on(:site_setting_changed) do |name, old_value, new_value|
     next if name != :enable_discourse_workflows
     next unless new_value && !old_value

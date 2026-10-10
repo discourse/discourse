@@ -46,6 +46,32 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(job_args).to include("execution_id" => execution.id, "user_id" => admin.id)
     end
 
+    it "returns 422 without a pending execution or job for a submission check" do
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "submission-trigger", "trigger:before_post_submission"
+        end
+      check = Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+
+      expect do
+        post "/admin/plugins/discourse-workflows/executions.json",
+             params: {
+               workflow_id: check.id,
+               trigger_node_id: "submission-trigger",
+             }
+      end.not_to change {
+        [
+          DiscourseWorkflows::Execution.count,
+          Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.size,
+        ]
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_workflows.errors.submission_check.cannot_run"),
+      )
+    end
+
     it "returns 404 when trigger node does not exist" do
       post "/admin/plugins/discourse-workflows/executions.json",
            params: {

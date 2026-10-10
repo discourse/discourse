@@ -43,6 +43,26 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
       it { is_expected.to fail_to_find_a_model(:trigger_node) }
     end
 
+    context "when workflow contains a submission check" do
+      fab!(:workflow) do
+        graph =
+          build_workflow_graph do |builder|
+            builder.node "trigger-1", "trigger:before_post_submission"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      end
+
+      it "refuses execution before creating a row or enqueuing a job" do
+        expect { result }.not_to change {
+          [
+            DiscourseWorkflows::Execution.count,
+            Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.size,
+          ]
+        }
+        expect(result).to fail_a_policy(:not_submission_check)
+      end
+    end
+
     context "when everything is valid" do
       it "creates a pending manual execution and enqueues a job" do
         expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1).and change {

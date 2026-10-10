@@ -21,6 +21,22 @@ import {
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/node-types";
 
 module("Unit | Utility | workflows node types", function () {
+  test("terminal nodes have no output ports", function (assert) {
+    assert.deepEqual(
+      nodeTypeOutputKeys({
+        identifier: "action:reject_submission",
+        outputs: [],
+      }),
+      [],
+      "an explicitly terminal descriptor has no outgoing socket"
+    );
+    assert.deepEqual(
+      nodeTypeOutputKeys("action:unknown"),
+      ["main"],
+      "a missing descriptor retains the default output"
+    );
+  });
+
   test("reads i18n metadata from the descriptor ui", function (assert) {
     const nodeType = {
       identifier: "action:ai_agent",
