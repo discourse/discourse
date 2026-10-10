@@ -31,6 +31,30 @@ zh_CN:
         remove: "移除此赞"
         cant_remove: "您无法再移除您自己的赞了"
         unauthenticated: "请注册或登录以点赞此帖子"
+    discourse_workflows:
+      node_unavailable:
+        requires_reactions: "需要启用 Reactions 插件"
+      nodes:
+        "action:post_reaction": "对帖子做出回应"
+        "trigger:post_reaction_changed": "帖子回应发生了变化"
+      node_descriptions:
+        "action:post_reaction": "在帖子上添加或删除表情符号"
+        "trigger:post_reaction_changed": "当帖子上的点赞、回复或评论被添加、替换或删除时触发。点赞用户是点赞者，而非帖子作者。"
+      post_reaction:
+        operations:
+          add: "添加回应"
+          remove: "移除回应"
+        reaction: "回应"
+        if_exists: "如果用户已经做出回应"
+        if_exists_description: "用户每个帖子只能有一个回应"
+        if_exists_keep: "保持他们的回应"
+        if_exists_replace: "替换他们的回应"
+      post_reaction_changed:
+        changes_added: "添加："
+        changes_replaced: "已更换"
+        changes_removed: "已移除"
+        reaction: "回应"
+        reaction_description: "仅当添加、替换或移除此回应时触发。留空则表示可匹配任何回应。"
     notifications:
       reaction_1_user_multiple_posts:
         other: "回应了您的 %{count} 个帖子"

@@ -1960,7 +1960,6 @@ hr:
         upload_title: "Učitajte sliku"
         image_is_not_a_square: "Upozorenje: obrezali smo vašu sliku; širina i visina nisu bile jednake."
         logo_small: "Mali logotip web stranice. Koristi se prema zadanim postavkama."
-        use_custom: "Ili prenesite prilagođeni avatar:"
       change_profile_background:
         title: "Zaglavlje profila"
         instructions: "Zaglavlja profila bit će centrirana i imaju zadanu širinu od 1110px."
@@ -2549,7 +2548,7 @@ hr:
       hide_forever: "ne hvala"
       hidden_for_session: "OK, pitat ćemo te sutra. Uvijek možete upotrijebiti 'Prijava' i za stvaranje računa."
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
-      value_prop: "Umorni ste od listanja istih postova? Kada kreirate račun uvijek ćete se vraćati tamo gdje ste stali. S računom također možete primati obavijesti o novim odgovorima, spremati oznake i koristiti lajkove da zahvalite drugima. Svi možemo raditi zajedno kako bismo ovu zajednicu učinili sjajnom. :heart:"
+      value_prop: "Umorni ste od listanja istih postova? Kada kreirate račun uvijek ćete se vraćati tamo gdje ste stali. S računom također možete primati obavijesti o novim odgovorima, spremati oznake i koristiti lajkove da zahvalite drugima. Svi možemo raditi zajedno kako bismo ovu zajednicu učinili sjajnom."
     offline_indicator:
       no_internet: "Nema internetske veze."
       refresh_page: "Osvježi stranicu"
@@ -2976,8 +2975,7 @@ hr:
       discard: "Odbaci"
       draft_saved: "Skica spremljena!"
       users_placeholder: "Dodajte korisnike ili grupe"
-      title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
-      title_placeholder_redesign: "Titula"
+      title_placeholder: "Titula"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "Zašto uređuješ?"
       topic_featured_link_placeholder: "Unesite vezu prikazanu s naslovom."
@@ -5563,6 +5561,7 @@ hr:
             block: "Blokiraj"
             presets:
               custom: "Posebna"
+            automatic: "Automatska"
           authorizations:
             user: "Korisnik"
             last_used: "Zadnje korišteno"
@@ -6711,8 +6710,8 @@ hr:
             must_be_unique: "Neispravan naziv varijable. Naziv mora biti jedinstven."
           upload: "Učitaj"
           unsaved_changes_alert: "Još niste spremili svoje promjene, želite li ih odbaciti i nastaviti dalje?"
-          unsaved_parent_themes: "Niste dodijelili komponentu temama, želite li krenuti dalje?"
           discard: "Odbaci"
+          leave: "Napustiti"
           stay: "Ostanite"
           delete_upload_confirm: "Izbrisati ovaj prijenos? (CSS teme može prestati raditi!)"
           component_on_themes: "Uključite komponentu na ove teme"

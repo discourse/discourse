@@ -1525,7 +1525,6 @@ sv:
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte lika stora."
         logo_small: "Webbplatsens lilla logotyp. Används som standard."
-        use_custom: "Eller ladda upp en anpassad avatar:"
       change_profile_background:
         title: "Profilrubrik"
         instructions: "Profilrubriken kommer att centreras, samt ha en standardbredd på 1110px."
@@ -1985,7 +1984,7 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk."
     offline_indicator:
       no_internet: "Ingen internetanslutning."
       refresh_page: "Uppdatera sida"
@@ -2340,8 +2339,7 @@ sv:
       edit_shared_draft: "Redigera delat utkast"
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
-      title_placeholder: "Vad handlar ämnet om i en kort mening?"
-      title_placeholder_redesign: "Rubrik"
+      title_placeholder: "Rubrik"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
@@ -4502,6 +4500,7 @@ sv:
             block: "Blockera"
             presets:
               custom: "Anpassad"
+            automatic: "Automatisk"
           authorizations:
             user: "Användare"
             status: "Status"
@@ -5457,8 +5456,8 @@ sv:
           upload: "Ladda upp"
           select_component: "Välj en komponent…"
           unsaved_changes_alert: "Du har inte sparat dina ändringar ännu, vill du förkasta dem och fortsätta?"
-          unsaved_parent_themes: "Du har inte tilldelat komponenter till teman, vill du fortsätta?"
           discard: "Förkasta"
+          leave: "Lämna"
           stay: "Stanna"
           delete_upload_confirm: "Radera denna uppladdning? (Temats CSS kan sluta fungera!)"
           component_on_themes: "Inkludera komponent i dessa teman"

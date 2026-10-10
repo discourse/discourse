@@ -1856,7 +1856,6 @@ it:
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
         logo_small: "Logo piccolo del sito. Usato come impostazione predefinita."
-        use_custom: "Oppure carica un avatar personalizzato:"
       change_profile_background:
         title: "Intestazione Profilo "
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
@@ -2424,7 +2423,7 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
-      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa community un posto fantastico. :heart:"
+      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa community un posto fantastico."
     offline_indicator:
       no_internet: "Nessuna connessione internet."
       refresh_page: "Aggiorna pagina"
@@ -2835,8 +2834,7 @@ it:
       edit_shared_draft: "Modifica Bozza condivisa"
       discard: "Elimina"
       users_placeholder: "Aggiungi utenti o gruppi"
-      title_placeholder: "In breve, di cosa tratta questa discussione?"
-      title_placeholder_redesign: "Titolo"
+      title_placeholder: "Titolo"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "Perché stai modificando?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
@@ -5308,6 +5306,7 @@ it:
             use_preset: "Configura"
             presets:
               custom: "Personalizzato"
+            automatic: "Automatico"
           authorizations:
             user: "Utente"
             last_used: "Ultimo utilizzo"
@@ -6749,8 +6748,8 @@ it:
           upload: "Carica"
           select_component: "Seleziona un componente…"
           unsaved_changes_alert: "Non hai ancora salvato le tue modifiche. Sei sicuro di volerle abbandonare e passare ad altro?"
-          unsaved_parent_themes: "Non hai assegnato il Componente ai Temi, vuoi andare avanti?"
           discard: "Annulla"
+          leave: "Esci"
           stay: "Resta"
           css_html: "Codice personalizzato"
           edit_css_html: "Modifica codice"

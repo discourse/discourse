@@ -1538,8 +1538,7 @@ et:
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
-      title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
-      title_placeholder_redesign: "Pealkiri"
+      title_placeholder: "Pealkiri"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
@@ -2863,6 +2862,7 @@ et:
             block: "Blokeeri"
             presets:
               custom: "Individuaalne"
+            automatic: "Automaatne"
           authorizations:
             user: "Kasutaja"
             status: "Staatus"
@@ -3464,6 +3464,7 @@ et:
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
+          leave: "Lahku"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"

@@ -279,13 +279,10 @@ uk:
       default_deny_label: "Відмовити"
     errors:
       send_chat_message:
-        invalid_params: "Неправильні параметри: %{errors}"
         channel_not_found: "Канал не знайдено: %{channel_id}"
-        failed: "Не вдалося надіслати повідомлення в чаті."
       chat_approval:
         channel_not_found: "Повідомлення в чаті не вдалося: канал %{channel_id} не знайдено."
         invalid_params: "Помилка під час надсилання повідомлення в чаті: %{errors}"
-        failed: "Помилка надсилання повідомлення в чаті: %{steps}"
         timeout_must_be_positive: "Час очікування у хвилинах повинен бути більшим за 0."
         invalid_timeout_action: "Недопустима дія після закінчення часу очікування: %{action}."
         buttons_required: "Потрібна хоча б одна кнопка схвалення чату."

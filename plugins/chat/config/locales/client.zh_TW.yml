@@ -824,15 +824,19 @@ zh_TW:
         "action:chat_approval": "聊天審批"
         "trigger:chat_message_created": "已創建聊天消息"
       node_descriptions:
-        "action:send_chat_message": "向聊天頻道發送消息"
         "action:chat_approval": "向聊天頻道發送審批請求并等待回復"
         "trigger:chat_message_created": "創建新聊天消息時觸發"
       chat_message_created:
         channel_id: "頻道"
         channel_id_description: "留空可觸發所有聊天頻道。"
       send_chat_message:
+        target: "寄送至"
+        targets:
+          channel: "頻道"
         channel_id: "頻道"
+        target_usernames: "收件者"
         message: "訊息"
+        actor_username: "發送人"
       chat_approval:
         message: "訊息"
         buttons: "按鈕"

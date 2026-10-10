@@ -26,6 +26,24 @@ sq:
           title: "Rezervat"
       read_post:
         unknown_post: "postim"
+      chat_tool_approval:
+        topic_states:
+          open: "Fillo"
+          closed: "Mbyllur"
+          active: "Aktiv"
+        solution_post: "Postim #%{number}"
+        duration_label: "Kohëzgjatja:"
+        user_duration:
+          one: "%{count} ditë"
+          other: "%{count} ditë"
+        posts_label: "Postime"
+        category_label: "Kategori"
+        category_fields:
+          name: "emër"
+          description: "përshkrimi"
+          color: "ngjyra"
+        approve_label: "Po"
+        reject_label: "Jo"
       tool_summary:
         search: "Kërko"
         time: "Koha"

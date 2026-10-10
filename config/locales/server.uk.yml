@@ -20,6 +20,7 @@ uk:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Розділ не знайдено"
       draft_too_long: "Чернетка занадто довга"
       post_not_found: "Повідомлення не знайдено"
       topic_not_found: "Тему не знайдено"

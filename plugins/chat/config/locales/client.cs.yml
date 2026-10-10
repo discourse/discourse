@@ -846,8 +846,11 @@ cs:
       chat_message_created:
         channel_id: "Kanál"
       send_chat_message:
+        targets:
+          channel: "Kanál"
         channel_id: "Kanál"
         message: "Odeslat"
+        actor_username: "Odesílatel"
       chat_approval:
         message: "Odeslat"
         buttons: "Tlačítka"

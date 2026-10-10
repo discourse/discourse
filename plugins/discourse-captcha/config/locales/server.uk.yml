@@ -18,7 +18,5 @@ uk:
     discourse_captcha_provider: "Виберіть постачальника капчі. Це вимагає, щоб ви володіли обліковим записом обраного провайдера"
     hcaptcha_site_key: "Ключ сайту hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Секретний ключ hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-    recaptcha_site_key: "Ключ сайту ReCaptcha з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
-    recaptcha_secret_key: "Секретний ключ ReCaptcha з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
   captcha_verification_failed: "Не вдалося перевірити капчу"
   captcha_not_configured: "Captcha увімкнено, але не налаштовано належним чином. Зверніться до адміністратора сайту."

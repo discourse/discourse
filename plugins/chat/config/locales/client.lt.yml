@@ -308,6 +308,7 @@ lt:
     discourse_workflows:
       send_chat_message:
         message: "Žinutės"
+        actor_username: "Siuntėjas"
       chat_approval:
         message: "Žinutės"
         buttons: "Mygtukai"

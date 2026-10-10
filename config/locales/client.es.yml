@@ -2031,7 +2031,6 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
         logo_small: "Logotipo pequeño del sitio. Usado por defecto."
-        use_custom: "O sube un avatar personalizado:"
       change_profile_background:
         title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
@@ -2613,7 +2612,6 @@ es:
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
-      value_prop: "¿Cansado de recorrer las mismas publicaciones? Si creas una cuenta, siempre volverás al punto donde lo dejaste. Con una cuenta también puedes recibir notificaciones de nuevas respuestas, guardar marcadores y utilizar los «me gusta» para dar las gracias a los demás. Podemos trabajar todos juntos para hacer grande esta comunidad :heart:"
     offline_indicator:
       no_internet: "Sin conexión a Internet."
       refresh_page: "Actualizar página"
@@ -3058,8 +3056,7 @@ es:
       discard: "Descartar"
       draft_saved: "¡Borrador guardado!"
       users_placeholder: "Añadir usuarios o grupos"
-      title_placeholder: "En una frase breve, ¿de qué trata este tema?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué estás editando?"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
@@ -5866,6 +5863,7 @@ es:
             use_preset: "Configurar"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             scopes: "Ámbitos concedidos"
@@ -7395,8 +7393,8 @@ es:
           upload: "Subir"
           select_component: "Selecciona un componente…"
           unsaved_changes_alert: "No has guardado los cambios aún, ¿los quieres descartar y seguir adelante?"
-          unsaved_parent_themes: "No has asignado este componente a ningún tema, ¿quieres continuar?"
           discard: "Descartar"
+          leave: "Abandonar"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"

@@ -2148,7 +2148,6 @@ cs:
         upload_title: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
         logo_small: "Malé logo webu. Používá se ve výchozím nastavení."
-        use_custom: "Nebo nahrajte vlastní avatar:"
       change_profile_background:
         title: "Záhlaví profilu"
         instructions: "Záhlaví profilu bude vycentrována a má výchozí šířku 1110px."
@@ -2774,7 +2773,7 @@ cs:
       hide_forever: "děkuji, ne"
       hidden_for_session: "Dobře, zeptáme se vás zítra. K vytvoření účtu můžete kdykoli použít také funkci \"Přihlásit se\"."
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
-      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá. :heart:"
+      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá."
     offline_indicator:
       no_internet: "Žádné internetové připojení."
       refresh_page: "Obnovit stránku"
@@ -3244,8 +3243,7 @@ cs:
       discard: "Zrušit"
       draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
-      title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
-      title_placeholder_redesign: "Název"
+      title_placeholder: "Název"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
       edit_reason_placeholder: "Proč byla nutná úprava?"
       topic_featured_link_placeholder: "Zadejte odkaz s titulkem"
@@ -6169,6 +6167,7 @@ cs:
             block: "Zablokovat"
             presets:
               custom: "Přizpůsobené"
+            automatic: "Automatické"
           authorizations:
             user: "Uživatel"
             last_used: "Poslední použití"
@@ -7718,8 +7717,8 @@ cs:
           upload: "Nahrát"
           select_component: "Vyberte komponentu…"
           unsaved_changes_alert: "Ještě jste neuložili své změny, chcete je zahodit a pokračovat?"
-          unsaved_parent_themes: "Nepřiřadili jste komponentu k žádným motivům, chcete pokračovat?"
           discard: "Zahodit"
+          leave: "Opustit"
           stay: "Stay"
           css_html: "Vlastní kód"
           edit_css_html: "Upravit kód"

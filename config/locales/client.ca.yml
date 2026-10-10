@@ -1773,8 +1773,7 @@ ca:
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
       discard: "Descarta"
-      title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
-      title_placeholder_redesign: "Títol"
+      title_placeholder: "Títol"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
@@ -3216,6 +3215,7 @@ ca:
             block: "Bloca"
             presets:
               custom: "Personalitzat"
+            automatic: "Automàtic"
           authorizations:
             user: "Usuari"
             status: "Estat"
@@ -3929,6 +3929,7 @@ ca:
           upload: "Carrega"
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
+          leave: "Abandona"
           stay: "Roman"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"

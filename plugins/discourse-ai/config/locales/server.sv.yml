@@ -33,6 +33,25 @@ sv:
           title: "Säkerhetskopior"
       read_post:
         unknown_post: "inlägg"
+      chat_tool_approval:
+        topic_states:
+          open: "Öppen"
+          closed: "Stängd"
+          active: "Aktiv"
+          deleted: "Raderade"
+        solution_post: "Inlägg nr %{number}"
+        duration_label: "Varaktighet:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dagar"
+        posts_label: "Inlägg"
+        category_label: "Kategori"
+        category_fields:
+          name: "namn"
+          description: "beskrivning"
+          color: "färg"
+        approve_label: "Ja"
+        reject_label: "Nej"
       tool_summary:
         suspend_user: "Stäng av användare"
         silence_user: "Tysta användare"

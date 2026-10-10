@@ -277,6 +277,8 @@ ro:
       chat_message_created:
         channel_id: "Canal"
       send_chat_message:
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
         message: "Mesaj"
       chat_approval:

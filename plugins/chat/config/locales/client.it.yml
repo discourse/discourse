@@ -749,8 +749,11 @@ it:
       chat_message_created:
         channel_id: "Canale"
       send_chat_message:
+        targets:
+          channel: "Canale"
         channel_id: "Canale"
         message: "Messaggio"
+        actor_username: "Mittente"
       chat_approval:
         message: "Messaggio"
         buttons: "Pulsanti"

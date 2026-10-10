@@ -18,6 +18,7 @@ da:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Denne kategori blev ikke fundet"
       topic_not_found: "Emne ikke fundet"
     oauth:
       deny: "Nægt"

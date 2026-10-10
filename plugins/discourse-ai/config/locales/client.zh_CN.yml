@@ -53,8 +53,6 @@ zh_CN:
             queued: "已排队"
             running: "正在生成…"
             failed: "失败——再次生成以重试。如果这种情况持续发生，请考虑减少 <a href='%{max_asks_url}' target='_blank' rel='noopener noreferrer'>最大请求数</a>。"
-            view_pm: "查看完整报告"
-            view_pm_new_tab: "查看完整报告（在新标签页中打开）"
             load_failed: "报告无法加载。"
             reload: "重新加载报告"
             coverage: "分析了 %{count} 个问题中的 %{total} 个问题"
@@ -834,8 +832,6 @@ zh_CN:
         description: "描述"
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
-        max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大 token 总量（输入 + 输出）。留空则默认为模型上下文窗口的一半。"
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传
@@ -1541,6 +1537,9 @@ zh_CN:
             "1": "Mixtral-8x7B V0.1"
         conversations:
           homepage_option: "AI 机器人对话"
+          preview:
+            title: "登录后提问"
+            body: "从人工智能获取答案，并将您的对话保存在此处以便日后继续查看。"
           header: "我能帮上什么忙？"
           submit: "提交问题"
           disclaimer: "生成式 AI 可能会犯错。请验证重要信息。"

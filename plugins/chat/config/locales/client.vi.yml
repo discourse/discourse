@@ -336,7 +336,11 @@ vi:
           other: "Thông báo chat - %{count} chưa đọc"
     discourse_workflows:
       send_chat_message:
+        target: "Gửi đến"
+        targets:
+          channel: "Kênh"
         message: "Nhắn tin"
+        actor_username: "Người gửi"
       chat_approval:
         message: "Nhắn tin"
         buttons: "Nút"

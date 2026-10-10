@@ -18,6 +18,7 @@ sv:
       link: "Länk"
   mcp:
     errors:
+      category_not_found: "Kategorin hittades inte"
       draft_too_long: "Utkastet är för långt"
       topic_not_found: "Ämnet hittades inte"
     oauth:

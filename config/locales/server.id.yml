@@ -17,6 +17,7 @@ id:
       location: "Lokasi"
   mcp:
     errors:
+      category_not_found: "Kategori tidak ditemukan"
       draft_too_long: "Draf terlalu panjang"
       topic_not_found: "Tidak ada topik"
     oauth:

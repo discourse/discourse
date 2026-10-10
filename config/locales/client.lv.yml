@@ -1747,8 +1747,7 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       discard: "Izmest"
-      title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
-      title_placeholder_redesign: "Virsraksts"
+      title_placeholder: "Virsraksts"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
@@ -2996,6 +2995,7 @@ lv:
           clients:
             actions: "Darbības"
             block: "Bloķēt"
+            automatic: "Automātiski"
           authorizations:
             user: "Lietotājs"
             status: "Statuss"
@@ -3544,6 +3544,7 @@ lv:
           add_upload: "Pievienot augšupielādējamu resursu"
           upload: "Augšupielādēt"
           discard: "Izmest"
+          leave: "Iziet"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
           installed: "Uzinstalēts"

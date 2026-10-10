@@ -31,6 +31,25 @@ hy:
           title: "Պահուտսներ"
       read_post:
         unknown_post: "գրառում"
+      chat_tool_approval:
+        topic_states:
+          open: "Բացել"
+          closed: "Փակված է"
+          active: "Ակտիվ"
+          deleted: "Ջնջված է"
+        solution_post: "Գրառում #%{number}"
+        duration_label: "Տևողությունը."
+        user_duration:
+          one: "%{count} օր"
+          other: "%{count} օր"
+        posts_label: "Գրառումներ"
+        category_label: "Կատեգորիա"
+        category_fields:
+          name: "անվան"
+          description: "նկարագրություն"
+          color: "գույն"
+        approve_label: "Այո"
+        reject_label: "Ոչ"
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"

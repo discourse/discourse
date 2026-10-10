@@ -283,8 +283,6 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        max_turn_tokens: "Giới hạn Token mỗi lượt (Max turn tokens)"
-        max_turn_tokens_help: "Tổng số Token tối đa (đầu vào + đầu ra) tiêu tốn qua tất cả các lời gọi mô hình ngôn ngữ lớn (LLM) trong một lần Bot phản hồi. Để trống để mặc định dùng một nửa cửa sổ ngữ cảnh (Context window) của mô hình."
         compression_threshold: "Ngưỡng nén (Compression threshold)"
         user: Thành viên
         save: "Lưu lại"

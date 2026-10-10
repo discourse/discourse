@@ -1635,7 +1635,6 @@ sq:
         upload_title: "Ngarkoni foton tuaj"
         image_is_not_a_square: "Vini re: fotoja juaj është përshtatur, pasi nuk ishte katrore."
         logo_small: "Logoja e vogël e faqes. Përdoret si parazgjedhje."
-        use_custom: "Ose ngarkoni një avatar të personalizuar:"
       change_profile_background:
         title: "Titulli i profilit"
         instructions: "Titujt e profilit do të jenë të përqendruara dhe do të kenë një gjerësi të parazgjedhur prej 1110px."
@@ -2183,7 +2182,7 @@ sq:
       hide_forever: "jo faleminderit"
       hidden_for_session: "OK, do t'ju pyesim nesër. Mund të përdorni gjithmonë 'Identifikohu' për të krijuar një llogari gjithashtu."
       intro: "Përshëndetje! Duket sikur po shijoni diskutimin, por ende nuk jeni regjistruar për një llogari."
-      value_prop: "Të lodhur nga lëvizja nëpër të njëjtat postime? Kur krijoni një llogari, gjithmonë do të ktheheni aty ku keni ndaluar. Me një llogari ju gjithashtu mund të njoftoheni për përgjigjet e reja, të ruani faqeshënuesit dhe të përdorni pëlqime për të falënderuar të tjerët. Të gjithë mund të punojmë së bashku për ta bërë këtë komunitet të madh. :heart:"
+      value_prop: "Të lodhur nga lëvizja nëpër të njëjtat postime? Kur krijoni një llogari, gjithmonë do të ktheheni aty ku keni ndaluar. Me një llogari ju gjithashtu mund të njoftoheni për përgjigjet e reja, të ruani faqeshënuesit dhe të përdorni pëlqime për të falënderuar të tjerët. Të gjithë mund të punojmë së bashku për ta bërë këtë komunitet të madh."
     offline_indicator:
       no_internet: "Nuk ka lidhje interneti."
       refresh_page: "Rifreskoni faqen"
@@ -2546,8 +2545,7 @@ sq:
       edit_shared_draft: "Redakto draftin e përbashkët"
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
-      title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
-      title_placeholder_redesign: "Titulli"
+      title_placeholder: "Titulli"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
@@ -4090,6 +4088,7 @@ sq:
             block: "Blloko"
             presets:
               custom: "Grupet e krijuara"
+            automatic: "Automatik"
           authorizations:
             user: "User"
             status: "Status"
@@ -4597,6 +4596,7 @@ sq:
           preview: "Parashikimi"
           cancel: "Anulo"
           upload: "Ngarko"
+          leave: "Dilni"
           installed: "Instaluar"
           install_popular: "Popullore"
           about_theme: "Rreth"

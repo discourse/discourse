@@ -19,6 +19,7 @@ es:
       link: "Enlace"
   mcp:
     errors:
+      category_not_found: "Categoría no encontrada"
       draft_too_long: "El borrador es demasiado largo"
       post_not_found: "Publicación no encontrada"
       topic_not_found: "Tema no encontrado"

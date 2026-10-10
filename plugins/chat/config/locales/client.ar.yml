@@ -982,15 +982,19 @@ ar:
         "action:chat_approval": "الموافقة على الدردشة"
         "trigger:chat_message_created": "إنشاء رسالة دردشة"
       node_descriptions:
-        "action:send_chat_message": "أرسل رسالة إلى قناة دردشة"
         "action:chat_approval": "أرسل طلب موافقة إلى قناة دردشة وانتظار ردًا"
         "trigger:chat_message_created": "يتم تشغيله عند إنشاء رسالة دردشة جديدة"
       chat_message_created:
         channel_id: "القناة"
         channel_id_description: "اترك هذا الحقل فارغًا للتطبيق على جميع قنوات الدردشة."
       send_chat_message:
+        target: "إرسال إلى"
+        targets:
+          channel: "القناة"
         channel_id: "القناة"
+        target_usernames: "المستلمون"
         message: "الرسالة"
+        actor_username: "المُرسِل"
       chat_approval:
         message: "الرسالة"
         buttons: "الأزرار"

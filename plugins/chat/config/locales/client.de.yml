@@ -846,15 +846,19 @@ de:
         "action:chat_approval": "Chat-Genehmigung"
         "trigger:chat_message_created": "Chat-Nachricht erstellt"
       node_descriptions:
-        "action:send_chat_message": "Eine Nachricht an einen Chat-Kanal senden"
         "action:chat_approval": "Eine Genehmigungsanfrage an einen Chat-Kanal senden und auf eine Antwort warten"
         "trigger:chat_message_created": "Wird ausgelöst, wenn eine neue Chat-Nachricht erstellt wird"
       chat_message_created:
         channel_id: "Kanal"
         channel_id_description: "Leer lassen, damit die Funktion für alle Chat-Kanäle ausgelöst wird."
       send_chat_message:
+        target: "Senden an"
+        targets:
+          channel: "Kanal"
         channel_id: "Kanal"
+        target_usernames: "Empfänger"
         message: "Nachricht"
+        actor_username: "Absender"
       chat_approval:
         message: "Nachricht"
         buttons: "Buttons"

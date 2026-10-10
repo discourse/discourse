@@ -2046,7 +2046,6 @@ tr_TR:
         upload_title: "Resminizi yükleyin"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kırptık."
         logo_small: "Sitenin küçük logosu. Varsayılan olarak kullanılır."
-        use_custom: "Veya özel bir avatar yükleyin:"
       change_profile_background:
         title: "Profil Başlığı"
         instructions: "Profil başlıkları ortalanır ve varsayılan olarak 1110 px boyutunda olur."
@@ -2629,7 +2628,7 @@ tr_TR:
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, yarın yine sorarız. Hesap oluşturmak için dilediğiniz zaman \"Giriş Yap\"ı da kullanabilirsiniz."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap açmadınız."
-      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
+      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz."
     offline_indicator:
       no_internet: "İnternet bağlantısı yok."
       refresh_page: "Sayfayı yenileyin"
@@ -3084,8 +3083,7 @@ tr_TR:
       cancel_edit: "Düzenlemeyi iptal et"
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
-      title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
-      title_placeholder_redesign: "Başlık"
+      title_placeholder: "Başlık"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
       edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
@@ -5953,6 +5951,7 @@ tr_TR:
             use_preset: "Kur"
             presets:
               custom: "Özel"
+            automatic: "Otomatik"
           authorizations:
             user: "Kullanıcı"
             scopes: "Verilen kapsamlar"
@@ -7493,8 +7492,8 @@ tr_TR:
           upload: "Yükle"
           select_component: "Bileşen seçin…"
           unsaved_changes_alert: "Değişikliklerinizi henüz kaydetmediniz, bunları silip devam etmek istiyor musunuz?"
-          unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "Kapat"
+          leave: "Ayrıl"
           stay: "Kal"
           css_html: "Özel Kod"
           edit_css_html: "Kodu düzenle"

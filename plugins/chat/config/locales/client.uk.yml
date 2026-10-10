@@ -989,15 +989,19 @@ uk:
         "action:chat_approval": "Схвалення чату"
         "trigger:chat_message_created": "Повідомлення чату створено"
       node_descriptions:
-        "action:send_chat_message": "Надішліть повідомлення в чат"
         "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
         "trigger:chat_message_created": "Спрацьовує при створенні нового повідомлення в чаті"
       chat_message_created:
         channel_id: "Канал"
         channel_id_description: "Залиште поле порожнім, щоб активувати для всіх каналів чату."
       send_chat_message:
+        target: "Надіслати"
+        targets:
+          channel: "Канал"
         channel_id: "Канал"
+        target_usernames: "Одержувачі"
         message: "Повідомлення"
+        actor_username: "Відправник"
       chat_approval:
         message: "Повідомлення"
         buttons: "Кнопки"

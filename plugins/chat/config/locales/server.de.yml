@@ -249,13 +249,10 @@ de:
       default_deny_label: "ablehnen"
     errors:
       send_chat_message:
-        invalid_params: "Ungültige Parameter: %{errors}"
         channel_not_found: "Kanal nicht gefunden: %{channel_id}"
-        failed: "Chat-Nachricht konnte nicht gesendet werden."
       chat_approval:
         channel_not_found: "Chat-Nachricht fehlgeschlagen: Kanal „%{channel_id}“ wurde nicht gefunden."
         invalid_params: "Chat-Nachricht fehlgeschlagen: %{errors}"
-        failed: "Chat-Nachricht fehlgeschlagen: %{steps}"
         timeout_must_be_positive: "Die Zeitüberschreitungsdauer in Minuten muss größer als 0 sein."
   reviewable_score_types:
     needs_review:

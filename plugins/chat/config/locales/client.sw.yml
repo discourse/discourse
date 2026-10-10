@@ -173,6 +173,8 @@ sw:
       chat_message_created:
         channel_id: "Chaneli"
       send_chat_message:
+        targets:
+          channel: "Chaneli"
         channel_id: "Chaneli"
         message: "Ujumbe"
       chat_approval:

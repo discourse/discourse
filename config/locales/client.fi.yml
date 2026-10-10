@@ -1856,7 +1856,6 @@ fi:
         upload_title: "Lataa oma kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
         logo_small: "Sivuston pieni logo. Käytetään oletuksena."
-        use_custom: "Tai lataa mukautettu avatar:"
       change_profile_background:
         title: "Profiilin yläkuva"
         instructions: "Profiilin yläkuva keskitetään, ja sen oletusleveys on 1 110 px."
@@ -2424,7 +2423,7 @@ fi:
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
-      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan. :heart:"
+      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan."
     offline_indicator:
       no_internet: "Ei Internet-yhteyttä."
       refresh_page: "Päivitä sivu"
@@ -2838,8 +2837,7 @@ fi:
       edit_shared_draft: "Muokkaa jaettua luonnosta"
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
-      title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
-      title_placeholder_redesign: "Otsikko"
+      title_placeholder: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -5311,6 +5309,7 @@ fi:
             use_preset: "Määritä"
             presets:
               custom: "Mukautettu"
+            automatic: "Automaattiset"
           authorizations:
             user: "Käyttäjä"
             last_used: "Viimeksi käytetty"
@@ -6753,8 +6752,8 @@ fi:
           upload: "Lataa"
           select_component: "Valitse komponentti…"
           unsaved_changes_alert: "Et ole tallentanut tekemiäsi muutoksia. Haluatko hylätä ne ja siirtyä muualle?"
-          unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
+          leave: "Poistu"
           stay: "Jää"
           css_html: "Mukautettu koodi"
           edit_css_html: "Muokkaa koodia"

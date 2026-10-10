@@ -773,8 +773,6 @@ zh_TW:
         description: "描述"
         no_llm_selected: "未選擇語言模型"
         use_parent_llm: "使用智能體的語言模型"
-        max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "單次機器人回復期間所有 LLM 調用消耗的最大 token 總量（輸入 + 輸出）。留空則默認為模型上下文窗口的一半。"
         compression_threshold: "壓縮閾值"
         compression_threshold_help: "上下文使用百分比（20-99%），超過該百分比時自動壓縮開始生效。數值越低，壓縮觸發越早，從而保留更多空間。"
         vision_enabled: 包含圖片上傳

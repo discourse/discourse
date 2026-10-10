@@ -42,6 +42,27 @@ lt:
           title: "Atsarginės kopijos"
       read_post:
         unknown_post: "įrašai"
+      chat_tool_approval:
+        topic_states:
+          open: "Atidaryti"
+          closed: "Uždaryta"
+          active: "Aktyvus"
+          deleted: "Ištrinta"
+        solution_post: "Įrašas #%{number}"
+        duration_label: "Trukmė:"
+        user_duration:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
+        posts_label: "Pranešimai"
+        category_label: "Kategorija"
+        category_fields:
+          name: "vardą"
+          description: "aprašymas"
+          color: "spalva"
+        approve_label: "Taip"
+        reject_label: "Ne"
       agents:
         custom_prompt:
           name: "Pasirinktinis raginimas"

@@ -2004,7 +2004,6 @@ hu:
         upload_title: "Saját kép feltöltése"
         image_is_not_a_square: "Figyelmeztetés: a kép vágásra került; a szélesség és a magaság nem volt egyforma."
         logo_small: "Az oldal kis logója. Alapértelmezés szerint használt."
-        use_custom: "Vagy töltsön fel egy egyéni profilképet:"
       change_profile_background:
         title: "A profil borítóképe"
         instructions: "A profil borítóképe középre lesz igazítva, alapértelmezetten 1110 képpontos szélességgel."
@@ -2587,7 +2586,7 @@ hu:
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
-      value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük. :heart:"
+      value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük."
     offline_indicator:
       no_internet: "Nincs internetkapcsolat."
       refresh_page: "Oldal frissítése"
@@ -3016,8 +3015,7 @@ hu:
       discard: "Elvetés"
       draft_saved: "Vázlat mentve!"
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
-      title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
-      title_placeholder_redesign: "Cím"
+      title_placeholder: "Cím"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
@@ -5741,6 +5739,7 @@ hu:
             block: "Letiltás"
             presets:
               custom: "Egyéni"
+            automatic: "Autómatikus"
           authorizations:
             user: "Felhasználó"
             last_used: "Utoljára használva"
@@ -7265,8 +7264,8 @@ hu:
           upload: "Feltöltés"
           select_component: "Válassz egy összetevőt"
           unsaved_changes_alert: "Még nem mentette el a módosításokat, el akarja dobni őket, és továbblépni?"
-          unsaved_parent_themes: "Nem rendelted hozzá az összetevőket a témákhoz, szeretnél továbblépni?"
           discard: "Elvetés"
+          leave: "Elhagyás"
           stay: "Marad"
           css_html: "Egyéni kód"
           edit_css_html: "Kód szerkesztése"

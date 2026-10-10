@@ -1696,8 +1696,7 @@ id:
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
       discard: "Batalkan"
-      title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
-      title_placeholder_redesign: "Judul"
+      title_placeholder: "Judul"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
@@ -2489,6 +2488,7 @@ id:
             kind: "Tipe"
           clients:
             actions: "Aksi"
+            automatic: "Otomatis"
           authorizations:
             user: "Pengguna"
             status: "Status"
@@ -2866,6 +2866,7 @@ id:
           collapse: Persempit
           upload: "Unggah"
           discard: "Batalkan"
+          leave: "Keluar"
           direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"

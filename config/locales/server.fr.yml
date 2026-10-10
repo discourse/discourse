@@ -19,6 +19,7 @@ fr:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Catégorie introuvable"
       draft_too_long: "Le brouillon est trop long"
       post_not_found: "Publication introuvable"
       topic_not_found: "Sujet non trouvé"

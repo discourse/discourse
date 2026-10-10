@@ -9,3 +9,7 @@ lv:
     discourse_reactions:
       users_popup:
         all: "Visi"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Pievienots"
+        changes_removed: "Noņemts"

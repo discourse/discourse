@@ -26,10 +26,34 @@ pl_PL:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "Nie można utworzyć kategorii"
+      category_delete_confirmation_required: "Usunięcie kategorii musi zostać potwierdzone"
+      category_delete_name_mismatch: "Nazwa kategorii nie pasuje"
+      category_not_found: "Nie odnaleziono kategorii"
+      category_update_failed: "Nie można zaktualizować kategorii"
+      category_update_required: "Należy podać co najmniej jedno pole kategorii"
       draft_sequence_conflict: "Konflikt sekwencji roboczej"
       draft_too_long: "Szkic jest zbyt długi"
+      group_create_failed: "Nie udało się zaktualizować motywu"
+      group_delete_confirmation_required: "Usunięcie grupy musi zostać potwierdzone"
+      group_delete_name_mismatch: "Nazwa grupy nie pasuje"
+      group_member_selector_required: "Podaj dokładnie jedną z następujących nazw użytkowników: user_ids lub user_emails"
+      group_user_limit:
+        one: "Wybierz nie więcej niż %{count} użytkownika."
+        few: "Wybierz nie więcej niż %{count} użytkowników."
+        many: "Wybierz nie więcej niż %{count} użytkowników."
+        other: "Wybierz nie więcej niż %{count} użytkowników."
+      group_membership_request_not_found: "Ten użytkownik nie ma oczekującej prośby o członkostwo w grupie"
       group_not_found: "Grupa nie znaleziona"
       group_post_single_cursor: "Podaj before_post_id lub before, nie oba"
+      group_request_reason_required: "Aby poprosić o członkostwo w grupie, konieczne jest podanie powodu"
+      group_update_existing_users_required:
+        one: "Ta zmiana dotyczy również istniejącego %{count} członka. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        few: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        many: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        other: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+      group_update_failed: "Nie udało się zaktualizować grupy"
+      group_update_required: "Podaj co najmniej jedno pole grupy do aktualizacji"
       invalid_date: "Nieprawidłowa data"
       invalid_directory_period: "Nieprawidłowy okres katalogu"
       invalid_reply_mode: "Nieprawidłowy tryb odpowiedzi"
@@ -81,8 +105,10 @@ pl_PL:
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
       upload_not_found: "Nie znaleziono pliku do przesłania"
       upload_too_large: "Przesłany plik jest za duży"
-      user_update_required: "Podaj co najmniej jedno pole profilu do aktualizacji"
+      user_create_failed: "Nie udało się utworzyć użytkownika"
+      user_deactivation_pending_review: "Przed dezaktywacją konta sprawdź, czy konto tego użytkownika oczekuje na zatwierdzenie."
       user_not_found: "Użytkownik nie został znaleziony"
+      user_update_required: "Podaj co najmniej jedno pole profilu do aktualizacji"
     oauth:
       authorize_title: "Autoryzuj klienta MCP"
       client_request: "%{client_name} żąda dostępu do %{site_name}."
@@ -873,6 +899,8 @@ pl_PL:
         many: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
         other: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
       usernames_or_emails_required: "Nazwy użytkowników lub adresy e-mail muszą być obecne"
+      users_not_found: "Brak pasujących kont użytkowników: %{values}"
+      conflicting_notification_defaults: "Każda kategoria lub tag może mieć tylko jeden domyślny poziom powiadomień."
       cannot_add_emails: "Do dodawania członków do tej grupy można używać wyłącznie nazw użytkowników. Aby zaprosić e-mailem, użyj przycisku „Zaproś”."
       counting_too_many_email_domains:
         one: "Maksymalnie %{count} domena e-mail może być liczona jednocześnie"
@@ -2075,6 +2103,8 @@ pl_PL:
         total_users: "Łączna liczba aktywnych kont użytkowników"
       description: "Pokaż liczbę powiązanych kont pogrupowanych według dostawcy logowania. Dotyczy tylko sytuacji, gdy włączone są metody logowania społecznościowego."
   dashboard:
+    reports:
+      cap_reached: "Pulpit nawigacyjny pokazuje już maksymalną liczbę raportów: %{max}. Usuń jeden przed dodaniem kolejnego."
     problem:
       twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
       group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
@@ -3526,6 +3556,7 @@ pl_PL:
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich wymaganych pól użytkownika"
+    missing_user_field_details: "Uzupełnij wymagane pole użytkownika '%{name}' (ID: %{id})."
     missing_username: "Wpisz nazwę użytkownika"
     missing_full_name: "Wpisz swoje imię i nazwisko"
     auth_complete: "Uwierzytelnianie zostało zakończone."
@@ -4921,6 +4952,16 @@ pl_PL:
         Jeśli nie wyłączyłeś uwierzytelniania dwuskładnikowego (2FA), ktoś mógł włamać się na Twoje konto.
 
         W razie pytań [skontaktuj się z naszą przyjazną obsługą] (%{base_url}/about).
+    account_associated:
+      title: "Nowe powiązane konto"
+      subject_template: "[%{email_prefix}] Nowe powiązane konto"
+      subject_template_improved: "Nowe powiązane konto"
+      text_body_template: |
+        Konto %{provider_name} zostało właśnie połączone z Twoim kontem w %{site_name}. Teraz możesz się na nie logować.
+
+        Jeśli to Ty, nie musisz nic więcej robić.
+
+        Jeśli to nie Ty, ktoś może mieć dostęp do Twojego konta. [Sprawdź powiązane konta](%{base_url}/my/preferences/account), [sprawdź istniejące sesje](%{base_url}/my/preferences/security) i rozważ zmianę hasła.
     digest:
       why: "Krótkie podsumowanie %{site_link} od %{since}"
       since_last_visit: "Od twojej ostatniej wizyty"

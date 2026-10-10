@@ -279,13 +279,28 @@ pl_PL:
       default_deny_label: "Odrzuć"
     errors:
       send_chat_message:
-        invalid_params: "Nieprawidłowe parametry: %{errors}"
+        invalid_params: "Wiadomość jest nieprawidłowa: %{errors}"
         channel_not_found: "Nie znaleziono kanału: %{channel_id}"
-        failed: "Nie udało się wysłać wiadomości czatu."
+        channel_blocked: "Nie można publikować na kanale %{channel_id}: %{reason}"
+        failed: "Nie udało się wysłać wiadomości czatu (nieudany krok: %{step})."
+        recipient_blank: "Nie podano nazw użytkowników odbiorców."
+        recipient_staged: "'%{username}' jest użytkownikiem testowym i nie może korzystać z czatu."
+        recipient_suspended: "'%{username}' jest zawieszony i nie można odbierać wiadomości bezpośrednich."
+        recipient_inactive: "'%{username}' nie aktywował jeszcze swojego konta."
+        recipient_chat_disabled: "Użytkownik '%{username}' wyłączył czat w swoich preferencjach."
+        recipient_cannot_chat: "'%{username}' nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_anonymous: "Wiadomości bezpośrednich nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
+        sender_chat_disabled: "Nadawca '%{sender}' wyłączył czat w swoich preferencjach."
+        sender_cannot_chat: "Nadawca „%{sender}” nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_cannot_create_dm: "Nadawca '%{sender}' nie ma uprawnień do wysyłania wiadomości bezpośrednich (zobacz ustawienie „grupy z włączonymi wiadomościami bezpośrednimi”)."
+        sender_dms_disabled: "Nadawca '%{sender}' wyłączył wiadomości prywatne w swoich preferencjach."
+        user_blocked: "'%{sender}' nie można wysłać bezpośredniej wiadomości do '%{username}': %{reason}"
+        group_blocked: "'%{sender}' nie można wysłać wiadomości grupowej bezpośrednio do %{usernames}: %{reason}"
       chat_approval:
         channel_not_found: "Nie udało się wysłać wiadomości na czacie: kanał %{channel_id} nie został znaleziony."
         invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
-        failed: "Nie udało się wysłać wiadomości na czacie: %{steps}"
+        channel_blocked: "Nie można wysłać wiadomości na czacie: nie można pisać na kanale %{channel_id}: %{reason}"
+        failed_step: "Nie udało się wysłać wiadomości na czacie (nieudany krok: %{step})."
         timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
         invalid_timeout_action: "Nieprawidłowa czynność limitu czasu: %{action}."
         buttons_required: "Wymagany jest co najmniej jeden przycisk zatwierdzający czat."
@@ -296,6 +311,15 @@ pl_PL:
         button_value_too_long: "Wartość przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
         button_style_invalid: "Przycisk zatwierdzania czatu %{position} musi mieć jeden z następujących stylów: %{styles}."
         button_icon_too_long: "Ikona przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+    hints:
+      send_chat_message:
+        self_message: "Nadawca i odbiorca to „%{username}”, więc wiadomość została opublikowana w ich osobistym czacie."
+        preferences_bypassed: "„%{username}” nie przyjmuje bezpośrednich wiadomości od „%{sender}”, ale wiadomość została dostarczona, bo nadawca jest członkiem personelu."
+    logs:
+      send_chat_message:
+        sent_to_channel: "Element %{item_index}: wysłano wiadomość %{message_id} na kanał %{channel_id}."
+        sent_to_user: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do '%{username}'."
+        sent_to_group: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do grupy w wiadomościach bezpośrednich za pomocą %{usernames}."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"

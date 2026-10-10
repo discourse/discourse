@@ -508,6 +508,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -1658,7 +1661,6 @@ da:
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
         logo_small: "Webstedets lille logo. Anvendes som standard."
-        use_custom: "Eller overfør en brugerdefineret avatar:"
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -2475,8 +2477,7 @@ da:
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
-      title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -4482,6 +4483,7 @@ da:
             block: "Blokér"
             presets:
               custom: "Tilpasset"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruger"
             status: "Status"
@@ -5493,8 +5495,8 @@ da:
           upload: "Overfør"
           select_component: "Vælg en komponent…"
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
-          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
+          leave: "Forlad"
           stay: "Bliv"
           delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
           component_on_themes: "Inkluder komponent i disse temaer"

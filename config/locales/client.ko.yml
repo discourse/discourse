@@ -1449,7 +1449,6 @@ ko:
         upload_title: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
         logo_small: "사이트의 작은 로고. 기본적으로 사용됩니다."
-        use_custom: "또는 아바타 업로드:"
       change_profile_background:
         title: "프로필 헤더"
         instructions: "프로필 헤더는 중앙에 위치하며 기본 너비는 1110px입니다."
@@ -2149,8 +2148,7 @@ ko:
       edit_shared_draft: "공유 초안 편집"
       discard: "취소"
       users_placeholder: "사용자 또는 그룹 추가"
-      title_placeholder: "토론 주제를 한 문장으로 적으세요"
-      title_placeholder_redesign: "제목"
+      title_placeholder: "제목"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
       edit_reason_placeholder: "왜 편집 중입니까?"
       topic_featured_link_placeholder: "제목과 함께 표시된 링크를 입력하세요."
@@ -3929,6 +3927,7 @@ ko:
             block: "차단"
             presets:
               custom: "사용자 정의"
+            automatic: "자동화"
           authorizations:
             user: "사용자"
             status: "상태"
@@ -4747,8 +4746,8 @@ ko:
             must_be_unique: "유효하지 않은 변수 이름입니다. 반드시 고유해야 합니다."
           upload: "업로드"
           unsaved_changes_alert: "변경사항을 아직 저장하지 않았습니다. 변경사항을 버리고 계속할까요?"
-          unsaved_parent_themes: "구성 요소를 테마에 할당하지 않았습니다. 계속할까요?"
           discard: "버리기"
+          leave: "나가기"
           stay: "유지"
           delete_upload_confirm: "이 업로드를 삭제할까요? (테마 CSS가 작동 중지될 수 있습니다!)"
           component_on_themes: "이 테마에 구성 요소 포함"

@@ -719,8 +719,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtanzahl an Token (Eingabe + Ausgabe), die bei allen LLM-Aufrufen während einer einzelnen Bot-Antwort verbraucht werden. Lass das Feld leer, um die Standardeinstellung zu verwenden, die der Hälfte des Kontextfensters des Modells entspricht."
         compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_enabled: Bild-Uploads einbeziehen

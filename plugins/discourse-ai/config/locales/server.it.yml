@@ -263,6 +263,26 @@ it:
       default_pm_prefix: "[MP di bot IA senza titolo]"
       read_post:
         unknown_post: "messaggio"
+      chat_tool_approval:
+        topic_states:
+          open: "Aperta"
+          closed: "Chiuso"
+          active: "Attivo"
+          deleted: "Eliminato"
+        solution_post: "Messaggio #%{number}"
+        duration_label: "Durata:"
+        user_duration:
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        posts_label: "Messaggi"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrizione"
+          color: "colore"
+          text_color: "colore del testo"
+        approve_label: "Sì"
+        reject_label: "No"
       agents:
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:

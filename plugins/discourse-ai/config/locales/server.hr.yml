@@ -35,6 +35,27 @@ hr:
           title: "Sigurnosne kopije"
       read_post:
         unknown_post: "Objava"
+      chat_tool_approval:
+        topic_states:
+          open: "Otvori"
+          closed: "🔐"
+          active: "Aktivno"
+          deleted: "Izbrisao"
+        solution_post: "Članak #%{number}"
+        duration_label: "Trajanje:"
+        user_duration:
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
+        posts_label: "Postovi"
+        category_label: "Kategorija"
+        category_fields:
+          name: "ime"
+          description: "opis"
+          color: "boja"
+          text_color: "boja teksta"
+        approve_label: "Da"
+        reject_label: "Ne"
       tool_summary:
         search: "Pretraživanje"
         time: "Vrijeme"
