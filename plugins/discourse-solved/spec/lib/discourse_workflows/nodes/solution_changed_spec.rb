@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
   end
 
   describe "#matches?" do
-    it "filters changes, categories, and tags" do
+    it "filters changes, categories, tags, and topics" do
       post.topic.tags << tag
       trigger = described_class.from_event(:accepted_solution, post)
 
@@ -23,10 +23,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
       expect(trigger.matches?(trigger_context(changes: ["removed"]))).to eq(false)
       expect(trigger.matches?(trigger_context(category_ids: [other_category.id]))).to eq(false)
       expect(trigger.matches?(trigger_context(tag_names: ["missing"]))).to eq(false)
+      expect(trigger.matches?(trigger_context(topic_ids: [topic.id + 1]))).to eq(false)
       expect(
         trigger.matches?(
           trigger_context(
             changes: ["accepted"],
+            topic_ids: [topic.id],
             category_ids: [category.id],
             tag_names: [tag.name],
           ),
