@@ -13,8 +13,24 @@ module PageObjects
         within(SECTION_SELECTOR) { all(".db-report__card").map { |el| el["data-identifier"] } }
       end
 
+      def has_cards_in_order?(identifiers)
+        has_css?("#{SECTION_SELECTOR} .db-report__card", count: identifiers.size) &&
+          identifiers.each_with_index.all? do |identifier, index|
+            has_css?(
+              "#{SECTION_SELECTOR} .db-report__card:nth-child(#{index + 1})[data-identifier='#{identifier}']",
+            )
+          end
+      end
+
       def has_card?(identifier)
         has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
+      end
+
+      def has_card_size?(identifier, rows:, cols:)
+        selector = "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']"
+        selector += cols > 1 ? ".--wide" : ":not(.--wide)"
+        selector += rows > 1 ? ".--rows-#{rows}" : ":not([class*='--rows-'])"
+        has_css?(selector)
       end
 
       def has_default_report?
