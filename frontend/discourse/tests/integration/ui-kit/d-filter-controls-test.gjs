@@ -3,6 +3,8 @@ import Evented from "@ember/object/evented";
 import Service from "@ember/service";
 import { click, fillIn, render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
@@ -48,8 +50,12 @@ const SAMPLE_DROPDOWN_OPTIONS = [
 class RouterStub extends Service.extend(Evented) {
   @tracked currentURL = "/admin/example";
 
-  changeURL(url) {
+  replaceURL(url) {
     this.currentURL = url;
+  }
+
+  changeURL(url) {
+    this.replaceURL(url);
     this.trigger("routeDidChange");
   }
 }
@@ -1147,6 +1153,134 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
 
     assert.dom(".d-filter-controls__input").hasValue("third");
     assert.dom(".item").exists({ count: 1 }, "applies the seeded filter");
+  });
+
+  for (const [nextFilter, expectedCount] of [
+    ["", 3],
+    ["second", 1],
+  ]) {
+    test(`an older URL write preserves the newer filter "${nextFilter}"`, async function (assert) {
+      this.owner.unregister("service:router");
+      this.owner.register("service:router", RouterStub);
+      const router = this.owner.lookup("service:router");
+      const pendingURLWrites = [];
+      sinon.stub(DiscourseURL, "replaceState").callsFake((url) => {
+        pendingURLWrites.push(() => router.replaceURL(url));
+      });
+      this.set("data", SAMPLE_DATA);
+      this.set("searchableProps", ["name"]);
+
+      await render(
+        <template>
+          <DFilterControls
+            @array={{this.data}}
+            @searchableProps={{this.searchableProps}}
+            @textFilterQueryParam="filter"
+          >
+            <:content as |filteredData|>
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </:content>
+          </DFilterControls>
+        </template>
+      );
+
+      await fillIn(".d-filter-controls__input", "first");
+      assert.dom(".item").hasText("First Item", "applies the typed filter");
+
+      await fillIn(".d-filter-controls__input", nextFilter);
+      assert
+        .dom(".item")
+        .exists({ count: expectedCount }, "applies the newer filter");
+
+      pendingURLWrites.shift()();
+      await settled();
+
+      assert
+        .dom(".d-filter-controls__input")
+        .hasValue(
+          nextFilter,
+          "keeps the newer input after the older URL write"
+        );
+      assert
+        .dom(".item")
+        .exists({ count: expectedCount }, "keeps the newer filter applied");
+      if (nextFilter) {
+        assert.dom(".item").hasText("Second Item", "shows the newer match");
+      }
+    });
+  }
+
+  test("seeds the text filter on real navigation after local edits", async function (assert) {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+    const router = this.owner.lookup("service:router");
+    sinon
+      .stub(DiscourseURL, "replaceState")
+      .callsFake((url) => router.replaceURL(url));
+    router.changeURL("/admin/example?filter=first");
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
+        >
+          <:content as |filteredData|>
+            {{#each filteredData as |item|}}
+              <div class="item">{{item.name}}</div>
+            {{/each}}
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    assert.dom(".d-filter-controls__input").hasValue("first", "seeds on mount");
+    assert.dom(".item").hasText("First Item", "applies the initial URL filter");
+
+    await fillIn(".d-filter-controls__input", "second");
+    assert.dom(".item").hasText("Second Item", "applies a local edit");
+
+    router.changeURL("/admin/example?filter=first");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("first", "restores the earlier URL filter after editing");
+    assert.dom(".item").hasText("First Item", "shows the destination match");
+
+    router.changeURL("/admin/example?filter=second");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("second", "seeds on navigation");
+    assert.dom(".item").hasText("Second Item", "applies the new URL filter");
+
+    router.changeURL("/admin/example");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("", "clears on navigation without a filter");
+    assert
+      .dom(".item")
+      .exists({ count: 3 }, "shows all items after navigation");
+
+    await fillIn(".d-filter-controls__input", "first");
+    assert.dom(".item").hasText("First Item", "applies another local edit");
+
+    router.changeURL("/admin/example");
+    await settled();
+
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("", "restores an absent URL filter after editing");
+    assert.dom(".item").exists({ count: 3 }, "shows all destination items");
   });
 
   test("reveals a URL-owned dropdown activated by a route change", async function (assert) {

@@ -1,4 +1,5 @@
 import { cached } from "@glimmer/tracking";
+import { untrack } from "@glimmer/validator";
 import { warn } from "@ember/debug";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
@@ -434,7 +435,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     // Mods cannot access themes
     if (currentUser.admin) {
-      store.findAll("theme").then((themes) => {
+      untrack(() => store.findAll("theme")).then((themes) => {
         this.adminSidebarStateManager.setLinkKeywords(
           "admin_themes_and_components",
           themes.content
