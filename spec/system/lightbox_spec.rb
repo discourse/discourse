@@ -25,10 +25,15 @@ describe "Lightbox | Photoswipe" do
       post.update(cooked: cpp.html)
     end
 
-    it "has the correct lightbox elements" do
+    it "lets the user inspect a single image and quote it into the composer" do
       topic_page.visit_topic(topic)
 
-      topic_page.post_by_number(1).find("a.lightbox").click
+      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
+      lightbox_image = lightbox_link.find("img", visible: :all)
+      expected_width = lightbox_link["data-target-width"].presence || lightbox_image["width"]
+      expected_height = lightbox_link["data-target-height"].presence || lightbox_image["height"]
+      expected_src = lightbox_image["data-orig-src"].presence || lightbox_link["href"]
+      lightbox_link.click
 
       expect(lightbox).to be_visible
 
@@ -41,17 +46,17 @@ describe "Lightbox | Photoswipe" do
       expect(lightbox).to have_download_button
       expect(lightbox).to have_original_image_button
       expect(lightbox).to have_image_info_button
-    end
 
-    it "quotes the image into the composer" do
-      topic_page.visit_topic(topic)
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_no_caption_details
 
-      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
-      lightbox_image = lightbox_link.find("img", visible: :all)
-      expected_width = lightbox_link["data-target-width"].presence || lightbox_image["width"]
-      expected_height = lightbox_link["data-target-height"].presence || lightbox_image["height"]
-      expected_src = lightbox_image["data-orig-src"].presence || lightbox_link["href"]
-      lightbox_link.click
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_caption_details("2400×3600 1.21 KB")
+
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_no_caption_details
 
       expect(lightbox).to have_quote_button
 
@@ -72,23 +77,6 @@ describe "Lightbox | Photoswipe" do
       topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to have_no_image_info_button
-    end
-
-    it "can toggle image info" do
-      topic_page.visit_topic(topic)
-
-      topic_page.post_by_number(1).find("a.lightbox").click
-
-      expect(lightbox).to be_visible
-      expect(lightbox).to have_no_caption_details
-
-      lightbox.image_info_button.click
-
-      expect(lightbox).to have_caption_details("2400×3600 1.21 KB")
-
-      lightbox.image_info_button.click
-
-      expect(lightbox).to have_no_caption_details
     end
   end
 
@@ -192,7 +180,7 @@ describe "Lightbox | Photoswipe" do
       post.update(cooked: cpp.html)
     end
 
-    it "toggles UI by tapping image" do
+    it "lets the user toggle image controls and information before closing the lightbox" do
       topic_page.visit_topic(topic)
       topic_page.post_by_number(1).find("a.lightbox").click
 
@@ -204,23 +192,6 @@ describe "Lightbox | Photoswipe" do
 
       tap_screen_at(screen_center_x, screen_center_y)
       expect(lightbox).to have_ui_visible
-    end
-
-    it "closes lightbox by tapping backdrop" do
-      topic_page.visit_topic(topic)
-      topic_page.post_by_number(1).find("a.lightbox").click
-
-      expect(lightbox).to be_visible
-
-      tap_screen_at(50, 50)
-
-      expect(lightbox).to be_hidden
-    end
-
-    it "toggles image info by clicking button" do
-      topic_page.visit_topic(topic)
-
-      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_no_caption_details
@@ -232,6 +203,12 @@ describe "Lightbox | Photoswipe" do
       lightbox.image_info_button.click
 
       expect(lightbox).to have_no_caption_details
+
+      expect(lightbox).to be_visible
+
+      tap_screen_at(50, 50)
+
+      expect(lightbox).to be_hidden
     end
   end
 

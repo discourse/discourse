@@ -448,6 +448,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          before { admin.user_option.update!(timezone: "Europe/London") }
+
           it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
             visit("/upcoming-events/day/2025/8/1")
 
@@ -478,6 +480,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          before { admin.user_option.update!(timezone: "Europe/London") }
+
           it "navigates to next day" do
             visit("/upcoming-events/day/2025/8/4")
 
@@ -527,6 +531,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          before { admin.user_option.update!(timezone: "Europe/London") }
+
           it "navigates to previous day" do
             visit("/upcoming-events/day/2025/8/1")
 

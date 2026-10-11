@@ -3,6 +3,8 @@
 describe "Composer - ProseMirror - Uploads" do
   include_context "with prosemirror editor"
 
+  before { current_user.user_option.update!(timezone: nil) }
+
   describe "image uploads" do
     it "shows the completed image without flashing or continuing to pulse" do
       open_composer

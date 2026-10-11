@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Uploading files in the composer" do
-  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true, timezone: nil) }
 
   let(:modal) { PageObjects::Modals::Base.new }
   let(:composer) { PageObjects::Components::Composer.new }

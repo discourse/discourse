@@ -150,6 +150,8 @@ describe "Post event" do
 
     context "when showLocalTime is set and the event crosses midnight relative to the viewer",
             timezone: "Australia/Brisbane" do
+      before { admin.user_option.update!(timezone: "Australia/Brisbane") }
+
       it "renders the preview badge in the event timezone, not the viewer's" do
         # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
         # so without showLocalTime the viewer would see "Sep 8" in the badge.
@@ -209,6 +211,8 @@ describe "Post event" do
   end
 
   context "when showing local time", timezone: "Australia/Brisbane" do
+    before { admin.user_option.update!(timezone: "Australia/Brisbane") }
+
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
