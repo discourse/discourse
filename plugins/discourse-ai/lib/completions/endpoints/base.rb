@@ -28,6 +28,7 @@ module DiscourseAi
           Errno::ECONNREFUSED,
           Errno::ECONNRESET,
           Errno::ETIMEDOUT,
+          EOFError,
           SocketError,
           OpenSSL::SSL::SSLError,
         ]

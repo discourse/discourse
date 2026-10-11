@@ -883,6 +883,47 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(result.to_s).to eq('{"message":"ok"}')
       end
 
+      it "retries an unexpected streaming EOF before any output is generated" do
+        response = instance_double(Net::HTTPResponse, code: "200")
+        reads = 0
+        allow(response).to receive(:read_body) do |&block|
+          reads += 1
+          raise EOFError, "end of file reached" if reads == 1
+          block.call(streaming_body(content: "Recovered answer"))
+        end
+        http = instance_double(Net::HTTP)
+        allow(http).to receive(:request).and_yield(response)
+        allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+        visible = []
+
+        llm.generate("Hello", user: user) { |partial| visible << partial }
+
+        expect(visible.join).to eq("Recovered answer")
+        expect(http).to have_received(:request).twice
+      end
+
+      it "reports an unexpected streaming EOF after partial output without retrying" do
+        partial = "Partial answer"
+        response = instance_double(Net::HTTPResponse, code: "200")
+        allow(response).to receive(:read_body) do |&block|
+          block.call(streaming_body(content: partial))
+          raise EOFError, "end of file reached"
+        end
+        http = instance_double(Net::HTTP)
+        allow(http).to receive(:request).and_yield(response)
+        allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+        visible = []
+
+        expect {
+          llm.generate("Hello", user: user) { |fragment| visible << fragment }
+        }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+          "end of file reached",
+        )
+        expect(visible.join).to eq(partial)
+        expect(http).to have_received(:request).once
+      end
+
       it "retries network errors twice" do
         request =
           WebMock
