@@ -33,7 +33,7 @@ module PostRevisionParams
 
   def permitted_post_revision_attributes(parameters)
     unless parameters.is_a?(ActionController::Parameters)
-      raise Discourse::InvalidParameters.new(:edit)
+      raise Discourse::InvalidParameters.new(:post_revision)
     end
 
     permitted =

@@ -6,7 +6,7 @@ class ReviewableFlaggedPost < Reviewable
   class << self
     def additional_args(params)
       args = ReviewableActionBuilder.penalty_args(params)
-      args[:edit] = params[:edit] if params.key?(:edit)
+      args[:post_revision] = params[:post_revision] if params.key?(:post_revision)
 
       args
     end
@@ -256,7 +256,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_edit(performed_by, args)
-    raise Discourse::InvalidParameters.new(:edit) unless args[:edit]&.key?(:raw)
+    raise Discourse::InvalidParameters.new(:post_revision) unless args[:post_revision]&.key?(:raw)
 
     result = nil
 
@@ -265,7 +265,7 @@ class ReviewableFlaggedPost < Reviewable
       editor: performed_by,
       params: {
         post_id: target_id,
-        changes: args[:edit],
+        changes: args[:post_revision],
       },
     ) do
       on_success do |post:|
@@ -273,7 +273,7 @@ class ReviewableFlaggedPost < Reviewable
         result.updated_post = post
       end
 
-      on_failed_contract { raise Discourse::InvalidParameters.new(:edit) }
+      on_failed_contract { raise Discourse::InvalidParameters.new(:post_revision) }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
 

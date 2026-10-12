@@ -906,7 +906,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A review edit with plugin fields.",
                 review_post_field: "post value",
                 review_topic_field: "topic value",
@@ -931,7 +931,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: edited_raw,
                 tags: [tag.name],
               },
@@ -950,7 +950,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A reviewed post.",
                 original_tags: [{ id: false }],
               },
@@ -967,7 +967,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A reviewed post.",
                 original_title: "A stale topic title",
               },
@@ -987,7 +987,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A reviewed post.",
                 original_tags: [{ id: stale_tag.id }],
               },
@@ -1005,7 +1005,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: 0,
-              edit: {
+              post_revision: {
                 raw: "A stale review action.",
               },
             }
@@ -1031,7 +1031,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A reviewed post.",
                 category_id: private_category.id,
               },
@@ -1052,7 +1052,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "The shared draft has been reviewed.",
                 category_id: destination.id,
               },
@@ -1074,7 +1074,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "This edit has too many tags.",
                 tags: [{ name: "one" }, { name: "two" }],
               },
@@ -1096,7 +1096,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "An edit with a forbidden featured link.",
                 featured_link: "https://example.com",
               },
@@ -1125,7 +1125,7 @@ RSpec.describe ReviewablesController do
             put "/review/#{flagged.id}/perform/agree_and_edit.json",
                 params: {
                   version: flagged.version,
-                  edit: {
+                  post_revision: {
                     raw:,
                   },
                 }
@@ -1147,7 +1147,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "The stale replacement must not be saved.",
                 original_text: original_raw,
               },
@@ -1167,7 +1167,7 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
-              edit: {
+              post_revision: {
                 raw: "A forbidden replacement.",
               },
             }
@@ -1524,7 +1524,7 @@ RSpec.describe ReviewablesController do
           def additional_args(params)
             args = {}
             args[:legacy_id] = params[:legacy_id] if params.key?(:legacy_id)
-            args[:edit] = params[:edit] if params.key?(:edit)
+            args[:post_revision] = params[:post_revision] if params.key?(:post_revision)
 
             args
           end
@@ -1568,13 +1568,13 @@ RSpec.describe ReviewablesController do
         )
       end
 
-      it "preserves a custom reviewable's edit argument" do
+      it "preserves a custom reviewable's post_revision argument" do
         messages =
           MessageBus.track_publish("/phony-reviewable-test") do
             put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
                 params: {
                   version: reviewable_phony.version,
-                  edit: "plugin edit",
+                  post_revision: "plugin revision",
                   send_email: false,
                 }
           end
@@ -1582,7 +1582,7 @@ RSpec.describe ReviewablesController do
         expect(response.status).to eq(200)
         expect(messages.first.data[:args]).to eq(
           version: reviewable_phony.version,
-          edit: "plugin edit",
+          post_revision: "plugin revision",
         )
       end
 

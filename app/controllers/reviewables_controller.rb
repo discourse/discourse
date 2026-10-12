@@ -2,6 +2,7 @@
 
 class ReviewablesController < ApplicationController
   include ReviewableActionParams
+  include ReviewableFlaggedPostActionParams
 
   requires_login
 

@@ -552,7 +552,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reviewable.perform(
           moderator,
           :agree_and_edit,
-          edit: {
+          post_revision: {
             raw:,
             title:,
             category_id: category.id,
@@ -580,7 +580,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reviewable.perform(
           moderator,
           :agree_and_edit,
-          edit: {
+          post_revision: {
             raw: "",
             title: "This title must not be saved",
             category_id: destination.id,
