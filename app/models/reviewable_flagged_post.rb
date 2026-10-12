@@ -3,16 +3,22 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def additional_args(params)
+      args = ReviewableActionBuilder.penalty_args(params)
+
+      args[:post_version] = params[:post_version] if params[:action_id] == "agree_and_edit"
+
+      args
+    end
+  end
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
-  # Penalties are handled by the modal after the action is performed
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_keep,
       agree_and_keep_deleted: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       disagree_and_keep_deleted: :disagree,
       ignore_and_do_nothing: :ignore,
@@ -250,6 +256,35 @@ class ReviewableFlaggedPost < Reviewable
     create_result(:success, :ignored, actions.map(&:user_id), false)
   end
 
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_edit(performed_by, args)
+    post_version = performed_by.staff? ? post.version : post.public_version
+    revision = post.revisions.find_by(number: post.version)
+    latest_flag_at = reviewable_scores.pending.maximum(:created_at) || created_at
+
+    unless args[:post_version].to_s == post_version.to_s && revision &&
+             revision.updated_at >= latest_flag_at && revision.modifications.present?
+      raise Discourse::InvalidParameters.new(:post_version)
+    end
+
+    result = perform_agree_and_keep(performed_by, args)
+    result.post_revision = revision
+    result
+  end
+
   def perform_agree_and_keep(performed_by, args)
     agree(performed_by, args)
   end
@@ -427,7 +462,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

@@ -3,6 +3,7 @@
 module TagGuardian
   def can_see_tag?(tag)
     return false if !SiteSetting.tagging_enabled
+    return false if !tag
     return false if hidden_tag_names.include?(tag.name)
     true
   end

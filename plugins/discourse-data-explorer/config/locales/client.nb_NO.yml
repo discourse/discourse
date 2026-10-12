@@ -15,7 +15,6 @@ nb_NO:
         no_semicolons: "Fjern semikolonene fra spørringen."
         dirty: "Du må lagre spørringen før du kjører den."
     explorer:
-      default_query: "Forvalg"
       or: "eller"
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
       title: "Datautforsker"
@@ -44,6 +43,7 @@ nb_NO:
         one: "%{count} resultat."
         other: "%{count} resultater."
       query_groups: "Grupper"
+      query_tags: "Stikkord"
       query_description: "Beskrivelse"
       reset_params: "Tilbakestill"
       search_placeholder: "Søk…"

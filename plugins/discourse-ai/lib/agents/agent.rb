@@ -174,7 +174,7 @@ module DiscourseAi
           tools << Tools::Assign if defined?(::Assigner)
           tools << Tools::MarkAsSolved if defined?(::DiscourseSolved)
 
-          tools
+          DiscoursePluginRegistry.apply_modifier(:ai_agent_available_tools, tools).uniq
         end
 
         def external_agent_id(agent_klass)

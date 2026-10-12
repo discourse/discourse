@@ -26,6 +26,10 @@ sk:
                 lt_1h: "< 1 hodina"
                 gt_24h: "> 24 hodín"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Odstránené"
+        tag_names: "Značky"
     notifications:
       alt:
         solved:

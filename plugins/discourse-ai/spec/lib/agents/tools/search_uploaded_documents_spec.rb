@@ -16,8 +16,11 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchUploadedDocuments do
     )
   end
 
-  let(:upload) { Fabricate(:upload, original_filename: "guide.md") }
-  let(:other_upload) { Fabricate(:upload, original_filename: "faq.md") }
+  fab!(:upload) do
+    SiteSetting.authorized_extensions = "md|txt"
+    Fabricate(:upload, original_filename: "guide.md")
+  end
+  fab!(:other_upload) { Fabricate(:upload, original_filename: "faq.md") }
 
   before do
     enable_current_plugin

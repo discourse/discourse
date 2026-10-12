@@ -27,6 +27,10 @@ hu:
                 lt_1h: "< 1 óra"
                 gt_24h: "> 24 óra"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Eltávolítva"
+        tag_names: "Címkék"
     notifications:
       alt:
         solved:

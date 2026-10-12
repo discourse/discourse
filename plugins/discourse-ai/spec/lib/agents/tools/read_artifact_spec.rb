@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
 
   fab!(:post)
   fab!(:post2) { Fabricate(:post, user: post.user) }
@@ -40,6 +40,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       expect(new_artifact.css).to eq(artifact.css)
       expect(new_artifact.js).to eq(artifact.js)
       expect(new_artifact.metadata["cloned_from"]).to eq(artifact.id)
+      expect(tool.custom_raw).to include(%([ai-artifact id="#{new_artifact.id}"]))
     end
 
     it "handles invalid URLs" do

@@ -7,7 +7,6 @@
 th:
   js:
     explorer:
-      default_query: "ค่าเริ่มต้น"
       or: "หรือ"
       create: "สร้าง"
       ai:
@@ -22,6 +21,7 @@ th:
           no: "ไม่ใช่"
       delete: "ลบ"
       query_groups: "กลุ่ม"
+      query_tags: "ป้าย"
       query_description: "รายละเอียด"
       query_user: "สร้างโดย"
       search_placeholder: "ค้นหา..."

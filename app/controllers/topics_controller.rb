@@ -1569,12 +1569,18 @@ class TopicsController < ApplicationController
       format.html do
         @tags = @topic_view.visible_tags
 
-        if SiteSetting.content_localization_enabled && use_crawler_layout?
+        if SiteSetting.content_localization_enabled &&
+             (
+               use_crawler_layout? ||
+                 Middleware::AnonymousCache::Helper.new(request.env).is_crawler?
+             )
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
-        store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        if set_layout == "application"
+          store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        end
         render :show
       end
 

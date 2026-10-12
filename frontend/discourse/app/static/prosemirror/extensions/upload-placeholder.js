@@ -57,7 +57,10 @@ const extension = {
         const isUserAction = transactions.some(
           (tr) => tr.docChanged && tr.getMeta("addToHistory") !== false
         );
-        if (!isUserAction) {
+        const resolvesUpload = transactions.some((tr) =>
+          tr.getMeta("uploadPlaceholderResolved")
+        );
+        if (!isUserAction || resolvesUpload) {
           return;
         }
 

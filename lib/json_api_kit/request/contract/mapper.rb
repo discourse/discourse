@@ -75,7 +75,7 @@ module JsonApiKit
           },
           %i[include no_such_name] => {
             title: "No such relationship path",
-            detail: ->(error) { "There is no relationship path named #{error.name}." },
+            detail: ->(error) { "There is no relationship path named #{error.relationship_path}." },
           },
           %i[fields bad_shape] => {
             title: "Invalid fields parameter",
@@ -84,9 +84,9 @@ module JsonApiKit
           %i[fields bad_value] => {
             title: "Invalid fields value",
             detail: ->(error) do
-              "#{error.member_parameter(error.options[:type])} must be a list of field names."
+              "#{error.member_parameter(error.resource_type)} must be a list of field names."
             end,
-            source: ->(error) { error.member_parameter(error.options[:type]) },
+            source: ->(error) { error.member_parameter(error.resource_type) },
           },
           %i[sort bad_shape] => {
             title: "Invalid sort parameter",

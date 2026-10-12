@@ -5,7 +5,7 @@ import {
   playUserLeftSound,
   stopCallSounds,
 } from "./sound-effects";
-import { participantCanSpeak } from "./stage-roles";
+import { participantCanSpeak, participantEntitledToMedia } from "./stage-roles";
 
 // Handles the roster-shaped room messages ("participants", "role_change",
 // "hand_raise"): diffing the roster into mesh peer create/destroy (or the
@@ -28,6 +28,7 @@ export default class RosterHandler {
   #registerTrack;
   #getRemoteUserIds;
   #removeRemoteStream;
+  #removeRemoteMedia;
   #removeAllRemoteStreams;
   #getLocalVideoKind;
   #syncVideoSenders;
@@ -53,6 +54,7 @@ export default class RosterHandler {
     registerTrack,
     getRemoteUserIds = () => [],
     removeRemoteStream,
+    removeRemoteMedia = () => {},
     removeAllRemoteStreams,
     getLocalVideoKind,
     syncVideoSenders,
@@ -77,6 +79,7 @@ export default class RosterHandler {
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
     this.#removeRemoteStream = removeRemoteStream;
+    this.#removeRemoteMedia = removeRemoteMedia;
     this.#removeAllRemoteStreams = removeAllRemoteStreams;
     this.#getLocalVideoKind = getLocalVideoKind;
     this.#syncVideoSenders = syncVideoSenders;
@@ -182,8 +185,9 @@ export default class RosterHandler {
       }
     }
 
-    this.#syncRemoteVideoTracks(roomId, participants);
+    this.#syncRemoteMediaTracks(roomId, participants);
     this.#dropDisallowedStreams(roomId, participants, { isStage });
+    this.#dropUnentitledMedia(roomId, participants);
 
     if (!this.#isMeshRoom(roomId)) {
       // Publisher-count changes move camera subscriptions between simulcast
@@ -237,7 +241,7 @@ export default class RosterHandler {
     }
   }
 
-  #syncRemoteVideoTracks(roomId, participants) {
+  #syncRemoteMediaTracks(roomId, participants) {
     for (const participant of participants || []) {
       const participantId = Number(participant?.id);
       if (!participantId || participantId === this.#getCurrentUserId()) {
@@ -251,6 +255,18 @@ export default class RosterHandler {
       const track = this.#peerManager.remoteVideoTrack(roomId, participantId);
       if (track) {
         this.#registerTrack(roomId, participantId, track);
+      }
+
+      // Screen audio dropped by a revoked entitlement never gets another
+      // ontrack once the right comes back.
+      if (participant.is_screen_sharing) {
+        const screenAudioTrack = this.#peerManager.remoteScreenAudioTrack(
+          roomId,
+          participantId
+        );
+        if (screenAudioTrack) {
+          this.#registerTrack(roomId, participantId, screenAudioTrack);
+        }
       }
     }
   }
@@ -277,6 +293,34 @@ export default class RosterHandler {
     for (const userId of this.#getRemoteUserIds(roomId)) {
       if (!allowedToPublish.has(userId)) {
         this.#removeRemoteStream(roomId, userId);
+      }
+    }
+  }
+
+  // The receive-side policy refuses new tracks; this drops the camera or
+  // screen media of a mesh sender whose entitlement was revoked while it
+  // played. Only a lost entitlement counts — a sender who merely stopped
+  // publishing keeps its idle tracks for the next time it starts.
+  #dropUnentitledMedia(roomId, participants) {
+    if (!this.#isMeshRoom(roomId)) {
+      return;
+    }
+
+    for (const participant of participants || []) {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId === this.#getCurrentUserId()) {
+        continue;
+      }
+
+      if (!participantEntitledToMedia(participant)) {
+        this.#removeRemoteMedia(roomId, participantId);
+      } else if (
+        !participantEntitledToMedia(participant, { screenOnly: true })
+      ) {
+        // While sharing, the one video m-line is carrying the screen.
+        this.#removeRemoteMedia(roomId, participantId, {
+          keepVideo: !participant.is_screen_sharing,
+        });
       }
     }
   }

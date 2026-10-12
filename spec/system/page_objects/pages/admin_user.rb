@@ -15,12 +15,20 @@ module PageObjects
         has_css?(".btn-danger.suspend-user")
       end
 
+      def has_unsuspend_button?
+        has_css?(".btn-danger.unsuspend-user")
+      end
+
       def has_no_suspend_button?
         has_no_css?(".btn-danger.suspend-user")
       end
 
       def has_silence_button?
         has_css?(".btn-danger.silence-user")
+      end
+
+      def has_unsilence_button?
+        has_css?(".btn-danger.unsilence-user")
       end
 
       def has_no_silence_button?

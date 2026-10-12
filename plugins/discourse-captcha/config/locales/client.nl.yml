@@ -7,4 +7,6 @@
 nl:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Testen"
       placeholder: tijdelijke aanduiding

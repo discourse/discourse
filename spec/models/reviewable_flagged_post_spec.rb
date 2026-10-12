@@ -29,6 +29,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:score) { result.reviewable_score }
     let(:guardian) { Guardian.new(moderator) }
 
+    it "keeps the spam flag pending and the author unsuspended when post deletion is forbidden" do
+      SiteSetting.tos_topic_id = post.topic_id
+
+      expect do
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "spam",
+          suspend_until: 2.days.from_now,
+          post_action: "delete",
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload).to be_pending
+      expect(score.reload).to be_pending
+      expect(post.user.reload).not_to be_suspended
+      expect(post.reload).not_to be_trashed
+      expect(
+        UserHistory.where(action: UserHistory.actions[:suspend_user], target_user_id: post.user_id),
+      ).to be_empty
+    end
+
     it "disagrees with flags without restoring a soft-deleted post" do
       post.update!(hidden: true)
       post.trash!
@@ -295,17 +317,29 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "agree_and_suspend agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_suspend)
+      reviewable.perform(
+        moderator,
+        :agree_and_suspend,
+        reason: "spam",
+        suspend_until: 2.days.from_now,
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden
+      expect(post.user.reload).to be_suspended
     end
 
     it "agree_and_silence agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_silence)
+      reviewable.perform(
+        moderator,
+        :agree_and_silence,
+        reason: "spam",
+        silenced_till: 2.days.from_now,
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden
+      expect(post.user.reload).to be_silenced
     end
 
     it "agree_and_hide agrees with the flags and hides the post" do
@@ -501,6 +535,43 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       post.reload
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
+    end
+  end
+
+  describe "#perform" do
+    context "when performing agree_and_edit on a flagged post reviewable" do
+      fab!(:flagged, :reviewable_flagged_post)
+
+      it "approves the flagged post reviewable through agree_and_edit using the author's saved revision" do
+        PostRevisor.new(flagged.post).revise!(
+          flagged.post.user,
+          { raw: "The author corrected this flagged post." },
+          force_new_version: true,
+        )
+        revision = flagged.post.revisions.last
+
+        result = flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+
+        expect(result).to be_success
+        expect(result.post_revision).to eq(revision)
+        expect(flagged.reload).to be_approved
+      end
+
+      it "rejects agree_and_edit on a flagged post reviewable when the revision predates its latest flag" do
+        PostRevisor.new(flagged.post).revise!(
+          moderator,
+          raw: "The moderator corrected this post before the latest flag.",
+        )
+        revision = flagged.post.revisions.last
+        freeze_time 1.minute.from_now
+        flagged.add_score(Fabricate(:user), PostActionType.types[:spam])
+
+        expect do
+          flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+        end.to raise_error(Discourse::InvalidParameters)
+
+        expect(flagged.reload).to be_pending
+      end
     end
   end
 
