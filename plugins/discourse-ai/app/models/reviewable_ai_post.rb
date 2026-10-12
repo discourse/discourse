@@ -181,6 +181,65 @@ class ReviewableAiPost < Reviewable
 
   private
 
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_hide, :agree_and_keep_hidden
+      {
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    when :delete_and_agree, :delete_and_ignore, :delete_and_agree_replies,
+         :delete_and_ignore_replies
+      {
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = post.user.reload
+
+      {
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = post.user.reload
+
+      {
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_user_block
+      user = post.user
+
+      {
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    end
+  end
+
   def post
     @post ||= target || Post.with_deleted.find_by(id: target_id)
   end

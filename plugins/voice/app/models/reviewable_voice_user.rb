@@ -85,6 +85,39 @@ class ReviewableVoiceUser < Reviewable
       result.update_flag_stats = { status: :ignored, user_ids: flagged_by_user_ids }
     end
   end
+
+  private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    end
+  end
 end
 
 # == Schema Information

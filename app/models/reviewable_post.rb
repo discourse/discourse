@@ -126,6 +126,45 @@ class ReviewablePost < Reviewable
 
   private
 
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :reject_and_delete, :reject_and_keep_deleted
+      {
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :reject_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :reject_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    end
+  end
+
   def post
     @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
