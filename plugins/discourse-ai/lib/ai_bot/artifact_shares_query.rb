@@ -5,11 +5,13 @@ module DiscourseAi
     class ArtifactSharesQuery
       FEED_PAGE_SIZE = 20
       MAX_CONVERSATION_SCAN = 100
+      MAX_INSPECTION_SCAN = 100
       FEED_TYPES = %w[all standalone conversation].freeze
       FEED_ORDERS = %w[newest oldest].freeze
 
-      def initialize(user:, type:, order:, cursor:)
+      def initialize(user:, type:, order:, cursor:, published_only: false)
         @user = user
+        @published_only = published_only
         @type = type.nil? ? "all" : type
         @order = order.nil? ? "newest" : order
         @raw_cursor = cursor
@@ -45,6 +47,7 @@ module DiscourseAi
 
         items = []
         conversation_scans = 0
+        event_scans = 0
         last_event = nil
         loop do
           streams.each do |type, stream|
@@ -70,10 +73,27 @@ module DiscourseAi
 
           stream = streams[type]
           stream[:rows].shift
-          items.concat(stream[:cards].fetch(event.id))
+          cards = stream[:cards].fetch(event.id)
+          if @published_only
+            cards =
+              cards
+                .select { |card| card[:available] }
+                .map do |card|
+                  card.slice(:id, :type, :name, :url, :version, :created_at, :available)
+                end
+            if type == "conversation"
+              cards = cards.first(1)
+              cards.each { |card| card[:id] = "conversation-#{event.id}" }
+            end
+          end
+          items.concat(cards)
+          event_scans += 1
           conversation_scans += 1 if type == "conversation"
           last_event = feed_position(event, type)
-          break if items.length >= FEED_PAGE_SIZE || conversation_scans == MAX_CONVERSATION_SCAN
+          if items.length >= FEED_PAGE_SIZE || conversation_scans == MAX_CONVERSATION_SCAN ||
+               (@published_only && event_scans == MAX_INSPECTION_SCAN)
+            break
+          end
         end
 
         has_more =
@@ -243,7 +263,8 @@ module DiscourseAi
                 {
                   id: "conversation-#{conversation.id}-#{artifact_id}",
                   type: "conversation",
-                  name: artifact[1],
+                  # Inspection labels come from the publication, never the mutable private source.
+                  name: @published_only ? conversation.title : artifact[1],
                   url: conversation.url,
                   embed_url: AiArtifact.embed_url(artifact_id, version),
                   available:

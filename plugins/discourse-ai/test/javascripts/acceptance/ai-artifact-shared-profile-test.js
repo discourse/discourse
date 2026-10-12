@@ -1,5 +1,6 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 import {
@@ -16,15 +17,24 @@ acceptance("AI artifact - Shared artifacts profile", function (needs) {
     artifactRequests = 0;
     conversationRequests = 0;
   });
-  needs.user();
+  needs.user({ admin: false, moderator: false });
   needs.settings({
     discourse_ai_enabled: true,
     ai_artifact_security: "strict",
   });
   needs.pretender((server, helper) => {
-    server.get("/discourse-ai/ai-bot/artifact-shares.json", () => {
+    server.get("/u/eviltrout.json", () => {
+      const profile = userFixtures["/u/eviltrout.json"];
+      return helper.response({
+        ...profile,
+        user: { ...profile.user, admin: false, moderator: false },
+      });
+    });
+    server.get("/discourse-ai/ai-bot/artifact-shares.json", (request) => {
       artifactRequests++;
       return helper.response({
+        user_id: Number(request.queryParams.user_id),
+        can_manage: true,
         has_more: false,
         next_cursor: null,
         items: [
@@ -54,23 +64,28 @@ acceptance("AI artifact - Shared artifacts profile", function (needs) {
         ],
       });
     });
-    server.get("/discourse-ai/ai-bot/shared-ai-conversations.json", () => {
-      conversationRequests++;
-      return helper.response({
-        has_more: false,
-        next_cursor: null,
-        items: [
-          {
-            id: 42,
-            share_key: "shared",
-            title: "A shared conversation",
-            url: "/discourse-ai/ai-bot/shared-ai-conversations/shared",
-            created_at: "2026-09-20T12:00:00Z",
-            available: true,
-          },
-        ],
-      });
-    });
+    server.get(
+      "/discourse-ai/ai-bot/shared-ai-conversations.json",
+      (request) => {
+        conversationRequests++;
+        return helper.response({
+          user_id: Number(request.queryParams.user_id),
+          can_manage: true,
+          has_more: false,
+          next_cursor: null,
+          items: [
+            {
+              id: 42,
+              share_key: "shared",
+              title: "A shared conversation",
+              url: "/discourse-ai/ai-bot/shared-ai-conversations/shared",
+              created_at: "2026-09-20T12:00:00Z",
+              available: true,
+            },
+          ],
+        });
+      }
+    );
     server.get(
       "/discourse-ai/ai-bot/shared-ai-conversations/preview/42.json",
       (request) => {
@@ -85,6 +100,53 @@ acceptance("AI artifact - Shared artifacts profile", function (needs) {
         return helper.response({});
       }
     );
+  });
+
+  test("sidebar offers AI sharing links only on the enabled self profile", async function (assert) {
+    this.siteSettings.sidebar_user_navigation = true;
+
+    const artifactsLink =
+      '.user-nav-sidebar-link[href="/u/eviltrout/activity/shared-ai-artifacts"]';
+    const conversationsLink =
+      '.user-nav-sidebar-link[href="/u/eviltrout/activity/shared-ai-conversations"]';
+
+    await visit("/u/eviltrout/activity");
+    assert
+      .dom(artifactsLink)
+      .hasText("Shared AI artifacts", "artifacts appear in the sidebar");
+    assert
+      .dom(conversationsLink)
+      .hasText(
+        "Shared AI conversations",
+        "conversations appear in the sidebar"
+      );
+
+    await click(artifactsLink);
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/activity/shared-ai-artifacts",
+      "the sidebar opens artifacts"
+    );
+    await click(conversationsLink);
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/activity/shared-ai-conversations",
+      "the sidebar opens conversations"
+    );
+
+    await visit("/u/charlie/activity");
+    assert
+      .dom('.user-nav-sidebar-link[href*="shared-ai"]')
+      .doesNotExist("AI sharing links are private to the current user");
+
+    this.siteSettings.discourse_ai_enabled = false;
+    await visit("/u/eviltrout/activity");
+    assert
+      .dom(artifactsLink)
+      .doesNotExist("artifacts are hidden when AI is disabled");
+    assert
+      .dom(conversationsLink)
+      .doesNotExist("conversations are hidden when AI is disabled");
   });
 
   test("self profile offers actions and confirms conversation revoke", async function (assert) {
@@ -265,7 +327,7 @@ acceptance("AI artifact - Shared artifacts profile", function (needs) {
 });
 
 acceptance("AI artifact - Shared artifacts scrolling", function (needs) {
-  needs.user();
+  needs.user({ admin: false, moderator: false });
   needs.settings({
     discourse_ai_enabled: true,
     ai_artifact_security: "strict",
@@ -274,6 +336,8 @@ acceptance("AI artifact - Shared artifacts scrolling", function (needs) {
     server.get("/discourse-ai/ai-bot/artifact-shares.json", (request) => {
       if (request.queryParams.cursor) {
         return helper.response({
+          user_id: Number(request.queryParams.user_id),
+          can_manage: true,
           items: [
             {
               id: "conversation-43",
@@ -293,6 +357,8 @@ acceptance("AI artifact - Shared artifacts scrolling", function (needs) {
         });
       }
       return helper.response({
+        user_id: Number(request.queryParams.user_id),
+        can_manage: true,
         items: [
           {
             id: "standalone-first",
@@ -340,15 +406,17 @@ acceptance("AI artifact - Shared AI artifacts disabled", function (needs) {
   needs.hooks.beforeEach(() => {
     requests = 0;
   });
-  needs.user();
+  needs.user({ admin: false, moderator: false });
   needs.settings({
     discourse_ai_enabled: true,
     ai_artifact_security: "disabled",
   });
   needs.pretender((server, helper) => {
-    server.get("/discourse-ai/ai-bot/artifact-shares.json", () => {
+    server.get("/discourse-ai/ai-bot/artifact-shares.json", (request) => {
       requests++;
       return helper.response({
+        user_id: Number(request.queryParams.user_id),
+        can_manage: true,
         items: [
           {
             id: "conversation-42",
@@ -418,7 +486,7 @@ acceptance("AI artifact - Shared AI artifacts disabled", function (needs) {
 });
 
 acceptance("AI sharing - plugin disabled", function (needs) {
-  needs.user();
+  needs.user({ admin: false, moderator: false });
   needs.settings({ discourse_ai_enabled: false });
 
   test("neither activity tab nor route is available", async function (assert) {
@@ -435,7 +503,7 @@ acceptance("AI sharing - plugin disabled", function (needs) {
 });
 
 acceptance("AI sharing - bot disabled", function (needs) {
-  needs.user();
+  needs.user({ admin: false, moderator: false });
   needs.settings({
     discourse_ai_enabled: true,
     ai_bot_enabled: false,
@@ -458,3 +526,422 @@ acceptance("AI sharing - bot disabled", function (needs) {
     assert.dom(".user-nav__activity-shared-conversations").exists();
   });
 });
+
+acceptance("AI sharing - Administrator inspection", function (needs) {
+  const requests = [];
+  const state = { failNextPage: false, emptyPages: false, refreshed: false };
+  needs.user({ admin: true });
+  needs.settings({
+    discourse_ai_enabled: true,
+    ai_artifact_security: "strict",
+  });
+  needs.hooks.beforeEach(() => {
+    requests.length = 0;
+    state.failNextPage = false;
+    state.emptyPages = false;
+    state.refreshed = false;
+  });
+  needs.pretender((server, helper) => {
+    for (const [username, id] of [
+      ["system", -1],
+      ["inspectionbot", -100],
+      ["zerobot", 0],
+    ]) {
+      server.get(`/u/${username}.json`, () => {
+        const profile = userFixtures["/u/charlie.json"];
+        return helper.response({
+          ...profile,
+          user: { ...profile.user, username, id },
+        });
+      });
+    }
+
+    for (const feed of ["artifact-shares", "shared-ai-conversations"]) {
+      server.get(`/discourse-ai/ai-bot/${feed}.json`, (request) => {
+        const params = request.queryParams;
+        requests.push({ feed, ...params });
+        if (params.cursor && state.failNextPage) {
+          state.failNextPage = false;
+          return helper.response(500, { errors: ["Unavailable"] });
+        }
+        const inspected = params.user_id === "5";
+        const title = state.refreshed
+          ? "Fresh publication"
+          : inspected
+            ? "Published by Charlie"
+            : "My own publication";
+        if (state.emptyPages) {
+          const position = params.cursor ? JSON.parse(params.cursor).id : null;
+          const finished = position === 124;
+          return helper.response({
+            user_id: Number(params.user_id),
+            can_manage: false,
+            items: finished
+              ? [
+                  {
+                    id: "found",
+                    type: "standalone",
+                    name: title,
+                    title,
+                    url: "/published",
+                    available: true,
+                  },
+                ]
+              : [],
+            has_more: !finished,
+            next_cursor: finished
+              ? null
+              : { id: position === null ? 123 : 124 },
+          });
+        }
+        return helper.response({
+          user_id: Number(params.user_id),
+          can_manage: !inspected && !state.refreshed,
+          items: [
+            {
+              id: params.cursor ? "second" : "first",
+              type: "standalone",
+              name: title,
+              title,
+              url: "/discourse-ai/ai-bot/artifact-shares/published",
+              available: true,
+              share_key: inspected ? undefined : "own-key",
+            },
+          ],
+          has_more: !params.cursor && !state.refreshed,
+          next_cursor:
+            params.cursor || state.refreshed
+              ? null
+              : { id: 123, created_at: "published" },
+        });
+      });
+    }
+  });
+
+  test("system and nonpositive bot profiles have no sidebar links, tabs or direct feeds", async function (assert) {
+    for (const username of ["system", "inspectionbot", "zerobot"]) {
+      this.siteSettings.sidebar_user_navigation = true;
+      await visit(`/u/${username}/activity`);
+      assert
+        .dom('.user-nav-sidebar-link[href*="shared-ai"]')
+        .doesNotExist("nonpositive targets have no sidebar inspection links");
+      this.siteSettings.sidebar_user_navigation = false;
+      await visit(`/u/${username}/activity`);
+      assert
+        .dom(".user-nav__activity-shared-artifacts")
+        .doesNotExist("nonpositive targets have no artifact tab");
+      assert
+        .dom(".user-nav__activity-shared-conversations")
+        .doesNotExist("nonpositive targets have no conversation tab");
+      for (const route of [
+        "shared-ai-artifacts",
+        "shared-ai-conversations",
+        "shared-artifacts",
+      ]) {
+        await visit(`/u/${username}/activity/${route}`);
+        assert.strictEqual(
+          currentURL(),
+          `/u/${username}/activity`,
+          "nonpositive targets redirect to their activity page"
+        );
+      }
+    }
+    assert.strictEqual(
+      requests.length,
+      0,
+      "invalid profile navigation never requests a feed or falls back to self"
+    );
+  });
+
+  test("legacy tabs and canonical or legacy routes allow read-only inspection", async function (assert) {
+    await visit("/u/charlie/activity");
+    assert
+      .dom(".user-nav__activity-shared-artifacts a")
+      .exists("admin sees the artifact tab");
+    assert
+      .dom(".user-nav__activity-shared-conversations a")
+      .exists("admin sees the conversation tab");
+    await click(".user-nav__activity-shared-artifacts a");
+    assert
+      .dom(".shared-artifacts__card h3")
+      .hasText("Published by Charlie", "published artifact is listed");
+    assert
+      .dom(".shared-artifacts__actions")
+      .doesNotExist("inspection has no management or embed controls");
+    assert
+      .dom(".shared-artifacts iframe")
+      .doesNotExist("inspection does not mount a mutable runtime");
+    assert.deepEqual(
+      requests[0],
+      { feed: "artifact-shares", user_id: "5" },
+      "initial request targets the inspected user"
+    );
+
+    await click(".user-nav__activity-shared-conversations a");
+    assert
+      .dom(".shared-conversations__card h3")
+      .hasText("Published by Charlie", "conversation publication is listed");
+    assert
+      .dom(".shared-conversations__actions")
+      .doesNotExist("conversation inspection has no revoke controls");
+    assert.deepEqual(
+      requests.at(-1),
+      { feed: "shared-ai-conversations", user_id: "5" },
+      "conversation request targets the inspected user"
+    );
+
+    await visit("/u/charlie/activity/shared-artifacts");
+    assert.strictEqual(
+      currentURL(),
+      "/u/charlie/activity/shared-ai-artifacts",
+      "legacy route resolves to the inspected feed"
+    );
+  });
+
+  test("sidebar supports inspection and changing profile resets the list and owner controls", async function (assert) {
+    this.siteSettings.sidebar_user_navigation = true;
+    await visit("/u/charlie/activity");
+    const artifactLink =
+      '.user-nav-sidebar-link[href="/u/charlie/activity/shared-ai-artifacts"]';
+    const conversationLink =
+      '.user-nav-sidebar-link[href="/u/charlie/activity/shared-ai-conversations"]';
+    assert.dom(artifactLink).exists("admin sidebar offers artifacts");
+    assert.dom(conversationLink).exists("admin sidebar offers conversations");
+    await click(artifactLink);
+    assert
+      .dom(".shared-artifacts__actions")
+      .doesNotExist("inspected artifacts are read-only");
+
+    await visit("/u/eviltrout/activity/shared-ai-artifacts");
+    assert
+      .dom(".shared-artifacts__card h3")
+      .hasText("My own publication", "profile change replaces inspection data");
+    assert
+      .dom(".shared-artifacts__revoke")
+      .exists("admin retains owner management on self");
+    await visit("/u/charlie/activity/shared-ai-artifacts");
+    assert
+      .dom(".shared-artifacts__card h3")
+      .hasText(
+        "Published by Charlie",
+        "changing back recreates inspection data"
+      );
+    assert
+      .dom(".shared-artifacts__actions")
+      .doesNotExist("owner controls cannot persist on inspection");
+
+    this.siteSettings.discourse_ai_enabled = false;
+    await visit("/u/charlie/activity");
+    assert
+      .dom(artifactLink)
+      .doesNotExist("disabled AI hides administrator artifact navigation");
+    assert
+      .dom(conversationLink)
+      .doesNotExist("disabled AI hides administrator conversation navigation");
+    await visit("/u/charlie/activity/shared-ai-artifacts");
+    assert.notStrictEqual(
+      currentURL(),
+      "/u/charlie/activity/shared-ai-artifacts",
+      "disabled AI guards direct inspection"
+    );
+  });
+
+  for (const kind of ["artifacts", "conversations"]) {
+    test(`${kind} observer continues through empty inspection pages`, async function (assert) {
+      state.emptyPages = true;
+      enableLoadMoreObserver();
+      const observations = stubIntersectionObserver();
+      try {
+        await visit(`/u/charlie/activity/shared-ai-${kind}`);
+        assert
+          .dom(`.shared-${kind}__card`)
+          .doesNotExist("an empty first page exposes no unavailable content");
+        assert
+          .dom(`.shared-${kind}__empty`)
+          .doesNotExist(
+            "a continuation cursor suppresses the final empty state"
+          );
+        const firstObserver = observations.at(-1);
+        await firstObserver.trigger();
+        assert
+          .dom(`.shared-${kind}__card`)
+          .doesNotExist(
+            "an empty intermediate page still exposes no unavailable content"
+          );
+        assert.notStrictEqual(
+          observations.at(-1),
+          firstObserver,
+          "the observer is rearmed after the empty page"
+        );
+        await observations.at(-1).trigger();
+        assert
+          .dom(`.shared-${kind}__card h3`)
+          .hasText(
+            "Published by Charlie",
+            "the next intersection finds the publication"
+          );
+        assert
+          .dom(`.shared-${kind}__actions`)
+          .doesNotExist("continued inspection remains read-only");
+        assert.deepEqual(
+          requests.map(({ user_id, cursor }) => ({ user_id, cursor })),
+          [
+            { user_id: "5", cursor: undefined },
+            { user_id: "5", cursor: JSON.stringify({ id: 123 }) },
+            { user_id: "5", cursor: JSON.stringify({ id: 124 }) },
+          ],
+          "empty pages advance the cursor without losing the target"
+        );
+      } finally {
+        disableLoadMoreObserver();
+      }
+    });
+
+    test(`${kind} same-user route refresh replaces data, pagination and management authorization`, async function (assert) {
+      await visit(`/u/eviltrout/activity/shared-ai-${kind}`);
+      assert
+        .dom(`.shared-${kind}__card h3`)
+        .hasText("My own publication", "the initial owner data is shown");
+      assert
+        .dom(`.shared-${kind}__revoke`)
+        .exists("the initial response permits owner management");
+      await click(`.shared-${kind}__sort`);
+      await click(`.shared-${kind}__revoke`);
+      assert
+        .dom(".dialog-container")
+        .exists("owner management confirmation is open before refresh");
+      state.refreshed = true;
+      await this.owner
+        .lookup(`route:user-activity.shared-ai-${kind}`)
+        .refresh();
+      await settled();
+
+      assert
+        .dom(`.shared-${kind}__card h3`)
+        .hasText(
+          "Fresh publication",
+          "a refreshed response replaces the same user's old data"
+        );
+      assert
+        .dom(`.shared-${kind}__actions`)
+        .doesNotExist(
+          "the refreshed management authorization replaces old controls"
+        );
+      assert
+        .dom(".dialog-container")
+        .doesNotExist(
+          "refresh dismisses the stale owner management confirmation"
+        );
+      assert
+        .dom(`.shared-${kind}__sort`)
+        .hasText("Newest first", "refresh resets the prior sort state");
+      assert.strictEqual(
+        requests.at(-1).user_id,
+        "19",
+        "refresh still explicitly requests the same target"
+      );
+    });
+
+    test(`${kind} sort, pagination and retries retain the inspected target`, async function (assert) {
+      enableLoadMoreObserver();
+      const observations = stubIntersectionObserver();
+      try {
+        await visit(`/u/charlie/activity/shared-ai-${kind}`);
+        if (kind === "artifacts") {
+          await click(".shared-artifacts__filters button:nth-child(2)");
+        }
+        assert.strictEqual(
+          requests.at(-1).type,
+          kind === "artifacts" ? "standalone" : undefined,
+          "only the artifact feed carries its selected filter"
+        );
+        await click(`.shared-${kind}__sort`);
+        assert.strictEqual(
+          requests.at(-1).order,
+          "oldest",
+          "sorting is passed to the target feed"
+        );
+        state.failNextPage = true;
+        await observations.at(-1).trigger();
+        assert
+          .dom(`.shared-${kind}__retry`)
+          .exists("failed target pagination offers retry");
+        const failedRequest = requests.at(-1);
+        await click(`.shared-${kind}__retry`);
+        assert.deepEqual(
+          requests.at(-1),
+          failedRequest,
+          "retry retains the target, order, filter and cursor"
+        );
+        assert
+          .dom(`.shared-${kind}__card`)
+          .exists({ count: 2 }, "target page is appended");
+        assert.true(
+          requests.every((request) => request.user_id === "5"),
+          "every request explicitly targets Charlie"
+        );
+        assert
+          .dom(`.shared-${kind}__actions`)
+          .doesNotExist("pagination does not introduce management controls");
+      } finally {
+        disableLoadMoreObserver();
+      }
+    });
+  }
+});
+
+for (const viewer of ["moderator", "anonymous"]) {
+  acceptance(`AI sharing - ${viewer} access`, function (needs) {
+    const state = { requests: 0 };
+    if (viewer === "moderator") {
+      needs.user({ moderator: true, admin: false });
+    }
+    needs.settings({
+      discourse_ai_enabled: true,
+      sidebar_user_navigation: true,
+    });
+    needs.hooks.beforeEach(() => {
+      state.requests = 0;
+    });
+    needs.pretender((server, helper) => {
+      for (const feed of ["artifact-shares", "shared-ai-conversations"]) {
+        server.get(`/discourse-ai/ai-bot/${feed}.json`, () => {
+          state.requests++;
+          return helper.response({ items: [], has_more: false });
+        });
+      }
+    });
+
+    test("another user's sidebar and direct feeds are inaccessible", async function (assert) {
+      await visit("/u/charlie/activity");
+      assert
+        .dom('.user-nav-sidebar-link[href*="shared-ai"]')
+        .doesNotExist("inspection links are hidden");
+      this.siteSettings.sidebar_user_navigation = false;
+      await visit("/u/charlie/activity");
+      assert
+        .dom(".user-nav__activity-shared-artifacts")
+        .doesNotExist("artifact tab is hidden");
+      assert
+        .dom(".user-nav__activity-shared-conversations")
+        .doesNotExist("conversation tab is hidden");
+      for (const route of [
+        "shared-ai-artifacts",
+        "shared-ai-conversations",
+        "shared-artifacts",
+      ]) {
+        await visit(`/u/charlie/activity/${route}`);
+        assert.notStrictEqual(
+          currentURL(),
+          `/u/charlie/activity/${route}`,
+          "direct feed navigation redirects away"
+        );
+      }
+      assert.strictEqual(
+        state.requests,
+        0,
+        "guarded navigation makes no feed requests"
+      );
+    });
+  });
+}

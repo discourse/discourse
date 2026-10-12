@@ -14,7 +14,12 @@ import { i18n } from "discourse-i18n";
 import SharedConversationsList from "discourse/plugins/discourse-ai/discourse/components/shared-conversations-list";
 
 function listData(items, hasMore = false, nextCursor = null) {
-  return { items, has_more: hasMore, next_cursor: nextCursor };
+  return {
+    items,
+    has_more: hasMore,
+    next_cursor: nextCursor,
+    can_manage: true,
+  };
 }
 
 function share(id, available = true) {
@@ -230,5 +235,34 @@ module("Integration | Component | SharedConversationsList", function (hooks) {
     resolvePage(response(listData([share(2)])));
     await Promise.all([firstLoad, secondLoad]);
     assert.dom(".shared-conversations__card h3").hasText("Conversation 2");
+  });
+
+  test("inspection renders published links without management controls", async function (assert) {
+    this.data = { ...listData([share(1)]), user_id: 5, can_manage: false };
+    await render(
+      <template><SharedConversationsList @data={{this.data}} /></template>
+    );
+
+    assert
+      .dom(".shared-conversations__card h3 a")
+      .exists("published representation remains accessible");
+    assert
+      .dom(".shared-conversations__actions")
+      .doesNotExist("inspection renders no management, copy or embed controls");
+    assert
+      .dom("iframe")
+      .doesNotExist("inspection never mounts an artifact runtime");
+  });
+
+  test("missing management authorization hides owner controls", async function (assert) {
+    this.data = listData([share(1)]);
+    delete this.data.can_manage;
+    await render(
+      <template><SharedConversationsList @data={{this.data}} /></template>
+    );
+
+    assert
+      .dom(".shared-conversations__actions")
+      .doesNotExist("management defaults to denied");
   });
 });

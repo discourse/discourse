@@ -14,7 +14,12 @@ import { i18n } from "discourse-i18n";
 import SharedArtifactsList from "discourse/plugins/discourse-ai/discourse/components/shared-artifacts-list";
 
 function listData(items, { hasMore = false, nextCursor = null } = {}) {
-  return { items, has_more: hasMore, next_cursor: nextCursor };
+  return {
+    items,
+    has_more: hasMore,
+    next_cursor: nextCursor,
+    can_manage: true,
+  };
 }
 
 function share(name, shareKey, available = true) {
@@ -840,5 +845,38 @@ module("Integration | Component | SharedArtifactsList", function (hooks) {
     );
     assert.dom(".shared-artifacts__retry").doesNotExist("retry clears");
     assert.dom(".shared-artifacts__card").exists({ count: 2 }, "page appended");
+  });
+
+  test("inspection renders published links without management controls", async function (assert) {
+    this.data = {
+      ...listData([share("Published", "published")]),
+      user_id: 5,
+      can_manage: false,
+    };
+    await render(
+      <template><SharedArtifactsList @data={{this.data}} /></template>
+    );
+
+    assert
+      .dom(".shared-artifacts__card h3 a")
+      .exists("published representation remains accessible");
+    assert
+      .dom(".shared-artifacts__actions")
+      .doesNotExist("inspection renders no management, copy or embed controls");
+    assert
+      .dom("iframe")
+      .doesNotExist("inspection never mounts an artifact runtime");
+  });
+
+  test("missing management authorization hides owner controls", async function (assert) {
+    this.data = listData([share("Published", "published")]);
+    delete this.data.can_manage;
+    await render(
+      <template><SharedArtifactsList @data={{this.data}} /></template>
+    );
+
+    assert
+      .dom(".shared-artifacts__actions")
+      .doesNotExist("management defaults to denied");
   });
 });
