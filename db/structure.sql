@@ -5468,6 +5468,37 @@ ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.disc
 
 
 --
+-- Name: discourse_workflows_reviewable_agents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_reviewable_agents (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    ai_agent_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_reviewable_agents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_reviewable_agents_id_seq OWNED BY public.discourse_workflows_reviewable_agents.id;
+
+
+--
 -- Name: discourse_workflows_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14789,6 +14820,13 @@ ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: discourse_workflows_reviewable_agents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_reviewable_agents_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17448,6 +17486,14 @@ ALTER TABLE ONLY public.discourse_workflows_executions
 
 
 --
+-- Name: discourse_workflows_reviewable_agents discourse_workflows_reviewable_agents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT discourse_workflows_reviewable_agents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_tags discourse_workflows_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19815,6 +19861,20 @@ CREATE INDEX idx_dwf_executions_on_workflow_version_id ON public.discourse_workf
 --
 
 CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.discourse_workflows_workflow_publish_history USING btree (workflow_id, created_at DESC, id DESC);
+
+
+--
+-- Name: idx_dwf_reviewable_agents_on_agent_reviewable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_reviewable_agents_on_agent_reviewable ON public.discourse_workflows_reviewable_agents USING btree (ai_agent_id, reviewable_id);
+
+
+--
+-- Name: idx_dwf_reviewable_agents_on_reviewable_agent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_reviewable_agents_on_reviewable_agent ON public.discourse_workflows_reviewable_agents USING btree (reviewable_id, ai_agent_id);
 
 
 --
@@ -25649,6 +25709,14 @@ ALTER TABLE ONLY public.poll_votes
 
 
 --
+-- Name: discourse_workflows_reviewable_agents fk_rails_bf51f3a32a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT fk_rails_bf51f3a32a FOREIGN KEY (reviewable_id) REFERENCES public.reviewables(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ai_tool_actions fk_rails_bf8a76772d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25735,6 +25803,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261012021959'),
+('20261012015332'),
 ('20261009144947'),
 ('20261009130230'),
 ('20261009121104'),
