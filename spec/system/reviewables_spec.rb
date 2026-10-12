@@ -85,6 +85,31 @@ describe "Reviewables" do
         expect(drafts_page).to have_no_drafts
       end
 
+      it "edits a post without resolving its flag after minimizing a review edit" do
+        short_reviewable.update!(topic: post.topic)
+        review_page.visit_reviewable(short_reviewable)
+        open_agree_and_edit
+        expect(composer).to have_value(post.raw)
+        composer.minimize
+
+        expect(composer).to be_minimized
+        click_link(post.topic.title)
+        expect(composer).to be_minimized
+
+        topic_page.click_post_action_button(post, :show_more)
+        topic_page.click_post_action_button(post, :edit)
+        composer.fill_content("An ordinary edit that leaves the flag for review.")
+        composer.submit
+
+        expect(composer).to be_closed
+        expect(topic_page).to have_post_content(
+          post_number: post.post_number,
+          content: "An ordinary edit that leaves the flag for review.",
+        )
+        review_page.visit_reviewable(short_reviewable)
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+      end
+
       it "keeps an ordinary edit draft when the moderator edits a flagged post" do
         topic_page.visit_topic(post.topic)
         topic_page.click_post_action_button(post, :show_more)

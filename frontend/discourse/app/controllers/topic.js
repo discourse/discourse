@@ -2045,16 +2045,6 @@ export default class TopicController extends Controller {
     }
 
     const { composer } = this;
-    const composerModel = composer.get("model");
-    const editingSamePost =
-      opts.post.id === composerModel?.post?.id &&
-      opts.action === composerModel?.action &&
-      opts.draftKey === composerModel?.draftKey;
-
-    if (editingSamePost && !composerModel.disableDrafts) {
-      return composer.unshrink();
-    }
-
     const draftData = await Draft.get(opts.draftKey);
     const data = draftData.draft && JSON.parse(draftData.draft);
 

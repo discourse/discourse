@@ -1560,6 +1560,17 @@ export default class ComposerService extends Service {
       return;
     }
 
+    if (
+      [Composer.EDIT, Composer.EDIT_SHARED_DRAFT].includes(opts.action) &&
+      opts.post?.id === composerModel?.post?.id &&
+      opts.action === composerModel?.action &&
+      opts.draftKey === composerModel?.draftKey &&
+      (opts.onSave ?? null) === this.#onSave &&
+      (opts.onSaved ?? null) === this.#onSaved
+    ) {
+      return this.unshrink();
+    }
+
     this.setProperties({
       showEditReason: false,
       editReason: null,
