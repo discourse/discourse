@@ -21,16 +21,6 @@ class ReviewableQueuedPost < Reviewable
 
   after_commit :compute_user_stats, only: %i[create update]
 
-  def self.additional_args(params)
-    args = ReviewableActionBuilder.penalty_args(params)
-    return args if params[:revise_reason].blank?
-
-    args.merge(
-      revise_reason: params[:revise_reason],
-      revise_feedback: params[:revise_feedback],
-      revise_custom_reason: params[:revise_custom_reason],
-    )
-  end
 
   def build_combined_actions(actions, guardian, args)
     unless approved?

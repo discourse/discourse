@@ -29,12 +29,6 @@ class ReviewableUser < Reviewable
     }
   end
 
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params).merge(
-      reject_reason: params[:reject_reason],
-      send_email: params[:send_email] != "false",
-    )
-  end
 
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?

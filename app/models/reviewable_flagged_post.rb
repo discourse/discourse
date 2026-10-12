@@ -3,13 +3,6 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
-  class EditConflict < StandardError
-  end
-
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params)
-  end
-
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   def self.action_aliases
@@ -254,10 +247,26 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_edit(performed_by, args)
-    edited_post =
-      edit_post(guardian: args[:guardian] || Guardian.new(performed_by), params: args[:edit])
-    result = perform_agree_and_keep(performed_by, args)
-    result.updated_post = edited_post
+    raise Discourse::InvalidParameters.new(:edit) unless args[:edit]&.key?(:raw)
+
+    result = nil
+    Post::Revise.call(guardian: args[:guardian] || performed_by.guardian, params: { post_id: target_id, changes: args[:edit] }) do
+      on_success do |post:|
+        result = perform_agree_and_keep(performed_by, args)
+        result.updated_post = post
+      end
+      on_failed_contract { raise Discourse::InvalidParameters.new(:edit) }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_post) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
+      on_failed_step(:check_edit_conflicts) { raise Post::Revise::EditConflict }
+      on_failure do |post:, topic:, status: nil|
+        raise Discourse::InvalidAccess if status == :forbidden
+        raise ActiveRecord::RecordInvalid.new(post.errors.present? ? post : topic)
+      end
+    end
     result
   end
 
@@ -404,101 +413,6 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
-
-  def edit_post(guardian:, params:)
-    raise Discourse::InvalidParameters.new(:edit) unless params&.key?(:raw)
-
-    params = params.with_indifferent_access
-    post = Post.with_deleted.lock.find(target_id)
-    guardian.ensure_can_edit!(post)
-    topic = Topic.with_deleted.lock.find(post.topic_id)
-
-    raise EditConflict if params[:original_text].present? && params[:original_text] != post.raw
-
-    changes =
-      params.slice(
-        :raw,
-        :edit_reason,
-        :locale,
-        :reply_to_post_number,
-        *Post.plugin_permitted_update_params.keys,
-      )
-    category_changed = false
-    if post.is_first_post?
-      if params[:original_title].present? && params[:original_title] != topic.title
-        raise EditConflict
-      end
-      original_tag_ids = params[:original_tags]&.map { |tag| tag[:id].to_i }&.sort
-      if original_tag_ids.present? && original_tag_ids != topic.tags.pluck(:id).sort
-        raise EditConflict
-      end
-
-      topic_changes = params.slice(*PostRevisor.tracked_topic_fields.keys)
-      topic_changes.delete(:title) if topic_changes[:title] == topic.title
-      if topic_changes[:category_id].to_i == topic.category_id.to_i
-        topic_changes.delete(:category_id)
-      end
-      if topic_changes.key?(:tags) && PostRevisor.tag_change_noop?(topic, topic_changes[:tags])
-        topic_changes.delete(:tags)
-      end
-      guardian.ensure_can_edit_topic!(topic) if topic_changes.except(:tags).present?
-      guardian.ensure_can_edit_tags!(topic) if topic_changes.key?(:tags)
-
-      category_changed = topic_changes.key?(:category_id)
-      if category_changed
-        tag_names =
-          if topic_changes.key?(:tags)
-            incoming = topic_changes[:tags] || []
-            ids = incoming.filter_map { |tag| tag[:id]&.to_i }
-            incoming.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
-              Tag.visible(guardian).where(id: ids).pluck(:name)
-          else
-            topic.tags.pluck(:name)
-          end
-        validation =
-          TopicCategoryChangeValidator.call(
-            topic:,
-            category_id: topic_changes[:category_id],
-            guardian:,
-            tag_names:,
-            tags_changed: topic_changes.key?(:tags),
-          )
-        if !validation.success?
-          raise Discourse::InvalidAccess if validation.status == :forbidden
-          topic.errors.add(:base, validation.error)
-          raise ActiveRecord::RecordInvalid.new(topic)
-        end
-        if topic.shared_draft
-          topic.shared_draft.update!(category_id: topic_changes.delete(:category_id))
-        end
-      end
-      changes.merge!(topic_changes)
-    end
-
-    post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
-    options = {}
-    options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&
-      guardian.is_staff?
-    if params.key?(:bypass_bump) && guardian.can_update_bumped_at?
-      options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(params[:bypass_bump])
-    end
-    revisor = PostRevisor.new(post, topic)
-    revisor.revise!(guardian.user, changes, options)
-    raise ActiveRecord::RecordInvalid.new(post) if post.errors.present?
-    if topic.errors.present?
-      errors =
-        TopicCategoryChangeValidator.safe_revision_errors(topic:, guardian:, category_changed:)
-      topic.errors.clear
-      errors.each { |error| topic.errors.add(:base, error) }
-      raise ActiveRecord::RecordInvalid.new(topic)
-    end
-    if revisor.successfully_saved_post_and_topic == false
-      topic.errors.add(:base, :unable_to_update)
-      raise ActiveRecord::RecordInvalid.new(topic)
-    end
-
-    post
-  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable_id: id)

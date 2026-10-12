@@ -3,10 +3,6 @@
 class ReviewablePostVotingComment < Reviewable
   include ReviewableActionBuilder
 
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params)
-  end
-
   def serializer
     ReviewablePostVotingCommentSerializer
   end

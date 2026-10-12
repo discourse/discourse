@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewablesController < ApplicationController
-  include TagParamLimit
+  include ReviewableActionParams
 
   requires_login
 
@@ -256,10 +256,6 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
-    if params[:edit]
-      args[:edit] = edit_params
-      return if reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
-    end
 
     result = nil
     begin
@@ -269,9 +265,8 @@ class ReviewablesController < ApplicationController
         return render_json_error(error)
       end
 
-      if reviewable.type_class.respond_to?(:additional_args)
-        args.merge!(reviewable.type_class.additional_args(params) || {})
-      end
+      args.merge!(reviewable_action_args(reviewable))
+      return if performed?
 
       plugin_params =
         DiscoursePluginRegistry.reviewable_params.select do |reviewable_param|
@@ -294,7 +289,7 @@ class ReviewablesController < ApplicationController
       return(
         render_json_error(I18n.t("reviewables.conflict"), status: 409, type: "reviewable_conflict")
       )
-    rescue ReviewableFlaggedPost::EditConflict
+    rescue Post::Revise::EditConflict
       return render_json_error(I18n.t("edit_conflict"), status: 409, type: "edit_conflict")
     end
 
@@ -381,56 +376,4 @@ class ReviewablesController < ApplicationController
     Reviewable.with_deleted_content { yield }
   end
 
-  private
-
-  def edit_params
-    unless params[:edit].is_a?(ActionController::Parameters)
-      raise Discourse::InvalidParameters.new(:edit)
-    end
-
-    %i[tags original_tags].each do |key|
-      tags = params[:edit][key]
-      next if tags.nil?
-      valid =
-        tags.is_a?(Array) &&
-          tags.all? do |tag|
-            tag.is_a?(ActionController::Parameters) &&
-              (
-                tag[:id].nil? || (tag[:id].is_a?(Integer) && tag[:id].positive?) ||
-                  (tag[:id].is_a?(String) && tag[:id].match?(/\A[1-9]\d*\z/))
-              ) && (tag[:name].nil? || tag[:name].is_a?(String)) &&
-              (tag[:id].present? || tag[:name].present?)
-          end
-      raise Discourse::InvalidParameters.new(key) unless valid
-    end
-    permitted =
-      params[:edit]
-        .permit(
-          :raw,
-          :original_text,
-          :edit_reason,
-          :locale,
-          :title,
-          :original_title,
-          :category_id,
-          :featured_link,
-          :archetype,
-          :reply_to_post_number,
-          :bypass_bump,
-          tags: %i[id name],
-          original_tags: %i[id name],
-          image_sizes: {
-          },
-        )
-        .to_h
-        .deep_symbolize_keys
-    permitted.merge!(
-      params[:edit]
-        .slice(*Post.plugin_permitted_update_params.keys, *PostRevisor.tracked_topic_fields.keys)
-        .except(:title, :category_id, :tags, :featured_link, :archetype)
-        .permit!
-        .to_h
-        .deep_symbolize_keys,
-    )
-  end
 end

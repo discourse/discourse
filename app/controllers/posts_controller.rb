@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include PostRevisionParams
   include TagParamLimit
 
   # Bug with Rails 7+
@@ -196,102 +197,41 @@ class PostsController < ApplicationController
   end
 
   def update
-    params.require(:post)
+    Post::Revise.call(service_params.merge(params: post_revision_params)) do
+      on_success do |post:, topic:, category_changed:|
+        post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
+        post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
+        link_counts = TopicLink.counts_for(guardian, topic, [post])
+        post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
 
-    post = Post.where(id: params[:id])
-    post = post.with_deleted if guardian.is_staff?
-    post = post.first
+        result = { post: post_serializer.as_json }
+        if category_changed.present?
+          result[:category] = BasicCategorySerializer.new(
+            category_changed,
+            scope: guardian,
+            root: false,
+          ).as_json
+        end
 
-    raise Discourse::NotFound if post.blank?
-
-    post.image_sizes = params[:image_sizes].permit!.to_h if params[:image_sizes].present?
-
-    if !guardian.public_send("can_edit?", post) && post.user_id == current_user.id &&
-         post.edit_time_limit_expired?(current_user)
-      return render_json_error(I18n.t("too_late_to_edit"))
-    end
-
-    guardian.ensure_can_edit!(post)
-
-    changes = {
-      raw: params[:post][:raw],
-      edit_reason: params[:post][:edit_reason],
-      locale: params[:post][:locale],
-    }
-
-    if params[:post].key?(:reply_to_post_number)
-      changes[:reply_to_post_number] = params[:post][:reply_to_post_number]
-    end
-
-    Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
-
-    # keep `raw_old` for backwards compatibility
-    original_text = params[:post][:original_text] || params[:post][:raw_old]
-    if original_text.present? && original_text != post.raw
-      return render_json_error(I18n.t("edit_conflict"), status: 409)
-    end
-
-    # to stay consistent with the create api, we allow for title & category changes here
-    if post.is_first_post?
-      if params[:title]
-        guardian.ensure_can_edit_topic!(post.topic) if params[:title] != post.topic.title
-        changes[:title] = params[:title]
+        render_json_dump(result)
       end
-      changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
-
-      if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
-        guardian.ensure_can_edit_topic!(post.topic)
-        category = Category.find_by(id: changes[:category_id])
-        if category || (changes[:category_id].to_i == 0)
-          guardian.ensure_can_move_topic_to_category!(category)
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_post) do |post:|
+        if post.user_id == current_user.id && post.edit_time_limit_expired?(current_user)
+          render_json_error(I18n.t("too_late_to_edit"))
         else
-          return render_json_error(I18n.t("category.errors.not_found"))
+          raise Discourse::InvalidAccess
         end
       end
-    end
-
-    # We don't need to validate edits to small action posts by staff
-    opts = {}
-    if post.post_type == Post.types[:small_action] && current_user.staff?
-      opts[:skip_validations] = true
-    end
-
-    if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
-      if guardian.can_update_bumped_at?
-        bypass_bump_value =
-          if params.key?(:bypass_bump)
-            params[:bypass_bump]
-          else
-            params.dig(:post, :bypass_bump)
-          end
-        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(bypass_bump_value)
+      on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
+      on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+      on_failure do |post:, topic:, status: :unprocessable_entity|
+        render_json_error(post.errors.present? ? post : topic, status:)
       end
     end
-
-    topic = post.topic
-    topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
-
-    revisor = PostRevisor.new(post, topic)
-    revisor.revise!(current_user, changes, opts)
-
-    return render_json_error(post) if post.errors.present?
-    return render_json_error(topic) if topic.errors.present?
-
-    post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
-    post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
-    link_counts = TopicLink.counts_for(guardian, topic, [post])
-    post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
-
-    result = { post: post_serializer.as_json }
-    if revisor.category_changed.present?
-      result[:category] = BasicCategorySerializer.new(
-        revisor.category_changed,
-        scope: guardian,
-        root: false,
-      ).as_json
-    end
-
-    render_json_dump(result)
   end
 
   def show

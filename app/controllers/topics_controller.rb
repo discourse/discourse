@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include PostRevisionParams
   include TagParamLimit
   include EmbedModeHandler
 
@@ -415,98 +416,25 @@ class TopicsController < ApplicationController
   end
 
   def update
-    topic = Topic.find_by(id: params[:topic_id])
-
-    guardian.ensure_can_edit!(topic)
     return if reject_too_many_tags!(:tags, :original_tags)
 
-    original_title = params[:original_title]
-    if original_title.present? && original_title != topic.title
-      return render_json_error(I18n.t("edit_conflict"), status: 409)
-    end
-
-    original_tag_ids = params[:original_tags]&.map { |t| t["id"] }&.sort
-    if original_tag_ids.present? && original_tag_ids != topic.tags.pluck(:id).sort
-      return render_json_error(I18n.t("edit_conflict"), status: 409)
-    end
-
-    if params.key?(:category_id) && (params[:category_id].to_i != topic.category_id.to_i)
-      category_validation =
-        TopicCategoryChangeValidator.call(
-          topic:,
-          category_id: params[:category_id],
-          guardian:,
-          tag_names: resolve_tag_names(topic),
-          tags_changed: params.has_key?(:tags),
-        )
-      if !category_validation.success?
-        return render_json_error(category_validation.error, status: category_validation.status)
-      end
-
-      if topic.shared_draft
-        topic.shared_draft.update(category_id: params[:category_id])
-        params.delete(:category_id)
-      end
-    end
-
-    changes = {}
-
-    PostRevisor.tracked_topic_fields.each_key { |f| changes[f] = params[f] if params.has_key?(f) }
-
-    changes.delete(:title) if topic.title == changes[:title]
-    changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
-
-    tags_submitted = Tag.include_tags? && changes.has_key?(:tags)
-
-    if tags_submitted
-      if changes[:tags].present?
-        incoming = changes[:tags]
-
-        if incoming.first.is_a?(String)
-          Discourse.deprecate(
-            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
-            since: "2026.01",
-            drop_from: "2026.07",
-          )
+    Post::Revise.call(service_params.merge(params: topic_revision_params)) do
+      on_success do |topic:|
+        if Tag.include_tags? && params.key?(:tags)
+          render_topic_with_tags(topic)
+        else
+          render_serialized(topic, BasicTopicSerializer)
         end
-
-        changes.delete(:tags) if PostRevisor.tag_change_noop?(topic, incoming)
-
-        # resolve to name strings before passing to PostRevisor
-        changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
-      elsif topic.tags.empty?
-        changes.delete(:tags)
       end
-    end
-
-    success = true
-
-    if changes.length > 0
-      first_post = topic.ordered_posts.first
-      success =
-        PostRevisor.new(first_post, topic).revise!(
-          current_user,
-          changes,
-          validate_post: false,
-          keep_existing_draft: params[:keep_existing_draft].to_s == "true",
-        )
-
-      topic.errors.add(:base, :unable_to_update) if !success && topic.errors.blank?
-    end
-
-    # this is used to return the title to the client as it may have been changed by "TextCleaner"
-    if !success
-      error =
-        TopicCategoryChangeValidator.safe_revision_errors(
-          topic:,
-          guardian:,
-          category_changed: changes.has_key?(:category_id),
-        )
-      render_json_error(error)
-    elsif tags_submitted
-      render_topic_with_tags(topic)
-    else
-      render_serialized(topic, BasicTopicSerializer)
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
+      on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+      on_failure do |post:, topic:, status: :unprocessable_entity|
+        render_json_error(post.errors.present? ? post : topic, status:)
+      end
     end
   end
 
@@ -1389,30 +1317,6 @@ class TopicsController < ApplicationController
       .visible_tags(guardian)
       .map { |t| { id: t.id, name: t.name, slug: t.slug_for_url } }
     render_json_dump(payload)
-  end
-
-  def resolve_tag_names(topic)
-    @resolved_tag_names ||=
-      if params[:tags].present?
-        incoming = params[:tags]
-        if incoming.first.is_a?(String)
-          Discourse.deprecate(
-            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
-            since: "2026.01",
-            drop_from: "2026.07",
-          )
-          incoming.reject(&:empty?)
-        else
-          ids = incoming.filter_map { |t| t[:id]&.to_i }
-          names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
-          names += Tag.visible(guardian).where(id: ids).pluck(:name) if ids.present?
-          names
-        end
-      elsif params.has_key?(:tags)
-        []
-      else
-        topic.tags.pluck(:name)
-      end
   end
 
   def topic_params

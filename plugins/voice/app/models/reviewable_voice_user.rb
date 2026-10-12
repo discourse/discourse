@@ -3,10 +3,6 @@
 class ReviewableVoiceUser < Reviewable
   include ReviewableActionBuilder
 
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params)
-  end
-
   def serializer
     ReviewableVoiceUserSerializer
   end

@@ -5,10 +5,6 @@ require_dependency "reviewable"
 class ReviewableAiPost < Reviewable
   include ReviewableActionBuilder
 
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params)
-  end
-
   def self.action_aliases
     { agree_and_keep_hidden: :agree_and_keep, disagree_and_restore: :disagree }
   end
