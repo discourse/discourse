@@ -2,14 +2,12 @@
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ClickTrack from "discourse/lib/click-track";
 import { bind } from "discourse/lib/decorators";
-import { highlightPost } from "discourse/lib/utilities";
 
 @classNameBindings(
   "multiSelect",
@@ -28,7 +26,6 @@ export default class DiscourseTopic extends Component {
   init() {
     super.init(...arguments);
     this.appEvents.on("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.on("post:highlight", this, "_highlightPost");
   }
 
   willDestroy() {
@@ -36,7 +33,6 @@ export default class DiscourseTopic extends Component {
 
     // this happens after route exit, stuff could have trickled in
     this.appEvents.off("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.off("post:highlight", this, "_highlightPost");
   }
 
   @computed("topic.userFilters")
@@ -103,12 +99,6 @@ export default class DiscourseTopic extends Component {
     if (this.enteredAt && this.lastEnteredAt !== this.enteredAt) {
       schedule("afterRender", this.scrolled);
       this.set("lastEnteredAt", this.enteredAt);
-    }
-  }
-
-  _highlightPost(postNumber, options = {}) {
-    if (isBlank(options.jump) || options.jump !== false) {
-      scheduleOnce("afterRender", null, highlightPost, postNumber);
     }
   }
 

@@ -29,7 +29,9 @@ export default class Blocks extends Component {
         <div class="chat-message__blocks">
           {{#each @message.blocks as |blockDefinition|}}
             <Block
+              @cooked={{@message.cooked}}
               @createInteraction={{this.createInteraction}}
+              @decorate={{@decorate}}
               @definition={{blockDefinition}}
             />
           {{/each}}

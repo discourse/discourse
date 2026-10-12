@@ -15,6 +15,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import categoryStyleType from "discourse/lib/category-style-type";
 import {
   availableCategoryType,
   unavailableBadgeText,
@@ -745,7 +746,10 @@ export default class UpsertCategoryGeneral extends Component {
       >
         <styleField.Control>
           <@form.ConditionalContent
-            @activeName={{or styleField.value @category.styleType "square"}}
+            @activeName={{or
+              (categoryStyleType (or styleField.value @category.styleType))
+              "square"
+            }}
             @onChange={{this.onStyleTypeChange}}
             as |cc|
           >
@@ -753,9 +757,11 @@ export default class UpsertCategoryGeneral extends Component {
               <Condition @name="icon">
                 {{i18n "category.styles.icon"}}
               </Condition>
-              <Condition @name="emoji">
-                {{i18n "category.styles.emoji"}}
-              </Condition>
+              {{#if this.siteSettings.enable_emoji}}
+                <Condition @name="emoji">
+                  {{i18n "category.styles.emoji"}}
+                </Condition>
+              {{/if}}
               <Condition @name="square">
                 {{i18n "category.styles.square"}}
               </Condition>
@@ -913,71 +919,86 @@ export default class UpsertCategoryGeneral extends Component {
         </@form.Field>
       {{/unless}}
 
-      <@form.Container
-        class="--radio-cards"
-        @format="max"
-        @title={{i18n "category.visibility.title"}}
-      >
-        <@form.ConditionalContent
-          @activeName={{this.categoryVisibility}}
-          @onChange={{this.onChangeVisibility}}
-          as |cc|
+      {{#if @category.is_special}}
+        <@form.Container
+          @format="max"
+          @title={{i18n "category.visibility.title"}}
         >
-          <cc.Conditions as |Condition|>
-            {{#if this.isParentRestricted}}
-              <DTooltip
-                @content={{i18n "category.subcategory_permissions_warning"}}
-              >
-                <:trigger>
-                  <Condition @disabled={{true}} @name="public">
-                    {{dIcon "ban"}}
-                    {{i18n this.publicVisibilityLabel}}
-                  </Condition>
-                </:trigger>
-              </DTooltip>
+          <@form.Alert @type="warning">
+            {{#if @category.isUncategorizedCategory}}
+              {{i18n "category.uncategorized_security_warning"}}
             {{else}}
-              <Condition @name="public">
-                {{dIcon "check"}}
-                {{i18n this.publicVisibilityLabel}}
-              </Condition>
+              {{i18n "category.special_warning"}}
             {{/if}}
-            <Condition
-              @locked={{this.privateVisibilityLocked}}
-              @name="group_restricted"
-            >
-              {{#if this.privateVisibilityLocked}}
-                {{dIcon "lock"}}
-              {{else}}
-                {{dIcon "check"}}
-              {{/if}}
-              {{i18n "category.visibility.group_restricted"}}
-            </Condition>
-          </cc.Conditions>
-
-          <cc.Contents as |Content|>
-            <Content @name="group_restricted">
-              <@form.Container
-                @format="max"
-                @title={{i18n "category.visibility.which_groups_can_access"}}
-              >
-                <GroupChooser
-                  @content={{this.availableAccessGroups}}
-                  @onChange={{this.onChangeAccessGroups}}
-                  @options={{hash disabled=this.isParentRestricted}}
-                  @value={{this.accessGroups}}
-                />
-                {{! eslint-disable ember/template-no-invalid-interactive }}
-                <span
-                  class="category-permission-hint"
-                  {{on "click" this.goToSecurityTab}}
+          </@form.Alert>
+        </@form.Container>
+      {{else}}
+        <@form.Container
+          class="--radio-cards"
+          @format="max"
+          @title={{i18n "category.visibility.title"}}
+        >
+          <@form.ConditionalContent
+            @activeName={{this.categoryVisibility}}
+            @onChange={{this.onChangeVisibility}}
+            as |cc|
+          >
+            <cc.Conditions as |Condition|>
+              {{#if this.isParentRestricted}}
+                <DTooltip
+                  @content={{i18n "category.subcategory_permissions_warning"}}
                 >
-                  {{this.permissionHint}}
-                </span>
-              </@form.Container>
-            </Content>
-          </cc.Contents>
-        </@form.ConditionalContent>
-      </@form.Container>
+                  <:trigger>
+                    <Condition @disabled={{true}} @name="public">
+                      {{dIcon "ban"}}
+                      {{i18n this.publicVisibilityLabel}}
+                    </Condition>
+                  </:trigger>
+                </DTooltip>
+              {{else}}
+                <Condition @name="public">
+                  {{dIcon "check"}}
+                  {{i18n this.publicVisibilityLabel}}
+                </Condition>
+              {{/if}}
+              <Condition
+                @locked={{this.privateVisibilityLocked}}
+                @name="group_restricted"
+              >
+                {{#if this.privateVisibilityLocked}}
+                  {{dIcon "lock"}}
+                {{else}}
+                  {{dIcon "check"}}
+                {{/if}}
+                {{i18n "category.visibility.group_restricted"}}
+              </Condition>
+            </cc.Conditions>
+
+            <cc.Contents as |Content|>
+              <Content @name="group_restricted">
+                <@form.Container
+                  @format="max"
+                  @title={{i18n "category.visibility.which_groups_can_access"}}
+                >
+                  <GroupChooser
+                    @content={{this.availableAccessGroups}}
+                    @onChange={{this.onChangeAccessGroups}}
+                    @options={{hash disabled=this.isParentRestricted}}
+                    @value={{this.accessGroups}}
+                  />
+                  {{! eslint-disable ember/template-no-invalid-interactive }}
+                  <span
+                    class="category-permission-hint"
+                    {{on "click" this.goToSecurityTab}}
+                  >
+                    {{this.permissionHint}}
+                  </span>
+                </@form.Container>
+              </Content>
+            </cc.Contents>
+          </@form.ConditionalContent>
+        </@form.Container>
+      {{/if}}
     </@form.Section>
   </template>
 }

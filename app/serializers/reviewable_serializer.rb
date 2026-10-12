@@ -41,6 +41,17 @@ class ReviewableSerializer < ApplicationSerializer
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization
 
+  def initialize(object, options = {})
+    if SiteSetting.enable_mentions
+      options =
+        options.merge(
+          reviewable_note_mention_usernames:
+            PlaintextMentions.known_usernames(object.reviewable_notes.map(&:content)),
+        )
+    end
+    super(object, options)
+  end
+
   def bundled_actions
     args = {}
     args[:claimed_by] = claimed_by if @options[:claimed_topics]

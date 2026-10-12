@@ -30,9 +30,9 @@ export default class DiscourseReactionsCounter extends Component {
     const { reactions } = this.args.post;
 
     if (
-      reactions &&
-      reactions.length === 1 &&
-      reactions[0].id === mainReaction
+      reactions?.length &&
+      (!this.siteSettings.enable_emoji ||
+        (reactions.length === 1 && reactions[0].id === mainReaction))
     ) {
       classes.push("only-like");
     }

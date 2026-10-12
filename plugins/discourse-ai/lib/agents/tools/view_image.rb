@@ -51,6 +51,14 @@ module DiscourseAi
           !context.cancel_manager&.cancelled?
         end
 
+        def work_evidence(result)
+          if result.is_a?(Hash) && result[:status] == "success"
+            result.merge(analysis: ANALYSIS_PREFIX).to_json
+          else
+            super
+          end
+        end
+
         def invoke
           references = Array(parameters[:images]).map(&:to_s).map(&:strip).reject(&:blank?)
           question = parameters[:question].to_s.strip
@@ -95,6 +103,7 @@ module DiscourseAi
                     .compact,
                 max_tokens: MAX_OUTPUT_TOKENS,
                 cancel_manager: context.cancel_manager,
+                execution_context: context.execution_context,
               ),
             )
 

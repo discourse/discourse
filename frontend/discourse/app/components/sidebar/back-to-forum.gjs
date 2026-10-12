@@ -25,11 +25,15 @@ export default class BackToForum extends Component {
     return getURL("/");
   }
 
+  get label() {
+    return this.args.label ?? "sidebar.back_to_forum";
+  }
+
   <template>
     <a class="sidebar-sections__back-to-forum" href={{this.href}}>
       {{dIcon "arrow-left"}}
 
-      <span>{{i18n "sidebar.back_to_forum"}}</span>
+      <span>{{i18n this.label}}</span>
     </a>
   </template>
 }

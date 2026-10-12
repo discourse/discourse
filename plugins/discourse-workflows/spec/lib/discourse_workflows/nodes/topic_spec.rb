@@ -160,7 +160,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             },
             item: item,
           )
-        end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
+        end.to raise_error(
+          DiscourseWorkflows::NodeError,
+          node_error_message(
+            :not_found,
+            scope: :actor,
+            item_index: 0,
+            username: "nonexistent_user",
+          ),
+        )
       end
 
       it "raises when topic creation fails validation" do
@@ -198,6 +206,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
         expect(result["topic"]["id"]).to eq(topic.id)
         expect(result["topic"]["title"]).to eq(topic.title)
+        expect(result["topic"]["url"]).to eq(topic.url)
         expect(result["topic"]["category_id"]).to eq(category.id)
         expect(result["topic"]["tags"]).to eq([])
         expect(result["post"]).to include(

@@ -142,6 +142,15 @@ export default <template>
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
+
+      {{! Composer lives inside the grid so themes can place it in a grid
+      column (e.g. Horizon peek mode). It is position:fixed in its default
+      state, so its DOM location here does not affect normal positioning —
+      however this relies on #main-outlet-wrapper never establishing a containing
+      block (no transform/filter/contain/will-change/perspective). }}
+      {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+        <ComposerContainer />
+      {{/if}}
     </div>
 
     <PluginOutlet
@@ -165,7 +174,9 @@ export default <template>
     <ModalContainer />
     <DesignWizardPanel />
     <DialogHolder />
-    <ComposerContainer />
+    {{#unless @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+      <ComposerContainer />
+    {{/unless}}
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}

@@ -18,7 +18,6 @@ hu:
       admin_dashboard_card:
         no_results: "Nincs találat"
     explorer:
-      default_query: "Alapértelmezett"
       default_query_notice: "Ez egy alapértelmezett lekérdezés, az SQL nem szerkeszthető. Az SQL szerkesztéséhez hozzon létre egy új lekérdezést."
       view_query: "Megtekintés"
       queries: "Lekérdezések"
@@ -73,6 +72,7 @@ hu:
         other: "Az első %{count} találat megjelenítése."
       query_name: "Lekérdezés"
       query_groups: "Csoportok"
+      query_tags: "Címkék"
       link: "Hivatkozás ehhez:"
       report_name: "Jelentés"
       query_description: "Leírás"

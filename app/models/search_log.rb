@@ -17,8 +17,18 @@ class SearchLog < ActiveRecord::Base
           )
         end
   scope :excluding_crawlers, -> { where(crawler: false, likely_crawler: false) }
+  # Crawler scoring needs a pageview session, so anonymous searches without one
+  # (direct requests to the search endpoints) can't be vetted and are excluded.
+  scope :from_browser_or_member,
+        -> { where("search_logs.user_id IS NOT NULL OR search_logs.session_id IS NOT NULL") }
   scope :human_only,
-        -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.excluding_crawlers : non_staff }
+        -> do
+          if CrawlerScorer.enabled?
+            non_staff_or_anonymous.excluding_crawlers.from_browser_or_member
+          else
+            non_staff
+          end
+        end
 
   def ctr
     return 0 if click_through == 0 || searches == 0

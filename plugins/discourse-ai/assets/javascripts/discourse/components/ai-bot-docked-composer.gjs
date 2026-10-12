@@ -322,6 +322,8 @@ export default class AiBotDockedComposer extends Component {
     }
     const result = await this.aiBotDockedSubmit.submitReply({
       topicId: this.topicId,
+      agentId: this.topic.ai_agent_id,
+      llmModelId: this.topic.ai_llm_model_id,
       raw,
       uploads,
       inProgressUploadsCount,

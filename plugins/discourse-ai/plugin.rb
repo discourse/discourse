@@ -159,6 +159,12 @@ after_initialize do
   end
 
   on(:user_destroyed) do |user|
+    AiArtifactKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShareKeyValue.where(
+      ai_artifact_share_id: AiArtifactShare.where(user_id: user.id).select(:id),
+    ).delete_all
+    AiArtifactShareKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShare.where(user_id: user.id).delete_all
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
     DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)

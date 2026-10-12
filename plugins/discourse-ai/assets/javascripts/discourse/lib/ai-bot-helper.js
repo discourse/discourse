@@ -5,16 +5,16 @@ import ShareFullTopicModal from "../components/modal/share-full-topic-modal";
 
 const MAX_AGENT_USER_ID = -1200;
 
-let enabledChatBotMap = null;
+let enabledAgentMap = null;
 
-function ensureBotMap() {
-  if (!enabledChatBotMap) {
+function ensureAgentMap() {
+  if (!enabledAgentMap) {
     const currentUser = getOwnerWithFallback(this).lookup(
       "service:current-user"
     );
-    enabledChatBotMap = {};
-    currentUser?.ai_enabled_chat_bots?.forEach((bot) => {
-      enabledChatBotMap[bot.id] = bot;
+    enabledAgentMap = {};
+    currentUser?.ai_enabled_agents?.forEach((agent) => {
+      enabledAgentMap[agent.user_id] = agent;
     });
   }
 }
@@ -24,28 +24,20 @@ export function isGPTBot(user) {
     return;
   }
 
-  ensureBotMap();
-  return !!enabledChatBotMap[user.id];
+  ensureAgentMap();
+  return !!enabledAgentMap[user.id];
 }
 
 export function getBotType(user) {
-  if (!user) {
-    return;
-  }
-
-  ensureBotMap();
-  const bot = enabledChatBotMap[user.id];
-  if (!bot) {
-    return;
-  }
-  return bot.is_agent ? "agent" : "llm";
+  return isGPTBot(user) ? "agent" : undefined;
 }
 
 export function isPostFromAiBot(post, currentUser) {
   return (
+    !!post.llm_name ||
     post.user_id <= MAX_AGENT_USER_ID ||
-    !!currentUser?.ai_enabled_chat_bots?.some(
-      (bot) => post.username === bot.username
+    !!currentUser?.ai_enabled_agents?.some(
+      (agent) => post.username === agent.username
     )
   );
 }
@@ -67,7 +59,7 @@ export function isAiBotRecipient(recipients, currentUser) {
     .split(",")
     .map((username) => username.trim().toLowerCase());
 
-  return !!currentUser?.ai_enabled_chat_bots?.some((bot) =>
-    usernames.includes(bot.username.toLowerCase())
+  return !!currentUser?.ai_enabled_agents?.some((agent) =>
+    usernames.includes(agent.username.toLowerCase())
   );
 }

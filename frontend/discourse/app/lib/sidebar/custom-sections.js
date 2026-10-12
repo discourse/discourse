@@ -4,6 +4,7 @@ import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-side
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar";
+import UserNavSidebarPanel from "./user-nav-sidebar";
 
 class MainSidebarPanel extends BaseCustomSidebarPanel {
   scrollActiveLinkIntoView = true;
@@ -63,6 +64,10 @@ export function resetPanelSections(
 }
 
 export function resetSidebarPanels() {
-  customPanels = [new MainSidebarPanel(), new AdminSidebarPanel()];
+  customPanels = [
+    new MainSidebarPanel(),
+    new AdminSidebarPanel(),
+    new UserNavSidebarPanel(),
+  ];
   currentPanelKey = MAIN_PANEL;
 }

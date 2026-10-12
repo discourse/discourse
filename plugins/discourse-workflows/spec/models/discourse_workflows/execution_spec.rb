@@ -6,18 +6,18 @@ RSpec.describe DiscourseWorkflows::Execution do
     fab!(:execution) do
       Fabricate(
         :discourse_workflows_execution,
-        workflow: workflow,
+        workflow:,
         status: :waiting,
         resume_token: "tok-abc",
       )
     end
 
-    it "transitions a waiting execution to running and returns it" do
-      claimed = described_class.claim_for_resume(execution, resume_token: "tok-abc")
+    it "claims a waiting execution once using its current token" do
+      claimed = described_class.claim_for_resume(execution)
 
-      expect(claimed).to be_present
-      expect(claimed.status).to eq("running")
+      expect(claimed).to eq(execution)
       expect(execution.reload.status).to eq("running")
+      expect(described_class.claim_for_resume(execution)).to be_nil
     end
 
     it "returns nil when the resume token does not match" do
@@ -25,52 +25,26 @@ RSpec.describe DiscourseWorkflows::Execution do
       expect(execution.reload.status).to eq("waiting")
     end
 
-    it "returns nil when the execution is no longer waiting" do
-      execution.update!(status: :running)
+    it "preserves a newer wait when the caller holds a stale execution" do
+      stale_execution = described_class.find(execution.id)
+      execution.update!(resume_token: "new-wait-token")
 
-      expect(described_class.claim_for_resume(execution, resume_token: "tok-abc")).to be_nil
-    end
-
-    it "returns nil when the execution does not exist" do
-      execution.destroy!
-
-      expect(described_class.claim_for_resume(execution, resume_token: "tok-abc")).to be_nil
-    end
-
-    it "matches without a resume token (job entry points)" do
-      claimed = described_class.claim_for_resume(execution)
-
-      expect(claimed).to be_present
-      expect(claimed.status).to eq("running")
-    end
-
-    it "is idempotent — only the first call claims the execution" do
-      first = described_class.claim_for_resume(execution, resume_token: "tok-abc")
-      second = described_class.claim_for_resume(execution, resume_token: "tok-abc")
-
-      expect(first).to be_present
-      expect(second).to be_nil
+      expect(described_class.claim_for_resume(stale_execution)).to be_nil
+      expect(execution.reload).to have_attributes(status: "waiting", resume_token: "new-wait-token")
     end
   end
 
   describe ".claim_pending" do
     fab!(:workflow, :discourse_workflows_workflow)
-    fab!(:execution) do
-      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :pending)
-    end
+    fab!(:execution) { Fabricate(:discourse_workflows_execution, workflow:, status: :pending) }
 
-    it "transitions a pending execution to running and returns it" do
+    it "starts a pending execution once" do
       claimed = described_class.claim_pending(execution)
 
       expect(claimed).to be_present
       expect(claimed.status).to eq("running")
       expect(claimed.started_at).to be_present
       expect(execution.reload.status).to eq("running")
-    end
-
-    it "returns nil when the execution is no longer pending" do
-      execution.update!(status: :running)
-
       expect(described_class.claim_pending(execution)).to be_nil
     end
   end
@@ -80,7 +54,7 @@ RSpec.describe DiscourseWorkflows::Execution do
     fab!(:execution) do
       Fabricate(
         :discourse_workflows_execution,
-        workflow: workflow,
+        workflow:,
         status: :waiting,
         waiting_node_id: "node-1",
         waiting_until: 1.minute.ago,
@@ -115,17 +89,54 @@ RSpec.describe DiscourseWorkflows::Execution do
       expect(execution.fail_with_timeout!).to eq(false)
       expect(execution.reload.status).to eq("running")
     end
+
+    it "preserves a newer wait when an expired wait is processed late" do
+      stale_execution = described_class.find(execution.id)
+      next_wait = {
+        waiting_node_id: "node-2",
+        waiting_until: 1.minute.from_now,
+        resume_token: "next-wait-token",
+      }
+      execution.update!(next_wait)
+
+      expect(stale_execution.fail_with_timeout!).to eq(false)
+      expect(execution.reload).to have_attributes(
+        status: "waiting",
+        **next_wait,
+        waiting_until: eq_time(next_wait[:waiting_until]),
+      )
+    end
+
+    it "enqueues the configured error workflow when a wait times out" do
+      error_graph =
+        build_workflow_graph { |workflow_graph| workflow_graph.node "error-1", "trigger:error" }
+      error_workflow = Fabricate(:discourse_workflows_workflow, published: true, **error_graph)
+      workflow.update!(error_workflow_id: error_workflow.id)
+
+      expect(execution.fail_with_timeout!).to eq(true)
+
+      expect(
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map { |job| job["args"].first },
+      ).to contain_exactly(
+        include(
+          "workflow_id" => error_workflow.id,
+          "trigger_node_id" => "error-1",
+          "execution_mode" => "error_mode",
+          "trigger_data" => include("execution" => include("id" => execution.id.to_s)),
+        ),
+      )
+    end
   end
 
   describe ".compute_run_time_ms" do
     def build_step(node_type: "action:code", started_at: nil, finished_at: nil)
       node = Struct.new(:id, :name, :type).new(SecureRandom.uuid, "Node", node_type)
       DiscourseWorkflows::Executor::Step.build(
-        node: node,
+        node:,
         position: 0,
         input: [],
-        started_at: started_at,
-        finished_at: finished_at,
+        started_at:,
+        finished_at:,
       )
     end
 
@@ -190,9 +201,9 @@ RSpec.describe DiscourseWorkflows::Execution do
     before { SiteSetting.workflow_executions_retention_days = 30 }
 
     def fabricate_at(status, created_at)
-      execution = Fabricate(:discourse_workflows_execution, workflow: workflow, status: status)
-      Fabricate(:discourse_workflows_execution_data, execution: execution)
-      described_class.where(id: execution.id).update_all(created_at: created_at)
+      execution = Fabricate(:discourse_workflows_execution, workflow:, status:)
+      Fabricate(:discourse_workflows_execution_data, execution:)
+      described_class.where(id: execution.id).update_all(created_at:)
       execution
     end
 
@@ -244,7 +255,7 @@ RSpec.describe DiscourseWorkflows::Execution do
 
         described_class.purge_old
 
-        expect(described_class.where(workflow: workflow, status: :success)).to be_empty
+        expect(described_class.where(workflow:, status: :success)).to be_empty
       end
     end
   end

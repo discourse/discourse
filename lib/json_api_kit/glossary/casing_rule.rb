@@ -14,6 +14,8 @@ module JsonApiKit
           snake_case(name).tap { raise Correction.new(it) unless camel_case(it) == name }
         end
 
+        def declared_names(name) = [declared_name(name)]
+
         def member_name(name) = camel_case(name)
 
         def member_attributes(attributes) = attributes.transform_keys { MEMBER_NAMES[it] }
