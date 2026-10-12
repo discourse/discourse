@@ -1129,7 +1129,7 @@ RSpec.describe ReviewablesController do
             }
 
         expect(response).to have_http_status(:ok)
-        expect(response.parsed_body.dig("post", "raw")).to eq(raw)
+        expect(response.parsed_body.dig("reviewable_perform_result", "post", "raw")).to eq(raw)
         expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
       end
 

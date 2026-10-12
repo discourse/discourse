@@ -22,7 +22,10 @@ export default class PostAdapter extends RestAdapter {
           edit,
         }),
       }
-    ).then((json) => new Result(json.post, json));
+    ).then((json) => {
+      const post = json.reviewable_perform_result.post;
+      return new Result(post, { ...json, post });
+    });
   }
 
   find(store, type, findArgs) {

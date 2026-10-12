@@ -3,6 +3,21 @@
 RSpec.describe PostSerializer do
   fab!(:post)
 
+  describe ".for_update" do
+    it "includes the edited body, current draft sequence and visible link counts" do
+      user = post.user
+      link = Fabricate(:topic_link, post:, clicks: 3)
+      sequence = DraftSequence.next!(user, post.topic.draft_key)
+
+      json =
+        described_class.for_update(post:, topic: post.topic, guardian: user.guardian, user:).as_json
+
+      expect(json[:raw]).to eq(post.raw)
+      expect(json[:draft_sequence]).to eq(sequence)
+      expect(json[:link_counts]).to contain_exactly(include(url: link.url, clicks: 3))
+    end
+  end
+
   context "with a post with lots of actions" do
     fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)

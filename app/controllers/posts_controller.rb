@@ -199,12 +199,10 @@ class PostsController < ApplicationController
   def update
     Post::Revise.call(service_params.merge(params: post_revision_params, editor: current_user)) do
       on_success do |post:, topic:, category_changed:|
-        post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
-        post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
-        link_counts = TopicLink.counts_for(guardian, topic, [post])
-        post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
+        result = {
+          post: PostSerializer.for_update(post:, topic:, guardian:, user: current_user).as_json,
+        }
 
-        result = { post: post_serializer.as_json }
         if category_changed.present?
           result[:category] = BasicCategorySerializer.new(
             category_changed,

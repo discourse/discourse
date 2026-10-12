@@ -288,15 +288,7 @@ class ReviewablesController < ApplicationController
     end
 
     if result.success?
-      json = serialize_data(result, ReviewablePerformResultSerializer)
-      if post = result.updated_post
-        serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
-        serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-        link_counts = TopicLink.counts_for(guardian, post.topic, [post])
-        serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
-        json[:post] = serializer.as_json
-      end
-      render_json_dump(json)
+      render_serialized(result, ReviewablePerformResultSerializer, user: current_user)
     else
       render_json_error(result)
     end

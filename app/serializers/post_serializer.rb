@@ -105,6 +105,21 @@ class PostSerializer < BasicPostSerializer
              :localization_outdated,
              :localized_oneboxes
 
+  class << self
+    def for_update(post:, topic:, guardian:, user:)
+      link_counts = TopicLink.counts_for(guardian, topic, [post])
+
+      new(
+        post,
+        scope: guardian,
+        root: false,
+        add_raw: true,
+        draft_sequence: DraftSequence.current(user, topic.draft_key),
+        single_post_link_counts: link_counts[post.id],
+      )
+    end
+  end
+
   def initialize(object, opts)
     super(object, opts)
 

@@ -3,6 +3,7 @@
 class ReviewablePerformResultSerializer < ApplicationSerializer
   attributes(
     :success,
+    :post,
     :created_post_id,
     :created_post_topic_id,
     :remove_reviewable_ids,
@@ -11,6 +12,21 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :reviewable_count,
     :unseen_reviewable_count,
   )
+
+  def post
+    post = object.updated_post
+
+    PostSerializer.for_update(
+      post:,
+      topic: post.topic,
+      guardian: scope,
+      user: @options[:user] || scope.user,
+    ).as_json
+  end
+
+  def include_post?
+    object.updated_post.present?
+  end
 
   def success
     object.success?
