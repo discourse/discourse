@@ -10,7 +10,6 @@ fa_IR:
       admin_dashboard_card:
         no_results: "هیچ نتیجه‌ای وجود ندارد"
     explorer:
-      default_query: "پیش‌فرض"
       or: "یا"
       create: "ایجاد"
       ai:
@@ -39,6 +38,7 @@ fa_IR:
         one: "نمایش %{count} نتیجه برتر."
         other: "نمایش %{count} نتیجه برتر."
       query_groups: "گروه‌ها"
+      query_tags: "برچسب‌ها"
       link: "پیوند برای"
       report_name: "گزارش"
       query_description: "توضیح"

@@ -885,6 +885,92 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      context "when performing agree_and_edit on a flagged post reviewable" do
+        it "rejects agree_and_edit on a flagged post reviewable without saved revision evidence" do
+          flagged = Fabricate(:reviewable_flagged_post)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+              }
+
+          expect(response).to have_http_status(:bad_request)
+          expect(flagged.reload).to be_pending
+        end
+
+        it "approves a flagged post reviewable through agree_and_edit with the saved post version" do
+          sign_in(admin)
+          flagged_post = Fabricate(:post, version: 2, public_version: 2)
+          flagged = Fabricate(:reviewable_flagged_post, target: flagged_post)
+          Fabricate(:post_revision, post: flagged_post, number: flagged_post.version)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+                post_version: flagged_post.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+          expect(flagged.reload).to be_approved
+        end
+      end
+
+      it "suspends a flagged post's author and deletes the post when the moderator selects both actions" do
+        flagged_post = Fabricate(:post)
+        flagged =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: flagged_post,
+            target_created_by: flagged_post.user,
+          )
+        expiry = 2.days.from_now.change(usec: 0)
+
+        put "/review/#{flagged.id}/perform/agree_and_suspend.json",
+            params: {
+              version: flagged.version,
+              reason: "Repeated spam",
+              suspend_until: expiry.iso8601,
+              post_action: "delete",
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(flagged_post.user.reload.suspended_till).to eq(expiry)
+        expect(flagged_post.reload).to be_trashed
+        expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+      end
+
+      it "silences the author and rejects a queued post" do
+        queued = Fabricate(:reviewable_queued_post)
+        expiry = 2.days.from_now.change(usec: 0)
+
+        put "/review/#{queued.id}/perform/reject_and_silence.json",
+            params: {
+              version: queued.version,
+              reason: "Repeated spam",
+              silenced_till: expiry.iso8601,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(queued.reload).to be_rejected
+        expect(queued.target_created_by.reload.silenced_till).to eq(expiry)
+      end
+
+      it "rejects missing penalty details without resolving the reviewable" do
+        flagged = Fabricate(:reviewable_flagged_post)
+
+        put "/review/#{flagged.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged.version,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(flagged.reload).to be_pending
+        expect(flagged.target_created_by.reload).not_to be_silenced
+      end
+
       it "returns 404 to category moderators for an inaccessible whisper" do
         SiteSetting.enable_category_group_moderation = true
         group_user = Fabricate(:group_user)
@@ -1019,7 +1105,7 @@ RSpec.describe ReviewablesController do
         expect(like.reload).to be_trashed
       end
 
-      it "releases a deleted topic's claim when agreeing before a silence" do
+      it "releases a deleted topic's claim when agreeing and silencing" do
         SiteSetting.reviewable_claiming = "optional"
         admin = Fabricate(:admin)
         flagger = Fabricate(:user, refresh_auto_groups: true)
@@ -1032,6 +1118,8 @@ RSpec.describe ReviewablesController do
         put "/review/#{flagged_reviewable.id}/perform/agree_and_silence.json",
             params: {
               version: flagged_reviewable.reload.version,
+              reason: "Repeated spam",
+              silenced_till: 1.day.from_now,
             }
 
         expect(response).to have_http_status(:ok)

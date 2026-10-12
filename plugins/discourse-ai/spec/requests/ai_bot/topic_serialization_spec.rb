@@ -2,7 +2,7 @@
 
 RSpec.describe "AI Bot Post Serializer" do
   fab!(:current_user, :user)
-  fab!(:bot_user, :user)
+  fab!(:bot_user) { Fabricate(:user, id: DiscourseAi::BotUser.next_id) }
 
   before do
     enable_current_plugin

@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe SchemaSettingsObjectValidator do
+  def errors_for(schema, object) =
+    described_class.new(schema:, object:).validate.transform_values(&:full_messages)
+
+  def schema_with(name, **attributes) = { name: "section", properties: { name => attributes } }
+
   describe ".property_values_of_type" do
     it "returns an empty array when objects array is empty" do
       schema = { name: "section", properties: { upload: { type: "upload" } } }
@@ -130,10 +135,53 @@ RSpec.describe SchemaSettingsObjectValidator do
         ],
       )
     end
+
+    it "looks up the valid ids of each type once for all objects, ignoring malformed values" do
+      tag_1 = Fabricate(:tag)
+      tag_2 = Fabricate(:tag)
+      tag_3 = Fabricate(:tag)
+
+      schema = {
+        name: "section",
+        properties: {
+          links: {
+            type: "objects",
+            schema: {
+              name: "link",
+              properties: {
+                tags_property: {
+                  type: "tags",
+                },
+              },
+            },
+          },
+          tags_property: {
+            type: "tags",
+          },
+        },
+      }
+
+      objects = [
+        { tags_property: [tag_1.name], links: [{ tags_property: [tag_2.name] }] },
+        { tags_property: [tag_3.name] },
+        { tags_property: [{ "name" => tag_1.name }] },
+      ]
+
+      queries =
+        track_sql_queries do
+          expect(described_class.validate_objects(schema:, objects:)).to eq(
+            [
+              "The property at JSON Pointer '/2/tags_property' must be an array of valid tag names.",
+            ],
+          )
+        end
+
+      expect(queries.length).to eq(1)
+    end
   end
 
   describe "#validate" do
-    it "returns errors when required properties are missing" do
+    it "returns errors when required properties are missing or blank" do
       schema = {
         name: "section",
         properties: {
@@ -143,6 +191,19 @@ RSpec.describe SchemaSettingsObjectValidator do
           },
           description: {
             type: "string",
+            required: true,
+          },
+          category_property: {
+            type: "categories",
+            required: true,
+          },
+          enum_property: {
+            type: "enum",
+            choices: [true, false],
+            required: true,
+          },
+          integer_property: {
+            type: "integer",
             required: true,
           },
           links: {
@@ -175,619 +236,246 @@ RSpec.describe SchemaSettingsObjectValidator do
         },
       }
 
-      errors = described_class.new(schema:, object: {}).validate
+      object = {
+        title: "  ",
+        description: "",
+        category_property: [],
+        enum_property: false,
+        integer_property: "",
+        links: [{ child_links: [{}, {}] }, {}],
+      }
 
-      expect(errors.keys).to contain_exactly("/description", "/title")
-      expect(errors["/description"].full_messages).to contain_exactly("must be present")
-      expect(errors["/title"].full_messages).to contain_exactly("must be present")
+      expect(errors_for(schema, object)).to eq(
+        "/title" => ["must be present"],
+        "/description" => ["must be present"],
+        "/category_property" => ["must be present"],
+        "/integer_property" => ["must be an integer"],
+        "/links/0/name" => ["must be present"],
+        "/links/0/child_links/0/title" => ["must be present"],
+        "/links/0/child_links/1/title" => ["must be present"],
+        "/links/1/name" => ["must be present"],
+      )
+    end
 
-      errors =
-        described_class.new(
-          schema: schema,
-          object: {
-            links: [{ child_links: [{}, {}] }, {}],
+    it "returns no errors when optional properties are blank" do
+      schema = {
+        name: "section",
+        properties: {
+          string_property: {
+            type: "string",
+            validations: {
+              url: true,
+            },
           },
-        ).validate
+          datetime_property: {
+            type: "datetime",
+          },
+          category_property: {
+            type: "categories",
+            validations: {
+              min: 1,
+            },
+          },
+        },
+      }
 
-      expect(errors.keys).to eq(
-        %w[
-          /title
-          /description
-          /links/0/name
-          /links/0/child_links/0/title
-          /links/0/child_links/1/title
-          /links/1/name
-        ],
+      object = { string_property: "", datetime_property: "", category_property: [] }
+
+      expect(errors_for(schema, object)).to eq({})
+    end
+
+    it "returns errors for missing properties of every type only when required" do
+      properties =
+        %w[string integer float boolean datetime icon upload topic post categories groups tags]
+          .index_with { |type| { type: } }
+          .merge("enum" => { type: "enum", choices: ["a"] })
+      required_properties =
+        properties.transform_values { |attributes| attributes.merge(required: true) }
+
+      expect(errors_for({ name: "section", properties: }, {})).to eq({})
+
+      expect(errors_for({ name: "section", properties: required_properties }, {})).to eq(
+        properties.keys.to_h { |name| ["/#{name}", ["must be present"]] },
       )
-
-      expect(errors["/title"].full_messages).to contain_exactly("must be present")
-      expect(errors["/description"].full_messages).to contain_exactly("must be present")
-      expect(errors["/links/0/name"].full_messages).to contain_exactly("must be present")
-
-      expect(errors["/links/0/child_links/0/title"].full_messages).to contain_exactly(
-        "must be present",
-      )
-
-      expect(errors["/links/0/child_links/1/title"].full_messages).to contain_exactly(
-        "must be present",
-      )
-
-      expect(errors["/links/1/name"].full_messages).to contain_exactly("must be present")
     end
 
     context "for enum properties" do
-      def schema(required: false)
-        property = {
-          name: "section",
-          properties: {
-            enum_property: {
-              type: "enum",
-              choices: ["choice 1", 2, false],
-            },
-          },
-        }
-
-        property[:properties][:enum_property][:required] = true if required
-        property
-      end
+      let(:schema) { schema_with(:enum_property, type: "enum", choices: ["choice 1", 2, false]) }
 
       it "returns no errors when the value is in the enum" do
-        expect(
-          described_class.new(schema: schema, object: { enum_property: "choice 1" }).validate,
-        ).to eq({})
+        expect(errors_for(schema, { enum_property: "choice 1" })).to eq({})
       end
 
       it "returns errors when the value is not in the enum" do
-        errors =
-          described_class.new(schema: schema, object: { enum_property: "random_value" }).validate
-
-        expect(errors.keys).to eq(["/enum_property"])
-
-        expect(errors["/enum_property"].full_messages).to contain_exactly(
-          "must be one of the following: [\"choice 1\", 2, false]",
+        expect(errors_for(schema, { enum_property: "random_value" })).to eq(
+          "/enum_property" => ["must be one of the following: [\"choice 1\", 2, false]"],
         )
-      end
-
-      it "returns no errors when an optional enum property is missing" do
-        expect(described_class.new(schema: schema(required: false), object: {}).validate).to eq({})
-      end
-
-      it "returns errors when a required enum property is missing" do
-        errors = described_class.new(schema: schema(required: true), object: {}).validate
-
-        expect(errors.keys).to eq(["/enum_property"])
-
-        expect(errors["/enum_property"].full_messages).to contain_exactly("must be present")
       end
     end
 
     context "for boolean properties" do
-      let(:schema) { { name: "section", properties: { boolean_property: { type: "boolean" } } } }
+      let(:schema) { schema_with(:boolean_property, type: "boolean", required: true) }
 
-      it "returns no errors for a boolean value" do
-        expect(
-          described_class.new(schema: schema, object: { boolean_property: true }).validate,
-        ).to eq({})
+      it "returns no errors when the required boolean is true or false" do
+        expect(errors_for(schema, { boolean_property: true })).to eq({})
 
-        expect(
-          described_class.new(schema: schema, object: { boolean_property: false }).validate,
-        ).to eq({})
+        expect(errors_for(schema, { boolean_property: false })).to eq({})
       end
 
       it "returns errors for a non-boolean value" do
-        errors =
-          described_class.new(schema: schema, object: { boolean_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/boolean_property"])
-        expect(errors["/boolean_property"].full_messages).to contain_exactly("must be a boolean")
+        expect(errors_for(schema, { boolean_property: "string" })).to eq(
+          "/boolean_property" => ["must be a boolean"],
+        )
       end
     end
 
     context "for float properties" do
-      let(:schema) { { name: "section", properties: { float_property: { type: "float" } } } }
+      let(:schema) { schema_with(:float_property, type: "float") }
 
       it "returns no errors for an integer or float value" do
-        expect(described_class.new(schema: schema, object: { float_property: 1.5 }).validate).to eq(
-          {},
-        )
+        expect(errors_for(schema, { float_property: 1.5 })).to eq({})
 
-        expect(described_class.new(schema: schema, object: { float_property: 1 }).validate).to eq(
-          {},
-        )
-      end
-
-      it "returns no errors when an optional value is missing" do
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when a required value is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            float_property: {
-              type: "float",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/float_property"])
-        expect(errors["/float_property"].full_messages).to contain_exactly("must be present")
+        expect(errors_for(schema, { float_property: 1 })).to eq({})
       end
 
       it "returns errors for a non-float value" do
-        errors = described_class.new(schema: schema, object: { float_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/float_property"])
-        expect(errors["/float_property"].full_messages).to contain_exactly("must be a float")
+        expect(errors_for(schema, { float_property: "string" })).to eq(
+          "/float_property" => ["must be a float"],
+        )
       end
 
       it "returns errors when the number fails minimum or maximum validation" do
-        schema = {
-          name: "section",
-          properties: {
-            float_property: {
-              type: "float",
-              validations: {
-                min: 5.5,
-                max: 11.5,
-              },
-            },
-          },
-        }
+        schema = schema_with(:float_property, type: "float", validations: { min: 5.5, max: 11.5 })
 
-        errors = described_class.new(schema: schema, object: { float_property: 4.5 }).validate
-
-        expect(errors.keys).to eq(["/float_property"])
-
-        expect(errors["/float_property"].full_messages).to contain_exactly(
-          "must be larger than or equal to 5.5",
+        expect(errors_for(schema, { float_property: 4.5 })).to eq(
+          "/float_property" => ["must be larger than or equal to 5.5"],
         )
 
-        errors = described_class.new(schema: schema, object: { float_property: 12.5 }).validate
-
-        expect(errors.keys).to eq(["/float_property"])
-
-        expect(errors["/float_property"].full_messages).to contain_exactly(
-          "must be smaller than or equal to 11.5",
+        expect(errors_for(schema, { float_property: 12.5 })).to eq(
+          "/float_property" => ["must be smaller than or equal to 11.5"],
         )
       end
     end
 
     context "for integer properties" do
-      let(:schema) { { name: "section", properties: { integer_property: { type: "integer" } } } }
+      let(:schema) { schema_with(:integer_property, type: "integer") }
 
       it "returns no errors for an integer value" do
-        expect(described_class.new(schema: schema, object: { integer_property: 1 }).validate).to eq(
-          {},
-        )
-      end
-
-      it "returns no errors when the optional integer is missing" do
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required integer is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            integer_property: {
-              type: "integer",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/integer_property"])
-        expect(errors["/integer_property"].full_messages).to contain_exactly("must be present")
+        expect(errors_for(schema, { integer_property: 1 })).to eq({})
       end
 
       it "returns errors for a non-integer value" do
-        errors =
-          described_class.new(schema: schema, object: { integer_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/integer_property"])
-        expect(errors["/integer_property"].full_messages).to contain_exactly("must be an integer")
-
-        errors = described_class.new(schema: schema, object: { integer_property: 1.0 }).validate
-
-        expect(errors.keys).to eq(["/integer_property"])
-        expect(errors["/integer_property"].full_messages).to contain_exactly("must be an integer")
+        ["string", 1.0].each do |value|
+          expect(errors_for(schema, { integer_property: value })).to eq(
+            "/integer_property" => ["must be an integer"],
+          )
+        end
       end
 
-      it "returns no errors when the integer satisfies range validation" do
-        schema = {
-          name: "section",
-          properties: {
-            integer_property: {
-              type: "integer",
-              validations: {
-                min: 5,
-                max: 10,
-              },
-            },
-          },
-        }
+      it "returns errors only when the integer fails range validation" do
+        schema = schema_with(:integer_property, type: "integer", validations: { min: 5, max: 10 })
 
-        expect(described_class.new(schema: schema, object: { integer_property: 6 }).validate).to eq(
-          {},
-        )
-      end
+        expect(errors_for(schema, { integer_property: 6 })).to eq({})
 
-      it "returns errors when the integer fails range validation" do
-        schema = {
-          name: "section",
-          properties: {
-            integer_property: {
-              type: "integer",
-              validations: {
-                min: 5,
-                max: 10,
-              },
-            },
-          },
-        }
-
-        errors = described_class.new(schema: schema, object: { integer_property: 4 }).validate
-
-        expect(errors.keys).to eq(["/integer_property"])
-
-        expect(errors["/integer_property"].full_messages).to contain_exactly(
-          "must be larger than or equal to 5",
+        expect(errors_for(schema, { integer_property: 4 })).to eq(
+          "/integer_property" => ["must be larger than or equal to 5"],
         )
 
-        errors = described_class.new(schema: schema, object: { integer_property: 11 }).validate
-
-        expect(errors.keys).to eq(["/integer_property"])
-
-        expect(errors["/integer_property"].full_messages).to contain_exactly(
-          "must be smaller than or equal to 10",
+        expect(errors_for(schema, { integer_property: 11 })).to eq(
+          "/integer_property" => ["must be smaller than or equal to 10"],
         )
       end
     end
 
     context "for string properties" do
-      let(:schema) { { name: "section", properties: { string_property: { type: "string" } } } }
+      let(:schema) { schema_with(:string_property, type: "string") }
 
       it "returns no errors for a string value" do
-        expect(
-          described_class.new(schema: schema, object: { string_property: "string" }).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors when the optional string is missing" do
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required string is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            string_property: {
-              type: "string",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/string_property"])
-        expect(errors["/string_property"].full_messages).to contain_exactly("must be present")
+        expect(errors_for(schema, { string_property: "string" })).to eq({})
       end
 
       it "returns errors for a non-string value" do
-        schema = { name: "section", properties: { string_property: { type: "string" } } }
-        errors = described_class.new(schema: schema, object: { string_property: 1 }).validate
-
-        expect(errors.keys).to eq(["/string_property"])
-        expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
+        expect(errors_for(schema, { string_property: 1 })).to eq(
+          "/string_property" => ["must be a string"],
+        )
       end
 
-      it "returns no errors when the string is a valid URL" do
-        schema = {
-          name: "section",
-          properties: {
-            string_property: {
-              type: "string",
-              validations: {
-                url: true,
-              },
-            },
-          },
-        }
+      it "returns errors only when the string is not a valid URL" do
+        schema = schema_with(:string_property, type: "string", validations: { url: true })
 
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              string_property: "https://www.example.com",
-            },
-          ).validate,
-        ).to eq({})
+        expect(errors_for(schema, { string_property: "https://www.example.com" })).to eq({})
 
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              string_property: "/some-path/to/some-where",
-            },
-          ).validate,
-        ).to eq({})
+        expect(errors_for(schema, { string_property: "/some-path/to/some-where" })).to eq({})
+
+        expect(errors_for(schema, { string_property: "not a url" })).to eq(
+          "/string_property" => ["must be a valid URL"],
+        )
       end
 
-      it "returns errors when the string is not a valid URL" do
-        schema = {
-          name: "section",
-          properties: {
-            string_property: {
-              type: "string",
-              validations: {
-                url: true,
-              },
-            },
-          },
-        }
+      it "returns errors only when the string fails length validation" do
+        validations = { min_length: 5, max_length: 10 }
+        schema = schema_with(:string_property, type: "string", validations:)
 
-        errors =
-          described_class.new(schema: schema, object: { string_property: "not a url" }).validate
+        expect(errors_for(schema, { string_property: "123456" })).to eq({})
 
-        expect(errors.keys).to eq(["/string_property"])
-        expect(errors["/string_property"].full_messages).to contain_exactly("must be a valid URL")
-      end
-
-      it "returns no errors when the string satisfies length validation" do
-        schema = {
-          name: "section",
-          properties: {
-            string_property: {
-              type: "string",
-              validations: {
-                min_length: 5,
-                max_length: 10,
-              },
-            },
-          },
-        }
-
-        expect(
-          described_class.new(schema: schema, object: { string_property: "123456" }).validate,
-        ).to eq({})
-      end
-
-      it "returns errors when the string fails length validation" do
-        schema = {
-          name: "section",
-          properties: {
-            string_property: {
-              type: "string",
-              validations: {
-                min_length: 5,
-                max_length: 10,
-              },
-            },
-          },
-        }
-
-        errors = described_class.new(schema: schema, object: { string_property: "1234" }).validate
-
-        expect(errors.keys).to eq(["/string_property"])
-
-        expect(errors["/string_property"].full_messages).to contain_exactly(
-          "must be at least 5 characters long",
+        expect(errors_for(schema, { string_property: "1234" })).to eq(
+          "/string_property" => ["must be at least 5 characters long"],
         )
 
-        errors =
-          described_class.new(schema: schema, object: { string_property: "12345678910" }).validate
-
-        expect(errors.keys).to eq(["/string_property"])
-
-        expect(errors["/string_property"].full_messages).to contain_exactly(
-          "must be at most 10 characters long",
+        expect(errors_for(schema, { string_property: "12345678910" })).to eq(
+          "/string_property" => ["must be at most 10 characters long"],
         )
       end
     end
 
     context "for topic properties" do
+      let(:schema) { schema_with(:topic_property, type: "topic") }
+
       it "returns no errors for a valid topic ID" do
         topic = Fabricate(:topic)
 
-        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
-
-        expect(
-          described_class.new(schema: schema, object: { topic_property: topic.id }).validate,
-        ).to eq({})
+        expect(errors_for(schema, { topic_property: topic.id })).to eq({})
       end
 
-      it "returns no errors when the optional topic ID is missing" do
-        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required topic ID is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            topic_property: {
-              type: "topic",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/topic_property"])
-        expect(errors["/topic_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the topic ID is not an integer" do
-        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
-
-        errors = described_class.new(schema: schema, object: { topic_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/topic_property"])
-
-        expect(errors["/topic_property"].full_messages).to contain_exactly(
-          "must be a valid topic id",
-        )
-      end
-
-      it "returns errors for an unknown topic ID" do
-        schema = {
-          name: "section",
-          properties: {
-            topic_property: {
-              type: "topic",
-            },
-            child_topics: {
-              type: "objects",
-              schema: {
-                name: "child_topic",
-                properties: {
-                  topic_property_2: {
-                    type: "topic",
-                  },
-                },
-              },
-            },
-          },
-        }
-
-        queries =
-          track_sql_queries do
-            errors =
-              described_class.new(
-                schema:,
-                object: {
-                  topic_property: 99_999_999,
-                  child_topics: [{ topic_property_2: 99_999_999 }],
-                },
-              ).validate
-
-            expect(errors.keys).to eq(%w[/topic_property /child_topics/0/topic_property_2])
-
-            expect(errors["/topic_property"].full_messages).to contain_exactly(
-              "must be a valid topic id",
-            )
-
-            expect(errors["/child_topics/0/topic_property_2"].full_messages).to contain_exactly(
-              "must be a valid topic id",
-            )
-          end
-
-        # only 1 SQL query should be executed to check if topic ids are valid
-        expect(queries.length).to eq(1)
+      it "returns errors for an invalid topic ID" do
+        ["string", 99_999_999].each do |value|
+          expect(errors_for(schema, { topic_property: value })).to eq(
+            "/topic_property" => ["must be a valid topic id"],
+          )
+        end
       end
     end
 
     context "for upload properties" do
-      it "returns no errors for a valid upload ID" do
-        upload = Fabricate(:upload)
-
-        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
-
-        expect(
-          described_class.new(schema: schema, object: { upload_property: upload.id }).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors when the optional upload ID is missing" do
-        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required upload ID is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            upload_property: {
-              type: "upload",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/upload_property"])
-        expect(errors["/upload_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the upload ID is not an integer" do
-        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
-
-        errors = described_class.new(schema: schema, object: { upload_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/upload_property"])
-
-        expect(errors["/upload_property"].full_messages).to contain_exactly(
-          "must be a valid upload id",
-        )
-      end
-
-      it "returns errors when the upload value is an invalid URL" do
-        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
-
-        errors =
-          described_class.new(
-            schema: schema,
-            object: {
-              upload_property: "/invalid/upload/url.png",
-            },
-          ).validate
-
-        expect(errors.keys).to eq(["/upload_property"])
-
-        expect(errors["/upload_property"].full_messages).to contain_exactly(
-          "must be a valid upload id",
-        )
-      end
-
-      it "returns errors for an unknown upload ID" do
-        schema = {
+      let(:schema) do
+        {
           name: "section",
           properties: {
             upload_property: {
               type: "upload",
             },
-            child_uploads: {
-              type: "objects",
-              schema: {
-                name: "child_upload",
-                properties: {
-                  upload_property_2: {
-                    type: "upload",
-                  },
-                },
-              },
+            upload_property_2: {
+              type: "upload",
             },
           },
         }
+      end
 
-        queries =
-          track_sql_queries do
-            errors =
-              described_class.new(
-                schema:,
-                object: {
-                  upload_property: 99_999_999,
-                  child_uploads: [{ upload_property_2: 99_999_999 }],
-                },
-              ).validate
+      it "returns no errors for a valid upload URL and ID" do
+        upload_1 = Fabricate(:upload)
+        upload_2 = Fabricate(:upload)
 
-            expect(errors.keys).to eq(%w[/upload_property /child_uploads/0/upload_property_2])
+        object = { upload_property: upload_1.url, upload_property_2: upload_2.id }
 
-            expect(errors["/upload_property"].full_messages).to contain_exactly(
-              "must be a valid upload id",
-            )
+        expect(errors_for(schema, object)).to eq({})
+      end
 
-            expect(errors["/child_uploads/0/upload_property_2"].full_messages).to contain_exactly(
-              "must be a valid upload id",
-            )
-          end
-
-        # only 1 SQL query should be executed to check if upload ids are valid
-        expect(queries.length).to eq(1)
+      it "returns errors for an invalid upload ID or URL" do
+        ["/invalid/upload/url.png", 99_999_999].each do |value|
+          expect(errors_for(schema, { upload_property: value })).to eq(
+            "/upload_property" => ["must be a valid upload id"],
+          )
+        end
       end
     end
 
@@ -796,181 +484,48 @@ RSpec.describe SchemaSettingsObjectValidator do
       fab!(:tag_2, :tag)
       fab!(:tag_3, :tag)
 
+      let(:schema) { schema_with(:tags_property, type: "tags") }
+
       it "returns no errors for valid tag names" do
-        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
-
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              tags_property: [tag_1.name, tag_2.name],
-            },
-          ).validate,
-        ).to eq({})
+        expect(errors_for(schema, { tags_property: [tag_1.name, tag_2.name] })).to eq({})
       end
 
-      it "returns no errors when the optional tag list is missing" do
-        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required tag list is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            tags_property: {
-              type: "tags",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/tags_property"])
-        expect(errors["/tags_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the tag value is not an array" do
-        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
-
-        errors = described_class.new(schema: schema, object: { tags_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/tags_property"])
-
-        expect(errors["/tags_property"].full_messages).to contain_exactly(
-          "must be an array of valid tag names",
-        )
+      it "returns errors for invalid tag names" do
+        ["string", ["some random tag name", tag_1.name]].each do |value|
+          expect(errors_for(schema, { tags_property: value })).to eq(
+            "/tags_property" => ["must be an array of valid tag names"],
+          )
+        end
       end
 
       it "returns errors when the tag count fails range validation" do
-        schema = {
-          name: "section",
-          properties: {
-            tags_property: {
-              type: "tags",
-              validations: {
-                min: 1,
-                max: 2,
-              },
-            },
-          },
-        }
+        schema = schema_with(:tags_property, type: "tags", validations: { min: 2, max: 2 })
 
-        errors = described_class.new(schema: schema, object: { tags_property: [] }).validate
-
-        expect(errors.keys).to eq(["/tags_property"])
-
-        expect(errors["/tags_property"].full_messages).to contain_exactly(
-          "must have at least 1 tag name",
+        expect(errors_for(schema, { tags_property: [tag_1.name] })).to eq(
+          "/tags_property" => ["must have at least 2 tag names"],
         )
 
-        errors =
-          described_class.new(
-            schema: schema,
-            object: {
-              tags_property: [tag_1.name, tag_2.name, tag_3.name],
-            },
-          ).validate
-
-        expect(errors.keys).to eq(["/tags_property"])
-
-        expect(errors["/tags_property"].full_messages).to contain_exactly(
-          "must have at most 2 tag names",
+        expect(errors_for(schema, { tags_property: [tag_1.name, tag_2.name, tag_3.name] })).to eq(
+          "/tags_property" => ["must have at most 2 tag names"],
         )
-      end
-
-      it "returns errors when the list contains invalid tag names" do
-        schema = {
-          name: "section",
-          properties: {
-            tags_property: {
-              type: "tags",
-            },
-            child_tags: {
-              type: "objects",
-              schema: {
-                name: "child_tag",
-                properties: {
-                  tags_property_2: {
-                    type: "tags",
-                  },
-                },
-              },
-            },
-          },
-        }
-
-        tag_1
-
-        queries =
-          track_sql_queries do
-            errors =
-              described_class.new(
-                schema:,
-                object: {
-                  tags_property: ["some random tag name", tag_1.name],
-                  child_tags: [{ tags_property_2: ["some random tag name", tag_1.name, "abcdef"] }],
-                },
-              ).validate
-
-            expect(errors.keys).to eq(%w[/tags_property /child_tags/0/tags_property_2])
-
-            expect(errors["/tags_property"].full_messages).to contain_exactly(
-              "must be an array of valid tag names",
-            )
-
-            expect(errors["/child_tags/0/tags_property_2"].full_messages).to contain_exactly(
-              "must be an array of valid tag names",
-            )
-          end
-
-        # only 1 SQL query should be executed to check if tag ids are valid
-        expect(queries.length).to eq(1)
       end
     end
 
     context "for groups properties" do
+      let(:schema) { schema_with(:groups_property, type: "groups") }
+
       it "returns no errors for valid group IDs" do
         group = Fabricate(:group)
 
-        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
-
-        expect(
-          described_class.new(schema: schema, object: { groups_property: [group.id] }).validate,
-        ).to eq({})
+        expect(errors_for(schema, { groups_property: [group.id] })).to eq({})
       end
 
-      it "returns no errors when the optional group list is missing" do
-        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required group list is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            groups_property: {
-              type: "groups",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/groups_property"])
-        expect(errors["/groups_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the group value is not an array of valid IDs" do
-        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
-
-        errors = described_class.new(schema: schema, object: { groups_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/groups_property"])
-
-        expect(errors["/groups_property"].full_messages).to contain_exactly(
-          "must be an array of valid group ids",
-        )
+      it "returns errors for invalid group IDs" do
+        ["string", [99_999_999]].each do |value|
+          expect(errors_for(schema, { groups_property: value })).to eq(
+            "/groups_property" => ["must be an array of valid group ids"],
+          )
+        end
       end
 
       it "returns errors when the group count fails range validation" do
@@ -978,177 +533,33 @@ RSpec.describe SchemaSettingsObjectValidator do
         group_2 = Fabricate(:group)
         group_3 = Fabricate(:group)
 
-        schema = {
-          name: "section",
-          properties: {
-            group_property: {
-              type: "groups",
-              validations: {
-                min: 1,
-                max: 2,
-              },
-            },
-          },
-        }
+        schema = schema_with(:group_property, type: "groups", validations: { min: 2, max: 2 })
 
-        errors = described_class.new(schema: schema, object: { group_property: [] }).validate
-
-        expect(errors.keys).to eq(["/group_property"])
-
-        expect(errors["/group_property"].full_messages).to contain_exactly(
-          "must have at least 1 group id",
+        expect(errors_for(schema, { group_property: [group_1.id] })).to eq(
+          "/group_property" => ["must have at least 2 group ids"],
         )
 
-        errors =
-          described_class.new(
-            schema: schema,
-            object: {
-              group_property: [group_1.id, group_2.id, group_3.id],
-            },
-          ).validate
-
-        expect(errors.keys).to eq(["/group_property"])
-
-        expect(errors["/group_property"].full_messages).to contain_exactly(
-          "must have at most 2 group ids",
+        expect(errors_for(schema, { group_property: [group_1.id, group_2.id, group_3.id] })).to eq(
+          "/group_property" => ["must have at most 2 group ids"],
         )
-      end
-
-      it "returns errors when the list contains invalid group IDs" do
-        schema = {
-          name: "section",
-          properties: {
-            groups_property: {
-              type: "groups",
-            },
-            child_groups: {
-              type: "objects",
-              schema: {
-                name: "child_group",
-                properties: {
-                  groups_property_2: {
-                    type: "groups",
-                  },
-                },
-              },
-            },
-          },
-        }
-
-        queries =
-          track_sql_queries do
-            errors =
-              described_class.new(
-                schema:,
-                object: {
-                  groups_property: [99_999_999],
-                  child_groups: [{ groups_property_2: [99_999_999] }],
-                },
-              ).validate
-
-            expect(errors.keys).to eq(%w[/groups_property /child_groups/0/groups_property_2])
-
-            expect(errors["/groups_property"].full_messages).to contain_exactly(
-              "must be an array of valid group ids",
-            )
-
-            expect(errors["/child_groups/0/groups_property_2"].full_messages).to contain_exactly(
-              "must be an array of valid group ids",
-            )
-          end
-
-        # only 1 SQL query should be executed to check if group ids are valid
-        expect(queries.length).to eq(1)
       end
     end
 
     context "for post properties" do
+      let(:schema) { schema_with(:post_property, type: "post") }
+
       it "returns no errors for a valid post ID" do
         post = Fabricate(:post)
 
-        schema = { name: "section", properties: { post_property: { type: "post" } } }
-
-        expect(
-          described_class.new(schema: schema, object: { post_property: post.id }).validate,
-        ).to eq({})
+        expect(errors_for(schema, { post_property: post.id })).to eq({})
       end
 
-      it "returns no errors when the optional post ID is missing" do
-        schema = { name: "section", properties: { post_property: { type: "post" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required post ID is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            post_property: {
-              type: "post",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/post_property"])
-        expect(errors["/post_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the post ID is not an integer" do
-        schema = { name: "section", properties: { post_property: { type: "post" } } }
-
-        errors = described_class.new(schema: schema, object: { post_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/post_property"])
-
-        expect(errors["/post_property"].full_messages).to contain_exactly("must be a valid post id")
-      end
-
-      it "returns errors for an unknown post ID" do
-        schema = {
-          name: "section",
-          properties: {
-            post_property: {
-              type: "post",
-            },
-            child_posts: {
-              type: "objects",
-              schema: {
-                name: "child_post",
-                properties: {
-                  post_property_2: {
-                    type: "post",
-                  },
-                },
-              },
-            },
-          },
-        }
-
-        queries =
-          track_sql_queries do
-            errors =
-              described_class.new(
-                schema:,
-                object: {
-                  post_property: 99_999_999,
-                  child_posts: [{ post_property_2: 99_999_999 }],
-                },
-              ).validate
-
-            expect(errors.keys).to eq(%w[/post_property /child_posts/0/post_property_2])
-
-            expect(errors["/post_property"].full_messages).to contain_exactly(
-              "must be a valid post id",
-            )
-
-            expect(errors["/child_posts/0/post_property_2"].full_messages).to contain_exactly(
-              "must be a valid post id",
-            )
-          end
-
-        # only 1 SQL query should be executed to check if post ids are valid
-        expect(queries.length).to eq(1)
+      it "returns errors for an invalid post ID" do
+        ["string", 99_999_999].each do |value|
+          expect(errors_for(schema, { post_property: value })).to eq(
+            "/post_property" => ["must be a valid post id"],
+          )
+        end
       end
     end
 
@@ -1156,89 +567,23 @@ RSpec.describe SchemaSettingsObjectValidator do
       fab!(:category_1, :category)
       fab!(:category_2, :category)
 
+      let(:schema) { schema_with(:category_property, type: "categories") }
+
       it "returns no errors for valid category IDs" do
-        schema = { name: "section", properties: { category_property: { type: "categories" } } }
-
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              category_property: [category_1.id, category_2.id],
-            },
-          ).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors when the optional category list is missing" do
-        schema = { name: "section", properties: { category_property: { type: "categories" } } }
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required category list is empty" do
-        schema = {
-          name: "section",
-          properties: {
-            category_property: {
-              type: "categories",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: { category_property: [] }).validate
-
-        expect(errors.keys).to eq(["/category_property"])
-        expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "returns errors when the required category list is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            category_property: {
-              type: "categories",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/category_property"])
-        expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
+        expect(errors_for(schema, { category_property: [category_1.id, category_2.id] })).to eq({})
       end
 
       it "returns errors when the category list contains non-integers" do
-        schema = { name: "section", properties: { category_property: { type: "categories" } } }
-
-        errors =
-          described_class.new(schema: schema, object: { category_property: ["string"] }).validate
-
-        expect(errors.keys).to eq(["/category_property"])
-
-        expect(errors["/category_property"].full_messages).to contain_exactly(
-          "must be an array of valid category ids",
+        expect(errors_for(schema, { category_property: ["string"] })).to eq(
+          "/category_property" => ["must be an array of valid category ids"],
         )
       end
 
       it "returns errors when the category count fails range validation" do
-        schema = {
-          name: "section",
-          properties: {
-            category_property: {
-              type: "categories",
-              validations: {
-                min: 1,
-                max: 2,
-              },
-            },
-          },
-        }
+        schema = schema_with(:category_property, type: "categories", validations: { min: 2 })
 
-        errors = described_class.new(schema: schema, object: { category_property: [] }).validate
-
-        expect(errors.keys).to eq(["/category_property"])
-
-        expect(errors["/category_property"].full_messages).to contain_exactly(
-          "must have at least 1 category id",
+        expect(errors_for(schema, { category_property: [category_1.id] })).to eq(
+          "/category_property" => ["must have at least 2 category ids"],
         )
       end
 
@@ -1277,174 +622,48 @@ RSpec.describe SchemaSettingsObjectValidator do
 
         queries =
           track_sql_queries do
-            errors = described_class.new(schema:, object:).validate
-
-            expect(errors.keys).to eq(
-              %w[/category_property /category_property_2 /child_categories/0/category_property_3],
+            expect(errors_for(schema, object)).to eq(
+              "/category_property" => ["must be an array of valid category ids"],
+              "/category_property_2" => ["must be an array of valid category ids"],
+              "/child_categories/0/category_property_3" => [
+                "must be an array of valid category ids",
+              ],
             )
-
-            expect(errors["/category_property"].full_messages).to contain_exactly(
-              "must be an array of valid category ids",
-            )
-
-            expect(errors["/category_property_2"].full_messages).to contain_exactly(
-              "must be an array of valid category ids",
-            )
-
-            expect(
-              errors["/child_categories/0/category_property_3"].full_messages,
-            ).to contain_exactly("must be an array of valid category ids")
           end
 
-        # only 1 SQL query should be executed to check if category ids are valid
         expect(queries.length).to eq(1)
       end
     end
 
     context "for datetime properties" do
-      let(:schema) { { name: "section", properties: { datetime_property: { type: "datetime" } } } }
+      let(:schema) { schema_with(:datetime_property, type: "datetime") }
 
-      it "returns no errors for a valid UTC datetime" do
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              datetime_property: "2024-12-29T15:30:00Z",
-            },
-          ).validate,
-        ).to eq({})
-
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              datetime_property: "2024-12-29T15:30:00.000Z",
-            },
-          ).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors for an ISO 8601 datetime with a timezone offset" do
-        expect(
-          described_class.new(
-            schema: schema,
-            object: {
-              datetime_property: "2024-12-29T15:30:00+05:30",
-            },
-          ).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors when the optional datetime is missing" do
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns no errors when the optional datetime is blank" do
-        expect(
-          described_class.new(schema: schema, object: { datetime_property: "" }).validate,
-        ).to eq({})
-      end
-
-      it "returns errors when the required datetime is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            datetime_property: {
-              type: "datetime",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/datetime_property"])
-        expect(errors["/datetime_property"].full_messages).to contain_exactly("must be present")
+      it "returns no errors for an ISO 8601 datetime with a timezone" do
+        %w[2024-12-29T15:30:00Z 2024-12-29T15:30:00.000Z 2024-12-29T15:30:00+05:30].each do |value|
+          expect(errors_for(schema, { datetime_property: value })).to eq({})
+        end
       end
 
       it "returns errors for an invalid datetime" do
-        errors =
-          described_class.new(
-            schema: schema,
-            object: {
-              datetime_property: "not a datetime",
-            },
-          ).validate
-
-        expect(errors.keys).to eq(["/datetime_property"])
-        expect(errors["/datetime_property"].full_messages).to contain_exactly(
-          "must be a valid datetime",
-        )
-      end
-
-      it "returns errors for a date-only string" do
-        errors =
-          described_class.new(schema: schema, object: { datetime_property: "2024-12-29" }).validate
-
-        expect(errors.keys).to eq(["/datetime_property"])
-        expect(errors["/datetime_property"].full_messages).to contain_exactly(
-          "must be a valid datetime",
-        )
-      end
-
-      it "returns errors for a datetime without a timezone" do
-        errors =
-          described_class.new(
-            schema: schema,
-            object: {
-              datetime_property: "2024-12-29T15:30:00",
-            },
-          ).validate
-
-        expect(errors.keys).to eq(["/datetime_property"])
-        expect(errors["/datetime_property"].full_messages).to contain_exactly(
-          "must be a valid datetime",
-        )
-      end
-
-      it "returns errors when the datetime is not a string" do
-        errors = described_class.new(schema: schema, object: { datetime_property: 123 }).validate
-
-        expect(errors.keys).to eq(["/datetime_property"])
-        expect(errors["/datetime_property"].full_messages).to contain_exactly(
-          "must be a valid datetime",
-        )
+        ["not a datetime", "2024-12-29", "2024-12-29T15:30:00", 123].each do |value|
+          expect(errors_for(schema, { datetime_property: value })).to eq(
+            "/datetime_property" => ["must be a valid datetime"],
+          )
+        end
       end
     end
 
     context "for icon properties" do
-      let(:schema) { { name: "section", properties: { icon_property: { type: "icon" } } } }
+      let(:schema) { schema_with(:icon_property, type: "icon") }
 
       it "returns no errors for an icon string" do
-        expect(
-          described_class.new(schema: schema, object: { icon_property: "heart" }).validate,
-        ).to eq({})
-      end
-
-      it "returns no errors when the optional icon is missing" do
-        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
-      end
-
-      it "returns errors when the required icon is missing" do
-        schema = {
-          name: "section",
-          properties: {
-            icon_property: {
-              type: "icon",
-              required: true,
-            },
-          },
-        }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/icon_property"])
-        expect(errors["/icon_property"].full_messages).to contain_exactly("must be present")
+        expect(errors_for(schema, { icon_property: "heart" })).to eq({})
       end
 
       it "returns errors for an invalid icon" do
-        errors = described_class.new(schema: schema, object: { icon_property: 1 }).validate
-
-        expect(errors.keys).to eq(["/icon_property"])
-        expect(errors["/icon_property"].full_messages).to contain_exactly("must be an icon name")
+        expect(errors_for(schema, { icon_property: 1 })).to eq(
+          "/icon_property" => ["must be an icon name"],
+        )
       end
     end
   end

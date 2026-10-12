@@ -35,6 +35,74 @@ describe DiscourseMcp::OAuth do
     McpGroupScope.create!(group: other_group, scope: "mcp:content:read")
   end
 
+  describe "registration management" do
+    let(:client_id) { "https://client.example.com/oauth/client.json" }
+    let!(:metadata_client) do
+      McpOauthClient.create!(
+        client_id: client_id,
+        name: "Original name",
+        registration_type: "cimd",
+        trust_state: "approved",
+        redirect_uris: ["https://client.example.com/manual"],
+      )
+    end
+    let(:published_uris) { ["https://client.example.com/published"] }
+
+    before do
+      SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
+      response = instance_double(Net::HTTPOK, code: "200")
+      allow(response).to receive(:[]).with("Content-Type").and_return("application/json")
+      destination = instance_double(FinalDestination)
+      allow(FinalDestination).to receive(:new).and_return(destination)
+      allow(destination).to receive(:get).and_yield(
+        response,
+        {
+          client_id: client_id,
+          client_name: "Published name",
+          redirect_uris: published_uris,
+        }.to_json,
+        URI(client_id),
+      )
+    end
+
+    it "keeps updating published registration details after an unchanged save" do
+      metadata_client.update_registration!(
+        name: metadata_client.name,
+        redirect_uris: metadata_client.redirect_uris,
+      )
+      described_class::ClientResolver.resolve!(client_id, force: true, user: user)
+      expect(metadata_client.reload).to have_attributes(
+        name: "Published name",
+        redirect_uris: published_uris,
+      )
+    end
+
+    it "preserves both registration details after an admin edits the name" do
+      metadata_client.update_registration!(name: "Admin chosen name")
+
+      described_class::ClientResolver.resolve!(client_id, force: true, user: user)
+
+      expect(metadata_client.reload).to have_attributes(
+        name: "Admin chosen name",
+        redirect_uris: ["https://client.example.com/manual"],
+      )
+    end
+
+    it "preserves both registration details after an admin edits the redirects" do
+      metadata_client.update_registration!(
+        name: metadata_client.name,
+        redirect_uris: ["https://client.example.com/admin"],
+      )
+
+      described_class::ClientResolver.resolve!(client_id, force: true, user: user)
+
+      expect(metadata_client.reload).to have_attributes(
+        name: "Original name",
+        redirect_uris: ["https://client.example.com/admin"],
+      )
+    end
+  end
+
   it "rejects an unapproved metadata domain before registering the client" do
     client_id = "https://unapproved.example.com/oauth/client.json"
     SiteSetting.mcp_oauth_client_id_metadata_policy = "approved_domains"

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
-  subject(:contract) { described_class.for(params, resource:, glossary:) }
+  subject(:contract) { described_class.for({ sort: {} }.merge(params), resource:, glossary:) }
 
   let(:params) { {} }
   let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:cursor) { JsonApiKit::Pagination::Cursor.new([resource.order.digest, 0, 12]).to_s }
+  let(:cursor) { JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0, 12]).to_s }
   let(:related) do
     Class.new(JsonApiKit::Resource) do
       model User
@@ -220,10 +220,10 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     let(:params) { { page: {} } }
     let(:cursor_not_matching_segment) do
-      JsonApiKit::Pagination::Cursor.new([resource.order.digest, 7, 12]).to_s
+      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 7, 12]).to_s
     end
     let(:cursor_not_matching_length) do
-      JsonApiKit::Pagination::Cursor.new([resource.order.digest, 0]).to_s
+      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0]).to_s
     end
 
     before { contract.valid? }

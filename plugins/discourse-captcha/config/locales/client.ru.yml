@@ -7,6 +7,8 @@
 ru:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Тест"
       missing_token: "Пожалуйста, пройдите проверку капчи."
       verification_failed: "Проверка капчи не удалась. Пожалуйста, попробуйте еще раз."
       placeholder: заполнитель

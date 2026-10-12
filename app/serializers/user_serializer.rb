@@ -7,6 +7,8 @@ class UserSerializer < UserCardSerializer
   attributes :bio_raw,
              :bio_cooked,
              :can_edit,
+             :can_edit_avatar,
+             :can_upload_avatar,
              :can_edit_username,
              :can_edit_email,
              :can_edit_name,
@@ -51,6 +53,8 @@ class UserSerializer < UserCardSerializer
                      :gravatar_avatar_template,
                      :custom_avatar_upload_id,
                      :custom_avatar_template,
+                     :associated_account_avatars,
+                     :selected_user_associated_account_id,
                      :has_title_badges,
                      :muted_usernames,
                      :can_mute_users,
@@ -213,6 +217,14 @@ class UserSerializer < UserCardSerializer
     scope.can_edit?(object)
   end
 
+  def can_edit_avatar
+    scope.can_edit_avatar?(object)
+  end
+
+  def can_upload_avatar
+    !scope.is_anonymous? && scope.can_pick_avatar_source?(object, "custom")
+  end
+
   def can_edit_username
     scope.can_edit_username?(object)
   end
@@ -301,7 +313,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def system_avatar_template
-    User.system_avatar_template(object.username)
+    User.default_template(object.username)
   end
 
   def include_gravatar_avatar_upload_id?
@@ -332,8 +344,23 @@ class UserSerializer < UserCardSerializer
     include_custom_avatar_upload_id?
   end
 
-  def custom_avatar_template
-    User.avatar_template(object.username, object.user_avatar.custom_upload_id)
+  def associated_account_avatars
+    object
+      .user_associated_accounts
+      .joins(:avatar_upload)
+      .where(provider_name: Discourse.enabled_authenticators.map(&:name))
+      .map do |account|
+        {
+          id: account.id,
+          name: account.provider_name,
+          upload_id: account.avatar_upload_id,
+          avatar_template: User.avatar_template(object.username, account.avatar_upload_id),
+        }
+      end
+  end
+
+  def selected_user_associated_account_id
+    object.user_avatar&.selected_user_associated_account_id
   end
 
   def has_title_badges

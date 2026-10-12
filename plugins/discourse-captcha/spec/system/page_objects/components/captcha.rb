@@ -25,6 +25,14 @@ module PageObjects
         page.has_no_css?("#g-recaptcha")
       end
 
+      def has_recaptcha_v3_container?
+        page.has_css?("#g-recaptcha-v3")
+      end
+
+      def has_no_recaptcha_v3_container?
+        page.has_no_css?("#g-recaptcha-v3")
+      end
+
       def has_captcha_error?
         page.has_css?(".captcha-container + .alert-error") ||
           page.has_css?(".captcha-service-tip .bad")

@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
 module JsonApiKitSpec
+  class ParametersAuthorResource < JsonApiKit::Resource
+    type :users
+  end
+
+  class ParametersPostResource < JsonApiKit::Resource
+    type :posts
+    has_one :last_poster, resource: ParametersAuthorResource
+  end
+
   class ParametersResource < JsonApiKit::Resource
     type :topics
+    has_many :ordered_posts, resource: ParametersPostResource
   end
 
   class ParametersChange < JsonApiKit::VersionChange
@@ -94,6 +104,39 @@ RSpec.describe JsonApiKit::Request::Parameters do
     it "converts every segment of the path" do
       expect(declared_parameters).to eq("include" => "ordered_posts.last_poster")
     end
+
+    context "when both relationships have historical names" do
+      let(:parameters) { { "include" => "olderPosts.author,olderPosts" } }
+      let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_relationship from: :older_posts, to: :ordered_posts
+            end
+            resource :posts do
+              renamed_relationship from: :author, to: :last_poster
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
+
+      it "translates every path against the resource declarations" do
+        expect(declared_parameters).to eq("include" => "ordered_posts.last_poster,ordered_posts")
+      end
+
+      context "when the paths are an array" do
+        let(:parameters) { { "include" => ["olderPosts.author"] } }
+
+        it "preserves the array while translating its paths" do
+          expect(declared_parameters).to eq("include" => ["ordered_posts.last_poster"])
+        end
+      end
+    end
   end
 
   context "when the parameters have a fieldset" do
@@ -164,12 +207,14 @@ RSpec.describe JsonApiKit::Request::Parameters do
   end
 
   context "with a version change" do
-    let(:glossary) { JsonApiKit::Glossary.resource(version) }
+    let(:glossary) { JsonApiKit::Edition.for(version).glossary }
     let(:version) { JsonApiKit::Timeline::FIRST_RELEASE }
-    let(:change) { JsonApiKitSpec::ParametersChange.new(__FILE__) }
+    let(:version_change) { JsonApiKitSpec::ParametersChange.new(__FILE__) }
 
     before do
-      allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return([change])
+      allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
+        [version_change],
+      )
     end
 
     context "when a fieldset has a renamed field" do
@@ -205,7 +250,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
 
     context "when the sort has two fields that merge into one" do
-      let(:change) { JsonApiKitSpec::ParametersMergeChange.new(__FILE__) }
+      let(:version_change) { JsonApiKitSpec::ParametersMergeChange.new(__FILE__) }
       let(:parameters) { { "sort" => "postedDate,postedTime" } }
 
       it "converts both to the one field" do
@@ -256,7 +301,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
 
     context "when the anchor has a reshaped field" do
-      let(:change) { JsonApiKitSpec::ParametersShapeChange.new(__FILE__) }
+      let(:version_change) { JsonApiKitSpec::ParametersShapeChange.new(__FILE__) }
       let(:parameters) { { "page" => { "anchor" => { "words" => %w[Anchors and pages] } } } }
 
       it "converts the field to its current name and shape" do
@@ -316,6 +361,87 @@ RSpec.describe JsonApiKit::Request::Parameters do
 
     it "converts the anchor name" do
       expect(declared_parameters).to eq("page" => { "anchor" => "without_replies" })
+    end
+  end
+
+  context "when a type changes after a field name" do
+    let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
+    let(:field_change) do
+      Class
+        .new(JsonApiKit::VersionChange) do
+          resource :discussion_threads do
+            renamed_attribute from: :heading, to: :title
+            renamed_filter from: :label, to: :title
+          end
+        end
+        .new(__FILE__)
+    end
+    let(:type_change) do
+      Class
+        .new(JsonApiKit::VersionChange) { renamed_type from: :discussion_threads, to: :topics }
+        .new(__FILE__)
+    end
+
+    before do
+      allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return(
+        [field_change, type_change],
+      )
+    end
+
+    context "when the request supplies a fieldset" do
+      let(:parameters) { { "fields" => { "discussionThreads" => "heading" } } }
+
+      it "translates the type and field together" do
+        expect(declared_parameters).to eq("fields" => { "topics" => ["title"] })
+      end
+    end
+
+    context "when the fieldset is empty" do
+      let(:parameters) { { "fields" => { "discussionThreads" => "" } } }
+
+      it "translates the type without a field name" do
+        expect(declared_parameters).to eq("fields" => { "topics" => [] })
+      end
+    end
+
+    context "when the fieldset value is invalid" do
+      let(:parameters) { { "fields" => { "discussionThreads" => 42 } } }
+
+      it "translates the type for the contract" do
+        expect(declared_parameters).to eq("fields" => { "topics" => 42 })
+      end
+    end
+
+    context "when the request supplies names without a type" do
+      let(:parameters) do
+        {
+          "sort" => "heading",
+          "filter" => {
+            "label" => "A",
+          },
+          "page" => {
+            "anchor" => {
+              "heading" => "A",
+            },
+          },
+        }
+      end
+
+      it "derives the historical type before translating names" do
+        expect(declared_parameters).to eq(
+          "sort" => {
+            "title" => :asc,
+          },
+          "filter" => {
+            "title" => "A",
+          },
+          "page" => {
+            "anchor" => {
+              "title" => "A",
+            },
+          },
+        )
+      end
     end
   end
 

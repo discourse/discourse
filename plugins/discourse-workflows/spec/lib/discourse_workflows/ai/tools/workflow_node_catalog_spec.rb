@@ -286,6 +286,19 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(result[:nodes].map { |node| node[:type] }).to include("trigger:tag_created")
   end
 
+  it "finds the chat action for DM queries but not for personal message ones",
+     :aggregate_failures do
+    skip "Chat plugin is not available" if !defined?(::Chat::Channel)
+    SiteSetting.chat_enabled = true
+
+    dm_types = invoke_tool(query: "dm")[:nodes].map { |node| node[:type] }
+    pm_types = invoke_tool(query: "personal pm")[:nodes].map { |node| node[:type] }
+
+    expect(dm_types).to include("action:send_personal_message", "action:send_chat_message")
+    expect(pm_types).to include("action:send_personal_message")
+    expect(pm_types).not_to include("action:send_chat_message")
+  end
+
   it "matches broad multi-term catalog queries", :aggregate_failures do
     result =
       described_class.new(

@@ -3,17 +3,23 @@
 class SchemaSettingsObjectValidator
   class << self
     def validate_objects(schema:, objects:)
-      error_messages = []
+      valid_ids_lookup = valid_ids_lookup_for(schema:, objects:)
 
-      objects.each_with_index do |object, index|
-        humanize_error_messages(
-          new(schema: schema, object: object).validate,
-          index:,
-          error_messages:,
-        )
+      objects.each_with_index.flat_map do |object, index|
+        new(schema:, object:, valid_ids_lookup:).validate.flat_map do |pointer, errors|
+          errors.humanize_messages("/#{index}#{pointer}")
+        end
       end
+    end
 
-      error_messages
+    def valid_ids_lookup_for(schema:, objects:)
+      Hash.new do |lookup, type|
+        column = TYPE_TO_MODEL_MAP[type][:column] || :id
+        values = property_values_of_type(schema:, objects:, type:)
+        values = values.grep(column == :name ? String : Integer)
+
+        lookup[type] = TYPE_TO_MODEL_MAP[type][:klass].where(column => values).pluck(column).to_set
+      end
     end
 
     def property_values_of_type(schema:, objects:, type:)
@@ -53,10 +59,7 @@ class SchemaSettingsObjectValidator
     def hydrate_uploads(schema:, objects:, cdn: false)
       return objects if objects.blank?
 
-      upload_ids =
-        property_values_of_type(schema: schema, objects: objects, type: "upload").select do |value|
-          value.is_a?(Integer)
-        end
+      upload_ids = property_values_of_type(schema:, objects:, type: "upload").grep(Integer)
       return objects if upload_ids.empty?
 
       uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
@@ -103,12 +106,6 @@ class SchemaSettingsObjectValidator
       symbol_key = property_name.to_sym
       symbol_key if object.key?(symbol_key)
     end
-
-    def humanize_error_messages(errors, index:, error_messages:)
-      errors.each do |property_json_pointer, error_details|
-        error_messages.push(*error_details.humanize_messages("/#{index}#{property_json_pointer}"))
-      end
-    end
   end
 
   class SchemaSettingsObjectErrors
@@ -147,13 +144,13 @@ class SchemaSettingsObjectValidator
     end
   end
 
-  def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: {})
+  def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: nil)
     @object = object.with_indifferent_access
-    @schema_name = schema[:name]
     @properties = schema[:properties]
     @errors = errors
     @json_pointer_prefix = json_pointer_prefix
-    @valid_ids_lookup = valid_ids_lookup
+    @valid_ids_lookup =
+      valid_ids_lookup || self.class.valid_ids_lookup_for(schema:, objects: [object])
   end
 
   def validate
@@ -187,7 +184,7 @@ class SchemaSettingsObjectValidator
         .new(
           schema:,
           object:,
-          valid_ids_lookup:,
+          valid_ids_lookup: @valid_ids_lookup,
           json_pointer_prefix: "#{@json_pointer_prefix}#{property_name}/#{index}/",
           errors: @errors,
         )
@@ -196,9 +193,18 @@ class SchemaSettingsObjectValidator
   end
 
   def validate_property(property_name, property_attributes)
-    return if property_attributes[:required] && !is_property_present?(property_name)
     return if !has_valid_property_value_type?(property_attributes, property_name)
-    !has_valid_property_value?(property_attributes, property_name)
+
+    if absent?(@object[property_name])
+      add_error(property_name, :required) if property_attributes[:required]
+      return
+    end
+
+    has_valid_property_value?(property_attributes, property_name)
+  end
+
+  def absent?(value)
+    value != false && value.blank?
   end
 
   def has_valid_property_value_type?(property_attributes, property_name)
@@ -218,7 +224,7 @@ class SchemaSettingsObjectValidator
           if upload = Upload.get_from_url(value)
             @object[property_name] = upload.id
             # upload already verified via get_from_url, so we can add it to valid ids
-            (@valid_ids_lookup["upload"] ||= Set.new) << upload.id
+            @valid_ids_lookup["upload"] << upload.id
             true
           else
             false
@@ -254,16 +260,14 @@ class SchemaSettingsObjectValidator
     type = property_attributes[:type]
     value = @object[property_name]
 
-    return true if value.nil?
-
     case type
     when "topic", "upload", "post"
-      if !valid_ids(type).include?(value)
+      if !@valid_ids_lookup[type].include?(value)
         add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
     when "tags", "categories", "groups"
-      if !Array(value).to_set.subset?(valid_ids(type))
+      if !value.to_set.subset?(@valid_ids_lookup[type])
         add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
@@ -278,17 +282,7 @@ class SchemaSettingsObjectValidator
         return false
       end
     when "datetime"
-      return true if value.blank?
-      begin
-        # DateTime.iso8601 checks the format but does not enforce timezone presence
-        # so we need to do an additional check for the presence of timezone info.
-        DateTime.iso8601(value)
-        if value.include?("T") && (value.end_with?("Z") || value.match?(/[+-]\d{2}:\d{2}$/))
-          return true
-        end
-        add_error(property_name, :not_valid_datetime_value)
-        return false
-      rescue ArgumentError, TypeError
+      if !DatetimeSettingValidator.new.valid_value?(value)
         add_error(property_name, :not_valid_datetime_value)
         return false
       end
@@ -322,15 +316,6 @@ class SchemaSettingsObjectValidator
     true
   end
 
-  def is_property_present?(property_name)
-    if @object[property_name].blank?
-      add_error(property_name, :required)
-      false
-    else
-      true
-    end
-  end
-
   def add_error(property_name, key, i18n_opts = {})
     pointer = json_pointer(property_name)
     @errors[pointer] ||= SchemaSettingsObjectErrors.new
@@ -339,10 +324,6 @@ class SchemaSettingsObjectValidator
 
   def json_pointer(property_name)
     "/#{@json_pointer_prefix}#{property_name}"
-  end
-
-  def valid_ids_lookup
-    @valid_ids_lookup ||= {}
   end
 
   TYPE_TO_MODEL_MAP = {
@@ -367,18 +348,6 @@ class SchemaSettingsObjectValidator
     },
   }
   private_constant :TYPE_TO_MODEL_MAP
-
-  def valid_ids(type)
-    valid_ids_lookup[type] ||= begin
-      column = TYPE_TO_MODEL_MAP[type][:column] || :id
-
-      Set.new(
-        TYPE_TO_MODEL_MAP[type][:klass].where(
-          column => fetch_property_values_of_type(@properties, @object, type),
-        ).pluck(column),
-      )
-    end
-  end
 
   def fetch_property_values_of_type(properties, object, type)
     values = Set.new

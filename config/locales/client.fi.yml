@@ -5317,7 +5317,6 @@ fi:
             status: "Tila"
             actions: "Toiminnot"
           activity:
-            rate_limits: "Rajat"
             outcome: "Tulos"
             time: "Aika"
             user: "Käyttäjä"
@@ -7809,13 +7808,14 @@ fi:
           multiselect: "Monivalinta"
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
-        search: "Hae tekstiä, jota haluaisit muokata"
+        search_label: "Haku"
+        theme_disabled: "Pois käytöstä"
+        filters: "Suodattimet"
+        status:
+          invalid: "Virheellinen"
         title: "Sivuston tekstit"
         edit: "Muokkaa"
-        revert: "Palauta muutokset"
         revert_confirm: "Haluatko varmasti palauttaa muutokset?"
-        go_back: "Takaisin hakuun"
-        recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: "Näytä vain korvatut"
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         show_untranslated: "Näytä vain kääntämättömät"

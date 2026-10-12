@@ -48,6 +48,53 @@ describe DiscourseAi::TopicSummarization do
         I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
       expect(original_service.cached_summary).to eq(english_summary)
     end
+
+    it "reads a cached summary without building the summarization bot" do
+      cached_summary = create_cached_summary(topic)
+      allow(DiscourseAi::Summarization).to receive(:build_bot).and_call_original
+
+      expect(described_class.for(topic, nil).cached_summary).to eq(cached_summary)
+      expect(DiscourseAi::Summarization).not_to have_received(:build_bot)
+    end
+
+    it "reads a cached summary without querying LLM models" do
+      cached_summary = create_cached_summary(topic)
+      result = nil
+
+      queries = track_sql_queries { result = described_class.for(topic, nil).cached_summary }
+
+      expect(result).to eq(cached_summary)
+      expect(queries.grep(/FROM "llm_models"/)).to be_empty
+    end
+
+    it "can read a stored summary when generation is unavailable" do
+      cached_summary = create_cached_summary(topic)
+      SiteSetting.ai_summarization_agent = ""
+      service = described_class.for(topic, user)
+
+      expect(service.cached_summary).to eq(cached_summary)
+      expect(service).not_to be_available
+      expect(service.summarize(force_regenerate: true)).to be_nil
+    end
+
+    it "does not read or generate summaries when summarization is disabled" do
+      create_cached_summary(topic)
+      SiteSetting.ai_summarization_enabled = false
+      service = described_class.for(topic, user)
+
+      expect(service.cached_summary).to be_nil
+      expect(service).not_to be_available
+      expect(service.summarize).to be_nil
+    end
+
+    it "generates a summary through the shared topic API" do
+      DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+        service = described_class.for(topic, user)
+
+        expect(service).to be_available
+        expect(service.summarize.summarized_text).to eq(summary)
+      end
+    end
   end
 
   describe "#summarize" do
