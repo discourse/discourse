@@ -83,7 +83,6 @@ export function buildWorkflowExportPayload(
   const allNodes = [...exportedNodes, ...exportedStickyNotes];
 
   return {
-    id: workflowMetadata.id?.toString() || null,
     name: workflowMetadata.name || null,
     nodes: allNodes,
     connections: serializeConnections(connections || [], [
@@ -92,10 +91,6 @@ export function buildWorkflowExportPayload(
     ]),
     settings: cloneObject(workflowMetadata.settings),
     staticData: cloneObject(workflowMetadata.staticData),
-    pinData: cloneObject(workflowMetadata.pinData),
-    versionId: workflowMetadata.versionId || null,
-    activeVersionId: workflowMetadata.activeVersionId || null,
-    versionCounter: workflowMetadata.versionCounter || null,
   };
 }
 

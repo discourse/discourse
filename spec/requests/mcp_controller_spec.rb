@@ -78,6 +78,88 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
+  it "returns a structured internal error when a tool unexpectedly fails" do
+    failure_message = "private implementation failure"
+    primitive = DiscourseMcp.registry.find(:tool, "discourse_current_user_get")
+    primitive.implementation.stubs(:call).raises(StandardError, failure_message)
+
+    post "/mcp", params: payload.to_json, headers: headers
+
+    expect(response.status).to eq(500)
+    expect(response.parsed_body).to eq(
+      "jsonrpc" => "2.0",
+      "id" => payload[:id],
+      "error" => {
+        "code" => -32_603,
+        "message" => "Internal error",
+      },
+    )
+    expect(response.body).not_to include(failure_message)
+  end
+
+  context "when login is required" do
+    before { SiteSetting.login_required = true }
+
+    it "lists tools using a bearer token without a browser session" do
+      list_payload = payload.merge(method: "tools/list", params: payload[:params].slice(:_meta))
+      list_headers = headers.except("HTTP_MCP_NAME").merge("HTTP_MCP_METHOD" => "tools/list")
+
+      post "/mcp", params: list_payload.to_json, headers: list_headers
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "tools").pluck("name")).to contain_exactly(
+        "discourse_current_user_get",
+      )
+    end
+
+    it "calls tools using a bearer token without a browser session" do
+      post "/mcp", params: payload.to_json, headers: headers
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "structuredContent", "username")).to eq(
+        admin.username,
+      )
+    end
+
+    it "challenges requests without a bearer token even with a browser session" do
+      sign_in(admin)
+
+      post "/mcp", params: payload.to_json, headers: headers.except("HTTP_AUTHORIZATION")
+
+      expect(response.status).to eq(401)
+      expect(response.headers["WWW-Authenticate"]).to eq(
+        %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}"),
+      )
+    end
+
+    it "challenges anonymous requests without a bearer token" do
+      post "/mcp", params: payload.to_json, headers: headers.except("HTTP_AUTHORIZATION")
+
+      expect(response.status).to eq(401)
+      expect(response.headers["WWW-Authenticate"]).to eq(
+        %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}"),
+      )
+    end
+
+    it "rejects invalid bearer tokens" do
+      post "/mcp",
+           params: payload.to_json,
+           headers: headers.merge("HTTP_AUTHORIZATION" => "Bearer invalid")
+
+      expect(response.status).to eq(401)
+      expect(response.headers["WWW-Authenticate"]).to include('error="invalid_token"')
+    end
+
+    it "returns not found when MCP is disabled" do
+      access_token
+      SiteSetting.mcp_server_enabled = false
+
+      post "/mcp", params: payload.to_json, headers: headers
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   it "directs unauthenticated clients to resource metadata for scope selection" do
     post "/mcp", params: payload.to_json, headers: headers.except("HTTP_AUTHORIZATION")
 
@@ -98,6 +180,7 @@ describe "MCP transport" do
   end
 
   it "returns an OAuth insufficient-scope challenge for an exposed tool" do
+    SiteSetting.login_required = true
     McpPrimitive.create!(kind: "tool", identifier: "discourse_read_post", enabled: true)
     scoped_payload =
       payload.deep_merge(
@@ -151,6 +234,43 @@ describe "MCP transport" do
       'scope="mcp:profile:write"',
     )
     expect(admin.user_profile.reload.bio_raw).not_to eq("Changed without profile access")
+  end
+
+  it "omits submitted values from prompt validation errors" do
+    McpPrimitive.create!(kind: "prompt", identifier: "discourse.draft_reply", enabled: true)
+    prompt_headers = classic_headers
+    prompt_authorization =
+      DiscourseMcp::OAuth::AuthorizationGrant.create!(
+        user: admin,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: [DiscourseMcp::INITIAL_SCOPE, DiscourseMcp::Scopes::CONTENT_READ],
+      )
+    prompt_token = McpOauthAccessToken.issue!(authorization: prompt_authorization)
+    instructions = "Confidential draft instructions"
+
+    post "/mcp",
+         params: {
+           jsonrpc: "2.0",
+           id: 1,
+           method: "prompts/get",
+           params: {
+             name: "discourse.draft_reply",
+             arguments: {
+               instructions:,
+             },
+           },
+         }.to_json,
+         headers: prompt_headers.merge("HTTP_AUTHORIZATION" => "Bearer #{prompt_token}")
+
+    expect(response.status).to eq(400)
+    expect(response.parsed_body.dig("error", "code")).to eq(-32_602)
+    expect(response.parsed_body.dig("error", "data", "errors")).to contain_exactly(
+      "type" => "required",
+      "data_pointer" => "",
+      "schema_pointer" => "",
+    )
+    expect(response.body).not_to include(instructions)
   end
 
   it "negotiates a compatible protocol through the standard initialize request" do

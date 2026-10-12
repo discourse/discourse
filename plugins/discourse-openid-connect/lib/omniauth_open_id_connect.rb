@@ -25,6 +25,7 @@ module OmniAuth
       option :passthrough_authorize_options, [:p]
       option :passthrough_token_options, [:p]
       option :claims, nil
+      option :email_claim, "email"
 
       option :client_options,
              site: nil,
@@ -207,9 +208,10 @@ module OmniAuth
 
       info do
         data_source = options.use_userinfo ? userinfo_response : id_token_info
+        email = data_source[options.email_claim]
         prune!(
           name: data_source["name"],
-          email: data_source["email"],
+          email: email.is_a?(String) ? email : nil,
           first_name: data_source["given_name"],
           last_name: data_source["family_name"],
           nickname: data_source["preferred_username"],

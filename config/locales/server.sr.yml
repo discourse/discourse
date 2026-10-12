@@ -13,6 +13,8 @@ sr:
     next_page: "Sledeća strana"
     replies: "Odgovori"
     last_updated: "Posljednje ažuriranje"
+    event:
+      location: "Lokacija"
   mcp:
     errors:
       topic_not_found: "Tema nije pronađena"

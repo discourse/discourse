@@ -23,6 +23,10 @@ hy:
                 lt_1h: "< 1 ժամով"
                 gt_24h: "> Վերջին 24 ժամվա"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Հեռացվել է"
+        tag_names: "Պիտակներ"
     notifications:
       alt:
         solved:

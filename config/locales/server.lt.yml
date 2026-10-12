@@ -13,6 +13,10 @@ lt:
     next_page: "Kitas puslapis"
     replies: "Atsakymai"
     last_updated: "Paskutinį kartą atnaujinta"
+    event:
+      name: "Įvykis"
+      location: "Vieta"
+      link: "nuoroda"
   mcp:
     errors:
       topic_not_found: "Tema nerasta"

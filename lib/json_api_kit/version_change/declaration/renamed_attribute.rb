@@ -3,21 +3,15 @@
 module JsonApiKit
   class VersionChange
     class Declaration
-      class RenamedAttribute < Declaration
-        NO_CONVERSION = ->(value) { value }
-
+      class RenamedAttribute < RenamedName
         def initialize(type, from:, to:, up: NO_CONVERSION, down: NO_CONVERSION)
-          super
+          super(type, DERIVED_FROM_AN_ATTRIBUTE, from:, to:, up:, down:)
         end
 
         private
 
         def verify!
           raise fault("Declare both up: and down:") if [up, down].count(NO_CONVERSION) == 1
-        end
-
-        def transformation(kind)
-          Rename.new(from: name(kind, from), to: name(kind, to), **converters)
         end
       end
     end

@@ -76,6 +76,10 @@ module DiscourseWorkflows
       @js_evaluator&.expression_errors || []
     end
 
+    def discard_expression_errors(from:)
+      @js_evaluator&.expression_errors&.slice!(from..) || []
+    end
+
     def evaluate_expression(expression)
       result = js_evaluator.evaluate(expression)
       last_error = js_evaluator.expression_errors.last
