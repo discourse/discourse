@@ -9,7 +9,7 @@ RSpec.describe Post::Revise do
     it do
       is_expected.not_to allow_values(
         { tags: [{ id: "1.5" }] },
-        { original_tags: [{ id: false }] },
+        { original_tags: [{ id: false, name: "new-tag" }] },
         { tags: ["existing-tag", { id: 1 }] },
       ).for(:changes)
     end

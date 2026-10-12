@@ -42,9 +42,11 @@ class Post::Revise
     def valid_tag?(tag)
       return false unless tag.is_a?(Hash)
       return false unless tag[:name].nil? || tag[:name].is_a?(String)
-      return tag[:name].present? if tag[:id].blank?
 
-      tag[:id].to_s.match?(/\A[1-9]\d*\z/)
+      id = tag[:id]
+      return tag[:name].present? if id.nil? || (id.is_a?(String) && id.blank?)
+
+      id.to_s.match?(/\A[1-9]\d*\z/)
     end
   end
 

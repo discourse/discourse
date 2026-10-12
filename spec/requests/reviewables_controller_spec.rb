@@ -1116,18 +1116,23 @@ RSpec.describe ReviewablesController do
         expect(flagged.target.reload.raw).to eq(original_raw)
       end
 
-      it "returns the edited post with the completed review action" do
+      it "returns the edited post in the response without broadcasting it" do
         flagged = Fabricate(:reviewable_flagged_post)
         raw = "The moderator removed the abusive passage."
 
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              edit: {
-                raw:,
-              },
-            }
+        messages =
+          MessageBus.track_publish("/reviewable_action") do
+            put "/review/#{flagged.id}/perform/agree_and_edit.json",
+                params: {
+                  version: flagged.version,
+                  edit: {
+                    raw:,
+                  },
+                }
+          end
 
+        expect(messages.size).to eq(1)
+        expect(messages.first.data).not_to have_key(:post)
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.dig("reviewable_perform_result", "post", "raw")).to eq(raw)
         expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)

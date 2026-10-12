@@ -288,7 +288,12 @@ class ReviewablesController < ApplicationController
     end
 
     if result.success?
-      render_serialized(result, ReviewablePerformResultSerializer, user: current_user)
+      render_serialized(
+        result,
+        ReviewablePerformResultSerializer,
+        user: current_user,
+        include_payload: true,
+      )
     else
       render_json_error(result)
     end

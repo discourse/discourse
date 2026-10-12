@@ -25,7 +25,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
   end
 
   def include_post?
-    object.updated_post.present?
+    @options[:include_payload] && object.updated_post.present?
   end
 
   def success
