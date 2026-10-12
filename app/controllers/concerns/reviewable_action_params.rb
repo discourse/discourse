@@ -13,7 +13,7 @@ module ReviewableActionParams
       args.merge!(reviewable.type_class.additional_args(params) || {})
     end
 
-    if args.key?(:edit)
+    if reviewable.is_a?(ReviewableFlaggedPost) && args.key?(:edit)
       edit = args[:edit]
       args[:edit] = permitted_post_revision_attributes(edit)
       reject_too_many_tags!(:tags, :original_tags, parameters: edit)

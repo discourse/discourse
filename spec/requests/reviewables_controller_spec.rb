@@ -1522,7 +1522,11 @@ RSpec.describe ReviewablesController do
       class ::ReviewablePhony < Reviewable
         class << self
           def additional_args(params)
-            { legacy_id: params[:legacy_id] } if params.key?(:legacy_id)
+            args = {}
+            args[:legacy_id] = params[:legacy_id] if params.key?(:legacy_id)
+            args[:edit] = params[:edit] if params.key?(:edit)
+
+            args
           end
         end
 
@@ -1564,19 +1568,22 @@ RSpec.describe ReviewablesController do
         )
       end
 
-      it "ignores core action parameters not returned by a custom reviewable" do
+      it "preserves a custom reviewable's edit argument" do
         messages =
           MessageBus.track_publish("/phony-reviewable-test") do
             put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
                 params: {
                   version: reviewable_phony.version,
-                  edit: "invalid",
+                  edit: "plugin edit",
                   send_email: false,
                 }
           end
 
         expect(response.status).to eq(200)
-        expect(messages.first.data[:args]).to eq(version: reviewable_phony.version)
+        expect(messages.first.data[:args]).to eq(
+          version: reviewable_phony.version,
+          edit: "plugin edit",
+        )
       end
 
       it "preserves parameters returned by the custom reviewable's additional_args hook" do
