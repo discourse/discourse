@@ -117,7 +117,13 @@ module DiscourseWorkflows
         end
       end
 
-      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx, :workflow_call_stack
+      attr_reader :user,
+                  :vars,
+                  :execution_id,
+                  :node_id,
+                  :webhook_ctx,
+                  :workflow_call_stack,
+                  :deadline
 
       def initialize(
         input_items:,
@@ -147,7 +153,8 @@ module DiscourseWorkflows
         webhook_context: nil,
         workflow_call_stack: [],
         runtime_state: RuntimeState.new,
-        static_data_state: nil
+        static_data_state: nil,
+        deadline: nil
       )
         @input_groups = normalize_input_groups(input_groups, input_items)
         @input_items = @input_groups[0] || []
@@ -183,6 +190,7 @@ module DiscourseWorkflows
         @webhook_ctx = webhook_context
         @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
+        @deadline = deadline
       end
 
       # Static data access.
