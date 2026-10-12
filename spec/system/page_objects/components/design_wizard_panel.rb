@@ -84,11 +84,11 @@ module PageObjects
       end
 
       def has_palette_preview?
-        has_css?("link[data-scheme-id]", visible: :all)
+        has_css?("link[data-scheme-preview]", visible: :all)
       end
 
       def has_no_palette_preview?
-        has_no_css?("link[data-scheme-id]", visible: :all)
+        has_no_css?("link[data-scheme-preview]", visible: :all)
       end
 
       def layout_dimensions

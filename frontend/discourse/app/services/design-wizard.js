@@ -685,7 +685,7 @@ export default class DesignWizardService extends Service {
       try {
         await applyColorScheme(
           { id: paletteId },
-          { replace: true, themeId: this.themeId, mode }
+          { replace: true, themeId: this.themeId, mode, preview: true }
         );
       } catch {
         // the manager already reports failures; a failed preview should not
