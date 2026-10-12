@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def resume_draft
+        page.find(".resume-draft").click
+        self
+      end
+
       def has_drafts?(count: 1)
         page.has_css?(".post-list-item", count: count)
       end

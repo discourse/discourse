@@ -538,6 +538,58 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_agree_and_edit" do
+    fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
+
+    it "saves the post and topic edits and approves the spam flag" do
+      SiteSetting.tagging_enabled = true
+      category = Fabricate(:category)
+      tag = Fabricate(:tag)
+      raw = "The moderator removed the abusive passage."
+      title = "A revised title for the reviewed topic"
+
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_edit,
+          edit: {
+            raw:,
+            title:,
+            category_id: category.id,
+            tags: [{ id: tag.id }],
+          },
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_approved
+      expect(post.reload.raw).to eq(raw)
+      expect(post.topic.reload.title).to eq(title)
+      expect(post.topic.category).to eq(category)
+      expect(post.topic.tags).to contain_exactly(tag)
+    end
+
+    it "preserves the post and topic and keeps the spam flag pending when the edit is invalid" do
+      original_raw = post.raw
+      original_title = post.topic.title
+
+      expect do
+        reviewable.perform(
+          moderator,
+          :agree_and_edit,
+          edit: {
+            raw: "",
+            title: "This title must not be saved",
+          },
+        )
+      end.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(reviewable.reload).to be_pending
+      expect(post.reload.raw).to eq(original_raw)
+      expect(post.topic.reload.title).to eq(original_title)
+      expect(post.revisions).to be_empty
+    end
+  end
+
   describe "#perform_delete_and_agree" do
     it "notifies the user about the flagged post deletion" do
       reviewable = Fabricate(:reviewable_flagged_post)

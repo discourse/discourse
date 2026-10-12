@@ -1435,7 +1435,7 @@ export default class ComposerService extends Service {
           });
         }
 
-        onSaved?.();
+        onSaved?.(result);
       })
       .catch((error) => {
         composer.set("disableDrafts", false);
@@ -1806,6 +1806,13 @@ export default class ComposerService extends Service {
     this.skipAutoSave = false;
 
     return true;
+  }
+
+  clearReviewableAction() {
+    if (this.model?.reviewableAction) {
+      this.model.set("reviewableAction", null);
+      this.#onSaved = null;
+    }
   }
 
   unshrink() {
