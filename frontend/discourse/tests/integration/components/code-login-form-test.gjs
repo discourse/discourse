@@ -1140,6 +1140,35 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__continue-to-site").isDisabled();
   });
 
+  test("keeps the avatar read-only when it can't be edited", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({
+        username_required: true,
+        username: "jane",
+        avatar_template: "/letter/j.png",
+        can_upload_avatar: true,
+        can_edit_avatar: false,
+      })
+    );
+    pretender.get("/u/check_username", () =>
+      response({ available: true, avatar_template: "/letter/j.png" })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(".code-login-form__avatar")
+      .isDisabled("prevents opening the picker");
+    assert
+      .dom(".code-login-form__avatar-edit")
+      .doesNotExist("hides the edit icon");
+    assert
+      .dom(".code-login-form__avatar img")
+      .exists("keeps the picture visible");
+  });
+
   test("keeps a local avatar preview without uploading before account creation", async function (assert) {
     stubCodeRequest();
     this.siteSettings.selectable_avatars_mode = "tl2";

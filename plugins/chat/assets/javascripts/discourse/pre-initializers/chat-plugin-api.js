@@ -16,9 +16,9 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * Callback used to decorate a chat message
  *
  * @callback PluginApi~decorateChatMessageCallback
- * @param {ChatMessage} chatMessage - model
  * @param {HTMLElement} messageContainer - DOM node
- * @param {ChatChannel} chatChannel - model
+ * @param {Object} helper - decorated HTML helper
+ * @param {ChatMessage} chatMessage - model
  */
 
 /**
@@ -39,7 +39,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {PluginApi~decorateChatMessageCallback} decorator
  * @example
  *
- * api.decorateChatMessage((chatMessage, messageContainer) => {
+ * api.decorateChatMessage((messageContainer, _helper, chatMessage) => {
  *   messageContainer.dataset.foo = chatMessage.id;
  * });
  */

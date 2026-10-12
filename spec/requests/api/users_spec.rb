@@ -180,11 +180,15 @@ RSpec.describe "users" do
 
         before do
           enable_auth_provider(:google_oauth2)
-          UserAssociatedAccount.create!(
-            user: user,
-            provider_uid: "myuid",
-            provider_name: "google_oauth2",
-          )
+          account =
+            UserAssociatedAccount.create!(
+              user: user,
+              provider_uid: "myuid",
+              provider_name: "google_oauth2",
+              avatar_upload: Fabricate(:upload, user: user),
+            )
+
+          user.user_avatar.update!(selected_user_associated_account_id: account.id)
         end
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -219,6 +223,25 @@ RSpec.describe "users" do
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
+        end
+
+        context "with an associated account avatar" do
+          let(:account) do
+            Fabricate(
+              :user_associated_account,
+              user: user,
+              provider_name: "google_oauth2",
+              avatar_upload: upload,
+            )
+          end
+          let(:params) { { "associated_account_id" => account.id, "type" => "associated_account" } }
+
+          before { enable_auth_provider(:google_oauth2) }
+
+          it_behaves_like "a JSON endpoint", Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok] do
+            let(:expected_response_schema) { expected_response_schema }
+            let(:expected_request_schema) { expected_request_schema }
+          end
         end
       end
     end
@@ -494,6 +517,43 @@ RSpec.describe "users" do
 
         expected_response_schema = load_spec_schema("user_anonymize_response")
         schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path "/admin/users/{id}/merge.json" do
+    post "Merge a user" do
+      tags "Users", "Admin"
+      operationId "mergeUser"
+      description "Merge a user into another user. Requires admin permissions. The source user cannot be a staff member. The merge runs in the background and deletes the source user when complete."
+      consumes "application/json"
+      parameter name: "Api-Key", in: :header, type: :string, required: true
+      parameter name: "Api-Username", in: :header, type: :string, required: true
+      parameter name: :id,
+                in: :path,
+                type: :integer,
+                required: true,
+                description: "ID of the user to merge"
+      expected_request_schema = load_spec_schema("user_merge_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces "application/json"
+      response "200", "response" do
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema expected_response_schema
+
+        fab!(:source_user, :user)
+        fab!(:target_user, :user)
+        let(:id) { source_user.id }
+        let(:params) { { "target_username" => target_user.username } }
+        let(:"Api-Username") { admin.username }
+
+        before { sign_out }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

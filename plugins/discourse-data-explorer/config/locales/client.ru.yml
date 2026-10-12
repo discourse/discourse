@@ -25,7 +25,6 @@ ru:
       admin_dashboard_card:
         no_results: "Нет результатов"
     explorer:
-      default_query: "По умолчанию"
       default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
       view_query: "Вид"
       queries: "Запросы"
@@ -102,6 +101,7 @@ ru:
         other: "Показаны %{count} лучшего результата."
       query_name: "Запрос"
       query_groups: "Группы"
+      query_tags: "Теги"
       link: "Ссылка для"
       report_name: "Отчёт"
       query_description: "Описание"

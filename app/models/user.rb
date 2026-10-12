@@ -1309,13 +1309,20 @@ class User < ActiveRecord::Base
     end
   end
 
-  def remove_avatar!(actor)
-    return if uploaded_avatar_id.blank?
+  def custom_avatar_template
+    user_avatar&.custom_avatar_template
+  end
 
-    self.class.transaction do
-      update!(uploaded_avatar_id: nil)
-      user_avatar&.update!(custom_upload_id: nil, gravatar_upload_id: nil)
-    end
+  def find_avatar_upload(upload_id)
+    UserAvatar.find_upload_for_user(self, upload_id)
+  end
+
+  def pick_avatar!(upload_id, type: :current)
+    UserAvatar.pick_for_user!(self, upload_id, type: type)
+  end
+
+  def remove_avatar!(actor)
+    return unless UserAvatar.remove_for_user!(self)
 
     StaffActionLogger.new(actor).log_removed_avatar(self)
   end
@@ -1656,17 +1663,7 @@ class User < ActiveRecord::Base
   def refresh_avatar
     return if @import_mode
 
-    avatar = user_avatar || create_user_avatar
-
-    if primary_email.present? && SiteSetting.automatically_download_gravatars? &&
-         !avatar.last_gravatar_download_attempt
-      Jobs.cancel_scheduled_job(:update_gravatar, user_id: id, avatar_id: avatar.id)
-      Jobs.enqueue_in(1.second, :update_gravatar, user_id: id, avatar_id: avatar.id)
-    end
-
-    # mark all the user's quoted posts as "needing a rebake"
-    # use background job to avoid blocking on large datasets
-    Jobs.enqueue(:rebake_quoted_posts_for_user, user_id: id) if saved_change_to_uploaded_avatar_id?
+    UserAvatar.refresh_for_user(self)
   end
 
   def first_post_created_at
@@ -1781,13 +1778,7 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_random_on_signup &&
-         SiteSetting.selectable_avatars_mode != "disabled"
-      if upload = SiteSetting.selectable_avatars.sample
-        update_column(:uploaded_avatar_id, upload.id)
-        UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
-      end
-    end
+    UserAvatar.assign_random_to_user(self)
   end
 
   def anonymous?

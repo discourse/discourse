@@ -316,21 +316,6 @@ export default class UppyUpload {
       }
     );
 
-    this.uppyWrapper.uppyInstance.on("file-removed", (file, reason) => {
-      run(() => {
-        // we handle the cancel-all event specifically, so no need
-        // to do anything here. this event is also fired when some files
-        // are handled by an upload handler
-        if (reason === "cancel-all") {
-          return;
-        }
-        this.appEvents.trigger(
-          `upload-mixin:${this.config.id}:upload-cancelled`,
-          file.id
-        );
-      });
-    });
-
     if (this.siteSettings.enable_upload_debug_mode) {
       this.uppyWrapper.debug.instrumentUploadTimings(
         this.uppyWrapper.uppyInstance
@@ -366,10 +351,6 @@ export default class UppyUpload {
     }
 
     this.uppyWrapper.uppyInstance.on("cancel-all", () => {
-      this.appEvents.trigger(
-        `upload-mixin:${this.config.id}:uploads-cancelled`
-      );
-
       if (this.inProgressUploads.length) {
         this.inProgressUploads.length = 0; // Clear array in-place
         this.#triggerInProgressUploadsEvent();
@@ -416,14 +397,25 @@ export default class UppyUpload {
 
   @bind
   cancelSingleUpload(data) {
-    this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+    if (this.uppyWrapper.uppyInstance.getFile(data.fileId)) {
+      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+      this.appEvents.trigger(
+        `upload-mixin:${this.config.id}:upload-cancelled`,
+        data.fileId
+      );
+    }
     this.#removeInProgressUpload(data.fileId);
     this.#finishBatch();
   }
 
   @bind
   cancelAllUploads() {
-    this.uppyWrapper.uppyInstance?.cancelAll();
+    if (this.uppyWrapper.uppyInstance) {
+      this.uppyWrapper.uppyInstance.cancelAll();
+      this.appEvents.trigger(
+        `upload-mixin:${this.config.id}:uploads-cancelled`
+      );
+    }
     this.inProgressUploads.length = 0;
     this.#triggerInProgressUploadsEvent();
     this.#finishBatch();

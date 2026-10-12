@@ -12,6 +12,8 @@ et:
     previous_page: "Eelmine leht"
     next_page: "Järgmine leht"
     replies: "Vastused"
+    event:
+      location: "Asukoht"
   mcp:
     errors:
       draft_too_long: "Mustand on liiga pikk"

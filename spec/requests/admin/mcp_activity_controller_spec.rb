@@ -6,7 +6,7 @@ describe Admin::McpActivityController do
   describe "#index" do
     before { sign_in(admin) }
 
-    it "returns activity and calculates the 24-hour metrics in one query" do
+    it "returns activity and calculates the default seven-day metrics in one query" do
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
         method: "tools/call",
@@ -30,22 +30,86 @@ describe Admin::McpActivityController do
         occurrences: 4,
         duration_ms: 200,
       )
+      McpAuditLog.create!(
+        occurred_at: 8.days.ago,
+        method: "tools/call",
+        tool: "discourse_old_search",
+        outcome: "success",
+        occurrences: 10,
+        duration_ms: 500,
+      )
 
       queries = track_sql_queries { get "/admin/mcp/activity.json" }
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["metrics"]).to eq(
-        "tool_calls" => 9,
-        "errors" => 7,
+        "tool_calls" => 5,
+        "failed_tool_calls" => 3,
         "rate_limits" => 4,
-        "p95_latency_ms" => 200,
+        "p95_latency_ms" => 100,
       )
-      expect(response.parsed_body.dig("activity", 2, "tool")).to eq("discourse_search")
+      expect(response.parsed_body["activity"].map { |entry| entry["tool"] }).to contain_exactly(
+        "discourse_search",
+        "discourse_create_topic",
+        nil,
+      )
       metric_queries =
         queries.select do |sql|
-          sql.include?('FROM "mcp_audit_logs"') && sql.match?(/occurred_at.*>/)
+          sql.include?('FROM "mcp_audit_logs"') && sql.include?("PERCENTILE_DISC")
         end
       expect(metric_queries.length).to eq(1)
+    end
+
+    it "applies the selected date range to activity and metrics" do
+      recent_log =
+        McpAuditLog.create!(
+          occurred_at: 6.days.ago,
+          method: "tools/call",
+          tool: "discourse_recent",
+          outcome: "success",
+          occurrences: 2,
+        )
+      older_log =
+        McpAuditLog.create!(
+          occurred_at: 8.days.ago,
+          method: "tools/call",
+          tool: "discourse_older",
+          outcome: "success",
+          occurrences: 3,
+        )
+
+      get "/admin/mcp/activity.json",
+          params: {
+            start_date: 7.days.ago.to_date.iso8601,
+            end_date: Time.zone.today.iso8601,
+          }
+
+      expect(response.parsed_body["activity"].map { |entry| entry["id"] }).to eq([recent_log.id])
+      expect(response.parsed_body.dig("metrics", "tool_calls")).to eq(2)
+
+      get "/admin/mcp/activity.json",
+          params: {
+            start_date: 9.days.ago.to_date.iso8601,
+            end_date: Time.zone.today.iso8601,
+          }
+
+      expect(response.parsed_body["activity"].map { |entry| entry["id"] }).to eq(
+        [older_log.id, recent_log.id].sort.reverse,
+      )
+      expect(response.parsed_body.dig("metrics", "tool_calls")).to eq(5)
+    end
+
+    it "returns no latency value when no executed tool call has a duration" do
+      McpAuditLog.create!(
+        occurred_at: Time.zone.now,
+        outcome: "rate_limited",
+        occurrences: 1,
+        duration_ms: 200,
+      )
+
+      get "/admin/mcp/activity.json"
+
+      expect(response.parsed_body.dig("metrics", "p95_latency_ms")).to be_nil
     end
 
     it "filters users, clients, tools, outcomes, and exact request IDs on the server" do
@@ -86,6 +150,10 @@ describe Admin::McpActivityController do
 
       get "/admin/mcp/activity.json", params: { outcome: "error" }
       expect(response.parsed_body["activity"].map { |entry| entry["id"] }).to eq([matching_log.id])
+      expect(response.parsed_body["metrics"]).to include(
+        "tool_calls" => 1,
+        "failed_tool_calls" => 1,
+      )
 
       get "/admin/mcp/activity.json", params: { filter: matching_log.request_id }
       expect(response.parsed_body["activity"].map { |entry| entry["id"] }).to eq([matching_log.id])
@@ -129,7 +197,7 @@ describe Admin::McpActivityController do
       expect(response.parsed_body).not_to have_key("metrics")
     end
 
-    it "rejects invalid filter values" do
+    it "rejects invalid filter and date values" do
       get "/admin/mcp/activity.json", params: { outcome: "unknown" }
       expect(response.status).to eq(400)
 
@@ -137,6 +205,19 @@ describe Admin::McpActivityController do
       expect(response.status).to eq(400)
 
       get "/admin/mcp/activity.json", params: { filter: "a" * 201 }
+      expect(response.status).to eq(400)
+
+      get "/admin/mcp/activity.json", params: { start_date: "not-a-date" }
+      expect(response.status).to eq(400)
+
+      get "/admin/mcp/activity.json", params: { end_date: "not-a-date" }
+      expect(response.status).to eq(400)
+
+      get "/admin/mcp/activity.json",
+          params: {
+            start_date: 1.day.from_now.to_date.iso8601,
+            end_date: Time.zone.today.iso8601,
+          }
       expect(response.status).to eq(400)
     end
 

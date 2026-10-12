@@ -31,6 +31,7 @@ module Jobs
         ::UserAction,
         ::UserStat,
         ::GroupUser,
+        ::SiteSetting,
       ].each do |klass|
         measure_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 

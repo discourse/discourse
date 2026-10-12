@@ -93,6 +93,21 @@ zh_CN:
                 slower: "慢 %{duration}"
                 tooltip: "平均回复时间趋势。"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_solved: "需要启用 Solved 插件"
+      nodes:
+        "trigger:solution_changed": "解决方案已更改"
+      node_descriptions:
+        "trigger:solution_changed": "当答案被接受为解决方案或被取消接受时触发。"
+      solution_changed:
+        changes: "更改"
+        changes_description: "留空以匹配任何更改。"
+        changes_accepted: "已接受"
+        changes_removed: "已移除"
+        changes_placeholder: "任何更改"
+        tag_names: "标签"
+        tag_names_description: "仅对包含以下标签之一的话题触发"
     notifications:
       alt:
         solved:

@@ -58,8 +58,20 @@ RSpec.describe AdminDashboardSearch do
       )
       Fabricate.times(5, :search_log, term: "ghost", user: user, created_at: "2026-04-26 11:00")
 
-      Fabricate.times(8, :clicked_search_log, term: "onboarding", created_at: "2026-05-05 10:00")
-      Fabricate.times(2, :search_log, term: "onboarding", created_at: "2026-05-05 11:00")
+      Fabricate.times(
+        8,
+        :clicked_search_log,
+        term: "onboarding",
+        session_id: "browser-session",
+        created_at: "2026-05-05 10:00",
+      )
+      Fabricate.times(
+        2,
+        :search_log,
+        term: "onboarding",
+        session_id: "browser-session",
+        created_at: "2026-05-05 11:00",
+      )
 
       # Searches flagged as crawler traffic must stay out of every metric and out of the
       # prior-window deltas. If counted, "crawler-bait" would top trending, inflate the
@@ -78,6 +90,9 @@ RSpec.describe AdminDashboardSearch do
         crawler: true,
         created_at: "2026-04-26 09:00",
       )
+      # Anonymous searches without a pageview session can't be crawler-scored, so they
+      # are excluded the same way.
+      Fabricate.times(30, :search_log, term: "sessionless-bait", created_at: "2026-05-05 12:00")
 
       Fabricate(:search_log, term: "admin-search", user: admin, created_at: "2026-05-05 12:00")
       Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-05 13:00")

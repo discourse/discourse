@@ -63,8 +63,98 @@ module PageObjects
           page.has_no_css?(".workflows-configurator-modal")
         end
 
+        def has_combined_topic_tag_fields?
+          page.has_css?("[data-name='add_tag_names'] .mini-tag-chooser") &&
+            page.has_css?("[data-name='remove_tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='replace_tag_names']") &&
+            page.has_no_css?("[data-name='operation']")
+        end
+
+        def select_topic_tag_mode(mode)
+          find("[data-name='mode'] select").select(mode)
+          self
+        end
+
+        def set_tagged_topic(topic)
+          find("[data-name='topic_id'] input[type='text']").fill_in(with: topic.id)
+          self
+        end
+
+        def add_replacement_tag(tag)
+          selector =
+            PageObjects::Components::SelectKit.new(
+              "[data-name='replace_tag_names'] .mini-tag-chooser",
+            )
+          selector.expand
+          selector.search(tag.name)
+          selector.select_row_by_value(tag.id)
+          self
+        end
+
+        def has_replacement_topic_tag_fields?
+          page.has_css?("[data-name='mode'] option:checked", text: "Replace all", visible: :all) &&
+            page.has_css?("[data-name='replace_tag_names'] .mini-tag-chooser") &&
+            page.has_css?(
+              "[data-name='replace_tag_names']",
+              text: I18n.t("js.discourse_workflows.topic_tags.replace_tag_names_description"),
+            ) && page.has_no_css?("[data-name='add_tag_names']") &&
+            page.has_no_css?("[data-name='remove_tag_names']")
+        end
+
+        def has_replacement_tag?(tag)
+          page.has_css?("[data-name='replace_tag_names'] .select-kit-header", text: tag.name)
+        end
+
+        def has_legacy_topic_tag_fields?
+          page.has_css?(
+            "[data-name='operation'] .cm-wf-reference-pill__path",
+            exact_text: "operation",
+          ) && page.has_css?("[data-name='tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='add_tag_names']") &&
+            page.has_no_css?("[data-name='remove_tag_names']")
+        end
+
         def has_saved_node_configuration?
           page.has_css?(".workflows-configurator-modal__save-status--saved")
+        end
+
+        def add_status_filter(status)
+          selector = PageObjects::Components::SelectKit.new("[data-name='statuses'] .multi-select")
+          selector.expand
+          selector.select_row_by_value(status)
+          self
+        end
+
+        def has_status_filter?(status)
+          page.has_css?("[data-name='statuses'] .select-kit-header", text: status)
+        end
+
+        def filter_topics_by_category(category)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='category_ids'] .category-selector")
+          selector.expand
+          selector.select_row_by_value(category.id)
+          self
+        end
+
+        def has_fixed_topic_filters?(category)
+          page.has_css?("[data-name='category_ids'] .select-kit-header", text: category.name) &&
+            page.has_css?("[data-name='include_subcategories']") &&
+            page.has_css?("[data-name='tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='statuses']")
+        end
+
+        def filter_reviewable_type(type)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='reviewable_types'] .multi-select")
+          selector.expand
+          selector.select_row_by_value(type)
+          self
+        end
+
+        def has_fixed_reviewable_filter?(type)
+          page.has_css?("[data-name='reviewable_types'] .select-kit-header", text: type) &&
+            page.has_no_css?("[data-name='statuses']")
         end
 
         def has_workflow_path?(workflow)
@@ -79,6 +169,16 @@ module PageObjects
           find(".workflows-editable-title__text").click
           find(".workflows-editable-title__input").fill_in(with: name)
           find(".workflows-editable-title__input").send_keys(:return)
+          self
+        end
+
+        def has_name?(name)
+          page.has_css?(".workflows-editable-title__text", exact_text: name)
+        end
+
+        def publish
+          click_button(I18n.t("js.discourse_workflows.publish"))
+          page.has_no_button?(I18n.t("js.discourse_workflows.publish"))
           self
         end
 
@@ -110,6 +210,8 @@ module PageObjects
 
         NODE_TYPE_LABELS = {
           "trigger:topic_closed" => "Topic closed",
+          "trigger:topic_reopened" => "Topic reopened",
+          "trigger:reviewable_rejected" => "Review item rejected",
           "trigger:post_created" => "Post created",
           "trigger:topic_created" => "Topic created",
           "trigger:webhook" => "Webhook",
@@ -133,10 +235,6 @@ module PageObjects
           "action:badge" => {
             "grant" => "Grant badge",
             "revoke" => "Revoke badge",
-          },
-          "action:topic_tags" => {
-            "add" => "Add",
-            "remove" => "Remove",
           },
           "action:group" => {
             "add" => "Add to group",

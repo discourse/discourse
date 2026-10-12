@@ -179,10 +179,10 @@ describe "Viewing sidebar" do
 
       context "with translation override" do
         fab!(:translation_override) do
-          TranslationOverride.create!(
-            locale: "en",
-            translation_key: "js.sidebar.sections.community.links.my_messages.content",
-            value: "Overrided",
+          TranslationOverride.upsert!(
+            "en",
+            "js.sidebar.sections.community.links.my_messages.content",
+            "Overrided",
           )
         end
 

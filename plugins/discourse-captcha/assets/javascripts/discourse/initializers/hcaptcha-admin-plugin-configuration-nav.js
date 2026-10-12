@@ -13,6 +13,13 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "hand");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+        {
+          label: "discourse_captcha.configuration_test.tab_title",
+          route: "adminPlugins.show.discourse-captcha-test",
+          description: "discourse_captcha.configuration_test.description",
+        },
+      ]);
     });
   },
 };

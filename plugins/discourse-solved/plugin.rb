@@ -43,6 +43,10 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::SolutionChanged::V1 }
+  end
+
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-solved/db/fixtures").to_s
 
   UserUpdater::OPTION_ATTR.push(:notify_on_solved)
