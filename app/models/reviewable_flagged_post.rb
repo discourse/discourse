@@ -3,6 +3,12 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def action_params
+      ReviewableActionBuilder.penalty_params + [:edit]
+    end
+  end
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   def self.action_aliases

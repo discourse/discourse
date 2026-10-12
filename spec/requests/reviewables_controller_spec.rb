@@ -1520,6 +1520,16 @@ RSpec.describe ReviewablesController do
 
     describe "with reviewable params added via plugin API" do
       class ::ReviewablePhony < Reviewable
+        class << self
+          def action_params
+            [:reason, { details: [:note] }]
+          end
+
+          def additional_args(params)
+            { legacy_id: params[:legacy_id] } if params.key?(:legacy_id)
+          end
+        end
+
         def build_actions(actions, guardian, _args)
           return [] unless pending?
 
@@ -1542,29 +1552,73 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable_phony) { Fabricate(:reviewable, type: "ReviewablePhony") }
 
       it "passes the added param into the reviewable class' perform method" do
-        MessageBus.expects(:publish).with(
-          "/phony-reviewable-test",
-          { args: { :version => reviewable_phony.version, :send_email => true, "fake_id" => "2" } },
-          user_ids: [1],
-        )
+        messages =
+          MessageBus.track_publish("/phony-reviewable-test") do
+            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
+                params: {
+                  version: reviewable_phony.version,
+                  fake_id: 2,
+                }
+          end
 
-        MessageBus.expects(:publish).with(
-          "/reviewable_action",
-          {
-            success: true,
-            remove_reviewable_ids: [reviewable_phony.id],
-            version: 1,
-            reviewable_count: 0,
-            unseen_reviewable_count: 0,
-          },
-          group_ids: [3],
-        )
-
-        put "/review/#{reviewable_phony.id}/perform/approve_phony.json?version=#{reviewable_phony.version}",
-            params: {
-              fake_id: 2,
-            }
         expect(response.status).to eq(200)
+        expect(messages.first.data[:args]).to eq(
+          :version => reviewable_phony.version,
+          "fake_id" => "2",
+        )
+      end
+
+      it "passes the custom reviewable's declared scalar and nested parameters" do
+        messages =
+          MessageBus.track_publish("/phony-reviewable-test") do
+            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
+                params: {
+                  version: reviewable_phony.version,
+                  reason: "The report was resolved.",
+                  details: {
+                    note: "Approved after review.",
+                    ignored: "unpermitted",
+                  },
+                }
+          end
+
+        expect(response.status).to eq(200)
+        expect(messages.first.data[:args]).to eq(
+          version: reviewable_phony.version,
+          reason: "The report was resolved.",
+          details: {
+            "note" => "Approved after review.",
+          },
+        )
+      end
+
+      it "ignores undeclared core action parameters for a custom reviewable" do
+        messages =
+          MessageBus.track_publish("/phony-reviewable-test") do
+            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
+                params: {
+                  version: reviewable_phony.version,
+                  edit: "invalid",
+                  send_email: false,
+                }
+          end
+
+        expect(response.status).to eq(200)
+        expect(messages.first.data[:args]).to eq(version: reviewable_phony.version)
+      end
+
+      it "preserves parameters returned by the custom reviewable's additional_args hook" do
+        messages =
+          MessageBus.track_publish("/phony-reviewable-test") do
+            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
+                params: {
+                  version: reviewable_phony.version,
+                  legacy_id: 3,
+                }
+          end
+
+        expect(response.status).to eq(200)
+        expect(messages.first.data[:args]).to eq(version: reviewable_phony.version, legacy_id: "3")
       end
     end
 

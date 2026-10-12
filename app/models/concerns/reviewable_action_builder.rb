@@ -3,6 +3,20 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
+  class << self
+    def penalty_params
+      [
+        :reason,
+        :message,
+        :suspend_until,
+        :silenced_till,
+        :post_action,
+        :post_edit,
+        { other_user_ids: [] },
+      ]
+    end
+  end
+
   attr_accessor :actions, :guardian, :action_args
 
   def build_actions(actions, guardian, args)

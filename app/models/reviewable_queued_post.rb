@@ -3,6 +3,13 @@
 class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def action_params
+      ReviewableActionBuilder.penalty_params +
+        %i[revise_reason revise_feedback revise_custom_reason]
+    end
+  end
+
   def self.action_aliases
     { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end

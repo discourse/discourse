@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+# Saves permitted edits to a post or its topic, reporting invalid or conflicting changes.
+#
+# Post::Revise.call(
+#   params: {
+#     post_id: post.id,
+#     changes: { raw: "The corrected text of this post.", original_text: post.raw },
+#   },
+#   guardian: editor.guardian,
+#   editor:,
+# )
 class Post::Revise
   include Service::Base
 
@@ -53,8 +63,8 @@ class Post::Revise
   model :topic
   policy :can_edit_topic_record
   model :post
-  model :changes
   policy :can_edit_post
+  step :prepare_changes
   policy :can_edit_topic
   policy :can_edit_tags
   step :check_edit_conflicts
@@ -95,33 +105,91 @@ class Post::Revise
     params.topic_id.blank? || guardian.can_edit?(topic)
   end
 
-  def fetch_changes(params:, post:, topic:, guardian:, editor:)
-    Post::EditChanges.new(
-      post:,
-      topic:,
-      guardian:,
-      editor:,
-      attributes: params.changes,
-      topic_only: params.topic_id.present?,
-    )
-  end
-
   def can_edit_post(params:, post:, guardian:)
     params.topic_id.present? || guardian.can_edit?(post)
   end
 
-  def can_edit_topic(params:, changes:, topic:, guardian:)
+  def prepare_changes(params:, post:, topic:, guardian:)
+    attributes = params.changes.with_indifferent_access
+    topic_changes = topic_attributes(attributes:, post:, topic:)
+    revision_changes =
+      if params.topic_id.present?
+        {}.with_indifferent_access
+      else
+        attributes.slice(
+          :raw,
+          :edit_reason,
+          :locale,
+          :reply_to_post_number,
+          *Post.plugin_permitted_update_params.keys,
+        )
+      end
+
+    revision_changes.merge!(topic_changes)
+
+    tag_names =
+      if revision_changes.key?(:tags) || topic_changes.key?(:category_id)
+        resolve_tag_names(attributes:, topic:, guardian:)
+      end
+
+    # resolve to name strings before passing to PostRevisor
+    revision_changes[:tags] = tag_names if revision_changes.key?(:tags)
+    revision_changes.delete(:category_id) if topic.shared_draft && topic_changes.key?(:category_id)
+
+    context[:topic_changes] = topic_changes
+    context[:revision_changes] = revision_changes
+    context[:tag_names] = tag_names
+  end
+
+  def topic_attributes(attributes:, post:, topic:)
+    # to stay consistent with the create api, we allow for title & category changes here
+    return {} unless post.is_first_post?
+
+    changes = attributes.slice(*PostRevisor.tracked_topic_fields.keys)
+    changes.delete(:title) if changes[:title] == topic.title
+    changes.delete(:category_id) if changes[:category_id].to_i == topic.category_id.to_i
+
+    if changes.key?(:tags) &&
+         (!Tag.include_tags? || PostRevisor.tag_change_noop?(topic, changes[:tags]))
+      changes.delete(:tags)
+    end
+
+    changes
+  end
+
+  def resolve_tag_names(attributes:, topic:, guardian:)
+    return topic.tags.pluck(:name) unless attributes.key?(:tags)
+
+    incoming = attributes[:tags] || []
+
+    if incoming.first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+
+      return incoming.reject(&:empty?)
+    end
+
+    ids = incoming.filter_map { |tag| tag[:id]&.to_i }
+
+    incoming.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
+      Tag.visible(guardian).where(id: ids).pluck(:name)
+  end
+
+  def can_edit_topic(params:, topic_changes:, topic:, guardian:)
     return true if params.topic_id.present?
 
-    changes.topic_attributes.except(:tags).empty? || guardian.can_edit_topic?(topic)
+    topic_changes.except(:tags).empty? || guardian.can_edit_topic?(topic)
   end
 
-  def can_edit_tags(changes:, topic:, guardian:)
-    !changes.topic_attributes.key?(:tags) || guardian.can_edit_tags?(topic)
+  def can_edit_tags(topic_changes:, topic:, guardian:)
+    !topic_changes.key?(:tags) || guardian.can_edit_tags?(topic)
   end
 
-  def check_edit_conflicts(changes:, post:, topic:)
-    originals = changes.attributes
+  def check_edit_conflicts(params:, post:, topic:)
+    originals = params.changes
     conflict = originals[:original_text].present? && originals[:original_text] != post.raw
 
     if post.is_first_post?
@@ -133,26 +201,26 @@ class Post::Revise
     fail!(I18n.t("edit_conflict")) if conflict
   end
 
-  def category_changed?(changes:)
-    changes.category_changed?
+  def category_changed?(topic_changes:)
+    topic_changes.key?(:category_id)
   end
 
   def shared_draft?(topic:)
     topic.shared_draft.present?
   end
 
-  def revision_requested?(changes:)
-    changes.revision_requested?
+  def revision_requested?(params:, revision_changes:)
+    params.topic_id.blank? || revision_changes.present?
   end
 
-  def validate_category_change(changes:, topic:, guardian:)
+  def validate_category_change(topic_changes:, tag_names:, topic:, guardian:)
     result =
       TopicCategoryChangeValidator.call(
         topic:,
-        category_id: changes.topic_attributes[:category_id],
+        category_id: topic_changes[:category_id],
         guardian:,
-        tag_names: changes.resolved_tag_names,
-        tags_changed: changes.topic_attributes.key?(:tags),
+        tag_names:,
+        tags_changed: topic_changes.key?(:tags),
       )
 
     return if result.success?
@@ -162,17 +230,22 @@ class Post::Revise
     fail!(result.error)
   end
 
-  def update_shared_draft_destination(changes:, topic:)
-    topic.shared_draft.update!(category_id: changes.topic_attributes[:category_id])
+  def update_shared_draft_destination(topic_changes:, topic:)
+    topic.shared_draft.update!(category_id: topic_changes[:category_id])
   end
 
-  def revise_post(changes:, post:, topic:, guardian:, editor:)
-    post.image_sizes = changes.attributes[:image_sizes] if changes.attributes[:image_sizes].present?
+  def revise_post(params:, topic_changes:, revision_changes:, post:, topic:, guardian:, editor:)
+    post.image_sizes = params.changes[:image_sizes] if params.changes[:image_sizes].present?
 
     revisor = PostRevisor.new(post, topic)
-    topic_edit_requested = changes.topic_edit_requested?
-    category_changed = changes.category_changed?
-    revised = revisor.revise!(editor, changes.revision_attributes, changes.revision_options)
+    topic_edit_requested = params.topic_id.present? && topic_changes.present?
+    category_changed = topic_changes.key?(:category_id)
+    revised =
+      revisor.revise!(
+        editor,
+        revision_changes,
+        revision_options(params:, post:, guardian:, editor:),
+      )
     context[:category_changed] = revisor.category_changed
 
     if topic.errors.present?
@@ -190,5 +263,25 @@ class Post::Revise
     if post.errors.present? || topic.errors.present?
       fail!(post.errors.full_messages + topic.errors.full_messages)
     end
+  end
+
+  def revision_options(params:, post:, guardian:, editor:)
+    attributes = params.changes
+    options = {}
+
+    if params.topic_id.present?
+      options[:validate_post] = false
+      options[:keep_existing_draft] = attributes[:keep_existing_draft].to_s == "true"
+    end
+
+    # We don't need to validate edits to small action posts by staff
+    options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&
+      editor.staff?
+
+    if attributes.key?(:bypass_bump) && guardian.can_update_bumped_at?
+      options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(attributes[:bypass_bump])
+    end
+
+    options
   end
 end

@@ -14,13 +14,11 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
   )
 
   def post
-    post = object.updated_post
-
-    PostSerializer.for_update(
-      post:,
-      topic: post.topic,
-      guardian: scope,
-      user: @options[:user] || scope.user,
+    PostUpdateSerializer.new(
+      object.updated_post,
+      scope:,
+      root: false,
+      user: @options[:user],
     ).as_json
   end
 

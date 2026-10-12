@@ -3,6 +3,12 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def action_params
+      ReviewableActionBuilder.penalty_params
+    end
+  end
+
   def self.queue_for_review_if_possible(post, created_or_edited_by)
     return unless SiteSetting.review_every_post
     return if post.post_type != Post.types[:regular] || post.topic.private_message?

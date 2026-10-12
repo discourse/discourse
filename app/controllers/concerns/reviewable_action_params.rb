@@ -7,27 +7,11 @@ module ReviewableActionParams
   private
 
   def reviewable_action_args(reviewable)
-    args =
-      params
-        .permit(
-          :reason,
-          :message,
-          :suspend_until,
-          :silenced_till,
-          :post_action,
-          :post_edit,
-          :revise_reason,
-          :revise_feedback,
-          :revise_custom_reason,
-          :reject_reason,
-          other_user_ids: [],
-        )
-        .to_h
-        .symbolize_keys
+    declared_params = reviewable.type_class.action_params
+    args = params.permit(*declared_params).to_h.symbolize_keys
+    args[:send_email] = params[:send_email] != "false" if declared_params.include?(:send_email)
 
-    args[:send_email] = params[:send_email] != "false"
-
-    if params.key?(:edit)
+    if declared_params.include?(:edit) && params.key?(:edit)
       args[:edit] = permitted_post_revision_attributes(params[:edit])
       reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
     end

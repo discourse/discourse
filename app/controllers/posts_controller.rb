@@ -200,7 +200,13 @@ class PostsController < ApplicationController
     Post::Revise.call(service_params.merge(params: post_revision_params, editor: current_user)) do
       on_success do |post:, topic:, category_changed:|
         result = {
-          post: PostSerializer.for_update(post:, topic:, guardian:, user: current_user).as_json,
+          post:
+            PostUpdateSerializer.new(
+              post,
+              scope: guardian,
+              root: false,
+              user: current_user,
+            ).as_json,
         }
 
         if category_changed.present?

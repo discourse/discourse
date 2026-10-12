@@ -3,6 +3,12 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def action_params
+      ReviewableActionBuilder.penalty_params + %i[reject_reason send_email]
+    end
+  end
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
