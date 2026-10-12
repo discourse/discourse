@@ -21,7 +21,6 @@ class ReviewableQueuedPost < Reviewable
 
   after_commit :compute_user_stats, only: %i[create update]
 
-
   def build_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?

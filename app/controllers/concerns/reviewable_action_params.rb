@@ -7,7 +7,19 @@ module ReviewableActionParams
   private
 
   def reviewable_action_args(reviewable)
-    args = params.permit(:reason, :message, :suspend_until, :silenced_till, :post_action, :post_edit, other_user_ids: []).to_h.symbolize_keys
+    args =
+      params
+        .permit(
+          :reason,
+          :message,
+          :suspend_until,
+          :silenced_till,
+          :post_action,
+          :post_edit,
+          other_user_ids: [],
+        )
+        .to_h
+        .symbolize_keys
 
     case reviewable
     when ReviewableFlaggedPost
@@ -17,7 +29,12 @@ module ReviewableActionParams
       end
     when ReviewableQueuedPost
       if params[:revise_reason].present?
-        args.merge!(params.permit(:revise_reason, :revise_feedback, :revise_custom_reason).to_h.symbolize_keys)
+        args.merge!(
+          params
+            .permit(:revise_reason, :revise_feedback, :revise_custom_reason)
+            .to_h
+            .symbolize_keys,
+        )
       end
     when ReviewableUser
       args.merge!(params.permit(:reject_reason).to_h.symbolize_keys)

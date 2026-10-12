@@ -5,7 +5,17 @@ module PostRevisionParams
 
   def post_revision_params
     post = params.require(:post)
-    input = post.slice(:raw, :original_text, :edit_reason, :locale, :reply_to_post_number, :category_id, :bypass_bump, *Post.plugin_permitted_update_params.keys)
+    input =
+      post.slice(
+        :raw,
+        :original_text,
+        :edit_reason,
+        :locale,
+        :reply_to_post_number,
+        :category_id,
+        :bypass_bump,
+        *Post.plugin_permitted_update_params.keys,
+      )
     input[:original_text] ||= post[:raw_old]
     input[:title] = params[:title] if params.key?(:title)
     input[:image_sizes] = params[:image_sizes] if params.key?(:image_sizes)
@@ -14,8 +24,17 @@ module PostRevisionParams
   end
 
   def topic_revision_params
-    input = params.slice(*PostRevisor.tracked_topic_fields.keys, :original_title, :original_tags, :keep_existing_draft)
-    { topic_id: params[:topic_id], changes: permitted_post_revision_attributes(input, allow_tag_names: true) }
+    input =
+      params.slice(
+        *PostRevisor.tracked_topic_fields.keys,
+        :original_title,
+        :original_tags,
+        :keep_existing_draft,
+      )
+    {
+      topic_id: params[:topic_id],
+      changes: permitted_post_revision_attributes(input, allow_tag_names: true),
+    }
   end
 
   def permitted_post_revision_attributes(parameters, allow_tag_names: false)
@@ -29,7 +48,7 @@ module PostRevisionParams
       valid =
         tags.is_a?(Array) &&
           tags.all? do |tag|
-            next true if allow_tag_names && key == :tags && tag.is_a?(String)
+            next true if allow_tag_names && tag.is_a?(String)
             tag.is_a?(ActionController::Parameters) &&
               (
                 tag[:id].nil? || (tag[:id].is_a?(Integer) && tag[:id].positive?) ||
@@ -39,7 +58,8 @@ module PostRevisionParams
           end
       raise Discourse::InvalidParameters.new(key) unless valid
     end
-    string_tags = parameters[:tags].is_a?(Array) && parameters[:tags].all? { |tag| tag.is_a?(String) }
+    string_tags =
+      parameters[:tags].is_a?(Array) && parameters[:tags].all? { |tag| tag.is_a?(String) }
     permitted =
       parameters
         .permit(
@@ -63,6 +83,10 @@ module PostRevisionParams
         .to_h
         .deep_symbolize_keys
     permitted[:tags] = parameters[:tags] if string_tags
+    if allow_tag_names && parameters[:original_tags].is_a?(Array) &&
+         parameters[:original_tags].all? { |tag| tag.is_a?(String) }
+      permitted[:original_tags] = parameters[:original_tags]
+    end
     permitted.merge!(
       parameters
         .slice(*Post.plugin_permitted_update_params.keys, *PostRevisor.tracked_topic_fields.keys)

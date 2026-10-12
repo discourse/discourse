@@ -375,5 +375,4 @@ class ReviewablesController < ApplicationController
   def with_deleted_content
     Reviewable.with_deleted_content { yield }
   end
-
 end

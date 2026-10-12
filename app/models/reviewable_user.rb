@@ -29,7 +29,6 @@ class ReviewableUser < Reviewable
     }
   end
 
-
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 

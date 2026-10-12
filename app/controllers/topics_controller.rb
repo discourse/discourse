@@ -429,9 +429,12 @@ class TopicsController < ApplicationController
       on_failed_contract { raise Discourse::InvalidParameters }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_topic_record) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
-      on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+      on_failed_step(:check_edit_conflicts) do
+        render_json_error(I18n.t("edit_conflict"), status: 409)
+      end
       on_failure do |post:, topic:, status: :unprocessable_entity|
         render_json_error(post.errors.present? ? post : topic, status:)
       end

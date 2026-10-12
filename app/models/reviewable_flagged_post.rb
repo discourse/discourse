@@ -250,7 +250,13 @@ class ReviewableFlaggedPost < Reviewable
     raise Discourse::InvalidParameters.new(:edit) unless args[:edit]&.key?(:raw)
 
     result = nil
-    Post::Revise.call(guardian: args[:guardian] || performed_by.guardian, params: { post_id: target_id, changes: args[:edit] }) do
+    Post::Revise.call(
+      guardian: args[:guardian] || performed_by.guardian,
+      params: {
+        post_id: target_id,
+        changes: args[:edit],
+      },
+    ) do
       on_success do |post:|
         result = perform_agree_and_keep(performed_by, args)
         result.updated_post = post
@@ -259,6 +265,7 @@ class ReviewableFlaggedPost < Reviewable
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_edit_post) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_topic_record) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
       on_failed_step(:check_edit_conflicts) { raise Post::Revise::EditConflict }
