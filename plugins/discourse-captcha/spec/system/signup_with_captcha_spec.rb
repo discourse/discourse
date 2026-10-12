@@ -125,20 +125,49 @@ RSpec.describe "Signup with captcha" do
         signup_page.open
         expect(captcha).to have_no_hcaptcha_container
         expect(captcha).to have_no_recaptcha_container
+        expect(captcha).to have_no_recaptcha_v3_container
       end
     end
   end
 
   context "with reCaptcha", allow_network: %w[www.google.com www.gstatic.com] do
     before do
-      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
-      SiteSetting.recaptcha_site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-      SiteSetting.recaptcha_secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
+      SiteSetting.recaptcha_v2_site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+      SiteSetting.recaptcha_v2_secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
     end
 
     it "displays the reCaptcha widget on signup page" do
       signup_page.open
       expect(captcha).to have_recaptcha_container
+    end
+
+    it "completes signup using the renamed v2 provider and keys" do
+      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+        window.grecaptcha = {
+          render: (_element, options) => {
+            setTimeout(() => options.callback("v2-token"), 0);
+            return 1;
+          },
+          reset: () => {}
+        };
+      JS
+      stub_request(:post, DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+        body: {
+          secret: SiteSetting.recaptcha_v2_secret_key,
+          response: "v2-token",
+        },
+      ).to_return(status: 200, body: { success: true }.to_json)
+
+      signup_page
+        .open
+        .fill_email("test@example.com")
+        .fill_username("testuser")
+        .fill_password("supersecurepassword")
+      expect(signup_page).to have_valid_fields
+      signup_page.click_create_account
+
+      expect(page).to have_current_path("/u/account-created")
     end
 
     it "loads the reCaptcha iframe" do
@@ -152,6 +181,110 @@ RSpec.describe "Signup with captcha" do
     end
   end
 
+  context "with reCaptcha v3" do
+    before do
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+      SiteSetting.recaptcha_v3_site_key = "v3-site-key"
+      SiteSetting.recaptcha_v3_secret_key = "v3-secret-key"
+
+      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+          window.captchaExecutions = 0;
+          window.grecaptcha = {
+            execute: () => Promise.resolve(`v3-token-${++window.captchaExecutions}`)
+          };
+        JS
+
+      stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+        body: {
+          secret: "v3-secret-key",
+          response: "v3-token-1",
+        },
+      ).to_return(status: 200, body: { success: true, action: "signup", score: 0.9 }.to_json)
+    end
+
+    it "fetches a fresh token after the signup form has been open for three minutes" do
+      page.driver.with_playwright_page { |pw_page| pw_page.clock.install }
+      signup_page
+        .open
+        .fill_email("test@example.com")
+        .fill_username("testuser")
+        .fill_password("supersecurepassword")
+      expect(captcha).to have_no_hcaptcha_container
+      expect(captcha).to have_no_recaptcha_container
+      expect(signup_page).to have_valid_fields
+      page.driver.with_playwright_page { |pw_page| pw_page.clock.fast_forward(180_000) }
+      expect(page.evaluate_script("window.captchaExecutions")).to eq(0)
+
+      signup_page.click_create_account
+
+      expect(page).to have_current_path("/u/account-created")
+    end
+  end
+
+  context "with reCaptcha v3 signup retries" do
+    before do
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+      SiteSetting.recaptcha_v3_site_key = "v3-site-key"
+      SiteSetting.recaptcha_v3_secret_key = "v3-secret-key"
+
+      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+        window.captchaExecutions = 0;
+        window.grecaptcha = {
+          execute: () => Promise.resolve(`v3-token-${++window.captchaExecutions}`)
+        };
+      JS
+
+      stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+        body: {
+          secret: "v3-secret-key",
+          response: "v3-token-1",
+        },
+      ).to_return(status: 200, body: { success: true, action: "signup", score: 0.1 }.to_json)
+      stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+        body: {
+          secret: "v3-secret-key",
+          response: "v3-token-2",
+        },
+      ).to_return(status: 200, body: { success: true, action: "signup", score: 0.9 }.to_json)
+    end
+
+    it "fetches a new token when retrying after verification fails" do
+      signup_page
+        .open
+        .fill_email("test@example.com")
+        .fill_username("testuser")
+        .fill_password("supersecurepassword")
+      expect(signup_page).to have_valid_fields
+
+      signup_page.click_create_account
+      expect(signup_page).to have_flash_message(I18n.t("captcha_verification_failed"))
+      signup_page.click_create_account
+
+      expect(page).to have_current_path("/u/account-created")
+    end
+
+    it "lets the user retry signup for approval after verifying a login code" do
+      SiteSetting.enable_local_logins_via_email = true
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+
+      code_signup.open.submit_email("approval@example.com")
+      wait_for { ActionMailer::Base.deliveries.any? }
+      code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
+      code_signup.submit_code(code)
+
+      expect(code_signup).to have_account_details
+      code_signup.fill_username("approval-user")
+      expect(page.evaluate_script("window.captchaExecutions")).to eq(0)
+      code_signup.submit_for_approval
+      expect(code_signup).to have_error(I18n.t("captcha_verification_failed"))
+      code_signup.submit_for_approval
+
+      expect(code_signup).to have_pending_approval
+    end
+  end
+
   context "when captcha provider is none" do
     before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
@@ -159,6 +292,7 @@ RSpec.describe "Signup with captcha" do
       signup_page.open
       expect(captcha).to have_no_hcaptcha_container
       expect(captcha).to have_no_recaptcha_container
+      expect(captcha).to have_no_recaptcha_v3_container
     end
   end
 end

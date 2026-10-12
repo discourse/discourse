@@ -15,11 +15,13 @@ class TopicPublisher
       .change! do
         if @topic.private_message?
           @topic = TopicConverter.new(@topic, @published_by).convert_to_public_topic(@category_id)
-        else
-          PostRevisor.new(@topic.first_post, @topic).revise!(
-            @published_by,
-            category_id: @category_id,
-          )
+        elsif @topic.category_id != @category_id
+          revised =
+            PostRevisor.new(@topic.first_post, @topic).revise!(
+              @published_by,
+              category_id: @category_id,
+            )
+          raise ActiveRecord::RecordInvalid.new(@topic) unless revised
         end
 
         @topic.update_columns(visible: true)
@@ -29,10 +31,12 @@ class TopicPublisher
         # Clean up any publishing artifacts
         SharedDraft.where(topic: @topic).delete_all
 
-        TopicTimer.where(topic: @topic).update_all(
-          deleted_at: DateTime.now,
-          deleted_by_id: @published_by.id,
-        )
+        TopicTimer
+          .where(topic: @topic)
+          .find_each do |timer|
+            reason = timer.publishing_to_category? ? :completed : :cancelled
+            timer.finish!(reason, by_user: @published_by)
+          end
 
         op = @topic.first_post
 

@@ -12,6 +12,9 @@ bs_BA:
     previous_page: "Previous page"
     next_page: "Next page"
     replies: "Odgovori"
+    event:
+      location: "Lokacija"
+      link: "Link"
   mcp:
     errors:
       topic_not_found: "Tema nije pronađena"

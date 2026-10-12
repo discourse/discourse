@@ -11,18 +11,16 @@ RSpec.describe Jobs::ResumeAiToolApproval do
       :ai_agent,
       allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
       require_approval: true,
-    )
+    ).tap(&:create_user!)
   end
-  fab!(:topic) { Fabricate(:private_message_topic, user: requester, recipient: admin) }
+  fab!(:topic) do
+    Fabricate(:private_message_topic, user: requester, recipient: admin).tap do |pm|
+      pm.allowed_users << ai_agent.user
+    end
+  end
   fab!(:source_post) { Fabricate(:post, topic: topic, user: requester) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [llm_model])
-    ai_agent.create_user!
-    topic.allowed_users << ai_agent.user
-  end
+  before { prepare_ai_bot_fixtures(bots: [llm_model]) }
 
   let(:tool_action) do
     AiToolAction.create!(
@@ -32,7 +30,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
         reason: "Collect bug reports",
       },
       ai_agent: ai_agent,
-      bot_user_id: llm_model.reload.user_id,
+      bot_user_id: ai_agent.user_id,
       post_id: source_post.id,
     )
   end
@@ -40,7 +38,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
   let(:reviewable) do
     ReviewableAiToolAction.needs_review!(
       target: tool_action,
-      created_by: llm_model.reload.user,
+      created_by: ai_agent.user,
       reviewable_by_moderator: true,
       payload: {
         agent_name: ai_agent.name,
