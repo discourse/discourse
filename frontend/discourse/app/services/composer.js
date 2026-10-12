@@ -1298,8 +1298,6 @@ export default class ComposerService extends Service {
       }
     }
 
-    composer.set("disableDrafts", true);
-
     // for now handle a very narrow use case
     // if we are replying to a topic
     // AND are on a different topic
@@ -1342,7 +1340,6 @@ export default class ComposerService extends Service {
           ],
           class: "reply-where-modal",
           didCancel: () => {
-            composer.set("disableDrafts", false);
             this.skipAutoSave = true;
             this._saveDraft(true);
             this.skipAutoSave = false;
@@ -1368,9 +1365,13 @@ export default class ComposerService extends Service {
         }
       });
 
+    const disableDrafts = composer.disableDrafts;
+    composer.set("disableDrafts", true);
+
     const promise = composer
       .save({ imageSizes, editReason: this.editReason, onSave: this.#onSave })
       .then((result) => {
+        composer.set("disableDrafts", disableDrafts);
         this.appEvents.trigger("composer:saved");
 
         if (result.responseJson.action === "enqueued") {
@@ -1439,7 +1440,7 @@ export default class ComposerService extends Service {
         onSaved?.(result);
       })
       .catch((error) => {
-        composer.set("disableDrafts", false);
+        composer.set("disableDrafts", disableDrafts);
         if (error) {
           this.appEvents.one("composer:will-open", () => {
             if (
@@ -1736,7 +1737,7 @@ export default class ComposerService extends Service {
 
   async destroyDraft() {
     const key = this.get("model.draftKey");
-    if (!key || this.model.draftsEnabled === false) {
+    if (!key || this.model.disableDrafts) {
       return;
     }
 
@@ -1796,7 +1797,7 @@ export default class ComposerService extends Service {
   }
 
   saveAndCloseComposer() {
-    if (!this.model.anyDirty || this.model.draftsEnabled === false) {
+    if (!this.model.anyDirty || this.model.disableDrafts) {
       return this.cancelComposer();
     }
 
@@ -1959,7 +1960,7 @@ export default class ComposerService extends Service {
     this.set("linkLookup", null);
 
     let composerModel;
-    if (opts.draft && opts.draftsEnabled !== false) {
+    if (opts.draft && !opts.disableDrafts) {
       composerModel = await loadDraft(this.store, opts);
 
       if (!composerModel) {
@@ -2062,7 +2063,7 @@ export default class ComposerService extends Service {
   _saveDraft(showToast = false) {
     cancel(this._saveDraftDebounce);
 
-    if (!this.model || this.model.draftsEnabled === false) {
+    if (!this.model || this.model.disableDrafts) {
       return;
     }
 

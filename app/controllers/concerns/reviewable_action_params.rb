@@ -2,7 +2,6 @@
 
 module ReviewableActionParams
   include PostRevisionParams
-  include TagParamLimit
 
   private
 
@@ -13,12 +12,7 @@ module ReviewableActionParams
       additional_args =
         reviewable
           .type_class
-          .additional_args(params) do |revision|
-            attributes = permitted_post_revision_attributes(revision)
-            reject_too_many_tags!(:tags, :original_tags, parameters: revision)
-
-            attributes
-          end
+          .additional_args(params) { |preparation_method, value| send(preparation_method, value) }
 
       args.merge!(additional_args || {})
     end

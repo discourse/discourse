@@ -853,7 +853,6 @@ export default class Composer extends RestModel {
   @computed(
     "draftSaving",
     "disableDrafts",
-    "draftsEnabled",
     "canEditTitle",
     "title",
     "reply",
@@ -870,7 +869,7 @@ export default class Composer extends RestModel {
       return false;
     }
 
-    if (this.disableDrafts || this.draftsEnabled === false) {
+    if (this.disableDrafts) {
       return false;
     }
 
@@ -1517,7 +1516,7 @@ export default class Composer extends RestModel {
 
     this.setProperties({
       draftKey: opts.draftKey,
-      draftsEnabled: opts.draftsEnabled !== false,
+      disableDrafts: !!opts.disableDrafts,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,

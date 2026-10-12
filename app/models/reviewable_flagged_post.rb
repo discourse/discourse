@@ -7,7 +7,9 @@ class ReviewableFlaggedPost < Reviewable
     def additional_args(params)
       args = ReviewableActionBuilder.penalty_args(params)
 
-      args[:post_revision] = yield(params[:post_revision]) if params.key?(:post_revision)
+      if params[:action_id] == "agree_and_edit" && params.key?(:post_revision)
+        args[:post_revision] = yield(:prepare_post_revision_params, params[:post_revision])
+      end
 
       args
     end

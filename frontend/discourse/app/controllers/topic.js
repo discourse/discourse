@@ -2051,7 +2051,7 @@ export default class TopicController extends Controller {
       opts.action === composerModel?.action &&
       opts.draftKey === composerModel?.draftKey;
 
-    if (editingSamePost && composerModel.draftsEnabled !== false) {
+    if (editingSamePost && !composerModel.disableDrafts) {
       return composer.unshrink();
     }
 

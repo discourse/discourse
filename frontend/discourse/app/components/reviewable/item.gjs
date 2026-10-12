@@ -354,7 +354,7 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      draftsEnabled: false,
+      disableDrafts: true,
       onSave: async (revision) => {
         const json = await ajax(
           `/review/${reviewable.id}/perform/${performableAction.server_action}`,
