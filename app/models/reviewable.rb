@@ -556,7 +556,7 @@ class Reviewable < ActiveRecord::Base
 
     result = exclude_private_messages_hidden_from(result, user)
     visible_target =
-      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(:id)
+      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(1)
 
     result.where(<<~SQL)
       NOT EXISTS (
@@ -569,8 +569,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.exclude_private_messages_hidden_from(result, user)
-    visible_private_message_ids =
-      user.guardian.private_message_topic_scope(Topic.unscoped).select(:id)
+    visible_private_message =
+      user
+        .guardian
+        .private_message_topic_scope(Topic.unscoped.where("topics.id = private_message.id"))
+        .select(1)
 
     result.where(<<~SQL, private_message: Archetype.private_message)
         NOT EXISTS (
@@ -578,7 +581,7 @@ class Reviewable < ActiveRecord::Base
           FROM topics private_message
           WHERE private_message.id = reviewables.topic_id
             AND private_message.archetype = :private_message
-            AND private_message.id NOT IN (#{visible_private_message_ids.to_sql})
+            AND NOT EXISTS (#{visible_private_message.to_sql})
         )
       SQL
   end
