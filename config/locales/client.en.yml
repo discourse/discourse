@@ -6161,9 +6161,6 @@ en:
         search_full_page: "Open full page admin search"
 
     badges:
-      earned_n_times:
-        one: "Earned this badge %{count} time"
-        other: "Earned this badge %{count} times"
       granted_on: "Granted %{date}"
       others_count:
         one: "Granted to others %{count} time"
@@ -6180,6 +6177,9 @@ en:
       awarded:
         one: "%{number} awarded"
         other: "%{number} awarded"
+      earned:
+        one: "Earned %{number} time"
+        other: "Earned %{number} times"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
