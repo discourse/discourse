@@ -1101,17 +1101,14 @@ export default class Composer extends RestModel {
 
     const post = this.post;
     const oldCooked = post.cooked;
-    let promise = Promise.resolve();
-    let revisionTopicProps = {};
+    const topic = this.topic;
+    const props = {};
+    let topicProps;
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
-      const topic = this.topic;
-
       if (topic.details.can_edit) {
-        const topicProps = this.getProperties(
-          Object.keys(_edit_topic_serializer)
-        );
+        topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
         // user clicked "overwrite edits" button
         if (!this.editConflict) {
           topicProps.original_title = this.originalTitle;
@@ -1123,42 +1120,57 @@ export default class Composer extends RestModel {
           topicProps.featured_link = topicProps.featuredLink ?? null;
         }
         delete topicProps.featuredLink;
-
-        // If we're editing a shared draft, keep the original category
-        if (this.action === EDIT_SHARED_DRAFT && !opts.onSave) {
-          const destinationCategoryId = topicProps.categoryId;
-          promise = promise.then(() =>
-            topic.updateDestinationCategory(destinationCategoryId)
-          );
-          topicProps.categoryId = topic.get("category.id");
-        }
-
-        if (opts.onSave) {
-          revisionTopicProps = topicProps;
-          if (!topic.isPrivateMessage) {
-            revisionTopicProps.category_id = topicProps.categoryId;
-          }
-          delete revisionTopicProps.categoryId;
-          if (Array.isArray(topicProps.tags)) {
-            revisionTopicProps.tags = serializeTags(topicProps.tags);
-          }
-        } else {
-          promise = promise.then(() => Topic.update(topic, topicProps));
-        }
       } else if (topic.details.can_edit_tags) {
-        if (opts.onSave) {
-          revisionTopicProps.tags = serializeTags(this.tags);
+        topicProps = { tags: this.tags };
+      }
+    }
+
+    let promise = Promise.resolve();
+
+    if (opts.onSave) {
+      Object.assign(props, topicProps);
+
+      if (topicProps && topic.details.can_edit) {
+        if (!topic.isPrivateMessage) {
+          props.category_id = props.categoryId;
+        }
+        delete props.categoryId;
+      }
+
+      if (Array.isArray(props.tags)) {
+        props.tags = serializeTags(props.tags);
+      }
+
+      promise = promise
+        .then(() => opts.onSave(props))
+        .then((result) => {
+          post.setProperties(post.constructor.munge(result.payload));
+          result.target = post;
+          return result;
+        });
+    } else {
+      if (topicProps) {
+        if (topic.details.can_edit) {
+          // If we're editing a shared draft, keep the original category
+          if (this.action === EDIT_SHARED_DRAFT) {
+            const destinationCategoryId = topicProps.categoryId;
+            promise = promise.then(() =>
+              topic.updateDestinationCategory(destinationCategoryId)
+            );
+            topicProps.categoryId = topic.get("category.id");
+          }
+
+          promise = promise.then(() => Topic.update(topic, topicProps));
         } else {
           promise = promise.then(() => topic.updateTags(this.tags));
         }
       }
+
+      promise = promise.then(() => post.save(props));
     }
 
-    let props = {
-      ...revisionTopicProps,
-      edit_reason: opts.editReason,
-      image_sizes: opts.imageSizes,
-    };
+    props.edit_reason = opts.editReason;
+    props.image_sizes = opts.imageSizes;
 
     this.serialize(_update_serializer, props);
 
@@ -1191,26 +1203,17 @@ export default class Composer extends RestModel {
     post.setProperties({ cooked, staged: true });
 
     return promise
-      .then(() => {
-        const save = opts.onSave ? opts.onSave(props) : post.save(props);
-
-        return save.then((result) => {
-          if (opts.onSave) {
-            post.setProperties(post.constructor.munge(result.payload));
-            result.target = post;
-          }
-
-          // The server omits `reply_to_user` from the response when it's
-          // nil, so the post's in-memory value isn't overwritten when the
-          // target is cleared. Mirror the composer's final state onto the
-          // post so reply indicators update without a refresh.
-          post.setProperties({
-            reply_to_post_number: this.reply_to_post_number,
-            reply_to_user: this.reply_to_user,
-          });
-          this.clearState();
-          return result;
+      .then((result) => {
+        // The server omits `reply_to_user` from the response when it's
+        // nil, so the post's in-memory value isn't overwritten when the
+        // target is cleared. Mirror the composer's final state onto the
+        // post so reply indicators update without a refresh.
+        post.setProperties({
+          reply_to_post_number: this.reply_to_post_number,
+          reply_to_user: this.reply_to_user,
         });
+        this.clearState();
+        return result;
       })
       .catch(rollback)
       .finally(() => {
