@@ -1,10 +1,87 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin editing objects type" do
+describe "Admin editing objects type" do
   let(:admin_objects_setting_editor_page) { PageObjects::Pages::AdminObjectsSettingEditor.new }
 
   fab!(:admin)
   before { sign_in(admin) }
+
+  context "with translated fields" do
+    fab!(:theme)
+    let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }
+    let(:key) { "resource_sections.getting_started.links.guidelines.label" }
+
+    before do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme.save!
+    end
+
+    it "previews nested keys and opens the component's translations in Site texts" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      expect(admin_objects_setting_editor_page).to have_translation_key(key)
+      admin_objects_setting_editor_page.manage_translations
+      expect(page).to have_current_path("/admin/customize/site_texts?theme_id=#{theme.id}")
+      site_texts_page.select_locale("ja")
+      site_texts_page.edit_translation(
+        "js.theme_translations.#{theme.id}.#{key}",
+        locale: "ja",
+        theme_id: theme.id,
+      )
+      expect(page).to have_content("Default text · English")
+      site_texts_page.override_translation("ガイドライン")
+      expect(page).to have_css(".saved")
+      page.refresh
+      expect(page).to have_field("site-text-value", with: "ガイドライン")
+    end
+
+    it "warns before managing translations with unsaved object text" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.fill_in_field("title", "Unsaved title")
+      admin_objects_setting_editor_page.manage_translations
+      expect(page).to have_css(
+        "#dialog-holder",
+        text: I18n.t("admin_js.admin.customize.theme.unsaved_changes_alert"),
+      )
+      click_button(I18n.t("admin_js.admin.customize.theme.stay"))
+      expect(admin_objects_setting_editor_page).to have_setting_field("title", "Unsaved title")
+      admin_objects_setting_editor_page.manage_translations
+      click_button(I18n.t("admin_js.admin.customize.theme.discard"))
+      expect(page).to have_current_path("/admin/customize/site_texts?theme_id=#{theme.id}")
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      expect(admin_objects_setting_editor_page).to have_setting_field("title", "Resources")
+    end
+
+    it "refreshes theme translations after saving object text" do
+      themes_page = PageObjects::Pages::AdminCustomizeThemes.new
+      themes_page.visit(theme)
+      expect(themes_page).to have_translation(key, "Community guidelines")
+      themes_page.click_edit_objects_setting_button("resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("label", "Updated guidelines").save
+
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+      page.refresh
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+    end
+
+    it "keeps the editor open and preserves saved values when identifiers are invalid" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("translation_key", "Invalid key").save
+      expect(admin_objects_setting_editor_page).to have_validation_error
+      page.refresh
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      expect(admin_objects_setting_editor_page).to have_setting_field(
+        "translation_key",
+        "guidelines",
+      )
+    end
+  end
 
   describe "when editing a theme setting of objects type" do
     fab!(:theme)

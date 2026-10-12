@@ -4,6 +4,8 @@ import {
   findAll,
   focus,
   render,
+  settled,
+  triggerEvent,
   waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -108,6 +110,150 @@ module(
   "Integration | Admin | Themes | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("warns before leaving unsaved objects and lets the admin stay or discard", async function (assert) {
+      await renderEditor(schemaAndData(1));
+      await fillIn('.schema-field[data-name="name"] input', "Unsaved title");
+      const router = this.owner.lookup("service:router");
+      const abortedTransition = {
+        isAborted: true,
+        data: {},
+        abort: sinon.spy(),
+      };
+      const transition = {
+        data: {},
+        abort: sinon.spy(() =>
+          router.trigger("routeWillChange", abortedTransition)
+        ),
+        retry: sinon.spy(),
+      };
+      router.trigger("routeWillChange", transition);
+      await settled();
+      assert.true(transition.abort.calledOnce);
+      assert.false(abortedTransition.abort.called);
+      assert.dom(".dialog-container").exists();
+      await click(".dialog-footer .btn-default");
+      assert.false(transition.retry.called);
+      assert
+        .dom('.schema-field[data-name="name"] input')
+        .hasValue("Unsaved title");
+      router.trigger("routeWillChange", transition);
+      await settled();
+      await click(".dialog-footer .btn-danger");
+      assert.true(transition.retry.calledOnce);
+      assert.true(transition.data.skipSchemaSettingWarning);
+    });
+
+    test("previews keys from stable object identifiers", async function (assert) {
+      const schema = {
+        name: "link",
+        identifier: "label",
+        properties: {
+          translation_key: { type: "string" },
+          label: { type: "string", translatable: true },
+          destination: { type: "string" },
+        },
+      };
+      const setting = {
+        setting: "resources",
+        value: [
+          {
+            translation_key: "guidelines",
+            label: "Guidelines",
+            destination: "/guidelines",
+          },
+        ],
+      };
+      await render(
+        <template>
+          <AdminSchemaSettingEditor @schema={{schema}} @setting={{setting}} />
+        </template>
+      );
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.guidelines.label",
+          "shows the component's usable key"
+        );
+      await fillIn('.schema-field[data-name="label"] input', "Community rules");
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.guidelines.label",
+          "editing text preserves the key"
+        );
+      await fillIn('.schema-field[data-name="translation_key"] input', "rules");
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.rules.label",
+          "editing the identifier updates the preview"
+        );
+    });
+
+    test("validates translation identifiers without restricting ordinary text", async function (assert) {
+      const schema = {
+        name: "card",
+        identifier: "title",
+        properties: {
+          translation_key: { type: "string", required: true },
+          title: { type: "string", translatable: true },
+        },
+      };
+      const setting = {
+        setting: "welcome_cards",
+        value: [{ translation_key: "welcome", title: "Welcome home!" }],
+      };
+      await render(
+        <template>
+          <AdminSchemaSettingEditor @schema={{schema}} @setting={{setting}} />
+        </template>
+      );
+
+      const input = '.schema-field[data-name="translation_key"] input';
+      const error =
+        '.schema-field[data-name="translation_key"] .schema-field__input-error';
+      for (const value of [
+        "Welcome",
+        "1welcome",
+        "_welcome",
+        "welcome-home",
+        "welcome home",
+        "welcome.home",
+        "welcôme",
+      ]) {
+        await fillIn(input, value);
+        assert
+          .dom(error)
+          .hasText(
+            "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores.",
+            value
+          );
+      }
+      for (const value of ["a", "welcome", "welcome_home2"]) {
+        await fillIn(input, value);
+        assert.dom(error).doesNotExist(value);
+      }
+      assert.dom(input).hasAttribute("maxlength", "80");
+      document.querySelector(input).value = "a".repeat(81);
+      await triggerEvent(input, "input");
+      assert
+        .dom(error)
+        .hasText(
+          i18n(
+            "admin.customize.schema.fields.string.invalid_translation_identifier"
+          )
+        );
+      await fillIn(input, "");
+      assert.dom(error).hasText(i18n("admin.customize.schema.fields.required"));
+      await fillIn(
+        '.schema-field[data-name="title"] input',
+        "Welcome Home! 123"
+      );
+      assert
+        .dom('.schema-field[data-name="title"] .schema-field__input-error')
+        .doesNotExist();
+    });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
       await renderEditor(schemaAndData(1));

@@ -15,6 +15,8 @@ export default class SiteText extends RestModel {
         "status",
         "old_default",
         "new_default",
+        "default_text",
+        "default_locale",
         "interpolation_keys"
       )
     );

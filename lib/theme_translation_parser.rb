@@ -38,8 +38,8 @@ class ThemeTranslationParser
       raise InvalidYaml.new(I18n.t("themes.locale_errors.invalid_yaml"))
     end
 
-    parsed[key].slice!(*INTERNAL_KEYS) if @internal
-    parsed[key].except!(*INTERNAL_KEYS) if !@internal
+    parsed[key].slice!(*INTERNAL_KEYS) if @internal == true
+    parsed[key].except!(*INTERNAL_KEYS) if @internal == false
 
     parsed
   end

@@ -108,6 +108,156 @@ RSpec.describe RemoteTheme do
 
     around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
+    context "when adding translatable object fields" do
+      let(:old_settings) do
+        File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")) + <<~YAML
+          cards:
+            type: objects
+            default:
+              - title: Welcome
+            schema:
+              name: card
+              properties:
+                title:
+                  type: string
+        YAML
+      end
+      let(:updated_settings) do
+        settings = YAML.safe_load(old_settings)
+        cards = settings["cards"]
+        cards["default"][0]["translation_key"] = "welcome"
+        cards["schema"]["properties"]["translation_key"] = {
+          "type" => "string",
+          "required" => true,
+        }
+        cards["schema"]["properties"]["title"]["translatable"] = true
+        settings.to_yaml
+      end
+      let(:migration_path) { "migrations/settings/0002-add-translation-keys.js" }
+      let(:key) { "resource_sections.getting_started.links.guidelines.label" }
+
+      let(:theme) do
+        add_to_git_repo(initial_repo, "settings.yaml" => old_settings, "locales/en.yml" => "en: {}")
+        RemoteTheme.import_theme(initial_repo_url)
+      end
+      let(:original_version) { theme.remote_theme.local_version }
+
+      before do
+        theme.update_setting(:cards, [{ "title" => "My custom welcome" }])
+        I18n.with_locale(:ja) { theme.update_translation(key, "ガイドライン") }
+        original_version
+        add_to_git_repo(initial_repo, "settings.yaml" => updated_settings, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "welcome" })));
+            return settings;
+          }
+        JS
+      end
+
+      it "migrates customized objects before validating and rebuilding translations" do
+        theme.remote_theme.update_from_remote
+
+        expect(theme.reload.get_setting(:cards)).to eq(
+          [{ "title" => "My custom welcome", "translation_key" => "welcome" }],
+        )
+        expect(theme.object_translation_defaults.dig("cards.welcome.title", :text)).to eq(
+          "My custom welcome",
+        )
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+        field = theme.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en")
+        expect(field.javascript_cache.content).to include("My custom welcome", "ガイドライン")
+        expect(theme.theme_settings_migrations.pluck(:version)).to contain_exactly(1, 2)
+      end
+
+      it "rolls back an update when the migration leaves invalid translation keys" do
+        add_to_git_repo(initial_repo, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "Invalid key" })));
+            return settings;
+          }
+        JS
+
+        expect { theme.remote_theme.update_from_remote }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+
+        expect(theme.reload.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.settings_field.value).to eq(old_settings)
+        expect(theme.remote_theme.local_version).to eq(original_version)
+        expect(theme.theme_settings_migrations.pluck(:version)).to eq([1])
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+
+        objects = theme.settings[:resource_sections].value
+        objects.first["translation_key"] = "Invalid key"
+        expect { theme.update_setting(:resource_sections, objects) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+
+      it "validates saved objects even when migrations are disabled" do
+        expect { theme.remote_theme.update_from_remote(run_migrations: false) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+
+        expect(theme.reload.settings_field.value).to eq(old_settings)
+        expect(theme.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.remote_theme.local_version).to eq(original_version)
+      end
+
+      it "cleans up removed object translations after migrations finish" do
+        add_to_git_repo(initial_repo, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "welcome" })));
+            settings.set("resource_sections", []);
+            return settings;
+          }
+        JS
+
+        theme.remote_theme.update_from_remote
+
+        expect(theme.reload.object_translation_defaults.keys).to eq(["cards.welcome.title"])
+        expect(theme.theme_translation_overrides.where(translation_key: key)).not_to exist
+      end
+
+      it "rolls back an update when the migration raises" do
+        add_to_git_repo(
+          initial_repo,
+          migration_path =>
+            'export default function migrate() { throw new Error("migration failed"); }',
+        )
+
+        expect { theme.remote_theme.update_from_remote }.to raise_error(
+          Theme::SettingsMigrationError,
+        )
+
+        expect(theme.reload.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.settings_field.value).to eq(old_settings)
+        expect(theme.remote_theme.local_version).to eq(original_version)
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+      end
+    end
+
+    it "retains the generated English locale field across remote updates" do
+      add_to_git_repo(
+        initial_repo,
+        "settings.yaml" =>
+          File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      field = theme.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en")
+      add_to_git_repo(initial_repo, "README.md" => "Updated documentation")
+      theme.remote_theme.update_from_remote
+      expect(
+        theme.reload.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en").id,
+      ).to eq(field.id)
+    end
+
     it "run pending theme settings migrations" do
       add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
         export default function migrate(settings) {

@@ -10975,7 +10975,8 @@ CREATE TABLE public.theme_translation_overrides (
     translation_key character varying NOT NULL,
     value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    original_translation text
 );
 
 
@@ -25819,6 +25820,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260925155026'),
 ('20260925054715'),
 ('20260923174053'),
+('20260923151316'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),
