@@ -373,6 +373,28 @@ es:
       read_post:
         unknown_post: "publicación"
       chat_tool_approval:
+        topic_states:
+          open: "Abierto"
+          closed: "Cerrado"
+          active: "Activo"
+          deleted: "Eliminado"
+        solution_post: "Publicación n.º %{number}"
+        duration_label: "Duración:"
+        user_duration:
+          one: "%{count} día"
+          other: "%{count} días"
+        post_states:
+          locked: "Bloqueado"
+        posts_label: "Publicaciones"
+        category_label: "Categoría"
+        category_fields:
+          name: "nombre"
+          description: "descripción"
+          color: "color"
+          text_color: "color del texto"
+        approve_label: "Sí"
+        reject_label: "No"
+        empty_value: "Vacío"
         unexpected_error: "se ha producido un error inesperado"
       agents:
         cannot_delete_system_agent: "Los agentes del sistema no se pueden eliminar, desactívalos en su lugar"

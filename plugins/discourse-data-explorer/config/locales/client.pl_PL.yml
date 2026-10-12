@@ -91,6 +91,12 @@ pl_PL:
       undo: "Odrzuć zmiany"
       delete: "Usuń"
       recover: "Cofnij usunięcie zapytania"
+      dashboard:
+        add: "Dodaj do pulpitu nawigacyjnego"
+        remove: "Usuń z pulpitu nawigacyjnego"
+        added: "Zapytanie dodane do pulpitu nawigacyjnego"
+        removed: "Zapytanie usunięto z pulpitu nawigacyjnego"
+        unmountable: "Zapytania z wymaganymi parametrami, które nie mają wartości domyślnej, nie mogą być wyświetlane na pulpicie nawigacyjnym"
       sql_label: "SQL"
       run_with_explain: "Uruchom z planem zapytań"
       run_options: "Więcej opcji uruchamiania"

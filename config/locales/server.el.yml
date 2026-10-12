@@ -19,6 +19,7 @@ el:
       link: "Σύνδεσμος"
   mcp:
     errors:
+      category_not_found: "Η κατηγορία δεν βρέθηκε"
       draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"
       topic_not_found: "Το θέμα δε βρέθηκε"
     oauth:

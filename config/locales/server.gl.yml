@@ -17,6 +17,7 @@ gl:
       link: "Ligazón"
   mcp:
     errors:
+      category_not_found: "Non foi posíbel atopar a categoría"
       topic_not_found: "Non foi posíbel atopar o tema"
     oauth:
       deny: "Rexeitar"

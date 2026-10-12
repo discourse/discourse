@@ -134,7 +134,6 @@ de:
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
     ai_summary_gists_agent: "Agent, der zur Erstellung kurzer Themenzusammenfassungen verwendet wird. Bei der Erstellung von Zusammenfassungen wird immer das integrierte Tool „final-summary“ verwendet; andere auf dem Agenten konfigurierte Tools und strukturierte Antwortformate werden ignoriert."
-    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde rückwirkend ergänzt werden sollen. Jede lokalisierte Zusammenfassung zählt zu diesem Limit."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -426,6 +425,28 @@ de:
       read_post:
         unknown_post: "Beitrag"
       chat_tool_approval:
+        topic_states:
+          open: "Offen"
+          closed: "Geschlossen"
+          active: "Aktiv"
+          deleted: "Gelöscht"
+        solution_post: "Beitrag #%{number}"
+        duration_label: "Dauer:"
+        user_duration:
+          one: "%{count} Tag"
+          other: "%{count} Tage"
+        post_states:
+          locked: "Gesperrt"
+        posts_label: "Beiträge"
+        category_label: "Kategorie"
+        category_fields:
+          name: "Name"
+          description: "beschreibung"
+          color: "farbe"
+          text_color: "textfarbe"
+        approve_label: "Ja"
+        reject_label: "Nein"
+        empty_value: "Leer"
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."
         failed: "Aktion konnte nicht abgeschlossen werden: %{error}"

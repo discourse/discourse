@@ -39,6 +39,12 @@ fr:
             delete: "Supprimer"
         multi_select:
           title: "Sélection multiple"
+        reorderable_list:
+          policies_pinned: "Épinglé"
+          policies_required: "Requis"
+          table_field: "Champ"
+          table_type: "Type"
+          cross_list_primary: "Principal"
         toasts:
           title: "Toasts"
         font_scale:

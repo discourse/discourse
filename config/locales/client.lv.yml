@@ -179,6 +179,9 @@ lv:
         enabled: "Padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
         disabled: "Noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
     topic_admin_menu: "tēmas darbības"
+    reorder:
+      removed: "Izdzēsa %{label}"
+      position: "%{position} no %{total}"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       dismiss: "Nerādīt"
@@ -1747,8 +1750,7 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       discard: "Izmest"
-      title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
-      title_placeholder_redesign: "Virsraksts"
+      title_placeholder: "Virsraksts"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
@@ -2996,6 +2998,7 @@ lv:
           clients:
             actions: "Darbības"
             block: "Bloķēt"
+            automatic: "Automātiski"
           authorizations:
             user: "Lietotājs"
             status: "Statuss"
@@ -3544,6 +3547,7 @@ lv:
           add_upload: "Pievienot augšupielādējamu resursu"
           upload: "Augšupielādēt"
           discard: "Izmest"
+          leave: "Iziet"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
           installed: "Uzinstalēts"

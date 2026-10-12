@@ -24,6 +24,10 @@ da:
         remove: "Fjern dette 'Synes godt om'"
         cant_remove: "Du kan ikke længere fjerne dit 'Synes godt om'"
         unauthenticated: "Tilmeld dig eller log ind for at 'synes godt om' dette indlæg"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Tilføjet"
+        changes_removed: "Fjernet"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:

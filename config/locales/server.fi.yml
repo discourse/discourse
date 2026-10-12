@@ -18,6 +18,7 @@ fi:
       link: "Linkki"
   mcp:
     errors:
+      category_not_found: "Aluetta ei löytynyt"
       draft_too_long: "Luonnos on liian pitkä"
       topic_not_found: "Ketjua ei löytynyt"
     oauth:

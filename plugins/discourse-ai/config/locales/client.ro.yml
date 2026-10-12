@@ -319,6 +319,15 @@ ro:
         providers:
           google: "Google"
           fake: "Personalizat"
+      ai_artifact:
+        editor:
+          version: "Versiune"
+          default: "Implicit"
+          apply: "Aplică"
+        share: "Partajează"
+        create_link: "Creează legătură"
+        copy_link: "Copiază legătură"
+        filter_all: "Toate"
       ai_bot:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
