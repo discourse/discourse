@@ -437,10 +437,6 @@ class DiscourseVipsWorker
   private_constant :RLIMITS
 
   def self.run(server_fd:, owner_fd:)
-    parent_pid = Process.ppid
-    Landlock::Native.set_parent_death_signal! if LINUX_PLATFORM
-    exit! 1 if Process.ppid != parent_pid
-
     Process.setproctitle("discourse vips worker")
     new(server: UNIXServer.for_fd(server_fd), owner_reader: IO.for_fd(owner_fd)).run
   end
