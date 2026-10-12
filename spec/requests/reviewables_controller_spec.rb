@@ -922,21 +922,26 @@ RSpec.describe ReviewablesController do
         Post.plugin_permitted_update_params.delete("review_post_field")
       end
 
-      it "rejects tag names without tag objects" do
+      it "edits the flagged post and applies tags supplied by name" do
+        SiteSetting.tagging_enabled = true
         flagged = Fabricate(:reviewable_flagged_post)
+        tag = Fabricate(:tag)
+        edited_raw = "A reviewed post."
 
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
               edit: {
-                raw: "A reviewed post.",
-                tags: ["spam"],
+                raw: edited_raw,
+                tags: [tag.name],
               },
             },
             as: :json
 
-        expect(response).to have_http_status(:bad_request)
-        expect(flagged.reload).to be_pending
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(flagged.target.reload.raw).to eq(edited_raw)
+        expect(flagged.topic.reload.tags).to contain_exactly(tag)
       end
 
       it "rejects invalid original tag IDs" do
@@ -1088,16 +1093,22 @@ RSpec.describe ReviewablesController do
         flagged = Fabricate(:reviewable_flagged_post)
         original_raw = flagged.target.raw
 
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
+        put "/review/#{flagged.id}/perform/agree_and_edit",
             params: {
               version: flagged.version,
               edit: {
                 raw: "An edit with a forbidden featured link.",
                 featured_link: "https://example.com",
               },
+            }.to_json,
+            headers: {
+              "CONTENT_TYPE" => "application/json",
+              "HTTP_ACCEPT" => "application/json, text/javascript, */*; q=0.01",
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
             }
 
         expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.media_type).to eq("application/json")
         expect(response.parsed_body["errors"]).to eq(
           [I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_update")],
         )
@@ -1332,6 +1343,26 @@ RSpec.describe ReviewablesController do
         expect(job["args"][0]["type"]).to eq("signup_after_approval")
       end
 
+      it "emails the rejected user when send_email is omitted" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        rejected_user = Fabricate(:user)
+        rejected_user.activate
+        rejected_email = rejected_user.email
+        rejected_reviewable = ReviewableUser.find_by(target: rejected_user)
+
+        expect do
+          put "/review/#{rejected_reviewable.id}/perform/delete_user.json",
+              params: {
+                version: rejected_reviewable.version,
+              }
+        end.to change { ActionMailer::Base.deliveries.size }.by(1)
+
+        expect(response).to have_http_status(:ok)
+        expect(rejected_reviewable.reload).to be_rejected
+        expect(ActionMailer::Base.deliveries.last.to).to contain_exactly(rejected_email)
+      end
+
       it "doesn't send email when `send_email` is false" do
         _other_reviewable = Fabricate(:reviewable)
 
@@ -1508,7 +1539,7 @@ RSpec.describe ReviewablesController do
       it "passes the added param into the reviewable class' perform method" do
         MessageBus.expects(:publish).with(
           "/phony-reviewable-test",
-          { args: { :version => reviewable_phony.version, "fake_id" => "2" } },
+          { args: { :version => reviewable_phony.version, :send_email => true, "fake_id" => "2" } },
           user_ids: [1],
         )
 

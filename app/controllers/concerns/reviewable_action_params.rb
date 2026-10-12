@@ -16,34 +16,32 @@ module ReviewableActionParams
           :silenced_till,
           :post_action,
           :post_edit,
+          :revise_reason,
+          :revise_feedback,
+          :revise_custom_reason,
+          :reject_reason,
           other_user_ids: [],
         )
         .to_h
         .symbolize_keys
 
-    case reviewable
-    when ReviewableFlaggedPost
-      if params[:action_id] == "agree_and_edit"
-        args[:edit] = permitted_post_revision_attributes(params[:edit])
-        reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
-      end
-    when ReviewableQueuedPost
-      if params[:revise_reason].present?
-        args.merge!(
-          params
-            .permit(:revise_reason, :revise_feedback, :revise_custom_reason)
-            .to_h
-            .symbolize_keys,
-        )
-      end
-    when ReviewableUser
-      args.merge!(params.permit(:reject_reason).to_h.symbolize_keys)
-      args[:send_email] = params[:send_email] != "false"
+    args[:send_email] = params[:send_email] != "false"
+
+    if params.key?(:edit)
+      args[:edit] = permitted_post_revision_attributes(params[:edit])
+      reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
     end
 
     if reviewable.type_class.respond_to?(:additional_args)
       args.merge!(reviewable.type_class.additional_args(params) || {})
     end
+
+    plugin_params =
+      DiscoursePluginRegistry.reviewable_params.select do |entry|
+        reviewable.type == entry[:type].to_s.classify
+      end
+    args.merge!(params.slice(*plugin_params.map { |entry| entry[:param] }).permit!)
+
     args
   end
 end

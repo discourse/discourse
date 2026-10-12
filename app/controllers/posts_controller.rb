@@ -197,7 +197,7 @@ class PostsController < ApplicationController
   end
 
   def update
-    Post::Revise.call(service_params.merge(params: post_revision_params)) do
+    Post::Revise.call(service_params.merge(params: post_revision_params, editor: current_user)) do
       on_success do |post:, topic:, category_changed:|
         post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
         post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
@@ -215,9 +215,11 @@ class PostsController < ApplicationController
 
         render_json_dump(result)
       end
+
       on_failed_contract { raise Discourse::InvalidParameters }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
+
       on_failed_policy(:can_edit_post) do |post:|
         if post.user_id == current_user.id && post.edit_time_limit_expired?(current_user)
           render_json_error(I18n.t("too_late_to_edit"))
@@ -228,9 +230,11 @@ class PostsController < ApplicationController
       on_failed_policy(:can_edit_topic_record) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
+
       on_failed_step(:check_edit_conflicts) do
         render_json_error(I18n.t("edit_conflict"), status: 409)
       end
+
       on_failure do |post:, topic:, status: :unprocessable_entity|
         render_json_error(post.errors.present? ? post : topic, status:)
       end

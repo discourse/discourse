@@ -569,6 +569,10 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "preserves the post and topic and keeps the spam flag pending when the edit is invalid" do
+      destination = Fabricate(:category)
+      shared_draft = Fabricate(:shared_draft, topic: post.topic)
+      original_destination = shared_draft.category
+      SiteSetting.shared_drafts_category = post.topic.category_id
       original_raw = post.raw
       original_title = post.topic.title
 
@@ -579,6 +583,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           edit: {
             raw: "",
             title: "This title must not be saved",
+            category_id: destination.id,
           },
         )
       end.to raise_error(ActiveRecord::RecordInvalid)
@@ -587,6 +592,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.reload.raw).to eq(original_raw)
       expect(post.topic.reload.title).to eq(original_title)
       expect(post.revisions).to be_empty
+      expect(shared_draft.reload.category).to eq(original_destination)
     end
   end
 

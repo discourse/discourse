@@ -13,36 +13,71 @@ class Post::Revise
 
     validates :post_id, presence: true, unless: :topic_id
     validates :topic_id, absence: true, if: :post_id
-  end
 
-  transaction do
-    model :topic
-    policy :can_edit_topic_record
-    model :post
-    model :changes
-    policy :can_edit_post
-    policy :can_edit_topic
-    policy :can_edit_tags
-    step :check_edit_conflicts
-    only_if :category_changed? do
-      step :validate_category_change
-      only_if :shared_draft? do
-        step :update_shared_draft_destination
+    validate :valid_changes
+
+    private
+
+    def valid_changes
+      unless changes.is_a?(Hash)
+        errors.add(:changes, :invalid)
+        return
+      end
+
+      %i[tags original_tags].each do |key|
+        tags = changes[key]
+        next if tags.nil?
+
+        errors.add(:changes, :invalid) unless valid_tags?(tags)
       end
     end
-    only_if :revision_requested? do
-      step :revise_post
+
+    def valid_tags?(tags)
+      return false unless tags.is_a?(Array)
+      return true if tags.all? { |tag| tag.is_a?(String) }
+
+      tags.all? { |tag| valid_tag?(tag) }
     end
+
+    def valid_tag?(tag)
+      return false unless tag.is_a?(Hash)
+      return false unless tag[:name].nil? || tag[:name].is_a?(String)
+      return tag[:name].present? if tag[:id].nil?
+
+      tag[:id].to_s.match?(/\A[1-9]\d*\z/)
+    end
+  end
+
+  model :topic
+  policy :can_edit_topic_record
+  model :post
+  model :changes
+  policy :can_edit_post
+  policy :can_edit_topic
+  policy :can_edit_tags
+  step :check_edit_conflicts
+
+  only_if :category_changed? do
+    step :validate_category_change
+
+    only_if :shared_draft? do
+      step :update_shared_draft_destination
+    end
+  end
+
+  only_if :revision_requested? do
+    step :revise_post
   end
 
   private
 
   def fetch_post(params:, guardian:)
     posts = guardian.is_staff? ? Post.with_deleted : Post.all
+
     if params.topic_id
-      posts.where(topic_id: params.topic_id).order(:post_number).lock.first
+      posts.where(topic_id: params.topic_id).order(:post_number).first
     else
-      posts.lock.find_by(id: params.post_id)
+      posts.find_by(id: params.post_id)
     end
   end
 
@@ -50,18 +85,20 @@ class Post::Revise
     topics = guardian.is_staff? ? Topic.with_deleted : Topic.all
     posts = guardian.is_staff? ? Post.with_deleted : Post.all
     topic_id = params.topic_id || posts.where(id: params.post_id).pick(:topic_id)
-    topics.lock.find_by(id: topic_id)
+
+    topics.find_by(id: topic_id)
   end
 
   def can_edit_topic_record(params:, topic:, guardian:)
     params.topic_id.blank? || guardian.can_edit?(topic)
   end
 
-  def fetch_changes(params:, post:, topic:, guardian:)
+  def fetch_changes(params:, post:, topic:, guardian:, editor:)
     Post::EditChanges.new(
       post:,
       topic:,
       guardian:,
+      editor:,
       attributes: params.changes,
       topic_only: params.topic_id.present?,
     )
@@ -73,6 +110,7 @@ class Post::Revise
 
   def can_edit_topic(params:, changes:, topic:, guardian:)
     return true if params.topic_id.present?
+
     changes.topic_attributes.except(:tags).empty? || guardian.can_edit_topic?(topic)
   end
 
@@ -83,11 +121,13 @@ class Post::Revise
   def check_edit_conflicts(changes:, post:, topic:)
     originals = changes.attributes
     conflict = originals[:original_text].present? && originals[:original_text] != post.raw
+
     if post.is_first_post?
       conflict ||= originals[:original_title].present? && originals[:original_title] != topic.title
       tag_ids = originals[:original_tags]&.map { |tag| tag.is_a?(String) ? 0 : tag[:id].to_i }&.sort
       conflict ||= tag_ids.present? && tag_ids != topic.tags.pluck(:id).sort
     end
+
     fail!(I18n.t("edit_conflict")) if conflict
   end
 
@@ -112,6 +152,7 @@ class Post::Revise
         tag_names: changes.resolved_tag_names,
         tags_changed: changes.topic_attributes.key?(:tags),
       )
+
     return if result.success?
 
     topic.errors.add(:base, result.error)
@@ -123,27 +164,27 @@ class Post::Revise
     topic.shared_draft.update!(category_id: changes.topic_attributes[:category_id])
   end
 
-  def revise_post(changes:, post:, topic:, guardian:)
+  def revise_post(changes:, post:, topic:, guardian:, editor:)
     post.image_sizes = changes.attributes[:image_sizes] if changes.attributes[:image_sizes].present?
+
     revisor = PostRevisor.new(post, topic)
     topic_edit_requested = changes.topic_edit_requested?
-    revised = revisor.revise!(guardian.user, changes.revision_attributes, changes.revision_options)
+    category_changed = changes.category_changed?
+    revised = revisor.revise!(editor, changes.revision_attributes, changes.revision_options)
     context[:category_changed] = revisor.category_changed
 
     if topic.errors.present?
       errors =
-        TopicCategoryChangeValidator.safe_revision_errors(
-          topic:,
-          guardian:,
-          category_changed: changes.category_changed?,
-        )
+        TopicCategoryChangeValidator.safe_revision_errors(topic:, guardian:, category_changed:)
       topic.errors.clear
       errors.each { |error| topic.errors.add(:base, error) }
     end
+
     if (revisor.successfully_saved_post_and_topic == false || (!revised && topic_edit_requested)) &&
          post.errors.empty? && topic.errors.empty?
       topic.errors.add(:base, :unable_to_update)
     end
+
     if post.errors.present? || topic.errors.present?
       fail!(post.errors.full_messages + topic.errors.full_messages)
     end

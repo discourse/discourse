@@ -4,6 +4,24 @@ RSpec.describe Post::Revise do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:post_id) }
 
+    it { is_expected.not_to allow_values(nil, [], "invalid").for(:changes) }
+
+    it do
+      is_expected.not_to allow_values(
+        { tags: [{ id: "1.5" }] },
+        { original_tags: [{ id: false }] },
+        { tags: ["existing-tag", { id: 1 }] },
+      ).for(:changes)
+    end
+
+    it do
+      is_expected.to allow_values(
+        { tags: nil, original_tags: nil },
+        { tags: ["existing-tag"], original_tags: ["previous-tag"] },
+        { tags: [{ id: 1 }, { id: "2", name: "another-tag" }, { name: "new-tag" }] },
+      ).for(:changes)
+    end
+
     context "with a post ID" do
       subject(:contract) { described_class.new(post_id: 1) }
 
@@ -25,7 +43,7 @@ RSpec.describe Post::Revise do
 
     let(:post) { topic.first_post }
     let(:params) { { post_id: post.id, changes: } }
-    let(:dependencies) { { guardian: acting_user.guardian } }
+    let(:dependencies) { { guardian: acting_user.guardian, editor: acting_user } }
     let(:changes) { { raw: "The corrected text of this post." } }
 
     context "without a post or topic ID" do
@@ -111,22 +129,6 @@ RSpec.describe Post::Revise do
       it "preserves the body and revision history" do
         expect { expect(result).to fail_a_step(:revise_post) }.not_to change {
           [post.reload.raw, post.revisions.count]
-        }
-      end
-    end
-
-    context "when a shared draft destination changes but the revision fails" do
-      fab!(:category)
-      fab!(:destination, :category)
-      fab!(:shared_draft) { Fabricate(:shared_draft, topic:, category:) }
-
-      let(:changes) { { raw: "", category_id: destination.id } }
-
-      before { SiteSetting.shared_drafts_category = topic.category_id }
-
-      it "restores the previous destination" do
-        expect { expect(result).to fail_a_step(:revise_post) }.not_to change {
-          shared_draft.reload.category_id
         }
       end
     end

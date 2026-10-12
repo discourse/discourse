@@ -5,6 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 export default class PostAdapter extends RestAdapter {
   update(store, type, id, attrs) {
     const { reviewableAction, ...edit } = attrs;
+
     if (!reviewableAction) {
       return super.update(store, type, id, attrs);
     }
@@ -13,6 +14,7 @@ export default class PostAdapter extends RestAdapter {
       `/review/${reviewableAction.id}/perform/${reviewableAction.action}`,
       {
         type: "PUT",
+        dataType: "json",
         contentType: "application/json",
         data: JSON.stringify({
           ...reviewableAction.data,

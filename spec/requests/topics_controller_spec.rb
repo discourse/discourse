@@ -2793,6 +2793,15 @@ RSpec.describe TopicsController do
             )
           end
 
+          it "clears existing tags when JSON tags is null" do
+            topic.tags << tag
+
+            put "/t/#{topic.id}.json", params: { tags: nil }, as: :json
+
+            expect(response).to have_http_status(:ok)
+            expect(topic.reload.tags).to be_empty
+          end
+
           it "does not remove tag if no params is given" do
             topic.tags << tag
 
