@@ -1,52 +1,63 @@
 # frozen_string_literal: true
 
-# Saves permitted edits to a post or its topic, reporting invalid or conflicting changes.
-#
-# Pass guardian for authorization and editor for revision attribution. Params must contain
-# either post_id or topic_id; changes defaults to an empty hash. A topic_id edit targets
-# the first post for revision history but leaves its body unchanged.
-#
-# Accepted changes:
-# * raw, edit_reason, locale, reply_to_post_number: content and metadata for post_id edits.
-# * title, category_id, tags, featured_link, archetype: topic details, applied only to
-#   the first post. Tags accept [{ id: 123 }, { name: "new-tag" }]; nil or [] clears tags.
-#   Legacy arrays of tag name strings are also accepted.
-# * original_text, original_title, original_tags: optional conflict checks against
-#   current values. original_tags uses [{ id: 123 }]. Blank originals skip their checks.
-# * image_sizes: image dimensions supplied by the editor.
-# * bypass_bump: boolean or boolean string, honored only when the guardian permits it.
-# * keep_existing_draft: boolean or boolean string, preserves the editor's existing draft.
-# Registered plugin post and topic fields are also accepted.
-#
-# Outcome callbacks:
-# * on_success: post, topic, and category_changed are available.
-# * on_failed_contract: missing identifiers or invalid changes.
-# * on_model_not_found(:post) or (:topic): the requested content was not found.
-# * on_failed_policy: can_edit_post, can_edit_topic_record, can_edit_topic, or
-#   can_edit_tags identifies the denied permission.
-# * on_failed_step(:validate_tag_count): post.errors describes the tag limit.
-# * on_failed_step(:check_edit_conflicts): an original value no longer matches.
-# * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
-# * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
-# * on_failure: fallback for an outcome without a more specific handler.
-#
-# Post::Revise.call(
-#   params: {
-#     post_id: post.id,
-#     changes: { raw: "The corrected text of this post.", original_text: post.raw },
-#   },
-#   guardian: editor.guardian,
-#   editor:,
-# ) do
-#   on_success { |post:| render_serialized(post, PostUpdateSerializer) }
-#   on_failed_contract { raise Discourse::InvalidParameters }
-#   on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
-# end
+# Saves edits to a post or its topic, reporting invalid or conflicting changes.
 class Post::Revise
   include Service::Base
 
   class EditConflict < StandardError
   end
+
+  # @!method self.call(guardian:, editor:, params:)
+  #   @param guardian [Guardian] permissions of the person editing
+  #   @param editor [User] person credited with the revision
+  #   @param params [Hash] revision inputs
+  #   @option params [Integer] :post_id post to edit; mutually exclusive with topic_id
+  #   @option params [Integer] :topic_id topic to edit through its first post, preserving its body
+  #   @option params [Hash, ActionController::Parameters] :changes ({}) fields to change
+  #   @option params.changes [String] :raw post body, used with post_id
+  #   @option params.changes [String] :edit_reason revision explanation, used with post_id
+  #   @option params.changes [String] :locale content locale, used with post_id
+  #   @option params.changes [Integer] :reply_to_post_number reply target, used with post_id
+  #   @option params.changes [String] :title topic title, applied only to the first post
+  #   @option params.changes [Integer] :category_id destination category, applied only to the first post
+  #   @option params.changes [String] :featured_link topic link, applied only to the first post
+  #   @option params.changes [String] :archetype topic archetype, applied only to the first post
+  #   @option params.changes [Array<Hash>, Array<String>, nil] :tags topic tags as
+  #     [{ id: 123 }, { name: "new-tag" }] or legacy names. nil, [] or "" clears tags.
+  #     Applied only to the first post.
+  #   @option params.changes [String] :original_text expected body; blank skips the conflict check
+  #   @option params.changes [String] :original_title expected title; blank skips the conflict check
+  #   @option params.changes [Array<Hash>] :original_tags expected tags as [{ id: 123 }];
+  #     blank skips the conflict check
+  #   @option params.changes [Hash] :image_sizes image dimensions supplied by the editor
+  #   @option params.changes [Boolean, String] :bypass_bump preserve topic bump time when permitted
+  #   @option params.changes [Boolean, String] :keep_existing_draft preserve the editor's existing draft
+  #   @note Registered plugin post and topic fields are also accepted in changes.
+  #   @return [Service::Base::Context] service result when called without an outcome block
+  #   @yield Register outcome handlers through {Service::Runner}:
+  #     * on_success: exposes post, topic, and category_changed.
+  #     * on_failed_contract: missing identifiers or invalid changes.
+  #     * on_model_not_found(:post) or (:topic): content was not found.
+  #     * on_failed_policy: can_edit_post, can_edit_topic_record, can_edit_topic,
+  #       or can_edit_tags identifies the denied permission.
+  #     * on_failed_step(:validate_tag_count): post.errors describes the tag limit.
+  #     * on_failed_step(:check_edit_conflicts): an original value no longer matches.
+  #     * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
+  #     * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
+  #     * on_failure: fallback for an outcome without a more specific handler.
+  #   @example Edit a post and handle a conflict
+  #     Post::Revise.call(
+  #       params: {
+  #         post_id: post.id,
+  #         changes: { raw: "The corrected text of this post.", original_text: post.raw },
+  #       },
+  #       guardian: editor.guardian,
+  #       editor:,
+  #     ) do
+  #       on_success { |post:| render_serialized(post, PostUpdateSerializer) }
+  #       on_failed_contract { raise Discourse::InvalidParameters }
+  #       on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+  #     end
 
   params do
     attribute :post_id, :integer
@@ -56,9 +67,15 @@ class Post::Revise
     validates :post_id, presence: true, unless: :topic_id
     validates :topic_id, absence: true, if: :post_id
 
+    before_validation :normalize_changes
+
     validate :valid_changes
 
     private
+
+    def normalize_changes
+      self.changes = changes.to_unsafe_h.deep_symbolize_keys if changes.respond_to?(:to_unsafe_h)
+    end
 
     def valid_changes
       unless changes.is_a?(Hash)

@@ -30,6 +30,7 @@ RSpec.describe Post::Revise do
     it do
       is_expected.not_to allow_values(
         { tags: [{ id: "1.5" }] },
+        ActionController::Parameters.new(tags: [{ id: "1.5" }]),
         { original_tags: [{ id: false, name: "new-tag" }] },
         { tags: ["existing-tag", { id: 1 }] },
       ).for(:changes)
@@ -41,6 +42,7 @@ RSpec.describe Post::Revise do
         { tags: "" },
         { tags: ["existing-tag"] },
         { tags: [{ id: 1 }, { id: "2", name: "another-tag" }, { id: "", name: "new-tag" }] },
+        ActionController::Parameters.new(tags: [{ id: "1" }, { name: "new-tag" }]),
       ).for(:changes)
     end
 
@@ -193,6 +195,20 @@ RSpec.describe Post::Revise do
         expect(post.reload.raw).to eq(changes[:raw])
         expect(topic.reload.title).to eq(changes[:title])
         expect(topic.tags.pluck(:name)).to eq(["new-tag"])
+      end
+    end
+
+    context "when changes are Rails parameters" do
+      fab!(:tag)
+
+      let(:changes) { ActionController::Parameters.new(super().merge(tags: [{ id: tag.id }])) }
+
+      before { SiteSetting.tagging_enabled = true }
+
+      it "saves the body and nested tags" do
+        expect(result).to run_successfully
+        expect(post.reload.raw).to eq(changes[:raw])
+        expect(topic.reload.tags).to contain_exactly(tag)
       end
     end
 

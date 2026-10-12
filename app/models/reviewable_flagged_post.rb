@@ -8,14 +8,7 @@ class ReviewableFlaggedPost < Reviewable
       args = ReviewableActionBuilder.penalty_args(params)
 
       if params[:action_id] == "agree_and_edit" && params.key?(:post_revision)
-        revision = params[:post_revision]
-        args[:post_revision] = (
-          if revision.is_a?(ActionController::Parameters)
-            revision.to_unsafe_h
-          else
-            revision
-          end
-        )
+        args[:post_revision] = params[:post_revision]
       end
 
       args
@@ -266,7 +259,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_edit(performed_by, args)
-    unless args[:post_revision].is_a?(Hash) && args[:post_revision].key?(:raw)
+    unless args[:post_revision].respond_to?(:key?) && args[:post_revision].key?(:raw)
       raise Discourse::InvalidParameters.new(:post_revision)
     end
 
