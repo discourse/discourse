@@ -47,7 +47,7 @@ bin/lint --fix
 
 When you pass explicit files, `bin/lint` filters them to supported lintable file types before invoking lefthook.
 
-> :information_source: Markdown documentation files are not currently part of `bin/lint`, so running `bin/lint path/to/doc.md` will report that there are no matching files to lint.
+> :information_source: Markdown files are only linted under `docs/developer-guides/`. Running `bin/lint path/to/doc.md` on any other Markdown file will report that nothing was linted.
 
 ## What gets linted
 
