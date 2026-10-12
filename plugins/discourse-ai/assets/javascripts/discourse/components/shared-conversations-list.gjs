@@ -35,6 +35,17 @@ export default class SharedConversationsList extends Component {
     this.nextCursor = this.args.data.next_cursor;
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this._revokeConfirmationOpen) {
+      this.dialog.cancel();
+    }
+  }
+
+  get canManage() {
+    return this.args.data.can_manage === true;
+  }
+
   get canLoadMore() {
     return this.hasMore && !this.loadError && !this._revokeConfirmationOpen;
   }
@@ -45,7 +56,12 @@ export default class SharedConversationsList extends Component {
 
   @action
   async copyLink(item) {
-    if (this.loading || this._revokeConfirmationOpen || !item.available) {
+    if (
+      !this.canManage ||
+      this.loading ||
+      this._revokeConfirmationOpen ||
+      !item.available
+    ) {
       return;
     }
     const url = /^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(item.url)
@@ -64,7 +80,7 @@ export default class SharedConversationsList extends Component {
 
   @action
   revoke(item) {
-    if (this.loading || this._revokeConfirmationOpen) {
+    if (!this.canManage || this.loading || this._revokeConfirmationOpen) {
       return;
     }
 
@@ -136,7 +152,7 @@ export default class SharedConversationsList extends Component {
   }
 
   async #revokeConfirmed(item) {
-    if (this.loading) {
+    if (!this.canManage || this.loading) {
       return;
     }
     this.loading = true;
@@ -156,6 +172,7 @@ export default class SharedConversationsList extends Component {
   #fetch(order, cursor) {
     return ajax(SHARES_URL, {
       data: {
+        user_id: this.args.data.user_id,
         order,
         ...(cursor !== null && cursor !== undefined
           ? { cursor: JSON.stringify(cursor) }
@@ -217,24 +234,26 @@ export default class SharedConversationsList extends Component {
                     }}</p>
                 {{/unless}}
               </div>
-              <div class="shared-conversations__actions">
-                {{#if item.available}}
+              {{#if this.canManage}}
+                <div class="shared-conversations__actions">
+                  {{#if item.available}}
+                    <DButton
+                      class="btn-default shared-conversations__copy-link"
+                      @action={{fn this.copyLink item}}
+                      @disabled={{this.loading}}
+                      @icon="link"
+                      @label="discourse_ai.ai_artifact.copy_link"
+                    />
+                  {{/if}}
                   <DButton
-                    class="btn-default shared-conversations__copy-link"
-                    @action={{fn this.copyLink item}}
+                    class="btn-danger shared-conversations__revoke"
+                    @action={{fn this.revoke item}}
                     @disabled={{this.loading}}
-                    @icon="link"
-                    @label="discourse_ai.ai_artifact.copy_link"
+                    @icon="far-trash-can"
+                    @label="discourse_ai.ai_artifact.revoke_conversation"
                   />
-                {{/if}}
-                <DButton
-                  class="btn-danger shared-conversations__revoke"
-                  @action={{fn this.revoke item}}
-                  @disabled={{this.loading}}
-                  @icon="far-trash-can"
-                  @label="discourse_ai.ai_artifact.revoke_conversation"
-                />
-              </div>
+                </div>
+              {{/if}}
             </li>
           {{else}}
             {{#unless this.hasMore}}

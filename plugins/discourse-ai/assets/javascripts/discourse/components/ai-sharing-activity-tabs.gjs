@@ -8,10 +8,14 @@ export default class AiSharingActivityTabs extends Component {
   @service siteSettings;
 
   get showConversations() {
+    const user = this.args.outletArgs?.model;
     return (
       this.siteSettings.discourse_ai_enabled &&
       this.currentUser &&
-      this.currentUser.id === this.args.outletArgs?.model?.id
+      user &&
+      Number.isInteger(user.id) &&
+      user.id > 0 &&
+      (this.currentUser.admin || this.currentUser.id === user.id)
     );
   }
 

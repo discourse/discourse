@@ -37,6 +37,17 @@ export default class SharedArtifactsList extends Component {
     this.nextCursor = this.args.data.next_cursor;
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this._revokeConfirmationOpen) {
+      this.dialog.cancel();
+    }
+  }
+
+  get canManage() {
+    return this.args.data.can_manage === true;
+  }
+
   get canLoadMore() {
     return this.hasMore && !this.loadError && !this._revokeConfirmationOpen;
   }
@@ -47,7 +58,12 @@ export default class SharedArtifactsList extends Component {
 
   @action
   async copyLink(item) {
-    if (this.loading || this._revokeConfirmationOpen || !item.available) {
+    if (
+      !this.canManage ||
+      this.loading ||
+      this._revokeConfirmationOpen ||
+      !item.available
+    ) {
       return;
     }
     await this.#copy(this.#absoluteURL(item.url));
@@ -55,7 +71,12 @@ export default class SharedArtifactsList extends Component {
 
   @action
   async copyPostEmbed(item) {
-    if (this.loading || this._revokeConfirmationOpen || !item.available) {
+    if (
+      !this.canManage ||
+      this.loading ||
+      this._revokeConfirmationOpen ||
+      !item.available
+    ) {
       return;
     }
     await this.#copy(formatAiArtifactPostEmbed(item));
@@ -63,7 +84,12 @@ export default class SharedArtifactsList extends Component {
 
   @action
   async copyWebsiteEmbed(item) {
-    if (this.loading || this._revokeConfirmationOpen || !item.available) {
+    if (
+      !this.canManage ||
+      this.loading ||
+      this._revokeConfirmationOpen ||
+      !item.available
+    ) {
       return;
     }
     const url = this.#absoluteURL(item.embed_url || item.url);
@@ -74,7 +100,7 @@ export default class SharedArtifactsList extends Component {
 
   @action
   revoke(item) {
-    if (this.loading || this._revokeConfirmationOpen) {
+    if (!this.canManage || this.loading || this._revokeConfirmationOpen) {
       return;
     }
 
@@ -157,7 +183,7 @@ export default class SharedArtifactsList extends Component {
   }
 
   async #revokeConfirmed(item) {
-    if (this.loading) {
+    if (!this.canManage || this.loading) {
       return;
     }
     this.loading = true;
@@ -201,6 +227,7 @@ export default class SharedArtifactsList extends Component {
   #fetch(filter, order, cursor) {
     return ajax(SHARES_URL, {
       data: {
+        user_id: this.args.data.user_id,
         type: filter,
         order,
         ...(cursor !== null && cursor !== undefined
@@ -315,44 +342,46 @@ export default class SharedArtifactsList extends Component {
                     }}</p>
                 {{/unless}}
               </div>
-              <div class="shared-artifacts__actions">
-                {{#if item.available}}
+              {{#if this.canManage}}
+                <div class="shared-artifacts__actions">
+                  {{#if item.available}}
+                    <DButton
+                      class="btn-default shared-artifacts__copy-link"
+                      @action={{fn this.copyLink item}}
+                      @disabled={{this.loading}}
+                      @icon="link"
+                      @label="discourse_ai.ai_artifact.copy_link"
+                    />
+                    <DButton
+                      class="btn-default shared-artifacts__embed-post"
+                      @action={{fn this.copyPostEmbed item}}
+                      @disabled={{this.loading}}
+                      @icon="code"
+                      @label="discourse_ai.ai_artifact.embed_post"
+                      @title="discourse_ai.ai_artifact.embed_post_title"
+                    />
+                    <DButton
+                      class="btn-default shared-artifacts__embed-website"
+                      @action={{fn this.copyWebsiteEmbed item}}
+                      @disabled={{this.loading}}
+                      @icon="code"
+                      @label="discourse_ai.ai_artifact.embed_website"
+                      @title="discourse_ai.ai_artifact.embed_website_title"
+                    />
+                  {{/if}}
                   <DButton
-                    class="btn-default shared-artifacts__copy-link"
-                    @action={{fn this.copyLink item}}
+                    class="btn-danger shared-artifacts__revoke"
+                    @action={{fn this.revoke item}}
                     @disabled={{this.loading}}
-                    @icon="link"
-                    @label="discourse_ai.ai_artifact.copy_link"
+                    @icon="far-trash-can"
+                    @label={{if
+                      (eq item.type "conversation")
+                      "discourse_ai.ai_artifact.revoke_conversation"
+                      "discourse_ai.ai_artifact.revoke"
+                    }}
                   />
-                  <DButton
-                    class="btn-default shared-artifacts__embed-post"
-                    @action={{fn this.copyPostEmbed item}}
-                    @disabled={{this.loading}}
-                    @icon="code"
-                    @label="discourse_ai.ai_artifact.embed_post"
-                    @title="discourse_ai.ai_artifact.embed_post_title"
-                  />
-                  <DButton
-                    class="btn-default shared-artifacts__embed-website"
-                    @action={{fn this.copyWebsiteEmbed item}}
-                    @disabled={{this.loading}}
-                    @icon="code"
-                    @label="discourse_ai.ai_artifact.embed_website"
-                    @title="discourse_ai.ai_artifact.embed_website_title"
-                  />
-                {{/if}}
-                <DButton
-                  class="btn-danger shared-artifacts__revoke"
-                  @action={{fn this.revoke item}}
-                  @disabled={{this.loading}}
-                  @icon="far-trash-can"
-                  @label={{if
-                    (eq item.type "conversation")
-                    "discourse_ai.ai_artifact.revoke_conversation"
-                    "discourse_ai.ai_artifact.revoke"
-                  }}
-                />
-              </div>
+                </div>
+              {{/if}}
             </li>
           {{else}}
             {{#unless this.hasMore}}

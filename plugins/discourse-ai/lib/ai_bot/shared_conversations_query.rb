@@ -6,8 +6,9 @@ module DiscourseAi
       PAGE_SIZE = 20
       ORDERS = %w[newest oldest].freeze
 
-      def initialize(user:, order:, cursor:)
+      def initialize(user:, order:, cursor:, published_only: false)
         @user = user
+        @published_only = published_only
         @order = order.nil? ? "newest" : order
         @raw_cursor = cursor
       end
@@ -37,6 +38,12 @@ module DiscourseAi
         has_more = rows.length > PAGE_SIZE
         page = rows.first(PAGE_SIZE)
         items = build_items(page)
+        if @published_only
+          items =
+            items
+              .select { |item| item[:available] }
+              .map { |item| item.slice(:id, :title, :url, :created_at, :available) }
+        end
         { items: items, has_more: has_more, next_cursor: has_more ? position(page.last) : nil }
       end
 

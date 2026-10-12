@@ -21,13 +21,24 @@ module DiscourseAi
       end
 
       def index
+        if params.key?(:user_id) && !params[:user_id].to_s.match?(/\A[1-9]\d{0,9}\z/)
+          raise Discourse::InvalidParameters.new(:user_id)
+        end
+        owner = params.key?(:user_id) ? User.find_by(id: params[:user_id]) : current_user
+        guardian.ensure_can_inspect_ai_shares!(owner)
+        can_manage = owner.id == current_user.id
+
         render json:
-                 ArtifactSharesQuery.new(
-                   user: current_user,
-                   type: params[:type],
-                   order: params[:order],
-                   cursor: params[:cursor],
-                 ).call
+                 ArtifactSharesQuery
+                   .new(
+                     user: owner,
+                     published_only: !can_manage,
+                     type: params[:type],
+                     order: params[:order],
+                     cursor: params[:cursor],
+                   )
+                   .call
+                   .merge(user_id: owner.id, can_manage: can_manage)
       end
 
       def create

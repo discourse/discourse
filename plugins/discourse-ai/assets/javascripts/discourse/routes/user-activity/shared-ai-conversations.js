@@ -9,17 +9,23 @@ export default class UserActivitySharedAiConversations extends DiscourseRoute {
   @service siteSettings;
 
   beforeModel() {
+    const user = this.modelFor("user");
     if (
       !this.siteSettings.discourse_ai_enabled ||
       !this.currentUser ||
-      this.modelFor("user")?.id !== this.currentUser.id
+      !user ||
+      !Number.isInteger(user.id) ||
+      user.id <= 0 ||
+      (!this.currentUser.admin && user.id !== this.currentUser.id)
     ) {
       return this.router.replaceWith("userActivity.index");
     }
   }
 
   model() {
-    return ajax("/discourse-ai/ai-bot/shared-ai-conversations.json");
+    return ajax("/discourse-ai/ai-bot/shared-ai-conversations.json", {
+      data: { user_id: this.modelFor("user").id },
+    });
   }
 
   titleToken() {

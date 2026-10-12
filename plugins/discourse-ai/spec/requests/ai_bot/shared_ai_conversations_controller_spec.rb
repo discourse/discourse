@@ -61,6 +61,8 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to eq(
+        "user_id" => user.id,
+        "can_manage" => true,
         "items" => [
           {
             "id" => conversation.id,
