@@ -76,6 +76,12 @@ en:
         invalid_value: "is not valid for this field's type"
         incompatible_value_for_new_type: "has a current value that is not valid for the new type. Update or clear the value first."
       approval_timed_out: "Approval timed out"
+      run_timed_out:
+        one: "Execution ran for more than %{count} minute without pausing"
+        other: "Execution ran for more than %{count} minutes without pausing"
+      queue_timed_out:
+        one: "Execution was queued for more than %{count} minute without starting"
+        other: "Execution was queued for more than %{count} minutes without starting"
       rate_limited:
         global:
           one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
