@@ -2207,9 +2207,14 @@ class Topic < ActiveRecord::Base
     Post.with_deleted.where(topic_id: id).where.not(post_type: Post.types[:small_action]).count
   end
 
+  def bulk_permanent_deletion_enabled_for?(user)
+    SiteSetting.can_permanently_delete && SiteSetting.allow_bulk_permanent_topic_deletion &&
+      user&.admin? && user.user_option.bulk_permanent_topic_deletion
+  end
+
   def cannot_permanently_delete_reason(user)
     remaining = deletable_posts_count - 1
-    if posts_count > 0 || remaining > 0
+    if !bulk_permanent_deletion_enabled_for?(user) && (posts_count > 0 || remaining > 0)
       I18n.t("post.cannot_permanently_delete.many_posts", count: remaining)
     elsif deleted_by_id == user&.id && deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left =
