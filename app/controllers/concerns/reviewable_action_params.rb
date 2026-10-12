@@ -7,17 +7,16 @@ module ReviewableActionParams
   private
 
   def reviewable_action_args(reviewable)
-    declared_params = reviewable.type_class.action_params
-    args = params.permit(*declared_params).to_h.symbolize_keys
-    args[:send_email] = params[:send_email] != "false" if declared_params.include?(:send_email)
-
-    if declared_params.include?(:edit) && params.key?(:edit)
-      args[:edit] = permitted_post_revision_attributes(params[:edit])
-      reject_too_many_tags!(:tags, :original_tags, parameters: params[:edit])
-    end
+    args = {}
 
     if reviewable.type_class.respond_to?(:additional_args)
       args.merge!(reviewable.type_class.additional_args(params) || {})
+    end
+
+    if args.key?(:edit)
+      edit = args[:edit]
+      args[:edit] = permitted_post_revision_attributes(edit)
+      reject_too_many_tags!(:tags, :original_tags, parameters: edit)
     end
 
     plugin_params =

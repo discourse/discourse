@@ -3,13 +3,6 @@
 class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
-  class << self
-    def action_params
-      ReviewableActionBuilder.penalty_params +
-        %i[revise_reason revise_feedback revise_custom_reason]
-    end
-  end
-
   def self.action_aliases
     { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
@@ -27,6 +20,17 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_commit :compute_user_stats, only: %i[create update]
+
+  def self.additional_args(params)
+    args = ReviewableActionBuilder.penalty_args(params)
+    return args if params[:revise_reason].blank?
+
+    args.merge(
+      revise_reason: params[:revise_reason],
+      revise_feedback: params[:revise_feedback],
+      revise_custom_reason: params[:revise_custom_reason],
+    )
+  end
 
   def build_combined_actions(actions, guardian, args)
     unless approved?

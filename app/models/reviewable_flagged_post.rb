@@ -4,8 +4,11 @@ class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
   class << self
-    def action_params
-      ReviewableActionBuilder.penalty_params + [:edit]
+    def additional_args(params)
+      args = ReviewableActionBuilder.penalty_args(params)
+      args[:edit] = params[:edit] if params.key?(:edit)
+
+      args
     end
   end
 

@@ -2,6 +2,33 @@
 
 # Saves permitted edits to a post or its topic, reporting invalid or conflicting changes.
 #
+# Pass guardian for authorization and editor for revision attribution. Params must contain
+# either post_id or topic_id; changes defaults to an empty hash. A topic_id edit targets
+# the first post for revision history but leaves its body unchanged.
+#
+# Accepted changes:
+# * raw, edit_reason, locale, reply_to_post_number: content and metadata for post_id edits.
+# * title, category_id, tags, featured_link, archetype: topic details, applied only to
+#   the first post. Tags accept [{ id: 123 }, { name: "new-tag" }]; nil or [] clears tags.
+#   Legacy arrays of tag name strings are also accepted.
+# * original_text, original_title, original_tags: optional conflict checks against
+#   current values. original_tags uses [{ id: 123 }]. Blank originals skip their checks.
+# * image_sizes: image dimensions supplied by the editor.
+# * bypass_bump: boolean or boolean string, honored only when the guardian permits it.
+# * keep_existing_draft: boolean or boolean string, supported for topic_id edits.
+# Registered plugin post and topic fields are also accepted.
+#
+# Outcome callbacks:
+# * on_success: post, topic, and category_changed are available.
+# * on_failed_contract: missing identifiers or invalid changes.
+# * on_model_not_found(:post) or (:topic): the requested content was not found.
+# * on_failed_policy: can_edit_post, can_edit_topic_record, can_edit_topic, or
+#   can_edit_tags identifies the denied permission.
+# * on_failed_step(:check_edit_conflicts): an original value no longer matches.
+# * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
+# * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
+# * on_failure: fallback for an outcome without a more specific handler.
+#
 # Post::Revise.call(
 #   params: {
 #     post_id: post.id,
@@ -9,7 +36,11 @@
 #   },
 #   guardian: editor.guardian,
 #   editor:,
-# )
+# ) do
+#   on_success { |post:| render_serialized(post, PostUpdateSerializer) }
+#   on_failed_contract { raise Discourse::InvalidParameters }
+#   on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+# end
 class Post::Revise
   include Service::Base
 

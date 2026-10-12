@@ -3,12 +3,6 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
-  class << self
-    def action_params
-      ReviewableActionBuilder.penalty_params + %i[reject_reason send_email]
-    end
-  end
-
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -33,6 +27,13 @@ class ReviewableUser < Reviewable
       avatar_upload_id: avatar&.id,
       avatar_url: avatar && Discourse.store.cdn_url(avatar.url),
     }
+  end
+
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)

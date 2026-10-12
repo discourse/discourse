@@ -3,10 +3,8 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
-  class << self
-    def action_params
-      ReviewableActionBuilder.penalty_params
-    end
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
   end
 
   def self.queue_for_review_if_possible(post, created_or_edited_by)

@@ -1521,10 +1521,6 @@ RSpec.describe ReviewablesController do
     describe "with reviewable params added via plugin API" do
       class ::ReviewablePhony < Reviewable
         class << self
-          def action_params
-            [:reason, { details: [:note] }]
-          end
-
           def additional_args(params)
             { legacy_id: params[:legacy_id] } if params.key?(:legacy_id)
           end
@@ -1568,31 +1564,7 @@ RSpec.describe ReviewablesController do
         )
       end
 
-      it "passes the custom reviewable's declared scalar and nested parameters" do
-        messages =
-          MessageBus.track_publish("/phony-reviewable-test") do
-            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
-                params: {
-                  version: reviewable_phony.version,
-                  reason: "The report was resolved.",
-                  details: {
-                    note: "Approved after review.",
-                    ignored: "unpermitted",
-                  },
-                }
-          end
-
-        expect(response.status).to eq(200)
-        expect(messages.first.data[:args]).to eq(
-          version: reviewable_phony.version,
-          reason: "The report was resolved.",
-          details: {
-            "note" => "Approved after review.",
-          },
-        )
-      end
-
-      it "ignores undeclared core action parameters for a custom reviewable" do
+      it "ignores core action parameters not returned by a custom reviewable" do
         messages =
           MessageBus.track_publish("/phony-reviewable-test") do
             put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
