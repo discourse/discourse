@@ -6,7 +6,8 @@ class ReviewableFlaggedPost < Reviewable
   class << self
     def additional_args(params)
       args = ReviewableActionBuilder.penalty_args(params)
-      args[:post_revision] = params[:post_revision] if params.key?(:post_revision)
+
+      args[:post_revision] = yield(params[:post_revision]) if params.key?(:post_revision)
 
       args
     end

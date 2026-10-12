@@ -1,17 +1,27 @@
 # frozen_string_literal: true
 
 module ReviewableActionParams
+  include PostRevisionParams
+  include TagParamLimit
+
   private
 
   def reviewable_action_args(reviewable)
     args = {}
 
     if reviewable.type_class.respond_to?(:additional_args)
-      args.merge!(reviewable.type_class.additional_args(params) || {})
-    end
+      additional_args =
+        reviewable
+          .type_class
+          .additional_args(params) do |revision|
+            attributes = permitted_post_revision_attributes(revision)
+            reject_too_many_tags!(:tags, :original_tags, parameters: revision)
 
-    preparation_method = "prepare_#{reviewable.type.underscore}_action_args"
-    send(preparation_method, args) if respond_to?(preparation_method, true)
+            attributes
+          end
+
+      args.merge!(additional_args || {})
+    end
 
     plugin_params =
       DiscoursePluginRegistry.reviewable_params.select do |entry|
