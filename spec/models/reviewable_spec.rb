@@ -398,6 +398,39 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe ".list_for with a DSA category" do
+    fab!(:moderator)
+
+    before { SiteSetting.enable_dsa_reporting = true }
+
+    it "filters by category and by items still awaiting one" do
+      awaiting =
+        Fabricate(
+          :reviewable_flagged_post,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT",
+        )
+      classified =
+        Fabricate(
+          :reviewable_flagged_post,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT",
+          dsa_category: "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+        )
+
+      expect(
+        Reviewable.list_for(
+          moderator,
+          status: :dsa_classification,
+          dsa_category: "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+        ),
+      ).to contain_exactly(classified)
+      expect(
+        Reviewable.list_for(moderator, status: :dsa_classification, dsa_category: "unclassified"),
+      ).to contain_exactly(awaiting)
+    end
+  end
+
   describe ".unseen_list_for" do
     fab!(:admin)
     fab!(:moderator)
@@ -613,6 +646,88 @@ RSpec.describe Reviewable, type: :model do
   describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    context "with DSA reporting enabled" do
+      before { SiteSetting.enable_dsa_reporting = true }
+
+      it "requires a classification when a flag is upheld" do
+        reviewable = Fabricate(:reviewable_flagged_post, potentially_illegal: true)
+
+        result = reviewable.perform(moderator, :agree_and_keep)
+
+        expect(reviewable.reload).to have_attributes(legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT")
+        expect(reviewable).to be_awaiting_dsa_classification
+        expect(result.remove_reviewable_ids).to be_empty
+      end
+
+      it "classifies upheld flags that aren't illegal as terms of service violations" do
+        reviewable = Fabricate(:reviewable_flagged_post)
+
+        result = reviewable.perform(moderator, :agree_and_keep)
+
+        expect(reviewable.reload).to have_attributes(
+          legal_basis: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          dsa_category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        )
+        expect(reviewable).not_to be_awaiting_dsa_classification
+        expect(result.remove_reviewable_ids).to contain_exactly(reviewable.id)
+        expect(reviewable.reviewable_histories.dsa_classified.sole).to have_attributes(
+          created_by: moderator,
+          edited: include("legal_basis" => "DECISION_GROUND_INCOMPATIBLE_CONTENT"),
+        )
+      end
+
+      it "drops the classification when a reviewable is reopened" do
+        reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            status: :approved,
+            legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT",
+          )
+
+        reviewable.transition_to(:pending, moderator)
+
+        expect(reviewable.reload.legal_basis).to be_nil
+      end
+
+      it "drops the classification when the outcome no longer restricts anything" do
+        reviewable = Fabricate(:reviewable_flagged_post, potentially_illegal: true)
+        reviewable.perform(moderator, :agree_and_keep)
+        reviewable.update!(status: :pending)
+
+        reviewable.perform(moderator, :disagree)
+
+        expect(reviewable.reload).to have_attributes(
+          legal_basis: nil,
+          dsa_category: nil,
+          dsa_subcategory: nil,
+        )
+      end
+
+      it "doesn't require a classification when a flag is rejected" do
+        reviewable = Fabricate(:reviewable_flagged_post, potentially_illegal: true)
+
+        reviewable.perform(moderator, :disagree)
+
+        expect(reviewable.reload.legal_basis).to be_nil
+      end
+
+      it "requires a classification when a queued post is rejected" do
+        reviewable = Fabricate(:reviewable_queued_post)
+
+        reviewable.perform(moderator, :reject_post)
+
+        expect(reviewable.reload.legal_basis).to eq("DECISION_GROUND_INCOMPATIBLE_CONTENT")
+      end
+    end
+
+    it "doesn't require a DSA classification when DSA reporting is disabled" do
+      reviewable = Fabricate(:reviewable_flagged_post, potentially_illegal: true)
+
+      reviewable.perform(moderator, :agree_and_keep)
+
+      expect(reviewable.reload.legal_basis).to be_nil
+    end
 
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -1074,6 +1189,52 @@ RSpec.describe Reviewable, type: :model do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:deleted])
 
       expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
+    end
+
+    it "lists classified and unclassified items under the DSA classification status" do
+      SiteSetting.enable_dsa_reporting = true
+      Fabricate(:reviewable)
+      awaiting =
+        Fabricate(:reviewable, status: :approved, legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT")
+      classified =
+        Fabricate(
+          :reviewable,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          dsa_category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        )
+
+      expect(Reviewable.by_status(Reviewable.all, :dsa_classification)).to contain_exactly(
+        awaiting,
+        classified,
+      )
+    end
+
+    it "keeps handled reviewables pending until they're classified for DSA reporting" do
+      pending_reviewable = Fabricate(:reviewable)
+      awaiting =
+        Fabricate(
+          :reviewable,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+        )
+      classified =
+        Fabricate(
+          :reviewable,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          dsa_category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        )
+
+      expect(Reviewable.by_status(Reviewable.all, :pending)).to contain_exactly(pending_reviewable)
+
+      SiteSetting.enable_dsa_reporting = true
+
+      expect(Reviewable.by_status(Reviewable.all, :pending)).to contain_exactly(
+        pending_reviewable,
+        awaiting,
+      )
+      expect(Reviewable.by_status(Reviewable.all, :reviewed)).to include(classified)
     end
   end
 

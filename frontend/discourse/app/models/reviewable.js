@@ -33,10 +33,14 @@ export default class Reviewable extends RestModel {
   @tracked created_by;
   @tracked created_from_flag;
   @tracked deleted_at;
+  @tracked dsa_category;
+  @tracked dsa_subcategory;
+  @tracked dsa_subcategory_other;
   @tracked editable_fields;
   @tracked fancy_title;
   @tracked id;
   @tracked last_performing_username;
+  @tracked legal_basis;
   @tracked payload;
   @tracked post_id;
   @tracked post_updated_at;

@@ -72,6 +72,7 @@ RSpec.describe Admin::Config::SiteSettingsController do
             flag_post_allowed_groups
             allow_all_users_to_flag_illegal_content
             email_address_to_report_illegal_content
+            enable_dsa_reporting
             silence_new_user_sensitivity
             num_users_to_silence_new_user
             flag_sockpuppets

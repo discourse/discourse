@@ -25,17 +25,31 @@ export default <template>
       />
     </div>
 
-    <div class="reviewable-filter">
-      <label class="filter-label">
-        {{i18n "review.filters.type.title"}}
-      </label>
-      <ComboBox
-        @content={{@controller.allTypes}}
-        @onChange={{fn (mut @controller.filterType)}}
-        @options={{hash none="review.filters.type.all"}}
-        @value={{@controller.filterType}}
-      />
-    </div>
+    {{#if @controller.filteringByDsaClassification}}
+      <div class="reviewable-filter">
+        <label class="filter-label">
+          {{i18n "review.filters.dsa_category.title"}}
+        </label>
+        <ComboBox
+          @content={{@controller.allDsaCategories}}
+          @onChange={{fn (mut @controller.filterDsaCategory)}}
+          @options={{hash none="review.filters.dsa_category.all"}}
+          @value={{@controller.filterDsaCategory}}
+        />
+      </div>
+    {{else}}
+      <div class="reviewable-filter">
+        <label class="filter-label">
+          {{i18n "review.filters.type.title"}}
+        </label>
+        <ComboBox
+          @content={{@controller.allTypes}}
+          @onChange={{fn (mut @controller.filterType)}}
+          @options={{hash none="review.filters.type.all"}}
+          @value={{@controller.filterType}}
+        />
+      </div>
+    {{/if}}
 
     {{#if @controller.filtersExpanded}}
 
