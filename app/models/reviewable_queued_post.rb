@@ -4,12 +4,7 @@ class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
   def self.action_aliases
-    {
-      discard_post: :reject_post,
-      reject_and_silence: :reject_post,
-      reject_and_suspend: :reject_post,
-      delete_user_block: :delete_and_block_user,
-    }
+    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
 
   after_create do
@@ -27,13 +22,14 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def self.additional_args(params)
-    return {} if params[:revise_reason].blank?
+    args = ReviewableActionBuilder.penalty_args(params)
+    return args if params[:revise_reason].blank?
 
-    {
+    args.merge(
       revise_reason: params[:revise_reason],
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
-    }
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -153,6 +149,20 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_approve_post_closed(performed_by, args)
     perform_approve_post(performed_by, args)
+  end
+
+  def perform_reject_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
+  def perform_reject_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
   end
 
   def perform_reject_post(performed_by, args)

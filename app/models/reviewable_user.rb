@@ -30,7 +30,10 @@ class ReviewableUser < Reviewable
   end
 
   def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -87,6 +90,20 @@ class ReviewableUser < Reviewable
     target.remove_avatar!(performed_by)
 
     create_result(:success)
+  end
+
+  def perform_silence_user(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
   end
 
   def perform_approve_user(performed_by, args)

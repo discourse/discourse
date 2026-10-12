@@ -4,6 +4,10 @@ module Chat
   class ReviewableMessage < Reviewable
     include ReviewableActionBuilder
 
+    def self.additional_args(params)
+      ReviewableActionBuilder.penalty_args(params)
+    end
+
     validates :type, length: { maximum: 100 }
     validates :target_type, length: { maximum: 100 }
 
@@ -17,12 +21,7 @@ module Chat
     end
 
     def self.action_aliases
-      {
-        agree_and_keep_hidden: :agree_and_delete,
-        agree_and_silence: :agree_and_delete,
-        agree_and_suspend: :agree_and_delete,
-        delete_and_agree: :agree_and_delete,
-      }
+      { agree_and_keep_hidden: :agree_and_delete, delete_and_agree: :agree_and_delete }
     end
 
     def self.score_to_silence_user
@@ -139,6 +138,20 @@ module Chat
 
     def perform_agree_and_restore(performed_by, args)
       agree { chat_message.recover! }
+    end
+
+    def perform_agree_and_suspend(performed_by, args)
+      result = suspend_user(performed_by:, args:)
+      return result unless result.success?
+
+      perform_agree_and_delete(performed_by, args)
+    end
+
+    def perform_agree_and_silence(performed_by, args)
+      result = silence_user(performed_by:, args:)
+      return result unless result.success?
+
+      perform_agree_and_delete(performed_by, args)
     end
 
     def perform_agree_and_delete(performed_by, args)

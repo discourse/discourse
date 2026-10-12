@@ -472,6 +472,72 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   describe "penalty actions" do
     fab!(:reviewable, :reviewable_queued_post)
 
+    it "keeps the queued post pending when suspension details are invalid" do
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_suspend,
+          reason: "",
+          suspend_until: 2.days.from_now,
+        )
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_suspended
+    end
+
+    it "keeps the queued post pending when silencing details are invalid" do
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "",
+          silenced_till: 2.days.from_now,
+        )
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_silenced
+    end
+
+    it "keeps the queued post pending when the moderator cannot silence a related user" do
+      expect do
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "spam",
+          silenced_till: 2.days.from_now,
+          other_user_ids: [admin.id],
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_silenced
+      expect(admin.reload).not_to be_silenced
+    end
+
+    it "rejects a queued post and renews expired related silences without shortening active ones" do
+      expired_user = Fabricate(:user, silenced_till: 1.day.ago)
+      active_expiry = 3.days.from_now.change(usec: 0)
+      active_user = Fabricate(:user, silenced_till: active_expiry)
+      expiry = 2.days.from_now.change(usec: 0)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "spam",
+          silenced_till: expiry,
+          other_user_ids: [expired_user.id, active_user.id],
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_rejected
+      expect(reviewable.target_created_by.reload.silenced_till).to eq(expiry)
+      expect(expired_user.reload.silenced_till).to eq(expiry)
+      expect(active_user.reload.silenced_till).to eq(active_expiry)
+    end
+
     it "offers silence and suspend between the reject and delete actions" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       bundle = actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }
@@ -515,28 +581,38 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(actions.has?(:reject_and_suspend)).to eq(false)
     end
 
-    it "rejects the post and keeps the author, letting the client apply the suspension" do
+    it "rejects the post and suspends the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_suspend) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_suspend,
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.suspended?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_suspended
     end
 
-    it "rejects the post and keeps the author, letting the client apply the silencing" do
+    it "rejects the post and silences the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_silence) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_silence,
+            reason: "spam",
+            silenced_till: 2.days.from_now,
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.silenced?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_silenced
     end
   end
 end

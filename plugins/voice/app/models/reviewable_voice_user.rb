@@ -3,12 +3,12 @@
 class ReviewableVoiceUser < Reviewable
   include ReviewableActionBuilder
 
-  def serializer
-    ReviewableVoiceUserSerializer
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
   end
 
-  def self.action_aliases
-    { agree_and_suspend: :agree_and_keep, agree_and_silence: :agree_and_keep }
+  def serializer
+    ReviewableVoiceUserSerializer
   end
 
   def session
@@ -50,6 +50,20 @@ class ReviewableVoiceUser < Reviewable
 
     build_action(actions, :disagree, icon: "thumbs-down")
     build_action(actions, :ignore, icon: "xmark")
+  end
+
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
   end
 
   def perform_agree_and_keep(_performed_by, _args)

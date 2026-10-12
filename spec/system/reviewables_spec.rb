@@ -88,6 +88,52 @@ describe "Reviewables" do
     end
   end
 
+  context "when suspending a flagged post author" do
+    fab!(:reviewable) do
+      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+    end
+
+    let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
+
+    it "lets a moderator suspend the author and resolve the flagged post" do
+      modal = PageObjects::Modals::PenalizeUser.new("suspend")
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_suspend", bundle_index: 1)
+      modal.fill_in_suspend_reason("Repeated spam")
+      modal.set_future_date("tomorrow")
+      modal.perform
+
+      expect(modal).to be_closed
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      admin_user_page.visit(post.user)
+      expect(admin_user_page).to have_unsuspend_button
+    end
+  end
+
+  context "when silencing a flagged post author" do
+    fab!(:reviewable) do
+      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+    end
+
+    let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
+
+    it "lets a moderator silence the author and resolve the flagged post" do
+      modal = PageObjects::Modals::PenalizeUser.new("silence")
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
+      modal.fill_in_silence_reason("Repeated spam")
+      modal.set_future_date("tomorrow")
+      modal.perform
+
+      expect(modal).to be_closed
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      admin_user_page.visit(post.user)
+      expect(admin_user_page).to have_unsilence_button
+    end
+  end
+
   describe "when there are several flagged posts in the queue" do
     fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[3]) }
     fab!(:spammer_one, :user)

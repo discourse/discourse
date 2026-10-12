@@ -95,10 +95,43 @@ RSpec.describe ReviewablePost do
     end
 
     describe "#perform_reject_and_suspend" do
-      it "transitions to the rejected state" do
-        result = reviewable.perform admin, :reject_and_suspend
+      it "rejects the post and suspends its author" do
+        result =
+          reviewable.perform(
+            admin,
+            :reject_and_suspend,
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          )
 
-        expect(result.transition_to).to eq :rejected
+        expect(result).to be_success
+        expect(reviewable.reload).to be_rejected
+        expect(post.user.reload).to be_suspended
+      end
+
+      it "keeps the post pending when suspension details are invalid" do
+        result =
+          reviewable.perform(admin, :reject_and_suspend, reason: "", suspend_until: 2.days.from_now)
+
+        expect(result).not_to be_success
+        expect(reviewable.reload).to be_pending
+        expect(post.user.reload).not_to be_suspended
+      end
+    end
+
+    describe "#perform_reject_and_silence" do
+      it "rejects the post and silences its author" do
+        result =
+          reviewable.perform(
+            admin,
+            :reject_and_silence,
+            reason: "spam",
+            silenced_till: 2.days.from_now,
+          )
+
+        expect(result).to be_success
+        expect(reviewable.reload).to be_rejected
+        expect(post.user.reload).to be_silenced
       end
     end
 
