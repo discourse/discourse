@@ -7,6 +7,7 @@ import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
+import { Result } from "discourse/adapters/rest";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
@@ -353,11 +354,24 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      reviewableAction: {
-        id: reviewable.id,
-        action: performableAction.server_action,
-        version: reviewable.version,
-        data,
+      draftsEnabled: false,
+      onSave: async (revision) => {
+        const json = await ajax(
+          `/review/${reviewable.id}/perform/${performableAction.server_action}`,
+          {
+            type: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+              ...data,
+              version: reviewable.version,
+              post_revision: revision,
+            }),
+          }
+        );
+        const updatedPost = json.reviewable_perform_result.post;
+
+        return new Result(updatedPost, { ...json, post: updatedPost });
       },
       onSaved: (result) =>
         this._performResult(

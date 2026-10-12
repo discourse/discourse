@@ -156,6 +156,31 @@ RSpec.describe Post::Revise do
       end
     end
 
+    context "when keeping the existing draft" do
+      let(:changes) { super().merge(keep_existing_draft: true) }
+
+      it "edits the post while preserving the draft and its sequence" do
+        sequence = DraftSequence.next!(acting_user, topic.draft_key)
+        draft = Fabricate(:draft, user: acting_user, draft_key: topic.draft_key, sequence:)
+
+        expect { expect(result).to run_successfully }.not_to change {
+          DraftSequence.current(acting_user, topic.draft_key)
+        }
+        expect(post.reload.raw).to eq(changes[:raw])
+        expect(Draft.get(acting_user, topic.draft_key, sequence)).to eq(draft.data)
+      end
+    end
+
+    context "when keeping the existing draft is not requested" do
+      it "advances the draft sequence after editing the post" do
+        DraftSequence.next!(acting_user, topic.draft_key)
+
+        expect { expect(result).to run_successfully }.to change {
+          DraftSequence.current(acting_user, topic.draft_key)
+        }.by(1)
+      end
+    end
+
     context "when only the topic is being edited" do
       let(:params) { { topic_id: topic.id, changes: } }
       let(:changes) { { title: "A corrected topic title" } }

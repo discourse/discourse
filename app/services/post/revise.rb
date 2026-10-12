@@ -15,7 +15,7 @@
 #   current values. original_tags uses [{ id: 123 }]. Blank originals skip their checks.
 # * image_sizes: image dimensions supplied by the editor.
 # * bypass_bump: boolean or boolean string, honored only when the guardian permits it.
-# * keep_existing_draft: boolean or boolean string, supported for topic_id edits.
+# * keep_existing_draft: boolean or boolean string, preserves the editor's existing draft.
 # Registered plugin post and topic fields are also accepted.
 #
 # Outcome callbacks:
@@ -298,12 +298,8 @@ class Post::Revise
 
   def revision_options(params:, post:, guardian:, editor:)
     attributes = params.changes
-    options = {}
-
-    if params.topic_id.present?
-      options[:validate_post] = false
-      options[:keep_existing_draft] = attributes[:keep_existing_draft].to_s == "true"
-    end
+    options = { keep_existing_draft: attributes[:keep_existing_draft].to_s == "true" }
+    options[:validate_post] = false if params.topic_id.present?
 
     # We don't need to validate edits to small action posts by staff
     options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&

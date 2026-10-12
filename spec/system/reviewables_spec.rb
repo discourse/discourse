@@ -70,47 +70,39 @@ describe "Reviewables" do
         )
       end
 
-      it "lets a moderator resume a review edit from drafts and resolve the flag" do
+      it "discards a review edit when the moderator closes the composer" do
         review_page.visit_reviewable(short_reviewable)
         open_agree_and_edit
-        composer.fill_content("This review edit was resumed from drafts.")
+        composer.fill_content("This review edit should not become a draft.")
         composer.close
-        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
 
-        PageObjects::Pages::UserActivityDrafts.new.visit(admin).resume_draft
-        expect(composer).to have_value("This review edit was resumed from drafts.")
-        composer.submit
+        expect(discard_draft_modal).to be_open
+        discard_draft_modal.click_discard
 
         expect(composer).to be_closed
-        topic_page.visit_topic(post.topic)
-        expect(topic_page).to have_post_content(
-          post_number: post.post_number,
-          content: "This review edit was resumed from drafts.",
-        )
-        review_page.visit_reviewable(short_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+        drafts_page = PageObjects::Pages::UserActivityDrafts.new.visit(admin)
+        expect(drafts_page).to have_no_drafts
       end
 
-      it "lets a moderator resume a review draft as an ordinary topic edit" do
-        review_page.visit_reviewable(short_reviewable)
-        open_agree_and_edit
-        composer.fill_content("This draft is now an ordinary topic edit.")
-        composer.close
-        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
-
+      it "keeps an ordinary edit draft when the moderator edits a flagged post" do
         topic_page.visit_topic(post.topic)
         topic_page.click_post_action_button(post, :show_more)
         topic_page.click_post_action_button(post, :edit)
-        expect(composer).to have_value("This draft is now an ordinary topic edit.")
+        composer.fill_content("An ordinary edit draft to finish later.")
+        composer.close
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+
+        review_page.visit_reviewable(short_reviewable)
+        open_agree_and_edit
+        expect(composer).to have_value(post.raw)
+        composer.fill_content("A separate correction from the review queue.")
         composer.submit
 
         expect(composer).to be_closed
-        expect(topic_page).to have_post_content(
-          post_number: post.post_number,
-          content: "This draft is now an ordinary topic edit.",
-        )
-        review_page.visit_reviewable(short_reviewable)
-        expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(short_reviewable)
+        PageObjects::Pages::UserActivityDrafts.new.visit(admin).resume_draft
+        expect(composer).to have_value("An ordinary edit draft to finish later.")
       end
 
       it "opens a modal when suspending a user" do

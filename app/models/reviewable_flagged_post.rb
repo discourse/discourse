@@ -266,7 +266,7 @@ class ReviewableFlaggedPost < Reviewable
       editor: performed_by,
       params: {
         post_id: target_id,
-        changes: args[:post_revision],
+        changes: args[:post_revision].merge(keep_existing_draft: true),
       },
     ) do
       on_success do |post:|

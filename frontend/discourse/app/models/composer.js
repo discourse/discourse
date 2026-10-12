@@ -94,7 +94,6 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _draft_serializer = {
-    reviewableAction: "reviewableAction",
     reply: "reply",
     action: "action",
     title: "title",
@@ -854,6 +853,7 @@ export default class Composer extends RestModel {
   @computed(
     "draftSaving",
     "disableDrafts",
+    "draftsEnabled",
     "canEditTitle",
     "title",
     "reply",
@@ -870,7 +870,7 @@ export default class Composer extends RestModel {
       return false;
     }
 
-    if (this.disableDrafts) {
+    if (this.disableDrafts || this.draftsEnabled === false) {
       return false;
     }
 
@@ -1070,7 +1070,6 @@ export default class Composer extends RestModel {
 
   clearState() {
     this.setProperties({
-      reviewableAction: null,
       originalText: null,
       originalTitle: null,
       originalTags: null,
@@ -1104,7 +1103,7 @@ export default class Composer extends RestModel {
     const post = this.post;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
-    let reviewableTopicProps = {};
+    let revisionTopicProps = {};
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
@@ -1127,28 +1126,29 @@ export default class Composer extends RestModel {
         delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
-        if (this.action === EDIT_SHARED_DRAFT) {
+        if (this.action === EDIT_SHARED_DRAFT && !opts.onSave) {
           const destinationCategoryId = topicProps.categoryId;
           promise = promise.then(() =>
             topic.updateDestinationCategory(destinationCategoryId)
           );
           topicProps.categoryId = topic.get("category.id");
         }
-        if (this.reviewableAction) {
-          reviewableTopicProps = topicProps;
+
+        if (opts.onSave) {
+          revisionTopicProps = topicProps;
           if (!topic.isPrivateMessage) {
-            reviewableTopicProps.category_id = topicProps.categoryId;
+            revisionTopicProps.category_id = topicProps.categoryId;
           }
-          delete reviewableTopicProps.categoryId;
+          delete revisionTopicProps.categoryId;
           if (Array.isArray(topicProps.tags)) {
-            reviewableTopicProps.tags = serializeTags(topicProps.tags);
+            revisionTopicProps.tags = serializeTags(topicProps.tags);
           }
         } else {
           promise = promise.then(() => Topic.update(topic, topicProps));
         }
       } else if (topic.details.can_edit_tags) {
-        if (this.reviewableAction) {
-          reviewableTopicProps.tags = serializeTags(this.tags);
+        if (opts.onSave) {
+          revisionTopicProps.tags = serializeTags(this.tags);
         } else {
           promise = promise.then(() => topic.updateTags(this.tags));
         }
@@ -1156,15 +1156,12 @@ export default class Composer extends RestModel {
     }
 
     let props = {
-      ...reviewableTopicProps,
+      ...revisionTopicProps,
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
     };
 
     this.serialize(_update_serializer, props);
-    if (this.reviewableAction) {
-      props.reviewableAction = this.reviewableAction;
-    }
 
     // Only send when changed; otherwise a stale composer value could
     // clobber a concurrent reply-target change by another editor.
@@ -1185,7 +1182,7 @@ export default class Composer extends RestModel {
       if (error.jqXHR?.status === 409) {
         this.set(
           "editConflict",
-          !this.reviewableAction ||
+          !opts.onSave ||
             error.jqXHR.responseJSON?.error_type === "edit_conflict"
         );
       }
@@ -1196,7 +1193,14 @@ export default class Composer extends RestModel {
 
     return promise
       .then(() => {
-        return post.save(props).then((result) => {
+        const save = opts.onSave ? opts.onSave(props) : post.save(props);
+
+        return save.then((result) => {
+          if (opts.onSave) {
+            post.setProperties(post.constructor.munge(result.payload));
+            result.target = post;
+          }
+
           // The server omits `reply_to_user` from the response when it's
           // nil, so the post's in-memory value isn't overwritten when the
           // target is cleared. Mirror the composer's final state onto the
@@ -1513,7 +1517,7 @@ export default class Composer extends RestModel {
 
     this.setProperties({
       draftKey: opts.draftKey,
-      reviewableAction: opts.reviewableAction ?? null,
+      draftsEnabled: opts.draftsEnabled !== false,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,

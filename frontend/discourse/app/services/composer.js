@@ -136,6 +136,7 @@ export default class ComposerService extends Service {
   topic = null;
   linkLookup = null;
 
+  #onSave = null;
   #onSaved = null;
   @tracked _allowPreview = null;
   @tracked _showPreview;
@@ -1368,7 +1369,7 @@ export default class ComposerService extends Service {
       });
 
     const promise = composer
-      .save({ imageSizes, editReason: this.editReason })
+      .save({ imageSizes, editReason: this.editReason, onSave: this.#onSave })
       .then((result) => {
         this.appEvents.trigger("composer:saved");
 
@@ -1654,6 +1655,7 @@ export default class ComposerService extends Service {
 
       await this._setModel(composerModel, opts);
 
+      this.#onSave = opts.onSave ?? null;
       this.#onSaved = opts.onSaved ?? null;
     } finally {
       this.skipAutoSave = false;
@@ -1734,7 +1736,7 @@ export default class ComposerService extends Service {
 
   async destroyDraft() {
     const key = this.get("model.draftKey");
-    if (!key) {
+    if (!key || this.model.draftsEnabled === false) {
       return;
     }
 
@@ -1794,7 +1796,7 @@ export default class ComposerService extends Service {
   }
 
   saveAndCloseComposer() {
-    if (!this.model.anyDirty) {
+    if (!this.model.anyDirty || this.model.draftsEnabled === false) {
       return this.cancelComposer();
     }
 
@@ -1806,13 +1808,6 @@ export default class ComposerService extends Service {
     this.skipAutoSave = false;
 
     return true;
-  }
-
-  clearReviewableAction() {
-    if (this.model?.reviewableAction) {
-      this.model.set("reviewableAction", null);
-      this.#onSaved = null;
-    }
   }
 
   unshrink() {
@@ -1866,6 +1861,7 @@ export default class ComposerService extends Service {
 
     this.composerActionState.clear();
 
+    this.#onSave = null;
     this.#onSaved = null;
   }
 
@@ -1963,7 +1959,7 @@ export default class ComposerService extends Service {
     this.set("linkLookup", null);
 
     let composerModel;
-    if (opts.draft) {
+    if (opts.draft && opts.draftsEnabled !== false) {
       composerModel = await loadDraft(this.store, opts);
 
       if (!composerModel) {
@@ -2066,7 +2062,7 @@ export default class ComposerService extends Service {
   _saveDraft(showToast = false) {
     cancel(this._saveDraftDebounce);
 
-    if (!this.model) {
+    if (!this.model || this.model.draftsEnabled === false) {
       return;
     }
 

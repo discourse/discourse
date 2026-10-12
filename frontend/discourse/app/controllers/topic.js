@@ -922,7 +922,7 @@ export default class TopicController extends Controller {
         }
 
         if (Composer.isEditDraft(data)) {
-          opts.draft = { ...data, reply: opts.reply, reviewableAction: null };
+          opts.draft = { ...data, reply: opts.reply };
           opts.topic = topic;
         }
       } else if (quotedText) {
@@ -2051,8 +2051,7 @@ export default class TopicController extends Controller {
       opts.action === composerModel?.action &&
       opts.draftKey === composerModel?.draftKey;
 
-    if (editingSamePost) {
-      composer.clearReviewableAction();
+    if (editingSamePost && composerModel.draftsEnabled !== false) {
       return composer.unshrink();
     }
 
@@ -2060,7 +2059,7 @@ export default class TopicController extends Controller {
     const data = draftData.draft && JSON.parse(draftData.draft);
 
     if (Composer.isEditDraft(data) && data.postId === post.id) {
-      opts.draft = { ...data, reviewableAction: null };
+      opts.draft = data;
       opts.draftSequence = draftData.draft_sequence;
       opts.topic = topic;
     }
