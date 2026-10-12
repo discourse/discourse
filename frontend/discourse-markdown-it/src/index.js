@@ -50,6 +50,10 @@ export default class DiscourseMarkdownIt {
     this.options = options;
   }
 
+  get allowLister() {
+    return this.options.allowLister;
+  }
+
   get linkify() {
     return this.options.engine.linkify;
   }
