@@ -185,7 +185,13 @@ describe "Admin Dashboard Redesign | Search section" do
       user: user,
       created_at: "2026-05-10 11:00",
     )
-    Fabricate.times(2, :search_log, term: "ghost", created_at: "2026-05-10 12:00")
+    Fabricate.times(
+      2,
+      :search_log,
+      term: "ghost",
+      session_id: "browser-session",
+      created_at: "2026-05-10 12:00",
+    )
 
     dashboard.visit
     search = dashboard.search

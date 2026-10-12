@@ -39,6 +39,14 @@ module DiscourseWorkflows
         end
       end
 
+      def plugin_for(klass)
+        reference = klass.name || klass
+        DiscoursePluginRegistry
+          ._raw_discourse_workflows_nodes
+          .find { |entry| entry[:value] == reference }
+          &.fetch(:plugin)
+      end
+
       def find_credential_type(identifier)
         resolve_class(credential_type_index[identifier])
       end
@@ -46,6 +54,11 @@ module DiscourseWorkflows
       def find_node_type(identifier, version: nil, include_disabled_plugins: false)
         version ||= DEFAULT_VERSION
         node_type_index(include_disabled_plugins: include_disabled_plugins)[[identifier, version]]
+      end
+
+      def latest_node_type(identifier, include_disabled_plugins: false)
+        version = latest_version(identifier, include_disabled_plugins:)
+        find_node_type(identifier, version:, include_disabled_plugins:) if version
       end
 
       def latest_version(identifier, include_disabled_plugins: false)

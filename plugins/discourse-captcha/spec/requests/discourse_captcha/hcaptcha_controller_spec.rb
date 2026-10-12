@@ -36,9 +36,9 @@ RSpec.describe DiscourseCaptcha::HcaptchaController do
 
     context "when hCaptcha is not the selected provider" do
       before do
-        SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
-        SiteSetting.recaptcha_site_key = "test-site-key"
-        SiteSetting.recaptcha_secret_key = "test-secret-key"
+        SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
+        SiteSetting.recaptcha_v2_site_key = "test-site-key"
+        SiteSetting.recaptcha_v2_secret_key = "test-secret-key"
       end
 
       it "returns 404 error" do

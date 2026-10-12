@@ -18,6 +18,7 @@ module DiscourseWorkflows
       notice
       credential
       icon
+      emoji
       custom
     ].freeze
 
@@ -109,6 +110,7 @@ module DiscourseWorkflows
       data_table_condition_builder
       data_table_select
       date_time
+      emoji
       field_path
       filter_query
       group_select

@@ -563,15 +563,14 @@
 }
 
 .avatar-selector {
-  --label-max-width: 300px;
+  --avatar-choice-size: 48px;
 
   &__placeholder {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 45px;
-    height: 45px;
-    margin-inline-end: 0.75em;
+    flex: 0 0 var(--avatar-choice-size);
+    height: var(--avatar-choice-size);
     border-radius: 50%;
     background: var(--primary-low);
     color: var(--primary-medium);
@@ -584,7 +583,7 @@
 
   .avatar-choice {
     display: grid;
-    grid-template-columns: 2em 1fr auto;
+    grid-template-columns: 2em minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     align-items: center;
 
@@ -601,7 +600,7 @@
     }
 
     button {
-      margin-left: auto;
+      margin-inline-start: auto;
     }
 
     label a {
@@ -612,22 +611,34 @@
   label.radio {
     display: flex;
     align-items: center;
-    max-width: var(--label-max-width);
-    margin: 0 0.5em 0 0;
+    gap: 0.75em;
+    min-width: 0;
+    margin: 0;
+    margin-inline-end: 0.5em;
     padding: 0;
 
-    .avatar {
+    .avatar,
+    .avatar-placeholder {
       flex: 0 0 auto;
-      margin: 0 0.75em 0 0;
     }
+
+    .avatar-placeholder {
+      width: var(--avatar-choice-size);
+    }
+  }
+
+  .avatar-uploader {
+    display: contents;
+  }
+
+  .error,
+  .warning {
+    margin: 0;
+    grid-column: 2 / -1;
   }
 
   .error {
     color: var(--danger);
-    margin: 0;
-    max-width: calc(var(--label-max-width) - 20px);
-    grid-column-start: 2;
-    grid-column-end: 3;
   }
 }
 

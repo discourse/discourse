@@ -4,12 +4,7 @@ class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
   def self.action_aliases
-    {
-      discard_post: :reject_post,
-      reject_and_silence: :reject_post,
-      reject_and_suspend: :reject_post,
-      delete_user_block: :delete_and_block_user,
-    }
+    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
 
   after_create do
@@ -27,13 +22,14 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def self.additional_args(params)
-    return {} if params[:revise_reason].blank?
+    args = ReviewableActionBuilder.penalty_args(params)
+    return args if params[:revise_reason].blank?
 
-    {
+    args.merge(
       revise_reason: params[:revise_reason],
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
-    }
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -155,6 +151,20 @@ class ReviewableQueuedPost < Reviewable
     perform_approve_post(performed_by, args)
   end
 
+  def perform_reject_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
+  def perform_reject_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
   def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
@@ -271,7 +281,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

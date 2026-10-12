@@ -19,6 +19,10 @@ da:
                 lt_1h: "< 1 time"
                 gt_24h: "> 24 timer"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Fjernet"
+        tag_names: "Mærker"
     notifications:
       alt:
         solved:

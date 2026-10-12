@@ -15,7 +15,6 @@ sl:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
         dirty: "Pred zagonom morate poizvedbo shraniti."
     explorer:
-      default_query: "Privzeto"
       or: "ali"
       admins_only: "Raziskovalec podatkov je na voljo samo skrbnikom."
       allow_groups: "Dovoli skupinam dostop do te poizvedbe"
@@ -54,6 +53,7 @@ sl:
         other: "%{count} zadetkov."
       query_name: "Poizvedba"
       query_groups: "Skupine"
+      query_tags: "Oznake"
       link: "Povezava za"
       report_name: "Poročilo"
       query_description: "Opis"

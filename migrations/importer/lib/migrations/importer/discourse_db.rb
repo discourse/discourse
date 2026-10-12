@@ -9,7 +9,6 @@ module Migrations
       SKIP_ROW_MARKER = :$skip
 
       def initialize
-        @encoder = PG::TextEncoder::CopyRow.new
         @connection = PG::Connection.new(database_configuration)
         @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
       end
@@ -23,6 +22,9 @@ module Migrations
         column_count = column_names.size
         data = Array.new(column_count)
 
+        type_map = build_type_map(table_name, column_names)
+        encoder = PG::TextEncoder::CopyRow.new(type_map:)
+
         rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
           # TODO Maybe add error handling and check if all rows fail to insert, or only
           # some of them fail. Currently, if a single row fails to insert, then an exception
@@ -30,7 +32,7 @@ module Migrations
           # should ensure all data is valid. We might need to see how this works out in
           # actual migrations...
           @connection.transaction do
-            @connection.copy_data(sql, @encoder) do
+            @connection.copy_data(sql, encoder) do
               sliced_rows.each do |row|
                 if row[SKIP_ROW_MARKER]
                   skipped_rows << row
@@ -149,6 +151,31 @@ module Migrations
 
       def quote_identifier(identifier)
         PG::Connection.quote_ident(identifier.to_s)
+      end
+
+      def build_type_map(table_name, column_names)
+        sql = <<~SQL
+          SELECT a.attname AS name,
+                 t.typname AS pg_type
+          FROM pg_attribute a
+               JOIN pg_type t ON a.atttypid = t.oid
+          WHERE a.attrelid = $1::regclass
+            AND a.attnum > 0
+            AND NOT a.attisdropped
+        SQL
+
+        result = @connection.exec_params(sql, [table_name]).to_a
+        column_type_map = result.to_h { |row| [row["name"].to_sym, row["pg_type"]] }
+
+        encoders =
+          column_names.map do |column_name|
+            pg_type = column_type_map[column_name]
+            raise "Column #{column_name} not found in table #{table_name}" unless pg_type
+
+            PgEncoderCache.get_encoder(pg_type)
+          end
+
+        PG::TypeMapByColumn.new(encoders)
       end
     end
   end

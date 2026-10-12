@@ -9,6 +9,11 @@ class ReviewableUser < Reviewable
 
   after_create :retain_avatar_snapshot
 
+  def title_for_notification(user)
+    target&.username || payload&.dig("username") ||
+      I18n.t("js.review.user_label", locale: user.effective_locale)
+  end
+
   def self.payload_for(user)
     profile = user.user_profile
     avatar = user.uploaded_avatar
@@ -25,7 +30,10 @@ class ReviewableUser < Reviewable
   end
 
   def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -82,6 +90,20 @@ class ReviewableUser < Reviewable
     target.remove_avatar!(performed_by)
 
     create_result(:success)
+  end
+
+  def perform_silence_user(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
   end
 
   def perform_approve_user(performed_by, args)
@@ -241,7 +263,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

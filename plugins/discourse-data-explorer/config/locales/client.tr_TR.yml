@@ -25,7 +25,6 @@ tr_TR:
       admin_dashboard_card:
         no_results: "Sonuç yok"
     explorer:
-      default_query: "Varsayılan"
       default_query_notice: "Bu varsayılan bir sorgudur, SQL düzenlenemez. SQL'yi düzenlemek için yeni bir sorgu oluşturun."
       view_query: "Görüntüle"
       queries: "Sorgular"
@@ -94,6 +93,7 @@ tr_TR:
         other: "En iyi %{count} sonuç gösteriliyor."
       query_name: "Sorgu"
       query_groups: "Gruplar"
+      query_tags: "Etiketler"
       link: "Şunun için bağlantı:"
       report_name: "Rapor"
       query_description: "Açıklama"

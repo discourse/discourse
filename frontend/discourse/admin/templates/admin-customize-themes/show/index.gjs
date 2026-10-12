@@ -270,6 +270,7 @@ export default <template>
         <ThemeSettingRelativesSelector
           class="theme-setting"
           @model={{@controller.model}}
+          @onSave={{@controller.markParentThemesSaved}}
           @setting={{@controller.relativesSelectorSettingsForComponent}}
         />
       </div>

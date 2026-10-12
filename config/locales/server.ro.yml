@@ -13,6 +13,9 @@ ro:
     next_page: "Pagina următoare"
     replies: "Răspunsuri"
     last_updated: "Ultima actualizare"
+    event:
+      location: "Locație"
+      link: "Legătură"
   mcp:
     errors:
       topic_not_found: "Subiectul nu a fost găsit"

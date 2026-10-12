@@ -1,6 +1,7 @@
 import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -148,6 +149,154 @@ module(
       assert
         .dom(".workflows-execution-detail__step-section:last-of-type pre")
         .hasText("{}", "the empty item remains distinguishable from no items");
+    });
+
+    test("renders execution hints and handled errors for any node", async function (assert) {
+      this.execution = executionWithOutput([{ json: { value: 1 } }]);
+      this.execution.steps[0].metadata = {
+        hints: [
+          { message: "First hint", location: "outputPane" },
+          { message: "Second hint" },
+        ],
+        handled_error: {
+          message: "Boom",
+          name: "DiscourseWorkflows::NodeError",
+        },
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__hint.alert-warning")
+        .exists({ count: 2 }, "every hint renders as a warning");
+      assert
+        .dom(".workflows-execution-detail__step-warning.alert-warning")
+        .hasText(
+          "The node failed but the workflow continued because of its error settings: Boom",
+          "the error that the node continued past is explained"
+        );
+    });
+
+    test("renders the errors of items that failed individually", async function (assert) {
+      this.execution = executionWithOutput([{ json: { value: 1 } }]);
+      this.execution.steps[0].metadata = {
+        item_errors: [
+          { message: "Boom", items: [1, 2] },
+          { message: "Bang", items: [3] },
+        ],
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      const warnings = [
+        ...document.querySelectorAll(
+          ".workflows-execution-detail__step-warning.alert-warning"
+        ),
+      ].map((warning) => warning.textContent.trim());
+
+      assert.deepEqual(warnings, [
+        "2 items failed but the workflow continued because of its error settings: Boom",
+        "An item failed but the workflow continued because of its error settings: Bang",
+      ]);
+      assert.dom(".workflows-execution-detail__hint").doesNotExist();
+    });
+
+    test("explains why an execution was rate limited", async function (assert) {
+      const error =
+        "This workflow wasn't run because it already started 10 executions in the last minute.";
+      this.execution = {
+        ...executionWithOutput([]),
+        status: "rate_limited",
+        error,
+        steps: [],
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__error.alert-warning")
+        .hasText(error, "the rate limit explanation is shown as a warning");
+    });
+
+    test("renders execution errors that no step already shows", async function (assert) {
+      this.execution = {
+        ...executionWithOutput([{ json: { value: 1 } }]),
+        status: "error",
+        error: "Workflow could not start",
+      };
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert
+        .dom(".workflows-execution-detail__error.alert-error")
+        .hasText("Workflow could not start");
+    });
+
+    test("does not show the execution error when a step has failed", async function (assert) {
+      this.execution = {
+        ...executionWithOutput([{ json: { value: 1 } }]),
+        status: "error",
+        error: "Boom [item 0]",
+      };
+      this.execution.steps[0].status = "error";
+      this.execution.steps[0].error = "Boom";
+
+      await render(
+        <template><ExecutionDetail @execution={{this.execution}} /></template>
+      );
+
+      assert.dom(".workflows-execution-detail__error").doesNotExist();
+      assert.dom(".workflows-execution-detail__step-summary").hasText("Boom");
+    });
+
+    test("includes hints and warnings in the text export", async function (assert) {
+      this.execution = executionWithOutput([{ json: { value: 1 } }]);
+      this.execution.steps[0].metadata = {
+        hints: [{ message: "First hint" }],
+        handled_error: { message: "Boom" },
+        item_errors: [{ message: "Item boom", items: [0] }],
+      };
+      const createObjectURL = sinon
+        .stub(URL, "createObjectURL")
+        .returns("blob:export");
+      sinon.stub(URL, "revokeObjectURL");
+      sinon.stub(HTMLAnchorElement.prototype, "click");
+
+      try {
+        await render(
+          <template><ExecutionDetail @execution={{this.execution}} /></template>
+        );
+        await click(".workflows-execution-detail__export");
+
+        const text = await createObjectURL.firstCall.args[0].text();
+
+        assert.true(
+          text.includes(
+            "  Warning: The node failed but the workflow continued because of its error settings: Boom"
+          ),
+          "the handled error is exported"
+        );
+        assert.true(
+          text.includes(
+            "  Warning: An item failed but the workflow continued because of its error settings: Item boom"
+          ),
+          "the item error is exported"
+        );
+        assert.true(
+          text.includes("  Hint: First hint"),
+          "the hint is exported"
+        );
+      } finally {
+        sinon.restore();
+      }
     });
 
     test("opens workflow call child executions through the admin route", async function (assert) {
