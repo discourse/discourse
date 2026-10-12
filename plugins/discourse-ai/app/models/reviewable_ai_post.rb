@@ -3,14 +3,14 @@
 require_dependency "reviewable"
 
 class ReviewableAiPost < Reviewable
-  # Penalties are handled by the modal after the action is performed
+  include ReviewableActionBuilder
+
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      disagree_and_restore: :disagree,
-    }
+    { agree_and_keep_hidden: :agree_and_keep, disagree_and_restore: :disagree }
   end
 
   def build_actions(actions, guardian, args)
@@ -96,6 +96,20 @@ class ReviewableAiPost < Reviewable
     post.hide!(reviewable_scores.first.reviewable_score_type)
 
     agree
+  end
+
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
   end
 
   def perform_agree_and_keep(_performed_by, _args)

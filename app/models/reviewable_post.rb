@@ -3,6 +3,10 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def self.queue_for_review_if_possible(post, created_or_edited_by)
     return unless SiteSetting.review_every_post
     return if post.post_type != Post.types[:regular] || post.topic.private_message?
@@ -106,11 +110,17 @@ class ReviewablePost < Reviewable
     create_result(:success, :rejected, [created_by_id], false)
   end
 
-  def perform_reject_and_suspend(performed_by, _args)
+  def perform_reject_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
     create_result(:success, :rejected, [created_by_id], false)
   end
 
-  def perform_reject_and_silence(performed_by, _args)
+  def perform_reject_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
     create_result(:success, :rejected, [created_by_id], false)
   end
 
