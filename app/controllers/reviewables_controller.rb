@@ -378,9 +378,5 @@ class ReviewablesController < ApplicationController
         reviewable.type == entry[:type].to_s.classify
       end
     args.merge!(params.slice(*plugin_params.map { |entry| entry[:param] }).permit!)
-
-    args.transform_values do |value|
-      value.is_a?(ActionController::Parameters) ? value.to_unsafe_h : value
-    end
   end
 end

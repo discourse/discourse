@@ -8,7 +8,14 @@ class ReviewableFlaggedPost < Reviewable
       args = ReviewableActionBuilder.penalty_args(params)
 
       if params[:action_id] == "agree_and_edit" && params.key?(:post_revision)
-        args[:post_revision] = params[:post_revision]
+        revision = params[:post_revision]
+        args[:post_revision] = (
+          if revision.is_a?(ActionController::Parameters)
+            revision.to_unsafe_h
+          else
+            revision
+          end
+        )
       end
 
       args
