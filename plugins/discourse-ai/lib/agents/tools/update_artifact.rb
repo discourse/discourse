@@ -155,6 +155,7 @@ module DiscourseAi
                   artifact_version: artifact_version,
                   instructions: instructions,
                   cancel_manager: context.cancel_manager,
+                  execution_context: context.execution_context,
                 )
                 .apply do |progress|
                   partial_response << progress
@@ -237,7 +238,7 @@ module DiscourseAi
           content << [nil, "[/details]"]
           content << [
             :preview,
-            "### Preview\n\n<div class=\"ai-artifact\" data-ai-artifact-version=\"#{new_version.version_number}\" data-ai-artifact-id=\"#{artifact.id}\"></div>",
+            "### Preview\n\n[ai-artifact id=\"#{artifact.id}\" version=\"#{new_version.version_number}\"]",
           ]
 
           self.custom_raw = content.map { |c| c[1] }.join("\n\n")

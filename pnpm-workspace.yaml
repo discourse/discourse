@@ -1,3 +1,10 @@
+engineStrict: true
+publicHoistPattern:
+- playwright
+- playwright-core
+autoInstallPeers: false
+ignoreWorkspaceCycles: true
+updateNotifier: false
 strictPeerDependencies: true
 strictDepBuilds: true
 onlyBuiltDependencies:
@@ -20,6 +27,7 @@ packages:
 - "frontend/pretty-text-processor"
 - "frontend/asset-processor"
 - "frontend/discourse-types"
+- "frontend/playwright-runner"
 - "plugins/automation"
 - "plugins/boards"
 - "plugins/chat"

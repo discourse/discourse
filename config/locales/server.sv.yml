@@ -13,6 +13,9 @@ sv:
     next_page: "Nästa sida"
     replies: "Svar"
     last_updated: "Senast uppdaterat"
+    event:
+      location: "Plats"
+      link: "Länk"
   mcp:
     errors:
       draft_too_long: "Utkastet är för långt"

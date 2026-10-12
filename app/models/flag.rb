@@ -8,6 +8,7 @@ class Flag < ActiveRecord::Base
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
   scope :custom, -> { where("id >= 1000") }
+  scope :applicable_to, ->(type) { where("? = ANY(applies_to)", type) }
 
   before_save :set_position
   before_save :set_name_key

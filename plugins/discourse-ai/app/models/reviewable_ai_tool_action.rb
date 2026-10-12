@@ -70,6 +70,13 @@ class ReviewableAiToolAction < Reviewable
     resolution_result(:rejected, args)
   end
 
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
+  end
+
   private
 
   def resolution_result(status, args, tool_result: nil)
@@ -163,17 +170,19 @@ class ReviewableAiToolAction < Reviewable
       message&.blocks.to_a.any? do |block|
         block["elements"].to_a.any? { |element| element["action_id"] == action_id }
       end
+    valid_context =
+      !source ||
+        (
+          source.chat_channel_id == message&.chat_channel_id &&
+            (
+              source.thread_id == message&.thread_id ||
+                (message&.thread_id.nil? && source.thread&.original_message_id == source.id)
+            )
+        )
 
     if !message || !message.chat_channel.direct_message_channel? ||
          ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
-         !valid_block ||
-         (
-           source &&
-             (
-               source.chat_channel_id != message.chat_channel_id ||
-                 source.thread_id != message.thread_id
-             )
-         )
+         !valid_block || !valid_context
       raise Discourse::InvalidAccess
     end
   end
@@ -244,7 +253,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
