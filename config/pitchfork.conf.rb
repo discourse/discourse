@@ -81,6 +81,7 @@ after_mold_fork do |server, mold|
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
+  Process.warmup
 end
 
 oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
@@ -181,6 +182,7 @@ after_worker_timeout do |server, worker, timeout_info|
   MSG
 
   Rails.logger.error(message)
+  DiscourseEvent.trigger(:web_worker_timeout, continue_on_error: true)
 end
 
 if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"

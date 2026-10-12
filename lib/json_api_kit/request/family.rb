@@ -5,14 +5,16 @@ module JsonApiKit
     class Family
       LIST_ITEM = /\A(?<direction>-?)(?<name>.*)\z/m
 
-      def initialize(glossary:, type:)
+      def initialize(glossary:, resource:)
         @glossary = glossary
-        @type = type
+        @resource = resource
       end
 
       private
 
-      attr_reader :glossary, :type
+      attr_reader :glossary, :resource
+
+      def type = glossary.member_type(resource.type)
 
       def names(value, path, &name_for)
         case value
@@ -30,8 +32,10 @@ module JsonApiKit
         "#{direction}#{declared_name(yield(name), path)}"
       end
 
-      def declared_name(name, path)
-        glossary.declared_name(name).value
+      def declared_name(name, path) = declared_names(name, path).sole
+
+      def declared_names(name, path)
+        glossary.declared_names(name).map(&:value)
       rescue Glossary::NotAMemberName => error
         raise error.at(ParameterName.new(*path).to_s)
       end

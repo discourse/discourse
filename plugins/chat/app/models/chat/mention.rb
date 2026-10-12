@@ -8,7 +8,20 @@ module Chat
     has_many :mention_notifications,
              class_name: "Chat::MentionNotification",
              foreign_key: :chat_mention_id
-    has_many :notifications, through: :mention_notifications, dependent: :destroy
+    has_many :notifications, through: :mention_notifications
+
+    before_destroy :destroy_notifications
+
+    private
+
+    def destroy_notifications
+      links = Chat::MentionNotification.where(chat_mention_id: id)
+
+      # Destroying the through association repeatedly scans its loaded join records.
+      Notification.where(id: links.select(:notification_id)).find_each(batch_size: 200, &:destroy!)
+
+      links.delete_all
+    end
   end
 end
 

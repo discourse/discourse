@@ -12,6 +12,8 @@ sw:
     previous_page: "Ukurasa uliopita"
     next_page: "Ukurasa ujao"
     replies: "Majibu"
+    event:
+      location: "Sehemu"
   mcp:
     errors:
       topic_not_found: "Mada haijapatikana"

@@ -10,7 +10,6 @@ hr:
       admin_dashboard_card:
         no_results: "Nema rezultata"
     explorer:
-      default_query: "Zadano"
       or: "ili"
       create: "Stvorite"
       ai:
@@ -35,6 +34,7 @@ hr:
         few: "%{count} rezultata."
         other: "%{count} rezultata."
       query_groups: "Grupe"
+      query_tags: "Oznake"
       query_description: "Opis"
       query_user: "Napravio"
       reset_params: "Resetirati"

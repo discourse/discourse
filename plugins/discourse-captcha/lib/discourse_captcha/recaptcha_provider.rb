@@ -15,7 +15,11 @@ module DiscourseCaptcha
     end
 
     def send_captcha_verification(captcha_token)
-      send_verification(captcha_token, CAPTCHA_VERIFICATION_URL, SiteSetting.recaptcha_secret_key)
+      send_verification(
+        captcha_token,
+        CAPTCHA_VERIFICATION_URL,
+        SiteSetting.recaptcha_v2_secret_key,
+      )
     end
   end
 end

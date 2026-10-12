@@ -8,6 +8,7 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import form from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 import {
@@ -17,16 +18,20 @@ import {
 import { i18n } from "discourse-i18n";
 
 const refreshedClientName = "Updated client";
+const invalidRedirectUri = "https://";
 
 acceptance("Admin - MCP", function (needs) {
   let savedAccessRule;
   let emergencyBlockRequests;
   let refreshClientRequests;
   let setupComplete;
+  let activityMetrics;
+  let activityRecords;
   let activityRequests;
   let authorizationRequests;
   let clientRequests;
   let savedPrimitiveIds;
+  let editableClient;
 
   needs.user({ admin: true });
   needs.hooks.beforeEach(() => {
@@ -34,13 +39,68 @@ acceptance("Admin - MCP", function (needs) {
     emergencyBlockRequests = [];
     refreshClientRequests = [];
     setupComplete = true;
+    activityMetrics = {
+      tool_calls: 2,
+      failed_tool_calls: 1,
+      rate_limits: 0,
+      p95_latency_ms: 25,
+    };
+    activityRecords = [
+      {
+        id: 3,
+        created_at: "2026-09-22T10:00:00Z",
+        method: "tools/call",
+        tool: "discourse_topic_list",
+        username: "sam",
+        outcome: "success",
+        duration_ms: 25,
+        request_id: "request-current",
+      },
+    ];
     activityRequests = [];
     authorizationRequests = [];
     clientRequests = [];
     savedPrimitiveIds = null;
+    editableClient = {
+      id: 8,
+      name: "Registered client",
+      client_id: "registered-client",
+      registration_type: "pre_registered",
+      trust_state: "approved",
+      admin_managed: true,
+      redirect_uris: ["https://client.example.com/callback?audience=one,two"],
+    };
   });
 
   needs.pretender((server, helper) => {
+    server.post("/admin/mcp/clients.json", (request) => {
+      const data = new URLSearchParams(request.requestBody);
+      editableClient = {
+        ...editableClient,
+        name: data.get("client[name]"),
+        client_id: data.get("client[client_id]"),
+        redirect_uris: data.getAll("client[redirect_uris][]"),
+      };
+      return helper.response({ client: editableClient });
+    });
+    server.get("/admin/mcp/clients/8.json", () =>
+      helper.response({ client: editableClient })
+    );
+    server.put("/admin/mcp/clients/8.json", (request) => {
+      const data = new URLSearchParams(request.requestBody);
+      if (data.getAll("client[redirect_uris][]").includes(invalidRedirectUri)) {
+        return helper.response(422, { errors: ["Redirect URIs is invalid"] });
+      }
+      editableClient = {
+        ...editableClient,
+        admin_managed: true,
+        ...(data.has("client[name]") && { name: data.get("client[name]") }),
+        ...(data.has("client[redirect_uris][]") && {
+          redirect_uris: data.getAll("client[redirect_uris][]"),
+        }),
+      };
+      return helper.response({ client: editableClient });
+    });
     server.get("/admin/config/site_settings.json", () =>
       helper.response({ site_settings: [] })
     );
@@ -292,14 +352,12 @@ acceptance("Admin - MCP", function (needs) {
     server.get("/admin/mcp/activity.json", (request) => {
       activityRequests.push(request.queryParams);
 
-      const metrics = {
-        tool_calls: 2,
-        errors: 1,
-        rate_limits: 0,
-        p95_latency_ms: 25,
-      };
       if (request.queryParams.filter !== "search") {
-        return helper.response({ activity: [], metrics, meta: {} });
+        return helper.response({
+          activity: activityRecords,
+          metrics: activityMetrics,
+          meta: {},
+        });
       }
 
       if (request.queryParams.cursor) {
@@ -333,7 +391,7 @@ acceptance("Admin - MCP", function (needs) {
             request_id: "request-newer",
           },
         ],
-        metrics,
+        metrics: activityMetrics,
         meta: { next_cursor: 2 },
       });
     });
@@ -419,6 +477,183 @@ acceptance("Admin - MCP", function (needs) {
     assert
       .dom(".admin-mcp__setup")
       .exists("the incomplete setup checklist is visible");
+  });
+
+  test("corrects a registered OAuth client", async function (assert) {
+    const redirectUris = [
+      ...editableClient.redirect_uris,
+      "https://client.example.com/callback/one,two",
+    ];
+    await visit("/admin/config/mcp/clients/8");
+    await click(".admin-mcp__edit-client");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/mcp/clients/8/edit",
+      "editing has its own URL"
+    );
+    assert
+      .dom('[name="redirect_uris"]')
+      .hasValue(
+        editableClient.redirect_uris[0],
+        "the current redirect is editable"
+      );
+    assert
+      .dom('[name="client_id"]')
+      .doesNotExist("the client identity is fixed");
+
+    await form(".admin-mcp__edit-client-form")
+      .field("name")
+      .fillIn("Corrected client");
+    await form(".admin-mcp__edit-client-form")
+      .field("redirect_uris")
+      .fillIn(redirectUris.join("\n"));
+    await form(".admin-mcp__edit-client-form").submit();
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/mcp/clients/8",
+      "saving returns to client details"
+    );
+
+    assert
+      .dom(".admin-mcp__edit-client-form")
+      .doesNotExist("saving returns to the details");
+    assert
+      .dom(".admin-mcp__uri-list")
+      .includesText(redirectUris[1], "the saved redirects are displayed");
+    assert.strictEqual(
+      editableClient.name,
+      "Corrected client",
+      "the name is saved"
+    );
+    assert.deepEqual(
+      editableClient.redirect_uris,
+      redirectUris,
+      "both redirects are saved"
+    );
+    await click(".admin-mcp__edit-client");
+    await form(".admin-mcp__edit-client-form")
+      .field("name")
+      .fillIn("Discard me");
+    await click(".admin-mcp__cancel-client-edit");
+    assert.dom(".dialog-body").exists("unsaved changes require confirmation");
+    await click(".dialog-footer .btn-primary");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/mcp/clients/8",
+      "cancel returns to client details"
+    );
+    assert.strictEqual(
+      editableClient.name,
+      "Corrected client",
+      "cancel discards changes"
+    );
+  });
+
+  test("a name-only edit preserves redirects refreshed while the editor is open", async function (assert) {
+    editableClient.registration_type = "cimd";
+    editableClient.admin_managed = false;
+    await visit("/admin/config/mcp/clients/8/edit");
+    editableClient.redirect_uris = ["https://client.example.com/refreshed"];
+
+    const clientForm = form(".admin-mcp__edit-client-form");
+    await clientForm.field("name").fillIn("Renamed client");
+    await clientForm.submit();
+
+    assert
+      .dom(".admin-mcp__uri-list")
+      .includesText(
+        "https://client.example.com/refreshed",
+        "the refreshed redirects are retained"
+      );
+    assert.strictEqual(
+      editableClient.name,
+      "Renamed client",
+      "the name is saved"
+    );
+    assert
+      .dom(".admin-mcp__detail-list")
+      .includesText(
+        i18n("admin.config.mcp.clients.manual"),
+        "the registration is now admin-managed"
+      );
+  });
+
+  test("a rejected client edit still warns before discarding changes", async function (assert) {
+    await visit("/admin/config/mcp/clients/8/edit");
+    const clientForm = form(".admin-mcp__edit-client-form");
+    await clientForm.field("name").fillIn("Unsaved name");
+    await clientForm.field("redirect_uris").fillIn(invalidRedirectUri);
+    await clientForm.submit();
+    assert
+      .dom(".dialog-body")
+      .includesText("Redirect URIs is invalid", "the error is shown");
+    await click(".dialog-footer .btn-primary");
+    await click(".admin-mcp__cancel-client-edit");
+    assert
+      .dom(".dialog-body")
+      .exists("discarding the rejected changes requires confirmation");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/mcp/clients/8/edit",
+      "the editor stays open"
+    );
+  });
+
+  test("loads the OAuth client editor directly", async function (assert) {
+    await visit("/admin/config/mcp/clients/8/edit");
+    assert
+      .dom(".admin-mcp__edit-client-form")
+      .exists("the edit form loads directly");
+    assert
+      .dom(".d-page-header")
+      .doesNotExist("the normal page header is hidden");
+    assert
+      .dom(".d-page-subheader")
+      .doesNotExist("the details subheader is hidden");
+    assert
+      .dom('[name="name"]')
+      .hasValue(editableClient.name, "the current name is loaded");
+  });
+
+  test("creates an OAuth client with commas in redirect URIs", async function (assert) {
+    const redirectUris = [
+      "https://client.example.com/callback/one,two",
+      "https://client.example.com/callback?audience=one,two",
+    ];
+    await visit("/admin/config/mcp/clients/new");
+    await click('[data-client-preset-id="custom"] button');
+    const clientForm = form(".admin-mcp__client-form form");
+    await clientForm.field("name").fillIn("Comma client");
+    await clientForm.field("client_id").fillIn("comma-client");
+    await clientForm
+      .field("redirect_uris")
+      .fillIn(`  ${redirectUris[0]}  \n\n${redirectUris[1]}\n`);
+    await clientForm.submit();
+
+    assert.deepEqual(
+      editableClient.redirect_uris,
+      redirectUris,
+      "commas are preserved and blank lines are ignored"
+    );
+    assert
+      .dom(".admin-mcp__uri-list li")
+      .exists({ count: 2 }, "both redirects are displayed");
+  });
+
+  test("metadata clients can open the editor and save redirect URIs", async function (assert) {
+    const redirectUri = "https://client.example.com/new";
+    editableClient.registration_type = "cimd";
+    editableClient.admin_managed = false;
+    await visit("/admin/config/mcp/clients/8");
+    await click(".admin-mcp__edit-client");
+    assert.dom(".admin-mcp__edit-client-form").exists();
+    const clientForm = form(".admin-mcp__edit-client-form");
+    await clientForm.field("redirect_uris").fillIn(redirectUri);
+    await clientForm.submit();
+    assert.strictEqual(currentURL(), "/admin/config/mcp/clients/8");
+    assert
+      .dom(".admin-mcp__uri-list")
+      .includesText("https://client.example.com/new");
   });
 
   test("prefills known OAuth client applications", async function (assert) {
@@ -834,16 +1069,63 @@ acceptance("Admin - MCP", function (needs) {
     await visit("/admin/config/mcp/activity");
 
     assert
-      .dom(".admin-mcp__activity-filters select option:first-child")
+      .dom(".admin-mcp__activity-outcome select option:first-child")
       .hasText(
         i18n("admin.config.mcp.values.activity_outcome.all"),
         "the unfiltered option names the outcome filter"
+      );
+    assert
+      .dom(".db-date-range__trigger")
+      .hasText(
+        i18n("date_range_picker.presets.last_7_days"),
+        "the default range is the last seven days"
       );
     assert
       .dom(".admin-mcp__activity-metrics")
       .includesText(
         i18n("admin.config.mcp.activity.tool_calls"),
         "the metric describes the audited method"
+      );
+    assert
+      .dom(".admin-mcp__activity-metrics")
+      .includesText(
+        i18n("admin.config.mcp.activity.failed_tool_calls"),
+        "failed tool calls have a specific label"
+      );
+    assert
+      .dom(".admin-mcp__activity-failed-tool-calls")
+      .hasText(
+        activityMetrics.failed_tool_calls.toString(),
+        "the failed tool call metric is shown"
+      );
+  });
+
+  test("shows an empty latency value when there are no samples", async function (assert) {
+    activityMetrics.p95_latency_ms = null;
+
+    await visit("/admin/config/mcp/activity");
+
+    assert
+      .dom(".admin-mcp__activity-p95-latency")
+      .hasText(
+        i18n("admin.config.mcp.activity.no_latency"),
+        "the page does not describe missing latency as zero"
+      );
+  });
+
+  test("hides metrics when there is no activity", async function (assert) {
+    activityRecords = [];
+
+    await visit("/admin/config/mcp/activity");
+
+    assert
+      .dom(".admin-mcp__activity-metrics")
+      .doesNotExist("the metrics are hidden when the activity list is empty");
+    assert
+      .dom(".admin-mcp__activity-table")
+      .includesText(
+        i18n("admin.config.mcp.activity.empty"),
+        "the empty state is shown"
       );
   });
 
@@ -857,11 +1139,34 @@ acceptance("Admin - MCP", function (needs) {
       await waitUntil(() =>
         activityRequests.some((request) => request.filter === "search")
       );
-      await select(".admin-mcp__activity-filters select", "error");
+      await select(".admin-mcp__activity-outcome select", "error");
       await waitUntil(() =>
         activityRequests.some(
           (request) =>
             request.filter === "search" && request.outcome === "error"
+        )
+      );
+      await click(".db-date-range__trigger");
+      await click(
+        findAll(".d-date-range-picker__preset").find(
+          (element) =>
+            element.textContent.trim() ===
+            i18n("date_range_picker.presets.last_30_days")
+        )
+      );
+
+      const startDate = moment()
+        .startOf("day")
+        .subtract(29, "days")
+        .format("YYYY-MM-DD");
+      const endDate = moment().format("YYYY-MM-DD");
+      await waitUntil(() =>
+        activityRequests.some(
+          (request) =>
+            request.filter === "search" &&
+            request.outcome === "error" &&
+            request.start_date === startDate &&
+            request.end_date === endDate
         )
       );
 
@@ -885,7 +1190,13 @@ acceptance("Admin - MCP", function (needs) {
 
       assert.deepEqual(
         activityRequests.at(-1),
-        { cursor: "2", filter: "search", outcome: "error" },
+        {
+          cursor: "2",
+          filter: "search",
+          outcome: "error",
+          start_date: startDate,
+          end_date: endDate,
+        },
         "the cursor request preserves every active filter"
       );
       assert
@@ -900,6 +1211,34 @@ acceptance("Admin - MCP", function (needs) {
     } finally {
       disableLoadMoreObserver();
     }
+  });
+
+  test("filters activity with a custom date range", async function (assert) {
+    await visit("/admin/config/mcp/activity");
+    await click(".db-date-range__trigger");
+    await fillIn(
+      `.d-date-range-picker__input[aria-label='${i18n("date_range_picker.start_date")}']`,
+      "2026/09/01"
+    );
+    await fillIn(
+      `.d-date-range-picker__input[aria-label='${i18n("date_range_picker.end_date")}']`,
+      "2026/09/10"
+    );
+    await click(".d-date-range-picker__apply");
+    await waitUntil(() =>
+      activityRequests.some(
+        (request) =>
+          request.start_date === "2026-09-01" &&
+          request.end_date === "2026-09-10"
+      )
+    );
+
+    assert
+      .dom(".db-date-range__trigger")
+      .includesText(
+        moment("2026-09-01").format("ll"),
+        "the trigger shows the custom date range"
+      );
   });
 
   test("blocks and unblocks a primitive immediately", async function (assert) {

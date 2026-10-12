@@ -311,6 +311,10 @@ export default class ChatComposer extends Component {
   }
 
   async reactingToLastMessage() {
+    if (!this.siteSettings.enable_emoji) {
+      return false;
+    }
+
     // Check if the message is a reaction to the latest message in the channel.
     const message = this.draft.message.trim();
     let reactionCode = "";

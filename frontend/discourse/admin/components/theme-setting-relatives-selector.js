@@ -18,9 +18,10 @@ export default class ThemeSettingRelativesSelectorComponent extends SiteSettingC
       });
   }
 
-  _save() {
-    return this.args.model.save({
+  async _save() {
+    await this.args.model.save({
       [this.args.setting.setting]: this.convertNamesToIds(),
     });
+    this.args.onSave?.();
   }
 }

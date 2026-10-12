@@ -13,7 +13,7 @@ export default class FKSubmit extends Component {
       ...attributes
       @action={{@onSubmit}}
       @disabled={{@disabled}}
-      @forwardEvent="true"
+      @forwardEvent={{true}}
       @isLoading={{@isLoading}}
       @label={{this.label}}
     />

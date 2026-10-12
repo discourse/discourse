@@ -7,8 +7,8 @@ import { trustHTML } from "@ember/template";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 const MAX_AVATARS = 5;
@@ -41,7 +41,7 @@ export default class ChatChannelEmptyState extends Component {
       return dAvatar(chatable.users[0], { imageSize: "extra_large" });
     }
 
-    const icon = emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
+    const icon = (emoji && dEmoji(emoji)) || dIcon("d-chat");
 
     if (!chatable?.color) {
       return icon;

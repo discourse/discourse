@@ -10,7 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
-import { gt, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -61,26 +61,19 @@ export default class SchemaSettingNewEditor extends Component {
   }
 
   get fields() {
-    const list = [];
-
     if (!this.activeObject) {
-      return list;
+      return [];
     }
 
-    for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
-      if (spec.type === "objects") {
-        continue;
-      }
-
-      list.push({
+    return Object.entries(this.activeSchema.properties)
+      .filter(([, spec]) => spec.type !== "objects")
+      .map(([name, spec]) => ({
         name,
         spec,
-        description: this.fieldDescription(name, spec),
-        label: this.fieldLabel(name, spec),
-      });
-    }
-
-    return list;
+        description:
+          this.#propertyMetadata(name, "description") || spec.description,
+        label: this.#propertyMetadata(name, "label") || spec.label || name,
+      }));
   }
 
   get canMoveUp() {
@@ -111,81 +104,40 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   generateSchemaTitle(object, schema, index) {
-    let title;
+    let title = object[schema.identifier];
 
     if (schema.properties[schema.identifier]?.type === "categories") {
-      title = object[schema.identifier]
-        ?.map((categoryId) => {
-          return (
+      title = title
+        ?.map(
+          (categoryId) =>
             this.args.setting.metadata?.categories?.[categoryId]?.name ||
             Category.findById(categoryId)?.name
-          );
-        })
+        )
         .filter(Boolean)
         .join(", ");
-    } else {
-      title = object[schema.identifier];
     }
 
     return title || `${schema.name} ${index + 1}`;
   }
 
-  descriptions(fieldName, key) {
-    // The `property_descriptions` metadata is an object with keys in the following format as an example:
-    //
-    // {
-    //   some_property.description: <some description>,
-    //   some_property.label: <some label>,
-    //   some_objects_property.some_other_property.description: <some description>,
-    //   some_objects_property.some_other_property.label: <some label>,
-    // }
-    const descriptions = this.args.setting.metadata?.property_descriptions;
-
-    if (!descriptions) {
-      return;
-    }
-
-    if (this.activeSchemaPaths.length > 0) {
-      key = `${this.activeSchemaPaths.join(".")}.${fieldName}.${key}`;
-    } else {
-      key = `${fieldName}.${key}`;
-    }
-
-    return descriptions[key];
-  }
-
-  fieldLabel(fieldName, spec) {
-    return this.descriptions(fieldName, "label") || spec?.label || fieldName;
-  }
-
-  fieldDescription(fieldName, spec) {
-    return this.descriptions(fieldName, "description") || spec?.description;
-  }
-
   @action
   clickBack() {
-    const {
-      dataPaths: lastDataPaths,
-      schemaPaths: lastSchemaPaths,
-      index: lastIndex,
-    } = this.history.pop();
+    const { dataPaths, schemaPaths, index } = this.history.pop();
 
-    this.activeDataPaths = lastDataPaths;
-    this.activeSchemaPaths = lastSchemaPaths;
-    this.activeIndex = lastIndex;
+    this.activeDataPaths = dataPaths;
+    this.activeSchemaPaths = schemaPaths;
+    this.activeIndex = index;
   }
 
   @action
   addChildItem(propertyName, parentNodeIndex) {
-    this.activeData[parentNodeIndex][propertyName].push(
+    const children = this.activeData[parentNodeIndex][propertyName];
+
+    children.push(
       this.#prepareObject({}, this.activeSchema.properties[propertyName].schema)
     );
 
-    this.onChildClick(
-      this.activeData[parentNodeIndex][propertyName].length - 1,
-      propertyName,
-      parentNodeIndex
-    );
+    this.onChildClick(children.length - 1, propertyName, parentNodeIndex);
   }
 
   @action
@@ -196,25 +148,26 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   async removeItem() {
-    let confirm = true;
+    const warning = this.args.schema.deleteWarning;
+    const confirmed =
+      !warning ||
+      (await this.dialog.deleteConfirm({
+        title: warning.title,
+        message: warning.message,
+      }));
 
-    if (this.args.schema.deleteWarning) {
-      confirm = await this._confirmRemove(this.args.schema.deleteWarning);
-    }
-
-    if (!confirm) {
+    if (!confirmed) {
       return;
     }
 
     this.activeData.splice(this.activeIndex, 1);
 
-    if (this.activeData.length > 0) {
-      this.activeIndex = Math.max(this.activeIndex - 1, 0);
-    } else if (this.history.length > 0) {
+    if (this.activeData.length === 0 && this.history.length > 0) {
       this.clickBack();
-    } else {
-      this.activeIndex = 0;
+      return;
     }
+
+    this.activeIndex = Math.max(this.activeIndex - 1, 0);
   }
 
   @action
@@ -225,16 +178,14 @@ export default class SchemaSettingNewEditor extends Component {
   @action
   moveUp() {
     if (this.canMoveUp) {
-      this.#swapAdjacentItems(this.activeIndex, this.activeIndex - 1);
-      this.activeIndex = this.activeIndex - 1;
+      this.#moveActiveItem(-1);
     }
   }
 
   @action
   moveDown() {
     if (this.canMoveDown) {
-      this.#swapAdjacentItems(this.activeIndex, this.activeIndex + 1);
-      this.activeIndex = this.activeIndex + 1;
+      this.#moveActiveItem(1);
     }
   }
 
@@ -250,8 +201,10 @@ export default class SchemaSettingNewEditor extends Component {
         this.router.transitionTo(this.args.routeToRedirect, this.args.id);
       })
       .catch((e) => {
-        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          this.validationErrorMessage = e.jqXHR.responseJSON.errors[0];
+        const errors = e.jqXHR?.responseJSON?.errors;
+
+        if (errors) {
+          this.validationErrorMessage = errors[0];
         } else {
           popupAjaxError(e);
         }
@@ -260,38 +213,20 @@ export default class SchemaSettingNewEditor extends Component {
   }
 
   #resolveDataFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.data;
-    }
-
-    let data = this.data;
-
-    paths.forEach((path) => {
-      data = data[path];
-    });
-
-    return data;
+    return paths.reduce((data, path) => data[path], this.data);
   }
 
   #resolveSchemaFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.schema;
-    }
-
-    let schema = this.schema;
-
-    paths.forEach((path) => {
-      schema = schema.properties[path].schema;
-    });
-
-    return schema;
+    return paths.reduce(
+      (schema, path) => schema.properties[path].schema,
+      this.schema
+    );
   }
 
-  #swapAdjacentItems(fromIndex, toIndex) {
-    const item = this.activeData[fromIndex];
-
-    this.activeData.splice(fromIndex, 1);
-    this.activeData.splice(toIndex, 0, item);
+  #moveActiveItem(offset) {
+    const [item] = this.activeData.splice(this.activeIndex, 1);
+    this.activeData.splice(this.activeIndex + offset, 0, item);
+    this.activeIndex += offset;
   }
 
   #prepareObject(object, schema) {
@@ -302,6 +237,10 @@ export default class SchemaSettingNewEditor extends Component {
             this.#prepareObject(child, spec.schema)
           )
         );
+      } else if (spec.required && spec.type === "boolean") {
+        object[name] ??= false;
+      } else if (spec.required && spec.type === "enum") {
+        object[name] ??= spec.default;
       } else if (Array.isArray(object[name])) {
         object[name] = trackedArray(object[name]);
       }
@@ -310,15 +249,10 @@ export default class SchemaSettingNewEditor extends Component {
     return trackedObject(object);
   }
 
-  async _confirmRemove(warning) {
-    return new Promise((resolve) => {
-      this.dialog.deleteConfirm({
-        title: warning?.title,
-        message: warning?.message,
-        didCancel: () => resolve(false),
-        didConfirm: () => resolve(true),
-      });
-    });
+  #propertyMetadata(fieldName, key) {
+    return this.args.setting.metadata?.property_descriptions?.[
+      [...this.activeSchemaPaths, fieldName, key].join(".")
+    ];
   }
 
   <template>
@@ -385,7 +319,7 @@ export default class SchemaSettingNewEditor extends Component {
               @icon="chevron-down"
             />
 
-            {{#if (gt this.fields.length 0)}}
+            {{#if this.fields.length}}
               <DButton
                 class="btn-danger schema-setting-editor__remove-btn"
                 @action={{this.removeItem}}

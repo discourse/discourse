@@ -18,7 +18,6 @@ pt_BR:
       admin_dashboard_card:
         no_results: "Nenhum resultado"
     explorer:
-      default_query: "Padrão"
       default_query_notice: "Esta é uma consulta padrão; o SQL não pode ser editado. Para editar o SQL, crie uma nova consulta."
       view_query: "Visualizar"
       queries: "Consultas"
@@ -74,6 +73,7 @@ pt_BR:
         other: "Mostrando melhores %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
+      query_tags: "Tags"
       link: "Link para"
       report_name: "Relatório"
       query_description: "Descrição"

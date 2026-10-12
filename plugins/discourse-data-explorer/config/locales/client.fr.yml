@@ -28,7 +28,6 @@ fr:
         title: "Créer une requête dans Data Explorer"
         description: "Rédigez une requête SQL personnalisée pour faire ressortir les informations propres à votre communauté."
     explorer:
-      default_query: "Par défaut"
       default_query_notice: "Il s'agit d'une requête par défaut dont le code SQL ne peut pas être modifié. Pour modifier le code SQL, créez une nouvelle requête."
       view_query: "Afficher"
       queries: "Requêtes"
@@ -125,6 +124,7 @@ fr:
         other: "Affichage des %{count} premiers résultats."
       query_name: "Requête"
       query_groups: "Groupes"
+      query_tags: "Étiquettes"
       link: "Lien pour"
       report_name: "Rapport"
       query_description: "Description"

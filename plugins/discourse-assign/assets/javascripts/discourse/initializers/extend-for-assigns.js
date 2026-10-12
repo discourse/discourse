@@ -600,6 +600,14 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-assigned",
+        route: "userActivity.assigned",
+        label: "discourse_assign.assigned",
+        icon: "user-plus",
+        displayed: ({ currentUser }) => currentUser?.can_assign_globally,
+      });
+
       const currentUser = container.lookup("service:current-user");
       if (currentUser?.can_assign_globally) {
         api.modifyClass(

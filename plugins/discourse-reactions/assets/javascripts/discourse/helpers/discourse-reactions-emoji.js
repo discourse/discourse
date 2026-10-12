@@ -7,12 +7,9 @@ export default class DiscourseReactionsEmoji extends Helper {
   @service siteSettings;
 
   compute([reaction], options) {
-    // The like reaction must stay usable without emoji rendering, so fall
-    // back to the configured like icon when emojis are disabled site-wide.
-    if (
-      !this.siteSettings.enable_emoji &&
-      reaction === this.siteSettings.discourse_reactions_reaction_for_like
-    ) {
+    // Without emoji rendering, reactions degrade to likes, so every reaction
+    // falls back to the configured like icon.
+    if (!this.siteSettings.enable_emoji) {
       const icon = this.siteSettings.discourse_reactions_like_icon;
       return dIcon(icon === "heart" ? "d-liked" : icon, {
         ...options,

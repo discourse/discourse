@@ -44,12 +44,12 @@ export default class ChatMessagesManager {
     );
   }
 
-  findFirstMessageOfDay(a) {
-    return this.messages.find(
-      (b) =>
-        a.getFullYear() === b.createdAt.getFullYear() &&
-        a.getMonth() === b.createdAt.getMonth() &&
-        a.getDate() === b.createdAt.getDate()
+  findFirstMessageOfDay(date, timezone) {
+    const resolvedTimezone = timezone || moment.tz.guess();
+    const targetDate = moment(date).tz(resolvedTimezone);
+
+    return this.messages.find((message) =>
+      targetDate.isSame(moment(message.createdAt).tz(resolvedTimezone), "day")
     );
   }
 

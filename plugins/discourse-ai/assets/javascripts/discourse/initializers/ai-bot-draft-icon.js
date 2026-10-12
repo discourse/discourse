@@ -4,7 +4,7 @@ import { isAiBotRecipient } from "../lib/ai-bot-helper";
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
 
-  if (!currentUser?.ai_enabled_chat_bots?.length) {
+  if (!currentUser?.ai_enabled_agents?.length) {
     return;
   }
 

@@ -45,7 +45,10 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    let exceptionSelectors = [".sidebar-more-section-content"];
+    let exceptionSelectors = [
+      ".sidebar-more-section-content",
+      ".fk-d-menu-modal",
+    ];
 
     exceptionSelectors = applyValueTransformer(
       "hamburger-dropdown-click-outside-exceptions",

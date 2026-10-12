@@ -173,6 +173,14 @@ export default {
     withPluginApi(initializeWithApi);
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-solved",
+        route: "userActivity.solved",
+        label: "solved.title",
+        icon: "square-check",
+        displayed: ({ siteSettings }) => siteSettings.solved_enabled,
+      });
+
       api.replaceIcon(
         "notification.solved.accepted_notification",
         "square-check"

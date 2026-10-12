@@ -41,7 +41,7 @@ module Voice
           request(
             "StartRoomCompositeEgress",
             roomName: Livekit.room_name(room),
-            audioOnly: !room.video_allowed?,
+            audioOnly: !room.video_enabled?,
             fileOutputs: [output],
           )
         end

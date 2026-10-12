@@ -1493,12 +1493,12 @@ blockquote .post__contents-cooked-quote {
   &.topic-post-visited {
     .topic-post-visited-line {
       text-align: center;
-      border-bottom: 1px solid var(--danger-medium);
+      border-bottom: 1px solid light-dark(var(--danger-medium), var(--danger));
       z-index: z("base") + 2; // ensures last visit border is on top of post borders
       line-height: 0;
       margin: 0;
       margin-bottom: -1px;
-      color: var(--danger-medium);
+      color: light-dark(var(--danger-medium), var(--danger));
       font-size: var(--font-down-1);
       width: calc(
         var(--topic-body-width) + var(--topic-avatar-width) +

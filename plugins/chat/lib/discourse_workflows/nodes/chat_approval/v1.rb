@@ -182,11 +182,20 @@ if defined?(DiscourseWorkflows)
                   ),
                 )
               end
+              on_failed_policy(:channel_allows_message_creation) do |policy|
+                raise_node_error!(
+                  I18n.t(
+                    "discourse_workflows.errors.chat_approval.channel_blocked",
+                    channel_id: channel_id,
+                    reason: policy.reason,
+                  ),
+                )
+              end
               on_failure do
                 raise_node_error!(
                   I18n.t(
-                    "discourse_workflows.errors.chat_approval.failed",
-                    steps: result.inspect_steps,
+                    "discourse_workflows.errors.chat_approval.failed_step",
+                    step: ChatServiceFailure.failed_step_name(result),
                   ),
                 )
               end

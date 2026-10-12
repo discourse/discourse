@@ -59,6 +59,28 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         expect(json).to have_key("summary")
       end
 
+      it "reports rolled-up token totals exceeding the 32-bit integer range" do
+        AiApiRequestStat.delete_all
+        AiApiRequestStat.create!(
+          provider_id: 1,
+          feature_name: "ai_bot",
+          language_model: llm_model.name,
+          llm_id: llm_model.id,
+          user_id: user.id,
+          request_tokens: 1_500_000_000,
+          response_tokens: 100,
+          cache_read_tokens: 800_000_000,
+          cache_write_tokens: 50,
+          rolled_up: true,
+          created_at: 1.day.ago,
+        )
+
+        get usage_report_path
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["summary"]["total_tokens"]).to eq(2_300_000_150)
+      end
+
       it "respects date filters" do
         get usage_report_path,
             params: {

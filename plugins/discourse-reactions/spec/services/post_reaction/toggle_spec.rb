@@ -104,8 +104,9 @@ RSpec.describe DiscourseReactions::PostReaction::Toggle do
       it { is_expected.to run_successfully }
 
       it "creates the reaction" do
-        expect { result }.to change { DiscourseReactions::ReactionUser.count }.by(1)
-        expect(DiscourseReactions::ReactionUser.exists?(user: acting_user, post:)).to eq(true)
+        expect { result }.to change {
+          DiscourseReactions::ReactionUser.where(user: acting_user, post:).count
+        }.by(1)
       end
 
       it "publishes the changed reaction" do

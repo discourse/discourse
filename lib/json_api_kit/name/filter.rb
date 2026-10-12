@@ -2,6 +2,6 @@
 
 module JsonApiKit
   module Name
-    Filter = Data.define(:value, :type) { include Name }
+    Filter = Data.define(:value, :type) { include Name::ResourceScope }
   end
 end

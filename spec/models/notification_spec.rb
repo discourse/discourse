@@ -1,6 +1,72 @@
 # frozen_string_literal: true
 
 RSpec.describe Notification do
+  describe ".filter_inaccessible_reviewable_notifications" do
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:reviewable, :reviewable_flagged_post)
+
+    it "preserves regular mentions and filters reviewable mentions after access changes or deletion" do
+      SiteSetting.enable_mentions = true
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      mention = moderator.notifications.find_by!(notification_type: Notification.types[:mentioned])
+      regular =
+        Fabricate(:notification, user: moderator, notification_type: Notification.types[:mentioned])
+      notifications = [mention, regular]
+
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(
+          moderator.guardian,
+          notifications,
+        ),
+      ).to eq(notifications)
+
+      reviewable.update!(reviewable_by_moderator: false)
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(
+          moderator.guardian,
+          notifications,
+        ),
+      ).to eq([regular])
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(admin.guardian, notifications),
+      ).to eq(notifications)
+
+      reviewable.destroy!
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(admin.guardian, notifications),
+      ).to eq([regular])
+    end
+
+    it "filters mentions after category moderation membership is revoked" do
+      SiteSetting.enable_mentions = true
+      SiteSetting.enable_category_group_moderation = true
+      recipient = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(recipient)
+      category = reviewable.topic.category
+      reviewable.update!(category: category)
+      Fabricate(:category_moderation_group, category: category, group: group)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{recipient.username}")
+      notifications = recipient.notifications.to_a
+
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(
+          recipient.guardian,
+          notifications,
+        ),
+      ).to eq(notifications)
+
+      group.remove(recipient)
+      expect(
+        described_class.filter_inaccessible_reviewable_notifications(
+          recipient.reload.guardian,
+          notifications,
+        ),
+      ).to be_empty
+    end
+  end
+
   context "with the notification observer enabled" do
     fab!(:user)
     fab!(:coding_horror)
@@ -307,6 +373,34 @@ RSpec.describe Notification do
     describe "#url" do
       fab!(:topic)
       fab!(:post) { Fabricate(:post, topic: topic, post_number: 5) }
+
+      it "returns the reviewable URL for a note mention without a topic" do
+        notification =
+          Fabricate(
+            :notification,
+            notification_type: Notification.types[:mentioned],
+            topic: nil,
+            data: { reviewable_id: 123, reviewable_note_id: 456 }.to_json,
+          )
+
+        expect(notification.url).to eq("/review/123")
+
+        set_subfolder("/forum")
+
+        expect(notification.url).to eq("/forum/review/123")
+      end
+
+      it "returns the relative topic URL for a regular mention" do
+        notification =
+          Fabricate(
+            :notification,
+            notification_type: Notification.types[:mentioned],
+            topic: topic,
+            post_number: post.post_number,
+          )
+
+        expect(notification.url).to eq(topic.relative_url(post.post_number))
+      end
 
       it "returns the relative topic url for a regular reply notification" do
         notification =

@@ -8,6 +8,7 @@ module DiscourseWorkflows
     attributes :id,
                :title,
                :slug,
+               :url,
                :posts_count,
                :reply_count,
                :highest_post_number,

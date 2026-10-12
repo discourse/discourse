@@ -13,6 +13,10 @@ es:
     next_page: "Página siguiente"
     replies: "Respuestas"
     last_updated: "Última actualización"
+    event:
+      name: "Evento"
+      location: "Ubicación"
+      link: "Enlace"
   mcp:
     errors:
       draft_too_long: "El borrador es demasiado largo"
@@ -845,6 +849,7 @@ es:
       description_too_long:
         one: "La descripción es demasiado larga (el máximo es %{count} carácter)."
         other: "La descripción es demasiado larga (el máximo son %{count} caracteres)."
+      special_category_permissions: "Esta categoría se ajusta por defecto y los ajustes de seguridad no se pueden editar. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       permission_conflict: "Cualquier grupo que tenga acceso a una subcategoría también debe tener acceso a la categoría primaria. Los siguientes grupos tienen acceso a una de las subcategorías, pero no a la categoría primaria: %{group_names}."
       disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: «%{tags}»"
       disallowed_tags_generic: "Este tema tiene etiquetas no permitidas."

@@ -354,6 +354,33 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#show" do
+      it "reports whether the query can be, and is, on the admin dashboard" do
+        query = make_query("SELECT 1 as value")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["dashboard_mountable"]).to eq(true)
+        expect(response_json["query"]["dashboard_mounted"]).to eq(false)
+
+        AdminDashboardReport.create!(source: "data_explorer_query", identifier: query.id.to_s)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response_json["query"]["dashboard_mounted"]).to eq(true)
+      end
+
+      it "flags a query with a required parameter as not mountable" do
+        query = make_query("-- [params]\n-- int :num\nSELECT :num")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["dashboard_mountable"]).to eq(false)
+      end
+    end
+
     describe "#destroy" do
       it "returns 404 when query does not exist" do
         delete "/admin/plugins/discourse-data-explorer/queries/999999.json"
@@ -1175,6 +1202,15 @@ describe DiscourseDataExplorer::QueryController do
 
         get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(200)
+      end
+
+      it "does not expose admin dashboard state" do
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
+
+        get "/g/#{group.name}/reports/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]).not_to have_key("dashboard_mountable")
+        expect(response_json["query"]).not_to have_key("dashboard_mounted")
       end
 
       it "return a 404 when the query is hidden" do
