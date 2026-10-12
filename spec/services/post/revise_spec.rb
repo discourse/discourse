@@ -45,18 +45,6 @@ RSpec.describe Post::Revise do
         ActionController::Parameters.new(tags: [{ id: "1" }, { name: "new-tag" }]),
       ).for(:changes)
     end
-
-    context "with a post ID" do
-      subject(:contract) { described_class.new(post_id: 1) }
-
-      it { is_expected.to validate_absence_of(:topic_id) }
-    end
-
-    context "with a topic ID" do
-      subject(:contract) { described_class.new(topic_id: 1) }
-
-      it { is_expected.not_to validate_presence_of(:post_id) }
-    end
   end
 
   describe ".call" do
@@ -70,7 +58,7 @@ RSpec.describe Post::Revise do
     let(:dependencies) { { guardian: acting_user.guardian, editor: acting_user } }
     let(:changes) { { raw: "The corrected text of this post." } }
 
-    context "without a post or topic ID" do
+    context "without a post ID" do
       let(:params) { { changes: } }
 
       it { is_expected.to fail_a_contract }
@@ -80,26 +68,6 @@ RSpec.describe Post::Revise do
       let(:params) { { post_id: 0, changes: } }
 
       it { is_expected.to fail_to_find_a_model(:topic) }
-    end
-
-    context "when the topic is deleted" do
-      let(:params) { { topic_id: topic.id, changes: { title: "A corrected topic title" } } }
-
-      before { topic.trash! }
-
-      it { is_expected.to fail_to_find_a_model(:topic) }
-    end
-
-    context "when the actor cannot edit the topic" do
-      fab!(:acting_user, :user)
-
-      let(:params) { { topic_id: topic.id, changes: { title: "A corrected topic title" } } }
-
-      it "preserves the topic title" do
-        expect { expect(result).to fail_a_policy(:can_edit_topic_record) }.not_to change {
-          topic.reload.title
-        }
-      end
     end
 
     context "when the actor cannot edit the post" do
@@ -130,8 +98,8 @@ RSpec.describe Post::Revise do
 
     context "when the actor cannot edit tags" do
       fab!(:acting_user) { Fabricate(:user, refresh_auto_groups: true) }
-      fab!(:tag)
 
+      let(:tag) { Fabricate(:tag) }
       let(:changes) { super().merge(tags: [{ id: tag.id }]) }
 
       before do
@@ -156,11 +124,36 @@ RSpec.describe Post::Revise do
       end
     end
 
+    context "when the original title is stale" do
+      let(:changes) do
+        super().merge(title: "A corrected topic title", original_title: "An earlier topic title")
+      end
+
+      it "preserves the current body and title" do
+        expect { expect(result).to fail_a_step(:check_edit_conflicts) }.not_to change {
+          [post.reload.raw, topic.reload.title]
+        }
+      end
+    end
+
+    context "when the original tags are stale" do
+      let(:original_tag) { Fabricate(:tag) }
+      let(:changes) { super().merge(original_tags: [{ id: original_tag.id }]) }
+
+      before { SiteSetting.tagging_enabled = true }
+
+      it "preserves the current body and tags" do
+        expect { expect(result).to fail_a_step(:check_edit_conflicts) }.not_to change {
+          [post.reload.raw, topic.reload.tag_ids]
+        }
+      end
+    end
+
     context "when the destination category is forbidden" do
       fab!(:acting_user) { Fabricate(:user, refresh_auto_groups: true) }
-      fab!(:topic) { Fabricate(:topic_with_op, user: acting_user) }
-      fab!(:category) { Fabricate(:private_category, group: Group[:staff]) }
 
+      let(:topic) { Fabricate(:topic_with_op, user: acting_user) }
+      let(:category) { Fabricate(:private_category, group: Group[:staff]) }
       let(:changes) { super().merge(category_id: category.id) }
 
       before { post.update!(user: acting_user) }
@@ -199,8 +192,7 @@ RSpec.describe Post::Revise do
     end
 
     context "when changes are Rails parameters" do
-      fab!(:tag)
-
+      let(:tag) { Fabricate(:tag) }
       let(:changes) { ActionController::Parameters.new(super().merge(tags: [{ id: tag.id }])) }
 
       before { SiteSetting.tagging_enabled = true }
@@ -237,13 +229,17 @@ RSpec.describe Post::Revise do
       end
     end
 
-    context "when only the topic is being edited" do
-      let(:params) { { topic_id: topic.id, changes: } }
-      let(:changes) { { title: "A corrected topic title" } }
+    context "when the post belongs to a shared draft" do
+      let(:category) { Fabricate(:category) }
+      let(:changes) { super().merge(category_id: category.id) }
 
-      it "updates the title and preserves the post body" do
-        expect { expect(result).to run_successfully }.not_to change { post.reload.raw }
-        expect(topic.reload.title).to eq(changes[:title])
+      it "changes the topic category while preserving the publication destination" do
+        shared_draft = Fabricate(:shared_draft, topic:)
+
+        expect { expect(result).to run_successfully }.not_to change {
+          shared_draft.reload.category_id
+        }
+        expect(topic.reload.category_id).to eq(category.id)
       end
     end
 

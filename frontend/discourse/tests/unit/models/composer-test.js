@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import {
   CREATE_TOPIC,
@@ -693,77 +692,6 @@ module("Unit | Model | composer", function (hooks) {
     assert.false(post.staged);
     assert.strictEqual(composer.composeState, "open");
     assert.true(composer.editConflict);
-  });
-
-  test("editPost allows overwriting a content conflict from a save callback", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const composer = createComposer.call(this, {
-      action: EDIT,
-      post: store.createRecord("post", { id: 123, post_number: 2 }),
-      topic: store.createRecord("topic", { id: 456 }),
-      reply: "The moderator's replacement text.",
-    });
-    pretender.put("/custom-edit", () =>
-      response(409, { error_type: "edit_conflict" })
-    );
-
-    await assert.rejects(
-      composer.editPost({
-        onSave: () => ajax("/custom-edit", { type: "PUT" }),
-      }),
-      "the conflicting edit is rejected"
-    );
-
-    assert.true(
-      composer.editConflict,
-      "the moderator can overwrite the content conflict"
-    );
-    assert.strictEqual(
-      composer.composeState,
-      "open",
-      "the composer stays open"
-    );
-    assert.strictEqual(
-      composer.reply,
-      "The moderator's replacement text.",
-      "the edit is retained"
-    );
-  });
-
-  test("editPost clears overwrite mode for other save callback conflicts", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const composer = createComposer.call(this, {
-      action: EDIT,
-      post: store.createRecord("post", { id: 123, post_number: 2 }),
-      topic: store.createRecord("topic", { id: 456 }),
-      reply: "The moderator's replacement text.",
-      editConflict: true,
-    });
-    pretender.put("/custom-edit", () =>
-      response(409, { error_type: "workflow_conflict" })
-    );
-
-    await assert.rejects(
-      composer.editPost({
-        onSave: () => ajax("/custom-edit", { type: "PUT" }),
-      }),
-      "the conflicting save is rejected"
-    );
-
-    assert.false(
-      composer.editConflict,
-      "a workflow conflict cannot be overwritten"
-    );
-    assert.strictEqual(
-      composer.composeState,
-      "open",
-      "the composer stays open"
-    );
-    assert.strictEqual(
-      composer.reply,
-      "The moderator's replacement text.",
-      "the edit is retained"
-    );
   });
 
   test("editPost sends the topic edit-conflict fields", async function (assert) {

@@ -1,71 +1,14 @@
 # frozen_string_literal: true
 
-# Saves edits to a post or its topic, reporting invalid or conflicting changes.
+# Saves post revisions, reporting invalid or conflicting changes.
 class Post::Revise
   include Service::Base
 
   class EditConflict < StandardError
   end
 
-  # @!method self.call(guardian:, editor:, params:)
-  #   @param guardian [Guardian] permissions of the person editing
-  #   @param editor [User] person credited with the revision
-  #   @param params [Hash] revision inputs
-  #   @option params [Integer] :post_id post to edit; mutually exclusive with topic_id
-  #   @option params [Integer] :topic_id topic to edit through its first post, preserving its body
-  #   @option params [Hash, ActionController::Parameters] :changes ({}) fields to change
-  #   @option params.changes [String] :raw post body, used with post_id
-  #   @option params.changes [String] :edit_reason revision explanation, used with post_id
-  #   @option params.changes [String] :locale content locale, used with post_id
-  #   @option params.changes [Integer] :reply_to_post_number reply target, used with post_id
-  #   @option params.changes [String] :title topic title, applied only to the first post
-  #   @option params.changes [Integer] :category_id destination category, applied only to the first post
-  #   @option params.changes [String] :featured_link topic link, applied only to the first post
-  #   @option params.changes [String] :archetype topic archetype, applied only to the first post
-  #   @option params.changes [Array<Hash>, Array<String>, nil] :tags topic tags as
-  #     [{ id: 123 }, { name: "new-tag" }] or legacy names. nil, [] or "" clears tags.
-  #     Applied only to the first post.
-  #   @option params.changes [String] :original_text expected body; blank skips the conflict check
-  #   @option params.changes [String] :original_title expected title; blank skips the conflict check
-  #   @option params.changes [Array<Hash>] :original_tags expected tags as [{ id: 123 }];
-  #     blank skips the conflict check
-  #   @option params.changes [Hash] :image_sizes image dimensions supplied by the editor
-  #   @option params.changes [Boolean, String] :bypass_bump preserve topic bump time when permitted
-  #   @option params.changes [Boolean, String] :keep_existing_draft preserve the editor's existing draft
-  #   @note Registered plugin post and topic fields are also accepted in changes.
-  #   @return [Service::Base::Context] service result when called without an outcome block
-  #   @yield Register outcome handlers through {Service::Runner}:
-  #     * on_success: exposes post, topic, and category_changed.
-  #     * on_failed_contract: missing identifiers or invalid changes.
-  #     * on_model_not_found(:post) or (:topic): content was not found.
-  #     * on_failed_policy: can_edit_post, can_edit_topic_record, can_edit_topic,
-  #       or can_edit_tags identifies the denied permission.
-  #     * on_failed_step(:validate_tag_count): post.errors describes the tag limit.
-  #     * on_failed_step(:check_edit_conflicts): an original value no longer matches.
-  #     * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
-  #     * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
-  #     * on_failure: fallback for an outcome without a more specific handler.
-  #   @example Edit a post and handle a conflict
-  #     Post::Revise.call(
-  #       params: {
-  #         post_id: post.id,
-  #         changes: { raw: "The corrected text of this post.", original_text: post.raw },
-  #       },
-  #       guardian: editor.guardian,
-  #       editor:,
-  #     ) do
-  #       on_success { |post:| render_serialized(post, PostUpdateSerializer) }
-  #       on_failed_contract { raise Discourse::InvalidParameters }
-  #       on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
-  #     end
-
-  params do
-    attribute :post_id, :integer
-    attribute :topic_id, :integer
+  class RevisionContract < Service::ContractBase
     attribute :changes, default: -> { {} }
-
-    validates :post_id, presence: true, unless: :topic_id
-    validates :topic_id, absence: true, if: :post_id
 
     before_validation :normalize_changes
 
@@ -131,8 +74,69 @@ class Post::Revise
     end
   end
 
+  # @!method self.call(guardian:, editor:, params:, options: {})
+  #   @param guardian [Guardian] permissions of the person editing
+  #   @param editor [User] person credited with the revision
+  #   @param options [Hash] revision behavior
+  #   @option options [Boolean] :topic_revision (false) revise only topic fields using topic
+  #     permissions, preserving the post body and its validation state
+  #   @param params [Hash] revision inputs
+  #   @option params [Integer] :post_id post to revise
+  #   @option params [Hash, ActionController::Parameters] :changes ({}) fields to change
+  #   @option params.changes [String] :raw post body, used with post_id
+  #   @option params.changes [String] :edit_reason revision explanation, used with post_id
+  #   @option params.changes [String] :locale content locale, used with post_id
+  #   @option params.changes [Integer] :reply_to_post_number reply target, used with post_id
+  #   @option params.changes [String] :title topic title, applied only to the first post
+  #   @option params.changes [Integer] :category_id destination category, applied only to the first post
+  #   @option params.changes [String] :featured_link topic link, applied only to the first post
+  #   @option params.changes [String] :archetype topic archetype, applied only to the first post
+  #   @option params.changes [Array<Hash>, Array<String>, nil] :tags topic tags as
+  #     [{ id: 123 }, { name: "new-tag" }] or legacy names. nil, [] or "" clears tags.
+  #     Applied only to the first post.
+  #   @option params.changes [String] :original_text expected body; blank skips the conflict check
+  #   @option params.changes [String] :original_title expected title; blank skips the conflict check
+  #   @option params.changes [Array<Hash>] :original_tags expected tags as [{ id: 123 }];
+  #     blank skips the conflict check
+  #   @option params.changes [Hash] :image_sizes image dimensions supplied by the editor
+  #   @option params.changes [Boolean, String] :bypass_bump preserve topic bump time when permitted
+  #   @option params.changes [Boolean, String] :keep_existing_draft preserve the editor's existing draft
+  #   @note Registered plugin post and topic fields are also accepted in changes.
+  #   @return [Service::Base::Context] service result when called without an outcome block
+  #   @yield Register outcome handlers through {Service::Runner}:
+  #     * on_success: exposes post, topic, and category_changed.
+  #     * on_failed_contract: missing identifiers or invalid changes.
+  #     * on_model_not_found(:post) or (:topic): content was not found.
+  #     * on_failed_policy: can_edit_post, can_edit_topic,
+  #       or can_edit_tags identifies the denied permission.
+  #     * on_failed_step(:validate_tag_count): post.errors describes the tag limit.
+  #     * on_failed_step(:check_edit_conflicts): an original value no longer matches.
+  #     * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
+  #     * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
+  #     * on_failure: fallback for an outcome without a more specific handler.
+  #   @example Edit a post and handle a conflict
+  #     Post::Revise.call(
+  #       params: {
+  #         post_id: post.id,
+  #         changes: { raw: "The corrected text of this post.", original_text: post.raw },
+  #       },
+  #       guardian: editor.guardian,
+  #       editor:,
+  #     ) do
+  #       on_success { |post:| render_serialized(post, PostUpdateSerializer) }
+  #       on_failed_contract { raise Discourse::InvalidParameters }
+  #       on_failed_step(:check_edit_conflicts) { render_json_error(I18n.t("edit_conflict"), status: 409) }
+  #     end
+
+  params(base_class: RevisionContract) do
+    attribute :post_id, :integer
+
+    validates :post_id, presence: true
+  end
+
+  options { attribute :topic_revision, :boolean, default: false }
+
   model :topic
-  policy :can_edit_topic_record
   model :post
   policy :can_edit_post
   step :validate_tag_count
@@ -143,42 +147,27 @@ class Post::Revise
 
   only_if :category_changed? do
     step :validate_category_change
-
-    only_if :shared_draft? do
-      step :update_shared_draft_destination
-    end
   end
 
-  only_if :revision_requested? do
-    step :revise_post
-  end
+  step :revise_post
 
   private
 
   def fetch_post(params:, guardian:)
     posts = guardian.is_staff? ? Post.with_deleted : Post.all
 
-    if params.topic_id
-      posts.where(topic_id: params.topic_id).order(:post_number).first
-    else
-      posts.find_by(id: params.post_id)
-    end
+    posts.find_by(id: params.post_id)
   end
 
   def fetch_topic(params:, guardian:)
-    topics = guardian.is_staff? && params.topic_id.blank? ? Topic.with_deleted : Topic.all
+    topics = guardian.is_staff? ? Topic.with_deleted : Topic.all
     posts = guardian.is_staff? ? Post.with_deleted : Post.all
-    topic_id = params.topic_id || posts.where(id: params.post_id).pick(:topic_id)
 
-    topics.find_by(id: topic_id)
+    topics.find_by(id: posts.where(id: params.post_id).pick(:topic_id))
   end
 
-  def can_edit_topic_record(params:, topic:, guardian:)
-    params.topic_id.blank? || guardian.can_edit?(topic)
-  end
-
-  def can_edit_post(params:, post:, guardian:)
-    params.topic_id.present? || guardian.can_edit?(post)
+  def can_edit_post(post:, topic:, guardian:, options:)
+    options.topic_revision ? guardian.can_edit?(topic) : guardian.can_edit?(post)
   end
 
   def validate_tag_count(params:, post:)
@@ -194,12 +183,12 @@ class Post::Revise
     end
   end
 
-  def prepare_changes(params:, post:, topic:, guardian:)
+  def prepare_changes(params:, post:, topic:, guardian:, options:)
     attributes = params.changes.with_indifferent_access
     attributes[:tags] = nil if attributes[:tags] == ""
     topic_changes = topic_attributes(attributes:, post:, topic:)
     revision_changes =
-      if params.topic_id.present?
+      if options.topic_revision
         {}.with_indifferent_access
       else
         attributes.slice(
@@ -220,7 +209,6 @@ class Post::Revise
 
     # resolve to name strings before passing to PostRevisor
     revision_changes[:tags] = tag_names if revision_changes.key?(:tags)
-    revision_changes.delete(:category_id) if topic.shared_draft && topic_changes.key?(:category_id)
 
     context[:topic_changes] = topic_changes
     context[:revision_changes] = revision_changes
@@ -264,8 +252,8 @@ class Post::Revise
       Tag.visible(guardian).where(id: ids).pluck(:name)
   end
 
-  def can_edit_topic(params:, topic_changes:, topic:, guardian:)
-    return true if params.topic_id.present?
+  def can_edit_topic(topic_changes:, topic:, guardian:, options:)
+    return true if options.topic_revision
 
     topic_changes.except(:tags).empty? || guardian.can_edit_topic?(topic)
   end
@@ -291,14 +279,6 @@ class Post::Revise
     topic_changes.key?(:category_id)
   end
 
-  def shared_draft?(topic:)
-    topic.shared_draft.present?
-  end
-
-  def revision_requested?(params:, revision_changes:)
-    params.topic_id.blank? || revision_changes.present?
-  end
-
   def validate_category_change(topic_changes:, tag_names:, topic:, guardian:)
     result =
       TopicCategoryChangeValidator.call(
@@ -316,21 +296,26 @@ class Post::Revise
     fail!(result.error)
   end
 
-  def update_shared_draft_destination(topic_changes:, topic:)
-    topic.shared_draft.update!(category_id: topic_changes[:category_id])
-  end
-
-  def revise_post(params:, topic_changes:, revision_changes:, post:, topic:, guardian:, editor:)
+  def revise_post(
+    params:,
+    topic_changes:,
+    revision_changes:,
+    post:,
+    topic:,
+    guardian:,
+    editor:,
+    options:
+  )
     post.image_sizes = params.changes[:image_sizes] if params.changes[:image_sizes].present?
 
     revisor = PostRevisor.new(post, topic)
-    topic_edit_requested = params.topic_id.present? && topic_changes.present?
+    topic_edit_requested = options.topic_revision && topic_changes.present?
     category_changed = topic_changes.key?(:category_id)
     revised =
       revisor.revise!(
         editor,
         revision_changes,
-        revision_options(params:, post:, guardian:, editor:),
+        revision_options(params:, post:, guardian:, editor:, options:),
       )
     context[:category_changed] = revisor.category_changed
 
@@ -351,19 +336,19 @@ class Post::Revise
     end
   end
 
-  def revision_options(params:, post:, guardian:, editor:)
+  def revision_options(params:, post:, guardian:, editor:, options:)
     attributes = params.changes
-    options = { keep_existing_draft: attributes[:keep_existing_draft].to_s == "true" }
-    options[:validate_post] = false if params.topic_id.present?
+    revision_options = { keep_existing_draft: attributes[:keep_existing_draft].to_s == "true" }
+    revision_options[:validate_post] = false if options.topic_revision
 
     # We don't need to validate edits to small action posts by staff
-    options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&
+    revision_options[:skip_validations] = true if post.post_type == Post.types[:small_action] &&
       editor.staff?
 
     if attributes.key?(:bypass_bump) && guardian.can_update_bumped_at?
-      options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(attributes[:bypass_bump])
+      revision_options[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(attributes[:bypass_bump])
     end
 
-    options
+    revision_options
   end
 end

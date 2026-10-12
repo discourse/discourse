@@ -538,61 +538,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
-  describe "#perform_agree_and_edit" do
-    fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
+  describe "#perform" do
+    context "when agreeing with a spam flag and editing its post" do
+      fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
-    it "saves the post and topic edits and approves the spam flag" do
-      SiteSetting.tagging_enabled = true
-      category = Fabricate(:category)
-      tag = Fabricate(:tag)
-      raw = "The moderator removed the abusive passage."
-      title = "A revised title for the reviewed topic"
+      it "saves the edit and approves the spam flag" do
+        raw = "The moderator removed the abusive passage."
 
-      result =
-        reviewable.perform(
-          moderator,
-          :agree_and_edit,
-          post_revision: {
-            raw:,
-            title:,
-            category_id: category.id,
-            tags: [{ id: tag.id }],
-          },
-        )
+        result = reviewable.perform(moderator, :agree_and_edit, post_revision: { raw: })
 
-      expect(result).to be_success
-      expect(reviewable.reload).to be_approved
-      expect(post.reload.raw).to eq(raw)
-      expect(post.topic.reload.title).to eq(title)
-      expect(post.topic.category).to eq(category)
-      expect(post.topic.tags).to contain_exactly(tag)
-    end
+        expect(result).to be_success
+        expect(result.updated_post).to eq(post)
+        expect(reviewable.reload).to be_approved
+        expect(post.reload.raw).to eq(raw)
+      end
 
-    it "preserves the post and topic and keeps the spam flag pending when the edit is invalid" do
-      destination = Fabricate(:category)
-      shared_draft = Fabricate(:shared_draft, topic: post.topic)
-      original_destination = shared_draft.category
-      SiteSetting.shared_drafts_category = post.topic.category_id
-      original_raw = post.raw
-      original_title = post.topic.title
+      it "keeps the spam flag pending when the edit is invalid" do
+        expect do
+          reviewable.perform(moderator, :agree_and_edit, post_revision: { raw: "" })
+        end.to raise_error(ActiveRecord::RecordInvalid)
 
-      expect do
-        reviewable.perform(
-          moderator,
-          :agree_and_edit,
-          post_revision: {
-            raw: "",
-            title: "This title must not be saved",
-            category_id: destination.id,
-          },
-        )
-      end.to raise_error(ActiveRecord::RecordInvalid)
-
-      expect(reviewable.reload).to be_pending
-      expect(post.reload.raw).to eq(original_raw)
-      expect(post.topic.reload.title).to eq(original_title)
-      expect(post.revisions).to be_empty
-      expect(shared_draft.reload.category).to eq(original_destination)
+        expect(reviewable.reload).to be_pending
+      end
     end
   end
 

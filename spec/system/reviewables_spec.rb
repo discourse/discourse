@@ -14,7 +14,7 @@ describe "Reviewables" do
   before { sign_in(admin) }
 
   describe "when there is a flagged post reviewable with a short post" do
-    fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
+    fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic: post.topic) }
 
     describe "reviewable actions" do
       let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
@@ -86,14 +86,13 @@ describe "Reviewables" do
       end
 
       it "edits a post without resolving its flag after minimizing a review edit" do
-        short_reviewable.update!(topic: post.topic)
         review_page.visit_reviewable(short_reviewable)
         open_agree_and_edit
         expect(composer).to have_value(post.raw)
         composer.minimize
 
         expect(composer).to be_minimized
-        click_link(post.topic.title)
+        review_page.topic_link_component.open_topic
         expect(composer).to be_minimized
 
         topic_page.click_post_action_button(post, :show_more)

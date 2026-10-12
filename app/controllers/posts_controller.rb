@@ -231,7 +231,6 @@ class PostsController < ApplicationController
           raise Discourse::InvalidAccess
         end
       end
-      on_failed_policy(:can_edit_topic_record) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_topic) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_tags) { raise Discourse::InvalidAccess }
 

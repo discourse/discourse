@@ -2304,6 +2304,32 @@ RSpec.describe TopicsController do
   end
 
   describe "#update" do
+    context "when clearing topic tags" do
+      fab!(:editor, :admin)
+      fab!(:tag)
+      fab!(:topic, :topic_with_op)
+
+      before do
+        SiteSetting.tagging_enabled = true
+        topic.tags << tag
+        sign_in(editor)
+      end
+
+      it "accepts null tags in JSON" do
+        put "/t/#{topic.id}.json", params: { tags: nil }, as: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload.tags).to be_empty
+      end
+
+      it "accepts an empty tag field" do
+        put "/t/#{topic.id}.json", params: { tags: "" }
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload.tags).to be_empty
+      end
+    end
+
     it "does not update a topic for an anonymous user" do
       put "/t/1.json", params: { slug: "xyz" }
       expect(response.status).to eq(403)
@@ -2791,24 +2817,6 @@ RSpec.describe TopicsController do
             expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
               "apple-inc",
             )
-          end
-
-          it "clears existing tags when JSON tags is null" do
-            topic.tags << tag
-
-            put "/t/#{topic.id}.json", params: { tags: nil }, as: :json
-
-            expect(response).to have_http_status(:ok)
-            expect(topic.reload.tags).to be_empty
-          end
-
-          it "clears existing tags when the submitted tag field is empty" do
-            topic.tags << tag
-
-            put "/t/#{topic.id}.json", params: { tags: "" }
-
-            expect(response).to have_http_status(:ok)
-            expect(topic.reload.tags).to be_empty
           end
 
           it "does not remove tag if no params is given" do

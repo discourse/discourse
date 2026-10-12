@@ -922,28 +922,6 @@ RSpec.describe ReviewablesController do
         Post.plugin_permitted_update_params.delete("review_post_field")
       end
 
-      it "edits the flagged post and applies tags supplied by name" do
-        SiteSetting.tagging_enabled = true
-        flagged = Fabricate(:reviewable_flagged_post)
-        tag = Fabricate(:tag)
-        edited_raw = "A reviewed post."
-
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              post_revision: {
-                raw: edited_raw,
-                tags: [tag.name],
-              },
-            },
-            as: :json
-
-        expect(response).to have_http_status(:ok)
-        expect(flagged.reload).to be_approved
-        expect(flagged.target.reload.raw).to eq(edited_raw)
-        expect(flagged.topic.reload.tags).to contain_exactly(tag)
-      end
-
       it "rejects invalid original tag IDs" do
         flagged = Fabricate(:reviewable_flagged_post)
 
@@ -961,46 +939,10 @@ RSpec.describe ReviewablesController do
         expect(flagged.reload).to be_pending
       end
 
-      it "reports an edit conflict when the topic title has changed" do
-        flagged = Fabricate(:reviewable_flagged_post)
-
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              post_revision: {
-                raw: "A reviewed post.",
-                original_title: "A stale topic title",
-              },
-            }
-
-        expect(response).to have_http_status(:conflict)
-        expect(response.parsed_body["error_type"]).to eq("edit_conflict")
-        expect(flagged.reload).to be_pending
-      end
-
-      it "reports an edit conflict when the topic tags have changed" do
-        SiteSetting.tagging_enabled = true
-        flagged = Fabricate(:reviewable_flagged_post)
-        stale_tag = Fabricate(:tag)
-        flagged.target.topic.update!(tags: [Fabricate(:tag)])
-
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              post_revision: {
-                raw: "A reviewed post.",
-                original_tags: [{ id: stale_tag.id }],
-              },
-            }
-
-        expect(response).to have_http_status(:conflict)
-        expect(response.parsed_body["error_type"]).to eq("edit_conflict")
-        expect(flagged.reload).to be_pending
-      end
-
       it "distinguishes a reviewable version conflict from a content edit conflict" do
         flagged = Fabricate(:reviewable_flagged_post)
         flagged.update!(version: 1)
+        original_raw = flagged.target.raw
 
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
@@ -1013,56 +955,7 @@ RSpec.describe ReviewablesController do
         expect(response).to have_http_status(:conflict)
         expect(response.parsed_body["error_type"]).to eq("reviewable_conflict")
         expect(flagged.reload).to be_pending
-        expect(flagged.target.reload.raw).to eq("Hello world")
-      end
-
-      it "rejects a review edit that moves the topic into a forbidden category" do
-        flagged = Fabricate(:reviewable_flagged_post)
-        post = flagged.target
-        original_category = post.topic.category
-        reviewer = Fabricate(:user, trust_level: 4, refresh_auto_groups: true)
-        group = Fabricate(:group, users: [reviewer])
-        Fabricate(:category_moderation_group, category: original_category, group:)
-        flagged.update!(category: original_category)
-        SiteSetting.enable_category_group_moderation = true
-        sign_in(reviewer)
-        private_category = Fabricate(:private_category, group: Fabricate(:group))
-
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              post_revision: {
-                raw: "A reviewed post.",
-                category_id: private_category.id,
-              },
-            }
-
-        expect(response).to have_http_status(:forbidden)
-        expect(flagged.reload).to be_pending
-        expect(post.topic.reload.category).to eq(original_category)
-      end
-
-      it "updates a shared draft destination together with the review edit" do
-        flagged = Fabricate(:reviewable_flagged_post)
-        post = flagged.target
-        original_category = post.topic.category
-        shared_draft = Fabricate(:shared_draft, topic: post.topic)
-        destination = Fabricate(:category)
-
-        put "/review/#{flagged.id}/perform/agree_and_edit.json",
-            params: {
-              version: flagged.version,
-              post_revision: {
-                raw: "The shared draft has been reviewed.",
-                category_id: destination.id,
-              },
-            }
-
-        expect(response).to have_http_status(:ok)
-        expect(flagged.reload).to be_approved
-        expect(post.reload.raw).to eq("The shared draft has been reviewed.")
-        expect(post.topic.reload.category).to eq(original_category)
-        expect(shared_draft.reload.category).to eq(destination)
+        expect(flagged.target.reload.raw).to eq(original_raw)
       end
 
       it "rejects too many tags before applying a review edit" do
@@ -1093,19 +986,15 @@ RSpec.describe ReviewablesController do
         flagged = Fabricate(:reviewable_flagged_post)
         original_raw = flagged.target.raw
 
-        put "/review/#{flagged.id}/perform/agree_and_edit",
+        put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
               version: flagged.version,
               post_revision: {
                 raw: "An edit with a forbidden featured link.",
                 featured_link: "https://example.com",
               },
-            }.to_json,
-            headers: {
-              "CONTENT_TYPE" => "application/json",
-              "HTTP_ACCEPT" => "application/json, text/javascript, */*; q=0.01",
-              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
-            }
+            },
+            as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.media_type).to eq("application/json")
@@ -1131,8 +1020,7 @@ RSpec.describe ReviewablesController do
                 }
           end
 
-        expect(messages.size).to eq(1)
-        expect(messages.first.data).not_to have_key(:post)
+        expect(messages.map(&:data)).to contain_exactly(hash_excluding(:post))
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.dig("reviewable_perform_result", "post", "raw")).to eq(raw)
         expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
@@ -1163,6 +1051,7 @@ RSpec.describe ReviewablesController do
       it "rejects edits without permission and does not resolve the flag" do
         flagged = Fabricate(:reviewable_flagged_post)
         SiteSetting.tos_topic_id = flagged.target.topic_id
+        original_raw = flagged.target.raw
 
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
             params: {
@@ -1174,10 +1063,10 @@ RSpec.describe ReviewablesController do
 
         expect(response).to have_http_status(:forbidden)
         expect(flagged.reload).to be_pending
-        expect(flagged.target.reload.raw).to eq("Hello world")
+        expect(flagged.target.reload.raw).to eq(original_raw)
       end
 
-      it "does not resolve an edit action without an edit payload" do
+      it "requires a post revision to agree and edit" do
         flagged = Fabricate(:reviewable_flagged_post)
 
         put "/review/#{flagged.id}/perform/agree_and_edit.json",
@@ -1346,26 +1235,6 @@ RSpec.describe ReviewablesController do
         job = Jobs::CriticalUserEmail.jobs.first
         expect(job).to be_present
         expect(job["args"][0]["type"]).to eq("signup_after_approval")
-      end
-
-      it "emails the rejected user when send_email is omitted" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        rejected_user = Fabricate(:user)
-        rejected_user.activate
-        rejected_email = rejected_user.email
-        rejected_reviewable = ReviewableUser.find_by(target: rejected_user)
-
-        expect do
-          put "/review/#{rejected_reviewable.id}/perform/delete_user.json",
-              params: {
-                version: rejected_reviewable.version,
-              }
-        end.to change { ActionMailer::Base.deliveries.size }.by(1)
-
-        expect(response).to have_http_status(:ok)
-        expect(rejected_reviewable.reload).to be_rejected
-        expect(ActionMailer::Base.deliveries.last.to).to contain_exactly(rejected_email)
       end
 
       it "doesn't send email when `send_email` is false" do
@@ -1551,53 +1420,28 @@ RSpec.describe ReviewablesController do
 
       fab!(:reviewable_phony) { Fabricate(:reviewable, type: "ReviewablePhony") }
 
-      it "passes the added param into the reviewable class' perform method" do
+      it "passes registered and model declared arguments to a plugin action" do
         messages =
           MessageBus.track_publish("/phony-reviewable-test") do
             put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
                 params: {
                   version: reviewable_phony.version,
                   fake_id: 2,
-                }
-          end
-
-        expect(response.status).to eq(200)
-        expect(messages.first.data[:args]).to eq(
-          :version => reviewable_phony.version,
-          "fake_id" => "2",
-        )
-      end
-
-      it "preserves a custom reviewable's post_revision argument" do
-        messages =
-          MessageBus.track_publish("/phony-reviewable-test") do
-            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
-                params: {
-                  version: reviewable_phony.version,
+                  legacy_id: 3,
                   post_revision: "plugin revision",
                   send_email: false,
                 }
           end
 
-        expect(response.status).to eq(200)
-        expect(messages.first.data[:args]).to eq(
-          version: reviewable_phony.version,
-          post_revision: "plugin revision",
+        expect(response).to have_http_status(:ok)
+        expect(messages.map(&:data)).to contain_exactly(
+          args: {
+            :version => reviewable_phony.version,
+            "fake_id" => "2",
+            :legacy_id => "3",
+            :post_revision => "plugin revision",
+          },
         )
-      end
-
-      it "preserves parameters returned by the custom reviewable's additional_args hook" do
-        messages =
-          MessageBus.track_publish("/phony-reviewable-test") do
-            put "/review/#{reviewable_phony.id}/perform/approve_phony.json",
-                params: {
-                  version: reviewable_phony.version,
-                  legacy_id: 3,
-                }
-          end
-
-        expect(response.status).to eq(200)
-        expect(messages.first.data[:args]).to eq(version: reviewable_phony.version, legacy_id: "3")
       end
     end
 

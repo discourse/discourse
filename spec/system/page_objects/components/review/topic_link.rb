@@ -6,6 +6,11 @@ module PageObjects
       class TopicLink < PageObjects::Components::Base
         WRAPPER_CSS = ".review-item__meta-topic-title"
 
+        def open_topic
+          find("#{WRAPPER_CSS} a").click
+          self
+        end
+
         def has_closed_topic_status?
           within(WRAPPER_CSS) { has_css?(".topic-status [class*='d-icon-lock']") }
         end
