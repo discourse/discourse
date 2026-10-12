@@ -56,7 +56,7 @@ Of course, as you build your feature to add more complexity you likely wouldn’
 
 If you open up your browser and visit `/admin/snack` (without the .json) you’ll see that Discourse says “Oops! That page doesn’t exist.” — that’s because there’s nothing in our front end Ember application to respond to the route. Let’s add a `.gjs` template to show our snack:
 
-**app/assets/javascripts/admin/templates/snack.gjs**
+**frontend/discourse/admin/templates/snack.gjs**
 
 ```gjs
 <template>
@@ -68,7 +68,7 @@ If you open up your browser and visit `/admin/snack` (without the .json) you’l
 </template>
 ```
 
-And, like on the Rails API side we need to wire up the route. Open the file `app/assets/javascripts/admin/routes/admin-route-map.js` and look for the `export default function()` method. Add the following line:
+And, like on the Rails API side we need to wire up the route. Open the file `frontend/discourse/admin/routes/admin-route-map.js` and look for the `export default function()` method. Add the following line:
 
 ```js
 this.route("snack");
@@ -76,16 +76,17 @@ this.route("snack");
 
 We have one final thing left to do in Ember land, and that’s to have the Ember application perform an AJAX request to fetch our JSON from the server. Let’s create one last file. This will be an [Ember Route](https://guides.emberjs.com/release/routing/specifying-a-routes-model/). Its `model()` function will be called when the route is entered, so we’ll make our `ajax` call in there:
 
-**app/assets/javascripts/admin/routes/admin-snack.js**
+**frontend/discourse/admin/routes/admin-snack.js**
 
 ```js
 import { ajax } from "discourse/lib/ajax";
+import DiscourseRoute from "discourse/routes/discourse";
 
-export default Ember.Route.extend({
+export default class AdminSnackRoute extends DiscourseRoute {
   model() {
     return ajax("/admin/snack.json");
-  },
-});
+  }
+}
 ```
 
 Now, you can open your browser to `/admin/snack` and you should see the details of the snack rendered in the page!
@@ -96,7 +97,7 @@ Now, you can open your browser to `/admin/snack` and you should see the details 
 
 - The Ember application router says `snack` should be the route
 
-- The Ember.Route for `snack` makes an AJAX request to `/admin/snack.json`
+- The Ember route for `snack` makes an AJAX request to `/admin/snack.json`
 
 - The Rails application router says that should be the `admin_snack controller`
 
