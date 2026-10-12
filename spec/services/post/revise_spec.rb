@@ -6,6 +6,27 @@ RSpec.describe Post::Revise do
 
     it { is_expected.not_to allow_values(nil, [], "invalid").for(:changes) }
 
+    it { is_expected.not_to allow_values({ raw: [] }, { title: {} }).for(:changes) }
+
+    it do
+      is_expected.not_to allow_values({ image_sizes: [] }, { image_sizes: "invalid" }).for(:changes)
+    end
+
+    it do
+      is_expected.to allow_value(
+        {
+          raw: "The corrected text of this post.",
+          keep_existing_draft: true,
+          image_sizes: {
+            "image.png" => {
+              "width" => 640,
+              "height" => 480,
+            },
+          },
+        },
+      ).for(:changes)
+    end
+
     it do
       is_expected.not_to allow_values(
         { tags: [{ id: "1.5" }] },
@@ -17,6 +38,7 @@ RSpec.describe Post::Revise do
     it do
       is_expected.to allow_values(
         { tags: nil, original_tags: nil },
+        { tags: "" },
         { tags: ["existing-tag"] },
         { tags: [{ id: 1 }, { id: "2", name: "another-tag" }, { id: "", name: "new-tag" }] },
       ).for(:changes)
@@ -83,6 +105,24 @@ RSpec.describe Post::Revise do
 
       it "leaves the post unchanged" do
         expect { expect(result).to fail_a_policy(:can_edit_post) }.not_to change { post.reload.raw }
+      end
+    end
+
+    context "when the requested tags exceed the topic limit" do
+      let(:changes) { super().merge(tags: [{ name: "first-tag" }, { name: "second-tag" }]) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.max_tags_per_topic = 1
+      end
+
+      it "returns the tag limit error without changing the post" do
+        expect { expect(result).to fail_a_step(:validate_tag_count) }.not_to change {
+          post.reload.raw
+        }
+        expect(result[:post].errors.full_messages).to eq(
+          [I18n.t("tags.too_many_tags_for_topic", count: 1)],
+        )
       end
     end
 

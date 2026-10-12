@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { ajax } from "discourse/lib/ajax";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import {
   CREATE_TOPIC,
@@ -694,21 +695,22 @@ module("Unit | Model | composer", function (hooks) {
     assert.true(composer.editConflict);
   });
 
-  test("editPost allows overwriting a conflicting review edit", async function (assert) {
+  test("editPost allows overwriting a content conflict from a save callback", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const composer = createComposer.call(this, {
       action: EDIT,
       post: store.createRecord("post", { id: 123, post_number: 2 }),
       topic: store.createRecord("topic", { id: 456 }),
       reply: "The moderator's replacement text.",
-      reviewableAction: { id: 789, action: "agree_and_edit", version: 0 },
     });
-    pretender.put("/review/789/perform/agree_and_edit", () =>
+    pretender.put("/custom-edit", () =>
       response(409, { error_type: "edit_conflict" })
     );
 
     await assert.rejects(
-      composer.editPost({}),
+      composer.editPost({
+        onSave: () => ajax("/custom-edit", { type: "PUT" }),
+      }),
       "the conflicting edit is rejected"
     );
 
@@ -728,28 +730,29 @@ module("Unit | Model | composer", function (hooks) {
     );
   });
 
-  test("editPost clears overwrite mode when the review has changed", async function (assert) {
+  test("editPost clears overwrite mode for other save callback conflicts", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const composer = createComposer.call(this, {
       action: EDIT,
       post: store.createRecord("post", { id: 123, post_number: 2 }),
       topic: store.createRecord("topic", { id: 456 }),
       reply: "The moderator's replacement text.",
-      reviewableAction: { id: 789, action: "agree_and_edit", version: 0 },
       editConflict: true,
     });
-    pretender.put("/review/789/perform/agree_and_edit", () =>
-      response(409, { error_type: "reviewable_conflict" })
+    pretender.put("/custom-edit", () =>
+      response(409, { error_type: "workflow_conflict" })
     );
 
     await assert.rejects(
-      composer.editPost({}),
-      "the stale review action is rejected"
+      composer.editPost({
+        onSave: () => ajax("/custom-edit", { type: "PUT" }),
+      }),
+      "the conflicting save is rejected"
     );
 
     assert.false(
       composer.editConflict,
-      "a review conflict cannot be overwritten"
+      "a workflow conflict cannot be overwritten"
     );
     assert.strictEqual(
       composer.composeState,

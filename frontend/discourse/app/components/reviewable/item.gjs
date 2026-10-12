@@ -348,6 +348,8 @@ export default class ReviewableItem extends Component {
     const topic = Topic.create(await Topic.find(post.topic_id, {}));
     post.set("topic", topic);
 
+    const version = reviewable.version;
+
     return this.composer.open({
       post,
       action: Composer.EDIT,
@@ -364,7 +366,7 @@ export default class ReviewableItem extends Component {
             contentType: "application/json",
             data: JSON.stringify({
               ...data,
-              version: reviewable.version,
+              version,
               post_revision: revision,
             }),
           }

@@ -4,6 +4,10 @@ module Chat
   class ReviewableMessage < Reviewable
     include ReviewableActionBuilder
 
+    def self.additional_args(params)
+      ReviewableActionBuilder.penalty_args(params)
+    end
+
     validates :type, length: { maximum: 100 }
     validates :target_type, length: { maximum: 100 }
 

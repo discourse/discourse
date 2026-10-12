@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 module PostRevisionParams
-  include TagParamLimit
-
   private
-
-  def prepare_post_revision_params(revision)
-    attributes = permitted_post_revision_attributes(revision)
-    reject_too_many_tags!(:tags, :original_tags, parameters: revision)
-
-    attributes
-  end
 
   def post_revision_params
     post = params.require(:post)

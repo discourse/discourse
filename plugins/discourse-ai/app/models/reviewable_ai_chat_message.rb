@@ -5,6 +5,10 @@ require_dependency "reviewable"
 class ReviewableAiChatMessage < Reviewable
   include ReviewableActionBuilder
 
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def self.action_aliases
     { agree_and_keep_hidden: :agree_and_delete, delete_and_agree: :agree_and_delete }
   end

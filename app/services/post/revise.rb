@@ -24,6 +24,7 @@
 # * on_model_not_found(:post) or (:topic): the requested content was not found.
 # * on_failed_policy: can_edit_post, can_edit_topic_record, can_edit_topic, or
 #   can_edit_tags identifies the denied permission.
+# * on_failed_step(:validate_tag_count): post.errors describes the tag limit.
 # * on_failed_step(:check_edit_conflicts): an original value no longer matches.
 # * on_failed_step(:validate_category_change): topic.errors and status describe rejection.
 # * on_failed_step(:revise_post): post.errors or topic.errors describe invalid edits.
@@ -65,9 +66,31 @@ class Post::Revise
         return
       end
 
+      %i[
+        raw
+        original_text
+        edit_reason
+        locale
+        title
+        original_title
+        category_id
+        featured_link
+        archetype
+        reply_to_post_number
+        bypass_bump
+        keep_existing_draft
+      ].each do |key|
+        value = changes[key]
+        errors.add(:changes, :invalid) if value.is_a?(Array) || value.is_a?(Hash)
+      end
+
+      if changes.key?(:image_sizes) && !changes[:image_sizes].is_a?(Hash)
+        errors.add(:changes, :invalid)
+      end
+
       %i[tags original_tags].each do |key|
         tags = changes[key]
-        next if tags.nil?
+        next if tags.nil? || (key == :tags && tags == "")
 
         errors.add(:changes, :invalid) unless valid_tags?(tags)
       end
@@ -95,6 +118,7 @@ class Post::Revise
   policy :can_edit_topic_record
   model :post
   policy :can_edit_post
+  step :validate_tag_count
   step :prepare_changes
   policy :can_edit_topic
   policy :can_edit_tags
@@ -140,8 +164,22 @@ class Post::Revise
     params.topic_id.present? || guardian.can_edit?(post)
   end
 
+  def validate_tag_count(params:, post:)
+    %i[tags original_tags].each do |key|
+      tags = params.changes[key]
+      next unless tags.is_a?(Array) && tags.size > SiteSetting.max_tags_per_topic
+
+      post.errors.add(
+        :base,
+        I18n.t("tags.too_many_tags_for_topic", count: SiteSetting.max_tags_per_topic),
+      )
+      fail!(post.errors.full_messages)
+    end
+  end
+
   def prepare_changes(params:, post:, topic:, guardian:)
     attributes = params.changes.with_indifferent_access
+    attributes[:tags] = nil if attributes[:tags] == ""
     topic_changes = topic_attributes(attributes:, post:, topic:)
     revision_changes =
       if params.topic_id.present?

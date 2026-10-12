@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewablesController < ApplicationController
-  include PostRevisionParams
-
   requires_login
 
   PER_PAGE = 10
@@ -266,7 +264,6 @@ class ReviewablesController < ApplicationController
       end
 
       args.merge!(reviewable_action_args(reviewable))
-      return if performed?
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
@@ -373,12 +370,7 @@ class ReviewablesController < ApplicationController
     args = {}
 
     if reviewable.type_class.respond_to?(:additional_args)
-      additional_args =
-        reviewable
-          .type_class
-          .additional_args(params) { |preparation_method, value| send(preparation_method, value) }
-
-      args.merge!(additional_args || {})
+      args.merge!(reviewable.type_class.additional_args(params) || {})
     end
 
     plugin_params =
@@ -387,6 +379,8 @@ class ReviewablesController < ApplicationController
       end
     args.merge!(params.slice(*plugin_params.map { |entry| entry[:param] }).permit!)
 
-    args
+    args.transform_values do |value|
+      value.is_a?(ActionController::Parameters) ? value.to_unsafe_h : value
+    end
   end
 end
