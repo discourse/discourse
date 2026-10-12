@@ -13,6 +13,9 @@ vi:
     next_page: "Trang sau"
     replies: "Lượt trả lời"
     last_updated: "Cập nhật lần cuối"
+    event:
+      location: "Vị trí"
+      link: "Link"
   mcp:
     errors:
       topic_not_found: "Không tìm thấy chủ đề"

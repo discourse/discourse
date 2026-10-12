@@ -334,7 +334,7 @@ $show-interested: inherit;
   .event-chat-channel,
   .event-invitees-avatars-container {
     display: grid;
-    grid-template-columns: 3em 1fr;
+    grid-template-columns: 3em minmax(0, 1fr);
     column-gap: 1em;
     align-items: center;
     height: min-content;
@@ -360,6 +360,10 @@ $show-interested: inherit;
 
     > .d-icon {
       margin-top: 0.25em;
+    }
+
+    .event-description__text {
+      overflow-wrap: anywhere;
     }
 
     &.is-clamped .event-description__text {

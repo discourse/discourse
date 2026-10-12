@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 4
+    VERSION = 5
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})
@@ -42,6 +42,7 @@ module MarkdownEndpoint
       replace_oneboxes
       replace_details
       replace_polls
+      replace_events
       absolutize_urls
 
       ReverseMarkdown.convert(@fragment.to_html, github_flavored: true, unknown_tags: :bypass).strip
@@ -189,6 +190,57 @@ module MarkdownEndpoint
           label += " ([view on site](#{absolute_url(@post_url)}))" if @post_url.present?
           poll.replace(preserved_block("_#{label}_"))
         end
+    end
+
+    def replace_events
+      @fragment
+        .css("div.discourse-post-event")
+        .each do |event|
+          name = event["data-name"].presence || I18n.t("markdown_endpoints.event.name")
+          sections = ["**#{escape_text(EmojiConverter.convert(name))}**"]
+          fields = []
+          %w[start end].each do |attribute|
+            next if event["data-#{attribute}"].blank?
+
+            value = event_date(event["data-#{attribute}"], event)
+            fields << "**#{I18n.t("markdown_endpoints.event.#{attribute}")}:** #{escape_text(value)}"
+          end
+          if event["data-location"].present?
+            location = CGI.unescapeHTML(event["data-location"])
+            fields << "**#{I18n.t("markdown_endpoints.event.location")}:** #{escape_text(location)}"
+          end
+          if event["data-url"].present?
+            url = event["data-url"].strip
+            url = "https://#{url}" unless url.match?(%r{\A(?:[a-z][a-z0-9+.-]*:|/)}i)
+            if url.match?(%r{\A(?:https?://|/)}i)
+              url = URI::DEFAULT_PARSER.escape(absolute_url(url), /[\s<>"()\\]/)
+              fields << "**#{I18n.t("markdown_endpoints.event.link")}:** <#{url}>"
+            end
+          end
+          sections << fields.join("\\\n") if fields.present?
+          body = convert_html(event.inner_html)
+          sections << body if body.present?
+          content = sections.join("\n\n").lines.map { |line| "> #{line.chomp}".rstrip }.join("\n")
+          event.replace(preserved_block(content))
+        end
+    end
+
+    def event_date(value, event)
+      all_day = event["data-all-day"] == "true"
+      format = all_day ? :date_only : :long
+      formatted =
+        begin
+          I18n.l(DateTime.parse(value), format:)
+        rescue ArgumentError
+          value
+        end
+      return formatted if all_day
+
+      I18n.t(
+        "markdown_endpoints.event.date_with_timezone",
+        date: formatted,
+        timezone: event["data-timezone"].presence || "UTC",
+      )
     end
 
     def absolutize_urls

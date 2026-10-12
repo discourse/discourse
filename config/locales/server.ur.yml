@@ -11,6 +11,9 @@ ur:
     tags: "ٹیگز"
     replies: "جوابات"
     last_updated: "آخری اپ ڈیٹ"
+    event:
+      location: "مقام"
+      link: "رابطہ"
   mcp:
     errors:
       topic_not_found: "موضوع نہیں ملا"

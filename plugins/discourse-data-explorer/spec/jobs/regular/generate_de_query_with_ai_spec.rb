@@ -4,6 +4,7 @@ describe Jobs::GenerateDeQueryWithAi do
   fab!(:admin)
 
   before do
+    SiteSetting.discourse_ai_enabled = true
     SiteSetting.data_explorer_enabled = true
     SiteSetting.data_explorer_ai_queries_enabled = true
   end

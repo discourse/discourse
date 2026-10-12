@@ -1,10 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
-import { i18n } from "discourse-i18n";
+import AiThemeTranslationModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-theme-translation-modal";
 
 export default class AiThemeTranslate extends Component {
   static shouldRender(args, { siteSettings }) {
@@ -13,37 +11,12 @@ export default class AiThemeTranslate extends Component {
     );
   }
 
-  @service toasts;
+  @service modal;
 
   @action
-  async translate() {
+  translate() {
     const { theme, locale } = this.args.outletArgs;
-    try {
-      await ajax("/admin/plugins/discourse-ai/ai-theme-translations", {
-        type: "POST",
-        data: { theme_id: theme.id, locale },
-      });
-      this.toasts.success({
-        duration: "short",
-        data: {
-          message: i18n(
-            "discourse_ai.translations.theme_translations.translate.queued"
-          ),
-        },
-      });
-    } catch (e) {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: extractError(
-            e,
-            i18n(
-              "discourse_ai.translations.theme_translations.translate.failed"
-            )
-          ),
-        },
-      });
-    }
+    this.modal.show(AiThemeTranslationModal, { model: { theme, locale } });
   }
 
   <template>

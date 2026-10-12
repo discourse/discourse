@@ -29,7 +29,6 @@ zh_TW:
         description: "撰寫自訂 SQL 查詢，以找出社群中的特定資訊。"
     explorer:
       resize_editor: "調整查詢編輯器大小"
-      default_query: "預設"
       default_query_notice: "這是預設查詢，無法編輯 SQL。若要編輯 SQL，請建立新查詢。"
       view_query: "查看"
       queries: "查詢"
@@ -126,6 +125,7 @@ zh_TW:
         other: "顯示前 %{count} 筆結果。"
       query_name: "查詢"
       query_groups: "群組"
+      query_tags: "標簽"
       link: "連結："
       report_name: "報表"
       query_description: "描述"

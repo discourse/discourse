@@ -430,7 +430,7 @@ class PostRevisor
 
     Topic.reset_highest(@topic.id) unless only_user_id_changed
     post_process_post
-    alert_users
+    alert_users(old_raw)
     publish_changes
     grant_badge
 
@@ -876,9 +876,17 @@ class PostRevisor
     DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)
   end
 
-  def alert_users
+  def alert_users(old_raw)
     return if @editor.id == Discourse::SYSTEM_USER_ID
-    Jobs.enqueue(:post_alert, post_id: @post.id)
+
+    added_mentions =
+      if old_raw == @post.raw
+        []
+      else
+        @post.raw_mentions - PostAnalyzer.new(old_raw, @post.topic_id).raw_mentions
+      end
+
+    Jobs.enqueue(:post_alert, post_id: @post.id, added_mentions: added_mentions)
   end
 
   def publish_changes

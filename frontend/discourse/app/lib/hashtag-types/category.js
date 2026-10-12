@@ -1,6 +1,7 @@
 import { service } from "@ember/service";
+import categoryStyleType from "discourse/lib/category-style-type";
 import { iconHTML } from "discourse/lib/icon-library";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
@@ -43,14 +44,15 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       }
     }
 
+    const styleType = categoryStyleType(categoryOrHashtag.style_type);
     let style;
-    if (categoryOrHashtag.style_type === "square") {
+    if (styleType === "square") {
       if (parentColor) {
         style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
       } else {
         style = `background-color: #${color};`;
       }
-    } else if (categoryOrHashtag.style_type === "icon") {
+    } else if (styleType === "icon") {
       style = `color: #${color};`;
     } else {
       return [];
@@ -61,17 +63,18 @@ export default class CategoryHashtagType extends HashtagTypeBase {
 
   generateIconHTML(hashtag) {
     hashtag.preloaded ? this.onLoad(hashtag) : this.load(hashtag.id);
+    const styleType = categoryStyleType(hashtag.style_type);
     let style = "";
 
-    if (hashtag.style_type === "icon" && hashtag.icon) {
+    if (styleType === "icon" && hashtag.icon) {
       style = iconHTML(hashtag.icon);
     }
-    if (hashtag.style_type === "emoji" && hashtag.emoji) {
-      style = dReplaceEmoji(`:${hashtag.emoji}:`);
+    if (styleType === "emoji" && hashtag.emoji) {
+      style = dEmoji(hashtag.emoji);
     }
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
-    return `<span class="hashtag-category-${hashtag.style_type} ${colorCssClass}">${style}</span>`;
+    return `<span class="hashtag-category-${styleType} ${colorCssClass}">${style}</span>`;
   }
 
   isLoaded(id) {

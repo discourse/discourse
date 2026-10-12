@@ -86,7 +86,15 @@ module DiscourseAi
             )
           end
 
-          reviewable.reviewable_notes.create!(user: acting_user, content: reason)
+          note = reviewable.reviewable_notes.build(user: acting_user, content: reason)
+          if !note.save
+            return(
+              error_response(
+                note.errors.full_messages.join(", ").presence ||
+                  I18n.t("discourse_ai.ai_bot.perform_reviewable_action.errors.action_failed"),
+              )
+            )
+          end
 
           begin
             result =

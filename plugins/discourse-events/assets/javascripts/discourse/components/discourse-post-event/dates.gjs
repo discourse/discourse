@@ -151,10 +151,6 @@ export default class DiscoursePostEventDates extends Component {
 
   @action
   async computeDates(element) {
-    if (this.args.expiredAndRecurring) {
-      return;
-    }
-
     if (this.args.event.allDay) {
       const start = moment(this.args.event.startsAt, "YYYY-MM-DD");
       const includeStartYear = !start.isSame(moment(), "year");
@@ -226,11 +222,7 @@ export default class DiscoursePostEventDates extends Component {
       {{didInsert this.computeDates}}
     >
       {{dIcon "clock"}}
-      {{#if @expiredAndRecurring}}
-        -
-      {{else}}
-        {{this.htmlDates}}
-      {{/if}}
+      {{this.htmlDates}}
     </section>
   </template>
 }

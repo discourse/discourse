@@ -52,6 +52,45 @@ RSpec.describe ReviewableVoiceUser do
   end
 
   describe "#perform" do
+    it "suspends the user and agrees with the flag" do
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "Disruptive behavior",
+          suspend_until: 2.days.from_now,
+        )
+
+      expect(result).to be_success
+      expect(flagged_user.reload).to be_suspended
+      expect(reviewable.reload).to be_approved
+      expect(reviewable.reviewable_scores.first).to be_agreed
+    end
+
+    it "silences the user and agrees with the flag" do
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_silence,
+          reason: "Disruptive behavior",
+          silenced_till: 2.days.from_now,
+        )
+
+      expect(result).to be_success
+      expect(flagged_user.reload).to be_silenced
+      expect(reviewable.reload).to be_approved
+      expect(reviewable.reviewable_scores.first).to be_agreed
+    end
+
+    it "leaves the user and flag unchanged when suspension details are invalid" do
+      result = reviewable.perform(moderator, :agree_and_suspend, reason: "Disruption")
+
+      expect(result).not_to be_success
+      expect(flagged_user.reload).not_to be_suspended
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.first).to be_pending
+    end
+
     it "approves the reviewable and agrees with the flag on agree_and_keep" do
       reviewable.perform(moderator, :agree_and_keep)
 

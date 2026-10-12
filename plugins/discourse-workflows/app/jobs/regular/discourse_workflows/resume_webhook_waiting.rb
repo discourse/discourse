@@ -5,9 +5,14 @@ module Jobs
     class ResumeWebhookWaiting < ::Jobs::Base
       def execute(args)
         return unless SiteSetting.enable_discourse_workflows
+        return if args[:resume_token].blank?
 
         execution =
-          ::DiscourseWorkflows::Execution.find_by(id: args[:execution_id], status: :waiting)
+          ::DiscourseWorkflows::Execution.find_by(
+            id: args[:execution_id],
+            status: :waiting,
+            resume_token: args[:resume_token],
+          )
         return if execution.nil?
 
         claimed = ::DiscourseWorkflows::Execution.claim_for_resume(execution)

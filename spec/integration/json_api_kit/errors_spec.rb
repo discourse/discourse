@@ -24,6 +24,38 @@ RSpec.describe "a refused request" do
       end
     end
 
+    context "when the sort is an empty array" do
+      let(:params) { { sort: [] } }
+
+      it "refuses the sort" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid sort parameter",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
+              parameter: "sort",
+            ),
+          ],
+        )
+      end
+    end
+
+    context "when the sort is false" do
+      let(:params) { { sort: false } }
+
+      it "refuses the sort" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid sort parameter",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
+              parameter: "sort",
+            ),
+          ],
+        )
+      end
+    end
+
     context "when the sort is a string the resource does not declare" do
       let(:params) { { sort: "secrets" } }
 

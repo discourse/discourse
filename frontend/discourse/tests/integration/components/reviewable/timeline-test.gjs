@@ -3,6 +3,8 @@ import { getOwner } from "@ember/owner";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableTimeline from "discourse/components/reviewable/timeline";
+import UserCardContents from "discourse/components/user-card-contents";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -149,6 +151,42 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
     assert
       .dom(".timeline-event:last-child .timeline-event__description")
       .hasText("A note added from the form", "appends the pushed note");
+  });
+
+  test("opens the user card when clicking a mention in a saved note", async function (assert) {
+    const savedNote = {
+      ...note(10, "Please ask @charlie for help."),
+      cooked:
+        '<p>Please ask <a class="mention" href="/u/charlie">@charlie</a> for help.</p>',
+    };
+    const reviewable = storedReviewable(this, [savedNote]);
+
+    await render(
+      <template>
+        <div id="main-outlet">
+          <ReviewableTimeline @reviewable={{reviewable}} />
+        </div>
+        <UserCardContents />
+        <DMenus />
+      </template>
+    );
+
+    assert
+      .dom(".timeline-event__description a.mention")
+      .hasAttribute(
+        "href",
+        "/u/charlie",
+        "the mention links to the user profile"
+      );
+
+    await click(".timeline-event__description a.mention");
+
+    assert
+      .dom(".user-card .card-content")
+      .exists("clicking the mention opens the user card");
+    assert
+      .dom(".user-card .username")
+      .hasText("charlie", "shows the mentioned user's profile");
   });
 
   test("removes a deleted note from the timeline", async function (assert) {

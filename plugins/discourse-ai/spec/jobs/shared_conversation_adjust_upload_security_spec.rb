@@ -7,14 +7,8 @@ RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
 
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
 
-  fab!(:bot_user) do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = "10"
-    SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
-    claude_2.reload.user
-  end
+  fab!(:agent) { Fabricate(:ai_agent, default_llm: claude_2).tap(&:ensure_user!) }
+  fab!(:bot_user) { agent.user }
 
   fab!(:user)
   fab!(:topic) { Fabricate(:private_message_topic, user: user, recipient: bot_user) }
