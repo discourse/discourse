@@ -55,6 +55,14 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       nodes: payload.nodes,
       connections: {},
       settings: { executionOrder: "v1" },
+      variables: [
+        {
+          key: "notify_categories",
+          description: "Categories to notify",
+          variable_type: "category_list",
+          type_options: {},
+        },
+      ],
       staticData: { "node:Send request": { count: 1 } },
     });
     assert.deepEqual(payload.nodes[0].credentials, {
@@ -66,14 +74,6 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.true(payload.nodes[0].alwaysOutputData);
     assert.false("settings" in payload.nodes[0]);
     assert.false("credentials" in payload.nodes[0].parameters);
-    assert.deepEqual(payload.variables, [
-      {
-        key: "notify_categories",
-        description: "Categories to notify",
-        variable_type: "category_list",
-        type_options: {},
-      },
-    ]);
     assert.false(
       "id" in payload.variables[0],
       "export never includes a variable's database id"
