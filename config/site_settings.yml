@@ -465,6 +465,9 @@ basic:
     refresh: true
     disallowed_groups: "0|4|5"
     area: "group_permissions"
+    upcoming_change_default_override:
+      upcoming_change: "update_whispers_allowed_groups_default"
+      new_default: "3"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
@@ -5012,6 +5015,17 @@ experimental:
       status: "alpha"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  update_whispers_allowed_groups_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/414354"
       permanent_warning: false
       allow_enabled_for:
         - everyone
