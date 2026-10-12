@@ -1435,7 +1435,7 @@ export default class ComposerService extends Service {
           });
         }
 
-        onSaved?.();
+        onSaved?.(result);
       })
       .catch((error) => {
         composer.set("disableDrafts", false);

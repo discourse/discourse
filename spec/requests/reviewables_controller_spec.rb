@@ -885,6 +885,37 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      context "when performing agree_and_edit on a flagged post reviewable" do
+        it "rejects agree_and_edit on a flagged post reviewable without saved revision evidence" do
+          flagged = Fabricate(:reviewable_flagged_post)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+              }
+
+          expect(response).to have_http_status(:bad_request)
+          expect(flagged.reload).to be_pending
+        end
+
+        it "approves a flagged post reviewable through agree_and_edit with the saved post version" do
+          sign_in(admin)
+          flagged_post = Fabricate(:post, version: 2, public_version: 2)
+          flagged = Fabricate(:reviewable_flagged_post, target: flagged_post)
+          Fabricate(:post_revision, post: flagged_post, number: flagged_post.version)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+                post_version: flagged_post.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+          expect(flagged.reload).to be_approved
+        end
+      end
+
       it "suspends a flagged post's author and deletes the post when the moderator selects both actions" do
         flagged_post = Fabricate(:post)
         flagged =
