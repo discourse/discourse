@@ -1,5 +1,9 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import {
+  applySchemaDefaults,
+  getPropertySchema,
+} from "../../../lib/workflows/property-engine";
 import { STICKY_NOTE_NAME } from "../../../models/sticky-note";
 import WorkflowNode from "../../../models/workflow-node";
 
@@ -39,13 +43,24 @@ export function createNode(
   identifier,
   existingNodes,
   position = null,
-  { typeVersion = null, configOverrides = null } = {}
+  { typeVersion = null, configOverrides = null, nodeTypes = null } = {}
 ) {
   const allDefaults = applyValueTransformer(
     "workflow-node-defaults",
     NODE_DEFAULTS
   );
   const defaultsFn = allDefaults[identifier];
+  const configuration = {
+    ...(defaultsFn ? defaultsFn() : {}),
+    ...(configOverrides || {}),
+  };
+
+  if (nodeTypes) {
+    applySchemaDefaults(
+      getPropertySchema(nodeTypes, identifier, typeVersion),
+      configuration
+    );
+  }
 
   return WorkflowNode.create({
     type: identifier,
@@ -54,10 +69,7 @@ export function createNode(
       defaultNodeName(identifier),
       takenNodeNames(existingNodes)
     ),
-    configuration: {
-      ...(defaultsFn ? defaultsFn() : {}),
-      ...(configOverrides || {}),
-    },
+    configuration,
     position,
   });
 }

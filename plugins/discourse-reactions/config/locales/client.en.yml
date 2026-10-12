@@ -27,6 +27,30 @@ en:
         remove: "Remove this like"
         cant_remove: "You can no longer remove your like"
         unauthenticated: "Please sign up or log in to like this post"
+    discourse_workflows:
+      node_unavailable:
+        requires_reactions: "Requires the Reactions plugin to be enabled"
+      nodes:
+        "action:post_reaction": "React to post"
+        "trigger:post_reaction_changed": "Post reaction changed"
+      node_descriptions:
+        "action:post_reaction": "Add or remove a reaction on a post"
+        "trigger:post_reaction_changed": "Fires when a reaction on a post is added, replaced or removed. The user is whoever reacted, not the author."
+      post_reaction:
+        operations:
+          add: "Add reaction"
+          remove: "Remove reaction"
+        reaction: "Reaction"
+        if_exists: "If the user already reacted"
+        if_exists_description: "Users can only have one reaction per post"
+        if_exists_keep: "Keep their reaction"
+        if_exists_replace: "Replace their reaction"
+      post_reaction_changed:
+        changes_added: "Added"
+        changes_replaced: "Replaced"
+        changes_removed: "Removed"
+        reaction: "Reaction"
+        reaction_description: "Only trigger when this reaction is added, replaced or removed. Leave empty to match any reaction."
     notifications:
       reaction_1_user_multiple_posts:
         one: "reacted to %{count} of your post"

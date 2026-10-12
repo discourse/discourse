@@ -76,9 +76,6 @@ importers:
       lint-to-the-future-eslint:
         specifier: ^4.0.0
         version: 4.0.0(eslint@10.6.0(jiti@2.7.0))
-      playwright:
-        specifier: 1.62.1
-        version: 1.62.1
       postcss-selector-parser:
         specifier: ^7.1.6
         version: 7.1.6
@@ -620,9 +617,6 @@ importers:
       jsuites:
         specifier: ^5.13.3
         version: 5.13.3
-      loader.js:
-        specifier: ^4.7.0
-        version: 4.7.0
       message-bus-client:
         specifier: ^4.6.0
         version: 4.6.0
@@ -701,6 +695,12 @@ importers:
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
+
+  frontend/playwright-runner:
+    dependencies:
+      playwright:
+        specifier: 1.62.1
+        version: 1.62.1
 
   frontend/pretty-text:
     dependencies:
@@ -5809,9 +5809,6 @@ packages:
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
     engines: {node: '>=8.9.0'}
-
-  loader.js@4.7.0:
-    resolution: {integrity: sha512-9M2KvGT6duzGMgkOcTkWb+PR/Q2Oe54df/tLgHGVmFpAmtqJ553xJh6N63iFYI2yjo2PeJXbS5skHi/QpJq4vA==}
 
   locate-path@3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
@@ -14051,8 +14048,6 @@ snapshots:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 2.2.3
-
-  loader.js@4.7.0: {}
 
   locate-path@3.0.0:
     dependencies:

@@ -15,6 +15,7 @@ describe OpenIDConnectAuthenticator do
       },
       extra: {
         raw_info: {
+          email_verified: true,
           email: user.email,
           name: "John Doe",
         },
@@ -23,12 +24,41 @@ describe OpenIDConnectAuthenticator do
   end
 
   context "when email_verified is not supplied" do
-    # Some IDPs do not supply this information
-    # In this case we trust that they have verified the address
-    it "matches the user" do
+    before { hash[:extra][:raw_info].delete(:email_verified) }
+
+    it "uses a true fallback to verify the email and match the user" do
+      SiteSetting.openid_connect_email_verified_claim_fallback = true
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(user)
+      expect(result.email_valid).to eq(true)
+    end
+
+    it "uses the default false fallback and does not match the user" do
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.user).to be_nil
+      expect(result.email_valid).to eq(false)
+    end
+  end
+
+  context "when the fallback is true and email_verified is supplied" do
+    before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
+
+    {
+      true => true,
+      "true" => true,
+      "True" => true,
+      false => false,
+      "false" => false,
+    }.each do |claim, verified|
+      it "uses the supplied #{claim.inspect} value instead of the fallback" do
+        hash[:extra][:raw_info][:email_verified] = claim
+        result = authenticator.after_authenticate(hash)
+
+        expect(result.email_valid).to eq(verified)
+        expect(result.user).to eq(verified ? user : nil)
+      end
     end
   end
 
@@ -113,8 +143,73 @@ describe OpenIDConnectAuthenticator do
         expect(result.associated_groups).to eq([])
       end
 
-      it "logs an error and clears groups when the claim is not an array" do
-        hash[:extra][:raw_info][:groups] = "not_an_array"
+      it "extracts groups from comma-separated strings, ignoring whitespace and empty entries" do
+        hash[:extra][:raw_info][:groups] = " group1, ,group2, "
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "preserves commas in array entries" do
+        hash[:extra][:raw_info][:groups] = ["group1,group2"]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "group1,group2", name: "group1,group2" }])
+      end
+
+      it "extracts a string claim from the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => "group1,group2" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "treats blank strings as empty groups lists without falling back to the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => ["group1"] }
+
+        ["", "   ", ", ,"].each do |claim|
+          hash[:extra][:raw_info][:groups] = claim
+          expect(authenticator.after_authenticate(hash).associated_groups).to eq([])
+        end
+      end
+
+      it "syncs memberships as a string claim loses groups" do
+        SiteSetting.openid_connect_discovery_document =
+          "https://example.com/.well-known/openid-configuration"
+        SiteSetting.openid_connect_client_id = "client_id"
+        SiteSetting.openid_connect_client_secret = "client_secret"
+        SiteSetting.openid_connect_enabled = true
+        groups =
+          %w[group1 group2].map do |name|
+            group = Fabricate(:group)
+            associated_group =
+              Fabricate(:associated_group, name: name, provider_id: name, provider_name: "oidc")
+            GroupAssociatedGroup.create!(group: group, associated_group: associated_group)
+            group
+          end
+
+        hash[:extra][:raw_info][:groups] = "group1,group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(*groups)
+
+        hash[:extra][:raw_info][:groups] = "group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(groups.last)
+
+        hash[:extra][:raw_info][:groups] = ""
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to be_empty
+      end
+
+      it "logs an error and clears groups when the claim is not an array or string" do
+        hash[:extra][:raw_info][:groups] = 123
         Rails.logger.expects(:error).with(includes("not an array"))
         result = authenticator.after_authenticate(hash)
         expect(result.associated_groups).to eq([])
@@ -200,6 +295,22 @@ describe OpenIDConnectAuthenticator do
         result = authenticator.after_authenticate(hash)
         expect(result.user_field_values).to eq(user_field.id.to_s => "")
       end
+    end
+  end
+
+  describe "#register_middleware" do
+    it "configures the strategy with the selected email claim" do
+      SiteSetting.openid_connect_email_claim = "mail"
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      stub_request(:get, SiteSetting.openid_connect_discovery_document).to_return(body: "{}")
+      builder = OmniAuth::Builder.new(->(_env) { [200, {}, []] })
+      authenticator.register_middleware(builder)
+      strategy = builder.to_app
+
+      strategy.options.setup.call("omniauth.strategy" => strategy)
+
+      expect(strategy.options.email_claim).to eq("mail")
     end
   end
 

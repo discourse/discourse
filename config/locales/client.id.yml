@@ -3104,6 +3104,8 @@ id:
         field_types:
           date: "Tanggal"
       site_text:
+        search_label: "Cari"
+        theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
         show_untranslated: "Hanya tampilkan yang belum diterjemahkan"

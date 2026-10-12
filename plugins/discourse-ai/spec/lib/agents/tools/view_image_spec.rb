@@ -59,6 +59,33 @@ RSpec.describe DiscourseAi::Agents::Tools::ViewImage do
     expect(result[:analysis]).to eq("#{described_class::ANALYSIS_PREFIX}A small test image")
   end
 
+  it "charges delegated generation including reasoning without returning analysis as fresh evidence again" do
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        token_usage_tracker: DiscourseAi::Completions::TokenUsageTracker.new,
+      )
+    state =
+      DiscourseAi::Agents::SubagentExecutionState.new(
+        execution_context: execution,
+        root_token_budget: 4000,
+      )
+    context.execution_context = execution
+    context.subagent_execution_state = state
+    thinking = DiscourseAi::Completions::Thinking.new(message: "Inspect pixels")
+    DiscourseAi::Completions::Llm.with_prepared_responses([[thinking, "A small image"]]) do
+      tool = build_tool
+      result = tool.invoke
+      tokenizer = native_model.to_llm.tokenizer
+      expect(execution.work_budget.used).to eq(
+        tokenizer.size("Inspect pixels") + tokenizer.size("A small image"),
+      )
+      expect(JSON.parse(tool.work_evidence(result))).to eq(
+        result.merge(analysis: described_class::ANALYSIS_PREFIX).as_json,
+      )
+      expect(state.remaining_tokens).to eq(4000 - execution.work_budget.used)
+    end
+  end
+
   it "returns an error when delegated vision produces no text" do
     thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
     result = nil

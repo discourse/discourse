@@ -13,6 +13,10 @@ hu:
     next_page: "Következő oldal"
     replies: "Válaszok"
     last_updated: "Legutóbb frissítve"
+    event:
+      name: "Esemény"
+      location: "Hely"
+      link: "Hivatkozás"
   mcp:
     errors:
       draft_too_long: "A vázlat túl hosszú"
@@ -840,6 +844,7 @@ hu:
       description_too_long:
         one: "A leírás túl hosszú (maximum %{count} karakter)."
         other: "A leírás túl hosszú (maximum %{count} karakter)."
+      special_category_permissions: "Ez egy előre létrehozott kategória, és a biztonsági beállításai nem szerkeszthetők. Ha nem szeretné használni ezt a kategóriát, törölje ahelyett, hogy más célra használná fel."
       permission_conflict: "Minden olyan csoportnak, amely hozzáférhet egy alkategóriához, a szülőkategóriához is hozzá kell férnie. A következő csoportok hozzáférhetnek valamelyik alkategóriához, de nem férnek hozzá a szülőkategóriához: %{group_names}."
       disallowed_topic_tags: "Ebben a témában vannak olyan címkék, amelyeket ez a kategória nem engedélyez: '%{tags}'"
       disallowed_tags_generic: "Ez a téma nem engedélyezett címkéket tartalmaz."

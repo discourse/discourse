@@ -14,8 +14,8 @@
       "credentials": {},
       "webhookId": null,
       "position": {
-        "x": 12,
-        "y": 22
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -32,8 +32,44 @@
       "credentials": {},
       "webhookId": null,
       "position": {
-        "x": 292,
-        "y": 22
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "id": "note-button",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Bump button\" to change the label and icon of the button added to the topic admin menu.",
+        "width": 220,
+        "height": 250,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": -20,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-bump",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "\"Bump topic\" moves the topic to the top of the latest list. Double-click it to bump silently, without adding a visible entry to the topic.",
+        "width": 220,
+        "height": 250,
+        "color": "blue"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 220,
+        "y": -110
       }
     }
   ],

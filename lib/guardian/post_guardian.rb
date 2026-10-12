@@ -53,8 +53,11 @@ module PostGuardian
           return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
         end
 
-        # Silenced users can't flag
-        return false if is_flag && @user.silenced?
+        # Silenced users can't flag, except to report illegal content
+        if is_flag && @user.silenced? &&
+             !(action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content)
+          return false
+        end
 
         # Silenced users can't like
         return false if action_key == :like && @user.silenced?

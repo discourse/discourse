@@ -13,6 +13,9 @@ module DiscourseAi
         @root_token_budget = root_token_budget
         @spawn_count = 0
         @completion_count = 0
+        execution_context.work_budget ||=
+          DiscourseAi::Completions::TurnWorkBudget.new(limit: root_token_budget)
+        execution_context.work_execution_state = self
         @mutex = Mutex.new
       end
 
@@ -42,7 +45,7 @@ module DiscourseAi
       end
 
       def remaining_tokens
-        [root_token_budget - execution_context.token_usage_tracker.total, 0].max
+        execution_context.work_budget.remaining
       end
 
       private

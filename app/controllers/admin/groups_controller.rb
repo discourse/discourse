@@ -32,37 +32,28 @@ class Admin::GroupsController < Admin::StaffController
     group = Group.find_by(id: params[:id])
     raise Discourse::NotFound unless group
 
-    if group.automatic
-      can_not_modify_automatic
-    else
-      StaffActionLogger.new(current_user).log_group_deletion(group)
+    GroupDestroyer.destroy(guardian, group)
 
-      group.destroy!
-      render json: success_json
-    end
+    render json: success_json
+  rescue GroupMutations::AutomaticGroup => error
+    render_json_error(error.message)
   end
 
   def remove_owner
     group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group
 
-    return can_not_modify_automatic if group.automatic
-    guardian.ensure_can_edit_group!(group)
-
-    if params[:user_id].present?
-      users = [User.find_by(id: params[:user_id].to_i)]
-    elsif usernames = group_params[:usernames].presence
-      users = User.where(username: usernames.split(","))
-    else
-      raise Discourse::InvalidParameters.new(:user_id)
-    end
-
-    users.each do |user|
-      group.group_users.where(user_id: user.id).update_all(owner: false)
-      GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
-    end
+    user_id = params[:user_id]
+    GroupOwnerManager.remove(
+      guardian,
+      group,
+      user_id:,
+      usernames: user_id.present? ? nil : group_params[:usernames],
+    )
 
     render json: success_json
+  rescue GroupMutations::AutomaticGroup => error
+    render_json_error(error.message)
   end
 
   def set_primary

@@ -32,11 +32,13 @@ describe "AI Discoveries search modes" do
     SiteSetting.ai_embeddings_enabled = false
     SiteSetting.ai_embeddings_semantic_search_enabled = false
 
-    visit "/"
-    discoveries_search.open.fill_query("miyazaki").select_ask
+    expect(user.user_option.ai_ask_ai_default).to eq(true)
 
+    visit "/"
+    discoveries_search.open.fill_query("miyazaki").submit
+
+    expect(discoveries_search).to have_ask_in_effect
     expect(discoveries_search).to have_discovery
-    expect(discoveries_search).to have_ask_as_default
   end
 
   it "marks whichever option produced what is on screen" do

@@ -171,12 +171,10 @@ export default class CodeblockButtons {
 
     if (codeEl) {
       // replace any weird whitespace characters with a proper '\u20' whitespace
-      const text = codeEl.innerText
-        .replace(
-          /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
-          " "
-        )
-        .trim();
+      const text = codeEl.innerText.replace(
+        /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
+        " "
+      );
 
       if (action === "copy") {
         const result = clipboardCopy(text);

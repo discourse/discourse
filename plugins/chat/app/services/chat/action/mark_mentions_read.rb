@@ -18,29 +18,33 @@ module Chat
       option :thread_id, optional: true
 
       def call
-        ::Notification
-          .where(notification_type: Notification.types[:chat_mention])
-          .where(user: user)
-          .where(read: false)
-          .joins(
-            "INNER JOIN chat_mention_notifications ON chat_mention_notifications.notification_id = notifications.id",
-          )
-          .joins(
-            "INNER JOIN chat_mentions ON chat_mentions.id = chat_mention_notifications.chat_mention_id",
-          )
-          .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
-          .where("chat_messages.chat_channel_id IN (?)", channel_ids)
-          .then do |notifications|
-            break notifications if message_id.blank? && thread_id.blank?
-            break notifications.where("chat_messages.id <= ?", message_id) if message_id.present?
-            if thread_id.present?
-              notifications.where(
-                "chat_messages.id IN (SELECT id FROM chat_messages WHERE thread_id = ?)",
-                thread_id,
-              )
+        marked_count =
+          ::Notification
+            .where(notification_type: Notification.types[:chat_mention])
+            .where(user: user)
+            .where(read: false)
+            .joins(
+              "INNER JOIN chat_mention_notifications ON chat_mention_notifications.notification_id = notifications.id",
+            )
+            .joins(
+              "INNER JOIN chat_mentions ON chat_mentions.id = chat_mention_notifications.chat_mention_id",
+            )
+            .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
+            .where("chat_messages.chat_channel_id IN (?)", channel_ids)
+            .then do |notifications|
+              break notifications if message_id.blank? && thread_id.blank?
+              break notifications.where("chat_messages.id <= ?", message_id) if message_id.present?
+              if thread_id.present?
+                notifications.where(
+                  "chat_messages.id IN (SELECT id FROM chat_messages WHERE thread_id = ?)",
+                  thread_id,
+                )
+              end
             end
-          end
-          .update_all(read: true)
+            .update_all(read: true)
+
+        # update_all skips Notification callbacks, so clients wouldn't learn about the change
+        DB.after_commit { user.reload.publish_notifications_state } if marked_count > 0
       end
     end
   end
