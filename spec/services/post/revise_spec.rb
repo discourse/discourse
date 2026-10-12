@@ -17,8 +17,8 @@ RSpec.describe Post::Revise do
     it do
       is_expected.to allow_values(
         { tags: nil, original_tags: nil },
-        { tags: ["existing-tag"], original_tags: ["previous-tag"] },
-        { tags: [{ id: 1 }, { id: "2", name: "another-tag" }, { name: "new-tag" }] },
+        { tags: ["existing-tag"] },
+        { tags: [{ id: 1 }, { id: "2", name: "another-tag" }, { id: "", name: "new-tag" }] },
       ).for(:changes)
     end
 
@@ -54,6 +54,14 @@ RSpec.describe Post::Revise do
 
     context "when the post is missing" do
       let(:params) { { post_id: 0, changes: } }
+
+      it { is_expected.to fail_to_find_a_model(:topic) }
+    end
+
+    context "when the topic is deleted" do
+      let(:params) { { topic_id: topic.id, changes: { title: "A corrected topic title" } } }
+
+      before { topic.trash! }
 
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
@@ -134,12 +142,17 @@ RSpec.describe Post::Revise do
     end
 
     context "when the edit is valid" do
-      let(:changes) { super().merge(title: "A corrected topic title") }
+      let(:changes) do
+        super().merge(title: "A corrected topic title", tags: [{ id: "", name: "new-tag" }])
+      end
+
+      before { SiteSetting.tagging_enabled = true }
 
       it "saves the body and topic title together" do
         expect(result).to run_successfully
         expect(post.reload.raw).to eq(changes[:raw])
         expect(topic.reload.title).to eq(changes[:title])
+        expect(topic.tags.pluck(:name)).to eq(["new-tag"])
       end
     end
 

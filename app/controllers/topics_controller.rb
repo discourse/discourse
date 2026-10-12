@@ -420,6 +420,7 @@ class TopicsController < ApplicationController
 
     Post::Revise.call(service_params.merge(params: topic_revision_params, editor: current_user)) do
       on_success do |topic:|
+        # this is used to return the title to the client as it may have been changed by "TextCleaner"
         if Tag.include_tags? && params.key?(:tags)
           render_topic_with_tags(topic)
         else

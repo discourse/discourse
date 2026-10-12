@@ -13,6 +13,9 @@ class Post::EditChanges
   end
 
   def topic_attributes
+    return @topic_attributes if @topic_attributes
+
+    # to stay consistent with the create api, we allow for title & category changes here
     return {} unless @post.is_first_post?
 
     changes = attributes.slice(*PostRevisor.tracked_topic_fields.keys)
@@ -24,7 +27,7 @@ class Post::EditChanges
       changes.delete(:tags)
     end
 
-    changes
+    @topic_attributes = changes
   end
 
   def revision_attributes
@@ -44,6 +47,8 @@ class Post::EditChanges
       )
 
     changes.merge!(topic_attributes)
+
+    # resolve to name strings before passing to PostRevisor
     changes[:tags] = resolved_tag_names if changes.key?(:tags)
     changes.delete(:category_id) if @topic.shared_draft && category_changed?
 
@@ -51,7 +56,8 @@ class Post::EditChanges
   end
 
   def resolved_tag_names
-    return @topic.tags.pluck(:name) unless attributes.key?(:tags)
+    return @resolved_tag_names if @resolved_tag_names
+    return @resolved_tag_names = @topic.tags.pluck(:name) unless attributes.key?(:tags)
 
     incoming = attributes[:tags] || []
 
@@ -62,13 +68,14 @@ class Post::EditChanges
         drop_from: "2026.07",
       )
 
-      return incoming.reject(&:empty?)
+      return @resolved_tag_names = incoming.reject(&:empty?)
     end
 
     ids = incoming.filter_map { |tag| tag[:id]&.to_i }
 
-    incoming.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
-      Tag.visible(@guardian).where(id: ids).pluck(:name)
+    @resolved_tag_names =
+      incoming.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
+        Tag.visible(@guardian).where(id: ids).pluck(:name)
   end
 
   def category_changed?
@@ -87,6 +94,8 @@ class Post::EditChanges
     options = {}
     options[:validate_post] = false if @topic_only
     options[:keep_existing_draft] = attributes[:keep_existing_draft].to_s == "true" if @topic_only
+
+    # We don't need to validate edits to small action posts by staff
     options[:skip_validations] = true if @post.post_type == Post.types[:small_action] &&
       @editor.staff?
 

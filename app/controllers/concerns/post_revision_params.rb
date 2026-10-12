@@ -5,20 +5,14 @@ module PostRevisionParams
 
   def post_revision_params
     post = params.require(:post)
-    input =
-      post.slice(
-        :raw,
-        :original_text,
-        :edit_reason,
-        :locale,
-        :reply_to_post_number,
-        :category_id,
-        :bypass_bump,
-        *Post.plugin_permitted_update_params.keys,
-      )
+    input = post.slice(:original_text, :reply_to_post_number, :category_id, :bypass_bump)
 
+    input.merge!(raw: post[:raw], edit_reason: post[:edit_reason], locale: post[:locale])
+    Post.plugin_permitted_update_params.keys.each { |param| input[param] = post[param] }
+
+    # keep `raw_old` for backwards compatibility
     input[:original_text] ||= post[:raw_old]
-    input[:title] = params[:title] if params.key?(:title)
+    input[:title] = params[:title] if params[:title]
     input[:image_sizes] = params[:image_sizes] if params.key?(:image_sizes)
     input[:bypass_bump] = params[:bypass_bump] if params.key?(:bypass_bump)
 
@@ -67,6 +61,8 @@ module PostRevisionParams
       next unless parameters.key?(key)
 
       tags = parameters[key]
+      tags = nil if key == :tags && tags == ""
+
       permitted[key] = if tags.is_a?(Array)
         tags.map do |tag|
           tag.is_a?(ActionController::Parameters) ? tag.permit(:id, :name).to_h : tag

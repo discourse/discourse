@@ -710,6 +710,24 @@ RSpec.describe PostsController do
       }
     end
 
+    it "preserves the topic title when a body edit includes a null title" do
+      sign_in(post.user)
+      original_title = post.topic.title
+
+      put "/posts/#{post.id}.json",
+          params: {
+            post: {
+              raw: "The edited body.",
+            },
+            title: nil,
+          },
+          as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(post.reload.raw).to eq("The edited body.")
+      expect(post.topic.reload.title).to eq(original_title)
+    end
+
     context "when a trust level 1 user edits a public wiki post" do
       it "does not publish a hidden new user profile onebox" do
         author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
@@ -1280,6 +1298,17 @@ RSpec.describe PostsController do
       end
 
       after { DiscoursePluginRegistry.reset! }
+
+      it "passes nil to registered fields omitted from an edit" do
+        post.custom_fields[:random_number] = "244"
+        post.save_custom_fields
+        sign_in(post.user)
+
+        put "/posts/#{post.id}.json", params: { post: { raw: "The edited body." } }
+
+        expect(response).to have_http_status(:ok)
+        expect(post.reload.custom_fields[:random_number]).to be_nil
+      end
 
       it "calls blocks passed into `add_permitted_post_update_param`" do
         sign_in(post.user)

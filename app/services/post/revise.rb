@@ -42,7 +42,7 @@ class Post::Revise
     def valid_tag?(tag)
       return false unless tag.is_a?(Hash)
       return false unless tag[:name].nil? || tag[:name].is_a?(String)
-      return tag[:name].present? if tag[:id].nil?
+      return tag[:name].present? if tag[:id].blank?
 
       tag[:id].to_s.match?(/\A[1-9]\d*\z/)
     end
@@ -82,7 +82,7 @@ class Post::Revise
   end
 
   def fetch_topic(params:, guardian:)
-    topics = guardian.is_staff? ? Topic.with_deleted : Topic.all
+    topics = guardian.is_staff? && params.topic_id.blank? ? Topic.with_deleted : Topic.all
     posts = guardian.is_staff? ? Post.with_deleted : Post.all
     topic_id = params.topic_id || posts.where(id: params.post_id).pick(:topic_id)
 
