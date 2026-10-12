@@ -78,7 +78,7 @@ lt:
           no_context: "Nėra įrašo konteksto, kurį būtų galima pažymėti."
           no_reason: "Norint pažymėti įrašą, reikia nurodyti priežastį."
           invalid_flag_type: "Neteisingas vėliavos tipas."
-        skipped: "Verdiktas buvo klaidingas; vėliava nebuvo sukurta."
+        skipped: "Sprendimas buvo klaidingas; vėliava nebuvo sukurta."
         already_flagged: "Įrašas jau pažymėtas peržiūrai."
         flagged: "Įrašas pažymėtas peržiūrai."
         reason: "Dirbtinio intelekto robotas pažymėjo šį įrašą.\n\nPriežastis: %{reason}"

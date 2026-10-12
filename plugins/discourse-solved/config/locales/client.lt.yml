@@ -23,13 +23,13 @@ lt:
       alt:
         solved:
           accepted_notification: "patvirtinta"
-          topic_solved_notification: "išspresta"
+          topic_solved_notification: "išspręsta"
     solved:
-      title: "Išspresta"
+      title: "Išspręsta"
       accepted_answer_post_number: "įrašas %{post_number}"
       topic_status_filter:
         all: "visi"
-        solved: "išspresta"
+        solved: "išspręsta"
       move_post_cancel: "Atšaukti"
       confirm_solved_removal_confirm: "Patvirtinti"
       confirm_solved_removal_cancel: "Atšaukti"

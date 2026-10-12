@@ -65,6 +65,7 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      title: "مصنوعی ذہانت"
       copied: "کاپی کر لیا"
       view_raw: "خام دیکھیں"
       ai_decoded_transcript:
@@ -340,6 +341,7 @@ ur:
           delete: "شیئر کو حذف کریں"
         invite_ai_conversation:
           button: "دعوت دیں"
+        ai_label: "مصنوعی ذہانت"
         share_modal:
           copy: "کاپی"
         conversations:
@@ -375,7 +377,9 @@ ur:
             content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
             actions:
               disable: "غیر فعال کریں"
+        search_type: "مصنوعی ذہانت"
         search_all_topics: "تمام موضوعات"
         search_messages: "پیغامات"
+        ask_ai: "مصنوعی ذہانت"
         sources:
           related_discussions: "متعلقہ موضوعات"
