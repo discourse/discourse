@@ -538,6 +538,43 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform" do
+    context "when performing agree_and_edit on a flagged post reviewable" do
+      fab!(:flagged, :reviewable_flagged_post)
+
+      it "approves the flagged post reviewable through agree_and_edit using the author's saved revision" do
+        PostRevisor.new(flagged.post).revise!(
+          flagged.post.user,
+          { raw: "The author corrected this flagged post." },
+          force_new_version: true,
+        )
+        revision = flagged.post.revisions.last
+
+        result = flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+
+        expect(result).to be_success
+        expect(result.post_revision).to eq(revision)
+        expect(flagged.reload).to be_approved
+      end
+
+      it "rejects agree_and_edit on a flagged post reviewable when the revision predates its latest flag" do
+        PostRevisor.new(flagged.post).revise!(
+          moderator,
+          raw: "The moderator corrected this post before the latest flag.",
+        )
+        revision = flagged.post.revisions.last
+        freeze_time 1.minute.from_now
+        flagged.add_score(Fabricate(:user), PostActionType.types[:spam])
+
+        expect do
+          flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+        end.to raise_error(Discourse::InvalidParameters)
+
+        expect(flagged.reload).to be_pending
+      end
+    end
+  end
+
   describe "#perform_delete_and_agree" do
     it "notifies the user about the flagged post deletion" do
       reviewable = Fabricate(:reviewable_flagged_post)

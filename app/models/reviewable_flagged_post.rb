@@ -3,8 +3,14 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
-  def self.additional_args(params)
-    ReviewableActionBuilder.penalty_args(params)
+  class << self
+    def additional_args(params)
+      args = ReviewableActionBuilder.penalty_args(params)
+
+      args[:post_version] = params[:post_version] if params[:action_id] == "agree_and_edit"
+
+      args
+    end
   end
 
   scope :pending_and_default_visible, -> { pending.default_visible }
@@ -13,7 +19,6 @@ class ReviewableFlaggedPost < Reviewable
     {
       agree_and_keep_hidden: :agree_and_keep,
       agree_and_keep_deleted: :agree_and_keep,
-      agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       disagree_and_keep_deleted: :disagree,
       ignore_and_do_nothing: :ignore,
@@ -263,6 +268,21 @@ class ReviewableFlaggedPost < Reviewable
     return result unless result.success?
 
     perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_edit(performed_by, args)
+    post_version = performed_by.staff? ? post.version : post.public_version
+    revision = post.revisions.find_by(number: post.version)
+    latest_flag_at = reviewable_scores.pending.maximum(:created_at) || created_at
+
+    unless args[:post_version].to_s == post_version.to_s && revision &&
+             revision.updated_at >= latest_flag_at && revision.modifications.present?
+      raise Discourse::InvalidParameters.new(:post_version)
+    end
+
+    result = perform_agree_and_keep(performed_by, args)
+    result.post_revision = revision
+    result
   end
 
   def perform_agree_and_keep(performed_by, args)

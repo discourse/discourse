@@ -353,7 +353,10 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      onSaved: () => performAction().catch(popupAjaxError),
+      onSaved: (result) =>
+        performAction({ post_version: result.payload.version }).catch(
+          popupAjaxError
+        ),
     });
   }
 
