@@ -144,7 +144,7 @@ class CategoryList
   end
 
   def find_categories
-    query = Category.includes(CategoryList.included_associations).secured(@guardian)
+    query = Category.secured(@guardian)
     query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     query = self.class.order_categories(query)
 
@@ -166,21 +166,6 @@ class CategoryList
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    load_only_roots =
-      @options[:parent_category_id].blank? && !paginate && query.is_a?(ActiveRecord::Relation) &&
-        @options[:include_subcategories] != true && query.limit_value.nil? &&
-        query.offset_value.nil? && query.select_values.empty? && !query.eager_loading?
-
-    if load_only_roots
-      root_subcategory_ids = Hash.new { |hash, key| hash[key] = [] }
-      query
-        .where.not(parent_category_id: nil)
-        .except(:includes)
-        .pluck(:id, :parent_category_id)
-        .each { |id, parent_id| root_subcategory_ids[parent_id] << id }
-      query = query.where(parent_category_id: nil)
-    end
-
     @categories = query.to_a
 
     if paginate && @options[:include_pagination] && query.offset(page * CATEGORIES_PER_PAGE).exists?
@@ -195,7 +180,7 @@ class CategoryList
           .where(parent_category_id: @categories.map { |c| c.id })
 
       subcategories_query =
-        Category.includes(CategoryList.included_associations).where(
+        Category.where(
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )
@@ -215,9 +200,7 @@ class CategoryList
 
     include_subcategories = @options[:include_subcategories] == true
 
-    if load_only_roots
-      @categories.each { |category| category.subcategory_ids = root_subcategory_ids[category.id] }
-    elsif paginate
+    if paginate
       subcategory_ids = {}
       Category
         .secured(@guardian)
@@ -246,6 +229,11 @@ class CategoryList
       end
       @categories.delete_if { |c| to_delete.include?(c) }
     end
+
+    ActiveRecord::Associations::Preloader.new(
+      records: categories_with_descendants,
+      associations: CategoryList.included_associations,
+    ).call
 
     Category.preload_user_fields!(@guardian, categories_with_descendants)
   end
