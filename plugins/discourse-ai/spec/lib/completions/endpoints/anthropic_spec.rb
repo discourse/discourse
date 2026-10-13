@@ -84,6 +84,223 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
   before { enable_current_plugin }
 
+  it "captures only the final Claude attempt's stop reason after retrying an unfinished stream" do
+    response = instance_double(Net::HTTPResponse, code: "200")
+    reads = 0
+    allow(response).to receive(:read_body) do |&block|
+      reads += 1
+      if reads == 1
+        block.call(
+          "data: #{{ type: "message_delta", delta: { stop_reason: "max_tokens" }, usage: { output_tokens: 0 } }.to_json}\n\ndata: {",
+        )
+        raise EOFError, "Unexpected EOF"
+      end
+      events = [
+        { type: "content_block_delta", delta: { type: "text_delta", text: "Recovered answer" } },
+        { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 4 } },
+      ]
+      block.call(events.map { |event| "data: #{event.to_json}\n\n" }.join)
+    end
+    http = instance_double(Net::HTTP)
+    allow(http).to receive(:request).and_yield(response)
+    allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+    endpoint = described_class.new(model)
+    endpoint.stubs(:sleep_before_retry)
+    dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+    emitted = []
+    endpoint.perform_completion!(dialect, Discourse.system_user) { |partial| emitted << partial }
+    expect(emitted).to eq(["Recovered answer"])
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+      stop_reason: "end_turn",
+      reasoning_tokens: nil,
+      response_tokens: 4,
+    )
+  end
+
+  describe "completion state" do
+    it "classifies non-streaming thinking-only output as empty" do
+      stub_request(:post, url).to_return(
+        body: {
+          content: [{ type: "thinking", thinking: "Considering", signature: "sig" }],
+          stop_reason: "max_tokens",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 100,
+          },
+        }.to_json,
+      )
+      result = llm.generate(prompt, user: Discourse.system_user, output_thinking: true)
+      expect(result).to be_a(DiscourseAi::Completions::Thinking)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "max_tokens",
+        reasoning_tokens: nil,
+        response_tokens: 100,
+      )
+    end
+
+    it "classifies streamed thinking-only output as empty" do
+      events = [
+        { type: "content_block_start", content_block: { type: "thinking", thinking: "" } },
+        { type: "content_block_delta", delta: { type: "thinking_delta", thinking: "Considering" } },
+        { type: "content_block_stop" },
+        {
+          type: "message_delta",
+          delta: {
+            stop_reason: "max_tokens",
+          },
+          usage: {
+            output_tokens: 100,
+          },
+        },
+      ]
+      stub_request(:post, url).to_return(
+        body: events.map { |event| "data: #{event.to_json}\n\n" }.join,
+      )
+      emitted = []
+      llm.generate(prompt, user: Discourse.system_user, output_thinking: true) do |partial|
+        emitted << partial
+      end
+      expect(emitted).to all(be_a(DiscourseAi::Completions::Thinking))
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "max_tokens",
+        reasoning_tokens: nil,
+        response_tokens: 100,
+      )
+    end
+
+    it "preserves stripped-only non-streaming return values while classifying them as empty" do
+      text = "<thinking>Hidden</thinking>"
+      stub_request(:post, url).to_return(body: { content: [{ type: "text", text: text }] }.to_json)
+      expect(llm.generate(prompt_with_echo_tool, user: Discourse.system_user)).to eq(text)
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+
+    it "preserves stripped-only streaming return values without yielding hidden text" do
+      text = "<thinking>Hidden</thinking>"
+      stub_request(:post, url).to_return(
+        body:
+          "data: #{{ type: "content_block_delta", delta: { type: "text_delta", text: text } }.to_json}\n\n",
+      )
+      emitted = []
+      result =
+        llm.generate(prompt_with_echo_tool, user: Discourse.system_user) do |partial|
+          emitted << partial
+        end
+      expect(result).to eq(text)
+      expect(emitted).to eq([])
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+
+    it "does not flush reasoning from a truncated unclosed thinking block" do
+      events = [
+        {
+          type: "content_block_delta",
+          delta: {
+            type: "text_delta",
+            text: "<thinking>Hidden reasoning",
+          },
+        },
+        {
+          type: "message_delta",
+          delta: {
+            stop_reason: "max_tokens",
+          },
+          usage: {
+            output_tokens: 100,
+          },
+        },
+      ]
+      stub_request(:post, url).to_return(
+        body: events.map { |event| "data: #{event.to_json}\n\n" }.join,
+      )
+      emitted = []
+      llm.generate(prompt_with_echo_tool, user: Discourse.system_user) do |partial|
+        emitted << partial
+      end
+      expect(emitted).to eq([])
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "max_tokens",
+      )
+    end
+
+    it "does not flush reasoning from a truncated thinking block in an XML tool dialect" do
+      model.update!(provider_params: { disable_native_tools: true })
+      events = [
+        {
+          type: "content_block_delta",
+          delta: {
+            type: "text_delta",
+            text: "<thinking>Hidden reasoning",
+          },
+        },
+        {
+          type: "message_delta",
+          delta: {
+            stop_reason: "max_tokens",
+          },
+          usage: {
+            output_tokens: 100,
+          },
+        },
+      ]
+      stub_request(:post, url).to_return(
+        body: events.map { |event| "data: #{event.to_json}\n\n" }.join,
+      )
+      emitted = []
+      llm.generate(prompt_with_echo_tool, user: Discourse.system_user) do |partial|
+        emitted << partial
+      end
+      expect(emitted).to eq([])
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "max_tokens",
+      )
+    end
+
+    it "preserves dangling tag prefixes in non-streaming return values" do
+      stub_request(:post, url).to_return(
+        body: { content: [{ type: "text", text: "<think" }] }.to_json,
+      )
+      expect(llm.generate(prompt_with_echo_tool, user: Discourse.system_user)).to eq(
+        %w[<think <think],
+      )
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::COMPLETE)
+    end
+
+    it "preserves the existing native-tool streaming flush behavior for dangling tag prefixes" do
+      stub_request(:post, url).to_return(
+        body:
+          "data: #{{ type: "content_block_delta", delta: { type: "text_delta", text: "<think" } }.to_json}\n\n",
+      )
+      emitted = []
+      result =
+        llm.generate(prompt_with_echo_tool, user: Discourse.system_user) do |partial|
+          emitted << partial
+        end
+      expect(result).to eq("<think<think")
+      expect(emitted).to eq([])
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+
+    it "preserves stripped-only disable-streaming replay while keeping its classification empty" do
+      model.update!(provider_params: { disable_streaming: true })
+      text = "<thinking>Hidden</thinking>"
+      stub_request(:post, url).to_return(body: { content: [{ type: "text", text: text }] }.to_json)
+      emitted = []
+      result =
+        llm.generate(prompt_with_echo_tool, user: Discourse.system_user) do |partial|
+          emitted << partial
+        end
+      expect(result).to eq(text)
+      expect(emitted).to eq([text])
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+  end
+
   it "settles pending cancelled reasoning without final output usage" do
     thinking =
       "Consider each independent source carefully before deciding what the evidence actually supports."
@@ -132,6 +349,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     end
     expect(execution.work_budget.used).to eq(llm.tokenizer.size(thinking))
     expect(execution.token_usage_tracker.response).to be > 0
+    expect(AiApiAuditLog.last.completion_state).to be_nil
     expect(AiApiAuditLog.last.raw_response_payload).to include(thinking)
   end
 

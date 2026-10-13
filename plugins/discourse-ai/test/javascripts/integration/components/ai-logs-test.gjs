@@ -296,3 +296,33 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
     );
   });
 });
+
+module("Integration | Component | AiLogs", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+  });
+
+  test("offers incomplete outcome filters", async function (assert) {
+    const model = {
+      logs: [],
+      meta: { has_more: false },
+      models: [],
+      features: [],
+    };
+    const queryParams = {};
+    await render(
+      <template>
+        <AiLogs @model={{model}} @queryParams={{queryParams}} />
+      </template>
+    );
+    assert
+      .dom('.d-filter-controls__dropdown--outcome option[value="empty"]')
+      .hasText("Empty response", "empty completions can be filtered");
+    assert
+      .dom('.d-filter-controls__dropdown--outcome option[value="truncated"]')
+      .hasText("Truncated", "truncated completions can be filtered");
+  });
+});

@@ -22,6 +22,16 @@ module DiscourseAi
           AiApiAuditLog::Provider::Cohere
         end
 
+        protected
+
+        def reset_attempt_state!
+          super
+          @tool_idx = nil
+          @has_tool = nil
+          @input_tokens = nil
+          @output_tokens = nil
+        end
+
         private
 
         def model_uri

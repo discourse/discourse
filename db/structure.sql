@@ -540,7 +540,10 @@ CREATE TABLE public.ai_api_audit_logs (
     response_status integer,
     request_attempts jsonb,
     estimated_cost numeric(20,10),
-    time_to_first_token_msecs integer
+    time_to_first_token_msecs integer,
+    completion_state smallint,
+    reasoning_tokens integer,
+    stop_reason character varying(50)
 );
 
 
@@ -19438,6 +19441,13 @@ CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs U
 
 
 --
+-- Name: idx_ai_api_audit_logs_incomplete_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_incomplete_id ON public.ai_api_audit_logs USING btree (completion_state, id) WHERE (completion_state = ANY (ARRAY[2, 3]));
+
+
+--
 -- Name: idx_ai_api_audit_logs_payload_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25832,6 +25842,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261013010026'),
+('20261013010022'),
 ('20261012021959'),
 ('20261012015332'),
 ('20261009144947'),
