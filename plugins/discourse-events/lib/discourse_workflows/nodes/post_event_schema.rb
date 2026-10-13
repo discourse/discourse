@@ -108,6 +108,7 @@ if defined?(DiscourseWorkflows)
             DiscourseWorkflows::Schema::USER_SCHEMA,
             PARTICIPATION_SCHEMA,
             STATS_SCHEMA,
+            DiscourseWorkflows::Schema::ACTOR_SCHEMA,
           ).freeze
       end
     end

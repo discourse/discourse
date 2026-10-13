@@ -105,6 +105,7 @@ module Jobs
       invitee.notified = false
       invitee.status = status
       invitee.save!
+      invitee.publish_status_changed!(acting_user: @current_user) if invitee.saved_change_to_status?
     end
 
     def save_log(message)

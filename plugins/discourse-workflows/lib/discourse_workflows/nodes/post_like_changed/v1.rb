@@ -11,6 +11,7 @@ module DiscourseWorkflows
             Schema::POST_SCHEMA,
             Schema::TOPIC_LIST_ITEM_SCHEMA,
             Schema::USER_SCHEMA,
+            Schema::ACTOR_SCHEMA,
             Schema.document("change" => { "type" => "string", "enum" => CHANGES.values }),
           ).freeze
 
@@ -60,6 +61,7 @@ module DiscourseWorkflows
             post: serialize_post(@post),
             topic: serialize_topic_list_item(@post.topic),
             user: serialize_user(@user),
+            actor: serialize_user(@user),
           }
         end
 

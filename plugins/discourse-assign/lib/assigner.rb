@@ -412,7 +412,7 @@ class ::Assigner
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
 
-    DiscourseEvent.trigger(:assigned, assignment)
+    DiscourseEvent.trigger(:assigned, assignment, acting_user: @assigned_by)
 
     { success: true }
   end
@@ -477,7 +477,7 @@ class ::Assigner
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
-      DiscourseEvent.trigger(:unassigned, assignment)
+      DiscourseEvent.trigger(:unassigned, assignment, acting_user: @assigned_by)
 
       if allowed_user_ids.present?
         MessageBus.publish(

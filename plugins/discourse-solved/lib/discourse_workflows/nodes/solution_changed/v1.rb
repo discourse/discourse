@@ -17,6 +17,8 @@ if defined?(DiscourseWorkflows)
                   "enum" => CHANGES.values,
                 },
               ),
+              DiscourseWorkflows::Schema::POST_AUTHOR_SCHEMA,
+              DiscourseWorkflows::Schema::ACTOR_SCHEMA,
             ).freeze
 
           description(
@@ -46,10 +48,11 @@ if defined?(DiscourseWorkflows)
             new(event_name, *args)
           end
 
-          def initialize(event_name, post, *)
+          def initialize(event_name, post, payload = {})
             super(parameters: {})
             @change = CHANGES[event_name]
             @post = post
+            @actor = payload[:acting_user]
           end
 
           def valid?
@@ -61,6 +64,8 @@ if defined?(DiscourseWorkflows)
               change: @change,
               post: serialize_post(@post),
               topic: serialize_topic_list_item(topic),
+              user: serialize_user(@post.user),
+              actor: serialize_user(@actor),
             }
           end
 

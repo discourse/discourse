@@ -69,6 +69,7 @@ module DiscourseAssign
           DiscourseWorkflows::Schema::POST_SCHEMA,
           DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
           ASSIGNMENT_SCHEMA,
+          DiscourseWorkflows::Schema::ACTOR_SCHEMA,
         ).freeze
     end
   end

@@ -42,10 +42,12 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
 
   describe "#output" do
     it "returns reviewable data", :aggregate_failures do
+      moderator = Fabricate(:moderator)
       reviewable.update!(status: :approved)
-      output = described_class.new(:approved, reviewable).output
+      output = described_class.new(:approved, reviewable, acting_user: moderator).output
 
       expect(output[:reviewable]).to include(status: "approved")
+      expect(output[:actor]).to include(id: moderator.id, username: moderator.username)
       expect(output).to match_node_output_schema(described_class)
     end
   end

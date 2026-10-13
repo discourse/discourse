@@ -12,15 +12,20 @@ module DiscourseWorkflows
       OUTPUT_CONTRACTS = [
         {
           schema:
-            Schema.merge(Schema::POST_SCHEMA, Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::USER_SCHEMA),
+            Schema.merge(
+              Schema::POST_SCHEMA,
+              Schema::TOPIC_LIST_ITEM_SCHEMA,
+              Schema::USER_SCHEMA,
+              Schema::ACTOR_SCHEMA,
+            ),
         },
       ].freeze
 
-      def initialize(post, opts = nil, user = nil, *)
+      def initialize(post, opts = nil, actor = nil, *)
         super(parameters: {})
         @post = post
         @opts = opts
-        @user = user
+        @actor = actor
       end
 
       def valid?
@@ -32,7 +37,8 @@ module DiscourseWorkflows
         {
           post: serialize_post(@post),
           topic: serialize_topic_list_item(topic),
-          user: serialize_user(@user),
+          user: serialize_user(@actor),
+          actor: serialize_user(@actor),
         }
       end
 
