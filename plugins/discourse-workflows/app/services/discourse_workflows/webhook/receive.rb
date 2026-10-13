@@ -243,7 +243,7 @@ module DiscourseWorkflows
       PublishedTrigger.new(workflow:, workflow_version:, trigger_node: node)
     end
 
-    def filter_authenticated_nodes(webhook_nodes:, params:)
+    def filter_authenticated_nodes(webhook_nodes:, params:, webhook_context:)
       credentials = preload_auth_credentials(webhook_nodes)
       authenticated = []
       failure_reasons = []
@@ -254,6 +254,7 @@ module DiscourseWorkflows
             node: published_trigger.trigger_node,
             params:,
             credentials:,
+            request: webhook_context.request,
           )
 
         if result == Webhook::Action::AuthenticateNode::AUTHENTICATED
