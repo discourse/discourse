@@ -15,16 +15,8 @@ hr:
         reading_time:
           title: Vrijeme čitanja
         chat_usage:
-          messages: poruke
           author: Vi
           author_others: "%{username}"
           status_online: "● online"
-        invites:
-          title: Pozivnice
-          invitee_posts: Objava kreirano
-          invitee_likes: Like-ova dano
-        new_user_interactions:
-          likes_given: Like-ova dano
-          mentions: Spominjanja
         writing_analysis:
           menu_other: Ostalo

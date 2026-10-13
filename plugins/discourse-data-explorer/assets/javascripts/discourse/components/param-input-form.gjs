@@ -466,10 +466,10 @@ export default class ParamInputForm extends Component {
     {{#if this.paramInfo.length}}
       <div class="query-params">
         <Form
+          class="params-form"
           @data={{this.data}}
           @onRegisterApi={{this.onRegisterApi}}
           @onSubmit={{this.onSubmit}}
-          class="params-form"
           as |form|
         >
           {{#each this.paramInfo as |info|}}
@@ -477,9 +477,9 @@ export default class ParamInputForm extends Component {
               <form.Field
                 @name={{info.identifier}}
                 @title={{info.identifier}}
-                @validation={{info.validation}}
-                @validate={{info.validate}}
                 @type={{this.fieldTypeFor info}}
+                @validate={{info.validate}}
+                @validation={{info.validation}}
                 as |field|
               >
                 <info.component

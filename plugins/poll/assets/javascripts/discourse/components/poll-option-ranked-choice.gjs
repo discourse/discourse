@@ -16,23 +16,23 @@ export default class PollOptionsComponent extends Component {
 
   <template>
     <div
-      tabindex="0"
       class="ranked-choice-poll-option"
       data-poll-option-id={{@option.id}}
       data-poll-option-rank={{@option.rank}}
+      tabindex="0"
     >
       {{#if this.currentUser}}
         <PollOptionRankedChoiceDropdown
-          @rank={{@option.rank}}
           @option={{@option}}
+          @rank={{@option.rank}}
           @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
           @sendRank={{this.sendRank}}
         />
       {{else}}
         <DButton
+          class="btn-default"
           @action={{routeAction "showLogin"}}
           @label="poll.options.ranked_choice.login"
-          class="btn-default"
         />
       {{/if}}
       <span class="option-text" {{decoratePollOption @option.html}}></span>

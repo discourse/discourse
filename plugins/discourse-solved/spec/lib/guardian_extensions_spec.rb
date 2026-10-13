@@ -10,7 +10,7 @@ describe DiscourseSolved::GuardianExtensions do
 
   before { SiteSetting.allow_solved_on_all_topics = true }
 
-  describe ".can_unaccept_answer?" do
+  describe ".can_unaccept_answer? with a missing topic" do
     it "returns false when topic is nil" do
       admin = Fabricate(:admin, refresh_auto_groups: true)
       expect(Guardian.new(admin).can_unaccept_answer?(nil, post)).to be_falsey
@@ -155,10 +155,7 @@ describe DiscourseSolved::GuardianExtensions do
     end
     fab!(:support_topic) { Fabricate(:topic_with_op, category: support_category, user: other_user) }
 
-    before do
-      SiteSetting.enable_solved_shared_issues = true
-      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
-    end
+    before { DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache }
 
     describe ".can_create_shared_issue?" do
       it "returns true for a regular topic in a support category" do

@@ -234,7 +234,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events shown in local time" do
       describe "with local time enabled" do
         it "displays multiple occurrences with correct local time",
            timezone: "Australia/Brisbane",
@@ -367,7 +367,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events with an end date" do
       it "displays recurring events until the specified end date",
          time: Time.utc(2025, 6, 2, 19, 00) do
         post =
@@ -448,6 +448,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
             visit("/upcoming-events/day/2025/8/1")
 
@@ -478,6 +480,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to next day" do
             visit("/upcoming-events/day/2025/8/4")
 
@@ -527,6 +531,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to previous day" do
             visit("/upcoming-events/day/2025/8/1")
 

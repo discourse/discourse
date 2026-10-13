@@ -347,6 +347,12 @@ el:
     skip_to_last_reply: "Μετάβαση στην τελευταία απάντηση"
     skip_to_top: "Μετάβαση στην κορυφή"
     skip_user_nav: "Μετάβαση στο περιεχόμενο του προφίλ"
+    reorder:
+      remove: "Αφαίρεση %{label}"
+      removed: "Αφαίρεσε την ομάδα %{label}"
+      move_up: "Μετακίνηση πάνω"
+      move_down: "Μετακίνηση κάτω"
+      position: "%{position} από %{total}"
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_no_smtp: "Όλα τα εξερχόμενα email είναι απενεργοποιημένα επειδή δεν έχει ρυθμιστεί κανένας διακομιστής SMTP. Δεν είναι δυνατή η αποστολή κανενός είδους email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
@@ -356,6 +362,7 @@ el:
     notifications_tracking:
       tooltip: "Επίπεδο ειδοποίησης: %{level}"
     back_button: "Πίσω"
+    confirm_button: "Επιβεβαίωση"
     welcome_banner:
       header:
         new_members: "Καλώς ήρθες, %{preferred_display_name}!"
@@ -509,18 +516,9 @@ el:
         use_predefined: "Περιήγηση προτύπων"
         back: "Πίσω"
         icebreakers:
-          fun_facts:
-            title: "Ποιές είναι μερικές ενδιαφέρουσες πληροφορίες για εσάς;"
-            body: "Γεια σε όλους! Είμαι ενθουσιασμένος που ξεκινάω αυτή τη νέα κοινότητα. Για να ξεκινήσουμε, ας μοιραστούμεμια ενδιαφέρουσα πληροφορία για τους εαυτούς μας. Θα ξεκινήσω πρώτος: Λατρεύω την πεζοπορία και την εξερεύνηση νέων μονοπατιών! Τι είναι κάτι ενδιαφέρον για εσάς;"
-          coolest_thing_you_have_seen_today:
-            title: "Ποιο είναι το πιο ωραίο πράγμα που είδατε σήμερα;"
-            body: "Ποιο είναι το πιο ωραίο πράγμα που είδατε ή βιώσατε σήμερα; Θα μπορούσε να είναι οτιδήποτε, από ένα όμορφο ηλιοβασίλεμα μέχρι μια τυχαία πράξη καλοσύνης. Θα ξεκινήσω: Είδα έναν σκύλο να βοηθάει έναν ηλικιωμένο να διασχίσει τον δρόμο!"
           introduce_yourself:
             title: "Συστηθείτε"
             body: "Καλώς ορίσατε στην κοινότητα! Ας γνωριστούμε. Συστηθείτε μας και μοιραστείτε μαζί μας λίγα πράγματα για τα ενδιαφέροντά σας. Θα ξεκινήσω πρώτος: Είμαι παθιασμένος με την τεχνολογία και μου αρέσει να διδάσκω άλλους!"
-          what_is_your_favorite_food:
-            title: "Ποιο είναι το αγαπημένο σας φαγητό;"
-            body: "Μοιραστείτε το αγαπημένο σας φαγητό με την κοινότητα! Θα ξεκινήσω: Λατρεύω την πίτσα, ειδικά με έξτρα τυρί και πεπερόνι."
     design_wizard:
       title: "Προσαρμόστε τον ιστότοπό σας"
       back: "Πίσω"
@@ -1048,6 +1046,9 @@ el:
         note_added: "Σημείωση συντονιστή"
         note_added_by: "Σημείωση συντονιστή από %{username} · %{relativeDate}"
         no_events: "Δεν υπάρχουν συμβάντα χρονοδιαγράμματος για προβολή"
+      author_penalty:
+        toast:
+          undo: "Αναίρεση"
       notes:
         add_note_description: "Προσθέστε μια σημείωση για να παράσχετε πληροφορίες σε άλλους συντονιστές."
         add_note_button: "Προσθήκη σημείωσης"
@@ -1685,7 +1686,6 @@ el:
       admin: "Ο/Η %{user} είναι διαχειριστής"
       moderator_tooltip: "Αυτός ο χρήστης είναι συντονιστής"
       admin_tooltip: "Αυτός ο χρήστης είναι διαχειριστής"
-      silenced_tooltip: "Χρήστης σε σιγή"
       suspended_notice: "Αυτός ο χρήστης είναι σε αποβολή μέχρι τις %{date}."
       suspended_permanently: "Ο χρήστης είναι αποβλημένος."
       suspended_reason: "Αιτιολογία:"
@@ -1743,6 +1743,16 @@ el:
       tracked_topics_link: "Δείξε"
       automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος"
       apps: "Εφαρμογές"
+      mcp_authorizations:
+        endpoint: "Πόρος"
+        scopes: "Πεδία εφαρμογής"
+        details: "Λεπτομέρειες"
+        last_used: "Τελευταία χρήση"
+        never: "Ποτέ"
+        status: "Κατάσταση"
+        statuses:
+          active: "Ενεργό"
+          revoked: "Ανακλήθηκε"
       revoke_access: "Ανάκληση Πρόσβασης"
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
       api_approved: "Εγκεκριμένο:"
@@ -2017,7 +2027,6 @@ el:
         upload_title: "Ανέβασε την εικόνα σου"
         image_is_not_a_square: "Προσοχή: Περικόψαμε την εικόνα σου γιατί το ύψος και το πλάτος δεν ήταν ίσα."
         logo_small: "Μικρό λογότυπο του ιστότοπου. Χρησιμοποιείται από προεπιλογή."
-        use_custom: "Ή ανεβάστε ένα προσαρμοσμένο avatar:"
       change_profile_background:
         title: "Κεφαλίδα προφίλ"
         instructions: "Οι κεφαλίδες προφίλ θα κεντράρονται και θα έχουν προεπιλεγμένο πλάτος 1110px."
@@ -3044,8 +3053,7 @@ el:
       cancel_edit: "Ακύρωση επεξεργασίας"
       draft_saved: "Το προσχέδιο αποθηκεύτηκε!"
       users_placeholder: "Προσθήκη χρηστών ή ομάδων"
-      title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
-      title_placeholder_redesign: "Τίτλος"
+      title_placeholder: "Τίτλος"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "Γιατί κάνετε επεξεργασία;"
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο."
@@ -4659,6 +4667,7 @@ el:
       list: "Λίστα κατηγοριών"
       no_description: "Παρακαλώ πρόσθεσε μια περιγραφή στην κατηγορία"
       change_in_category_topic: "Επεξεργασία περιγραφής"
+      latest_topics: "Τελευταία θέματα"
       description_updated: "Η περιγραφή ενημερώθηκε"
       description_expand: "Δείτε περισσότερα"
       description_collapse: "Δείξε λιγότερα"
@@ -4926,6 +4935,7 @@ el:
       with_category: "%{filter} %{category} θέματα"
       filter:
         title: "Φιλτραρισμένα αποτελέσματα για %{filter}"
+        reset: "επαναφορά"
         button:
           label: "Φίλτρο"
       latest:
@@ -5151,9 +5161,6 @@ el:
         search_open: "Άνοιγμα αναζήτησης για τη διεπαφή διαχειριστή"
         search_full_page: "Άνοιγμα αναζήτησης πλήρους σελίδας διαχειριστή"
     badges:
-      earned_n_times:
-        one: "Κέρδισε αυτό το παράσημο %{count} φορά"
-        other: "Κέρδισε αυτό το παράσημο %{count} φορές"
       granted_on: "Απονεμήθηκε στις %{date}"
       others_count:
         one: "Απονεμήθηκε σε άλλους %{count} φορά"
@@ -5188,16 +5195,18 @@ el:
       favorite_max_not_reached: "Σήμανση αυτού του παράσημου ως αγαπημένου"
       favorite_count: "%{count}/%{max} παράσημα σημασμένα ως αγαπημένα"
     download_calendar:
-      title: "Λήψη ημερολογίου"
+      title: "Προσθήκη στο ημερολόγιο"
+      calendar: "Ημερολόγιο"
       save_ics: "Λήψη αρχείου .ics"
       save_google: "Προσθήκη στο ημερολόγιο Google"
       remember: "Μην με ρωτήσετε ξανά"
-      remember_explanation: "(μπορείτε να αλλάξετε αυτήν την προτίμηση στις προτιμήσεις χρήστη)"
       download: "Κατέβασμα"
       default_calendar: "Προεπιλεγμένο ημερολόγιο"
       default_calendar_instruction: "Προσδιορίστε ποιο ημερολόγιο θα χρησιμοποιείται κατά την αποθήκευση ημερομηνιών"
       add_to_calendar: "Προσθήκη στο ημερολόγιο"
       google: "Ημερολόγιο Google"
+      outlook: "Microsoft Outlook"
+      apple: "Ημερολόγιο Apple"
       ics: "ICS"
       default_title: "Προγραμματισμένη Εκδήλωση"
     tagging:
@@ -5876,6 +5885,71 @@ el:
           title: "Σχετικά με τον ιστότοπο σας"
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Πρόσβαση"
+            activity: "Δραστηριότητα"
+          overview:
+            status: "Κατάσταση"
+          access:
+            title: "Πρόσβαση"
+            group: "Ομάδα"
+            groups: "Ομάδες"
+            actions: "Ενέργειες"
+            edit: "Επεξεργασία"
+            delete: "Σβήσιμο"
+          primitives:
+            group_by: "Ομαδοποίηση κατά"
+            group_by_options:
+              scope: "Πεδίο εφαρμογής"
+              provider: "Πάροχος"
+              kind: "Τύπος"
+            provider: "Πάροχος"
+            kind: "Τύπος"
+            scope: "Πεδίο εφαρμογής"
+            state: "Πολιτεία"
+            scopes: "Πεδία εφαρμογής"
+          clients:
+            actions: "Ενέργειες"
+            block: "Αποκλεισμός"
+            presets:
+              custom: "Προσαρμοσμένο"
+            automatic: "Αυτόματα"
+          authorizations:
+            user: "Χρήστης"
+            last_used: "Τελευταία χρήση"
+            status: "Κατάσταση"
+            actions: "Ενέργειες"
+          activity:
+            outcome: "Αποτέλεσμα"
+            time: "Ώρα"
+            user: "Χρήστης"
+            duration: "Διάρκεια"
+          values:
+            server_status:
+              disabled: "Απενεργοποιημένος"
+            client_trust:
+              approved: "Εγκρίθηκε "
+            authorization_status:
+              active: "Ενεργό"
+              revoked: "Ανακλήθηκε"
+            activity_outcome:
+              success: "Επιτυχία"
+              error: "Σφάλμα"
+            primitive_state:
+              enabled: "Ενεργοποιημένη"
+              disabled: "Απενεργοποιημένος"
+            primitive_kind:
+              all: "Όλοι οι τύποι"
+              resource: "Πόρος"
+            primitive_risk:
+              read: "Μόνο για ανάγνωση"
+              moderation: "Συντονισμός"
+            filter:
+              all: "Όλα"
+          never: "Ποτέ"
+          actions:
+            revoke: "Ανακάλεσε"
         experimental:
           title: "Πειραματικό"
         emojis:
@@ -6255,6 +6329,7 @@ el:
         filters:
           country: "Χώρα"
           browser: "Περιηγητής"
+          language: "Γλώσσα"
           ip: "IP διεύθυνση"
         metrics:
           logged_in_share:
@@ -6470,6 +6545,7 @@ el:
             embedded: "Ενσωματωμένες προβολές σελίδας"
             crawlers: "Ανιχνευτές"
           see_details: "Δείτε λεπτομέρειες"
+          crawler_learn_more: "Μάθετε περισσότερα"
         period:
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
@@ -7327,8 +7403,8 @@ el:
           upload: "Μεταφόρτωση"
           select_component: "Επιλέξτε ένα στοιχείο…"
           unsaved_changes_alert: "Δεν έχετε αποθηκεύσει ακόμη τις αλλαγές σας, θέλετε να τις απορρίψετε και να προχωρήσετε;"
-          unsaved_parent_themes: "Δεν έχετε ορίσει το συστατικό σε θέματα, θέλετε να προχωρήσετε;"
           discard: "Απόρριψη"
+          leave: "Αποχώρηση"
           stay: "Παραμονή"
           css_html: "Προσαρμοσμένος κώδικας"
           edit_css_html: "Επεξεργασία κώδικα"
@@ -8323,13 +8399,12 @@ el:
           multiselect: "Πολλαπλή επιλογή"
       site_text:
         description: "Μπορείτε να προσαρμόσετε οποιοδήποτε κείμενο στο φόρουμ σας."
-        search: "Αναζήτησε το κείμενο που θα ήθελες να επεξεργαστείς"
+        search_label: "Αναζήτηση"
+        theme_disabled: "Απενεργοποιημένος"
+        filters: "Φίλτρα"
         title: "Κείμενα ιστότοπου"
         edit: "Επεξεργασία"
-        revert: "Επαναφορά αλλαγών"
         revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
-        go_back: "Πίσω στην αναζήτηση"
-        recommended: "Σου προτείνουμε να προσαρμόσεις το ακόλουθο κείμενο στις ανάγκες σου:"
         show_overriden: "Δείξε μόνο αυτά που άλλαξαν"
         show_outdated: "Εμφάνιση μόνο ξεπερασμένων/μη έγκυρων"
         show_untranslated: "Εμφάνιση μόνο αμετάφραστων"

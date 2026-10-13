@@ -48,6 +48,7 @@ import { resetAdditionalReportModes } from "discourse/lib/admin-report-additiona
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { resetDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
 import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
@@ -76,6 +77,7 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
+import { clearAdditionalUserNavSidebarLinks } from "discourse/lib/sidebar/user-nav-sidebar";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -224,6 +226,7 @@ export function testCleanup(container, app) {
   resetAdminDashboardReportRenderers();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
+  resetDeferredClassModifications();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -280,6 +283,7 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
+  clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();

@@ -14,20 +14,20 @@ const DesignWizardColorsSection = <template>
   <div class="design-wizard__color">
     <div class="design-wizard__color-modes">
       <button
-        type="button"
+        aria-pressed={{if (eq @colorMode "light") "true" "false"}}
         class="design-wizard__color-mode
           {{if (eq @colorMode 'light') '--active'}}"
-        aria-pressed={{if (eq @colorMode "light") "true" "false"}}
         disabled={{@darkOnly}}
+        type="button"
         {{on "click" (fn @onSelectMode "light")}}
       >
         {{i18n "design_wizard.colors.light"}}
       </button>
       <button
-        type="button"
+        aria-pressed={{if (eq @colorMode "dark") "true" "false"}}
         class="design-wizard__color-mode
           {{if (eq @colorMode 'dark') '--active'}}"
-        aria-pressed={{if (eq @colorMode "dark") "true" "false"}}
+        type="button"
         {{on "click" (fn @onSelectMode "dark")}}
       >
         {{i18n "design_wizard.colors.dark"}}
@@ -36,11 +36,11 @@ const DesignWizardColorsSection = <template>
     <div class="design-wizard__swatches">
       {{#each @pairs as |pair|}}
         <button
-          type="button"
+          aria-pressed={{if (eq pair.key @selectedPairKey) "true" "false"}}
           class="design-wizard__swatch
             {{if (eq pair.key @selectedPairKey) '--selected'}}"
-          aria-pressed={{if (eq pair.key @selectedPairKey) "true" "false"}}
           data-pair-key={{pair.key}}
+          type="button"
           {{on "click" (fn @onSelectPair pair.key)}}
         >
           <span
@@ -66,22 +66,22 @@ const DesignWizardColorsSection = <template>
   <div class="design-wizard__switch-row">
     <div>
       <span
-        id="design-wizard-user-selectable-title"
         class="design-wizard__switch-row-title"
+        id="design-wizard-user-selectable-title"
       >
         {{i18n "design_wizard.colors.user_selectable"}}
       </span>
       <span
-        id="design-wizard-user-selectable-description"
         class="design-wizard__switch-row-description"
+        id="design-wizard-user-selectable-description"
       >
         {{i18n "design_wizard.colors.user_selectable_description"}}
       </span>
     </div>
     <DToggleSwitch
-      @state={{@userSelectable}}
-      aria-labelledby="design-wizard-user-selectable-title"
       aria-describedby="design-wizard-user-selectable-description"
+      aria-labelledby="design-wizard-user-selectable-title"
+      @state={{@userSelectable}}
       {{on "click" @onToggleUserSelectable}}
     />
   </div>

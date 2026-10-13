@@ -272,12 +272,18 @@ sk:
     topic_admin_menu: "tematické akcie"
     skip_to_main_content: "Preskočiť na hlavný obsah"
     skip_user_nav: "Preskočiť na obsah profilu"
+    reorder:
+      removed: "Odstránené %{label}"
+      move_up: "Posunúť sa nahor"
+      move_down: "Posunúť sa nadol"
+      position: "%{position} z %{total}"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     emails_are_disabled_non_staff: "Odchádzajúca pošta bola zakázaná pre používateľov, ktorí nie sú personál."
     software_update_prompt:
       message: "Aktualizovali sme túto stránku, <span>prosím obnovte</span> , aby všetko fungovalo bez problémov."
       dismiss: "Zahodiť"
     back_button: "Späť"
+    confirm_button: "Potvrďte"
     welcome_banner:
       header:
         logged_in_members: "Vitaj späť, %{preferred_display_name}!"
@@ -922,6 +928,9 @@ sk:
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
         no_events: "Žiadne udalosti na časovej osi na zobrazenie"
+      author_penalty:
+        toast:
+          undo: "Späť"
       notes:
         add_note_button: "Pridať poznámku"
         placeholder: "Tu napíšte svoju poznámku..."
@@ -1569,7 +1578,6 @@ sk:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
-      silenced_tooltip: "Tento používateľ je umlčaný"
       suspended_notice: "Tento používateľ je suspendovaný do %{date}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
@@ -1630,6 +1638,16 @@ sk:
       tracked_topics_link: "Zobraziť"
       automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítam na koniec"
       apps: "Appky"
+      mcp_authorizations:
+        endpoint: "Zdroje"
+        scopes: "Rozsahy"
+        details: "Detaily"
+        last_used: "Naposledy použité"
+        never: "Nikdy"
+        status: "Stav"
+        statuses:
+          active: "Aktívny"
+          revoked: "Odvolané"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
@@ -1939,7 +1957,6 @@ sk:
         upload_title: "Nahrať váš obrázok"
         image_is_not_a_square: "Upozornenie: váš obrázok sme orezali; mal rozdielnu šírku a výšku"
         logo_small: "Malé logo stránky. Používa sa v predvolenom nastavení."
-        use_custom: "Alebo nahrajte vlastný avatar:"
       change_profile_background:
         title: "Hlavička profilu"
         instructions: "Hlavičky profilov budú vycentrované a budú mať predvolenú šírku 1110 pixelov."
@@ -2556,7 +2573,7 @@ sk:
       hide_forever: "Nie, ďakujem"
       hidden_for_session: "Dobre, zajtra sa ťa opýtame. Na vytvorenie účtu môžete vždy použiť aj 'Prihlásiť sa'."
       intro: "Dobrý deň! Zdá sa, že sa vám diskusia páči, ale ešte ste si nezaložili účet."
-      value_prop: "Unavený z prehliadania tých istých príspevkov? Keď si vytvoríte účet, vždy sa vrátite tam, kde ste prestali. S účtom môžete tiež byť upozornení na nové odpovede, ukladať záložky a používať lajky na poďakovanie ostatným. Spoločne môžeme pracovať na tom, aby táto komunita bola skvelá. :heart:"
+      value_prop: "Unavený z prehliadania tých istých príspevkov? Keď si vytvoríte účet, vždy sa vrátite tam, kde ste prestali. S účtom môžete tiež byť upozornení na nové odpovede, ukladať záložky a používať lajky na poďakovanie ostatným. Spoločne môžeme pracovať na tom, aby táto komunita bola skvelá."
     offline_indicator:
       no_internet: "Žiadne internetové pripojenie."
       refresh_page: "Obnoviť stránku"
@@ -2998,8 +3015,7 @@ sk:
       edit_shared_draft: "Upraviť zdieľaný návrh"
       discard: "Zahodiť"
       users_placeholder: "Pridanie používateľov alebo skupín"
-      title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
-      title_placeholder_redesign: "Názov"
+      title_placeholder: "Názov"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
       edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
@@ -4499,6 +4515,7 @@ sk:
       list: "Zoznam kategórií"
       no_description: "Prosím, pridajte popis k tejto kategórii."
       change_in_category_topic: "Upraviť popis"
+      latest_topics: "Najnovšie témy"
       description_expand: "Zobraziť viac"
       description_collapse: "Zobraziť menej"
       already_used: "Táto farba je už použitá inou kategóriou"
@@ -4782,6 +4799,7 @@ sk:
       with_category: "%{filter} %{category} témy"
       filter:
         title: "Filtrované výsledky pre %{filter}"
+        reset: "zrušiť"
         button:
           label: "Filter"
       latest:
@@ -4961,11 +4979,6 @@ sk:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Získal tento odkaz %{count}-krát"
-        few: "Získal tento odkaz %{count}-krát"
-        many: "Získal tento odkaz %{count}-krát"
-        other: "Získal tento odkaz %{count}-krát"
       granted_on: "Udelený dňa %{date}"
       others_count:
         one: "Udelené ostatným %{count} krát"
@@ -5008,11 +5021,11 @@ sk:
       favorite_max_not_reached: "Označiť tento odznak ako obľúbený"
       favorite_count: "%{count}/%{max} odznaky označené ako obľúbené"
     download_calendar:
-      title: "Stiahnuť kalendár"
+      title: "Pridať do kalendára"
+      calendar: "Kalendár"
       save_ics: "Stiahnutie súboru .ics"
       save_google: "Pridať do kalendára Google"
       remember: "Už sa ma nepýtajte"
-      remember_explanation: "(túto voľbu môžete zmeniť v používateľských nastaveniach)"
       download: "Stiahnuť"
       default_calendar: "Predvolený kalendár"
       default_calendar_instruction: "Určenie kalendára, ktorý sa má použiť pri ukladaní dátumov"
@@ -5670,6 +5683,73 @@ sk:
           header_description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
         developer:
           title: "Vývojár"
+        mcp:
+          tabs:
+            access: "Prístup"
+            activity: "Aktivity"
+          overview:
+            status: "Stav"
+            tools: "Nástroje"
+          access:
+            title: "Prístup"
+            group: "Skupina"
+            groups: "Skupiny"
+            actions: "Akcie"
+            edit: "Upraviť"
+            delete: "Odstrániť"
+          primitives:
+            group_by: "Zoskupiť podľa"
+            group_by_options:
+              scope: "Rozsah"
+              provider: "Poskytovateľ"
+              kind: "Typ"
+            provider: "Poskytovateľ"
+            kind: "Typ"
+            scope: "Rozsah"
+            scopes: "Rozsahy"
+          clients:
+            actions: "Akcie"
+            block: "Blokovať"
+            use_preset: "Nastavenie"
+            presets:
+              custom: "Vlastné"
+            automatic: "Automaticky"
+          authorizations:
+            user: "Používateľ"
+            last_used: "Naposledy použité"
+            status: "Stav"
+            actions: "Akcie"
+          activity:
+            outcome: "Výsledok"
+            time: "Čas"
+            user: "Používateľ"
+            duration: "Trvanie"
+          values:
+            server_status:
+              disabled: "Vypnuté"
+            client_trust:
+              approved: "Schválený"
+            authorization_status:
+              active: "Aktívny"
+              revoked: "Odvolané"
+            activity_outcome:
+              success: "Úspech"
+              error: "Chyba"
+            primitive_state:
+              enabled: "Povolené"
+              disabled: "Vypnuté"
+            primitive_kind:
+              all: "Všetky typy"
+              tool: "Nástroj"
+              resource: "Zdroje"
+            primitive_risk:
+              read: "Len na čítanie"
+              moderation: "Moderovanie"
+            filter:
+              all: "Všetky"
+          never: "Nikdy"
+          actions:
+            revoke: "Zrušiť"
         experimental:
           title: "Experimentálne"
           header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."
@@ -6056,6 +6136,7 @@ sk:
           visitors: "Návštevníci"
         filters:
           browser: "Prehliadač"
+          language: "Jazyk"
           ip: "IP adresy"
         series:
           anonymous_human: "Anonymný"
@@ -6164,6 +6245,7 @@ sk:
           series:
             anonymous: "Anonymný"
             crawlers: "Crawlery"
+          crawler_learn_more: "Zistite viac"
         period:
           last_7_days: "Posledných 7 dní"
           last_30_days: "Posledných 30 dní"
@@ -7098,8 +7180,8 @@ sk:
           upload: "Upload"
           select_component: "Vyberte komponent…"
           unsaved_changes_alert: "Ešte ste neuložili svoje zmeny, chcete ich zrušiť a pokračovať ďalej?"
-          unsaved_parent_themes: "Komponent ste nepriradili k témam, chcete pokračovať?"
           discard: "Zahodiť"
+          leave: "Opustiť"
           stay: "Ponechať"
           css_html: "Vlastný kód"
           edit_css_html: "Upraviť kód"
@@ -8179,13 +8261,14 @@ sk:
           multiselect: "Viacnásobný výber"
       site_text:
         description: "Môžete si prispôsobiť akýkoľvek text na fóre."
-        search: "Hľadajte text, ktorý chcete upraviť"
+        search_label: "Hľadať"
+        theme_disabled: "Vypnuté"
+        filters: "Filtre"
+        status:
+          invalid: "Neplatné"
         title: "Texty stránok"
         edit: "Upraviť"
-        revert: "Vrátiť zmeny"
         revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
-        go_back: "Návrat na vyhľadávanie"
-        recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
         show_outdated: "Zobraziť len neaktuálne/neplatné"
         show_untranslated: "Zobraziť len nepreložené"

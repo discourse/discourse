@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -188,6 +189,30 @@ function stepSummary(step) {
   return String(step.error);
 }
 
+// A step that continued on error succeeds, so these explain what it continued past.
+function stepWarnings(step) {
+  const warnings = [];
+  const handledError = step.metadata?.handled_error?.message;
+  if (handledError) {
+    warnings.push(
+      i18n("discourse_workflows.executions.handled_error", {
+        message: handledError,
+      })
+    );
+  }
+
+  step.metadata?.item_errors?.forEach(({ message, items }) => {
+    warnings.push(
+      i18n("discourse_workflows.executions.item_error", {
+        count: items.length,
+        message,
+      })
+    );
+  });
+
+  return warnings;
+}
+
 function hasNoOutput(step) {
   return (
     step.status === "success" &&
@@ -256,10 +281,6 @@ export default class ExecutionDetail extends Component {
     this.#progress.destroy();
   }
 
-  get currentTime() {
-    return this.#progress.currentTime;
-  }
-
   get execution() {
     return this.liveExecution?.id === this.args.execution.id
       ? this.liveExecution
@@ -268,6 +289,10 @@ export default class ExecutionDetail extends Component {
 
   set execution(value) {
     this.liveExecution = value;
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
   }
 
   get isPending() {
@@ -284,6 +309,19 @@ export default class ExecutionDetail extends Component {
 
   get isLive() {
     return isLive(this.execution);
+  }
+
+  get executionError() {
+    // A failing step already explains the error in its summary.
+    if (this.execution.steps?.some((step) => step.error)) {
+      return null;
+    }
+
+    return this.execution.error;
+  }
+
+  get executionErrorType() {
+    return this.execution.status === "error" ? "error" : "warning";
   }
 
   @action
@@ -303,6 +341,100 @@ export default class ExecutionDetail extends Component {
     this.#progress.unsubscribe();
     this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
+  }
+
+  @action
+  exportAsText() {
+    const execution = this.execution;
+    const lines = [];
+
+    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
+    lines.push(`Execution ID: ${execution.id}`);
+    lines.push(`Status: ${execution.status}`);
+    lines.push(`Started: ${execution.started_at ?? "—"}`);
+    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
+    lines.push(
+      `Total time: ${formatDuration(
+        execution.started_at,
+        execution.finished_at,
+        this.isRunning ? this.currentTime : null
+      )}`
+    );
+
+    if (execution.error) {
+      lines.push(`\nError: ${execution.error}`);
+    }
+
+    lines.push("\n" + "=".repeat(60));
+
+    execution.steps?.forEach((step, index) => {
+      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
+      lines.push(`  Type: ${step.node_type}`);
+      const operationLabel = this.operationLabel(step);
+      if (operationLabel) {
+        lines.push(`  Operation: ${operationLabel}`);
+      }
+      lines.push(`  Status: ${step.status}`);
+      lines.push(
+        `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
+      );
+
+      stepWarnings(step).forEach((warning) => {
+        lines.push(`  Warning: ${warning}`);
+      });
+
+      step.metadata?.hints?.forEach((hint) => {
+        lines.push(`  Hint: ${hint.message}`);
+      });
+
+      if (step.metadata?.conditions) {
+        lines.push("  Conditions:");
+        step.metadata.conditions.forEach((c) => {
+          const result = c.passed ? "PASS" : "FAIL";
+          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
+          lines.push(
+            `    [${result}] ${expr}${formatValue(c.left)} ${c.operator} ${c.right != null ? formatValue(c.right) : ""}`
+          );
+        });
+      }
+
+      if (step.metadata?.logs?.length) {
+        lines.push("  Console:");
+        lines.push(
+          ...formatLogs(step.metadata.logs)
+            .split("\n")
+            .map((l) => `    ${l}`)
+        );
+      }
+
+      if (step.input && Object.keys(step.input).length > 0) {
+        lines.push(
+          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.output && Object.keys(step.output).length > 0) {
+        lines.push(
+          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.error) {
+        const label = step.status === "skipped" ? "Reason" : "Error";
+        lines.push(`  ${label}: ${step.error}`);
+      }
+
+      lines.push("-".repeat(60));
+    });
+
+    const text = lines.join("\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `discourse-workflows-execution-${execution.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   #syncLiveUpdates() {
@@ -378,7 +510,6 @@ export default class ExecutionDetail extends Component {
       );
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         refreshToken !== this.#refreshToken ||
         executionId !== this.execution.id
       ) {
@@ -393,108 +524,18 @@ export default class ExecutionDetail extends Component {
       this.#progress.resetRetry();
       this.#syncLiveUpdates();
     } catch (error) {
-      if (
-        !this.isDestroying &&
-        !this.isDestroyed &&
-        refreshToken === this.#refreshToken
-      ) {
+      if (!this.isDestroying && refreshToken === this.#refreshToken) {
         this.#progress.scheduleRetry(error);
       }
     } finally {
       if (refreshToken === this.#refreshToken) {
         this.#refreshing = false;
-        if (this.#refreshRequested && !this.isDestroying && !this.isDestroyed) {
+        if (this.#refreshRequested && !this.isDestroying) {
           this.#refreshRequested = false;
           this.#refreshExecution();
         }
       }
     }
-  }
-
-  @action
-  exportAsText() {
-    const execution = this.execution;
-    const lines = [];
-
-    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
-    lines.push(`Execution ID: ${execution.id}`);
-    lines.push(`Status: ${execution.status}`);
-    lines.push(`Started: ${execution.started_at ?? "—"}`);
-    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
-    lines.push(
-      `Total time: ${formatDuration(
-        execution.started_at,
-        execution.finished_at,
-        this.isRunning ? this.currentTime : null
-      )}`
-    );
-
-    if (execution.error) {
-      lines.push(`\nError: ${execution.error}`);
-    }
-
-    lines.push("\n" + "=".repeat(60));
-
-    execution.steps?.forEach((step, index) => {
-      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
-      lines.push(`  Type: ${step.node_type}`);
-      const operationLabel = this.operationLabel(step);
-      if (operationLabel) {
-        lines.push(`  Operation: ${operationLabel}`);
-      }
-      lines.push(`  Status: ${step.status}`);
-      lines.push(
-        `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
-      );
-
-      if (step.metadata?.conditions) {
-        lines.push("  Conditions:");
-        step.metadata.conditions.forEach((c) => {
-          const result = c.passed ? "PASS" : "FAIL";
-          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
-          lines.push(
-            `    [${result}] ${expr}${formatValue(c.left)} ${c.operator} ${c.right != null ? formatValue(c.right) : ""}`
-          );
-        });
-      }
-
-      if (step.metadata?.logs?.length) {
-        lines.push("  Console:");
-        lines.push(
-          ...formatLogs(step.metadata.logs)
-            .split("\n")
-            .map((l) => `    ${l}`)
-        );
-      }
-
-      if (step.input && Object.keys(step.input).length > 0) {
-        lines.push(
-          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
-        );
-      }
-
-      if (step.output && Object.keys(step.output).length > 0) {
-        lines.push(
-          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
-        );
-      }
-
-      if (step.error) {
-        const label = step.status === "skipped" ? "Reason" : "Error";
-        lines.push(`  ${label}: ${step.error}`);
-      }
-
-      lines.push("-".repeat(60));
-    });
-
-    const text = lines.join("\n");
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `discourse-workflows-execution-${execution.id}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   <template>
@@ -547,18 +588,24 @@ export default class ExecutionDetail extends Component {
 
           {{#if this.execution.workflow_call_caller.execution_url}}
             <DButton
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
               @route="adminPlugins.show.discourse-workflows.show.executions.show"
               @routeModels={{array
                 this.execution.workflow_call_caller.workflow_id
                 this.execution.workflow_call_caller.execution_id
               }}
-              @icon="up-right-from-square"
-              @label="discourse_workflows.executions.workflow_call_open_parent"
-              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
             />
           {{/if}}
         </div>
       {{/if}}
+
+      <DFlashMessage
+        class="workflows-execution-detail__error"
+        @flash={{this.executionError}}
+        @type={{this.executionErrorType}}
+      />
 
       <div class="workflows-execution-detail__steps">
         {{#each this.execution.steps as |step|}}
@@ -632,12 +679,30 @@ export default class ExecutionDetail extends Component {
             {{/if}}
 
             <div class="workflows-execution-detail__step-body">
+              {{#each (stepWarnings step) as |warning|}}
+                <DFlashMessage
+                  class="workflows-execution-detail__step-warning"
+                  @flash={{warning}}
+                  @type="warning"
+                />
+              {{/each}}
+
+              {{#each step.metadata.hints as |hint|}}
+                <DFlashMessage
+                  class="workflows-execution-detail__hint"
+                  @flash={{hint.message}}
+                  @type="warning"
+                />
+              {{/each}}
+
               {{#if (hasNoOutput step)}}
-                <div
-                  class="alert alert-info workflows-execution-detail__no-output"
-                >
-                  {{i18n "discourse_workflows.executions.no_output_data"}}
-                </div>
+                <DFlashMessage
+                  class="workflows-execution-detail__no-output"
+                  @flash={{i18n
+                    "discourse_workflows.executions.no_output_data"
+                  }}
+                  @type="info"
+                />
               {{/if}}
 
               {{#if step.metadata.conditions}}
@@ -733,14 +798,14 @@ export default class ExecutionDetail extends Component {
 
                   {{#if step.workflow_call_run.execution_url}}
                     <DButton
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
                       @route="adminPlugins.show.discourse-workflows.show.executions.show"
                       @routeModels={{array
                         step.workflow_call_run.workflow_id
                         step.workflow_call_run.execution_id
                       }}
-                      @icon="up-right-from-square"
-                      @label="discourse_workflows.executions.workflow_call_open"
-                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
                     />
                   {{/if}}
 
@@ -792,10 +857,10 @@ export default class ExecutionDetail extends Component {
             }}
           </div>
           <DButton
+            class="btn-default btn-small workflows-execution-detail__export"
             @action={{this.exportAsText}}
             @icon="download"
             @label="discourse_workflows.executions.export"
-            class="btn-default btn-small"
           />
         </div>
       </div>

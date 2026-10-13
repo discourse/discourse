@@ -1,3 +1,5 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
+
 // The screen-share audio m-line is pre-negotiated like the video one, but
 // both audio transceivers on a connection report kind "audio", so the screen
 // one is remembered per connection instead of being inferred from m-line
@@ -102,9 +104,8 @@ export default class PeerManager {
     );
     const orphanTrack = orphan?.sender?.track;
     if (orphanTrack && !associated.sender.track) {
-      associated.sender.replaceTrack(orphanTrack).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to migrate video track", error);
+      associated.sender.replaceTrack(orphanTrack).catch(() => {
+        voiceLog.warn("[voice] failed to migrate video track");
       });
       orphan.sender.replaceTrack(null).catch(() => {});
     }
@@ -142,9 +143,8 @@ export default class PeerManager {
     if (orphan && orphan !== screenTransceiver) {
       const orphanTrack = orphan.sender?.track;
       if (orphanTrack && !screenTransceiver.sender.track) {
-        screenTransceiver.sender.replaceTrack(orphanTrack).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to migrate screen audio track", error);
+        screenTransceiver.sender.replaceTrack(orphanTrack).catch(() => {
+          voiceLog.warn("[voice] failed to migrate screen audio track");
         });
         orphan.sender.replaceTrack(null).catch(() => {});
       }
@@ -228,6 +228,15 @@ export default class PeerManager {
     return PeerManager.videoTransceiverFor(pc)?.receiver?.track || null;
   }
 
+  remoteScreenAudioTrack(roomId, userId) {
+    const pc = this.get(roomId, userId);
+    if (!pc) {
+      return null;
+    }
+
+    return PeerManager.screenAudioTransceiverFor(pc)?.receiver?.track || null;
+  }
+
   allPeerConnections() {
     return this.#peerConnections;
   }
@@ -250,9 +259,8 @@ export default class PeerManager {
         if (sender) {
           try {
             await sender.replaceTrack(newTrack);
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.warn("[voice] failed to replace track on peer", error);
+          } catch {
+            voiceLog.warn("[voice] failed to replace track on peer");
           }
         }
       }
@@ -299,9 +307,8 @@ export default class PeerManager {
     });
     const videoTrack = this.#getLocalVideoTrack(roomId, remoteUserId);
     if (videoTrack) {
-      videoTransceiver.sender.replaceTrack(videoTrack).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to attach video track", error);
+      videoTransceiver.sender.replaceTrack(videoTrack).catch(() => {
+        voiceLog.warn("[voice] failed to attach video track");
       });
     }
 
@@ -318,12 +325,9 @@ export default class PeerManager {
       remoteUserId
     );
     if (screenAudioTrack) {
-      screenAudioTransceiver.sender
-        .replaceTrack(screenAudioTrack)
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to attach screen audio track", error);
-        });
+      screenAudioTransceiver.sender.replaceTrack(screenAudioTrack).catch(() => {
+        voiceLog.warn("[voice] failed to attach screen audio track");
+      });
     }
 
     pc.ontrack = (event) => {
@@ -345,40 +349,30 @@ export default class PeerManager {
         this.#sendSignal(roomId, remoteUserId, {
           type: "candidate",
           candidate: candidatePayload,
-        }).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to send candidate", error);
+        }).catch(() => {
+          voiceLog.warn("[voice] failed to send candidate");
         });
       } else {
-        this.#flushQueuedSignals(roomId, remoteUserId).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to flush signal queue", error);
+        this.#flushQueuedSignals(roomId, remoteUserId).catch(() => {
+          voiceLog.warn("[voice] failed to flush signal queue");
         });
       }
     };
 
     pc.onicegatheringstatechange = () => {
       if (pc.iceGatheringState === "complete") {
-        this.#flushQueuedSignals(roomId, remoteUserId).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to flush signal queue", error);
+        this.#flushQueuedSignals(roomId, remoteUserId).catch(() => {
+          voiceLog.warn("[voice] failed to flush signal queue");
         });
       }
     };
 
-    pc.onicecandidateerror = (event) => {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[voice] ICE candidate error for user ${remoteUserId}`,
-        event
-      );
+    pc.onicecandidateerror = () => {
+      voiceLog.warn("[voice] ICE candidate error for peer");
     };
 
     pc.onconnectionstatechange = () => {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[voice] connectionState ${pc.connectionState} for user ${remoteUserId}`
-      );
+      voiceLog.info(`[voice] connectionState ${pc.connectionState} for peer`);
       if (pc.connectionState === "connected") {
         this.#clearOfferRetry(roomId, remoteUserId);
         this.#clearPeerRestart(roomId, remoteUserId);
@@ -405,9 +399,8 @@ export default class PeerManager {
     };
 
     pc.oniceconnectionstatechange = () => {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[voice] iceConnectionState ${pc.iceConnectionState} for user ${remoteUserId}`
+      voiceLog.info(
+        `[voice] iceConnectionState ${pc.iceConnectionState} for peer`
       );
       if (pc.iceConnectionState === "failed") {
         this.#schedulePeerRestart(roomId, remoteUserId, { immediate: true });
@@ -482,9 +475,9 @@ export default class PeerManager {
       // An inbound offer/answer is already mid-flight on this peer; the
       // inbound handler will drive negotiation. The connection timeout in
       // #startConnectionTimeout is the safety net if it stalls.
-      // eslint-disable-next-line no-console
-      console.log(
-        `[voice] skipping offer for user ${remoteUserId}: signalingState=${pc.signalingState}`
+
+      voiceLog.info(
+        `[voice] skipping offer for peer: signalingState=${pc.signalingState}`
       );
       return;
     }
@@ -492,13 +485,11 @@ export default class PeerManager {
     try {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      this.#sendSignal(roomId, remoteUserId, offer).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to send offer", error);
+      this.#sendSignal(roomId, remoteUserId, offer).catch(() => {
+        voiceLog.warn("[voice] failed to send offer");
       });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to create offer", error);
+    } catch {
+      voiceLog.warn("[voice] failed to create offer");
     }
   }
 
@@ -514,9 +505,8 @@ export default class PeerManager {
     const attempts = this.#offerRetryAttempts.get(key) || 0;
 
     if (attempts >= PeerManager.#maxOfferRetries) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[voice] max offer retries (${PeerManager.#maxOfferRetries}) reached for user ${remoteUserId}`
+      voiceLog.warn(
+        `[voice] max offer retries (${PeerManager.#maxOfferRetries}) reached for peer`
       );
       return;
     }
@@ -526,9 +516,8 @@ export default class PeerManager {
       timing.maxOfferRetryDelayMs
     );
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] scheduling offer retry for user ${remoteUserId} (attempt ${attempts + 1}/${PeerManager.#maxOfferRetries}, delay ${actualDelay}ms)`
+    voiceLog.info(
+      `[voice] scheduling offer retry for peer (attempt ${attempts + 1}/${PeerManager.#maxOfferRetries}, delay ${actualDelay}ms)`
     );
 
     const timer = setTimeout(async () => {
@@ -553,9 +542,9 @@ export default class PeerManager {
     const queue = this.#pendingCandidates.get(key) || [];
     queue.push(candidate);
     this.#pendingCandidates.set(key, queue);
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] queued ICE candidate for user ${remoteUserId} (${queue.length} pending)`
+
+    voiceLog.info(
+      `[voice] queued ICE candidate for peer (${queue.length} pending)`
     );
   }
 
@@ -568,20 +557,16 @@ export default class PeerManager {
     }
 
     this.#pendingCandidates.delete(key);
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] flushing ${candidates.length} queued ICE candidates for user ${remoteUserId}`
+
+    voiceLog.info(
+      `[voice] flushing ${candidates.length} queued ICE candidates for peer`
     );
 
     for (const candidate of candidates) {
       try {
         await pc.addIceCandidate(new RTCIceCandidate(candidate));
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] failed to add queued ICE candidate for user ${remoteUserId}`,
-          error
-        );
+      } catch {
+        voiceLog.warn("[voice] failed to add queued ICE candidate for peer");
       }
     }
   }
@@ -654,9 +639,8 @@ export default class PeerManager {
       // and the disconnected/failed handlers restart those if checks truly
       // fail, so they are covered without an app-level teardown.
       if (pc.connectionState === "new") {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] connection stuck in "new" (${timing.connectionTimeoutMs}ms) for user ${remoteUserId}; restarting`
+        voiceLog.warn(
+          `[voice] connection stuck in "new" (${timing.connectionTimeoutMs}ms) for peer; restarting`
         );
         this.#schedulePeerRestart(roomId, remoteUserId, { immediate: true });
       }
@@ -697,9 +681,8 @@ export default class PeerManager {
     const attempts = this.#restartAttempts.get(key) || 0;
 
     if (attempts >= PeerManager.#maxRestartAttempts) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[voice] max restart attempts (${PeerManager.#maxRestartAttempts}) reached for user ${remoteUserId}`
+      voiceLog.warn(
+        `[voice] max restart attempts (${PeerManager.#maxRestartAttempts}) reached for peer`
       );
       return;
     }
@@ -712,17 +695,15 @@ export default class PeerManager {
       timing.maxRestartDelayMs
     );
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] scheduling peer restart for user ${remoteUserId} (attempt ${attempts + 1}/${PeerManager.#maxRestartAttempts}, delay ${delay}ms)`
+    voiceLog.info(
+      `[voice] scheduling peer restart for peer (attempt ${attempts + 1}/${PeerManager.#maxRestartAttempts}, delay ${delay}ms)`
     );
 
     const timer = setTimeout(() => {
       this.#peerReconnectTimers.delete(key);
       this.#restartAttempts.set(key, attempts + 1);
-      this.restart(roomId, remoteUserId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to restart peer connection", error);
+      this.restart(roomId, remoteUserId).catch(() => {
+        voiceLog.warn("[voice] failed to restart peer connection");
       });
     }, delay);
 

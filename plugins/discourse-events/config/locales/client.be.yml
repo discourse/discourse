@@ -13,6 +13,10 @@ be:
             topic_id:
               label: Номер тэмы
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            none: "Няма"
       disable_holiday: "Адключыць"
       enable_holiday: "Уключыць"
       region:

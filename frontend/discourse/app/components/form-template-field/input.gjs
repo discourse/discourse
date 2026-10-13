@@ -21,16 +21,16 @@ const FormTemplateFieldInput = <template>
     {{/if}}
 
     <Input
-      name={{@id}}
       class="form-template-field__input"
-      @value={{@value}}
-      @type={{if @validations.type @validations.type "text"}}
+      disabled={{@attributes.disabled}}
+      maxlength={{@validations.maximum}}
+      minlength={{@validations.minimum}}
+      name={{@id}}
+      pattern={{@validations.pattern}}
       placeholder={{@attributes.placeholder}}
       required={{if @validations.required "required" ""}}
-      pattern={{@validations.pattern}}
-      minlength={{@validations.minimum}}
-      maxlength={{@validations.maximum}}
-      disabled={{@attributes.disabled}}
+      @type={{if @validations.type @validations.type "text"}}
+      @value={{@value}}
       {{on "input" @onChange}}
     />
   </div>

@@ -113,8 +113,10 @@ module Voice
           result[:data]["participants"]
             .to_a
             .filter_map do |participant|
-              id = participant["identity"].to_i
-              id if id.positive?
+              identity = participant["identity"].to_s
+              next unless /\A-?[1-9]\d*\z/.match?(identity)
+
+              identity.to_i
             end
             .sort
 

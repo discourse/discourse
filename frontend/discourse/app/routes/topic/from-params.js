@@ -112,7 +112,8 @@ export default class TopicFromParams extends DiscourseRoute {
           try {
             const result = await resolvePermalink(
               originalTopicPath(topic, params),
-              transition
+              transition,
+              this.router
             );
             if (result.type === "redirect") {
               return params;
@@ -240,6 +241,23 @@ export default class TopicFromParams extends DiscourseRoute {
         topic,
       });
     }
+  }
+
+  @action
+  willTransition(transition) {
+    this.controllerFor("topic").set("previousURL", document.location.pathname);
+
+    transition.followRedirects().finally(() => {
+      const routeName = this.router.currentRouteName;
+
+      if (!routeName?.startsWith("topic.")) {
+        this.header.clearTopic();
+      }
+    });
+
+    // NOTE: omitting this return can break the back button when transitioning quickly between
+    // topics and the latest page.
+    return true;
   }
 
   async #loadNestedModel(topic, params, queryParams) {
@@ -532,22 +550,5 @@ export default class TopicFromParams extends DiscourseRoute {
 
   #truthyQueryParam(value) {
     return value === true || value === "true" || value === "1" || value === 1;
-  }
-
-  @action
-  willTransition(transition) {
-    this.controllerFor("topic").set("previousURL", document.location.pathname);
-
-    transition.followRedirects().finally(() => {
-      const routeName = this.router.currentRouteName;
-
-      if (!routeName?.startsWith("topic.")) {
-        this.header.clearTopic();
-      }
-    });
-
-    // NOTE: omitting this return can break the back button when transitioning quickly between
-    // topics and the latest page.
-    return true;
   }
 }

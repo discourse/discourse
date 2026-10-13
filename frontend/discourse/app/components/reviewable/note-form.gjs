@@ -1,14 +1,21 @@
 import Component from "@glimmer/component";
+import { destroy } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { modifier } from "ember-modifier";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -20,7 +27,37 @@ import { i18n } from "discourse-i18n";
  * @param {Function} [onNoteCreated] - Callback function called when a note is successfully created.
  */
 export default class ReviewableNoteForm extends Component {
+  @service a11y;
   @service appEvents;
+  @service siteSettings;
+  @service toasts;
+
+  mentionAutocomplete = modifier((textarea) => {
+    if (!this.siteSettings.enable_mentions) {
+      return;
+    }
+
+    const textHandler = new TextareaAutocompleteHandler(textarea);
+    const autocomplete = dAutocomplete.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      textHandler,
+      {
+        component: UserAutocompleteResults,
+        key: UserAutocompleteResults.TRIGGER_KEY,
+        dataSource: (term) => userSearch({ term, includeGroups: false }),
+        transformComplete: (user) => {
+          validateSearchResult(user);
+          return user.username;
+        },
+        afterComplete: () => {
+          textarea.focus({ preventScroll: true });
+        },
+      }
+    );
+
+    return () => destroy(autocomplete);
+  });
 
   /**
    * Registers the Form API reference.
@@ -61,6 +98,20 @@ export default class ReviewableNoteForm extends Component {
       // Clear the submitted content
       await this.formApi.set("content", "");
 
+      if (response.unnotified_usernames?.length) {
+        const message = i18n("review.notes.mentions_not_notified", {
+          count: response.unnotified_usernames.length,
+          usernames: response.unnotified_usernames
+            .map((username) => `@${username}`)
+            .join(", "),
+        });
+        this.toasts.warning({
+          duration: "long",
+          data: { message },
+        });
+        this.a11y.announce(message, "polite");
+      }
+
       // Notify any interested plugins that a note has been created.
       this.appEvents.trigger(
         "reviewablenote:created",
@@ -81,30 +132,31 @@ export default class ReviewableNoteForm extends Component {
   <template>
     <div class="reviewable-note-form">
       <Form
-        @data={{hash content=""}}
-        @onSubmit={{this.onSubmit}}
-        @onRegisterApi={{this.registerApi}}
-        @onDirtyCheck={{this.onDirtyCheck}}
         class="reviewable-note-form__form"
+        @data={{hash content=""}}
+        @onDirtyCheck={{this.onDirtyCheck}}
+        @onRegisterApi={{this.registerApi}}
+        @onSubmit={{this.onSubmit}}
         as |form|
       >
         <form.Field
-          @name="content"
-          @type="textarea"
-          @title={{i18n "review.notes.add_note_description"}}
           @format="full"
+          @name="content"
+          @title={{i18n "review.notes.add_note_description"}}
+          @type="textarea"
           @validation="required:trim|length:1,2000"
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
             <field.Control
-              @height={{80}}
-              placeholder={{i18n "review.notes.placeholder"}}
               class="reviewable-note-form__textarea"
+              placeholder={{i18n "review.notes.placeholder"}}
+              @height={{80}}
+              {{this.mentionAutocomplete}}
             />
             <PluginOutlet
-              @name="reviewable-note-form-after-note"
               @connectorTagName="div"
+              @name="reviewable-note-form-after-note"
               @outletArgs={{lazyHash form=form reviewable=@reviewable}}
             />
           </div>
@@ -112,8 +164,8 @@ export default class ReviewableNoteForm extends Component {
 
         <form.Actions>
           <form.Submit
-            @label="review.notes.add_note_button"
             class="btn-small btn-primary"
+            @label="review.notes.add_note_button"
           />
         </form.Actions>
       </Form>

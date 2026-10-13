@@ -14,6 +14,11 @@ export const STYLEGUIDE_PANEL = "styleguide";
 export default class StyleguideSidebarService extends Service {
   @service sidebarState;
 
+  /** Whether the styleguide panel is still the one on screen. */
+  get #isVisible() {
+    return this.sidebarState.currentPanel?.key === STYLEGUIDE_PANEL;
+  }
+
   showSidebar() {
     // Order matters: `setSeparatedMode` turns the switch buttons back on, so hiding them has to
     // come after it, and both have to come after the panel is current.
@@ -41,10 +46,5 @@ export default class StyleguideSidebarService extends Service {
 
     this.sidebarState.isForcingSidebar = false;
     this.sidebarState.forcingSidebarPanel = null;
-  }
-
-  /** Whether the styleguide panel is still the one on screen. */
-  get #isVisible() {
-    return this.sidebarState.currentPanel?.key === STYLEGUIDE_PANEL;
   }
 }

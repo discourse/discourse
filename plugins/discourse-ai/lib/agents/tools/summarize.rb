@@ -135,9 +135,10 @@ module DiscourseAi
               DiscourseAi::Completions::Llm.text_from_response(
                 llm.generate(
                   prompt,
-                  max_tokens: 400,
+                  max_response_tokens: 400,
                   user: bot_user,
                   feature_name: "summarize_tool",
+                  execution_context: context.execution_context,
                 ),
               )
 
@@ -157,9 +158,10 @@ module DiscourseAi
             result =
               llm.generate(
                 concatenation_prompt,
-                max_tokens: 500,
+                max_response_tokens: 500,
                 user: bot_user,
                 feature_name: "summarize_tool",
+                execution_context: context.execution_context,
               )
             DiscourseAi::Completions::Llm.text_from_response(result)
           else

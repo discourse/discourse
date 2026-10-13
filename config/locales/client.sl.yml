@@ -220,10 +220,14 @@ sl:
         enabled: "Je ustvaril ta oglasni trak %{when}. Pojavil se bo na vrhu vsake strani, dokler ga uporabnik ne opusti."
         disabled: "Je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
     topic_admin_menu: "dejanja teme"
+    reorder:
+      removed: "Je odstranil %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
     back_button: "Nazaj"
+    confirm_button: "Potrdi"
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
@@ -645,6 +649,9 @@ sl:
       user_label: "Uporabnik"
       timeline:
         target_deleted: "Prispevek izbrisan"
+      author_penalty:
+        toast:
+          undo: "Razveljavi"
       notes:
         delete: "Izbriši"
       topic_label: "Tema"
@@ -1175,7 +1182,6 @@ sl:
       admin: "%{user} je administrator"
       moderator_tooltip: "Uporabnik je moderator"
       admin_tooltip: "Uporabnik je administrator"
-      silenced_tooltip: "Ta uporabnik je utišan"
       suspended_notice: "Ta uporabnik je suspendiran do %{date}."
       suspended_permanently: "Ta uporabnik je suspendiran"
       suspended_reason: "Razlog: "
@@ -1232,6 +1238,13 @@ sl:
       tracked_topics_link: "Prikaži"
       automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Podrobnosti"
+        never: "Nikoli"
+        status: "Status"
+        statuses:
+          active: "Aktivni"
+          revoked: "Preklican"
       revoke_access: "Prekliči dostop"
       undo_revoke_access: "Razveljavi preklic dostopa"
       api_approved: "Odobreno"
@@ -2090,8 +2103,7 @@ sl:
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
       discard: "Zavrzi"
-      title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
-      title_placeholder_redesign: "Naziv"
+      title_placeholder: "Naziv"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "Zakaj spreminjate prispevek?"
       topic_featured_link_placeholder: "Vnesite povezavo prikazano z naslovom."
@@ -3089,6 +3101,7 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
+      latest_topics: "Zadnje teme"
       description_expand: "Več"
       description_collapse: "Manj"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
@@ -3298,6 +3311,7 @@ sl:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "ponastavi"
         button:
           label: "Filter"
       latest:
@@ -3447,11 +3461,6 @@ sl:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Prislužili to značko %{count} krat"
-        two: "Prislužili to značko %{count} krat"
-        few: "Prislužili to značko %{count} krat"
-        other: "Prislužili to značko %{count} krat"
       granted_on: "Podeljeno %{date}"
       title: Značke
       allow_title: "To značko lahko uporabite kot naziv"
@@ -3481,6 +3490,7 @@ sl:
         posting:
           name: Prispevki
     download_calendar:
+      title: "Dodaj v koledar"
       download: "Naloži"
     tagging:
       other_tags: "Druge oznake"
@@ -3821,6 +3831,60 @@ sl:
       config:
         developer:
           title: "Razvijalci"
+        mcp:
+          tabs:
+            access: "Dostopnost"
+            activity: "Aktivnost"
+          overview:
+            status: "Status"
+          access:
+            title: "Dostopnost"
+            group: "Skupina"
+            groups: "Skupine"
+            actions: "Akcije"
+            edit: "Uredi"
+            delete: "Izbriši"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Po meri"
+            automatic: "Samodejno"
+          authorizations:
+            user: "Uporabnik"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Čas"
+            user: "Uporabnik"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Onemogočeno"
+            client_trust:
+              approved: "Potrjeno"
+            authorization_status:
+              active: "Aktivni"
+              revoked: "Preklican"
+            activity_outcome:
+              success: "Uspeh"
+              error: "napaka"
+            primitive_state:
+              enabled: "Vključeno"
+              disabled: "Onemogočeno"
+            primitive_kind:
+              all: "Vse vrste"
+            primitive_risk:
+              moderation: "Moderiranje"
+            filter:
+              all: "Vsi"
+          never: "Nikoli"
+          actions:
+            revoke: "Odstrani"
         emojis:
           title: "Emoji"
         flags:
@@ -3941,6 +4005,8 @@ sl:
       site_traffic_explorer:
         metric_information: "O %{metric}"
         apply: "Uporabi"
+        filters:
+          language: "Jezik"
         series:
           anonymous_human: "Anonimni"
       dashboard:
@@ -4038,6 +4104,7 @@ sl:
         site_traffic:
           series:
             anonymous: "Anonimni"
+          crawler_learn_more: "Več o tem"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"
@@ -4399,6 +4466,7 @@ sl:
           upload: "Prenesi"
           unsaved_changes_alert: "Niste shranili sprememb - ali jih želite zavreči in nadaljevati?"
           discard: "Zavrzi"
+          leave: "Zapusti"
           direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"
@@ -4864,11 +4932,11 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        search: "Išči besedilo, ki bi ga rad/a uredil/a"
+        search_label: "Išči"
+        theme_disabled: "Onemogočeno"
+        filters: "Filtri"
         edit: "Uredi"
-        revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
-        go_back: "Nazaj na iskalnik"
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."

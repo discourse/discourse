@@ -5,7 +5,7 @@ import loaderShim from "discourse/lib/loader-shim";
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
-  importSync("@ember-compat/tracked-built-ins")
+  importSync("tracked-built-ins")
 );
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
@@ -63,6 +63,8 @@ loaderShim("@ember/template-factory", () =>
   importSync("@ember/template-factory")
 );
 loaderShim("@ember/template", () => importSync("@ember/template"));
+// Needed in production: plugins register their dynamic imports so tests wait for them.
+loaderShim("@ember/test-waiters", () => importSync("@ember/test-waiters"));
 loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
@@ -77,7 +79,6 @@ loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
-loaderShim("ember", () => importSync("ember"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
@@ -182,12 +183,6 @@ loaderShim("ember-this-fallback/this-fallback-helper", () =>
 loaderShim("ember-this-fallback/try-lookup-helper", () =>
   importSync("./lib/ember-this-fallback/try-lookup-helper")
 );
-loaderShim("ember-buffered-proxy/helpers", () =>
-  importSync("ember-buffered-proxy/helpers")
-);
-loaderShim("ember-buffered-proxy/mixin", () =>
-  importSync("ember-buffered-proxy/mixin")
-);
 loaderShim("ember-buffered-proxy/proxy", () =>
-  importSync("ember-buffered-proxy/proxy")
+  importSync("./lib/buffered-proxy")
 );

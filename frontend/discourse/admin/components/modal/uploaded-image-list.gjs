@@ -40,15 +40,15 @@ export default class UploadedImageList extends Component {
   <template>
     <DModal
       class="uploaded-image-list"
-      @title={{i18n @model.title}}
       @closeModal={{@closeModal}}
+      @title={{i18n @model.title}}
     >
       <:body>
         <div class="selectable-avatars">
           {{#each this.images as |image|}}
             <a
-              href
               class="selectable-avatar"
+              href
               {{on "click" (fn this.remove image)}}
             >
               {{dBoundAvatarTemplate image "huge"}}
@@ -64,9 +64,9 @@ export default class UploadedImageList extends Component {
       <:footer>
         <DButton @action={{this.close}} @label="close" />
         <ImagesUploader
-          @uploading={{this.uploading}}
-          @done={{this.uploadDone}}
           class="pull-right"
+          @done={{this.uploadDone}}
+          @uploading={{this.uploading}}
         />
       </:footer>
     </DModal>

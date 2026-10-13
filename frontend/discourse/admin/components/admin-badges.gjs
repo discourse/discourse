@@ -30,53 +30,53 @@ export default class AdminBadges extends Component {
   <template>
     <div class="badges">
       <DPageHeader
-        @titleLabel={{i18n "admin.config.badges.title"}}
         @descriptionLabel={{i18n "admin.config.badges.header_description"}}
         @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540"
+        @titleLabel={{i18n "admin.config.badges.title"}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+          <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
           <DBreadcrumbsItem
-            @path="/admin/badges"
             @label={{i18n "admin.config.badges.title"}}
+            @path="/admin/badges"
           />
         </:breadcrumbs>
         <:actions as |actions|>
           <actions.Primary
-            @route="adminBadges.show"
-            @routeModels="new"
+            class="new-badge"
             @icon="plus"
             @label="admin.badges.new"
-            class="new-badge"
+            @route="adminBadges.show"
+            @routeModels="new"
           />
 
           <actions.Default
-            @route="adminBadges.award"
-            @routeModels="new"
+            class="award-badge"
             @icon="upload"
             @label="admin.badges.mass_award.title"
-            class="award-badge"
+            @route="adminBadges.award"
+            @routeModels="new"
           />
 
           <actions.Default
-            @action={{this.editGroupings}}
-            @title="admin.badges.group_settings"
-            @label="admin.badges.group_settings"
-            @icon="gear"
             class="edit-groupings-btn"
+            @action={{this.editGroupings}}
+            @icon="gear"
+            @label="admin.badges.group_settings"
+            @title="admin.badges.group_settings"
           />
         </:actions>
         <:tabs>
           <DNavItem
-            @route="adminBadges.settings"
-            @label="settings"
             class="admin-badges-tabs__settings"
+            @label="settings"
+            @route="adminBadges.settings"
           />
           <DNavItem
-            @route="adminBadges.index"
-            @label="admin.config.badges.title"
-            @currentWhen="adminBadges.show adminBadges.index"
             class="admin-badges-tabs__index"
+            @currentWhen="adminBadges.show adminBadges.index"
+            @label="admin.config.badges.title"
+            @route="adminBadges.index"
           />
         </:tabs>
       </DPageHeader>

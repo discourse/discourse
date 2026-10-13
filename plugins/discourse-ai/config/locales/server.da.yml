@@ -16,8 +16,42 @@ da:
         image_generation_custom:
           name: "Tilpasset"
     ai_bot:
+      navigation:
+        users:
+          title: "Brugere"
+        groups:
+          title: "Grupper"
+        categories:
+          title: "Kategorier"
+        tags:
+          title: "Mærker"
+        themes:
+          title: "Temaer"
+        backups:
+          title: "Sikkerhedskopier"
       read_post:
         unknown_post: "indlæg"
+      chat_tool_approval:
+        topic_states:
+          open: "Åbn"
+          closed: "Lukket"
+          active: "Aktiv"
+          deleted: "Slettet"
+        solution_post: "Indlæg #%{number}"
+        duration_label: "Varighed:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dage"
+        posts_label: "Indlæg"
+        category_label: "Kategori"
+        category_fields:
+          name: "navn"
+          description: "beskrivelse"
+          color: "farve"
+          text_color: "tekst farve"
+        approve_label: "Ja"
+        reject_label: "Nej"
+        empty_value: "Tom"
       tool_summary:
         search: "Søg"
         time: "Tidspunkt"

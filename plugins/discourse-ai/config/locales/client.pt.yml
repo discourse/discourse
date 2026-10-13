@@ -16,6 +16,12 @@ pt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falhado"
         emotion:
           title: "Emoção"
         reports:
@@ -327,8 +333,6 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -357,6 +361,15 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+      ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Predefinição"
+          apply: "Aplicar"
+        share: "Partilhar"
+        create_link: "Criar ligação"
+        copy_link: "Copiar hiperligação"
+        filter_all: "Todos"
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:

@@ -120,22 +120,22 @@ export default class WebhookEvent extends Component {
 
       <div class="col actions">
         <DButton
-          @icon={{this.expandRequestIcon}}
+          class="btn-default"
           @action={{this.toggleRequest}}
+          @icon={{this.expandRequestIcon}}
           @label="admin.web_hooks.events.request"
-          class="btn-default"
         />
         <DButton
-          @icon={{this.expandResponseIcon}}
+          class="btn-default"
           @action={{this.toggleResponse}}
+          @icon={{this.expandResponseIcon}}
           @label="admin.web_hooks.events.response"
-          class="btn-default"
         />
         <DButton
-          @icon="arrows-rotate"
-          @action={{this.redeliver}}
-          @label="admin.web_hooks.events.redeliver"
           class="btn-default"
+          @action={{this.redeliver}}
+          @icon="arrows-rotate"
+          @label="admin.web_hooks.events.redeliver"
         />
       </div>
 

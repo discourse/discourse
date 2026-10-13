@@ -58,15 +58,6 @@ export default class RecalculateScoresForm extends Component {
     this.messageBus.unsubscribe("/recalculate_scores", this.onMessage);
   }
 
-  @bind
-  onMessage(message) {
-    if (message.success) {
-      this.status = "complete";
-      this.args.model.recalculate_scores_remaining = message.remaining;
-      this.remaining = message.remaining;
-    }
-  }
-
   get remainingText() {
     return i18n("gamification.daily_update_scores_availability", {
       count: this.remaining,
@@ -95,6 +86,15 @@ export default class RecalculateScoresForm extends Component {
     return `${pastDate} - ${today.format(
       i18n("dates.long_with_year_no_time")
     )}`;
+  }
+
+  @bind
+  onMessage(message) {
+    if (message.success) {
+      this.status = "complete";
+      this.args.model.recalculate_scores_remaining = message.remaining;
+      this.remaining = message.remaining;
+    }
   }
 
   @bind
@@ -151,22 +151,22 @@ export default class RecalculateScoresForm extends Component {
             <div class="input-group">
               <label>{{i18n "gamification.update_scores_help"}}</label>
               <ComboBox
-                @id="update-range"
-                @valueProperty="value"
                 @content={{this.updateRange}}
-                @value={{this.updateRangeValue}}
+                @id="update-range"
                 @onChange={{fn (mut this.updateRangeValue)}}
+                @value={{this.updateRangeValue}}
+                @valueProperty="value"
               />
 
               {{#if (eq this.updateRangeValue 5)}}
                 <div class="input-group -custom-range">
                   <label>{{i18n "gamification.custom_range_from"}}</label>
                   <DatePickerPast
+                    class="date-input"
                     @id="custom-from-date"
+                    @onSelect={{fn (mut this.recalculateFromDate)}}
                     @placeholder="yyyy-mm-dd"
                     @value={{this.recalculateFromDate}}
-                    @onSelect={{fn (mut this.recalculateFromDate)}}
-                    class="date-input"
                   />
                 </div>
               {{else}}
@@ -181,23 +181,23 @@ export default class RecalculateScoresForm extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
+          id="apply-section"
           @action={{this.apply}}
-          @label="gamification.apply"
           @ariaLabel="gamification.apply"
           @disabled={{this.applyDisabled}}
-          id="apply-section"
-          class="btn-primary"
+          @label="gamification.apply"
         />
         <DButton
+          class="btn-default"
+          id="cancel-section"
           @action={{@closeModal}}
+          @ariaLabel="gamification.cancel"
           @label={{if
             (eq this.status "complete")
             "gamification.close"
             "gamification.cancel"
           }}
-          @ariaLabel="gamification.cancel"
-          id="cancel-section"
-          class="btn-default"
         />
 
         <div class="recalculate-modal__footer-text">{{this.remainingText}}</div>

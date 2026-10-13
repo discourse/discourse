@@ -27,7 +27,7 @@ module Boards
     end
 
     def can_destroy(guardian:, board:)
-      guardian.can_destroy_boards_board?(board)
+      guardian.can_destroy_board?(board)
     end
 
     def publish_update(board:, params:)

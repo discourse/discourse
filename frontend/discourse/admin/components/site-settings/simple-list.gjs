@@ -16,11 +16,11 @@ export default class SiteSettingSimpleList extends Component {
   <template>
     <div ...attributes>
       <SimpleList
-        @values={{this.value}}
+        @allowAny={{this.setting.allow_any}}
+        @choices={{this.setting.choices}}
         @inputDelimiter={{this.inputDelimiter}}
         @onChange={{this.onChange}}
-        @choices={{this.setting.choices}}
-        @allowAny={{this.setting.allow_any}}
+        @values={{this.value}}
       />
     </div>
   </template>

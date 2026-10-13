@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# Forum Best Friend Forever ranking
-# Score is informative only, do not show in UI
 module DiscourseRewind
   module Action
     class Fbff < BaseReport
@@ -30,63 +28,23 @@ module DiscourseRewind
       def call
         return FakeData if should_use_fake_data?
 
-        most_liked_users =
-          like_query(user, date)
-            .where(acting_user_id: user.id)
-            .group(:user_id)
+        scores = Hash.new(0)
+        [
+          [like_query.where(acting_user_id: user.id), :user_id, LIKE_SCORE],
+          [like_query.where(user_id: user.id), :acting_user_id, LIKE_SCORE],
+          [post_query.where(posts: { user_id: user.id }), "replies.user_id", REPLY_SCORE],
+          [post_query.where(replies: { user_id: user.id }), "posts.user_id", REPLY_SCORE],
+        ].each do |query, friend_column, weight|
+          query
+            .where(friend_column => eligible_users)
+            .group(friend_column)
             .order("COUNT(*) DESC")
             .limit(MAX_SUMMARY_RESULTS)
-            .pluck("user_actions.user_id, COUNT(*)")
-            .map { |user_id, count| { user_id => count } }
-            .reduce({}, :merge)
+            .count
+            .each { |user_id, count| scores[user_id] += count * weight }
+        end
 
-        most_liked_by_users =
-          like_query(user, date)
-            .where(user: user)
-            .group(:acting_user_id)
-            .order("COUNT(*) DESC")
-            .limit(MAX_SUMMARY_RESULTS)
-            .pluck("acting_user_id, COUNT(*)")
-            .map { |acting_user_id, count| { acting_user_id => count } }
-            .reduce({}, :merge)
-
-        users_who_most_replied_me =
-          post_query(user, date)
-            .where(posts: { user_id: user.id })
-            .group("replies.user_id")
-            .order("COUNT(*) DESC")
-            .limit(MAX_SUMMARY_RESULTS)
-            .pluck("replies.user_id, COUNT(*)")
-            .map { |user_id, count| { user_id => count } }
-            .reduce({}, :merge)
-
-        users_i_most_replied =
-          post_query(user, date)
-            .where("replies.user_id = ?", user.id)
-            .group("posts.user_id")
-            .order("COUNT(*) DESC")
-            .limit(MAX_SUMMARY_RESULTS)
-            .pluck("posts.user_id, COUNT(*)")
-            .map { |user_id, count| { user_id => count } }
-            .reduce({}, :merge)
-
-        # NOTE: At some point maybe we want to include chat interactions
-        # in the calculations here.
-        fbffs = [
-          apply_score(most_liked_users, LIKE_SCORE),
-          apply_score(most_liked_by_users, LIKE_SCORE),
-          apply_score(users_who_most_replied_me, REPLY_SCORE),
-          apply_score(users_i_most_replied, REPLY_SCORE),
-        ]
-
-        fbff_id =
-          fbffs
-            .flatten
-            .inject { |h1, h2| h1.merge(h2) { |_, v1, v2| v1 + v2 } }
-            &.sort_by { |_, v| -v }
-            &.first
-            &.first
-
+        fbff_id = scores.max_by(&:last)&.first
         return if !fbff_id
 
         {
@@ -98,66 +56,43 @@ module DiscourseRewind
         }
       end
 
-      def post_query(user, date)
-        Post
-          .with(eligible_users: User.real.activated.not_suspended.select(:id))
-          .joins(:topic)
-          .includes(:topic)
+      def post_query
+        self
+          .class
+          .publicly_visible_posts
+          .joins(
+            "INNER JOIN posts replies ON replies.topic_id = posts.topic_id AND replies.post_number = posts.reply_to_post_number",
+          )
+          .where(posts: { post_type: Post.types[:regular], created_at: date })
           .where(
-            "posts.post_type IN (?)",
-            Topic.visible_post_types(user, include_moderator_actions: false),
+            replies: {
+              post_type: Post.types[:regular],
+              hidden: false,
+              created_at: date,
+              deleted_at: nil,
+            },
           )
-          .joins(
-            "INNER JOIN posts replies ON posts.topic_id = replies.topic_id AND posts.reply_to_post_number = replies.post_number",
-          )
-          .joins(
-            "INNER JOIN topics ON replies.topic_id = topics.id
-            AND topics.archetype <> 'private_message'
-            AND replies.post_type IN (#{Topic.visible_post_types(user, include_moderator_actions: false).join(",")})",
-          )
-          .joins("INNER JOIN eligible_users eu ON eu.id = replies.user_id")
-          .joins("INNER JOIN eligible_users eu2 ON eu2.id = posts.user_id")
-          .where("replies.created_at BETWEEN ? AND ?", date.first, date.last)
-          .where("posts.created_at BETWEEN ? AND ?", date.first, date.last)
           .where("replies.user_id <> posts.user_id")
-          .where(<<~SQL, user_id: user.id)
-            NOT EXISTS (
-              SELECT 1 FROM muted_users
-              WHERE muted_users.user_id = :user_id
-              AND muted_users.muted_user_id IN (replies.user_id, posts.user_id)
-            )
-            AND NOT EXISTS (
-              SELECT 1 FROM ignored_users
-              WHERE ignored_users.user_id = :user_id
-              AND ignored_users.ignored_user_id IN (replies.user_id, posts.user_id)
-            )
-          SQL
       end
 
-      def like_query(user, date)
+      def like_query
         UserAction
-          .with(eligible_users: User.real.activated.not_suspended.select(:id))
           .joins(:target_topic, :target_post)
-          .joins("INNER JOIN eligible_users eu ON eu.id = user_actions.user_id")
-          .joins("INNER JOIN eligible_users eu2 ON eu2.id = user_actions.acting_user_id")
-          .where(created_at: date)
-          .where(action_type: UserAction::WAS_LIKED)
-          .where(<<~SQL, user_id: user.id)
-            NOT EXISTS (
-              SELECT 1 FROM muted_users
-              WHERE muted_users.user_id = :user_id
-              AND muted_users.muted_user_id IN (user_actions.user_id, user_actions.acting_user_id)
-            )
-            AND NOT EXISTS (
-              SELECT 1 FROM ignored_users
-              WHERE ignored_users.user_id = :user_id
-              AND ignored_users.ignored_user_id IN (user_actions.user_id, user_actions.acting_user_id)
-            )
-          SQL
+          .merge(self.class.publicly_visible_topics)
+          .where(action_type: UserAction::WAS_LIKED, created_at: date)
+          .where(posts: { post_type: Post.types[:regular], hidden: false })
       end
 
-      def apply_score(users, score)
-        users.map { |user_id, count| { user_id => count * score } }
+      private
+
+      def eligible_users
+        @eligible_users ||=
+          User
+            .real
+            .activated
+            .not_suspended
+            .where.not(id: user.muted_user_ids | user.ignored_user_ids)
+            .select(:id)
       end
     end
   end

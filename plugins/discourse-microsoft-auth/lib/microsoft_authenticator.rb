@@ -23,8 +23,12 @@ class MicrosoftAuthenticator < ::Auth::ManagedAuthenticator
                         }
   end
 
-  def enabled?
-    SiteSetting.microsoft_auth_enabled
+  def enable_setting
+    :microsoft_auth_enabled
+  end
+
+  def required_settings
+    %i[microsoft_auth_client_id microsoft_auth_client_secret]
   end
 
   def primary_email_verified?(auth_token)

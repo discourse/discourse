@@ -135,8 +135,8 @@ export default class ChatMessageCreatorSearch extends Component {
 
   <template>
     <ListHandler
-      @items={{this.items}}
       @highlightedItem={{this.highlightedChatable}}
+      @items={{this.items}}
       @onHighlight={{this.highlightChatable}}
       @onSelect={{this.selectChatable}}
       @onShifSelect={{this.prefillAddMembers}}
@@ -151,16 +151,16 @@ export default class ChatMessageCreatorSearch extends Component {
 
             <DButton
               class="btn-flat chat-message-creator__search-input__cancel-button"
-              @icon="xmark"
               @action={{@close}}
+              @icon="xmark"
             />
           </div>
 
           <List
-            @items={{this.items}}
             @highlightedItem={{this.highlightedChatable}}
-            @onSelect={{this.selectChatable}}
+            @items={{this.items}}
             @onHighlight={{this.highlightChatable}}
+            @onSelect={{this.selectChatable}}
             @onShiftSelect={{this.prefillAddMembers}}
           />
         </div>

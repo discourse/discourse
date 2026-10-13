@@ -74,25 +74,25 @@ export default class PostVotingCommentActions extends Component {
         <DButton
           class="post-voting-comments__comment-actions-edit-link btn-transparent"
           @action={{@updateComment}}
+          @ariaLabel="post_voting.post.post_voting_comment.actions.edit"
           @icon="pencil"
           @title="post_voting.post.post_voting_comment.actions.edit"
-          @ariaLabel="post_voting.post.post_voting_comment.actions.edit"
         />
         {{#if this.canFlag}}
           <DButton
             class="post-voting-comments__comment-actions-flag-link btn-transparent"
             @action={{this.showFlag}}
+            @ariaLabel="post_voting.post.post_voting_comment.actions.flag"
             @icon="flag"
             @title="post_voting.post.post_voting_comment.actions.flag"
-            @ariaLabel="post_voting.post.post_voting_comment.actions.flag"
           />
         {{/if}}
         <DButton
           class="post-voting-comments__comment-actions-delete-link btn-transparent"
           @action={{this.deleteConfirm}}
+          @ariaLabel="post_voting.post.post_voting_comment.actions.delete"
           @icon="far-trash-can"
           @title="post_voting.post.post_voting_comment.actions.delete"
-          @ariaLabel="post_voting.post.post_voting_comment.actions.delete"
         />
 
       </span>

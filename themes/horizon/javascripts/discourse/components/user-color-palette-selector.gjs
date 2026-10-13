@@ -180,15 +180,15 @@ export default class UserColorPaletteSelector extends Component {
   <template>
     {{#unless (isEmpty this.userColorPalettes)}}
       <DMenu
-        @identifier="user-color-palette-selector"
-        @placementStrategy="fixed"
-        @onRegisterApi={{this.onRegisterMenu}}
         class={{dConcatClass
           "btn-flat user-color-palette-selector sidebar-footer-actions-button"
           (if this.cssLoaded "user-color-palette-css-loaded")
         }}
         data-selected-color-palette-id={{this.selectedColorPaletteId}}
+        @identifier="user-color-palette-selector"
         @inline={{true}}
+        @onRegisterApi={{this.onRegisterMenu}}
+        @placementStrategy="fixed"
       >
         <:trigger>
           {{dIcon "paintbrush"}}
@@ -198,9 +198,9 @@ export default class UserColorPaletteSelector extends Component {
             <div class="user-color-palette-menu__content">
               {{#each this.userColorPalettes as |colorPalette|}}
                 <UserColorPaletteMenuItem
-                  @selectedColorPaletteId={{this.selectedColorPaletteId}}
                   @colorPalette={{colorPalette}}
                   @paletteSelected={{this.paletteSelected}}
+                  @selectedColorPaletteId={{this.selectedColorPaletteId}}
                 />
               {{/each}}
             </div>

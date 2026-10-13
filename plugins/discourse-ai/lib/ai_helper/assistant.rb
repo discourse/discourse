@@ -33,7 +33,12 @@ module DiscourseAi
       end
 
       def available_prompts(user)
-        key = "prompt_cache_#{I18n.locale}"
+        key =
+          if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+            "prompt_cache_#{I18n.locale}_everyone_disallowed"
+          else
+            "prompt_cache_#{I18n.locale}_everyone_allowed"
+          end
         prompts = self.class.prompt_cache.fetch(key) { all_prompts }
 
         prompts
@@ -285,7 +290,7 @@ module DiscourseAi
             end
           end
 
-        bot.reply(context, llm_args: { max_tokens: 1024 }, &buffer_blk)
+        bot.reply(context, llm_args: { max_response_tokens: 1024 }, &buffer_blk)
 
         raw_caption = ""
 
@@ -305,6 +310,11 @@ module DiscourseAi
         raise Discourse::InvalidAccess if !user.in_any_groups?(ai_agent.allowed_group_ids.to_a)
 
         ai_agent
+      end
+
+      def ensure_mode_access_for_location!(helper_mode, user, location)
+        ensure_mode_access!(helper_mode, user)
+        raise Discourse::InvalidAccess if !location_map(helper_mode).include?(location)
       end
 
       private

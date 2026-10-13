@@ -25,6 +25,7 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
       end
     end
   end
+
   let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
   let(:users_resource) do
     related = groups_resource
@@ -39,19 +40,20 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
   let(:requested) { JsonApiKit::Page::Requested.for }
 
   describe "#listing" do
-    subject(:related_listing) { relationship.listing(params, guardian:, scoped_to:) }
+    subject(:related_listing) { relationship.listing(params, guardian:, scoped_to:, edition:) }
 
     let(:params) { { fields: { "users" => %w[username] } } }
     let(:guardian) { Guardian.new(author) }
     let(:scoped_to) { JsonApiKit::Scoping.for(User.where(id: author.id)) }
     let(:listing) { instance_double(JsonApiKit::Query::Collection) }
+    let(:edition) { JsonApiKit::Edition.current }
 
     before { allow(users_resource).to receive(:all).and_return(listing) }
 
     it "asks the resource on the other side for a listing" do
       related_listing
 
-      expect(users_resource).to have_received(:all).with(params, guardian:, scoped_to:)
+      expect(users_resource).to have_received(:all).with(params, guardian:, scoped_to:, edition:)
     end
 
     it "returns the listing that resource reads" do
@@ -124,7 +126,7 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
     describe "#linkage" do
       subject(:linkage) { relationship.linkage(records) }
 
-      let(:order) { posts_resource.order }
+      let(:order) { posts_resource.order({}) }
       let(:records) do
         JsonApiKit::Records.new(
           [first_post, second_post, third_post].map do

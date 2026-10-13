@@ -60,9 +60,9 @@ export default class RovingFocusToolbarExample extends Component {
 
   <template>
     <div
+      aria-label={{i18n "styleguide.sections.roving_focus.toolbar.label"}}
       class="roving-demo__toolbar"
       role="toolbar"
-      aria-label={{i18n "styleguide.sections.roving_focus.toolbar.label"}}
       {{dRovingFocus
         orientation="horizontal"
         itemSelector=".roving-demo__item"
@@ -73,26 +73,26 @@ export default class RovingFocusToolbarExample extends Component {
       {{#each this.toggles key="id" as |item|}}
         {{! eslint-disable-next-line ember/template-no-nested-interactive }}
         <button
-          type="button"
-          class="roving-demo__item"
           aria-pressed={{item.pressed}}
+          class="roving-demo__item"
+          type="button"
           {{on "click" (fn this.toggle item.id)}}
         >{{item.label}}</button>
       {{/each}}
 
       <span
+        aria-orientation="vertical"
         class="roving-demo__separator"
         role="separator"
-        aria-orientation="vertical"
       ></span>
 
       {{#each this.commands key="id" as |command|}}
         {{! eslint-disable-next-line ember/template-no-nested-interactive }}
         <button
-          type="button"
+          aria-disabled={{command.ariaDisabled}}
           class="roving-demo__item"
           disabled={{command.disabled}}
-          aria-disabled={{command.ariaDisabled}}
+          type="button"
         >{{command.label}}</button>
       {{/each}}
 

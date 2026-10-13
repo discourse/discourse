@@ -13,6 +13,11 @@ sq:
             topic_id:
               label: ID e temës
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Njoftim"
+            none: "Asnjë"
       disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:
@@ -33,6 +38,9 @@ sq:
         show_more: "Shfaq më shumë"
         show_less: "Shfaq më pak"
       show_all: "Shfaqni të gjitha"
+      other_hosts:
+        one: "dhe %{count} të tjera"
+        other: "dhe %{count} të tjerë"
       bulk_invite: "Ftesë me shumicë"
       bulk_invite_modal:
         confirm: "konfirmoni"

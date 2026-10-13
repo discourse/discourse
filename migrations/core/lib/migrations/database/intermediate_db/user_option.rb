@@ -34,6 +34,7 @@ module Migrations
             enable_smart_lists,
             enable_upcoming_change_available_notifications,
             external_links_in_new_tab,
+            hidden_composer_toolbar_buttons,
             hide_presence,
             hide_profile,
             hide_profile_and_presence,
@@ -65,7 +66,7 @@ module Migrations
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -96,6 +97,7 @@ module Migrations
         # @param enable_smart_lists                               [Boolean, nil]
         # @param enable_upcoming_change_available_notifications   [Boolean, nil]
         # @param external_links_in_new_tab                        [Boolean, nil]
+        # @param hidden_composer_toolbar_buttons                  [String, nil]
         # @param hide_presence                                    [Boolean, nil]
         # @param hide_profile                                     [Boolean, nil]
         # @param hide_profile_and_presence                        [Boolean, nil]
@@ -152,6 +154,7 @@ module Migrations
           enable_smart_lists: nil,
           enable_upcoming_change_available_notifications: nil,
           external_links_in_new_tab: nil,
+          hidden_composer_toolbar_buttons: nil,
           hide_presence: nil,
           hide_profile: nil,
           hide_profile_and_presence: nil,
@@ -208,6 +211,7 @@ module Migrations
             Migrations::Database.format_boolean(enable_smart_lists),
             Migrations::Database.format_boolean(enable_upcoming_change_available_notifications),
             Migrations::Database.format_boolean(external_links_in_new_tab),
+            hidden_composer_toolbar_buttons,
             Migrations::Database.format_boolean(hide_presence),
             Migrations::Database.format_boolean(hide_profile),
             Migrations::Database.format_boolean(hide_profile_and_presence),

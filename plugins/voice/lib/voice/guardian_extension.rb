@@ -91,6 +91,18 @@ module Voice
       room.public? || can_manage_voice_room?(room)
     end
 
+    # Room-independent half of can_invite_voice_agent?, so the client can learn
+    # whether to offer the action before any room is chosen.
+    def can_invite_voice_agents?
+      return false unless can_access_voice?
+      user.in_any_groups?(SiteSetting.voice_livekit_agent_invite_allowed_groups_map)
+    end
+
+    def can_invite_voice_agent?(room)
+      can_invite_voice_agents? && can_join_voice_room?(room) && room.public? &&
+        Voice::AgentBot.available?
+    end
+
     def ensure_can_invite_to_voice_room!(room)
       unless can_invite_to_voice_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("voice.errors.not_authorized"))
@@ -132,6 +144,29 @@ module Voice
       membership&.can_speak? || false
     end
 
+    # Camera and screen sharing are gated independently, per user: the room
+    # must allow media at all, the user must be able to speak in it (a stage
+    # listener publishes nothing), and their groups must carry the capability.
+    def can_publish_video_in_voice_room?(room)
+      eligible_to_publish_video_in_voice_room?(room) && voice_room_media_live?(room)
+    end
+
+    def can_screen_share_in_voice_room?(room)
+      eligible_to_screen_share_in_voice_room?(room) && voice_room_media_live?(room)
+    end
+
+    # The same capability minus the room's media flag and the stage role,
+    # which clients track live from room and role_change broadcasts. This is
+    # the half that gets serialized, so neither re-enabling a room's media nor
+    # a promotion needs the room re-serialized for each user.
+    def eligible_to_publish_video_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_publish_video]
+    end
+
+    def eligible_to_screen_share_in_voice_room?(room)
+      voice_media_entitlements(room)[:can_screen_share]
+    end
+
     # Only stage-room listeners have anything to request — anyone who can
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_voice_room?(room)
@@ -143,6 +178,18 @@ module Voice
       unless can_request_to_speak_in_voice_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("voice.errors.not_authorized"))
       end
+    end
+
+    private
+
+    def voice_media_entitlements(room)
+      return Voice::MediaEntitlements::NONE unless can_join_voice_room?(room)
+
+      Voice::MediaEntitlements.for_user(user)
+    end
+
+    def voice_room_media_live?(room)
+      room.video_enabled? && can_speak_in_voice_room?(room)
     end
   end
 end

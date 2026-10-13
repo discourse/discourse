@@ -182,84 +182,84 @@ export default class Field extends Component {
   <template>
     {{#if (eq this.entry.kind "standalone")}}
       <this.renderer
-        @form={{@form}}
-        @formApi={{@formApi}}
         @configuration={{@configuration}}
         @connections={{@connections}}
         @credentials={{@credentials}}
+        @dynamicValueHint={{this.dynamicValueHint}}
         @fieldName={{@fieldName}}
+        @form={{@form}}
+        @formApi={{@formApi}}
         @label={{this.fieldTitle}}
         @metadata={{this.metadata}}
         @node={{@node}}
+        @nodeDefinition={{this.nodeDefinition}}
         @nodeParameters={{@nodeParameters}}
         @nodes={{@nodes}}
-        @nodeDefinition={{this.nodeDefinition}}
         @nodeTypes={{@nodeTypes}}
+        @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @onSet={{@onSet}}
         @schema={{@schema}}
         @session={{@session}}
         @showOptional={{this.showOptional}}
-        @dynamicValueHint={{this.dynamicValueHint}}
-        @onSet={{@onSet}}
-        @onBeforeStartTestSession={{@onBeforeStartTestSession}}
       />
     {{else}}
       <@form.Field
-        @name={{@fieldName}}
-        @title={{this.fieldTitle}}
-        @showTitle={{this.showLabel}}
-        @showOptional={{this.showOptional}}
         @description={{this.fieldDescription}}
+        @format={{this.format}}
+        @name={{@fieldName}}
+        @onSet={{@onSet}}
+        @showOptional={{this.showOptional}}
+        @showTitle={{this.showLabel}}
+        @title={{this.fieldTitle}}
         @tooltip={{this.fieldTooltip}}
         @type={{this.resolvedFieldType}}
-        @format={{this.format}}
-        @validation={{this.validation}}
         @validate={{this.customValidation}}
-        @onSet={{@onSet}}
+        @validation={{this.validation}}
         as |field|
       >
         {{#if this.isCustomType}}
           <field.Control>
             <this.renderer
+              @configuration={{@configuration}}
+              @connections={{@connections}}
+              @credentials={{@credentials}}
+              @dynamicValueHint={{this.dynamicValueHint}}
               @field={{field}}
               @fieldName={{@fieldName}}
-              @schema={{@schema}}
-              @configuration={{@configuration}}
-              @credentials={{@credentials}}
+              @formApi={{@formApi}}
               @metadata={{this.metadata}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
               @nodes={{@nodes}}
               @nodeTypes={{@nodeTypes}}
-              @connections={{@connections}}
-              @formApi={{@formApi}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @placeholder={{this.placeholder}}
+              @schema={{@schema}}
               @session={{@session}}
               @supportsExpression={{this.supportsExpression}}
-              @placeholder={{this.placeholder}}
-              @dynamicValueHint={{this.dynamicValueHint}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           </field.Control>
         {{else}}
           <this.renderer
+            @configuration={{@configuration}}
+            @connections={{@connections}}
+            @credentials={{@credentials}}
+            @dynamicValueHint={{this.dynamicValueHint}}
             @field={{field}}
             @fieldName={{@fieldName}}
-            @schema={{@schema}}
-            @configuration={{@configuration}}
-            @credentials={{@credentials}}
+            @formApi={{@formApi}}
             @metadata={{this.metadata}}
             @node={{@node}}
             @nodeDefinition={{this.nodeDefinition}}
             @nodeParameters={{@nodeParameters}}
             @nodes={{@nodes}}
             @nodeTypes={{@nodeTypes}}
-            @connections={{@connections}}
-            @formApi={{@formApi}}
+            @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+            @placeholder={{this.placeholder}}
+            @schema={{@schema}}
             @session={{@session}}
             @supportsExpression={{this.supportsExpression}}
-            @placeholder={{this.placeholder}}
-            @dynamicValueHint={{this.dynamicValueHint}}
-            @onBeforeStartTestSession={{@onBeforeStartTestSession}}
           />
         {{/if}}
         {{#each this.entry.addons as |Addon|}}

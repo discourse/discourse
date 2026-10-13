@@ -99,23 +99,23 @@ export default class VoiceSpeakQueue extends Component {
               <span class="voice-speak-queue__actions">
                 {{#if this.canManage}}
                   <DButton
+                    class="btn-transparent voice-speak-queue__approve"
                     @action={{fn this.approve entry.participant}}
                     @icon="check"
                     @title="voice.stage.approve_request"
-                    class="btn-transparent voice-speak-queue__approve"
                   />
                   <DButton
+                    class="btn-transparent voice-speak-queue__dismiss"
                     @action={{fn this.dismiss entry.participant}}
                     @icon="xmark"
                     @title="voice.stage.dismiss_request"
-                    class="btn-transparent voice-speak-queue__dismiss"
                   />
                 {{else if entry.isSelf}}
                   <DButton
+                    class="btn-transparent voice-speak-queue__lower"
                     @action={{this.lowerHand}}
                     @icon="xmark"
                     @title="voice.stage.lower_hand"
-                    class="btn-transparent voice-speak-queue__lower"
                   />
                 {{/if}}
               </span>

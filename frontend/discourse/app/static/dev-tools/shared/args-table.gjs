@@ -95,19 +95,6 @@ export default class ArgsTable extends Component {
   }
 
   /**
-   * Extracts deprecation info from a deprecated argument for display.
-   *
-   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
-   * @returns {{message: string, since: string|undefined}}
-   */
-  #getDeprecationInfo(deprecatedArg) {
-    return {
-      message: deprecatedArg.message,
-      since: deprecatedArg.options?.since,
-    };
-  }
-
-  /**
    * Logs the argument value to the console and stores it in a global variable
    * for easy inspection. The variable is named `arg1`, `arg2`, etc.
    *
@@ -122,12 +109,24 @@ export default class ArgsTable extends Component {
     });
   }
 
+  /**
+   * Extracts deprecation info from a deprecated argument for display.
+   *
+   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
+   * @returns {{message: string, since: string|undefined}}
+   */
+  #getDeprecationInfo(deprecatedArg) {
+    return {
+      message: deprecatedArg.message,
+      since: deprecatedArg.options?.since,
+    };
+  }
+
   <template>
     {{#if this.entries.length}}
       <div class="outlet-args-table">
         {{#each this.entries as |entry|}}
           <button
-            type="button"
             class={{dConcatClass
               "outlet-args-table__row"
               (if entry.isDeprecated "--deprecated")
@@ -137,6 +136,7 @@ export default class ArgsTable extends Component {
               entry.deprecationInfo.message
               "Save to global variable"
             }}
+            type="button"
             {{on "click" (fn this.logValue entry)}}
           >
             <span class="outlet-args-table__key">

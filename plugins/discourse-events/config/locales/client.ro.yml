@@ -19,6 +19,11 @@ ro:
               label: ID subiect
     discourse_events:
       title: "Evenimente"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificare"
+            none: "Nimic"
       disable_holiday: "Dezactivează"
       enable_holiday: "Activează"
       date: "Dată"
@@ -135,6 +140,8 @@ ro:
           add: "Adaugă URL"
         description:
           label: "Descriere"
+        hosts:
+          label: "Gazde"
         event_type:
           public:
             title: "Public"

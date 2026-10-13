@@ -16,7 +16,6 @@ import { deepMerge } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -74,6 +73,12 @@ export default class PostStream extends RestModel {
   filterRepliesToPostNumber =
     parseInt(this.topic.replies_to_post_number, 10) || false;
   @tracked filterUpwardsPostID = false;
+
+  /**
+   * Post awaiting focus once rendered. A fresh object per request, so the
+   * renderer can mark it `done` without writing tracked state mid-render.
+   */
+  @tracked focusTarget = null;
   @tracked gaps;
   @tracked isMegaTopic;
   @tracked lastId;
@@ -288,6 +293,23 @@ export default class PostStream extends RestModel {
     );
   }
 
+  get loadedPosts() {
+    return Object.values(this._identityMap).filter(Boolean);
+  }
+
+  /**
+   * Moves focus to a post once it is rendered, so keyboard and screen reader
+   * users continue from there. The first post is skipped, as the page start
+   * already leads to it.
+   *
+   * @param {number} postNumber
+   */
+  focusPostOnRender(postNumber) {
+    if (postNumber > 1) {
+      this.focusTarget = { postNumber, done: false };
+    }
+  }
+
   cancelFilter() {
     this.streamFilters.mixedHiddenPosts = false;
 
@@ -343,8 +365,7 @@ export default class PostStream extends RestModel {
         : null;
 
       DiscourseURL.jumpToPost(postNumber, { originalTopOffset });
-
-      schedule("afterRender", () => highlightPost(postNumber));
+      this.focusPostOnRender(postNumber);
     });
   }
 
@@ -360,8 +381,7 @@ export default class PostStream extends RestModel {
       if (this.posts?.length > 1) {
         const postNumber = this.posts[1].post_number;
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
-
-        schedule("afterRender", () => highlightPost(postNumber));
+        this.focusPostOnRender(postNumber);
       }
     });
   }
@@ -700,10 +720,6 @@ export default class PostStream extends RestModel {
     return this._identityMap[id];
   }
 
-  get loadedPosts() {
-    return Object.values(this._identityMap).filter(Boolean);
-  }
-
   loadPostByPostNumber(postNumber) {
     const url = `/posts/by_number/${this.topic.id}/${postNumber}`;
 
@@ -924,43 +940,6 @@ export default class PostStream extends RestModel {
     );
 
     return refreshState.reconciled;
-  }
-
-  _reconcilePostRefresh(postId, refreshState) {
-    if (this._pendingPostRefreshes.get(postId) !== refreshState) {
-      return;
-    }
-
-    for (
-      let requestIndex = refreshState.requests.length - 1;
-      requestIndex >= 0;
-      requestIndex--
-    ) {
-      const refresh = refreshState.requests[requestIndex];
-      if (refresh.status === "pending") {
-        return;
-      }
-
-      if (refresh.status === "succeeded") {
-        const latest = this._identityMap[postId];
-        if (
-          latest &&
-          comparePostTimestamps(refresh.data.updated_at, latest.updated_at) >= 0
-        ) {
-          if (refreshState.preserveCooked) {
-            refresh.data.cooked = latest.cooked;
-          }
-          this.storePost(this.store.createRecord("post", refresh.data));
-        }
-
-        this._pendingPostRefreshes.delete(postId);
-        refreshState.resolve();
-        return;
-      }
-    }
-
-    this._pendingPostRefreshes.delete(postId);
-    refreshState.reject(refreshState.requests.at(-1).error);
   }
 
   /**
@@ -1403,6 +1382,43 @@ export default class PostStream extends RestModel {
         error,
       }
     );
+  }
+
+  _reconcilePostRefresh(postId, refreshState) {
+    if (this._pendingPostRefreshes.get(postId) !== refreshState) {
+      return;
+    }
+
+    for (
+      let requestIndex = refreshState.requests.length - 1;
+      requestIndex >= 0;
+      requestIndex--
+    ) {
+      const refresh = refreshState.requests[requestIndex];
+      if (refresh.status === "pending") {
+        return;
+      }
+
+      if (refresh.status === "succeeded") {
+        const latest = this._identityMap[postId];
+        if (
+          latest &&
+          comparePostTimestamps(refresh.data.updated_at, latest.updated_at) >= 0
+        ) {
+          if (refreshState.preserveCooked) {
+            refresh.data.cooked = latest.cooked;
+          }
+          this.storePost(this.store.createRecord("post", refresh.data));
+        }
+
+        this._pendingPostRefreshes.delete(postId);
+        refreshState.resolve();
+        return;
+      }
+    }
+
+    this._pendingPostRefreshes.delete(postId);
+    refreshState.reject(refreshState.requests.at(-1).error);
   }
 
   _initUserModels(post) {

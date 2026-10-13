@@ -71,10 +71,10 @@ export default class PollBreakdownOption extends Component {
   <template>
     <li
       class="poll-breakdown-option"
+      role="button"
       style={{this.colorBackgroundStyle}}
       {{on "mouseover" @onMouseOver}}
       {{on "mouseout" @onMouseOut}}
-      role="button"
     >
       <span
         class="poll-breakdown-option-color"

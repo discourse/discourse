@@ -23,16 +23,18 @@ export default class TopicBySlugOrId extends DiscourseRoute {
         if (error?.jqXHR?.status !== 404) {
           throw error;
         }
-        return resolvePermalink(`/t/${params.slug_or_id}`, transition).then(
-          (result) => {
-            if (result.type === "redirect") {
-              // The permalink redirect already navigated away
-              return {};
-            }
-            // Rethrow so the app-level 404 handling applies
-            throw error;
+        return resolvePermalink(
+          `/t/${params.slug_or_id}`,
+          transition,
+          this.router
+        ).then((result) => {
+          if (result.type === "redirect") {
+            // The permalink redirect already navigated away
+            return {};
           }
-        );
+          // Rethrow so the app-level 404 handling applies
+          throw error;
+        });
       });
   }
 }

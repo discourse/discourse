@@ -112,6 +112,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
       keyword_query: "猫",
       semantic_query: "猫",
       original_query_locale: user.effective_locale,
+      failed: true,
     )
     expect(Rails.logger).to have_received(:warn).with(
       "Discourse AI Discoveries query rewrite failed: StandardError",

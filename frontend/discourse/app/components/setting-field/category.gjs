@@ -17,13 +17,13 @@ export default class SettingFieldCategory extends Component {
   <template>
     <@field.Control>
       <CategoryChooser
-        @value={{this.categoryId}}
         @onChange={{this.onChange}}
         @options={{hash
           allowUncategorized=true
           none=true
           disabled=@field.disabled
         }}
+        @value={{this.categoryId}}
       />
     </@field.Control>
   </template>

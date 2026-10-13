@@ -27,6 +27,11 @@ he:
               label: מזהה נושא
     discourse_events:
       title: "אירועים"
+      preferences:
+        reminders:
+          preferences:
+            notification: "התראה"
+            none: "ללא"
       on_holiday: "בחג"
       disable_holiday: "השבתה"
       enable_holiday: "הפעלה"
@@ -524,6 +529,8 @@ he:
           placeholder: "רשות, ברירת המחדל היא כותרת הנושא"
         invitees:
           label: "קבוצות שהוזמנו"
+        hosts:
+          label: "מארחים"
         event_type:
           public:
             title: "ציבורי"

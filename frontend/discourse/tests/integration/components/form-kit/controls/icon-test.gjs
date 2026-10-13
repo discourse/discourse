@@ -23,8 +23,8 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
     await render(
       <template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="icon" @name="foo" @title="Foo" as |field|>
+        <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="icon" as |field|>
             <field.Control />
           </form.Field>
         </Form>
@@ -46,8 +46,8 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
     await render(
       <template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="icon" @name="foo" @title="Foo" as |field|>
+        <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="icon" as |field|>
             <field.Control @allowClear={{true}} />
           </form.Field>
         </Form>
@@ -70,10 +70,10 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="icon"
+            @disabled={{true}}
             @name="foo"
             @title="Foo"
-            @disabled={{true}}
+            @type="icon"
             as |field|
           >
             <field.Control />

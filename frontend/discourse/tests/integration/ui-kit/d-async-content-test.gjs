@@ -97,6 +97,28 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       assert.dom(".content").hasText("data");
     });
 
+    test("it renders the empty block when undefined", async function (assert) {
+      await render(
+        <template>
+          <DAsyncContent @asyncData={{undefined}}>
+            <:loading>
+              <div class="loading">Loading</div>
+            </:loading>
+            <:content>
+              <div class="content">Content</div>
+            </:content>
+            <:empty>
+              <div class="empty">Empty</div>
+            </:empty>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.dom(".empty").exists("there is nothing to load");
+      assert.dom(".loading").doesNotExist();
+      assert.dom(".content").doesNotExist();
+    });
+
     test("it surfaces a synchronous throw", async function (assert) {
       const load = () => {
         throw new Error("sync failure");

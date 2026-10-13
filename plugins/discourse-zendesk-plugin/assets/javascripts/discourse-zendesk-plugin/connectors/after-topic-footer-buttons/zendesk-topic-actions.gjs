@@ -48,10 +48,10 @@ export default class ZendeskTopicActions extends Component {
         {{#if this.valid_zendesk_credential}}
           {{#if this.zendesk_id}}
             <a
-              href={{this.zendesk_url}}
-              target="_blank"
               class="btn-primary btn"
+              href={{this.zendesk_url}}
               rel="noopener noreferrer"
+              target="_blank"
             >
               <i class="fa fa-clone"></i>
               {{i18n "topic.view_zendesk_issue"}}
@@ -60,8 +60,8 @@ export default class ZendeskTopicActions extends Component {
             <DButton
               class="btn-primary"
               @action={{this.createZendeskIssue}}
-              @label="topic.create_zendesk_issue"
               @disabled={{this.dirty}}
+              @label="topic.create_zendesk_issue"
             />
           {{/if}}
         {{else}}

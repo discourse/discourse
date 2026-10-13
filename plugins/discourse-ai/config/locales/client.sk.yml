@@ -16,6 +16,16 @@ sk:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Spýtajte sa AI"
+        ask_ai:
+          title: "Spýtajte sa AI"
+          reports:
+            retry_questions: "Skúsiť znova"
+          date: "Dátum"
+          outcomes:
+            failed: "Nepodarilo sa"
         emotion:
           title: "Emócia"
         reports:
@@ -636,9 +646,6 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-7: "Najinteligentnejší model spoločnosti Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimálna rovnováha medzi rýchlosťou a cenou"
-          anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
         configured:
           title: "Nakonfigurované LLM"
@@ -796,9 +803,23 @@ sk:
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
+        editor:
+          version: "Verzia"
+          default: "Predvolené"
+          option_on: "Zapnuté"
+          option_off: "Vypnuté"
+          apply: "Použi"
         expand_view_label: "Rozbaliť zobrazenie"
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
+        share: "Zdieľať"
+        create_link: "Vytvorte odkaz"
+        copied: "Skopírované do schránky"
+        copy_link: "Kopírovať odkaz"
+        copy_embed: "Kopírovať vloženie"
+        new_tab: "Zobraziť na novej karte"
+        filter_all: "Všetky"
+        filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
         llm: "Model:"

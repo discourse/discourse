@@ -33,7 +33,7 @@ RSpec.describe "a restricted field" do
         end
 
         context "when the field is explicitly requested" do
-          let(:params) { { fields: { topics: %w[title created_at] } } }
+          let(:params) { { fields: { topics: %w[title createdAt] } } }
 
           it "does not render it" do
             expect(document).to eq(title_only)
@@ -67,11 +67,11 @@ RSpec.describe "a restricted field" do
       let(:guardian) { middle.user.guardian }
 
       context "when using sparse fieldsets excluding the one used in the rule" do
-        let(:params) { { fields: { topics: %w[title created_at] } } }
+        let(:params) { { fields: { topics: %w[title createdAt] } } }
 
         it "does not crash" do
           expect(document[:data].map { it[:attributes].keys }).to eq(
-            [%w[title], %w[title created_at], %w[title]],
+            [%w[title], %w[title createdAt], %w[title]],
           )
         end
       end

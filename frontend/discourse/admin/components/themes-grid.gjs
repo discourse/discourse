@@ -63,16 +63,16 @@ export default class ThemesGrid extends Component {
   <template>
     <DFilterControls
       @array={{this.sortedThemes}}
-      @minItemsForFilter={{FILTER_MINIMUM}}
-      @searchableProps={{this.searchableProps}}
       @dropdownOptions={{this.dropdownOptions}}
       @inputPlaceholder={{this.inputPlaceholder}}
+      @minItemsForFilter={{FILTER_MINIMUM}}
       @noResultsMessage={{i18n "admin.customize.theme.no_themes_found"}}
+      @searchableProps={{this.searchableProps}}
     >
       <:content as |themes|>
         <div class="themes-cards-container">
           {{#each themes as |theme|}}
-            <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
+            <ThemesGridCard @allThemes={{@themes}} @theme={{theme}} />
           {{/each}}
           {{#if this.showInstallMoreThemesCard}}
             <AdminConfigAreaCard class="theme-card --install-more">
@@ -93,9 +93,9 @@ export default class ThemesGrid extends Component {
                 <div class="theme-card__footer">
                   <DButton
                     class="btn-primary theme-card__install-button"
-                    @label="admin.config_areas.themes_and_components.themes.install"
-                    @icon="upload"
                     @action={{@openInstallModal}}
+                    @icon="upload"
+                    @label="admin.config_areas.themes_and_components.themes.install"
                   />
                 </div>
               </:content>

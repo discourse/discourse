@@ -73,21 +73,21 @@ export default class DwellExample extends Component {
         }}
       >
         <DButton
+          aria-controls={{if this.expanded this.folderId}}
+          aria-expanded={{if this.expanded "true" "false"}}
+          class="styleguide-drag-and-drop__folder-toggle"
           @action={{this.toggleFolder}}
           @translatedLabel={{if
             this.expanded
             (i18n "styleguide.sections.drag_and_drop.dwell_collapse")
             (i18n "styleguide.sections.drag_and_drop.dwell_expand")
           }}
-          class="styleguide-drag-and-drop__folder-toggle"
-          aria-expanded={{if this.expanded "true" "false"}}
-          aria-controls={{if this.expanded this.folderId}}
         />
 
         {{#if this.expanded}}
           <div
-            id={{this.folderId}}
             class="styleguide-drag-and-drop__folder-rows"
+            id={{this.folderId}}
           >
             {{#each ROWS as |row|}}
               <div class="styleguide-drag-and-drop__folder-row">

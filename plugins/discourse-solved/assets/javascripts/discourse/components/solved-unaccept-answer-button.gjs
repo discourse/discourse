@@ -19,22 +19,6 @@ export default class SolvedUnacceptAnswerButton extends Component {
 
   @tracked saving = false;
 
-  @action
-  async unacceptAnswer() {
-    const post = this.args.post;
-
-    this.saving = true;
-    try {
-      await unacceptPost(post);
-
-      this.appEvents.trigger("discourse-solved:solution-toggled", post);
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.saving = false;
-    }
-  }
-
   get answerInfo() {
     return this.args.post.topic.accepted_answers?.find(
       (a) => a.post_number === this.args.post.post_number
@@ -56,6 +40,22 @@ export default class SolvedUnacceptAnswerButton extends Component {
     const username = this.answerInfo?.accepter_username;
     const name = this.answerInfo?.accepter_name;
     return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  @action
+  async unacceptAnswer() {
+    const post = this.args.post;
+
+    this.saving = true;
+    try {
+      await unacceptPost(post);
+
+      this.appEvents.trigger("discourse-solved:solution-toggled", post);
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.saving = false;
+    }
   }
 
   <template>

@@ -185,6 +185,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           args
         end
       end
+
       it "Allows for changes to the translation args" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:chat_notification_translation_args, &modifier_block)

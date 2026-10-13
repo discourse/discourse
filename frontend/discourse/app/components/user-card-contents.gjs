@@ -3,6 +3,7 @@ import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
@@ -13,6 +14,7 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
+import UserStatusModal from "discourse/components/modal/user-status";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
 import formatUsername from "discourse/helpers/format-username";
@@ -47,6 +49,9 @@ import { i18n } from "discourse-i18n";
 )
 @attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase {
+  @service modal;
+  @service userStatus;
+
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
@@ -57,6 +62,15 @@ export default class UserCardContents extends CardContentsBase {
 
   // If inside a topic
   topicPostCount = null;
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
 
   @computed("siteSettings.allow_profile_backgrounds")
   get allowBackgrounds() {
@@ -76,15 +90,6 @@ export default class UserCardContents extends CardContentsBase {
   @computed("siteSettings.moderators_view_emails")
   get canModeratorsViewEmails() {
     return this.siteSettings.moderators_view_emails;
-  }
-
-  @computed("topic.postStream")
-  get postStream() {
-    return this.topic?.postStream;
-  }
-
-  set postStream(value) {
-    set(this, "topic.postStream", value);
   }
 
   @computed("topicPostCount")
@@ -181,11 +186,6 @@ export default class UserCardContents extends CardContentsBase {
   @computed("user")
   get hasLocaleOrWebsite() {
     return this.user.location || this.user.website_name || this.userTimezone;
-  }
-
-  @computed("user.status")
-  get hasStatus() {
-    return this.siteSettings.enable_user_status && this.user.status;
   }
 
   @computed("user.status.emoji")
@@ -285,6 +285,16 @@ export default class UserCardContents extends CardContentsBase {
     }
   }
 
+  @computed("user.primary_group_name")
+  get primaryGroup() {
+    return `group-${this.user?.primary_group_name}`;
+  }
+
+  @computed("user.profile_hidden", "user.inactive")
+  get contentHidden() {
+    return this.user?.profile_hidden || this.user?.inactive;
+  }
+
   @observes("user.card_background_upload_url")
   addBackground() {
     if (!this.allowBackgrounds) {
@@ -298,65 +308,6 @@ export default class UserCardContents extends CardContentsBase {
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     this.element.style.backgroundImage = bg;
-  }
-
-  @computed("user.primary_group_name")
-  get primaryGroup() {
-    return `group-${this.user?.primary_group_name}`;
-  }
-
-  @computed("user.profile_hidden", "user.inactive")
-  get contentHidden() {
-    return this.user?.profile_hidden || this.user?.inactive;
-  }
-
-  @onEvent("didInsertElement")
-  _inserted() {
-    this.appEvents.on("dom:clean", this, this.cleanUp);
-  }
-
-  @onEvent("didDestroyElement")
-  _destroyed() {
-    this.appEvents.off("dom:clean", this, this.cleanUp);
-  }
-
-  async _showCallback(username) {
-    this.setProperties({ visible: true, loading: true });
-
-    const args = {
-      forCard: true,
-      include_post_count_for: this.get("topic.id"),
-    };
-
-    try {
-      const user = await User.findByUsername(username, args);
-
-      if (user.topic_post_count) {
-        this.set(
-          "topicPostCount",
-          user.topic_post_count[args.include_post_count_for]
-        );
-      }
-      this.setProperties({ user });
-      this.user.statusManager.trackStatus();
-
-      return user;
-    } catch {
-      this._close();
-    } finally {
-      this.set("loading", null);
-    }
-  }
-
-  _close() {
-    this.user?.statusManager.stopTrackingStatus();
-
-    this.setProperties({
-      user: null,
-      topicPostCount: null,
-    });
-
-    super._close(...arguments);
   }
 
   cleanUp() {
@@ -416,6 +367,72 @@ export default class UserCardContents extends CardContentsBase {
     user.checkEmail();
   }
 
+  @action
+  editUserStatus() {
+    const user = this.user;
+    this._close();
+
+    this.modal.show(UserStatusModal, {
+      model: {
+        user,
+        status: this.currentUser.status,
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
+        deleteAction: () => this.userStatus.clear(),
+      },
+    });
+  }
+
+  @onEvent("didInsertElement")
+  _inserted() {
+    this.appEvents.on("dom:clean", this, this.cleanUp);
+  }
+
+  @onEvent("didDestroyElement")
+  _destroyed() {
+    this.appEvents.off("dom:clean", this, this.cleanUp);
+  }
+
+  async _showCallback(username) {
+    this.setProperties({ visible: true, loading: true });
+
+    const args = {
+      forCard: true,
+      include_post_count_for: this.get("topic.id"),
+    };
+
+    try {
+      const user = await User.findByUsername(username, args);
+
+      if (user.topic_post_count) {
+        this.set(
+          "topicPostCount",
+          user.topic_post_count[args.include_post_count_for]
+        );
+      }
+      this.setProperties({ user });
+      this.user.statusManager.trackStatus();
+
+      return user;
+    } catch {
+      this._close();
+    } finally {
+      this.set("loading", null);
+    }
+  }
+
+  _close() {
+    this.user?.statusManager.stopTrackingStatus();
+
+    this.setProperties({
+      user: null,
+      topicPostCount: null,
+    });
+
+    super._close(...arguments);
+  }
+
   <template>
     {{#if this.visible}}
       <PluginOutlet
@@ -455,38 +472,79 @@ export default class UserCardContents extends CardContentsBase {
                 handleShowUser=this.handleShowUser
               }}
             >
-              <div class="user-card-avatar" aria-hidden="true">
-                {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{dBoundAvatar
-                      this.user
-                      "huge"
-                    }}</span>
-                {{else}}
-                  <a
-                    href={{this.avatarUrl}}
-                    class="card-huge-avatar"
-                    tabindex="-1"
-                  >
-                    {{dBoundAvatar this.user "huge"}}
-                    {{#if this.isOwnCard}}
-                      <span class="own-avatar-pencil">
-                        <span class="own-avatar-pencil--icon">
-                          {{dIcon "pencil"}}
+              <div class="user-card-avatar-wrapper">
+                <div aria-hidden="true" class="user-card-avatar">
+                  {{#if this.contentHidden}}
+                    <span class="card-huge-avatar">{{dBoundAvatar
+                        this.user
+                        "huge"
+                      }}</span>
+                  {{else}}
+                    <a
+                      class="card-huge-avatar"
+                      href={{this.avatarUrl}}
+                      tabindex="-1"
+                    >
+                      {{dBoundAvatar this.user "huge"}}
+                      {{#if this.isOwnCard}}
+                        <span class="own-avatar-pencil">
+                          <span class="own-avatar-pencil--icon">
+                            {{dIcon "pencil"}}
+                          </span>
                         </span>
-                      </span>
-                    {{/if}}
-                  </a>
-                {{/if}}
+                      {{/if}}
+                    </a>
+                  {{/if}}
 
-                <DUserAvatarFlair @user={{this.user}} />
+                  <DUserAvatarFlair @user={{this.user}} />
 
-                <div>
-                  <PluginOutlet
-                    @name="user-card-avatar-flair"
-                    @connectorTagName="div"
-                    @outletArgs={{lazyHash user=this.user}}
-                  />
+                  <div>
+                    <PluginOutlet
+                      @connectorTagName="div"
+                      @name="user-card-avatar-flair"
+                      @outletArgs={{lazyHash user=this.user}}
+                    />
+                  </div>
                 </div>
+
+                {{#if this.siteSettings.enable_user_status}}
+                  {{#if this.user.status}}
+                    {{#if this.isOwnCard}}
+                      <button
+                        class="user-status --editable"
+                        title={{i18n "user_status.edit_status"}}
+                        type="button"
+                        {{on "click" this.editUserStatus}}
+                      >
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </button>
+                    {{else}}
+                      <div class="user-status">
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </div>
+                    {{/if}}
+                  {{else if this.isOwnCard}}
+                    <button
+                      class="user-status --empty"
+                      title={{i18n "user_status.set_custom_status"}}
+                      type="button"
+                      {{on "click" this.editUserStatus}}
+                    >
+                      {{dIcon "circle-plus"}}
+                      <span class="user-status__description">
+                        {{i18n "user_status.what_are_you_doing"}}
+                      </span>
+                    </button>
+                  {{/if}}
+                {{/if}}
               </div>
               <div class="names">
                 <div
@@ -505,13 +563,13 @@ export default class UserCardContents extends CardContentsBase {
                     </span>
                   {{else}}
                     <a
-                      {{on "click" this.handleShowUser}}
-                      href={{this.user.path}}
-                      class="user-profile-link"
                       aria-label={{i18n
                         "user.profile_link"
                         username=this.user.username
                       }}
+                      class="user-profile-link"
+                      href={{this.user.path}}
+                      {{on "click" this.handleShowUser}}
                     >
                       <span class="name-username-wrapper">
                         {{if
@@ -525,8 +583,8 @@ export default class UserCardContents extends CardContentsBase {
                   {{/if}}
                 </div>
                 <PluginOutlet
-                  @name="user-card-after-username"
                   @connectorTagName="div"
+                  @name="user-card-after-username"
                   @outletArgs={{lazyHash
                     user=this.user
                     showUser=this.handleShowUser
@@ -551,19 +609,10 @@ export default class UserCardContents extends CardContentsBase {
                       "user.staged"
                     }}</div>
                 {{/if}}
-                {{#if this.hasStatus}}
-                  <div class="user-status">
-                    {{trustHTML this.userStatusEmoji}}
-                    <span class="user-status__description">
-                      {{this.user.status.description}}
-                    </span>
-                    {{dFormatDate this.user.status.ends_at format="tiny"}}
-                  </div>
-                {{/if}}
                 <div>
                   <PluginOutlet
-                    @name="user-card-post-names"
                     @connectorTagName="div"
+                    @name="user-card-post-names"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
@@ -573,25 +622,25 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.can_send_private_message_to_user}}
                 <li class="compose-pm">
                   <DButton
+                    class="btn-primary"
                     @action={{fn this.composePM this.user this.post}}
                     @icon="envelope"
                     @label="user.private_message"
-                    class="btn-primary"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-below-message-button"
                 @connectorTagName="li"
+                @name="user-card-below-message-button"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
               {{#if this.showFilter}}
                 <li>
                   <DButton
+                    class="btn-default"
                     @action={{fn this.handleFilterPosts this.user}}
                     @icon="filter"
                     @translatedLabel={{this.filterPostsLabel}}
-                    class="btn-default"
                   />
                 </li>
               {{/if}}
@@ -607,22 +656,22 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.showDelete}}
                 <li>
                   <DButton
+                    class="btn-danger"
                     @action={{fn this.deleteUser this.user}}
                     @icon="triangle-exclamation"
                     @label="admin.user.delete"
-                    class="btn-danger"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-additional-buttons"
                 @connectorTagName="li"
+                @name="user-card-additional-buttons"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
             </ul>
             <PluginOutlet
-              @name="user-card-additional-controls"
               @connectorTagName="div"
+              @name="user-card-additional-controls"
               @outletArgs={{lazyHash
                 user=this.user
                 close=this.close
@@ -708,11 +757,11 @@ export default class UserCardContents extends CardContentsBase {
               <div class="featured-topic">
                 <span class="desc">{{i18n "user.featured_topic"}}</span>
                 <LinkTo
-                  @route="topic"
                   @models={{array
                     this.user.featured_topic.slug
                     this.user.featured_topic.id
                   }}
+                  @route="topic"
                 >{{dReplaceEmoji
                     (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
@@ -758,8 +807,8 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 <span>
                   <PluginOutlet
-                    @name="user-card-location-and-website"
                     @connectorTagName="div"
+                    @name="user-card-location-and-website"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </span>
@@ -805,24 +854,24 @@ export default class UserCardContents extends CardContentsBase {
                       {{this.user.email}}
                     {{else}}
                       <DButton
+                        class="btn-primary"
                         @action={{fn this.checkEmail this.user}}
                         @icon="envelope"
                         @label="admin.users.check_email.text"
-                        class="btn-primary"
                       />
                     {{/if}}
                   </div>
                 {{/if}}
                 <PluginOutlet
-                  @name="user-card-metadata"
                   @connectorTagName="div"
+                  @name="user-card-metadata"
                   @outletArgs={{lazyHash user=this.user}}
                 />
               </div>
             {{/unless}}
             <PluginOutlet
-              @name="user-card-after-metadata"
               @connectorTagName="div"
+              @name="user-card-after-metadata"
               @outletArgs={{lazyHash user=this.user}}
             />
           </div>
@@ -842,8 +891,8 @@ export default class UserCardContents extends CardContentsBase {
                           <span class="user-field-value-list-item">
                             {{#if uf.field.searchable}}
                               <LinkTo
-                                @route="users"
                                 @query={{hash name=v}}
+                                @route="users"
                                 {{on "click" (fn this.refreshRoute v)}}
                               >{{v}}</LinkTo>
                             {{else}}
@@ -862,8 +911,8 @@ export default class UserCardContents extends CardContentsBase {
           {{/if}}
 
           <PluginOutlet
-            @name="user-card-before-badges"
             @connectorTagName="div"
+            @name="user-card-before-badges"
             @outletArgs={{lazyHash user=this.user}}
           />
 
@@ -880,7 +929,7 @@ export default class UserCardContents extends CardContentsBase {
                     {{/each}}
                     {{#if this.showMoreBadges}}
                       <span class="more-user-badges">
-                        <LinkTo @route="user.badges" @model={{this.user}}>
+                        <LinkTo @model={{this.user}} @route="user.badges">
                           {{i18n
                             "badges.more_badges"
                             count=this.moreBadgesCount

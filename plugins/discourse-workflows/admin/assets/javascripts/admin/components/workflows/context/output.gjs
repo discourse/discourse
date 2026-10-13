@@ -120,6 +120,18 @@ export default class OutputContext extends Component {
     return this.outputPreview.fields || [];
   }
 
+  get singleItemCountLabel() {
+    return this.outputPreview.itemCountLabel;
+  }
+
+  get emptyOutputMessage() {
+    return this.outputPreview.emptyMessage;
+  }
+
+  get canTogglePin() {
+    return this.singleOutputNode && (this.isPinned || this.canPin);
+  }
+
   itemCountLabel(summary) {
     if (!summary?.itemCount) {
       return null;
@@ -128,10 +140,6 @@ export default class OutputContext extends Component {
     return i18n("discourse_workflows.configurator.schema_item_count", {
       count: summary.itemCount,
     });
-  }
-
-  get singleItemCountLabel() {
-    return this.outputPreview.itemCountLabel;
   }
 
   emptyMessage(summary) {
@@ -146,10 +154,6 @@ export default class OutputContext extends Component {
     }
 
     return i18n("discourse_workflows.configurator.no_output_context");
-  }
-
-  get emptyOutputMessage() {
-    return this.outputPreview.emptyMessage;
   }
 
   @action
@@ -170,10 +174,6 @@ export default class OutputContext extends Component {
     }
   }
 
-  get canTogglePin() {
-    return this.singleOutputNode && (this.isPinned || this.canPin);
-  }
-
   <template>
     <div class="workflows-context-panel">
       {{#if this.isPinned}}
@@ -183,8 +183,8 @@ export default class OutputContext extends Component {
             {{i18n "discourse_workflows.pin_data.is_pinned"}}
           </span>
           <button
-            type="button"
             class="btn-link workflows-context-panel__unpin-btn"
+            type="button"
             {{on "click" this.togglePin}}
           >
             {{i18n "discourse_workflows.pin_data.unpin"}}
@@ -216,29 +216,33 @@ export default class OutputContext extends Component {
             <div class="workflows-context-panel__header-actions">
               <div class="workflows-context-panel__tabs" role="tablist">
                 <button
-                  type="button"
-                  role="tab"
                   aria-selected={{if this.isSchemaView "true" "false"}}
                   class={{dConcatClass
                     "workflows-context-panel__tab"
                     (if (eq this.viewMode "schema") "is-active")
                   }}
+                  role="tab"
+                  type="button"
                   {{on "click" (fn this.switchView "schema")}}
                 >{{i18n "discourse_workflows.pin_data.schema_view"}}</button>
                 <button
-                  type="button"
-                  role="tab"
                   aria-selected={{if this.isJsonView "true" "false"}}
                   class={{dConcatClass
                     "workflows-context-panel__tab"
                     (if (eq this.viewMode "json") "is-active")
                   }}
+                  role="tab"
+                  type="button"
                   {{on "click" (fn this.switchView "json")}}
                 >{{i18n "discourse_workflows.pin_data.json_view"}}</button>
               </div>
 
               <button
-                type="button"
+                aria-label={{if
+                  this.isPinned
+                  (i18n "discourse_workflows.pin_data.unpin")
+                  (i18n "discourse_workflows.pin_data.pin")
+                }}
                 class={{dConcatClass
                   "workflows-context-panel__icon-btn workflows-context-panel__pin-btn"
                   (if this.isPinned "is-pinned")
@@ -249,11 +253,7 @@ export default class OutputContext extends Component {
                   (i18n "discourse_workflows.pin_data.unpin")
                   (i18n "discourse_workflows.pin_data.pin")
                 }}
-                aria-label={{if
-                  this.isPinned
-                  (i18n "discourse_workflows.pin_data.unpin")
-                  (i18n "discourse_workflows.pin_data.pin")
-                }}
+                type="button"
                 {{on "click" this.togglePin}}
               >
                 {{dIcon "thumbtack"}}
@@ -264,9 +264,9 @@ export default class OutputContext extends Component {
 
         {{#if this.isJsonView}}
           <PinDataEditor
-            @nodeName={{this.nodeName}}
-            @initialItems={{this.effectiveItems}}
             @canEdit={{this.canEditPinData}}
+            @initialItems={{this.effectiveItems}}
+            @nodeName={{this.nodeName}}
             @session={{@session}}
           />
         {{else if this.fields.length}}
@@ -277,9 +277,9 @@ export default class OutputContext extends Component {
           </ul>
         {{else if this.hasNoData}}
           <PinDataEditor
-            @nodeName={{this.nodeName}}
-            @initialItems={{this.effectiveItems}}
             @canEdit={{this.canEditPinData}}
+            @initialItems={{this.effectiveItems}}
+            @nodeName={{this.nodeName}}
             @session={{@session}}
           />
         {{else}}

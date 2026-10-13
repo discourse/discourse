@@ -12,7 +12,6 @@ ar:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "جارٍ تجهيز الشبكات.."
       viewing_other_user: "أنت تشاهد تقرير <strong>%{username}</strong> في ميزة Discourse Rewind."
@@ -132,18 +131,14 @@ ar:
             many: "أفضل %{count} منشورًا لدى %{username}"
             other: "أفضل %{count} منشور لدى %{username}"
         ai_usage:
-          title: استخدام الذكاء الاصطناعي
           total_requests: إجمالي الطلبات
           total_tokens: إجمالي الرموز
           success_rate: معدل النجاح
-          favorite_features: الميزات الأكثر استخدامًا
-          favorite_models: نماذج الذكاء الاصطناعي الأكثر استخدامًا
           wake_up: "انهض يا %{username}..."
           system_title: "تم رصد استخدام تقنيات الذكاء الاصطناعي"
           section_features: "أهم الميزات"
           section_models: "أفضل النماذج"
         assignments:
-          title: المهام
           total_assigned: المهام المعينة لي
           total_assigned_others: "معيَّن إلى %{username}"
           completed: قائمة المهام المكتملة
@@ -152,13 +147,6 @@ ar:
           completion_rate: معدل الإكمال
         chat_usage:
           title: نشاط الدردشة
-          total_messages: إجمالي الرسائل
-          dm_messages: الرسائل المباشرة
-          unique_dm_channels: محادثات الرسائل المباشرة
-          reactions_received: التفاعلات المستلمة
-          avg_message_length: متوسط طول الرسالة
-          favorite_channels: القنوات المفضلة
-          messages: الرسائل
           bot_name: XxRewindBotxX
           author: أنت
           author_others: "%{username}"
@@ -198,40 +186,7 @@ ar:
           message_4: "بلغ متوسط طول رسالتك <strong>%{length}</strong> من الأحرف"
           message_5: "قنواتك المفضلة:"
           dancing_baby_alt: "طفل راقص"
-        favorite_gifs:
-          title:
-            zero: صورة GIF المفضلة لديك
-            one: صورة GIF المفضلة لديك
-            two: صورتا GIF المفضلتان لديك
-            few: صور GIF الـ%{count} المفضلة لديك
-            many: صور GIF الـ%{count} المفضلة لديك
-            other: صور GIF الـ%{count} المفضلة لديك
-          title_others:
-            zero: "صورة GIF المفضلة لدى %{username}"
-            one: "صورة GIF المفضلة لدى %{username}"
-            two: "صورتا GIF المفضلتان لدى %{username}"
-            few: "صور GIF الـ%{count} المفضلة لدى %{username}"
-            many: "صور GIF الـ%{count} المفضلة لدى %{username}"
-            other: "صور GIF الـ%{count} المفضلة لدى %{username}"
-          total_usage:
-            zero: ليس هناك أي استخدامات
-            one: الاستخدام مرة واحدة
-            two: إجمالي الاستخدام مرتين
-            few: إجمالي الاستخدام %{count} مرات
-            many: إجمالي الاستخدام %{count} مرة
-            other: إجمالي الاستخدام %{count} مرة
         invites:
-          title: الدعوات
-          total_invites: إجمالي الدعوات المرسلة
-          redeemed: الدعوات المقبولة
-          redemption_rate: معدل القبول
-          avg_trust_level: متوسط مستوى الثقة
-          invitee_impact: تأثير المدعوين
-          invitee_impact_others: "تأثير المدعوين من %{username}"
-          invitee_posts: منشور تم إنشاؤه
-          invitee_topics: المواضيع المطروحة
-          invitee_likes: تسجيلات الإعجاب الممنوحة
-          most_active_invitee: المدعو الأكثر نشاطًا
           guest_book_title: سجل الزوار
           guest_book_subtitle: دعوات مجتمعك
           guest_book_subtitle_others: "دعوات مجتمع %{username}"
@@ -244,21 +199,6 @@ ar:
           label_likes_given: "تسجيلات الإعجاب الممنوحة:"
           section_most_active: الضيف الأكثر نشاطًا
         new_user_interactions:
-          title: توجيه المستخدمين الجدد
-          subtitle:
-            zero: لم تساعد أي مستخدمين جددًا هذا العام
-            one: ساعدت مستخدمًا واحدًا جديدًا هذا العام
-            two: ساعدت مستخدمين جديدين هذا العام
-            few: ساعدت %{count} مستخدمين جددًا هذا العام
-            many: ساعدت %{count} مستخدمًا جديدًا هذا العام
-            other: ساعدت %{count} مستخدم جديد هذا العام
-          subtitle_others:
-            zero: "لم يساعد %{username} أي مستخدمين جددًا هذا العام"
-            one: "ساعد %{username} مستخدمًا واحدًا جديدًا هذا العام"
-            two: "ساعد %{username} مستخدمين جديدين هذا العام"
-            few: "ساعد %{username} %{count} مستخدمين جددًا هذا العام"
-            many: "ساعد %{username} %{count} مستخدمًا جديدًا هذا العام"
-            other: "ساعد %{username} %{count} مستخدم جديد هذا العام"
           new_member:
             zero: "ليس هناك أي أعضاء جدد"
             one: "عضو واحد جديد"
@@ -266,12 +206,6 @@ ar:
             few: "%{count} أعضاء جددًا"
             many: "%{count} عضوًا جديدًا"
             other: "%{count} عضو جديد"
-          total_interactions: إجمالي التفاعلات
-          unique_new_users: المستخدمون الجدد الفريدون
-          likes_given: تسجيلات الإعجاب الممنوحة
-          replies: الردود على المنشورات
-          mentions: الإشارات
-          topics_with_new_users: الموضوعات التي شارك فيها المستخدمون الجدد
           contributions_helped: كانت مساهماتك مفيدة
           contributions_helped_others: "كانت مساهمات %{username} مفيدة"
         time_of_day_activity:

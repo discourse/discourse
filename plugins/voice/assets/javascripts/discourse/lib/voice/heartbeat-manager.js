@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 
 const HEARTBEAT_INTERVAL_MS = 10000;
 
@@ -34,8 +35,8 @@ export default class HeartbeatManager {
       clearInterval(timer);
       this.#timers.delete(roomId);
       this.#inFlight.delete(roomId);
-      // eslint-disable-next-line no-console
-      console.log(`[voice] heartbeat stopped for room ${roomId}`);
+
+      voiceLog.info(`[voice] heartbeat stopped for room ${roomId}`);
     }
   }
 
@@ -62,12 +63,12 @@ export default class HeartbeatManager {
         type: "POST",
         data: this.#buildPayload(roomId),
       });
-      // eslint-disable-next-line no-console
-      console.log(`[voice] heartbeat sent for room ${roomId}`);
+
+      voiceLog.info(`[voice] heartbeat sent for room ${roomId}`);
     } catch (error) {
       const status = error?.jqXHR?.status || error?.status;
-      // eslint-disable-next-line no-console
-      console.warn(`[voice] heartbeat failed for room ${roomId}`, error);
+
+      voiceLog.warn(`[voice] heartbeat failed for room ${roomId}`);
 
       if (status === 403 || status === 404 || status === 410) {
         this.#onExpelled(roomId);

@@ -64,6 +64,24 @@ export default class EmojiUploader extends Component {
     return !isEmpty(this.group);
   }
 
+  @computed("uppyUpload.uploading", "uppyUpload.uploadProgress")
+  get buttonLabel() {
+    if (this.uppyUpload?.uploading) {
+      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload?.uploadProgress}%`;
+    } else {
+      return i18n("admin.emoji.choose_files");
+    }
+  }
+
+  @computed("uppyUpload.uploading")
+  get buttonIcon() {
+    if (this.uppyUpload?.uploading) {
+      return "spinner";
+    } else {
+      return "plus";
+    }
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     this.set("newEmojiGroups", this.emojiGroups);
@@ -86,24 +104,6 @@ export default class EmojiUploader extends Component {
     this.uppyUpload.openPicker();
   }
 
-  @computed("uppyUpload.uploading", "uppyUpload.uploadProgress")
-  get buttonLabel() {
-    if (this.uppyUpload?.uploading) {
-      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload?.uploadProgress}%`;
-    } else {
-      return i18n("admin.emoji.choose_files");
-    }
-  }
-
-  @computed("uppyUpload.uploading")
-  get buttonIcon() {
-    if (this.uppyUpload?.uploading) {
-      return "spinner";
-    } else {
-      return "plus";
-    }
-  }
-
   <template>
     <div class="form-kit">
       <div
@@ -115,8 +115,8 @@ export default class EmojiUploader extends Component {
         <div class="form-kit__container-content --large">
           <div class="form-kit__control-input-wrapper">
             <Input
-              id="emoji-name"
               class="form-kit__control-input"
+              id="emoji-name"
               name="name"
               @value={{readonly this.name}}
               {{on "input" (withEventValue (fn (mut this.name)))}}
@@ -133,14 +133,14 @@ export default class EmojiUploader extends Component {
         <div class="form-kit__container-content --large">
           <div class="form-kit__control-input-wrapper">
             <ComboBox
-              @name="group"
-              @id="emoji-group-selector"
-              @value={{this.group}}
               @content={{this.newEmojiGroups}}
-              @onChange={{this.createEmojiGroup}}
-              @valueProperty={{null}}
+              @id="emoji-group-selector"
+              @name="group"
               @nameProperty={{null}}
+              @onChange={{this.createEmojiGroup}}
               @options={{hash allowAny=true}}
+              @value={{this.group}}
+              @valueProperty={{null}}
             />
           </div>
         </div>
@@ -148,18 +148,18 @@ export default class EmojiUploader extends Component {
       <div class="control-group">
         <div class="input">
           <input
-            {{didInsert this.uppyUpload.setup}}
+            accept=".gif,.png,.svg"
             class="hidden-upload-field"
             disabled={{this.uppyUpload.uploading}}
-            type="file"
             multiple="true"
-            accept=".gif,.png,.svg"
+            type="file"
+            {{didInsert this.uppyUpload.setup}}
           />
           <DButton
-            @translatedLabel={{this.buttonLabel}}
+            class="btn-primary"
             @action={{this.chooseFiles}}
             @disabled={{this.uppyUpload.uploading}}
-            class="btn-primary"
+            @translatedLabel={{this.buttonLabel}}
           />
         </div>
       </div>

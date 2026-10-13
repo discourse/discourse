@@ -68,12 +68,12 @@ export default class CategoriesBoxes extends Component {
           />
 
           <div
-            style={{categoryColorVariable c.color}}
+            class="category category-box category-box-{{c.slug}}
+              {{if c.isMuted 'muted'}}"
             data-category-id={{c.id}}
             data-notification-level={{c.notificationLevelString}}
             data-url={{c.url}}
-            class="category category-box category-box-{{c.slug}}
-              {{if c.isMuted 'muted'}}"
+            style={{categoryColorVariable c.color}}
           >
             <div class="category-box-inner">
               {{#unless c.isMuted}}
@@ -108,20 +108,20 @@ export default class CategoriesBoxes extends Component {
                     {{#if (hasGrandchildren subcategories page=this.page)}}
                       {{#each subcategories as |subcategory|}}
                         <div
-                          data-category-id={{subcategory.id}}
-                          data-notification-level={{subcategory.notificationLevelString}}
-                          style={{borderColor subcategory.color}}
                           class="subcategory with-subcategories
                             {{if
                               subcategory.uploaded_logo.url
                               'has-logo'
                               'no-logo'
                             }}"
+                          data-category-id={{subcategory.id}}
+                          data-notification-level={{subcategory.notificationLevelString}}
+                          style={{borderColor subcategory.color}}
                         >
                           <div class="subcategory-box-inner">
                             <CategoryTitleLink
-                              @tagName="h4"
                               @category={{subcategory}}
+                              @tagName="h4"
                             />
                             {{#let
                               (categoryListSubcategories

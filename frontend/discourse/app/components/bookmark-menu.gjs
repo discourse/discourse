@@ -32,20 +32,6 @@ export default class BookmarkMenu extends Component {
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
 
-  @action
-  setReminderShortcuts() {
-    this.reminderAtOptions = [
-      this.timeShortcuts.twoHours(),
-      this.timeShortcuts.tomorrow(),
-      this.timeShortcuts.threeDays(),
-    ];
-
-    const custom = this.timeShortcuts.custom();
-    custom.label = "time_shortcut.more_options";
-    custom.icon = "far-calendar-plus";
-    this.reminderAtOptions.push(custom);
-  }
-
   get bookmarkManager() {
     return this.args.bookmarkManager;
   }
@@ -120,6 +106,20 @@ export default class BookmarkMenu extends Component {
     } else {
       return i18n("bookmarked.title");
     }
+  }
+
+  @action
+  setReminderShortcuts() {
+    this.reminderAtOptions = [
+      this.timeShortcuts.twoHours(),
+      this.timeShortcuts.tomorrow(),
+      this.timeShortcuts.threeDays(),
+    ];
+
+    const custom = this.timeShortcuts.custom();
+    custom.label = "time_shortcut.more_options";
+    custom.icon = "far-calendar-plus";
+    this.reminderAtOptions.push(custom);
   }
 
   @action
@@ -266,15 +266,15 @@ export default class BookmarkMenu extends Component {
   <template>
     <DMenu
       ...attributes
-      @identifier="bookmark-menu"
       class={{this.buttonClasses}}
-      @title={{this.buttonTitle}}
-      @label={{this.buttonLabel}}
-      @icon={{this.buttonIcon}}
-      @onClose={{this.onCloseMenu}}
-      @onShow={{this.onShowMenu}}
-      @onRegisterApi={{this.onRegisterApi}}
       @arrow={{false}}
+      @icon={{this.buttonIcon}}
+      @identifier="bookmark-menu"
+      @label={{this.buttonLabel}}
+      @onClose={{this.onCloseMenu}}
+      @onRegisterApi={{this.onRegisterApi}}
+      @onShow={{this.onShowMenu}}
+      @title={{this.buttonTitle}}
     >
       <:content>
         <DDropdownMenu as |dropdown|>
@@ -291,40 +291,40 @@ export default class BookmarkMenu extends Component {
               data-menu-option-id="edit"
             >
               <DButton
+                class="bookmark-menu__row-btn btn-transparent"
+                @action={{this.onEditBookmark}}
                 @icon="pencil"
                 @label="edit"
-                @action={{this.onEditBookmark}}
-                class="bookmark-menu__row-btn btn-transparent"
               />
             </dropdown.item>
 
             {{#if this.existingBookmark.reminderAt}}
               <dropdown.item
                 class="bookmark-menu__row --clear-reminder"
+                data-menu-option-id="clear-reminder"
                 role="button"
                 tabindex="0"
-                data-menu-option-id="clear-reminder"
               >
                 <DButton
+                  class="bookmark-menu__row-btn btn-transparent"
+                  @action={{this.onClearReminder}}
                   @icon="bell-slash"
                   @label="bookmarks.clear_reminder"
-                  @action={{this.onClearReminder}}
-                  class="bookmark-menu__row-btn btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
 
             <dropdown.item
               class="bookmark-menu__row --remove"
+              data-menu-option-id="delete"
               role="button"
               tabindex="0"
-              data-menu-option-id="delete"
             >
               <DButton
+                class="bookmark-menu__row-btn --danger"
+                @action={{this.onRemoveBookmark}}
                 @icon="trash-can"
                 @label="delete"
-                @action={{this.onRemoveBookmark}}
-                class="bookmark-menu__row-btn --danger"
               />
             </dropdown.item>
 
@@ -342,11 +342,11 @@ export default class BookmarkMenu extends Component {
                 data-menu-option-id={{option.id}}
               >
                 <DButton
+                  class="bookmark-menu__row-btn btn-transparent"
+                  @action={{fn this.onChooseReminderOption option}}
+                  @icon={{option.icon}}
                   @label={{option.label}}
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
-                  @action={{fn this.onChooseReminderOption option}}
-                  class="bookmark-menu__row-btn btn-transparent"
-                  @icon={{option.icon}}
                 />
               </dropdown.item>
             {{/each}}

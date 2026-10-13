@@ -112,8 +112,8 @@ function customizePostMenu(api, container) {
 
       <template>
         <PostVotingComments
-          @post={{@outletArgs.post}}
           @canCreatePost={{@outletArgs.state.canCreatePost}}
+          @post={{@outletArgs.post}}
         />
       </template>
     }

@@ -22,8 +22,6 @@ zh_TW:
     patreon_donation_prompt_show_after_topics: "檢視 n 個主題後顯示捐款提示"
     patreon_api_version: "Patreon API 版本。版本 1 已淘汰 — 請在 Patreon 建立新的 OAuth 用戶端並切換至版本 2。"
     patreon_donation_prompt_campaign_url: "捐款提示活動 URL"
-    errors:
-      patreon_creator_username_not_set: "啟用 Patreon 登入前，必須先設定「Patreon 創作者 Discourse 使用者名稱」。"
   dashboard:
     problem:
       access_token_invalid: "Patreon 創作者的存取權杖與更新權杖值不正確。您必須從<a href='https://www.patreon.com/platform/documentation/clients'>Patreon 網站</a>複製並貼上新的權杖至<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>網站設定</a>。"

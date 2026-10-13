@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   autoGainControlPreferred,
   echoCancellationPreferred,
@@ -72,107 +73,12 @@ export default class LocalAudioPipeline {
     return this.noiseSuppressionState === "on";
   }
 
-  #serialize(task) {
-    const run = this.#queue.then(task, task);
-    this.#queue = run.then(
-      () => {},
-      () => {}
-    );
-    return run;
-  }
-
   acquireMicrophone() {
     return this.#serialize(() => this.#acquireMicrophone());
   }
 
-  async #acquireMicrophone() {
-    try {
-      const rawStream = await navigator.mediaDevices.getUserMedia({
-        audio: audioConstraints(this.inputDeviceId),
-      });
-      this.lastAcquisitionError = null;
-      // eslint-disable-next-line no-console
-      console.log("[voice] local stream obtained");
-
-      this.#rawStream = rawStream;
-
-      try {
-        // A failed DTLN setup here is transient (the preference survives;
-        // the next acquisition retries) and already fell back to the raw
-        // stream, which has native suppression off in AI mode — no reacquire
-        // mid-join, the user can flip the mode if it persists.
-        await this.#buildProcessedStream(rawStream);
-      } catch (error) {
-        if (error instanceof SupersededError) {
-          return true;
-        }
-        throw error;
-      }
-
-      return true;
-    } catch (error) {
-      this.lastAcquisitionError = error;
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to obtain local stream", error);
-      return false;
-    }
-  }
-
   setNoiseSuppressionMode(mode) {
     return this.#serialize(() => this.#setNoiseSuppressionMode(mode));
-  }
-
-  async #setNoiseSuppressionMode(mode) {
-    if (mode === this.noiseSuppressionMode) {
-      return;
-    }
-
-    const previousMode = this.noiseSuppressionMode;
-    this.noiseSuppressionMode = mode;
-    setPreferredNoiseSuppressionMode(mode);
-
-    // Without a live mic the stored preference applies on next acquisition.
-    if (!this.#rawStream) {
-      return;
-    }
-
-    let reacquired;
-    try {
-      // Native suppression is part of the getUserMedia constraints, so any
-      // mode change needs a fresh capture, not just a graph restructure.
-      reacquired = await this.#reacquire({ userGesture: true });
-    } catch (error) {
-      if (error instanceof SupersededError) {
-        return;
-      }
-      // Capture failed: the current stream is untouched, so just undo the
-      // preference.
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply noise suppression mode", error);
-      this.noiseSuppressionMode = previousMode;
-      setPreferredNoiseSuppressionMode(previousMode);
-      return;
-    }
-
-    if (reacquired) {
-      // eslint-disable-next-line no-console
-      console.log(`[voice] noise suppression mode: ${mode}`);
-      return;
-    }
-
-    // AI setup failed on an explicit user action: put the preference back
-    // and tell them, mirroring the old toggle's revert behavior.
-    this.noiseSuppressionMode = previousMode;
-    setPreferredNoiseSuppressionMode(previousMode);
-    this.#onSuppressionFailed();
-    try {
-      await this.#reacquire({ userGesture: true });
-    } catch (error) {
-      if (!(error instanceof SupersededError)) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to restore previous mode", error);
-      }
-    }
   }
 
   setEchoCancellation(enabled) {
@@ -193,30 +99,6 @@ export default class LocalAudioPipeline {
 
   setInputDevice(deviceId) {
     return this.#serialize(() => this.#setInputDevice(deviceId));
-  }
-
-  async #setInputDevice(deviceId) {
-    const previousDeviceId = this.inputDeviceId;
-    this.inputDeviceId = deviceId;
-    setPreferredInputDeviceId(deviceId);
-
-    if (!this.#rawStream) {
-      return true;
-    }
-
-    try {
-      await this.#reacquire({ userGesture: true, exactDevice: true });
-      return true;
-    } catch (error) {
-      if (error instanceof SupersededError) {
-        return true;
-      }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to switch input device", error);
-      this.inputDeviceId = previousDeviceId;
-      setPreferredInputDeviceId(previousDeviceId);
-      return false;
-    }
   }
 
   async setGateThreshold(value) {
@@ -265,6 +147,123 @@ export default class LocalAudioPipeline {
     this.#onStreamChanged();
   }
 
+  #serialize(task) {
+    const run = this.#queue.then(task, task);
+    this.#queue = run.then(
+      () => {},
+      () => {}
+    );
+    return run;
+  }
+
+  async #acquireMicrophone() {
+    try {
+      const rawStream = await navigator.mediaDevices.getUserMedia({
+        audio: audioConstraints(this.inputDeviceId),
+      });
+      this.lastAcquisitionError = null;
+
+      voiceLog.info("[voice] local stream obtained");
+
+      this.#rawStream = rawStream;
+
+      try {
+        // A failed DTLN setup here is transient (the preference survives;
+        // the next acquisition retries) and already fell back to the raw
+        // stream, which has native suppression off in AI mode — no reacquire
+        // mid-join, the user can flip the mode if it persists.
+        await this.#buildProcessedStream(rawStream);
+      } catch (error) {
+        if (error instanceof SupersededError) {
+          return true;
+        }
+        throw error;
+      }
+
+      return true;
+    } catch (error) {
+      this.lastAcquisitionError = error;
+
+      voiceLog.warn("[voice] failed to obtain local stream");
+      return false;
+    }
+  }
+
+  async #setNoiseSuppressionMode(mode) {
+    if (mode === this.noiseSuppressionMode) {
+      return;
+    }
+
+    const previousMode = this.noiseSuppressionMode;
+    this.noiseSuppressionMode = mode;
+    setPreferredNoiseSuppressionMode(mode);
+
+    // Without a live mic the stored preference applies on next acquisition.
+    if (!this.#rawStream) {
+      return;
+    }
+
+    let reacquired;
+    try {
+      // Native suppression is part of the getUserMedia constraints, so any
+      // mode change needs a fresh capture, not just a graph restructure.
+      reacquired = await this.#reacquire({ userGesture: true });
+    } catch (error) {
+      if (error instanceof SupersededError) {
+        return;
+      }
+      // Capture failed: the current stream is untouched, so just undo the
+      // preference.
+
+      voiceLog.warn("[voice] failed to apply noise suppression mode");
+      this.noiseSuppressionMode = previousMode;
+      setPreferredNoiseSuppressionMode(previousMode);
+      return;
+    }
+
+    if (reacquired) {
+      voiceLog.info(`[voice] noise suppression mode: ${mode}`);
+      return;
+    }
+
+    // AI setup failed on an explicit user action: put the preference back
+    // and tell them, mirroring the old toggle's revert behavior.
+    this.noiseSuppressionMode = previousMode;
+    setPreferredNoiseSuppressionMode(previousMode);
+    this.#onSuppressionFailed();
+    try {
+      await this.#reacquire({ userGesture: true });
+    } catch (error) {
+      if (!(error instanceof SupersededError)) {
+        voiceLog.warn("[voice] failed to restore previous mode");
+      }
+    }
+  }
+
+  async #setInputDevice(deviceId) {
+    const previousDeviceId = this.inputDeviceId;
+    this.inputDeviceId = deviceId;
+    setPreferredInputDeviceId(deviceId);
+
+    if (!this.#rawStream) {
+      return true;
+    }
+
+    try {
+      await this.#reacquire({ userGesture: true, exactDevice: true });
+      return true;
+    } catch (error) {
+      if (error instanceof SupersededError) {
+        return true;
+      }
+
+      voiceLog.warn("[voice] failed to switch input device");
+      this.inputDeviceId = previousDeviceId;
+      setPreferredInputDeviceId(previousDeviceId);
+      return false;
+    }
+  }
+
   // Captures a fresh raw stream under the current constraints and rebuilds
   // the processed pipeline on it. Returns false when the DTLN setup failed
   // (the raw stream is published instead); throws SupersededError or
@@ -308,8 +307,8 @@ export default class LocalAudioPipeline {
       if (error instanceof SupersededError) {
         return;
       }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply audio processing change", error);
+
+      voiceLog.warn("[voice] failed to apply audio processing change");
     }
   }
 
@@ -333,15 +332,15 @@ export default class LocalAudioPipeline {
       });
       this.noiseSuppressionState = "on";
       this.#setOutgoingStream(suppressed);
-      // eslint-disable-next-line no-console
-      console.log("[voice] AI noise suppression enabled");
+
+      voiceLog.info("[voice] AI noise suppression enabled");
       return true;
     } catch (error) {
       if (error instanceof SupersededError) {
         throw error;
       }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] AI noise suppression setup failed", error);
+
+      voiceLog.warn("[voice] AI noise suppression setup failed");
       this.noiseSuppressionState = "off";
       this.#setOutgoingStream(rawStream);
       return false;
@@ -366,10 +365,9 @@ export default class LocalAudioPipeline {
           return;
         }
         // Capture failed: publish what we still have rather than nothing.
-        // eslint-disable-next-line no-console
-        console.warn(
-          "[voice] failed to reacquire after suppression breakdown",
-          error
+
+        voiceLog.warn(
+          "[voice] failed to reacquire after suppression breakdown"
         );
         this.#noiseSuppression.teardown();
         this.noiseSuppressionState = "off";
@@ -392,9 +390,8 @@ export default class LocalAudioPipeline {
           upstream,
           sliderToRms(this.gateThreshold)
         );
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to set up input gate", error);
+      } catch {
+        voiceLog.warn("[voice] failed to set up input gate");
         stream = upstream;
       }
     }

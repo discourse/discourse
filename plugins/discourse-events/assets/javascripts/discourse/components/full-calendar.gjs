@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -17,14 +18,15 @@ import {
   getCurrentBcp47Locale,
 } from "../lib/calendar-locale";
 import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
+import CalendarPlaceholder from "./calendar-placeholder";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent
-    @linkToPost={{true}}
+    @clampDescription={{true}}
     @event={{@data.event}}
+    @linkToPost={{true}}
     @onClose={{@data.onClose}}
     @withDescription={{true}}
-    @clampDescription={{true}}
   />
 </template>;
 
@@ -37,6 +39,8 @@ export default class FullCalendar extends Component {
   @service loadingSlider;
 
   @controller topic;
+
+  @tracked isRendered = false;
 
   calendar = null;
 
@@ -70,6 +74,33 @@ export default class FullCalendar extends Component {
       default:
         return 1;
     }
+  }
+
+  get defaultLeftHeaderToolbar() {
+    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
+  }
+
+  get headerToolbar() {
+    return {
+      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
+      center: this.args.centerHeaderToolbar ?? "title",
+      right:
+        this.args.rightHeaderToolbar ??
+        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
+    };
+  }
+
+  get showPlaceholder() {
+    return this.args.placeholder && !this.isRendered;
+  }
+
+  get initialView() {
+    const normalizedView = normalizeViewForCalendar(this.args.initialView);
+
+    return (
+      normalizedView ||
+      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
+    );
   }
 
   @action
@@ -183,6 +214,7 @@ export default class FullCalendar extends Component {
     });
 
     this.calendar.render();
+    this.isRendered = true;
   }
 
   @action
@@ -193,31 +225,17 @@ export default class FullCalendar extends Component {
     }
   }
 
-  get defaultLeftHeaderToolbar() {
-    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
-  }
-
-  get headerToolbar() {
-    return {
-      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
-      center: this.args.centerHeaderToolbar ?? "title",
-      right:
-        this.args.rightHeaderToolbar ??
-        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
-    };
-  }
-
-  get initialView() {
-    const normalizedView = normalizeViewForCalendar(this.args.initialView);
-
-    return (
-      normalizedView ||
-      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
-    );
-  }
-
   <template>
+    {{#if this.showPlaceholder}}
+      <CalendarPlaceholder
+        @height={{@height}}
+        @view={{this.initialView}}
+        @weekends={{@weekends}}
+      />
+    {{/if}}
     <div
+      aria-busy={{if this.showPlaceholder "true"}}
+      ...attributes
       {{didInsert this.setupCalendar}}
       {{didUpdate
         this.updateCalendar
@@ -226,7 +244,6 @@ export default class FullCalendar extends Component {
         this.capabilities.viewport.md
       }}
       {{this.forceUpdateSize}}
-      ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}
     </div>

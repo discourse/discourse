@@ -47,4 +47,68 @@ RSpec.describe DiscourseWorkflows::WorkflowSnapshot do
       end
     end
   end
+
+  describe "#variables_schema" do
+    it "defaults to an empty array when the source data has none" do
+      expect(described_class.new({}).variables_schema).to eq([])
+    end
+
+    it "reads variablesSchema from the source data" do
+      schema = [{ "key" => "priority", "type" => "string", "value" => "urgent" }]
+
+      expect(described_class.new("variablesSchema" => schema).variables_schema).to eq(schema)
+    end
+
+    it "round-trips through #to_h" do
+      schema = [{ "key" => "priority", "type" => "string", "value" => "urgent" }]
+      snapshot = described_class.new("variablesSchema" => schema)
+
+      expect(described_class.new(snapshot.to_h).variables_schema).to eq(schema)
+    end
+  end
+
+  describe ".from_workflow" do
+    fab!(:workflow, :discourse_workflows_workflow)
+    fab!(:variable) do
+      Fabricate(:discourse_workflows_workflow_variable, workflow:, value: "urgent")
+    end
+
+    context "when published: false" do
+      it "uses the workflow's live variables schema" do
+        snapshot = described_class.from_workflow(workflow, published: false)
+
+        expect(snapshot.variables_schema).to eq(workflow.reload.variables_schema)
+        expect(snapshot.variables_schema.first["value"]).to eq("urgent")
+      end
+    end
+
+    context "when published: true" do
+      before do
+        version = workflow.snapshot!(user: workflow.created_by)
+        workflow.update_columns(active_version_id: version.version_id)
+      end
+
+      it "uses the active version's variables schema" do
+        snapshot = described_class.from_workflow(workflow.reload, published: true)
+
+        expect(snapshot.variables_schema).to eq(workflow.active_version.variables_schema)
+      end
+    end
+  end
+
+  describe ".from_version" do
+    fab!(:workflow, :discourse_workflows_workflow)
+    fab!(:variable) do
+      Fabricate(:discourse_workflows_workflow_variable, workflow:, value: "urgent")
+    end
+
+    it "uses the given version's variables schema" do
+      version = workflow.snapshot!(user: workflow.created_by)
+
+      snapshot = described_class.from_version(workflow, version)
+
+      expect(snapshot.variables_schema).to eq(version.variables_schema)
+      expect(snapshot.variables_schema.first["value"]).to eq("urgent")
+    end
+  end
 end

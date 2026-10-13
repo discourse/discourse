@@ -16,6 +16,10 @@ export default class ComposerActionStateService extends Service {
   topicSnapshot = null;
   postSnapshot = null;
 
+  get snapshot() {
+    return { topic: this.topicSnapshot, post: this.postSnapshot };
+  }
+
   remember({ topic, post }) {
     if (topic && (!this.topicSnapshot || topic.id !== this.topicSnapshot.id)) {
       this.topicSnapshot = topic;
@@ -30,10 +34,6 @@ export default class ComposerActionStateService extends Service {
   clear() {
     this.topicSnapshot = null;
     this.postSnapshot = null;
-  }
-
-  get snapshot() {
-    return { topic: this.topicSnapshot, post: this.postSnapshot };
   }
 
   async selectAction(actionId, { options, composerModel, topic, post }) {

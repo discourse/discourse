@@ -61,6 +61,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-subcategories",
   "category-text-color",
   "category-visibility-private-locked",
+  "code-login-auto-create-account",
   "code-login-user-field-values",
   "composer-actions-content",
   "composer-editing-post",
@@ -149,6 +150,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "search-menu-search-context-enabled",
   "search-menu-search-shortcuts-enabled",
   "sidebar-anonymous-default-categories",
+  "sidebar-panel",
   "site-setting-allows-none",
   "small-user-attrs",
   "tag-separator",
@@ -172,4 +174,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-notes-modal-subtitle",
   "user-path",
   "welcome-banner-display-for-route",
+  "welcome-banner-location",
 ]);

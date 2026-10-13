@@ -14,14 +14,14 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
+  @service router;
 
-  @tracked currentPanelKey = currentPanelKey;
   @tracked mode = COMBINED_MODE;
-  @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
   @tracked isForcingSidebar = false;
   @tracked forcingSidebarPanel = null;
@@ -31,9 +31,83 @@ export default class SidebarState extends Service {
   collapsedSections = trackedSet();
   previousState = {};
   #hiders = trackedSet();
+  #revealedLinks = new WeakMap();
+  @tracked _requestedPanelKey = currentPanelKey;
+  @tracked _displaySwitchPanelButtons = false;
+
+  /**
+   * The panel the sidebar shows. Routes and plugins ask for a panel, and the
+   * `sidebar-panel` value transformer can show a different one instead.
+   */
+  get currentPanelKey() {
+    return applyValueTransformer("sidebar-panel", this._requestedPanelKey, {
+      requestedPanelKey: this._requestedPanelKey,
+    });
+  }
+
+  set currentPanelKey(key) {
+    this._requestedPanelKey = key;
+  }
+
+  // Combined mode and panel switching are both about the panel that was asked
+  // for, so neither applies once a transformer shows another one.
+  get #panelTransformed() {
+    return this.currentPanelKey !== this._requestedPanelKey;
+  }
+
+  get displaySwitchPanelButtons() {
+    return this._displaySwitchPanelButtons && !this.#panelTransformed;
+  }
 
   get sidebarHidden() {
     return this.#hiders.size > 0;
+  }
+
+  get currentPanel() {
+    return this.panels.find((panel) => panel.key === this.currentPanelKey);
+  }
+
+  get combinedMode() {
+    return this.mode === COMBINED_MODE && !this.#panelTransformed;
+  }
+
+  get showMainPanel() {
+    return this.currentPanelKey === MAIN_PANEL;
+  }
+
+  get sanitizedFilter() {
+    return escapeRegExp(this.filter.toLowerCase().trim());
+  }
+
+  resetLinkReveal(container) {
+    this.#revealedLinks.delete(container);
+  }
+
+  shouldRevealLink(container, destination, { force = false, linkRoute } = {}) {
+    let state = this.#revealedLinks.get(container);
+    const route = this.router.currentRoute;
+    const panel = this.currentPanelKey;
+
+    if (
+      !state ||
+      state.route !== route ||
+      state.panel !== panel ||
+      state.mode !== this.mode ||
+      state.filter !== this.filter
+    ) {
+      state = {
+        route,
+        panel,
+        mode: this.mode,
+        filter: this.filter,
+        destinations: new Map(),
+      };
+      this.#revealedLinks.set(container, state);
+    }
+
+    const revealed = state.destinations.get(linkRoute) === destination;
+    state.destinations.set(linkRoute, destination);
+    return force || !revealed;
   }
 
   registerHider(ref) {
@@ -45,15 +119,11 @@ export default class SidebarState extends Service {
   }
 
   setPanel(name) {
-    if (this.currentPanelKey) {
+    if (this._requestedPanelKey) {
       this.setPreviousState();
     }
-    this.currentPanelKey = name;
+    this._requestedPanelKey = name;
     this.restorePreviousState();
-  }
-
-  get currentPanel() {
-    return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
 
   setSeparatedMode() {
@@ -63,22 +133,22 @@ export default class SidebarState extends Service {
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
-    this.currentPanelKey = MAIN_PANEL;
+    this._requestedPanelKey = MAIN_PANEL;
     this.hideSwitchPanelButtons();
   }
 
   showSwitchPanelButtons() {
-    this.displaySwitchPanelButtons = true;
+    this._displaySwitchPanelButtons = true;
   }
 
   hideSwitchPanelButtons() {
-    this.displaySwitchPanelButtons = false;
+    this._displaySwitchPanelButtons = false;
   }
 
   setPreviousState() {
-    this.previousState[this.currentPanelKey] = {
+    this.previousState[this._requestedPanelKey] = {
       mode: this.mode,
-      displaySwitchPanelButtons: this.displaySwitchPanelButtons,
+      displaySwitchPanelButtons: this._displaySwitchPanelButtons,
     };
   }
 
@@ -105,7 +175,7 @@ export default class SidebarState extends Service {
   }
 
   restorePreviousState() {
-    const state = this.previousState[this.currentPanelKey];
+    const state = this.previousState[this._requestedPanelKey];
     if (!state) {
       return;
     }
@@ -121,18 +191,6 @@ export default class SidebarState extends Service {
     } else {
       this.hideSwitchPanelButtons();
     }
-  }
-
-  get combinedMode() {
-    return this.mode === COMBINED_MODE;
-  }
-
-  get showMainPanel() {
-    return this.currentPanelKey === MAIN_PANEL;
-  }
-
-  get sanitizedFilter() {
-    return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
   clearFilter() {

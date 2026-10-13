@@ -8,6 +8,10 @@ th:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "วันที่"
+          outcomes:
+            failed: "ล้มเหลว"
         reports:
           filters:
             sort_by:
@@ -208,6 +212,13 @@ th:
         display_name: "ชื่อ"
         providers:
           google: "กูเกิล"
+      ai_artifact:
+        editor:
+          version: "เวอร์ชัน"
+          default: "ค่าเริ่มต้น"
+          apply: "นำไปใช้"
+        share: "แบ่งปัน"
+        filter_all: "ทั้งหมด"
       ai_bot:
         debug_ai_modal:
           duration_label: "ช่วงเวลา:"

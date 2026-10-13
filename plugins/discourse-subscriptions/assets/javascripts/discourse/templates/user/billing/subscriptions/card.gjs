@@ -11,8 +11,8 @@ export default <template>
   <div class="form-vertical">
     <div class="control-group">
       <SubscribeCard
-        @cardElement={{@controller.cardElement}}
         class="input-xxlarge"
+        @cardElement={{@controller.cardElement}}
       />
     </div>
 

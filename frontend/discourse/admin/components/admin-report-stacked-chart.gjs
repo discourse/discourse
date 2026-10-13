@@ -246,8 +246,8 @@ export default class AdminReportStackedChart extends Component {
   <template>
     <Chart
       ...attributes
-      @chartConfig={{this.chartConfig}}
       class="admin-report-chart admin-report-stacked-chart"
+      @chartConfig={{this.chartConfig}}
     />
   </template>
 

@@ -55,8 +55,12 @@ module Migrations
             .map do |original_id|
               unless (discourse_id = query_discourse_id(mapping_type, original_id))
                 log_error(
-                  "Failed to update site setting '#{setting_name}': " \
-                    "Could not map original #{type_name} ID '#{original_id}' to Discourse ID",
+                  I18n.t(
+                    "importer.site_settings.id_not_mapped",
+                    setting_name:,
+                    type_name:,
+                    original_id:,
+                  ),
                 )
               end
               discourse_id
@@ -85,8 +89,11 @@ module Migrations
           if discourse_username.blank?
             if !(discourse_username = User.where(username_lower: original_username).pick(:username))
               log_error(
-                "Failed to update site setting '#{setting_name}': " \
-                  "Could not map original username '#{original_username}' to Discourse username",
+                I18n.t(
+                  "importer.site_settings.username_not_mapped",
+                  setting_name:,
+                  original_username:,
+                ),
               )
             end
           end

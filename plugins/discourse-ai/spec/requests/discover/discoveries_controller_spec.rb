@@ -29,11 +29,25 @@ describe DiscourseAi::Discover::DiscoveriesController do
       allowed_group.add(user)
     end
 
+    it "queues an Ask AI reply when embeddings and semantic search are disabled" do
+      group.add(user)
+      SiteSetting.ai_embeddings_enabled = false
+      SiteSetting.ai_embeddings_semantic_search_enabled = false
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { user_id: user.id, request_id: }) do
+        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["request_id"]).to eq(request_id)
+    end
+
     context "when the user doesn't have access to the agent" do
       it "returns a 403" do
         post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?", request_id: }
 
         expect(response.status).to eq(403)
+        expect(AskAiLog.count).to eq(0)
       end
     end
 
@@ -64,10 +78,28 @@ describe DiscourseAi::Discover::DiscoveriesController do
         end
       end
 
+      it "logs each accepted ask once without consolidating repeated questions" do
+        query = "How do I search for 猫?"
+        params = { query:, request_id: }
+
+        expect {
+          2.times { post "/discourse-ai/discoveries/reply", params: }
+          post "/discourse-ai/discoveries/reply", params: { query:, request_id: SecureRandom.uuid }
+        }.to change(AskAiLog, :count).by(2)
+
+        logs = AskAiLog.order(:id).last(2)
+        expect(logs).to all(have_attributes(user_id: user.id, query:, ask_outcome: nil))
+        expect(logs.map(&:asked_at)).to all(be_present)
+        expect(
+          Jobs::StreamDiscoverReply.jobs.last(2).map { |job| job["args"].first["ask_ai_log_id"] },
+        ).to eq(logs.map(&:id))
+      end
+
       it "returns a 400 if the query is missing" do
         post "/discourse-ai/discoveries/reply", params: { request_id: }
 
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "returns a 400 if the request ID is invalid" do
@@ -77,6 +109,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
                request_id: "not-a-uuid",
              }
         expect(response.status).to eq(400)
+        expect(AskAiLog.count).to eq(0)
       end
 
       it "does not enqueue the same request twice" do
@@ -148,6 +181,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
     let(:query) { "What is Discourse?" }
     let(:context) { "Discourse is an open-source discussion platform." }
     let(:request_id) { SecureRandom.uuid }
+
     fab!(:source_post, :post)
 
     context "when the user is allowed to discover" do
@@ -280,20 +314,14 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(posts.second.raw).not_to include("@support")
       end
 
-      it "uses an enabled AI bot when the follow-up agent has no dedicated user" do
+      it "rejects follow-up when the follow-up agent has no dedicated user" do
         follow_up_agent.update!(user: nil)
-        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
-        SiteSetting.ai_bot_allowed_groups = group.id.to_s
-        llm_model.toggle_companion_user
 
-        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        expect {
+          post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        }.not_to change(Topic, :count)
 
-        expect(response.status).to eq(200)
-        topic = Topic.find(response.parsed_body["topic_id"])
-        expect(topic.allowed_users).to include(llm_model.reload.user)
-        expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD]).to eq(
-          follow_up_agent.id.to_s,
-        )
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "continues from selected discussions when summary prose is hidden" do

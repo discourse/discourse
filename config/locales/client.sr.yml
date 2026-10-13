@@ -237,6 +237,9 @@ sr:
     topic_admin_menu: "радње око теме"
     skip_to_main_content: "Predji na glavni sadržaj"
     skip_user_nav: "Preskoči do sadržaja profila"
+    reorder:
+      removed: "Уклања групу %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     emails_are_disabled_non_staff: "Odlazni email je omogućen samo za osoblje."
     software_update_prompt:
@@ -822,6 +825,9 @@ sr:
       user_label: "Korisnik"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati na prethodno"
       notes:
         delete: "Obriši"
       topic_label: "Tema"
@@ -1306,6 +1312,12 @@ sr:
       users: "Korisnici"
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
+      mcp_authorizations:
+        details: "Detalji"
+        never: "Nikad"
+        status: "Status"
+        statuses:
+          active: "Aktivni"
       api_approved: "Potvrđenji:"
       api_expires_never: "nikada"
       staff_counters:
@@ -1846,8 +1858,7 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
-      title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      title_placeholder_redesign: "Naslov"
+      title_placeholder: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2365,6 +2376,7 @@ sr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Poslednje teme"
       description_expand: "Pokaži više"
       description_collapse: "Pokaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -2484,6 +2496,7 @@ sr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "resetuj"
         button:
           label: "Filter"
       latest:
@@ -2862,6 +2875,53 @@ sr:
       config:
         developer:
           title: "Programer"
+        mcp:
+          tabs:
+            activity: "Aktivnosti"
+          overview:
+            status: "Status"
+          access:
+            group: "Grupa"
+            groups: "Grupe"
+            actions: "Akcije"
+            edit: "Izmeni"
+            delete: "Obriši"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Posebna"
+            automatic: "Automatska"
+          authorizations:
+            user: "Korisnik"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Vreme"
+            user: "Korisnik"
+          values:
+            server_status:
+              disabled: "Isključeno"
+            client_trust:
+              approved: "Potvrđenji"
+            authorization_status:
+              active: "Aktivni"
+            activity_outcome:
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućeno"
+              disabled: "Isključeno"
+            primitive_kind:
+              all: "Svi tipovi"
+            filter:
+              all: "Sve"
+          never: "Nikad"
+          actions:
+            revoke: "Povuci"
         emojis:
           title: "Emoji"
         files:
@@ -3133,6 +3193,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
+          crawler_learn_more: "Saznaj više"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
@@ -3764,6 +3825,8 @@ sr:
         field_types:
           confirm: "Potvrda"
       site_text:
+        search_label: "Pretraži"
+        theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"
         outdated:

@@ -131,6 +131,13 @@ export default class UppyWrapper {
     });
   }
 
+  addNeedProcessing(fileCount) {
+    this.#eachPreProcessor((pluginName, status) => {
+      status.needProcessing += fileCount;
+      status.allComplete = false;
+    });
+  }
+
   #trackPreProcessorStatus(pluginId) {
     this.#preProcessorStatus[pluginId] = {
       needProcessing: 0,
@@ -138,13 +145,6 @@ export default class UppyWrapper {
       completeProcessing: 0,
       allComplete: false,
     };
-  }
-
-  addNeedProcessing(fileCount) {
-    this.#eachPreProcessor((pluginName, status) => {
-      status.needProcessing += fileCount;
-      status.allComplete = false;
-    });
   }
 
   #eachPreProcessor(cb) {

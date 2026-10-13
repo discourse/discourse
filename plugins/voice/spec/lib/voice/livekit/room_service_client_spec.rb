@@ -75,8 +75,6 @@ RSpec.describe Voice::Livekit::RoomServiceClient do
   end
 
   describe ".update_participant" do
-    before { SiteSetting.voice_video_enabled = true }
-
     it "sends the full permission set for a speaker in a video room" do
       room.update!(video_enabled: true)
       stub = twirp_stub("UpdateParticipant")
@@ -204,6 +202,8 @@ RSpec.describe Voice::Livekit::RoomServiceClient do
   end
 
   context "when LiveKit is down" do
+    before { SiteSetting.voice_verbose_logging = true }
+
     it "never raises on a timeout and logs the failure" do
       twirp_stub("DeleteRoom").to_timeout
       Rails.logger.expects(:warn).with(regexp_matches(/\[voice-livekit\] DeleteRoom failed/))

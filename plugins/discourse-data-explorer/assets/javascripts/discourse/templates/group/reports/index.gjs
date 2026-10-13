@@ -22,8 +22,8 @@ export default <template>
           <tr>
             <td>
               <LinkTo
-                @route="group.reports.show"
                 @models={{array @controller.group.name query.id}}
+                @route="group.reports.show"
               >
                 {{query.name}}
               </LinkTo>

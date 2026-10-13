@@ -956,6 +956,88 @@
   }
 }
 
+.styleguide-reorderable-list {
+  max-width: 22em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+
+  &__label {
+    flex: 1 1 auto;
+  }
+
+  &__input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__note {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  .d-reorderable-list__row {
+    padding: 0.35em 0.75em;
+
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    /* Inputs carry a default bottom margin, which pushes the box above the
+       row's centre line and leaves it out of step with the controls. Scoped to
+       the row so it outranks the attribute selector that sets it. */
+
+    input {
+      margin-bottom: 0;
+    }
+  }
+
+  .d-reorderable-list__create {
+    padding: 0.35em 0.75em;
+  }
+}
+
+.styleguide-reorderable-list-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5em;
+
+  &__panel {
+    flex: 1 1 14em;
+    max-width: 22em;
+
+    h4 {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+.styleguide-reorderable-table {
+  width: 100%;
+  max-width: 30em;
+  border-collapse: collapse;
+
+  /* The grip's column, sized to the grip. A table shares its free width out
+     among the columns, so without a width of its own this one takes a third of
+     the table to hold a 24px control. A width below the content's minimum is
+     raised to it, which is what makes `1px` mean "no wider than the grip". */
+
+  &__reorder {
+    width: 1px;
+    white-space: nowrap;
+  }
+
+  th {
+    padding: 0.35em 0.5em;
+    border-block-end: 1px solid var(--primary-low);
+    text-align: start;
+  }
+
+  td {
+    padding: 0.35em 0.5em;
+  }
+}
+
 .styleguide-shortcut-spellings {
   th,
   td {
@@ -1011,5 +1093,144 @@
     padding: 0.5em 1em;
     border-bottom: 1px solid var(--primary-very-low);
     line-height: 1.4;
+  }
+}
+
+.styleguide-tabs {
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .d-tabs__strip {
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .d-tabs__panel {
+    padding: var(--space-3);
+  }
+
+  &.--narrow {
+    max-width: 360px;
+  }
+
+  &.--vertical {
+    .d-tabs {
+      flex-direction: row;
+      gap: var(--space-3);
+    }
+
+    .d-tabs__strip {
+      align-items: flex-start;
+      border-bottom: 0;
+      border-right: 1px solid var(--primary-low);
+    }
+
+    .d-tabs__panel {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.styleguide-overflow-controls {
+  &.--narrow {
+    max-width: 360px;
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  &__strip {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding: var(--space-2) 0;
+  }
+
+  &__list {
+    @include horizontal-scroll-strip;
+    display: flex;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) 0;
+  }
+
+  &__column {
+    height: 160px;
+    overflow-y: auto;
+  }
+
+  &__chip {
+    flex: 0 0 auto;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    white-space: nowrap;
+  }
+
+  &__row {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--primary-very-low);
+  }
+}
+
+.context-menu-demo {
+  &__surface {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75em;
+    padding: 1em;
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    cursor: context-menu;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+
+    &.--nested {
+      align-self: stretch;
+      border-style: solid;
+      border-color: var(--tertiary);
+      background: var(--secondary);
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__field {
+    width: 100%;
+    max-width: 24em;
+  }
+
+  &__decision {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
   }
 }

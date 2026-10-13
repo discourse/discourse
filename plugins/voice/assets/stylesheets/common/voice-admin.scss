@@ -2,10 +2,6 @@
   margin-top: 1.5em;
 
   .voice-rooms {
-    .voice-rooms__name {
-      font-weight: 600;
-    }
-
     .voice-rooms__controls {
       display: flex;
       gap: 0.5em;
@@ -173,22 +169,5 @@
 
   &__load-more {
     margin-top: 0.5em;
-  }
-}
-
-.voice-livekit-status__webhook-config {
-  margin: 0.5em 0 1em;
-
-  p {
-    margin-bottom: 0.25em;
-    color: var(--primary-medium);
-  }
-
-  pre {
-    margin: 0;
-    padding: 0.5em 0.75em;
-    background: var(--primary-very-low);
-    font-size: var(--font-down-1);
-    overflow-x: auto;
   }
 }

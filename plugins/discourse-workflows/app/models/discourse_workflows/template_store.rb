@@ -15,6 +15,8 @@ module DiscourseWorkflows
     end
 
     def self.templates_by_id
+      return load_templates if Rails.env.development?
+
       @templates_by_id ||= load_templates
     end
     private_class_method :templates_by_id

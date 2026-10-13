@@ -12,7 +12,6 @@ fr:
       description: "Espace où les membres peuvent proposer des idées et voter pour leurs préférées."
   site_settings:
     enable_ideas_category_type_setup: "Active l'option de type de catégorie « Idées » lors de la configuration de la création d'une catégorie."
-    enable_topic_voting_badges: "Active les badges de vote sur les sujets attribués aux membres lorsque d'autres personnes votent pour leurs idées."
     topic_voting_enabled: 'Autoriser les utilisateurs à voter pour les sujets ?'
     topic_voting_enable_vote_limits: 'Limiter le nombre de votes par utilisateur selon le niveau de confiance'
     topic_voting_tl0_vote_limit: 'À combien de votes les utilisateurs de niveau de confiance 0 ont-ils droit ?'

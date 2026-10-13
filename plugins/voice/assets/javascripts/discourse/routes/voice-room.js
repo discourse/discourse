@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 import urlFlagSet from "discourse/plugins/voice/discourse/lib/voice/url-flag";
 
@@ -38,7 +38,7 @@ export default class VoiceRoomRoute extends DiscourseRoute {
       return;
     }
 
-    this.router.replaceWith(`discovery.${defaultHomepage()}`);
+    this.router.replaceWith(homepageNavigationDestination());
   }
 
   titleToken() {

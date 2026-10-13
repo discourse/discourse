@@ -24,9 +24,9 @@ export default class AiRegenSummariesModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.summarization.topic.regenerate_ai_summaries"}}
-      @closeModal={{@closeModal}}
       class="ai-regen-summaries-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.summarization.topic.regenerate_ai_summaries"}}
     >
       <:body>
         <p class="ai-regen-summaries-modal__description">
@@ -34,10 +34,10 @@ export default class AiRegenSummariesModal extends Component {
         </p>
         <div class="ai-regen-summaries-modal__buttons">
           <AiRegenSummariesButtons
-            @topicIds={{this.topicIds}}
             @disabled={{this.loading}}
             @onLoadingChange={{this.handleLoadingChange}}
             @onSuccess={{this.handleSuccess}}
+            @topicIds={{this.topicIds}}
           />
         </div>
       </:body>

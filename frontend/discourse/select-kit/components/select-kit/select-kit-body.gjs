@@ -52,7 +52,6 @@ export default class SelectKitBody extends Component {
     next(() => {
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         this.selectKit.mainElement()?.contains(document.activeElement)
       ) {
         return;

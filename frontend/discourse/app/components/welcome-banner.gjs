@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { next } from "@ember/runloop";
+import { registerDestructor } from "@ember/destroyable";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
@@ -18,6 +19,9 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
+const claimedLocations = new Map();
+const reportedLocations = new Set();
+
 export const ALL_PAGES_EXCLUDED_ROUTES = [
   "account-created.edit-email",
   "account-created.index",
@@ -32,12 +36,18 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 
 export default class WelcomeBanner extends Component {
   @service router;
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;
   @service search;
 
   checkViewport = modifier((element) => {
+    if (!this.site.can_search) {
+      this.search.welcomeBannerSearchInViewport = false;
+      return;
+    }
+
     const searchMenu =
       element.querySelector(".welcome-banner__search-menu") ?? element;
 
@@ -107,6 +117,10 @@ export default class WelcomeBanner extends Component {
   });
 
   handleKeyboardShortcut = modifier(() => {
+    if (!this.site.can_search) {
+      return;
+    }
+
     const cb = (appEvent) => {
       if (
         appEvent.type === "search" &&
@@ -119,6 +133,46 @@ export default class WelcomeBanner extends Component {
     this.appEvents.on("header:keyboard-trigger", cb);
     return () => this.appEvents.off("header:keyboard-trigger", cb);
   });
+
+  constructor() {
+    super(...arguments);
+
+    const { location } = this.args;
+    if (location === undefined) {
+      return;
+    }
+
+    claimedLocations.set(location, (claimedLocations.get(location) ?? 0) + 1);
+    registerDestructor(this, () => {
+      const remaining = claimedLocations.get(location) - 1;
+      if (remaining > 0) {
+        claimedLocations.set(location, remaining);
+      } else {
+        claimedLocations.delete(location);
+      }
+    });
+
+    // Other render points are constructed in this same pass, so wait for them
+    // before deciding that nobody claimed the location.
+    schedule("afterRender", this, this.#reportUnclaimedLocation);
+  }
+
+  // Where the banner renders. Core offers the site setting's locations; a
+  // customization can return a location of its own and render the banner independently,
+  // as long as it passes a @location that matches the transformer's value
+  get location() {
+    return applyValueTransformer(
+      "welcome-banner-location",
+      this.siteSettings.welcome_banner_location
+    );
+  }
+
+  // A bare <WelcomeBanner> without a @location arg will render regardless of the claimed location
+  get matchesLocation() {
+    return (
+      this.args.location === undefined || this.args.location === this.location
+    );
+  }
 
   get displayForRoute() {
     const { currentRouteName } = this.router;
@@ -147,32 +201,6 @@ export default class WelcomeBanner extends Component {
     return applyValueTransformer("search-advanced-icon-enabled", true, {
       location: "welcome-banner",
     });
-  }
-
-  #shouldDisplayForRoute(
-    welcome_banner_page_visibility,
-    top_menu,
-    currentRouteName
-  ) {
-    switch (welcome_banner_page_visibility) {
-      case "top_menu_pages":
-        return top_menu
-          .split("|")
-          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
-      case "homepage":
-        return currentRouteName === `discovery.${defaultHomepage()}`;
-      case "discovery":
-        return currentRouteName.startsWith("discovery.");
-      case "all_pages":
-        return (
-          !currentRouteName.startsWith("admin") &&
-          !ALL_PAGES_EXCLUDED_ROUTES.some(
-            (routeName) => routeName === currentRouteName
-          )
-        );
-      default:
-        return false;
-    }
   }
 
   get headerText() {
@@ -210,7 +238,11 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    return this.siteSettings.enable_welcome_banner && this.displayForRoute;
+    return (
+      this.siteSettings.enable_welcome_banner &&
+      this.matchesLocation &&
+      this.displayForRoute
+    );
   }
 
   get bodyClasses() {
@@ -222,7 +254,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get locationClass() {
-    return `--location-${dasherize(this.siteSettings.welcome_banner_location)}`;
+    return `--location-${dasherize(this.location)}`;
   }
 
   get bgImgClass() {
@@ -249,6 +281,57 @@ export default class WelcomeBanner extends Component {
       return trustHTML(
         `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
+    }
+  }
+
+  #reportUnclaimedLocation() {
+    if (this.isDestroying) {
+      return;
+    }
+
+    const { location } = this;
+    if (
+      !this.siteSettings.enable_welcome_banner ||
+      !this.displayForRoute ||
+      claimedLocations.has(location) ||
+      reportedLocations.has(location)
+    ) {
+      return;
+    }
+
+    reportedLocations.add(location);
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Welcome banner: no render point for location "${location}", so the ` +
+        `banner will not be shown. Either render <WelcomeBanner @location="${location}" /> ` +
+        "where you want it, or check the value returned by the " +
+        "welcome-banner-location transformer."
+    );
+  }
+
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
+    switch (welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return top_menu
+          .split("|")
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
+      case "homepage":
+        return currentRouteName === `discovery.${defaultHomepage()}`;
+      case "discovery":
+        return currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return (
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
+      default:
+        return false;
     }
   }
 
@@ -281,22 +364,24 @@ export default class WelcomeBanner extends Component {
             {{/if}}
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
-          <div class="search-menu welcome-banner__search-menu">
-            {{#if this.showAdvancedSearchIcon}}
-              <DButton
-                @icon="magnifying-glass"
-                @title="search.open_advanced"
-                @href={{getURL "/search?expanded=true"}}
-                class="search-icon"
+          {{#if this.site.can_search}}
+            <div class="search-menu welcome-banner__search-menu">
+              {{#if this.showAdvancedSearchIcon}}
+                <DButton
+                  class="search-icon"
+                  @href={{getURL "/search?expanded=true"}}
+                  @icon="magnifying-glass"
+                  @title="search.open_advanced"
+                />
+              {{/if}}
+              <SearchMenu
+                @hideResults={{not this.search.welcomeBannerSearchInViewport}}
+                @location="welcome-banner"
+                @searchInputId="welcome-banner-search-input"
+                @searchInputPlaceholder="welcome_banner.search_placeholder"
               />
-            {{/if}}
-            <SearchMenu
-              @location="welcome-banner"
-              @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder="welcome_banner.search_placeholder"
-              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
-            />
-          </div>
+            </div>
+          {{/if}}
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>

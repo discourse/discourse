@@ -8,13 +8,13 @@ export default class CategoryField extends BaseField {
   <template>
     <section class="field category-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <CategoryChooser
-            @value={{@field.metadata.value}}
             @onChange={{this.mutValue}}
             @options={{hash clearable=true disabled=@field.isDisabled}}
+            @value={{@field.metadata.value}}
           />
 
           <DAFieldDescription @description={{@description}} />

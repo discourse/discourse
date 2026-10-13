@@ -21,24 +21,24 @@ const Dropdown = <template>
     {{/if}}
 
     <select
-      name={{@id}}
       class="form-template-field__dropdown"
+      name={{@id}}
       required={{if @validations.required "required" ""}}
       {{on "input" @onChange}}
     >
       {{#if @attributes.none_label}}
         <option
           class="form-template-field__dropdown-placeholder"
-          value
           disabled
-          selected
           hidden
+          selected
+          value
         >{{@attributes.none_label}}</option>
       {{/if}}
       {{#each @choices as |choice|}}
         <option
-          value={{choice}}
           selected={{eq @value choice}}
+          value={{choice}}
         >{{choice}}</option>
       {{/each}}
     </select>

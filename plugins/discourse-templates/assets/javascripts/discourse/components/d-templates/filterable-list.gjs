@@ -159,22 +159,22 @@ export default class DTemplatesFilterableList extends Component {
           {{#if this.siteSettings.tagging_enabled}}
             <TagDrop
               @availableTags={{this.availableTags}}
-              @tag={{this.selectedTagObject}}
               @onChangeSelectedTag={{this.changeSelectedTag}}
+              @tag={{this.selectedTagObject}}
             />
           {{/if}}
           <DTextField
             class="templates-filter"
-            @value={{this.listFilter}}
             placeholder={{i18n "templates.filter_hint"}}
+            @value={{this.listFilter}}
           />
         </div>
         <div class="templates-list">
           {{#each this.filteredReplies as |r|}}
             <Item
-              @template={{r}}
               @model={{@model}}
               @onInsertTemplate={{this.insertTemplate}}
+              @template={{r}}
             />
           {{/each}}
         </div>

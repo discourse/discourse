@@ -19,6 +19,16 @@ nl:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "AI vragen"
+        ask_ai:
+          title: "AI vragen"
+          reports:
+            retry_questions: "Opnieuw proberen"
+          date: "Datum"
+          outcomes:
+            failed: "Mislukt"
         emotion:
           title: "Emotie"
         reports:
@@ -966,11 +976,6 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
-          anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          google-gemini-3-1-pro-preview: "Het intelligentste model van Google"
-          open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -1162,9 +1167,24 @@ nl:
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
+        editor:
+          version: "Versie"
+          default: "Standaard"
+          option_on: "Aan"
+          option_off: "Uit"
+          apply: "Toepassen"
         expand_view_label: "Weergave uitvouwen"
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
+        share: "Delen"
+        create_link: "Link maken"
+        copied: "Gekopieerd naar klembord"
+        copy_link: "Link kopiëren"
+        copy_embed: "Insluiting kopiëren"
+        new_tab: "Weergeven in nieuw tabblad"
+        filter_all: "Alles"
+        filter_standalone: "Losstaand"
+        filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
         agent: "Agent:"

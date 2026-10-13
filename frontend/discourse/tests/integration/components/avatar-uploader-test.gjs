@@ -23,7 +23,7 @@ module("Integration | Component | AvatarUploader", function (hooks) {
 
     await render(
       <template>
-        <AvatarUploader @id="avatar-uploader" @done={{callback}} />
+        <AvatarUploader @done={{callback}} @id="avatar-uploader" />
       </template>
     );
 

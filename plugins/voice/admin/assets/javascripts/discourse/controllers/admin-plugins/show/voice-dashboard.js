@@ -23,6 +23,20 @@ export default class VoiceDashboardController extends Controller {
     return moment().locale("en").utc().endOf("day");
   }
 
+  @action
+  setCustomDateRange(startDate, endDate) {
+    this.period = "custom";
+    this.start_date = moment(startDate).format("YYYY-MM-DD");
+    this.end_date = moment(endDate).format("YYYY-MM-DD");
+  }
+
+  @action
+  setPeriod(period) {
+    this.period = period;
+    this.start_date = null;
+    this.end_date = null;
+  }
+
   #calculateStartDate() {
     const fullDay = moment().locale("en").utc().endOf("day");
 
@@ -36,19 +50,5 @@ export default class VoiceDashboardController extends Controller {
       default:
         return fullDay.subtract(1, "month").startOf("day");
     }
-  }
-
-  @action
-  setCustomDateRange(startDate, endDate) {
-    this.period = "custom";
-    this.start_date = moment(startDate).format("YYYY-MM-DD");
-    this.end_date = moment(endDate).format("YYYY-MM-DD");
-  }
-
-  @action
-  setPeriod(period) {
-    this.period = period;
-    this.start_date = null;
-    this.end_date = null;
   }
 }

@@ -122,9 +122,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
+          @fullPage={{true}}
           @searchTerm="miyazaki"
           @showHeading={{true}}
-          @fullPage={{true}}
         />
       </template>
     );
@@ -149,10 +149,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -204,10 +202,12 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
   test("a suggested follow-up steps aside when the field is focused", async function (assert) {
     this.currentUser.ai_enabled_agents = [
-      { id: -1, username: "forum_helper", allow_personal_messages: true },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+      {
+        id: -1,
+        username: "forum_helper",
+        allow_personal_messages: true,
+        has_default_llm: true,
+      },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -497,7 +497,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__all-results")
       .hasAttribute(
         "href",
-        "/filter?q=topic%3A101%2C102%2C103%2C104",
+        "/filter?q=topic%3A101%2C102%2C103%2C104&query_label=miyazaki",
         "the full topic list contains every retrieval candidate"
       );
     assert.strictEqual(
@@ -614,8 +614,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -674,8 +674,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -731,8 +731,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="test search"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="test search"
         />
       </template>
     );
@@ -782,10 +782,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -845,10 +843,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_discover_agent = "-34";
     this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
@@ -891,10 +887,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -34,
         username: "discover",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -1027,8 +1021,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     await render(
       <template>
         <AiSearchDiscoveries
-          @searchTerm="how do i catch a pokemon"
           @closeSearchMenu={{this.closeSearchMenu}}
+          @searchTerm="how do i catch a pokemon"
         />
       </template>
     );

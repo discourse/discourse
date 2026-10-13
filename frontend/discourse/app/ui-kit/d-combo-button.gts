@@ -24,7 +24,7 @@ interface GroupArgs {
 }
 
 interface ButtonSignature {
-  Element: HTMLButtonElement;
+  Element: HTMLButtonElement | HTMLAnchorElement;
   Args: DButtonSignature["Args"] & GroupArgs;
   Blocks: { default: [] };
 }
@@ -72,10 +72,10 @@ class Menu extends Component<MenuSignature> {
             arguments beat curried ones, which would otherwise make them
             overrides. }}
         <CurriedComponent
-          @icon={{or @icon "chevron-down"}}
-          @placement={{or @placement "bottom-end"}}
           class={{dConcatClass "d-combo-button-menu" @btnTypeClass}}
           ...attributes
+          @icon={{or @icon "chevron-down"}}
+          @placement={{or @placement "bottom-end"}}
         >
           <:content>
             {{yield}}

@@ -7,6 +7,7 @@ module DiscourseAi
 
       JPEG_EXTENSIONS = %w[jpg jpeg].freeze
       SUPPORTED_IMAGE_EXTENSIONS = (JPEG_EXTENSIONS + %w[png gif webp avif]).freeze
+      SUPPORTED_IMAGE_FORMATS = SUPPORTED_IMAGE_EXTENSIONS.join(", ")
 
       def self.supported_image_upload?(upload)
         image_extension?(upload.extension&.downcase)
@@ -44,7 +45,7 @@ module DiscourseAi
             log_image_upload_skip(
               skips,
               upload,
-              "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_EXTENSIONS.join(", ")}",
+              "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_FORMATS}",
             )
             next
           end
@@ -57,7 +58,14 @@ module DiscourseAi
                 "application/octet-stream"
 
             attachment_type = DocumentEncoder.attachment_type_for(upload.extension, mime_type)
-            next if allowed_attachment_types&.exclude?(attachment_type)
+            if allowed_attachment_types&.exclude?(attachment_type)
+              record_upload_skip(
+                skips,
+                upload,
+                "#{attachment_type} attachments are not accepted by this model",
+              )
+              next
+            end
 
             next DocumentEncoder.encode(upload, mime_type, attachment_type, skips)
           end
@@ -89,7 +97,7 @@ module DiscourseAi
         end
 
         def log_image_upload_skip(skips, upload, message)
-          record_skip(skips, upload, message)
+          record_upload_skip(skips, upload, message)
 
           Rails.logger.warn(
             "Discourse AI: Skipping image upload " \

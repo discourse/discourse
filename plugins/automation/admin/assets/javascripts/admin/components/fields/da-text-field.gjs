@@ -10,15 +10,15 @@ export default class TextField extends BaseField {
   <template>
     <section class="field text-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="field-wrapper">
             <Input
-              @value={{@field.metadata.value}}
               disabled={{@field.isDisabled}}
-              {{on "input" this.mutText}}
               name={{@field.name}}
+              @value={{@field.metadata.value}}
+              {{on "input" this.mutText}}
             />
 
             <DAFieldDescription @description={{@description}} />
@@ -26,8 +26,8 @@ export default class TextField extends BaseField {
             {{#if this.displayPlaceholders}}
               <PlaceholdersList
                 @currentValue={{@field.metadata.value}}
-                @placeholders={{@placeholders}}
                 @onCopy={{this.mutValue}}
+                @placeholders={{@placeholders}}
               />
             {{/if}}
           </div>

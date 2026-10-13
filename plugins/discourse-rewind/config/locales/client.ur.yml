@@ -15,16 +15,8 @@ ur:
         reading_time:
           title: پڑھنے کیلئے وقت
         chat_usage:
-          messages: پیغامات
           author: آپ
           author_others: "%{username}"
           status_online: "● آن لائن"
-        invites:
-          title: دعوتیں
-          invitee_posts: بنائے گئے دھاگے
-          invitee_likes: پسندیدگییاں دی گئی
-        new_user_interactions:
-          likes_given: پسندیدگییاں دی گئی
-          mentions: تذکرے
         writing_analysis:
           menu_other: دیگر

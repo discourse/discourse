@@ -115,6 +115,11 @@ bs_BA:
         sort:
           relevance: "Bitnost"
           latest: "Zadnje"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spomenuto"
       incoming_webhooks:
         back: "Prethodno"
         description: "Opis"

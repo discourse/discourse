@@ -24,8 +24,8 @@ interface DConditionalLoadingSpinnerSignature {
 const DConditionalLoadingSpinner: TemplateOnlyComponent<DConditionalLoadingSpinnerSignature> =
   <template>
     <PluginOutlet
-      @name="conditional-loading-spinner"
       @defaultGlimmer={{true}}
+      @name="conditional-loading-spinner"
       @outletArgs={{lazyHash condition=@condition size=@size}}
     >
       <div

@@ -23,8 +23,8 @@ module("Integration | Component | PostList | Index", function (hooks) {
     await render(
       <template>
         <PostList
-          @posts={{posts}}
           @additionalItemClasses={{additionalClasses}}
+          @posts={{posts}}
         />
       </template>
     );
@@ -49,7 +49,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
     const posts = [];
     await render(
       <template>
-        <PostList @posts={{posts}} @emptyText="My custom empty text" />
+        <PostList @emptyText="My custom empty text" @posts={{posts}} />
       </template>
     );
     assert.dom(".post-list__empty-text").hasText("My custom empty text");
@@ -99,7 +99,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
       return post;
     });
     await render(
-      <template><PostList @posts={{posts}} @idPath="post_id" /></template>
+      <template><PostList @idPath="post_id" @posts={{posts}} /></template>
     );
     assert.dom(".post-list-item .excerpt").hasAttribute("data-post-id", "1");
   });
@@ -141,9 +141,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -157,7 +157,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
 
       await render(
         <template>
-          <PostList @posts={{posts}} @bulkSelectEnabled={{false}} />
+          <PostList @bulkSelectEnabled={{false}} @posts={{posts}} />
         </template>
       );
 
@@ -172,9 +172,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -197,9 +197,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -220,9 +220,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -245,9 +245,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -271,9 +271,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -308,10 +308,10 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
+            @bulkActions={{bulkActions}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
-            @bulkActions={{bulkActions}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -333,9 +333,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
+            @posts={{posts}}
           />
         </template>
       );
@@ -377,10 +377,10 @@ module("Integration | Component | PostList | Index", function (hooks) {
       await render(
         <template>
           <PostList
-            @posts={{posts}}
+            @bulkActions={{bulkActions}}
             @bulkSelectEnabled={{true}}
             @bulkSelectHelper={{bulkSelectHelper}}
-            @bulkActions={{bulkActions}}
+            @posts={{posts}}
           />
         </template>
       );

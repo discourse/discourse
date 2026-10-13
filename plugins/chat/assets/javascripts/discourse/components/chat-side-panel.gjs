@@ -16,6 +16,10 @@ export default class ChatSidePanel extends Component {
 
   store = new KeyValueStore(STORE_NAMESPACE);
 
+  get mainContainerWidth() {
+    return document.getElementById("main-chat-outlet").clientWidth;
+  }
+
   @action
   setupSize(element) {
     if (this.site.mobileView) {
@@ -49,10 +53,6 @@ export default class ChatSidePanel extends Component {
       );
       this.storeWidth(size.width);
     }
-  }
-
-  get mainContainerWidth() {
-    return document.getElementById("main-chat-outlet").clientWidth;
   }
 
   storeWidth(width) {

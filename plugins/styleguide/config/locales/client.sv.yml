@@ -27,6 +27,15 @@ sv:
           title: "Inmatad datum/tid"
         menus:
           title: "Menyer"
+        context_menu:
+          actions:
+            duplicate: "Duplicera"
+            delete: "Ta bort"
+        reorderable_list:
+          policies_pinned: "Fäst"
+          policies_required: "Krävs"
+          table_type: "Typ"
+          cross_list_primary: "Primär"
         toasts:
           title: "Popup-fönster"
         font_scale:

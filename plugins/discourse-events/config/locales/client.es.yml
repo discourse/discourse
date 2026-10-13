@@ -34,6 +34,10 @@ es:
     discourse_events:
       title: "Eventos"
       preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ninguna"
         all_events_description: "Todos los eventos del foro"
         my_events_description: "Eventos a los que vas a asistir o que te interesan"
       on_holiday: "De vacaciones"
@@ -364,6 +368,9 @@ es:
       edit_event: "Editar evento"
       export_event: "Exportar evento"
       created_by: "Creado por"
+      other_hosts:
+        one: "y %{count} otros"
+        other: "y %{count} otros"
       bulk_invite: "Invitaciones en masa"
       close_event: "Cerrar evento"
       open_event: "Abrir evento"
@@ -531,6 +538,8 @@ es:
           placeholder: "Opcional, por defecto es el título del tema"
         invitees:
           label: "Grupos invitados"
+        hosts:
+          label: "Anfitriones"
         event_type:
           public:
             title: "Público"

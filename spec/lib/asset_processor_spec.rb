@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe AssetProcessor do
+  describe ".append_es6_deprecation" do
+    it "attributes the warning to the file using the deprecated extension" do
+      result = described_class.append_es6_deprecation("export default {};", "legacy.js.es6")
+
+      expect(result).to include('id: "discourse.es6-extension"', "reportAtCallSite: true")
+    end
+  end
+
   def entrypoint(result, name)
     result.values.find { |chunk| chunk["name"] == name }
   end
@@ -478,8 +486,9 @@ RSpec.describe AssetProcessor do
 
     expect(entrypoint(result, "main")["code"]).to include("setComponentTemplate")
     expect(entrypoint(result, "main")["code"]).to include(
-      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+      "= setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
+    expect(entrypoint(result, "main")["code"]).to include('registerModuleForModifyClass("bar",')
   end
 
   it "handles colocation of connectors" do
@@ -649,7 +658,7 @@ RSpec.describe AssetProcessor do
     expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
-  it "errors on missing relative imports" do
+  it "errors on missing relative imports for a plugin without a hyphenated name" do
     mod_1 = <<~JS.chomp
       import SomeModule from "../some-module";
       console.log(SomeModule);

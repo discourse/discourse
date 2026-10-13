@@ -23,10 +23,10 @@ export default class BulkActionsAiRegenSummaries extends Component {
       </p>
       <div class="ai-bulk-regen-summaries__buttons">
         <AiRegenSummariesButtons
-          @topicIds={{this.topicIds}}
           @disabled={{this.loading}}
           @onLoadingChange={{this.handleLoadingChange}}
           @onSuccess={{@afterBulkAction}}
+          @topicIds={{this.topicIds}}
         />
       </div>
     </div>

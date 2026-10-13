@@ -81,13 +81,13 @@ export default class BlockDebugButton extends Component {
   <template>
     <DMenu
       @identifier="block-debug-menu"
+      @modalForMobile={{false}}
+      @title={{i18n "dev_tools.toggle_block_debug"}}
       @triggerClass={{dConcatClass
         "toggle-blocks"
         (if this.isActive "--active")
       }}
       @triggerComponent={{dElement "button"}}
-      @modalForMobile={{false}}
-      @title={{i18n "dev_tools.toggle_block_debug"}}
     >
       <:trigger>
         {{dIcon "cubes"}}
@@ -96,32 +96,32 @@ export default class BlockDebugButton extends Component {
         <div class="block-debug-menu">
           <label>
             <input
-              type="checkbox"
               checked={{devToolsState.blockOutletBoundaries}}
+              type="checkbox"
               {{on "change" this.toggleOutletBoundaries}}
             />
             {{i18n "dev_tools.block_debug.outlet_boundaries"}}
           </label>
           <label>
             <input
-              type="checkbox"
               checked={{devToolsState.blockVisualOverlay}}
+              type="checkbox"
               {{on "change" this.toggleVisualOverlay}}
             />
             {{i18n "dev_tools.block_debug.visual_overlay"}}
           </label>
           <label>
             <input
-              type="checkbox"
               checked={{devToolsState.blockGhostBlocks}}
+              type="checkbox"
               {{on "change" this.toggleGhostBlocks}}
             />
             {{i18n "dev_tools.block_debug.ghost_blocks"}}
           </label>
           <label>
             <input
-              type="checkbox"
               checked={{devToolsState.blockDebug}}
+              type="checkbox"
               {{on "change" this.toggleConditionDebugging}}
             />
             {{i18n "dev_tools.block_debug.condition_debugging"}}

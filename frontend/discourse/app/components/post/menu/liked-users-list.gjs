@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isTesting } from "discourse/lib/environment";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -30,7 +31,7 @@ export default class LikedUsersList extends Component {
       identifier: MENU_IDENTIFIER,
       component: PostLikedUsersMenu,
       modalForMobile: true,
-      closeOnScroll: true,
+      closeOnScroll: !isTesting(),
       arrow: true,
       placement: "bottom",
       offset: 15,
@@ -40,11 +41,9 @@ export default class LikedUsersList extends Component {
 
   <template>
     <button
-      id={{this.elementId}}
-      type="button"
-      aria-label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
-      aria-haspopup="dialog"
       aria-expanded={{if this.expanded "true" "false"}}
+      aria-haspopup="dialog"
+      aria-label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       class={{dConcatClass
         "btn btn-flat no-text"
         "post-action-menu__like-count"
@@ -54,8 +53,10 @@ export default class LikedUsersList extends Component {
         (if @post.liked "has-liked")
         (if @post.yours "my-likes" "regular-likes")
       }}
-      {{on "click" this.togglePopup}}
+      id={{this.elementId}}
+      type="button"
       ...attributes
+      {{on "click" this.togglePopup}}
     >
       {{#if this.buttonIcon}}
         {{dIcon this.buttonIcon}}

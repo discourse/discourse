@@ -30,6 +30,10 @@ export default class VoiceCallsService extends Service {
     stopCallSounds();
   }
 
+  get #ringChannel() {
+    return `/voice/call-ring/${this.currentUser.id}`;
+  }
+
   listen() {
     if (this.#subscribed || !this.currentUser) {
       return;
@@ -114,10 +118,6 @@ export default class VoiceCallsService extends Service {
     this.router.transitionTo("voice-room", ring.room_slug, {
       queryParams: { join: "true" },
     });
-  }
-
-  get #ringChannel() {
-    return `/voice/call-ring/${this.currentUser.id}`;
   }
 
   // If the retried start lands on a gesture that also ends the ring (e.g.

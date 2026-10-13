@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -19,7 +22,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * Used to ensure consistency between trigger detection and completion position calculation.
  */
 export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
-  /[\s.?,@/#!%&*;:\[\]{}=\-_()+]/;
+  /[\s.…?,@/#!%&*;:\[\]{}=\-_()+]/;
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -54,6 +57,7 @@ export default class DAutocompleteModifier extends Modifier {
       named: {},
       positional: [],
     });
+    associateDestroyableChild(owner, modifier);
 
     const modifierOptions = {
       ...options,
@@ -88,6 +92,24 @@ export default class DAutocompleteModifier extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
+  }
+
+  get shouldDebounce() {
+    return this.options.debounced ?? false;
+  }
+
+  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
+  // By default, when the autocomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
+  get autoSelectFirstSuggestion() {
+    return this.options.autoSelectFirstSuggestion ?? true;
   }
 
   @action
@@ -237,24 +259,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.menu.close("d-autocomplete");
   }
 
-  get shouldDebounce() {
-    return this.options.debounced ?? false;
-  }
-
-  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
-  // By default, when the autocomplete popup is rendered it has the
-  // first suggestion 'selected', and pressing enter key inserts
-  // the first suggestion into the input box.
-  // If you want to stop that behavior, i.e. have the popup renders
-  // with no suggestions selected, set the `autoSelectFirstSuggestion`
-  // option to false.
-  // With this option set to false, users will have to select
-  // a suggestion via the up/down arrow keys and then press enter
-  // to insert it.
-  get autoSelectFirstSuggestion() {
-    return this.options.autoSelectFirstSuggestion ?? true;
-  }
-
   async performAutocomplete() {
     const caretPosition = this.getCaretPosition();
     const value = this.getValue();
@@ -342,7 +346,7 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async performSearch(term) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -573,11 +577,12 @@ export default class DAutocompleteModifier extends Modifier {
     let completeEnd;
     let completeStart;
 
-    if (pos.completeStart !== undefined && pos.completeEnd !== undefined) {
+    if (pos.completeStart != null && pos.completeEnd != null) {
       completeStart = pos.completeStart;
       completeEnd = pos.completeEnd;
     } else {
-      completeStart = completeEnd = this.getCaretPosition();
+      completeStart = this.getCaretPosition();
+      completeEnd = completeStart - 1;
     }
 
     // Use textHandler's replaceTerm method for consistent behavior

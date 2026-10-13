@@ -31,18 +31,18 @@ export default class PolicyBuilderForm extends Component {
   <template>
     <Form
       @data={{@data}}
-      @onSubmit={{@onSubmit}}
       @onRegisterApi={{@onRegisterApi}}
+      @onSubmit={{@onSubmit}}
       @validate={{this.validatePolicy}}
       as |form data|
     >
       <form.Field
+        class="groups"
+        @format="large"
         @name="groups"
         @title={{i18n "discourse_policy.builder.groups.label"}}
         @tooltip={{i18n "discourse_policy.builder.groups.description"}}
-        @format="large"
         @type="custom"
-        class="groups"
         as |field|
       >
         <field.Control>
@@ -56,22 +56,22 @@ export default class PolicyBuilderForm extends Component {
       </form.Field>
 
       <form.Field
+        @format="small"
         @name="version"
         @title={{i18n "discourse_policy.builder.version.label"}}
         @tooltip={{i18n "discourse_policy.builder.version.description"}}
-        @validation="required"
-        @format="small"
         @type="input-number"
+        @validation="required"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
+        @format="small"
         @name="renew"
         @title={{i18n "discourse_policy.builder.renew.label"}}
         @tooltip={{i18n "discourse_policy.builder.renew.description"}}
-        @format="small"
         @type="input-number"
         as |field|
       >
@@ -79,10 +79,10 @@ export default class PolicyBuilderForm extends Component {
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="renewStart"
         @title={{i18n "discourse_policy.builder.renew-start.label"}}
         @tooltip={{i18n "discourse_policy.builder.renew-start.description"}}
-        @format="large"
         @type="input-date"
         as |field|
       >
@@ -90,26 +90,26 @@ export default class PolicyBuilderForm extends Component {
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="reminder"
         @title={{i18n "discourse_policy.builder.reminder.label"}}
         @tooltip={{i18n "discourse_policy.builder.reminder.description"}}
-        @format="large"
         @type="custom"
         as |field|
       >
         <field.Control>
           <PolicyReminderInput
-            @reminder={{data.reminder}}
             @onChangeReminder={{field.set}}
+            @reminder={{data.reminder}}
           />
         </field.Control>
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="accept"
         @title={{i18n "discourse_policy.builder.accept.label"}}
         @tooltip={{i18n "discourse_policy.builder.accept.description"}}
-        @format="large"
         @type="input-text"
         as |field|
       >
@@ -117,10 +117,10 @@ export default class PolicyBuilderForm extends Component {
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="revoke"
         @title={{i18n "discourse_policy.builder.revoke.label"}}
         @tooltip={{i18n "discourse_policy.builder.revoke.description"}}
-        @format="large"
         @type="input-text"
         as |field|
       >
@@ -128,21 +128,21 @@ export default class PolicyBuilderForm extends Component {
       </form.Field>
 
       <form.Field
+        class="add-users-to-group"
+        @format="large"
         @name="addUsersToGroup"
         @title={{i18n "discourse_policy.builder.add-users-to-group.label"}}
         @tooltip={{i18n
           "discourse_policy.builder.add-users-to-group.description"
         }}
-        @format="large"
         @type="custom"
-        class="add-users-to-group"
         as |field|
       >
         <field.Control>
           <div class="policy-builder-form__add-users-to-group">
             <PolicyGroupInput
-              @groups={{data.addUsersToGroup}}
               @excludeAutomaticGroups={{true}}
+              @groups={{data.addUsersToGroup}}
               @onChangeGroup={{field.set}}
             />
           </div>

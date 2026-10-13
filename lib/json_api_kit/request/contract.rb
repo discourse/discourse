@@ -19,6 +19,19 @@ module JsonApiKit
 
       INDIFFERENT_HASH = IndifferentHashType.new
 
+      class << self
+        def for(parameters, resource:, glossary:)
+          new(
+            **parameters.deep_dup,
+            options: {
+              resource:,
+              glossary:,
+              raw_parameters: parameters.with_indifferent_access,
+            },
+          )
+        end
+      end
+
       include RawAttributes
 
       validate :check_shapes
@@ -29,9 +42,13 @@ module JsonApiKit
         super
       end
 
+      def refusals = Mapper.new(errors, glossary:).to_a
+
       private
 
       def resource = options[:resource]
+
+      def glossary = options[:glossary]
 
       def raw_parameters = options[:raw_parameters]
 

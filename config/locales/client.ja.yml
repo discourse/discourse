@@ -302,12 +302,19 @@ ja:
     skip_to_last_reply: "最後の返信までスキップ"
     skip_to_top: "トップへスキップ"
     skip_user_nav: "プロファイルのコンテンツにスキップ"
+    reorder:
+      remove: "%{label} を削除"
+      removed: "%{label} を削除しました"
+      move_up: "上に移動"
+      move_down: "下に移動"
+      position: "%{position} / %{total}"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     emails_are_disabled_non_staff: "スタッフ以外のユーザーの送信メールは無効になっています。"
     software_update_prompt:
       message: "このサイトを更新しました。スムーズに動作するように<span>更新してください</span>。"
       dismiss: "閉じる"
     back_button: "戻る"
+    confirm_button: "確認"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name}、ようこそ！"
@@ -888,6 +895,9 @@ ja:
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
         no_events: "表示するタイムラインイベントはありません"
+      author_penalty:
+        toast:
+          undo: "元に戻す"
       notes:
         add_note_description: "他のモデレーターに文脈を伝えるメモを追加してください。"
         add_note_button: "メモを追加"
@@ -1515,7 +1525,6 @@ ja:
       admin: "%{user} は管理者です"
       moderator_tooltip: "このユーザーはモデレーターです"
       admin_tooltip: "このユーザーは管理者です"
-      silenced_tooltip: "このユーザーは投稿を禁止されています"
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
@@ -1574,6 +1583,16 @@ ja:
       tracked_topics_link: "表示"
       automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する"
       apps: "アプリ連携"
+      mcp_authorizations:
+        endpoint: "リソース"
+        scopes: "スコープ"
+        details: "詳細"
+        last_used: "最後の使用"
+        never: "送信しない"
+        status: "ステータス"
+        statuses:
+          active: "アクティブ"
+          revoked: "取り消し済み"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
@@ -1832,7 +1851,6 @@ ja:
         upload_title: "写真をアップロードする"
         image_is_not_a_square: "警告: 幅と高さが等しくないため、画像をトリミングしました。"
         logo_small: "サイトの小さなロゴ。デフォルトで使用されます。"
-        use_custom: "またはカスタムアバターをアップロード:"
       change_profile_background:
         title: "プロファイルヘッダー"
         instructions: "プロファイルヘッダーは中央揃えで、デフォルトの幅は 1110 px です。"
@@ -2379,7 +2397,6 @@ ja:
       hide_forever: "いいえ、結構です"
       hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、アカウント登録はまだのようです。"
-      value_prop: "同じ投稿をスクロールするのにうんざりしていませんか？アカウントを作成すると、中断した場所にいつでも戻ることができます。アカウントを使うと、新しい返信の通知を受け取ったり、ブックマークを保存したり、「いいね！」を使って感謝の気持ちを伝えたりすることも可能です。このコミュニティーを一緒に盛り上げていきましょう。:heart:"
     offline_indicator:
       no_internet: "インターネット接続がありません。"
       refresh_page: "ページを更新"
@@ -2791,8 +2808,7 @@ ja:
       discard: "破棄"
       draft_saved: "下書きが保存されました！"
       users_placeholder: "ユーザーまたはグループを追加"
-      title_placeholder: "トピックのタイトルを入力してください"
-      title_placeholder_redesign: "タイトル"
+      title_placeholder: "タイトル"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
       edit_reason_placeholder: "編集する理由は？"
       topic_featured_link_placeholder: "タイトルに表示されるリンクを入力してください。"
@@ -4161,6 +4177,7 @@ ja:
       list: "カテゴリをリスト表示"
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
+      latest_topics: "最新のトピック"
       description_expand: "もっと表示"
       description_collapse: "表示を減らす"
       already_used: "この色は他のカテゴリで使用されています。"
@@ -4428,6 +4445,7 @@ ja:
       with_category: "%{filter} %{category} トピック"
       filter:
         title: "%{filter} の絞り込み結果"
+        reset: "リセット"
         button:
           label: "フィルタ"
       latest:
@@ -4597,8 +4615,6 @@ ja:
       admin:
         title: "管理者"
     badges:
-      earned_n_times:
-        other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
       others_count:
         other: "他の人に %{count} 回付与しました"
@@ -4629,11 +4645,11 @@ ja:
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
     download_calendar:
-      title: "カレンダーをダウンロード"
+      title: "カレンダーに追加"
+      calendar: "カレンダー"
       save_ics: ".ics ファイルをダウンロード"
       save_google: "Google カレンダーに追加"
       remember: "今後表示しない"
-      remember_explanation: "(この設定はユーザー設定で変更できます)"
       download: "ダウンロード"
       default_calendar: "デフォルトのカレンダー"
       default_calendar_instruction: "日付を保存する際に、どのカレンダーを使用するかを決定します"
@@ -5295,6 +5311,74 @@ ja:
           header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
+        mcp:
+          tabs:
+            access: "アクセス"
+            activity: "アクティビティ"
+          overview:
+            status: "ステータス"
+            tools: "ツール"
+          access:
+            title: "アクセス"
+            group: "グループ"
+            groups: "グループ"
+            actions: "アクション"
+            edit: "編集"
+            delete: "削除"
+          primitives:
+            group_by: "グループ化"
+            group_by_options:
+              scope: "範囲"
+              provider: "プロバイダー"
+              kind: "タイプ"
+            provider: "プロバイダー"
+            kind: "タイプ"
+            scope: "範囲"
+            state: "都道府県"
+            scopes: "スコープ"
+          clients:
+            actions: "アクション"
+            block: "ブロック"
+            use_preset: "セットアップ"
+            presets:
+              custom: "カスタム"
+            automatic: "自動作成"
+          authorizations:
+            user: "ユーザー"
+            last_used: "最後の使用"
+            status: "ステータス"
+            actions: "アクション"
+          activity:
+            outcome: "結果"
+            time: "時刻"
+            user: "ユーザー"
+            duration: "期間"
+          values:
+            server_status:
+              disabled: "無効"
+            client_trust:
+              approved: "承認済み"
+            authorization_status:
+              active: "アクティブ"
+              revoked: "取り消し済み"
+            activity_outcome:
+              success: "成功"
+              error: "エラー"
+            primitive_state:
+              enabled: "有効"
+              disabled: "無効"
+            primitive_kind:
+              all: "全タイプ"
+              tool: "ツール"
+              resource: "リソース"
+            primitive_risk:
+              read: "読み取り専用"
+              moderation: "モデレーション"
+            filter:
+              all: "すべて"
+          never: "送信しない"
+          actions:
+            revoke: "同意を取り消す"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
@@ -5734,6 +5818,7 @@ ja:
         filters:
           country: "国"
           browser: "ブラウザ"
+          language: "言語"
           ip: "IP アドレス"
         series:
           anonymous_human: "匿名ユーザー"
@@ -5839,6 +5924,7 @@ ja:
           series:
             anonymous: "匿名ユーザー"
             crawlers: "クローラー"
+          crawler_learn_more: "もっと読む"
         period:
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"
@@ -6757,8 +6843,8 @@ ja:
           upload: "アップロード"
           select_component: "コンポーネントを選択してください…"
           unsaved_changes_alert: "変更内容を保存していません。変更を破棄して続行しますか？"
-          unsaved_parent_themes: "テーマにコンポーネントを割り当てていません。続行しますか？"
           discard: "破棄"
+          leave: "退出"
           stay: "移動しない"
           css_html: "カスタムコード"
           edit_css_html: "コードを編集"
@@ -7836,13 +7922,14 @@ ja:
           multiselect: "複数選択"
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
-        search: "編集するテキストを検索"
+        search_label: "検索"
+        theme_disabled: "無効"
+        filters: "フィルター"
+        status:
+          invalid: "無効です"
         title: "サイトのテキスト"
         edit: "編集"
-        revert: "変更を戻す"
         revert_confirm: "変更を戻してよろしいですか？"
-        go_back: "検索に戻る"
-        recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
         show_untranslated: "未翻訳のみを表示"

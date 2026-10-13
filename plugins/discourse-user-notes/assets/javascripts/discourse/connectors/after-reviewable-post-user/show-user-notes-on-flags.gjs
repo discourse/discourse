@@ -32,16 +32,16 @@ export default class ShowUserNotesOnFlags extends Component {
     <div class="after-reviewable-post-user-outlet show-user-notes-on-flags">
       {{#if this.userNotesCount}}
         <DButton
-          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
-          @action={{this.showUserNotes}}
           class="btn-flat"
+          @action={{this.showUserNotes}}
+          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
         >
           {{#if this.siteSettings.enable_emoji}}
             <img
-              src={{emojiUrlFor "memo"}}
-              title={{i18n "user_notes.show" count=this.userNotesCount}}
               alt
               class="emoji"
+              src={{emojiUrlFor "memo"}}
+              title={{i18n "user_notes.show" count=this.userNotesCount}}
             />
           {{else}}
             {{dIcon "pen-to-square"}}

@@ -15,15 +15,7 @@ lt:
         reading_time:
           title: Skaitymo laikas
         chat_usage:
-          messages: žinutės
           author: Jūs
           author_others: "%{username}"
-        invites:
-          title: Pakvietimai
-          invitee_posts: Sukurta įrašų
-          invitee_likes: Duota patikimų
-        new_user_interactions:
-          likes_given: Duota patikimų
-          mentions: Paminėjimai
         writing_analysis:
           menu_other: Kiti

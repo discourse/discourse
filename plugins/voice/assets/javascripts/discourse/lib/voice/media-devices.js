@@ -1,4 +1,5 @@
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import { processingConstraints } from "./audio-processing";
 
 const INPUT_STORAGE_KEY = "voice_audio_input_device";
@@ -203,8 +204,7 @@ export function applyOutputDevice(element, deviceId) {
     return;
   }
 
-  element.setSinkId(sinkId).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] failed to set audio output device", error);
+  element.setSinkId(sinkId).catch(() => {
+    voiceLog.warn("[voice] failed to set audio output device");
   });
 }

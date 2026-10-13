@@ -4,15 +4,15 @@ import { i18n } from "discourse-i18n";
 
 const AddPmParticipants = <template>
   <DModal
-    @title={{i18n @model.title}}
-    @closeModal={{@closeModal}}
-    @bodyClass="invite modal-panel"
     class="add-pm-participants"
+    @bodyClass="invite modal-panel"
+    @closeModal={{@closeModal}}
+    @title={{i18n @model.title}}
   >
     <:body>
       <InvitePanel
-        @inviteModel={{@model.inviteModel}}
         @closeModal={{@closeModal}}
+        @inviteModel={{@model.inviteModel}}
       />
     </:body>
   </DModal>

@@ -8,6 +8,12 @@ hu:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Újra"
+          date: "Dátum"
+          outcomes:
+            failed: "Sikertelen"
         reports:
           filters:
             sort_by:
@@ -305,6 +311,18 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+      ai_artifact:
+        editor:
+          version: "Verzió"
+          default: "Alapértelmezett"
+          option_on: "Be"
+          option_off: "Ki"
+          apply: "Alkalmaz"
+        share: "Megosztás"
+        create_link: "Hivatkozás létrehozása"
+        copy_link: "Hivatkozás másolása"
+        filter_all: "Összes"
+        filter_standalone: "Önálló"
       ai_bot:
         debug_ai_modal:
           duration_label: "Időtartam:"

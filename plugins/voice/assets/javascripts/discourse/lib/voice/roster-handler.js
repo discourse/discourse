@@ -1,10 +1,11 @@
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   playUserJoinedSound,
   playUserLeftSound,
   stopCallSounds,
 } from "./sound-effects";
-import { participantCanSpeak } from "./stage-roles";
+import { participantCanSpeak, participantEntitledToMedia } from "./stage-roles";
 
 // Handles the roster-shaped room messages ("participants", "role_change",
 // "hand_raise"): diffing the roster into mesh peer create/destroy (or the
@@ -27,6 +28,7 @@ export default class RosterHandler {
   #registerTrack;
   #getRemoteUserIds;
   #removeRemoteStream;
+  #removeRemoteMedia;
   #removeAllRemoteStreams;
   #getLocalVideoKind;
   #syncVideoSenders;
@@ -52,6 +54,7 @@ export default class RosterHandler {
     registerTrack,
     getRemoteUserIds = () => [],
     removeRemoteStream,
+    removeRemoteMedia = () => {},
     removeAllRemoteStreams,
     getLocalVideoKind,
     syncVideoSenders,
@@ -76,6 +79,7 @@ export default class RosterHandler {
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
     this.#removeRemoteStream = removeRemoteStream;
+    this.#removeRemoteMedia = removeRemoteMedia;
     this.#removeAllRemoteStreams = removeAllRemoteStreams;
     this.#getLocalVideoKind = getLocalVideoKind;
     this.#syncVideoSenders = syncVideoSenders;
@@ -98,9 +102,8 @@ export default class RosterHandler {
     );
     const currentUserId = this.#getCurrentUserId();
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] handleParticipants room=${roomId}, participants=[${Array.from(participantIds)}], currentUser=${currentUserId}`
+    voiceLog.info(
+      `[voice] handleParticipants room=${roomId}, count=${participantIds.size}`
     );
 
     if (this.#roleChangeInProgress.has(roomId)) {
@@ -156,10 +159,8 @@ export default class RosterHandler {
           if (existingPeerIds.size > 0 || !this.#isConnectingRoom(roomId)) {
             hasNewPeer = true;
           }
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] creating peer connection to user ${participantId}`
-          );
+
+          voiceLog.info("[voice] creating peer connection");
 
           await this.#createAndOfferPeer(roomId, participantId);
         } else {
@@ -184,8 +185,9 @@ export default class RosterHandler {
       }
     }
 
-    this.#syncRemoteVideoTracks(roomId, participants);
+    this.#syncRemoteMediaTracks(roomId, participants);
     this.#dropDisallowedStreams(roomId, participants, { isStage });
+    this.#dropUnentitledMedia(roomId, participants);
 
     if (!this.#isMeshRoom(roomId)) {
       // Publisher-count changes move camera subscriptions between simulcast
@@ -198,7 +200,48 @@ export default class RosterHandler {
     }
   }
 
-  #syncRemoteVideoTracks(roomId, participants) {
+  async handleRoleChange(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const newRole = payload.role;
+
+    if (targetUserId === this.#getCurrentUserId()) {
+      await this.#handleOwnRoleChange(roomId, newRole);
+    } else {
+      this.#handlePeerRoleChange(roomId, targetUserId);
+    }
+  }
+
+  handleHandRaise(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+
+    if (isSelf && !payload.raised && payload.reason === "dismissed") {
+      this.#toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.stage.request_dismissed") },
+      });
+      return;
+    }
+
+    const room = this.#getRoom(roomId);
+    if (!isSelf && payload.raised && room?.can_manage) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("voice.stage.hand_raised_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
+    }
+  }
+
+  #syncRemoteMediaTracks(roomId, participants) {
     for (const participant of participants || []) {
       const participantId = Number(participant?.id);
       if (!participantId || participantId === this.#getCurrentUserId()) {
@@ -212,6 +255,18 @@ export default class RosterHandler {
       const track = this.#peerManager.remoteVideoTrack(roomId, participantId);
       if (track) {
         this.#registerTrack(roomId, participantId, track);
+      }
+
+      // Screen audio dropped by a revoked entitlement never gets another
+      // ontrack once the right comes back.
+      if (participant.is_screen_sharing) {
+        const screenAudioTrack = this.#peerManager.remoteScreenAudioTrack(
+          roomId,
+          participantId
+        );
+        if (screenAudioTrack) {
+          this.#registerTrack(roomId, participantId, screenAudioTrack);
+        }
       }
     }
   }
@@ -242,14 +297,31 @@ export default class RosterHandler {
     }
   }
 
-  async handleRoleChange(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const newRole = payload.role;
+  // The receive-side policy refuses new tracks; this drops the camera or
+  // screen media of a mesh sender whose entitlement was revoked while it
+  // played. Only a lost entitlement counts — a sender who merely stopped
+  // publishing keeps its idle tracks for the next time it starts.
+  #dropUnentitledMedia(roomId, participants) {
+    if (!this.#isMeshRoom(roomId)) {
+      return;
+    }
 
-    if (targetUserId === this.#getCurrentUserId()) {
-      await this.#handleOwnRoleChange(roomId, newRole);
-    } else {
-      this.#handlePeerRoleChange(roomId, targetUserId);
+    for (const participant of participants || []) {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId === this.#getCurrentUserId()) {
+        continue;
+      }
+
+      if (!participantEntitledToMedia(participant)) {
+        this.#removeRemoteMedia(roomId, participantId);
+      } else if (
+        !participantEntitledToMedia(participant, { screenOnly: true })
+      ) {
+        // While sharing, the one video m-line is carrying the screen.
+        this.#removeRemoteMedia(roomId, participantId, {
+          keepVideo: !participant.is_screen_sharing,
+        });
+      }
     }
   }
 
@@ -313,42 +385,10 @@ export default class RosterHandler {
       // the microphone to match the new role.
       try {
         await this.#livekit.sessionFor(roomId)?.refreshPublications();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`,
-          error
+      } catch {
+        voiceLog.warn(
+          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`
         );
-      }
-    }
-  }
-
-  handleHandRaise(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const isSelf = targetUserId === this.#getCurrentUserId();
-
-    if (isSelf && !payload.raised && payload.reason === "dismissed") {
-      this.#toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.stage.request_dismissed") },
-      });
-      return;
-    }
-
-    const room = this.#getRoom(roomId);
-    if (!isSelf && payload.raised && room?.can_manage) {
-      const participant = (room.active_participants || []).find(
-        (p) => Number(p?.id) === targetUserId
-      );
-      if (participant) {
-        this.#toasts.default({
-          duration: 5000,
-          data: {
-            message: i18n("voice.stage.hand_raised_toast", {
-              username: participant.username,
-            }),
-          },
-        });
       }
     }
   }

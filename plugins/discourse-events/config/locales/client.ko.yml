@@ -24,6 +24,11 @@ ko:
             topic_id:
               label: 글 ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "알림"
+            none: "없음"
       on_holiday: "휴일"
       disable_holiday: "비활성화"
       enable_holiday: "활성화"

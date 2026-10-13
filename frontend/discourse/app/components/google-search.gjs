@@ -30,22 +30,22 @@ export default class GoogleSearch extends Component {
       ...attributes
     >
       <PluginOutlet
+        @defaultGlimmer={{true}}
         @name="google-search"
         @outletArgs={{lazyHash searchTerm=this.searchTerm siteUrl=this.siteUrl}}
-        @defaultGlimmer={{true}}
       >
         <form
           action="//google.com/search"
-          id="google-search"
           class="inline-form"
+          id="google-search"
         >
           <input
-            type="text"
-            name="q"
             aria-label={{i18n "search.search_google"}}
+            name="q"
+            type="text"
             value={{@searchTerm}}
           />
-          <input name="as_sitesearch" value={{@siteUrl}} type="hidden" />
+          <input name="as_sitesearch" type="hidden" value={{@siteUrl}} />
           <button class="btn btn-primary" type="submit">{{i18n
               "search.search_google_button"
             }}</button>

@@ -18,6 +18,34 @@ class ConfigureRow extends Component {
   @tracked dragCssClass;
   dragCount = 0;
 
+  get sectionLabel() {
+    return i18n(`admin.dashboard.sections.${this.args.section.id}.title`);
+  }
+
+  get reorderUpLabel() {
+    return i18n("admin.dashboard.configure.reorder_up", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get reorderDownLabel() {
+    return i18n("admin.dashboard.configure.reorder_down", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get dragHandleLabel() {
+    return i18n("admin.dashboard.configure.drag_handle", {
+      label: this.sectionLabel,
+    });
+  }
+
+  get toggleLabel() {
+    return i18n("admin.dashboard.configure.toggle_visibility", {
+      label: this.sectionLabel,
+    });
+  }
+
   isAboveElement(event) {
     event.preventDefault();
     const target = event.currentTarget;
@@ -74,70 +102,42 @@ class ConfigureRow extends Component {
     this.dragCssClass = null;
   }
 
-  get sectionLabel() {
-    return i18n(`admin.dashboard.sections.${this.args.section.id}.title`);
-  }
-
-  get reorderUpLabel() {
-    return i18n("admin.dashboard.configure.reorder_up", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get reorderDownLabel() {
-    return i18n("admin.dashboard.configure.reorder_down", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get dragHandleLabel() {
-    return i18n("admin.dashboard.configure.drag_handle", {
-      label: this.sectionLabel,
-    });
-  }
-
-  get toggleLabel() {
-    return i18n("admin.dashboard.configure.toggle_visibility", {
-      label: this.sectionLabel,
-    });
-  }
-
   <template>
     <li
+      class={{dConcatClass "db-configure__row" this.dragCssClass}}
+      data-section-id={{@section.id}}
+      draggable="true"
       {{on "dragstart" this.dragStart}}
       {{on "dragover" this.dragOver}}
       {{on "dragenter" this.dragEnter}}
       {{on "dragleave" this.dragLeave}}
       {{on "drop" this.drop}}
       {{on "dragend" this.dragEnd}}
-      class={{dConcatClass "db-configure__row" this.dragCssClass}}
-      data-section-id={{@section.id}}
-      draggable="true"
     >
       {{#if this.site.desktopView}}
         <span
-          class="db-configure__drag-handle"
           aria-hidden="true"
+          class="db-configure__drag-handle"
           tabindex="-1"
           title={{this.dragHandleLabel}}
         >{{dIcon "grip-vertical"}}</span>
       {{else}}
         <span class="db-configure__arrows">
           <DButton
-            @icon="chevron-up"
+            class="btn-flat db-configure__arrow"
             @action={{fn @onMoveUp @index}}
             @disabled={{@isFirst}}
+            @icon="chevron-up"
             @translatedAriaLabel={{this.reorderUpLabel}}
             @translatedTitle={{this.reorderUpLabel}}
-            class="btn-flat db-configure__arrow"
           />
           <DButton
-            @icon="chevron-down"
+            class="btn-flat db-configure__arrow"
             @action={{fn @onMoveDown @index}}
             @disabled={{@isLast}}
+            @icon="chevron-down"
             @translatedAriaLabel={{this.reorderDownLabel}}
             @translatedTitle={{this.reorderDownLabel}}
-            class="btn-flat db-configure__arrow"
           />
         </span>
       {{/if}}
@@ -145,9 +145,9 @@ class ConfigureRow extends Component {
       <span class="db-configure__section-name">{{this.sectionLabel}}</span>
 
       <DToggleSwitch
+        aria-label={{this.toggleLabel}}
         @state={{@section.visible}}
         {{on "click" (fn @onToggle @section.id)}}
-        aria-label={{this.toggleLabel}}
       />
     </li>
   </template>
@@ -201,20 +201,20 @@ export default class ConfigureMenu extends Component {
   <template>
     <div class="db-configure">
       <ul
-        class="db-configure__list"
         aria-label={{i18n "admin.dashboard.configure.menu_title"}}
+        class="db-configure__list"
       >
         {{#each @sections key="id" as |section index|}}
           <ConfigureRow
-            @section={{section}}
             @index={{index}}
             @isFirst={{eq index 0}}
             @isLast={{eq index this.lastIndex}}
             @onDragStart={{this.onDragStart}}
             @onDrop={{this.onDrop}}
-            @onMoveUp={{this.onMoveUp}}
             @onMoveDown={{this.onMoveDown}}
+            @onMoveUp={{this.onMoveUp}}
             @onToggle={{@onToggleVisibility}}
+            @section={{section}}
           />
         {{/each}}
       </ul>

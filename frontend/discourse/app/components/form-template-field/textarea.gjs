@@ -60,14 +60,14 @@ export default class FormTemplateFieldTextarea extends Component {
       {{/if}}
 
       <Textarea
-        name={{@id}}
-        @value={{this.value}}
         class="form-template-field__textarea"
-        placeholder={{@attributes.placeholder}}
-        pattern={{@validations.pattern}}
-        minlength={{@validations.minimum}}
         maxlength={{@validations.maximum}}
+        minlength={{@validations.minimum}}
+        name={{@id}}
+        pattern={{@validations.pattern}}
+        placeholder={{@attributes.placeholder}}
         required={{if @validations.required "required" ""}}
+        @value={{this.value}}
         {{on "input" this.onInput}}
       />
     </div>

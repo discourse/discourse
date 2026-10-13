@@ -32,7 +32,7 @@ module DiscourseAi
         rankings =
           if self.class.explicit_filters_except_private_messages?(query)
             [retrieve(@lexical_retriever, query)]
-          elsif semantic_query.blank? ||
+          elsif !DiscourseAi::Embeddings.enabled? || semantic_query.blank? ||
                 self.class.explicit_filters_except_private_messages?(keyword_query)
             [retrieve(@lexical_retriever, keyword_query)]
           else

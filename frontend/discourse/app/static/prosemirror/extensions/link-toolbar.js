@@ -133,6 +133,15 @@ class LinkToolbarPluginView {
     }
   }
 
+  /**
+   * ProseMirror view destroy handler
+   */
+  destroy() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#linkToolbar = null;
+  }
+
   #resetToolbar() {
     this.#menuInstance?.destroy();
     this.#menuInstance = null;
@@ -384,15 +393,6 @@ class LinkToolbarPluginView {
     } finally {
       this.#calculatingCoords = false;
     }
-  }
-
-  /**
-   * ProseMirror view destroy handler
-   */
-  destroy() {
-    this.#menuInstance?.destroy();
-    this.#menuInstance = null;
-    this.#linkToolbar = null;
   }
 }
 

@@ -115,10 +115,10 @@ export default class PostEventBulkInvite extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "discourse_post_event.bulk_invite_modal.title"}}
       class="post-event-bulk-invite"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "discourse_post_event.bulk_invite_modal.title"}}
     >
       <:body>
         <div class="bulk-invites">
@@ -135,9 +135,10 @@ export default class PostEventBulkInvite extends Component {
             }}</h3>
 
           <Form
+            class="bulk-invites-form"
             @data={{this.data}}
-            @onSubmit={{this.sendBulkInvites}}
             @onRegisterApi={{this.registerApi}}
+            @onSubmit={{this.sendBulkInvites}}
             as |form|
           >
             <form.Collection @name="invitees" as |collection index|>
@@ -145,6 +146,7 @@ export default class PostEventBulkInvite extends Component {
                 <collection.Field
                   class="bulk-invite-identifier-field"
                   @name="identifier"
+                  @showTitle={{false}}
                   @title={{i18n
                     (if
                       @model.event.isPrivate
@@ -152,7 +154,6 @@ export default class PostEventBulkInvite extends Component {
                       "discourse_post_event.bulk_invite_modal.user_selector_placeholder"
                     )
                   }}
-                  @showTitle={{false}}
                   @type="custom"
                   @validation="required"
                   as |field|
@@ -161,22 +162,22 @@ export default class PostEventBulkInvite extends Component {
                     {{#if @model.event.isPrivate}}
                       <GroupSelector
                         class="bulk-invite-identifier"
-                        @single={{true}}
                         @groupFinder={{this.groupFinder}}
                         @groupNames={{field.value}}
-                        @placeholderKey="discourse_post_event.bulk_invite_modal.group_selector_placeholder"
                         @onChangeCallback={{fn this.setGroupIdentifier field}}
+                        @placeholderKey="discourse_post_event.bulk_invite_modal.group_selector_placeholder"
+                        @single={{true}}
                       />
                     {{/if}}
                     {{#if @model.event.isPublic}}
                       <EmailGroupUserChooser
                         class="bulk-invite-identifier"
-                        @value={{field.value}}
                         @onChange={{fn this.setUserIdentifier field}}
                         @options={{hash
                           maximum=1
                           filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
                         }}
+                        @value={{field.value}}
                       />
                     {{/if}}
                   </field.Control>
@@ -184,47 +185,48 @@ export default class PostEventBulkInvite extends Component {
 
                 <collection.Field
                   @name="attendance"
+                  @showTitle={{false}}
                   @title={{i18n
                     "discourse_post_event.bulk_invite_modal.attendance_label"
                   }}
-                  @showTitle={{false}}
                   @type="custom"
                   as |field|
                 >
                   <field.Control>
                     <ComboBox
                       class="bulk-invite-attendance"
-                      @value={{field.value}}
                       @content={{this.bulkInviteStatuses}}
                       @nameProperty="name"
-                      @valueProperty="name"
                       @onChange={{field.set}}
+                      @value={{field.value}}
+                      @valueProperty="name"
                     />
                   </field.Control>
                 </collection.Field>
 
                 <form.Button
                   class="remove-bulk-invite"
-                  @icon="trash-can"
                   @action={{fn
                     this.removeInvite
                     collection.remove
                     index
                     form.addItemToCollection
                   }}
+                  @icon="trash-can"
                 />
               </div>
             </form.Collection>
 
             <form.Actions class="bulk-invite-actions">
+              <form.Button
+                class="add-bulk-invite"
+                @action={{fn this.addInvite form.addItemToCollection}}
+                @icon="plus"
+                @label="discourse_post_event.bulk_invite_modal.add_attendee"
+              />
               <form.Submit
                 class="send-bulk-invites"
                 @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
-              />
-              <form.Button
-                class="add-bulk-invite"
-                @icon="plus"
-                @action={{fn this.addInvite form.addItemToCollection}}
               />
             </form.Actions>
           </Form>
@@ -237,13 +239,13 @@ export default class PostEventBulkInvite extends Component {
             <BulkInviteSampleCsvFile />
 
             <CsvUploader
+              @i18nPrefix="discourse_post_event.bulk_invite_modal"
+              @uploadDone={{this.uploadDone}}
               @uploadUrl={{concat
                 "/discourse-post-event/events/"
                 @model.event.id
                 "/csv-bulk-invite"
               }}
-              @i18nPrefix="discourse_post_event.bulk_invite_modal"
-              @uploadDone={{this.uploadDone}}
             />
           </div>
         </div>

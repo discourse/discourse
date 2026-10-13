@@ -64,9 +64,9 @@ export default class VoiceTranscriptBadge extends Component {
   <template>
     {{#if this.visible}}
       <DTooltip
+        class="voice-transcript-badge"
         @identifier="voice-transcript-badge"
         @placement="bottom"
-        class="voice-transcript-badge"
       >
         <:trigger>
           {{dIcon "closed-captioning"}}

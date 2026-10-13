@@ -367,6 +367,12 @@ ro:
     topic_admin_menu: "acțiuni subiect"
     skip_to_main_content: "Sari la conținutul principal"
     skip_user_nav: "Sari la conținutul profilului"
+    reorder:
+      remove: "Înlătură %{label}"
+      removed: "%{label} a fost eliminată"
+      move_up: "Mută sus"
+      move_down: "Mută jos"
+      position: "%{position} din %{total}"
     emails_are_disabled: "Trimiterea de e-mailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări pe e-mail de niciun fel."
     emails_are_disabled_non_staff: "Mesajele de e-mail de ieșire au fost dezactivate pentru utilizatorii care nu fac parte din echipă."
     software_update_prompt:
@@ -917,6 +923,9 @@ ro:
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
         no_events: "Nu există evenimente cronologice de afișat"
+      author_penalty:
+        toast:
+          undo: "Anulează"
       notes:
         add_note_description: "Adaugă o notă pentru a oferi context celorlalți moderatori."
         add_note_button: "Adaugă notă"
@@ -1459,7 +1468,6 @@ ro:
       admin: "%{user} este admin"
       moderator_tooltip: "Acest utilizator este moderator"
       admin_tooltip: "Acest utilizator este admin"
-      silenced_tooltip: "Acest utilizator este silențios"
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "
@@ -1513,6 +1521,14 @@ ro:
       tracked_topics_link: "Arată"
       automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii"
       apps: "Aplicații"
+      mcp_authorizations:
+        details: "Detalii"
+        last_used: "Ultima utilizare"
+        never: "Niciodată"
+        status: "Stare"
+        statuses:
+          active: "Activă"
+          revoked: "Revocat"
       revoke_access: "Revocă accesul"
       undo_revoke_access: "Anulează revocarea accesului"
       api_approved: "Aprobate:"
@@ -2333,8 +2349,7 @@ ro:
       discard: "Renunță"
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
-      title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
-      title_placeholder_redesign: "Titlu"
+      title_placeholder: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -3292,6 +3307,7 @@ ro:
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
       no_description: "Adaugă o descriere acestei categorii."
+      latest_topics: "Ultimele subiecte"
       description_expand: "Arată mai multe"
       description_collapse: "Arată mai puține"
       already_used: "Această culoare este folosită la o altă categorie"
@@ -3486,6 +3502,7 @@ ro:
       with_category: "%{filter} %{category} subiecte"
       filter:
         title: "Rezultate filtrate pentru %{filter}"
+        reset: "Resetează"
         button:
           label: "Filtru"
       latest:
@@ -3632,10 +3649,6 @@ ro:
       admin:
         title: "Administrator"
     badges:
-      earned_n_times:
-        one: "A primit acest ecuson o dată"
-        few: "A primit acest ecuson de %{count} ori"
-        other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat %{date}"
       title: Insigne
       multiple_grant: "Poți primi asta de mai multe ori"
@@ -3662,6 +3675,7 @@ ro:
           name: Care postează
       favorite_count: "%{count}/%{max} insigne marcate ca favorite"
     download_calendar:
+      title: "Adaugă în calendar"
       download: "Descărcare"
     tagging:
       other_tags: "Alte etichete"
@@ -4037,6 +4051,63 @@ ro:
           header_description: "Furnizează aici informații despre acest site și despre echipa ta, astfel încât oamenii să poată afla despre ce este comunitatea ta, cine se află în spatele acesteia și cum să vă contacteze în cazul în care există o problemă. Afișate pe <a href='%{basePath}/about'>pagina Despre</a>a site-ului tău."
         developer:
           title: "Dezvoltator"
+        mcp:
+          tabs:
+            access: "Acces"
+            activity: "Activitate"
+          overview:
+            status: "Stare"
+          access:
+            title: "Acces"
+            group: "Grup"
+            groups: "Grupuri"
+            actions: "Acțiuni"
+            edit: "Editează"
+            delete: "Șterge"
+          primitives:
+            group_by_options:
+              provider: "Furnizor"
+              kind: "Tip"
+            provider: "Furnizor"
+            kind: "Tip"
+          clients:
+            actions: "Acțiuni"
+            block: "Blochează"
+            presets:
+              custom: "Personalizat"
+            automatic: "Automat"
+          authorizations:
+            user: "Utilizator"
+            last_used: "Ultima utilizare"
+            status: "Stare"
+            actions: "Acțiuni"
+          activity:
+            time: "Oră"
+            user: "Utilizator"
+            duration: "Durată"
+          values:
+            server_status:
+              disabled: "Dezactivate"
+            client_trust:
+              approved: "Aprobat"
+            authorization_status:
+              active: "Activă"
+              revoked: "Revocat"
+            activity_outcome:
+              success: "Succes"
+              error: "Eroare"
+            primitive_state:
+              enabled: "Activate"
+              disabled: "Dezactivate"
+            primitive_kind:
+              all: "Toate tipurile"
+            primitive_risk:
+              moderation: "Moderare"
+            filter:
+              all: "Toate"
+          never: "Niciodată"
+          actions:
+            revoke: "Revocă"
         experimental:
           title: "Experimental"
           header_description: "Activează sau dezactivează funcțiile experimentale pentru site-ul tău, cele mai multe dintre acestea pot fi controlate pe bază de grup"
@@ -4419,6 +4490,7 @@ ro:
             anonymous: "Anonimi"
             crawlers: "Crawlere"
           see_details: "Vezi detalii"
+          crawler_learn_more: "Află mai multe"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"
@@ -4983,6 +5055,7 @@ ro:
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
           discard: "Renunță"
+          leave: "Părăsește"
           installed: "Instalată"
           install_popular: "Populare"
           installing_message: "Se configurează noua ta temă…"
@@ -5637,13 +5710,12 @@ ro:
           dropdown: "Meniu derulant"
       site_text:
         description: "Poți personaliza orice text de pe forumul tău."
-        search: "Caută textul pe care vrei să îl editezi"
+        search_label: "Caută"
+        theme_disabled: "Dezactivate"
+        filters: "Filtre"
         title: "Texte site"
         edit: "Editează"
-        revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"
-        go_back: "Înapoi la căutare"
-        recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
         only_show_selected_locale: "Afișează rezultatele numai în limba selectată"
         outdated:

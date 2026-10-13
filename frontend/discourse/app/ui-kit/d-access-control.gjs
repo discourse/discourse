@@ -3,13 +3,12 @@ import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DMenu from "discourse/float-kit/components/d-menu";
+import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { eq } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { eq, or } from "discourse/truth-helpers";
+import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -38,7 +37,7 @@ const REMOVE_ACTION = {
   ),
 };
 
-function defaultPermissions() {
+export function defaultPermissions() {
   return [
     {
       id: READ_ONLY_PERMISSION,
@@ -63,46 +62,12 @@ function rowTypeSortOrder(type) {
   return ROW_TYPE_SORT_ORDER[type] ?? 2;
 }
 
-const AccessControlPermissionTrigger = <template>
-  <button
-    type="button"
-    class="btn btn-default d-access-control__permission"
-    disabled={{@disabled}}
-    ...attributes
-  >
-    <span class="d-button-label">
-      {{@label}}
-    </span>
-    {{dIcon "angle-down"}}
-  </button>
-</template>;
-
 export default class DAccessControl extends Component {
   @service site;
 
   constructor() {
     super(...arguments);
     this.permissionOptions = this.buildPermissionOptions();
-  }
-
-  /**
-   * If a transformPermissionOptions function is provided, it is passed all
-   * default permissions and can change the name, description, or level of
-   * these options, OR add new options, returning the new array.
-   *
-   * The level property is used to sort the options, and is an indicator
-   * of the level of access the permission provides, since e.g. Edit is a
-   * higher level of access than View, and to Edit by definition you need
-   * to be able to View.
-   *
-   * Otherwise, the default permissions are used.
-   */
-  buildPermissionOptions() {
-    const permissions =
-      this.args.transformPermissionOptions?.(defaultPermissions()) ||
-      defaultPermissions();
-
-    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
 
   /**
@@ -117,7 +82,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.mandatory_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.mandatory_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 
@@ -134,7 +101,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.banned_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.banned_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 
@@ -186,18 +155,25 @@ export default class DAccessControl extends Component {
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    const mappedAcl = this.acl.map((entry) => ({
-      key: `${granteeValue(entry.type, entry.id)}:${entry.permission}`,
-      id: entry.id,
-      permission: entry.permission,
-      display_name: entry.display_name,
-      sort_name: entry.sort_name || entry.name || entry.display_name,
-      username: entry.username,
-      name: entry.name,
-      avatar_template: entry.avatar_template,
-      type: entry.type,
-      mandatory: Boolean(entry.mandatory),
-    }));
+    const mappedAcl = this.acl.map((entry) => {
+      const hydratedEntry = this.#hydrateDisplayName({ ...entry });
+
+      return {
+        key: `${granteeValue(hydratedEntry.type, hydratedEntry.id)}:${hydratedEntry.permission}`,
+        id: hydratedEntry.id,
+        permission: hydratedEntry.permission,
+        display_name: hydratedEntry.display_name,
+        sort_name:
+          hydratedEntry.sort_name ||
+          hydratedEntry.name ||
+          hydratedEntry.display_name,
+        username: hydratedEntry.username,
+        name: hydratedEntry.name,
+        avatar_template: hydratedEntry.avatar_template,
+        type: hydratedEntry.type,
+        mandatory: Boolean(hydratedEntry.mandatory),
+      };
+    });
 
     return mappedAcl.sort((a, b) => {
       if (a.mandatory !== b.mandatory) {
@@ -280,6 +256,26 @@ export default class DAccessControl extends Component {
   }
 
   /**
+   * If a transformPermissionOptions function is provided, it is passed all
+   * default permissions and can change the name, description, or level of
+   * these options, OR add new options, returning the new array.
+   *
+   * The level property is used to sort the options, and is an indicator
+   * of the level of access the permission provides, since e.g. Edit is a
+   * higher level of access than View, and to Edit by definition you need
+   * to be able to View.
+   *
+   * Otherwise, the default permissions are used.
+   */
+  buildPermissionOptions() {
+    const permissions =
+      this.args.transformPermissionOptions?.(defaultPermissions()) ||
+      defaultPermissions();
+
+    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
+  }
+
+  /**
    * Fired when a grantee is chosen from the DAccessControlGranteeChooser
    * search results.
    */
@@ -331,9 +327,7 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  onRowPermissionChange(close, granteeType, granteeId, permission) {
-    close?.();
-
+  onRowPermissionChange(granteeType, granteeId, permission) {
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.acl.filter(
@@ -372,10 +366,19 @@ export default class DAccessControl extends Component {
     });
   }
 
-  @action
-  permissionLabel(permissionId) {
-    return this.permissionOptions.find((option) => option.id === permissionId)
-      .name;
+  #hydrateDisplayName(entry) {
+    if (!isEmpty(entry.display_name)) {
+      return entry;
+    }
+
+    if (entry.type === "group") {
+      const group = (this.args.groups || []).find(({ id }) => id === entry.id);
+      entry.display_name = group?.full_name || group?.name;
+    } else if (entry.type === "user") {
+      entry.display_name = prioritizeNameFallback(entry.name, entry.username);
+    }
+
+    return entry;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
@@ -385,10 +388,9 @@ export default class DAccessControl extends Component {
     <div class="d-access-control">
       <DAccessControlGranteeChooser
         class="d-access-control__chooser"
-        @value={{null}}
-        @onChange={{this.onGranteeChosen}}
-        @labelProperty="name"
         @filterPlaceholder="access_control.manage.add_group"
+        @labelProperty="name"
+        @onChange={{this.onGranteeChosen}}
         @options={{hash
           aclTargetType=@aclTarget.type
           customSearchOptions=(hash
@@ -401,8 +403,9 @@ export default class DAccessControl extends Component {
           maximum=1
           none="access_control.manage.add_group"
         }}
+        @value={{null}}
       />
-      {{#if this.rows.length}}
+      {{#if (or this.rows.length (has-block "additionalRows"))}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
             <div
@@ -411,8 +414,8 @@ export default class DAccessControl extends Component {
                 (if (eq row.type "user") "--user" "--group")
                 (if row.mandatory "--mandatory")
               }}
-              data-row-type={{row.type}}
               data-row-id={{row.id}}
+              data-row-type={{row.type}}
             >
               <span class="d-access-control__item">
                 <span class="d-access-control__item-icon">
@@ -441,64 +444,18 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
               </span>
-              <DMenu
-                @identifier="d-access-control__permission-menu"
-                @modalForMobile={{true}}
-                @autofocus={{false}}
-                @triggerComponent={{component
-                  AccessControlPermissionTrigger
-                  label=(this.permissionLabel row.permission)
-                  disabled=row.mandatory
+              <DAccessControlPermissionMenu
+                @disabled={{row.mandatory}}
+                @onChange={{fn this.onRowPermissionChange row.type row.id}}
+                @options={{this.excludeBannedPermissions
+                  this.permissionOptions
+                  row
                 }}
-                data-permission={{row.permission}}
-              >
-                <:content as |args|>
-                  <DDropdownMenu as |dropdown|>
-                    {{#each
-                      (this.excludeBannedPermissions this.permissionOptions row)
-                      key="id"
-                      as |option|
-                    }}
-                      {{#if (eq option.id "remove")}}
-                        <dropdown.divider />
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class={{dConcatClass
-                            "d-access-control__permission-option"
-                            "--with-description"
-                            (if (eq option.id "remove") "--remove")
-                            (if (eq option.id row.permission) "-selected")
-                          }}
-                          data-permission-id={{option.id}}
-                          @action={{fn
-                            this.onRowPermissionChange
-                            args.close
-                            row.type
-                            row.id
-                            option.id
-                          }}
-                        >
-                          <div class="d-access-control__permission-texts">
-                            <span class="d-access-control__permission-label">
-                              {{option.name}}
-                            </span>
-                            {{#if option.description}}
-                              <span
-                                class="d-access-control__permission-description"
-                              >
-                                {{option.description}}
-                              </span>
-                            {{/if}}
-                          </div>
-                        </DButton>
-                      </dropdown.item>
-                    {{/each}}
-                  </DDropdownMenu>
-                </:content>
-              </DMenu>
+                @value={{row.permission}}
+              />
             </div>
           {{/each}}
+          {{yield to="additionalRows"}}
         </div>
       {{/if}}
     </div>

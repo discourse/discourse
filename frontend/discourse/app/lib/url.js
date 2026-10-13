@@ -91,6 +91,28 @@ let _transitioning = false;
 let lockOn = null;
 
 class DiscourseURL extends EmberObject {
+  // This has been extracted so it can be tested.
+  get origin() {
+    const prefix = getURL("/");
+    return window.location.origin + (prefix === "/" ? "" : prefix);
+  }
+
+  get isComposerOpen() {
+    return this.container.lookup("service:composer")?.visible;
+  }
+
+  get router() {
+    return this.container.lookup("router:main");
+  }
+
+  get routerService() {
+    return this.container.lookup("service:router");
+  }
+
+  get appEvents() {
+    return this.container.lookup("service:app-events");
+  }
+
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   }
@@ -480,28 +502,6 @@ class DiscourseURL extends EmberObject {
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
     );
-  }
-
-  // This has been extracted so it can be tested.
-  get origin() {
-    const prefix = getURL("/");
-    return window.location.origin + (prefix === "/" ? "" : prefix);
-  }
-
-  get isComposerOpen() {
-    return this.container.lookup("service:composer")?.visible;
-  }
-
-  get router() {
-    return this.container.lookup("router:main");
-  }
-
-  get routerService() {
-    return this.container.lookup("service:router");
-  }
-
-  get appEvents() {
-    return this.container.lookup("service:app-events");
   }
 
   /**

@@ -385,6 +385,12 @@ cs:
     skip_to_last_reply: "Přejít na poslední odpověď"
     skip_to_top: "Přejít na začátek"
     skip_user_nav: "Přejít na obsah profilu"
+    reorder:
+      remove: "Odstranit %{label}"
+      removed: "Odebráno %{label}"
+      move_up: "Posunout nahoru"
+      move_down: "Posunout dolů"
+      position: "%{position} z %{total}"
     emails_are_disabled: "Všechny odchozí e-maily byly globálně zakázány správcem. Nebudou zasílána žádná e-mailová oznámení jakéhokoli druhu."
     emails_are_disabled_non_staff: "Odchozí e-maily byly zakázány pro uživatele, kteří nejsou členy redakce."
     software_update_prompt:
@@ -393,6 +399,7 @@ cs:
     notifications_tracking:
       tooltip: "Úroveň oznámení: %{level}"
     back_button: "Zpět"
+    confirm_button: "Potvrdit"
     welcome_banner:
       header:
         new_members: "Vítejte, %{preferred_display_name}!"
@@ -1081,6 +1088,9 @@ cs:
         note_added: "Poznámka moderátora"
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
         no_events: "Na časové ose nejsou k zobrazení žádné události"
+      author_penalty:
+        toast:
+          undo: "Zpět"
       notes:
         add_note_description: "Přidejte poznámku, která poskytne ostatním moderátorům kontext."
         add_note_button: "Přidat poznámku"
@@ -1768,7 +1778,6 @@ cs:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento uživatel je moderátor"
       admin_tooltip: "Tento uživatel je správce"
-      silenced_tooltip: "Tento uživatel je ztišen."
       suspended_notice: "Uživatel je pozastaven do %{date}."
       suspended_permanently: "Tento uživatel je pozastaven."
       suspended_reason: "Důvod: "
@@ -1827,6 +1836,16 @@ cs:
       tracked_topics_link: "Zobrazit"
       automatically_unpin_topics: "Automaticky odepnout témata, když se dostanu na konec"
       apps: "Aplikace"
+      mcp_authorizations:
+        endpoint: "Zdroj"
+        scopes: "Rozsah"
+        details: "Podrobnosti"
+        last_used: "Poslední použití"
+        never: "Nikdy"
+        status: "Stav"
+        statuses:
+          active: "Aktivní"
+          revoked: "Zrušeno"
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
       api_approved: "Schváleno:"
@@ -2135,7 +2154,6 @@ cs:
         upload_title: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
         logo_small: "Malé logo webu. Používá se ve výchozím nastavení."
-        use_custom: "Nebo nahrajte vlastní avatar:"
       change_profile_background:
         title: "Záhlaví profilu"
         instructions: "Záhlaví profilu bude vycentrována a má výchozí šířku 1110px."
@@ -2761,7 +2779,7 @@ cs:
       hide_forever: "děkuji, ne"
       hidden_for_session: "Dobře, zeptáme se vás zítra. K vytvoření účtu můžete kdykoli použít také funkci \"Přihlásit se\"."
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
-      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá. :heart:"
+      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá."
     offline_indicator:
       no_internet: "Žádné internetové připojení."
       refresh_page: "Obnovit stránku"
@@ -3231,8 +3249,7 @@ cs:
       discard: "Zrušit"
       draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
-      title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
-      title_placeholder_redesign: "Název"
+      title_placeholder: "Název"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
       edit_reason_placeholder: "Proč byla nutná úprava?"
       topic_featured_link_placeholder: "Zadejte odkaz s titulkem"
@@ -4851,6 +4868,7 @@ cs:
       list: "Přehled kategorií"
       no_description: "Doplňte prosím popis této kategorie."
       change_in_category_topic: "Úprava popisu"
+      latest_topics: "Nejnovější témata"
       description_expand: "Zobrazit více"
       description_collapse: "Zobrazit méně"
       already_used: "Tato barva je již použita jinou kategorií"
@@ -5163,6 +5181,7 @@ cs:
       with_category: "%{filter} %{category} témata"
       filter:
         title: "Filtrované výsledky pro %{filter}"
+        reset: "resetovat"
         button:
           label: "Filtr"
       latest:
@@ -5348,11 +5367,6 @@ cs:
       admin:
         title: "Administrace"
     badges:
-      earned_n_times:
-        one: "Získal/a tento odznak %{count} krát"
-        few: "Získal/a tento odznak %{count} krát"
-        many: "Získal/a tento odznak %{count} krát"
-        other: "Získal/a tento odznak %{count} krát"
       granted_on: "Udělen %{date}"
       others_count:
         one: "Uděleno ostatním %{count}x"
@@ -5395,11 +5409,11 @@ cs:
       favorite_max_not_reached: "Označit tento odznak jako oblíbený"
       favorite_count: "%{count}/%{max} odznaků označeno jako oblíbené"
     download_calendar:
-      title: "Stáhnout kalendář"
+      title: "Přidat do kalendáře"
+      calendar: "Kalendář"
       save_ics: "Stáhnout soubor .ics"
       save_google: "Přidat do kalendáře Google"
       remember: "Již se mě neptejte"
-      remember_explanation: "(toto nastavení můžete změnit v předvolbách uživatele)"
       download: "Stáhnout"
       default_calendar: "Výchozí kalendář"
       default_calendar_instruction: "Určí, který kalendář se má použít při ukládání dat"
@@ -6129,6 +6143,68 @@ cs:
           header_description: "Zde uveďte informace o tomto webu a svém týmu, aby se lidé dozvěděli, o čem je vaše komunita, kdo za ní stojí a jak vás kontaktovat v případě problému. Zobrazeno na stránce <a href='%{basePath}/about'>O tomto webu</a>."
         developer:
           title: "Vývojáři"
+        mcp:
+          tabs:
+            access: "Přístup"
+            activity: "Aktivita"
+          overview:
+            status: "Stav"
+          access:
+            title: "Přístup"
+            group: "Skupina"
+            groups: "Skupiny"
+            actions: "Akce"
+            edit: "Upravit"
+            delete: "Smazat"
+          primitives:
+            group_by_options:
+              scope: "Rozsah"
+              kind: "Typ"
+            kind: "Typ"
+            scope: "Rozsah"
+            scopes: "Rozsah"
+          clients:
+            actions: "Akce"
+            block: "Zablokovat"
+            presets:
+              custom: "Přizpůsobené"
+            automatic: "Automatické"
+          authorizations:
+            user: "Uživatel"
+            last_used: "Poslední použití"
+            status: "Stav"
+            actions: "Akce"
+          activity:
+            outcome: "Výsledky"
+            time: "Čas"
+            user: "Uživatel"
+            duration: "Doba trvání"
+          values:
+            server_status:
+              disabled: "Vypnuto"
+            client_trust:
+              approved: "Schválen"
+            authorization_status:
+              active: "Aktivní"
+              revoked: "Zrušeno"
+            activity_outcome:
+              success: "Úspěch"
+              error: "Chyba"
+            primitive_state:
+              enabled: "Zapnuto"
+              disabled: "Vypnuto"
+            primitive_kind:
+              all: "Všechny typy"
+              tool: "Nástroj"
+              resource: "Zdroj"
+            primitive_risk:
+              read: "Pouze pro čtení"
+              moderation: "Moderování"
+            filter:
+              all: "Vše"
+          never: "Nikdy"
+          actions:
+            revoke: "Odvolat"
         experimental:
           title: "Experimentální"
           header_description: "Zapněte nebo vypněte experimentální funkce pro svůj web, většinu z nich lze ovládat pomocí skupin"
@@ -6573,6 +6649,7 @@ cs:
           visitors: "Návštěvníci"
         filters:
           browser: "Prohlížeč"
+          language: "Jazyk"
           ip: "IP adresa"
         series:
           anonymous_human: "Anonymní"
@@ -6680,6 +6757,7 @@ cs:
           series:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
+          crawler_learn_more: "Zjistit více"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
@@ -7640,8 +7718,8 @@ cs:
           upload: "Nahrát"
           select_component: "Vyberte komponentu…"
           unsaved_changes_alert: "Ještě jste neuložili své změny, chcete je zahodit a pokračovat?"
-          unsaved_parent_themes: "Nepřiřadili jste komponentu k žádným motivům, chcete pokračovat?"
           discard: "Zahodit"
+          leave: "Opustit"
           stay: "Stay"
           css_html: "Vlastní kód"
           edit_css_html: "Upravit kód"
@@ -8784,13 +8862,12 @@ cs:
           multiselect: "Více možností"
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
-        search: "Vyhledejte text, který chcete upravit"
+        search_label: "Vyhledat"
+        theme_disabled: "Vypnuto"
+        filters: "Filtry"
         title: "Texty"
         edit: "Upravit"
-        revert: "Vrátit změny"
         revert_confirm: "Opravdu chcete vrátit změny?"
-        go_back: "Zpět na hledání"
-        recommended: "Doporučujeme přizpůsobit následující texty tak, aby vyhovovaly vašim potřebám:"
         show_overriden: "Zobrazit pouze změněné"
         show_outdated: "Zobrazit pouze zastaralé/neplatné"
         show_untranslated: "Zobrazit pouze nepřeložené"

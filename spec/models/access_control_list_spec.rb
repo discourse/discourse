@@ -341,6 +341,15 @@ RSpec.describe AccessControlList do
       expect(described_class.matching_user(user)).to include(direct_user_acl)
     end
 
+    it "matches admin grants for the system user without an admin membership row" do
+      system_user = User.find(Discourse::SYSTEM_USER_ID)
+      system_user.group_users.where(group_id: Group::AUTO_GROUPS[:admins]).delete_all
+      admin_acl = Fabricate(:access_control_list, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+
+      expect(described_class.matching_user(system_user)).to include(admin_acl)
+      expect(described_class.matching_user(user)).not_to include(admin_acl)
+    end
+
     it "does not match acls for groups the user does not belong to" do
       expect(described_class.matching_user(user)).not_to include(other_group_acl, anonymous_acl)
     end

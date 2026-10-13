@@ -8,6 +8,10 @@ ca:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Fallits"
         reports:
           filters:
             sort_by:
@@ -248,6 +252,13 @@ ca:
         providers:
           google: "Google"
           fake: "Personalitzat"
+      ai_artifact:
+        editor:
+          version: "Versió"
+          default: "Per defecte"
+          apply: "Aplica"
+        share: "Comparteix"
+        filter_all: "Tots"
       ai_bot:
         debug_ai_modal:
           duration_label: "Duració:"

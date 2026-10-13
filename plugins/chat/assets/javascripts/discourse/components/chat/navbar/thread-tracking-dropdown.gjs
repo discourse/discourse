@@ -55,12 +55,12 @@ export default class ChatNavbarThreadTrackingDropdown extends Component {
 
   <template>
     <ThreadNotificationsTracking
-      @levelId={{this.threadNotificationLevel}}
-      @onChange={{this.updateThreadNotificationLevel}}
       class={{dConcatClass
         "c-navbar__thread-tracking-dropdown"
         (if this.persistedNotificationLevel "-persisted")
       }}
+      @levelId={{this.threadNotificationLevel}}
+      @onChange={{this.updateThreadNotificationLevel}}
     />
   </template>
 }

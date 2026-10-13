@@ -444,10 +444,11 @@ module DiscourseAi
                 flagging_user,
                 message: :too_many_spam_flags,
                 post_id: post.id,
+                reviewable_id: result.reviewable&.id,
                 reason: reason,
                 keep_posts: true,
               )
-            silencer.silence
+            silencer.auto_silence
 
             # silencer will not hide tl1 posts, so we do this here
             hide_post(post)

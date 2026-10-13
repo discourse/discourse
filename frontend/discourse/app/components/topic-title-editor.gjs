@@ -32,18 +32,18 @@ export default class TopicTitleEditor extends Component {
       >
         {{#if @isEditingLocalization}}
           <DTextField
-            @id="edit-title"
-            @value={{@translationTitle}}
-            @maxlength={{this.siteSettings.max_topic_title_length}}
             @autofocus={{true}}
+            @id="edit-title"
+            @maxlength={{this.siteSettings.max_topic_title_length}}
+            @value={{@translationTitle}}
             {{dAutoFocus}}
           />
         {{else}}
           <DTextField
-            @id="edit-title"
-            @value={{@bufferedTitle}}
-            @maxlength={{this.siteSettings.max_topic_title_length}}
             @autofocus={{true}}
+            @id="edit-title"
+            @maxlength={{this.siteSettings.max_topic_title_length}}
+            @value={{@bufferedTitle}}
             {{dAutoFocus}}
           />
         {{/if}}

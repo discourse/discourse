@@ -1,3 +1,6 @@
+import type { DisabledItems } from "discourse/ui-kit/-internals/cursor/item-scope";
+import type { Orientation } from "discourse/ui-kit/-internals/cursor/navigation";
+
 /**
  * Which of the practice page's two focus-management strategies the group uses:
  * a roving tabindex that moves DOM focus, or `aria-activedescendant` on a controller that keeps
@@ -5,13 +8,6 @@
  * different concept.
  */
 export type DRovingFocusStrategy = "roving-tabindex" | "active-descendant";
-
-/**
- * Whether an `aria-disabled` item is a cursor target. Named for the two behaviours rather than
- * spelled as a boolean, because the call site should say which one it wants.
- */
-export type DRovingFocusDisabledItems = "skip" | "focusable";
-export type Orientation = "grid" | "horizontal" | "vertical";
 
 /**
  * Controls for moving the cursor to a live item in the roving-focus group.
@@ -119,6 +115,12 @@ export type DRovingFocusEntry =
   | "selected-or-none";
 
 /**
+ * What the Tab stop tracks in focus mode: `"focus"` moves it to whatever the cursor reaches,
+ * `"selection"` leaves it on the marked item however far focus travels.
+ */
+export type DRovingFocusTabStopAnchor = "focus" | "selection";
+
+/**
  * The outcome of an API-driven step: `"moved"` when the cursor advanced, `"edge"` when a cursor
  * exists but is already against a boundary, and `"unavailable"` when the group has no items at
  * all. Three-valued so a caller can tell "the run ended here" from "there is no run here" and
@@ -222,6 +224,25 @@ export interface DRovingFocusArgs {
    * Shape dictated by: Navigation Between Components, the single-tab-stop contract.
    */
   tabStop?: boolean;
+  /**
+   * Focus mode: what the Tab stop tracks (default `"focus"`).
+   *
+   * `"focus"` is the roving convention: the item the cursor reaches becomes the one Tab returns
+   * to. `"selection"` pins the stop to the marked item instead, so arrow keys move focus while
+   * Tab still comes back to the chosen value.
+   *
+   * Reach for `"selection"` only where a pattern says entry belongs to the chosen value rather
+   * than to wherever the reader last looked, which in practice means a group whose arrow keys do
+   * not themselves choose. Tabs with manual activation are the case it exists for: arrowing
+   * explores without selecting, and leaving must not strand the reader on a tab whose panel is
+   * not the one on screen. Where arrows do choose, the two settings agree anyway, because
+   * whatever focus reaches is also what is marked.
+   *
+   * Ignored under `focusStrategy="active-descendant"`, which has no Tab stop to place.
+   *
+   * Shape dictated by: the tabs pattern, whose entry convention is the active tab.
+   */
+  tabStopAnchor?: DRovingFocusTabStopAnchor;
   /**
    * Focus mode: whether removing the item that holds focus moves the cursor to the item that
    * took its place, rather than letting focus fall to `body` (default `true`).
@@ -353,7 +374,7 @@ export interface DRovingFocusArgs {
    *
    * Shape dictated by: Focusability of disabled controls.
    */
-  disabledItems?: DRovingFocusDisabledItems;
+  disabledItems?: DisabledItems;
   /**
    * Called for an arrow press on the axis this group does NOT navigate, so the keys a
    * single-axis composite leaves unused become available without every consumer re-deriving

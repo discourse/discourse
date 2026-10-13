@@ -37,7 +37,7 @@ module Boards
     end
 
     def can_write(board:, guardian:)
-      guardian.can_write_boards_board?(board)
+      guardian.can_write_board?(board)
     end
 
     def fetch_column(board:, params:)

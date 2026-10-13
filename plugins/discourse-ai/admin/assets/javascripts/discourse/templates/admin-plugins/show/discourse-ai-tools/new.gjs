@@ -3,13 +3,13 @@ import AiToolEditor from "../../../../../discourse/components/ai-tool-editor";
 export default <template>
   <section class="ai-agent-tool-editor__current admin-detail pull-left">
     <AiToolEditor
-      @tools={{@controller.allTools}}
+      @llms={{@controller.llms}}
       @model={{@controller.model}}
       @presets={{@controller.presets}}
-      @llms={{@controller.llms}}
       @secrets={{@controller.secrets}}
-      @settings={{@controller.settings}}
       @selectedPreset={{@controller.selectedPreset}}
+      @settings={{@controller.settings}}
+      @tools={{@controller.allTools}}
     />
   </section>
 </template>

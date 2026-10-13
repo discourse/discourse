@@ -63,35 +63,55 @@ export default class VoiceRoomList extends Component {
       <DPageSubheader @titleLabel={{i18n "voice.admin.rooms_title"}}>
         <:actions as |actions|>
           <actions.Primary
+            class="voice-admin__create-btn"
+            @icon="plus"
             @label="voice.admin.create_room"
             @route="adminPlugins.show.voice-rooms.new"
-            @icon="plus"
-            class="voice-admin__create-btn"
           />
         </:actions>
       </DPageSubheader>
 
       {{#if @rooms.length}}
-        <table class="d-admin-table voice-rooms">
-          <thead>
+        <table class="d-table voice-rooms">
+          <thead class="d-table__header">
             <tr>
-              <th>{{i18n "voice.admin.room.name"}}</th>
-              <th>{{i18n "voice.admin.room.public"}}</th>
-              <th>{{i18n "voice.admin.room.max_participants"}}</th>
-              <th>{{i18n "voice.admin.room.member_count"}}</th>
-              <th>{{i18n "voice.admin.room.creator"}}</th>
-              <th>{{i18n "voice.admin.room.created_at"}}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.name"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.public"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.max_participants"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.member_count"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.creator"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.created_at"
+                }}</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {{#each @rooms as |room|}}
-              <tr class="d-admin-row__content">
-                <td class="d-admin-row__overview voice-rooms__name">
-                  {{room.name}}
+              <tr class="d-table__row">
+                <td class="d-table__cell --overview voice-rooms__name">
+                  <LinkTo
+                    class="d-table__overview-link voice-rooms__name-link"
+                    @model={{room.id}}
+                    @route="adminPlugins.show.voice-rooms.edit"
+                  >
+                    <strong
+                      class="d-table__overview-name"
+                    >{{room.name}}</strong>
+                  </LinkTo>
                 </td>
-                <td class="d-admin-row__detail voice-rooms__public">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-rooms__public">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.room.public"}}
                   </div>
                   {{#if room.public}}
@@ -100,8 +120,10 @@ export default class VoiceRoomList extends Component {
                     {{i18n "no_value"}}
                   {{/if}}
                 </td>
-                <td class="d-admin-row__detail voice-rooms__max-participants">
-                  <div class="d-admin-row__mobile-label">
+                <td
+                  class="d-table__cell --detail voice-rooms__max-participants"
+                >
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.room.max_participants"}}
                   </div>
                   {{#if room.max_participants}}
@@ -110,54 +132,54 @@ export default class VoiceRoomList extends Component {
                     -
                   {{/if}}
                 </td>
-                <td class="d-admin-row__detail voice-rooms__member-count">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-rooms__member-count">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.room.member_count"}}
                   </div>
                   {{room.member_count}}
                 </td>
-                <td class="d-admin-row__detail voice-rooms__creator">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-rooms__creator">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.room.creator"}}
                   </div>
                   {{#if room.creator}}
                     <a
-                      href={{room.creator.userPath}}
                       data-user-card={{room.creator.username}}
+                      href={{room.creator.userPath}}
                     >
                       {{dAvatar room.creator imageSize="small"}}
                     </a>
                   {{/if}}
                 </td>
-                <td class="d-admin-row__detail voice-rooms__created-at">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-rooms__created-at">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.room.created_at"}}
                   </div>
                   {{dFormatDate room.created_at leaveAgo="true"}}
                 </td>
-                <td class="d-admin-row__controls voice-rooms__controls">
+                <td class="d-table__cell --controls voice-rooms__controls">
                   {{#if room.live_participant_count}}
                     <DButton
+                      class="btn-small btn-danger voice-rooms__end-call"
                       @icon="phone-slash"
                       @title="voice.admin.end_call.title"
                       {{on "click" (fn this.endCall room)}}
-                      class="btn-small btn-danger voice-rooms__end-call"
                     />
                   {{/if}}
 
                   <LinkTo
-                    @route="adminPlugins.show.voice-rooms.edit"
-                    @model={{room.id}}
                     class="btn btn-default btn-text btn-small"
+                    @model={{room.id}}
+                    @route="adminPlugins.show.voice-rooms.edit"
                   >
                     {{i18n "voice.admin.edit"}}
                   </LinkTo>
 
                   <DButton
-                    @icon="trash-can"
-                    @disabled={{room.isDeleting}}
-                    {{on "click" (fn this.destroyRoom room)}}
                     class="btn-small btn-danger voice-rooms__delete"
+                    @disabled={{room.isDeleting}}
+                    @icon="trash-can"
+                    {{on "click" (fn this.destroyRoom room)}}
                   />
                 </td>
               </tr>
@@ -166,9 +188,9 @@ export default class VoiceRoomList extends Component {
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="voice-admin__create-btn"
           @ctaLabel="voice.admin.create_room"
           @ctaRoute="adminPlugins.show.voice-rooms.new"
-          @ctaClass="voice-admin__create-btn"
           @emptyLabel="voice.admin.no_rooms_yet"
         />
       {{/if}}

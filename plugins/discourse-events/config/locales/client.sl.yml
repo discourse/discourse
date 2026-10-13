@@ -18,6 +18,11 @@ sl:
             topic_id:
               label: ID teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obvestila"
+            none: "Brez"
       on_holiday: "Na počitnicah"
       disable_holiday: "Onemogoči"
       enable_holiday: "Omogoči"

@@ -20,14 +20,14 @@ export default class ChatMessageText extends Component {
         <ChatMessageCollapser
           @cooked={{@cooked}}
           @decorate={{@decorate}}
-          @uploads={{@uploads}}
           @onToggleCollapse={{@onToggleCollapse}}
+          @uploads={{@uploads}}
         />
       {{else}}
         <DDecoratedHtml
-          @html={{trustHTML @cooked}}
-          @decorate={{@decorate}}
           @className="chat-cooked"
+          @decorate={{@decorate}}
+          @html={{trustHTML @cooked}}
         />
       {{/if}}
 

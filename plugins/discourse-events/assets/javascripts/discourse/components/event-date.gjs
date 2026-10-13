@@ -4,6 +4,7 @@ import { i18n } from "discourse-i18n";
 import guessDateFormat from "../lib/guess-best-date-format";
 
 export default class EventDate extends Component {
+  @service a11y;
   @service siteSettings;
 
   <template>
@@ -12,18 +13,18 @@ export default class EventDate extends Component {
         {{~#if this.siteSettings.use_local_event_date~}}
           <span
             class="event-date event-local-date past"
-            title={{this.dateRange}}
-            data-starts-at={{this.eventStartedAt}}
             data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
           >
             {{this.localDateContent}}
           </span>
         {{else}}
           <span
             class="event-date event-relative-date {{this.relativeDateType}}"
-            title={{this.dateRange}}
-            data-starts-at={{this.eventStartedAt}}
             data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
           >
             {{~#if this.isWithinDateRange~}}
               <span class="indicator"></span>
@@ -66,11 +67,16 @@ export default class EventDate extends Component {
     return this._formattedDate(this.eventStartedAt);
   }
 
+  get now() {
+    void this.a11y.autoUpdatingRelativeDateRef;
+    return Date.now();
+  }
+
   get relativeDateType() {
     if (this.isWithinDateRange) {
       return "current";
     }
-    if (this.eventStartedAt.isAfter(moment())) {
+    if (this.eventStartedAt.isAfter(this.now)) {
       return "future";
     }
     return "past";
@@ -78,23 +84,23 @@ export default class EventDate extends Component {
 
   get isWithinDateRange() {
     return (
-      this.eventStartedAt.isBefore(moment()) &&
-      this.eventEndedAt.isAfter(moment())
+      this.eventStartedAt.isBefore(this.now) &&
+      this.eventEndedAt.isAfter(this.now)
     );
   }
 
   get relativeDateContent() {
     // dateType "current" uses a different implementation
     const relativeDates = {
-      future: this.eventStartedAt.from(moment()),
-      past: this.eventEndedAt.from(moment()),
+      future: this.eventStartedAt.from(this.now),
+      past: this.eventEndedAt.from(this.now),
     };
     return relativeDates[this.relativeDateType];
   }
 
   get timeRemainingContent() {
     return i18n("discourse_post_event.topic_title.ends_in_duration", {
-      duration: this.eventEndedAt.from(moment()),
+      duration: this.eventEndedAt.from(this.now),
     });
   }
 

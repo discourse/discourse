@@ -19,6 +19,16 @@ tr_TR:
         categories:
           discourse_ai: "Discourse YZ"
       dashboard:
+        sections:
+          ask_ai:
+            title: "YZ'ye sor"
+        ask_ai:
+          title: "YZ'ye sor"
+          reports:
+            retry_questions: "Tekrar Dene"
+          date: "Tarih"
+          outcomes:
+            failed: "Başarısız"
         emotion:
           title: "Duygu"
         reports:
@@ -966,11 +976,6 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
-          anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
-          anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-3-1-pro-preview: "Google'ın en akıllı modeli"
-          open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
@@ -1162,9 +1167,24 @@ tr_TR:
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
       ai_artifact:
+        editor:
+          version: "Sürüm"
+          default: "Varsayılan"
+          option_on: "Açık"
+          option_off: "Kapalı"
+          apply: "Uygula"
         expand_view_label: "Görünümü genişlet"
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
+        share: "Paylaş"
+        create_link: "Bağlantı oluştur"
+        copied: "Panoya kopyalandı"
+        copy_link: "Bağlantıyı kopyala"
+        copy_embed: "Yerleştirmeyi kopyala"
+        new_tab: "Yeni sekmede göster"
+        filter_all: "Tümü"
+        filter_standalone: "Bağımsız"
+        filter_conversation: "Konuşma"
       ai_bot:
         title: "YZ botu"
         agent: "Ajan:"

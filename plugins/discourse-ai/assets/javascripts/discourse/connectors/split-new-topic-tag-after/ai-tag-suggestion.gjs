@@ -13,11 +13,11 @@ export default class AiTagSuggestion extends Component {
   <template>
     {{#if this.siteSettings.ai_embeddings_enabled}}
       <AiSplitTopicSuggester
-        @selectedPosts={{@outletArgs.selectedPosts}}
-        @mode="suggest_tags"
-        @updateAction={{@outletArgs.updateTags}}
-        @currentValue={{@outletArgs.tags}}
         @categoryId={{@outletArgs.categoryId}}
+        @currentValue={{@outletArgs.tags}}
+        @mode="suggest_tags"
+        @selectedPosts={{@outletArgs.selectedPosts}}
+        @updateAction={{@outletArgs.updateTags}}
       />
     {{/if}}
   </template>

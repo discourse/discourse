@@ -19,14 +19,14 @@ export default class FKMeta extends Component {
     {{#if this.shouldRenderMeta}}
       <div class="form-kit__meta">
         {{#if @error}}
-          <FKErrors @id={{@field.errorId}} @error={{@error}} />
+          <FKErrors @error={{@error}} @id={{@field.errorId}} />
         {{/if}}
 
         {{#if this.shouldRenderCharCounter}}
           <FKCharCounter
-            @value={{@field.value}}
-            @minLength={{@field.minLength}}
             @maxLength={{@field.maxLength}}
+            @minLength={{@field.minLength}}
+            @value={{@field.value}}
           />
         {{/if}}
       </div>

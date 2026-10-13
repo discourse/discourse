@@ -30,7 +30,7 @@ export default class ExpressionPreview extends Component {
 
   async #showTooltip() {
     const trigger = this.args.trigger;
-    if (!trigger || this.isDestroying || this.isDestroyed) {
+    if (!trigger || this.isDestroying) {
       return;
     }
 
@@ -64,12 +64,11 @@ export default class ExpressionPreview extends Component {
       closeOnClickOutside: false,
       closeOnScroll: false,
       matchTriggerWidth: true,
-      maxWidth: 9999,
       offset: 4,
       portalOutletElement,
     });
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       if (instance) {
         this.tooltip.close(instance);
       }

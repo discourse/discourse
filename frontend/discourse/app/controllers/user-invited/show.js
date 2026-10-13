@@ -35,6 +35,18 @@ export default class UserInvitedShowController extends Controller {
 
   @tracked _canInviteToForumOverride;
 
+  @computed("currentUser.can_invite_to_forum", "user.profile_hidden")
+  get canInviteToForum() {
+    if (this._canInviteToForumOverride !== undefined) {
+      return this._canInviteToForumOverride;
+    }
+    return this.currentUser?.can_invite_to_forum && !this.user?.profile_hidden;
+  }
+
+  set canInviteToForum(value) {
+    this._canInviteToForumOverride = value;
+  }
+
   @dependentKeyCompat
   get inviteRedeemed() {
     return this.filter === "redeemed";
@@ -48,18 +60,6 @@ export default class UserInvitedShowController extends Controller {
   @dependentKeyCompat
   get invitePending() {
     return this.filter === "pending";
-  }
-
-  @computed("currentUser.can_invite_to_forum", "user.profile_hidden")
-  get canInviteToForum() {
-    if (this._canInviteToForumOverride !== undefined) {
-      return this._canInviteToForumOverride;
-    }
-    return this.currentUser?.can_invite_to_forum && !this.user?.profile_hidden;
-  }
-
-  set canInviteToForum(value) {
-    this._canInviteToForumOverride = value;
   }
 
   @computed("user.id", "currentUser.id")
@@ -85,18 +85,6 @@ export default class UserInvitedShowController extends Controller {
     );
   }
 
-  @observes("searchTerm")
-  searchTermChanged() {
-    this._searchTermChanged();
-  }
-
-  @debounce(INPUT_DELAY)
-  _searchTermChanged() {
-    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-      (invites) => this.set("model", invites)
-    );
-  }
-
   @computed("model")
   get hasEmailInvites() {
     return this.model.invites.some((invite) => {
@@ -112,6 +100,11 @@ export default class UserInvitedShowController extends Controller {
   @computed("invitesCount", "filter")
   get showSearch() {
     return this.invitesCount[this.filter] > 5;
+  }
+
+  @observes("searchTerm")
+  searchTermChanged() {
+    this._searchTermChanged();
   }
 
   @action
@@ -203,5 +196,12 @@ export default class UserInvitedShowController extends Controller {
         this.hasLoadedInitialInvites = true;
       }
     }
+  }
+
+  @debounce(INPUT_DELAY)
+  _searchTermChanged() {
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      (invites) => this.set("model", invites)
+    );
   }
 }

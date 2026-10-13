@@ -177,8 +177,8 @@ export default class AdminCategoryManagementList extends Component {
       {{didUpdate this.typeChanged @categoryType}}
     >
       <DPageSubheader
-        @titleLabel={{this.titleLabel}}
         @descriptionLabel={{this.descriptionLabel}}
+        @titleLabel={{this.titleLabel}}
       />
 
       <PluginOutlet
@@ -210,11 +210,11 @@ export default class AdminCategoryManagementList extends Component {
           @inputPlaceholder={{i18n
             "admin.config.category_management.filter_placeholder"
           }}
+          @loading={{this.loading}}
           @noResultsMessage={{this.noResultsMessage}}
-          @onTextFilterChange={{this.onTextFilterChange}}
           @onDropdownFilterChange={{this.onVisibilityFilterChange}}
           @onResetFilters={{this.onResetFilters}}
-          @loading={{this.loading}}
+          @onTextFilterChange={{this.onTextFilterChange}}
         >
           <:aboveContent>
             <DConditionalLoadingSpinner @condition={{this.loading}} />
@@ -286,8 +286,8 @@ export default class AdminCategoryManagementList extends Component {
                           >
                             {{#each category.badge_chain as |badge|}}
                               <LinkTo
-                                @route="discovery.category"
                                 @model={{concat category.slug "/" category.id}}
+                                @route="discovery.category"
                               >
                                 {{dCategoryBadge
                                   badge
@@ -363,6 +363,7 @@ export default class AdminCategoryManagementList extends Component {
                         >
                           <div class="d-table__cell-actions">
                             <DButton
+                              class="btn-default btn-small admin-category-management-list__open-settings"
                               @href={{category.edit_url}}
                               @icon={{unless
                                 this.capabilities.viewport.md
@@ -373,7 +374,6 @@ export default class AdminCategoryManagementList extends Component {
                                 "admin.config.category_management.open_settings"
                               }}
                               @title="admin.config.category_management.open_settings"
-                              class="btn-default btn-small admin-category-management-list__open-settings"
                             />
                           </div>
                         </td>

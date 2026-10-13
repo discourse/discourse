@@ -74,9 +74,9 @@ export default class VoiceBackToVoiceRoomButton extends Component {
           {{#if room}}
             <DButton
               class="btn-transparent no-text c-navbar__back-to-voice-room"
+              @action={{fn this.openRoom room}}
               @icon="microphone-lines"
               @translatedTitle={{i18n "voice.chat.back_to_voice_room"}}
-              @action={{fn this.openRoom room}}
             />
           {{/if}}
         </:content>

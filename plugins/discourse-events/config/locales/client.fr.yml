@@ -45,6 +45,10 @@ fr:
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
           rsvp_body: "Échangez avec les autres participants avant, pendant et après l'événement."
       preferences:
+        reminders:
+          preferences:
+            notification: "Notification"
+            none: "Jamais"
         all_events_description: "Tous les événements du forum"
         my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
       on_holiday: "En vacances"
@@ -376,6 +380,9 @@ fr:
       edit_event: "Modifier l'événement"
       export_event: "Exporter l'événement"
       created_by: "Créé par "
+      other_hosts:
+        one: "et %{count} autre utilisateur"
+        other: "et %{count} autres utilisateurs"
       bulk_invite: "Invitation groupée"
       close_event: "Fermer l'événement"
       open_event: "Ouvrir l'événement"
@@ -590,6 +597,8 @@ fr:
           placeholder: "Facultatif, par défaut le titre du sujet"
         invitees:
           label: "Groupes invités"
+        hosts:
+          label: "Hôtes"
         event_type:
           label: "Type de participation"
           public:

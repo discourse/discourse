@@ -18,14 +18,14 @@ export default class FKControlCheckbox extends FKBaseControl {
   <template>
     <FKLabel class="form-kit__control-checkbox-label">
       <input
-        type="checkbox"
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
         checked={{or (eq @field.value true) (eq @field.value "true")}}
         class="form-kit__control-checkbox"
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{@field.describedBy}}
+        type="checkbox"
         ...attributes
         {{on "change" this.handleInput}}
       />

@@ -129,49 +129,49 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/discourse-chat-integration/providers"
       @label={{i18n "chat_integration.nav.providers"}}
+      @path="/admin/plugins/discourse-chat-integration/providers"
     />
 
-    <div id="admin-plugin-chat-integration" class="admin-detail">
+    <div class="admin-detail" id="admin-plugin-chat-integration">
       {{#if this.enabledProviders.length}}
         <div class="admin-nav-submenu">
           <ul class="nav nav-pills">
             {{#each this.enabledProviders as |provider|}}
               <DNavItem
-                @route="adminPlugins.show.discourse-chat-integration-providers.show"
-                @routeParam={{provider.name}}
                 @currentWhen={{this.isProviderActive provider.name}}
                 @label={{concat
                   "chat_integration.provider."
                   provider.name
                   ".title"
                 }}
+                @route="adminPlugins.show.discourse-chat-integration-providers.show"
+                @routeParam={{provider.name}}
               />
             {{/each}}
           </ul>
           {{#if this.disabledProviders.length}}
             <DMenu
-              @identifier="chat-integration-add-provider"
-              @icon="plus"
-              @label={{i18n "chat_integration.add_provider"}}
               class="btn-default btn-small"
+              @icon="plus"
+              @identifier="chat-integration-add-provider"
+              @label={{i18n "chat_integration.add_provider"}}
             >
               <:content as |menu|>
                 <DDropdownMenu as |dropdown|>
                   {{#each this.disabledProviders as |provider|}}
                     <dropdown.item>
                       <DButton
-                        @translatedLabel={{i18n
-                          (concat
-                            "chat_integration.provider." provider.name ".title"
-                          )
-                        }}
-                        @action={{fn this.configureProvider provider menu}}
                         class={{dConcatClass
                           "btn-transparent"
                           "chat-integration-add-provider-button"
                           (concat "--" provider.name)
+                        }}
+                        @action={{fn this.configureProvider provider menu}}
+                        @translatedLabel={{i18n
+                          (concat
+                            "chat_integration.provider." provider.name ".title"
+                          )
                         }}
                       />
                     </dropdown.item>
@@ -185,49 +185,49 @@ export default class DiscourseChatIntegrationProviders extends Component {
         {{outlet}}
       {{else}}
         <AdminConfigAreaEmptyList
-          @emptyLabel="chat_integration.empty_state.title"
           class="discourse-chat-integration-providers-empty-list"
+          @emptyLabel="chat_integration.empty_state.title"
         >
           <p>{{i18n "chat_integration.empty_state.body"}}</p>
           {{#if this.disabledProviders.length}}
             <div class="chat-integration-providers-list">
               {{#each this.popularProviders as |provider|}}
                 <DButton
-                  @translatedLabel={{i18n
-                    (concat "chat_integration.provider." provider.name ".title")
-                  }}
-                  @action={{fn this.configureProvider provider}}
                   class={{dConcatClass
                     "btn-default"
                     "chat-integration-popular-provider-setup"
                     (concat "--" provider.name)
                   }}
+                  @action={{fn this.configureProvider provider}}
+                  @translatedLabel={{i18n
+                    (concat "chat_integration.provider." provider.name ".title")
+                  }}
                 />
               {{/each}}
               {{#if this.otherProviders.length}}
                 <DMenu
-                  @identifier="chat-integration-more-providers"
-                  @icon="ellipsis"
-                  @label={{i18n "chat_integration.more_providers"}}
                   class="btn-default chat-integration-more-providers-setup"
+                  @icon="ellipsis"
+                  @identifier="chat-integration-more-providers"
+                  @label={{i18n "chat_integration.more_providers"}}
                 >
                   <:content>
                     <DDropdownMenu as |dropdown|>
                       {{#each this.otherProviders as |provider|}}
                         <dropdown.item>
                           <DButton
+                            class={{dConcatClass
+                              "btn-transparent"
+                              "chat-integration-more-providers-setup"
+                              (concat "--" provider.name)
+                            }}
+                            @action={{fn this.configureProvider provider}}
                             @translatedLabel={{i18n
                               (concat
                                 "chat_integration.provider."
                                 provider.name
                                 ".title"
                               )
-                            }}
-                            @action={{fn this.configureProvider provider}}
-                            class={{dConcatClass
-                              "btn-transparent"
-                              "chat-integration-more-providers-setup"
-                              (concat "--" provider.name)
                             }}
                           />
                         </dropdown.item>

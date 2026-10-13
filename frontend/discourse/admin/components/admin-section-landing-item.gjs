@@ -47,13 +47,13 @@ export default class AdminSectionLandingItem extends Component {
       {{! When there are no nested buttons, the entire component is a link }}
       {{#let (this.wrapperElement hasButtons) as |WrapperComponent|}}
         <WrapperComponent
-          @route={{@titleRoute}}
-          @model={{@titleRouteModel}}
           class={{dConcatClass
             "admin-section-landing-item"
             (if @icon "--has-icon")
           }}
           ...attributes
+          @model={{@titleRouteModel}}
+          @route={{@titleRoute}}
         >
           {{#if @imageUrl}}
             <img class="admin-section-landing-item__image" src={{@imageUrl}} />
@@ -72,7 +72,7 @@ export default class AdminSectionLandingItem extends Component {
 
             {{#if (and @titleRoute hasButtons)}}
               {{! Individual title is a link when buttons exist}}
-              <LinkTo @route={{@titleRoute}} @model={{@titleRouteModel}}>
+              <LinkTo @model={{@titleRouteModel}} @route={{@titleRoute}}>
                 <h3
                   class="admin-section-landing-item__title"
                 >{{this.title}}</h3>

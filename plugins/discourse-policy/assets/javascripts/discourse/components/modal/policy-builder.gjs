@@ -164,31 +164,31 @@ export default class PolicyBuilder extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_policy.builder.title"}}
-      @closeModal={{@closeModal}}
       class="policy-builder"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_policy.builder.title"}}
     >
       <:body>
         <PolicyBuilderForm
           @data={{this.formData}}
-          @onSubmit={{this.onSubmit}}
           @onRegisterApi={{this.onRegisterApi}}
+          @onSubmit={{this.onSubmit}}
         />
       </:body>
 
       <:footer>
         {{#if @model.insertMode}}
           <DButton
-            @label="discourse_policy.builder.insert"
-            @action={{this.submitForm}}
             class="btn-primary"
+            @action={{this.submitForm}}
+            @label="discourse_policy.builder.insert"
           />
         {{else}}
           <DButton
-            @label="discourse_policy.builder.save"
+            class="btn-primary"
             @action={{this.submitForm}}
             @isLoading={{this.isSaving}}
-            class="btn-primary"
+            @label="discourse_policy.builder.save"
           />
         {{/if}}
       </:footer>

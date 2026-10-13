@@ -19,6 +19,16 @@ es:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Preguntar a la IA"
+        ask_ai:
+          title: "Preguntar a la IA"
+          reports:
+            retry_questions: "Reintentar"
+          date: "Fecha"
+          outcomes:
+            failed: "Falló"
         emotion:
           title: "Emoción"
         reports:
@@ -962,11 +972,6 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
-          anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
-          anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-1-pro-preview: "El modelo de Google más inteligente"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -1158,9 +1163,23 @@ es:
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Por defecto"
+          option_on: "Activado"
+          option_off: "Desactivado"
+          apply: "Aplicar"
         expand_view_label: "Ampliar vista"
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
+        share: "Compartir"
+        create_link: "Crear enlace"
+        copied: "Copiado al portapapeles"
+        copy_link: "Copiar enlace"
+        copy_embed: "Copiar incrustación"
+        new_tab: "Mostrar en una pestaña nueva"
+        filter_all: "Todo"
+        filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
         agent: "Agente:"

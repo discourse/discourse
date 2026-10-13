@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
 
 export default class DiscourseReactionsPicker extends Component {
   @service capabilities;
@@ -15,24 +15,6 @@ export default class DiscourseReactionsPicker extends Component {
   @service siteSettings;
 
   emojiPickerIsOpen = false;
-
-  @action
-  pointerOut(event) {
-    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
-      return;
-    }
-
-    this.args.scheduleCollapse("collapseReactionsPicker");
-  }
-
-  @action
-  pointerOver(event) {
-    if (event.pointerType !== "mouse") {
-      return;
-    }
-
-    this.args.cancelCollapse();
-  }
 
   get reactionInfo() {
     const reactions = this.siteSettings.discourse_reactions_enabled_reactions
@@ -134,6 +116,24 @@ export default class DiscourseReactionsPicker extends Component {
   }
 
   @action
+  pointerOut(event) {
+    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
+      return;
+    }
+
+    this.args.scheduleCollapse("collapseReactionsPicker");
+  }
+
+  @action
+  pointerOver(event) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    this.args.cancelCollapse();
+  }
+
+  @action
   onSelectEmoji(selected_emoji) {
     this.args.toggle({
       reaction: selected_emoji,
@@ -186,18 +186,18 @@ export default class DiscourseReactionsPicker extends Component {
               }}
               @translatedTitle={{reaction.title}}
             >
-              {{dEmoji reaction.id}}
+              {{discourseReactionsEmoji reaction.id}}
             </DButton>
           {{/each}}
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
-              @icon="discourse-emojis"
+              @btnClass="btn-icon btn-flat"
               @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
-              @onShow={{this.preventCollapse}}
+              @icon="discourse-emojis"
               @onClose={{this.reenableCollapse}}
-              @btnClass="btn-icon btn-flat"
+              @onShow={{this.preventCollapse}}
             />
           {{/if}}
         </div>

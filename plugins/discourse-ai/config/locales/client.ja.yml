@@ -16,6 +16,16 @@ ja:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "AI に尋ねる"
+        ask_ai:
+          title: "AI に尋ねる"
+          reports:
+            retry_questions: "再試行"
+          date: "日付"
+          outcomes:
+            failed: "失敗しました"
         emotion:
           title: "感情"
         reports:
@@ -745,10 +755,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
-          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -922,9 +928,23 @@ ja:
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
+        editor:
+          version: "バージョン"
+          default: "デフォルト"
+          option_on: "オン"
+          option_off: "オフ"
+          apply: "適用"
         expand_view_label: "表示を拡大"
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
+        share: "共有"
+        create_link: "リンクを作成"
+        copied: "クリップボードにコピーしました"
+        copy_link: "リンクをコピー"
+        copy_embed: "埋め込みをコピー"
+        new_tab: "新しいタブで表示"
+        filter_all: "すべて"
+        filter_standalone: "単発"
       ai_bot:
         title: "AI ボット"
         llm: "モデル:"

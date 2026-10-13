@@ -12,7 +12,6 @@ de:
           discourse_rewind: "Discourse Rückblick"
   js:
     discourse_rewind:
-      placeholder: Discourse-Rückblick
       title: Rückblick
       loading: "Splines werden retikuliert …"
       viewing_other_user: "Du siehst dir gerade den Discourse-Rückblick-Bericht von <strong>%{username}</strong> an."
@@ -92,18 +91,14 @@ de:
             one: "Der beste Beitrag von %{username}"
             other: "Die %{count} besten Beiträge von %{username}"
         ai_usage:
-          title: KI-Nutzung
           total_requests: Gesamtanzahl der Anfragen
           total_tokens: Gesamtanzahl der Token
           success_rate: Erfolgsquote
-          favorite_features: Meistgenutzte Funktionen
-          favorite_models: Meistgenutzte KI-Modelle
           wake_up: "Aufwachen, %{username} …"
           system_title: "KI-NUTZUNG ERKANNT"
           section_features: "TOP FUNKTIONEN"
           section_models: "TOP-KI-MODELLE"
         assignments:
-          title: Zuordnungen
           total_assigned: Mir zugeordnet
           total_assigned_others: "%{username} zugeordnet"
           completed: Abgeschlossene Zuordnungen
@@ -112,13 +107,6 @@ de:
           completion_rate: Erledigungsquote
         chat_usage:
           title: Chat-Aktivität
-          total_messages: Nachrichten gesamt
-          dm_messages: Direktnachrichten
-          unique_dm_channels: Unterhaltungen in Direktnachrichten
-          reactions_received: Erhaltene Reaktionen
-          avg_message_length: Ø Nachrichtenlänge
-          favorite_channels: Lieblingskanäle
-          messages: Nachrichten
           bot_name: XxRückblickBotxX
           author: Du
           author_others: "%{username}"
@@ -144,28 +132,7 @@ de:
           message_4: "Deine durchschnittliche Nachrichtenlänge betrug <strong>%{length}</strong> Zeichen"
           message_5: "Deine Lieblingskanäle:"
           dancing_baby_alt: "Tanzendes Baby"
-        favorite_gifs:
-          title:
-            one: Dein Lieblings-GIF
-            other: Deine %{count} Lieblings-GIFs
-          title_others:
-            one: "Das Lieblings-GIF von %{username}"
-            other: "Die %{count} Lieblings-GIFs von %{username}"
-          total_usage:
-            one: '%{count} mal benutzt'
-            other: Insgesamt %{count} mal benutzt
         invites:
-          title: Einladungen
-          total_invites: Anzahl der versendeten Einladungen
-          redeemed: Angenommene Einladungen
-          redemption_rate: Annahmequote
-          avg_trust_level: Ø Vertrauensstufe
-          invitee_impact: Auswirkungen deiner Einladungen
-          invitee_impact_others: "Auswirkungen der Einladungen von %{username}"
-          invitee_posts: Erstellte Beiträge
-          invitee_topics: Erstellte Themen
-          invitee_likes: Abgegebene „Gefällt mir“
-          most_active_invitee: Aktivster Einladender
           guest_book_title: Gästebuch
           guest_book_subtitle: Deine Community Einladungen
           guest_book_subtitle_others: "Community-Einladungen von %{username}"
@@ -178,22 +145,9 @@ de:
           label_likes_given: "Abgegebene „Gefällt mir“"
           section_most_active: Aktivster Gast
         new_user_interactions:
-          title: Betreuung neuer Benutzer
-          subtitle:
-            one: Du hast dieses Jahr einem neuen Benutzer geholfen
-            other: Du hast dieses Jahr %{count} neuen Benutzern geholfen
-          subtitle_others:
-            one: "%{username} hat einem neuen Benutzer in diesem Jahr geholfen"
-            other: "%{username} hat %{count} neuen Benutzern in diesem Jahr geholfen"
           new_member:
             one: "%{count} neuen Mitglied geholfen"
             other: "%{count} neuen Mitgliedern geholfen"
-          total_interactions: Interaktionen insgesamt
-          unique_new_users: Einzigartige neue Benutzer
-          likes_given: Abgegebene „Gefällt mir“
-          replies: Antworten auf Beiträge
-          mentions: Erwähnungen
-          topics_with_new_users: Themen mit neuen Benutzern
           contributions_helped: Deine Beiträge haben
           contributions_helped_others: "Die Beiträge von %{username} haben"
         time_of_day_activity:

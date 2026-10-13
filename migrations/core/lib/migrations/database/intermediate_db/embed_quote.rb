@@ -10,6 +10,7 @@ module Migrations
       module EmbedQuote
         SQL = <<~SQL
           INSERT INTO embed_quotes (
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,
@@ -21,13 +22,14 @@ module Migrations
             quoted_username
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_quotes` record in the IntermediateDB.
         #
+        # @param original_markdown    [String, nil]
         # @param owner_id             [Integer, String]
         # @param owner_type           [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
@@ -43,6 +45,7 @@ module Migrations
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         def self.create(
+          original_markdown: nil,
           owner_id:,
           owner_type:,
           placeholder:,
@@ -55,6 +58,7 @@ module Migrations
         )
           Migrations::Database::IntermediateDB.insert(
             SQL,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,

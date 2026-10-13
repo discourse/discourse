@@ -3,8 +3,10 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import { confirmMeshPrivacy } from "../../components/modal/voice-mesh-privacy-warning";
 import { reportMicAcquisitionFailure } from "../../components/modal/voice-mic-permission";
 import AudioMonitor from "../../lib/voice/audio-monitor";
@@ -61,8 +63,11 @@ import {
 import TranscriptionCoordinator from "../../lib/voice/transcription-coordinator";
 import { applyVoiceQuality } from "../../lib/voice/video-quality";
 
+const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
+
 export default class VoiceWebrtcService extends Service {
   @service currentUser;
+  @service keyValueStore;
   @service messageBus;
   @service modal;
   @service siteSettings;
@@ -111,6 +116,8 @@ export default class VoiceWebrtcService extends Service {
   #roomHandlerCallbacks = new Map();
   #deferredTeardownTimers = new Set();
   #pendingPlaybackElements = new WeakSet();
+  #cameraRestorePromise = null;
+  #queuedCameraRestoreRoomId = null;
 
   #signaling;
   #peerManager;
@@ -275,7 +282,7 @@ export default class VoiceWebrtcService extends Service {
       getFirstActiveRoomId: () => this.#firstActiveRoomId(),
       getActiveRoomId: () => this.activeRoomId,
       getRoom: (roomId) => this.voiceRooms?.roomById(roomId),
-      canPublishVideo: (roomId) => this.canPublishVideo(roomId),
+      canPublish: (kind, roomId) => this.canPublish(kind, roomId),
       getCameraQuality: (roomId) => this.effectiveCameraQuality(roomId),
       getScreenQuality: (roomId) => this.effectiveScreenQuality(roomId),
       getScreenContent: () => this.screenContent,
@@ -286,6 +293,11 @@ export default class VoiceWebrtcService extends Service {
           this.currentUser?.id,
           state
         ),
+      onScreenShareEnded: () => {
+        if (this.watchingRoomId) {
+          this.#restorePreferredCamera(this.watchingRoomId);
+        }
+      },
       showError: (messageKey) =>
         this.toasts.error({
           duration: 5000,
@@ -329,8 +341,13 @@ export default class VoiceWebrtcService extends Service {
         camera: this.effectiveCameraQuality(roomId),
         screen: this.effectiveScreenQuality(roomId),
       }),
-      onTrack: (roomId, userId, track, streams) =>
-        this.#remoteStreamRegistry.register(roomId, userId, track, streams),
+      onTrack: (roomId, userId, track, streams) => {
+        const room = this.voiceRooms.roomById(roomId);
+        if (userId < 0 && (!room || !participantCanSpeak(room, userId))) {
+          return;
+        }
+        this.#remoteStreamRegistry.register(roomId, userId, track, streams);
+      },
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
       getRemoteUserIds: (roomId) =>
@@ -376,6 +393,8 @@ export default class VoiceWebrtcService extends Service {
         this.#remoteStreamRegistry.userIdsFor(roomId),
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
+      removeRemoteMedia: (roomId, userId, options) =>
+        this.#remoteStreamRegistry.removeMedia(roomId, userId, options),
       removeAllRemoteStreams: (roomId) => this.#removeAllRemoteStreams(roomId),
       getLocalVideoKind: () => this.localVideoKind,
       syncVideoSenders: (roomId) => this.#localVideo.syncSenders(roomId),
@@ -419,6 +438,9 @@ export default class VoiceWebrtcService extends Service {
     this.#livekit.destroy();
     this.#signaling.destroy();
 
+    this.watchingRoomId = null;
+    this.#cameraRestorePromise = null;
+    this.#queuedCameraRestoreRoomId = null;
     this.#localVideo.destroy();
     this.#localAudio.stop();
     this.#transcription.destroy();
@@ -473,32 +495,12 @@ export default class VoiceWebrtcService extends Service {
     return this.#localAudio.autoGainControl;
   }
 
-  setNoiseSuppressionMode(mode) {
-    return this.#localAudio.setNoiseSuppressionMode(mode);
-  }
-
-  setEchoCancellation(enabled) {
-    return this.#localAudio.setEchoCancellation(enabled);
-  }
-
-  setAutoGainControl(enabled) {
-    return this.#localAudio.setAutoGainControl(enabled);
-  }
-
   get gateThreshold() {
     return this.#localAudio.gateThreshold;
   }
 
   get inputDeviceId() {
     return this.#localAudio.inputDeviceId;
-  }
-
-  setInputDevice(deviceId) {
-    return this.#localAudio.setInputDevice(deviceId);
-  }
-
-  setGateThreshold(value) {
-    return this.#localAudio.setGateThreshold(value);
   }
 
   // --- Subtitles & transcript delegates ---
@@ -519,12 +521,12 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.progress;
   }
 
-  get captions() {
-    return this.#transcription.captions;
+  get sttModel() {
+    return this.#transcription.sttModel;
   }
 
-  toggleSubtitles() {
-    this.#transcription.toggle();
+  get captions() {
+    return this.#transcription.captions;
   }
 
   get transcriptRecording() {
@@ -547,6 +549,99 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.startedAt;
   }
 
+  get remoteStreams() {
+    manuallyTrack(this.remoteStreamsRevision);
+    return this.#remoteStreamRegistry.allStreams();
+  }
+
+  get remoteScreenAudioStreams() {
+    manuallyTrack(this.remoteStreamsRevision);
+    return this.#remoteStreamRegistry.allScreenAudioStreams();
+  }
+
+  get hasActiveRoom() {
+    return !!this.activeRoomId;
+  }
+
+  get activeRoom() {
+    return this.activeRoomId
+      ? this.voiceRooms?.roomById(this.activeRoomId)
+      : null;
+  }
+
+  // --- Video & screen sharing ---
+
+  get screenShareSupported() {
+    return !!navigator.mediaDevices?.getDisplayMedia;
+  }
+
+  get localVideoStream() {
+    return this.#localVideo.stream;
+  }
+
+  get localVideoKind() {
+    return this.#localVideo.kind;
+  }
+
+  get videoBlurEnabled() {
+    return this.#localVideo.blurEnabled;
+  }
+
+  get videoBlurAmount() {
+    return this.#localVideo.blurAmount;
+  }
+
+  get videoInputDeviceId() {
+    return this.#localVideo.inputDeviceId;
+  }
+
+  // Whether the site allows background blur; distinct from browser support
+  // so the UI can tell "turned off by admin" apart from "can't run here".
+  get videoBlurAvailable() {
+    return !!this.siteSettings.voice_video_background_blur_enabled;
+  }
+
+  get videoBlurSupported() {
+    return this.#localVideo.blurSupported;
+  }
+
+  get localVideoTrack() {
+    return this.#localVideo.track;
+  }
+
+  get localScreenAudioTrack() {
+    return this.#localVideo.screenAudioTrack;
+  }
+
+  setNoiseSuppressionMode(mode) {
+    return this.#localAudio.setNoiseSuppressionMode(mode);
+  }
+
+  setEchoCancellation(enabled) {
+    return this.#localAudio.setEchoCancellation(enabled);
+  }
+
+  setAutoGainControl(enabled) {
+    return this.#localAudio.setAutoGainControl(enabled);
+  }
+
+  setInputDevice(deviceId) {
+    return this.#localAudio.setInputDevice(deviceId);
+  }
+
+  setGateThreshold(value) {
+    return this.#localAudio.setGateThreshold(value);
+  }
+
+  toggleSubtitles() {
+    this.#transcription.toggle();
+  }
+
+  @action
+  setSttModel(model) {
+    this.#transcription.setSttModel(model);
+  }
+
   isTranscribingRoom(roomId) {
     return this.#transcription.isTranscribingRoom(roomId);
   }
@@ -563,18 +658,8 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.captionsFor(roomId);
   }
 
-  get remoteStreams() {
-    this.remoteStreamsRevision;
-    return this.#remoteStreamRegistry.allStreams();
-  }
-
-  get remoteScreenAudioStreams() {
-    this.remoteStreamsRevision;
-    return this.#remoteStreamRegistry.allScreenAudioStreams();
-  }
-
   remoteStreamsFor(roomId) {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.streamsFor(roomId);
   }
 
@@ -585,12 +670,12 @@ export default class VoiceWebrtcService extends Service {
   }
 
   remoteStreamFor(roomId, userId) {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.streamFor(roomId, userId);
   }
 
   connectionStateFor(roomId) {
-    this.connectionRevision;
+    manuallyTrack(this.connectionRevision);
     if (this.#connectingRoomIds.has(roomId)) {
       return "connecting";
     }
@@ -600,53 +685,12 @@ export default class VoiceWebrtcService extends Service {
     return "idle";
   }
 
-  get hasActiveRoom() {
-    return !!this.activeRoomId;
-  }
-
-  get activeRoom() {
-    return this.activeRoomId
-      ? this.voiceRooms?.roomById(this.activeRoomId)
-      : null;
-  }
-
   isActiveRoom(roomId) {
     return Number(this.activeRoomId) === Number(roomId);
   }
 
-  #setActiveRoomId(roomId) {
-    this.activeRoomId = roomId ?? null;
-  }
-
-  #clearActiveRoomId(roomId) {
-    if (Number(this.activeRoomId) !== Number(roomId)) {
-      return;
-    }
-
-    this.activeRoomId = this.#activeRoomIds.values().next().value ?? null;
-  }
-
-  #canSpeakInRoom(room) {
-    return participantCanSpeak(room, this.currentUser?.id);
-  }
-
-  #isMeshRoom(roomId) {
-    return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
-  }
-
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
-  }
-
-  async #acquireMicrophoneWithFeedback() {
-    const acquired = await this.#localAudio.acquireMicrophone();
-    if (!acquired) {
-      reportMicAcquisitionFailure(this.#localAudio.lastAcquisitionError, {
-        modal: this.modal,
-        toasts: this.toasts,
-      });
-    }
-    return acquired;
   }
 
   async join(room) {
@@ -701,8 +745,7 @@ export default class VoiceWebrtcService extends Service {
       }
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`[voice] joining room ${room.id}`);
+    voiceLog.info(`[voice] joining room ${room.id}`);
 
     this.#registerRoomHandler(room.id);
 
@@ -730,9 +773,8 @@ export default class VoiceWebrtcService extends Service {
         type: "POST",
         data: joinData,
       });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to join room", error);
+    } catch {
+      voiceLog.warn("[voice] failed to join room");
       this.#handleJoinFailure(room.id);
       return;
     }
@@ -745,11 +787,7 @@ export default class VoiceWebrtcService extends Service {
       return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] join response, active_participants:`,
-      response?.room?.active_participants
-    );
+    voiceLog.info("[voice] join response received");
 
     this.#roomTransports.set(room.id, response?.transport ?? "mesh");
     if (response?.participant_session_id) {
@@ -984,16 +1022,14 @@ export default class VoiceWebrtcService extends Service {
           if (error?.name === "NotAllowedError") {
             schedulePlaybackResume(element, this.#pendingPlaybackElements);
           } else {
-            // eslint-disable-next-line no-console
-            console.warn("[voice] audio element failed to play", error);
+            voiceLog.warn("[voice] audio element failed to play");
           }
         });
       } catch (error) {
         if (error?.name === "NotAllowedError") {
           schedulePlaybackResume(element, this.#pendingPlaybackElements);
         } else {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] audio element failed to play", error);
+          voiceLog.warn("[voice] audio element failed to play");
         }
       }
     }
@@ -1015,13 +1051,6 @@ export default class VoiceWebrtcService extends Service {
 
   isParticipantMuted(roomId, userId) {
     return this.#participantAudio.isMuted(roomId, userId);
-  }
-
-  #setMicEnabled(enabled) {
-    this.audioEnabled = enabled;
-    for (const track of this.localStream?.getAudioTracks() || []) {
-      track.enabled = enabled;
-    }
   }
 
   toggleMute() {
@@ -1095,10 +1124,6 @@ export default class VoiceWebrtcService extends Service {
     );
   }
 
-  #roomQualityCap(roomId) {
-    return this.voiceRooms?.roomById(roomId)?.max_quality_profile;
-  }
-
   allowedVoiceQualityTiers(roomId = this.activeRoomId) {
     return allowedQualityTiers(
       this.#roomQualityCap(roomId),
@@ -1148,15 +1173,6 @@ export default class VoiceWebrtcService extends Service {
     this.#localVideo.refreshQuality({ contentHintChanged: true });
   }
 
-  async #applyVoiceQualityToPeers() {
-    for (const [roomId] of this.#peerManager.allPeerConnections()) {
-      await applyVoiceQuality(
-        this.#peerManager.micSendersFor(roomId),
-        this.effectiveVoiceQuality(roomId)
-      );
-    }
-  }
-
   // --- Device selection & input sensitivity ---
 
   setOutputDevice(deviceId) {
@@ -1165,18 +1181,12 @@ export default class VoiceWebrtcService extends Service {
     this.#participantAudio.setOutputDevice(deviceId);
   }
 
-  // --- Video & screen sharing ---
-
-  get screenShareSupported() {
-    return !!navigator.mediaDevices?.getDisplayMedia;
+  videoAllowedIn(room) {
+    return this.#mediaAllowedIn(room, room?.video_allowed);
   }
 
-  videoAllowedIn(room) {
-    return !!(
-      this.siteSettings.voice_video_enabled &&
-      room?.video_enabled &&
-      (room?.room_type !== "stage" || this.#canSpeakInRoom(room))
-    );
+  screenShareAllowedIn(room) {
+    return this.#mediaAllowedIn(room, room?.screen_share_allowed);
   }
 
   videoPublisherCount(roomId) {
@@ -1187,49 +1197,57 @@ export default class VoiceWebrtcService extends Service {
     ).length;
   }
 
-  canPublishVideo(roomId) {
-    const room = this.voiceRooms?.roomById(roomId);
-    if (!room || !this.videoAllowedIn(room)) {
-      return false;
-    }
-    if (!this.#activeRoomIds.has(roomId)) {
-      return false;
-    }
-    if (this.localVideoKind) {
-      return true;
-    }
-    return (
-      this.videoPublisherCount(roomId) <
-      this.siteSettings.voice_video_max_publishers
+  canPublishCamera(roomId) {
+    return this.#canPublishIn(roomId, (room) => this.videoAllowedIn(room));
+  }
+
+  canPublishScreen(roomId) {
+    return this.#canPublishIn(roomId, (room) =>
+      this.screenShareAllowedIn(room)
     );
   }
 
-  get localVideoStream() {
-    return this.#localVideo.stream;
+  canPublish(kind, roomId) {
+    return kind === "screen"
+      ? this.canPublishScreen(roomId)
+      : this.canPublishCamera(roomId);
   }
 
-  get localVideoKind() {
-    return this.#localVideo.kind;
+  async toggleCamera() {
+    const userId = this.currentUser?.id;
+    if (!this.localVideoKind && this.#cameraRestorePromise) {
+      this.#setCameraPreferred(false, userId);
+      this.#queuedCameraRestoreRoomId = null;
+      await this.#cameraRestorePromise;
+      if (this.localVideoKind === "camera") {
+        await this.#localVideo.stop();
+      }
+      return;
+    }
+
+    const cameraWasActive = this.localVideoKind === "camera";
+    if (cameraWasActive) {
+      this.#setCameraPreferred(false, userId);
+    }
+
+    const result = await this.#localVideo.toggleCamera();
+
+    if (!cameraWasActive && this.localVideoKind === "camera") {
+      this.#setCameraPreferred(true, userId);
+    }
+
+    return result;
   }
 
-  get videoBlurEnabled() {
-    return this.#localVideo.blurEnabled;
-  }
+  async toggleScreenShare() {
+    const screenWasActive = this.localVideoKind === "screen";
+    const result = await this.#localVideo.toggleScreenShare();
 
-  get videoBlurAmount() {
-    return this.#localVideo.blurAmount;
-  }
+    if (screenWasActive && !this.localVideoKind && this.watchingRoomId) {
+      this.#restorePreferredCamera(this.watchingRoomId);
+    }
 
-  get videoInputDeviceId() {
-    return this.#localVideo.inputDeviceId;
-  }
-
-  toggleCamera() {
-    return this.#localVideo.toggleCamera();
-  }
-
-  toggleScreenShare() {
-    return this.#localVideo.toggleScreenShare();
+    return result;
   }
 
   toggleVideoBlur() {
@@ -1242,16 +1260,6 @@ export default class VoiceWebrtcService extends Service {
 
   setVideoInputDevice(deviceId) {
     return this.#localVideo.setInputDevice(deviceId);
-  }
-
-  // Whether the site allows background blur; distinct from browser support
-  // so the UI can tell "turned off by admin" apart from "can't run here".
-  get videoBlurAvailable() {
-    return !!this.siteSettings.voice_video_background_blur_enabled;
-  }
-
-  get videoBlurSupported() {
-    return this.#localVideo.blurSupported;
   }
 
   setWatching(roomId, watching, options = {}) {
@@ -1272,9 +1280,8 @@ export default class VoiceWebrtcService extends Service {
     const keepVideo = options.keepVideo === true;
     const stoppingVideo = !watching && !keepVideo && !!this.localVideoKind;
     if (stoppingVideo) {
-      this.#localVideo.stop({ broadcast: false }).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to stop video on page leave", error);
+      this.#localVideo.stop({ broadcast: false }).catch(() => {
+        voiceLog.warn("[voice] failed to stop video on page leave");
       });
     }
 
@@ -1304,6 +1311,15 @@ export default class VoiceWebrtcService extends Service {
     if (!this.#isMeshRoom(roomId)) {
       this.#livekit.sessionFor(roomId)?.setVideoSubscriptionsEnabled(watching);
     }
+
+    if (watching) {
+      if (this.#cameraRestorePromise) {
+        this.#queuedCameraRestoreRoomId = roomId;
+      }
+      this.#restorePreferredCamera(roomId);
+    } else if (this.#queuedCameraRestoreRoomId === roomId) {
+      this.#queuedCameraRestoreRoomId = null;
+    }
   }
 
   @action
@@ -1326,61 +1342,6 @@ export default class VoiceWebrtcService extends Service {
       element.play?.()?.catch?.(() => {});
     } catch {
       // ignore playback errors; the element retries on user interaction
-    }
-  }
-
-  #firstActiveRoomId() {
-    for (const roomId of this.#activeRoomIds) {
-      return roomId;
-    }
-    return null;
-  }
-
-  get localVideoTrack() {
-    return this.#localVideo.track;
-  }
-
-  get localScreenAudioTrack() {
-    return this.#localVideo.screenAudioTrack;
-  }
-
-  // Room state updates in voiceRooms; this only surfaces the change to
-  // people in the call. The moderator who pressed the button gets no toast —
-  // their button state already changed under their pointer.
-  #handleRecordingChanged(payload) {
-    const startedBySelf =
-      payload.recording?.started_by?.id === this.currentUser?.id;
-
-    if (payload.recording) {
-      if (!startedBySelf) {
-        this.toasts.default({
-          duration: 8000,
-          data: {
-            icon: "record-vinyl",
-            message: i18n("voice.room.recording_started_toast"),
-          },
-        });
-      }
-    } else {
-      this.toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.room.recording_stopped_toast") },
-      });
-    }
-  }
-
-  #handleRoomUpdated(roomId) {
-    if (!this.localVideoKind) {
-      return;
-    }
-
-    const room = this.voiceRooms?.roomById(roomId);
-    if (room && !this.videoAllowedIn(room)) {
-      this.#localVideo.stop().catch(() => {});
-      this.toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.video.room_disabled") },
-      });
     }
   }
 
@@ -1446,6 +1407,217 @@ export default class VoiceWebrtcService extends Service {
     }
   }
 
+  #setActiveRoomId(roomId) {
+    this.activeRoomId = roomId ?? null;
+  }
+
+  #clearActiveRoomId(roomId) {
+    if (Number(this.activeRoomId) !== Number(roomId)) {
+      return;
+    }
+
+    this.activeRoomId = this.#activeRoomIds.values().next().value ?? null;
+  }
+
+  #canSpeakInRoom(room) {
+    return participantCanSpeak(room, this.currentUser?.id);
+  }
+
+  // The server-computed right, re-checked against the two things a broadcast
+  // can change under a live call: the room's own media flag (a per-user right
+  // is absent from anonymously-scoped broadcasts, so it survives them stale)
+  // and the caller's stage role.
+  #mediaAllowedIn(room, allowed) {
+    return !!(
+      allowed &&
+      room?.video_enabled &&
+      (room?.room_type !== "stage" || this.#canSpeakInRoom(room))
+    );
+  }
+
+  #canPublishIn(roomId, allowedIn) {
+    const room = this.voiceRooms?.roomById(roomId);
+    if (!room || !allowedIn(room)) {
+      return false;
+    }
+    if (!this.#activeRoomIds.has(roomId)) {
+      return false;
+    }
+    if (this.localVideoKind) {
+      return true;
+    }
+    return (
+      this.videoPublisherCount(roomId) <
+      this.siteSettings.voice_video_max_publishers
+    );
+  }
+
+  #isMeshRoom(roomId) {
+    return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
+  }
+
+  #cameraEnabledKey(userId) {
+    return `${CAMERA_ENABLED_KEY_PREFIX}-${userId}`;
+  }
+
+  #cameraPreferred(userId = this.currentUser?.id) {
+    if (!userId) {
+      return false;
+    }
+
+    try {
+      return this.keyValueStore.get(this.#cameraEnabledKey(userId)) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  #setCameraPreferred(enabled, userId = this.currentUser?.id) {
+    if (!userId) {
+      return;
+    }
+
+    try {
+      if (enabled) {
+        this.keyValueStore.set({
+          key: this.#cameraEnabledKey(userId),
+          value: "true",
+        });
+      } else {
+        this.keyValueStore.remove(this.#cameraEnabledKey(userId));
+      }
+    } catch {
+      // A storage failure must not interfere with the camera control.
+    }
+  }
+
+  #restorePreferredCamera(roomId) {
+    const userId = this.currentUser?.id;
+    if (
+      this.#cameraRestorePromise ||
+      !this.#activeRoomIds.has(roomId) ||
+      this.watchingRoomId !== roomId ||
+      this.localVideoKind ||
+      !this.#cameraPreferred(userId) ||
+      !this.canPublishCamera(roomId)
+    ) {
+      return;
+    }
+
+    const restorePromise = this.#localVideo
+      .start("camera", {
+        silent: true,
+        shouldContinue: () =>
+          this.currentUser?.id === userId &&
+          this.#activeRoomIds.has(roomId) &&
+          this.watchingRoomId === roomId &&
+          (!this.localVideoKind || this.localVideoKind === "camera") &&
+          this.#cameraPreferred(userId) &&
+          this.canPublishCamera(roomId),
+      })
+      .catch(() => {
+        voiceLog.warn("[voice] failed to restore preferred camera state");
+      });
+    this.#cameraRestorePromise = restorePromise;
+
+    restorePromise.finally(() => {
+      if (this.#cameraRestorePromise === restorePromise) {
+        this.#cameraRestorePromise = null;
+      }
+
+      const queuedRoomId = this.#queuedCameraRestoreRoomId;
+      this.#queuedCameraRestoreRoomId = null;
+      if (queuedRoomId && this.watchingRoomId === queuedRoomId) {
+        this.#restorePreferredCamera(queuedRoomId);
+      } else if (this.watchingRoomId && this.watchingRoomId !== roomId) {
+        this.#restorePreferredCamera(this.watchingRoomId);
+      }
+    });
+  }
+
+  async #acquireMicrophoneWithFeedback() {
+    const acquired = await this.#localAudio.acquireMicrophone();
+    if (!acquired) {
+      reportMicAcquisitionFailure(this.#localAudio.lastAcquisitionError, {
+        modal: this.modal,
+        toasts: this.toasts,
+      });
+    }
+    return acquired;
+  }
+
+  #setMicEnabled(enabled) {
+    this.audioEnabled = enabled;
+    for (const track of this.localStream?.getAudioTracks() || []) {
+      track.enabled = enabled;
+    }
+  }
+
+  #roomQualityCap(roomId) {
+    return this.voiceRooms?.roomById(roomId)?.max_quality_profile;
+  }
+
+  async #applyVoiceQualityToPeers() {
+    for (const [roomId] of this.#peerManager.allPeerConnections()) {
+      await applyVoiceQuality(
+        this.#peerManager.micSendersFor(roomId),
+        this.effectiveVoiceQuality(roomId)
+      );
+    }
+  }
+
+  #firstActiveRoomId() {
+    for (const roomId of this.#activeRoomIds) {
+      return roomId;
+    }
+    return null;
+  }
+
+  // Room state updates in voiceRooms; this only surfaces the change to
+  // people in the call. The moderator who pressed the button gets no toast —
+  // their button state already changed under their pointer.
+  #handleRecordingChanged(payload) {
+    const startedBySelf =
+      payload.recording?.started_by?.id === this.currentUser?.id;
+
+    if (payload.recording) {
+      if (!startedBySelf) {
+        this.toasts.default({
+          duration: 8000,
+          data: {
+            icon: "record-vinyl",
+            message: i18n("voice.room.recording_started_toast"),
+          },
+        });
+      }
+    } else {
+      this.toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.room.recording_stopped_toast") },
+      });
+    }
+  }
+
+  #handleRoomUpdated(roomId) {
+    if (!this.localVideoKind) {
+      return;
+    }
+
+    const room = this.voiceRooms?.roomById(roomId);
+    const stillAllowed =
+      this.localVideoKind === "screen"
+        ? this.screenShareAllowedIn(room)
+        : this.videoAllowedIn(room);
+
+    if (room && !stillAllowed) {
+      this.#localVideo.stop().catch(() => {});
+      this.toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.video.room_disabled") },
+      });
+    }
+  }
+
   // --- Private orchestration ---
 
   #broadcastMuteState() {
@@ -1506,7 +1678,7 @@ export default class VoiceWebrtcService extends Service {
   }
 
   #handleRoomMessage(roomId, payload) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -1515,21 +1687,19 @@ export default class VoiceWebrtcService extends Service {
     // signals arriving mid-peer-setup, role changes overlapping signals).
     this.#roomMessageQueue
       .enqueue(roomId, () => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         return this.#processRoomMessage(roomId, payload);
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to process room message", error);
+      .catch(() => {
+        voiceLog.warn("[voice] failed to process room message");
       });
   }
 
   async #processRoomMessage(roomId, payload) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] 📨 MessageBus message: room=${roomId}, type=${payload.type}, active=${this.#activeRoomIds.has(roomId)}`
+    voiceLog.info(
+      `[voice] 📨 MessageBus message: room=${roomId}, active=${this.#activeRoomIds.has(roomId)}`
     );
 
     if (!this.#activeRoomIds.has(roomId)) {
@@ -1578,8 +1748,7 @@ export default class VoiceWebrtcService extends Service {
   }
 
   #handleKicked(roomId) {
-    // eslint-disable-next-line no-console
-    console.log(`[voice] kicked from room ${roomId}`);
+    voiceLog.info(`[voice] kicked from room ${roomId}`);
     this.leave({ id: roomId });
   }
 
@@ -1625,19 +1794,25 @@ export default class VoiceWebrtcService extends Service {
   }
 
   // Mesh receive-side media boundary: only register (and therefore play) a
-  // remote track the sender's server-attested role and the room's media
-  // policy allow. On LiveKit the SFU enforces publish permissions instead.
+  // remote track the sender's server-attested role, entitlements and the
+  // room's media policy allow. On LiveKit the SFU enforces publish
+  // permissions instead.
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
-    if (!remoteTrackAllowed(room, userId, track, streams)) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[voice] dropping ${track?.kind} track from user ${userId}: not allowed to publish in room ${roomId}`
+    const mesh = this.#isMeshRoom(roomId);
+    if (!remoteTrackAllowed(room, userId, track, streams, { mesh })) {
+      voiceLog.warn(
+        `[voice] dropping ${track?.kind} track from peer: not allowed to publish in room ${roomId}`
       );
-      try {
-        track?.stop();
-      } catch {
-        // a remote track may already be ended
+      // A pre-negotiated video or screen-audio receiver keeps one track for
+      // the connection's lifetime, so stopping it would leave the sender dark
+      // even once allowed. Left unregistered, it is never played.
+      if (track?.kind === "audio" && streams?.length) {
+        try {
+          track.stop();
+        } catch {
+          // a remote track may already be ended
+        }
       }
       return;
     }

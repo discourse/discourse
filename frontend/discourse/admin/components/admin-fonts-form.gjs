@@ -28,6 +28,14 @@ export default class AdminFontsForm extends Component {
 
   updateExistingUsers = null;
 
+  get formData() {
+    return {
+      base_font: this.siteSettings.base_font,
+      heading_font: this.siteSettings.heading_font,
+      default_text_size: this.siteSettings.default_text_size,
+    };
+  }
+
   @bind
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
@@ -103,27 +111,19 @@ export default class AdminFontsForm extends Component {
     }
   }
 
-  get formData() {
-    return {
-      base_font: this.siteSettings.base_font,
-      heading_font: this.siteSettings.heading_font,
-      default_text_size: this.siteSettings.default_text_size,
-    };
-  }
-
   <template>
     <Form
-      @onSubmit={{this.update}}
-      @data={{this.formData}}
       class="admin-fonts-form"
+      @data={{this.formData}}
+      @onSubmit={{this.update}}
       as |form transientData|
     >
       <form.Field
+        @format="full"
         @name="base_font"
         @title={{i18n "admin.config.fonts.form.base_font.title"}}
-        @validation="required"
-        @format="full"
         @type="custom"
+        @validation="required"
         as |field|
       >
         <field.Control>
@@ -134,11 +134,11 @@ export default class AdminFontsForm extends Component {
         </field.Control>
       </form.Field>
       <form.Field
+        @format="full"
         @name="heading_font"
         @title={{i18n "admin.config.fonts.form.heading_font.title"}}
-        @validation="required"
-        @format="full"
         @type="custom"
+        @validation="required"
         as |field|
       >
         <field.Control>
@@ -149,25 +149,25 @@ export default class AdminFontsForm extends Component {
         </field.Control>
       </form.Field>
       <form.Field
-        @name="default_text_size"
-        @title={{i18n "admin.config.fonts.form.default_text_size.title"}}
         @description={{i18n
           "admin.config.fonts.form.default_text_size.description"
         }}
-        @validation="required"
         @format="full"
+        @name="default_text_size"
+        @title={{i18n "admin.config.fonts.form.default_text_size.title"}}
         @type="custom"
+        @validation="required"
         as |field|
       >
         <field.Control>
           {{#each DEFAULT_TEXT_SIZES as |textSize|}}
             <DButton
-              @action={{fn this.setButtonValue field.set textSize}}
               class={{dConcatClass
                 "admin-fonts-form__button-option text-size btn-flat"
                 textSize
                 (if (eq transientData.default_text_size textSize) "active")
               }}
+              @action={{fn this.setButtonValue field.set textSize}}
             >{{textSize}}</DButton>
           {{/each}}
         </field.Control>

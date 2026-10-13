@@ -1,3 +1,4 @@
+import AccessControlListControl from "../../components/workflows/configurators/access-control-list-control";
 import ActorControl from "../../components/workflows/configurators/actor-control";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
@@ -22,12 +23,14 @@ import SelectControl from "../../components/workflows/configurators/select-contr
 import SummarizeAggregations from "../../components/workflows/configurators/summarize-aggregations";
 import TagsControl from "../../components/workflows/configurators/tags-control";
 import TimezoneControl from "../../components/workflows/configurators/timezone-control";
+import TopicControl from "../../components/workflows/configurators/topic-control";
 import UrlPreview from "../../components/workflows/configurators/url-preview";
 import UserControl from "../../components/workflows/configurators/user-control";
 import UserOrGroupControl from "../../components/workflows/configurators/user-or-group-control";
 import UserSeenTriggerOptions from "../../components/workflows/configurators/user-seen-trigger-options";
 
 const FIELD_CONTROL_REGISTRY = {
+  access_control: { kind: "standalone", renderer: AccessControlListControl },
   notice: { kind: "standalone", renderer: NoticeControl },
   actor: { kind: "field", type: "custom", renderer: ActorControl },
   boolean: { kind: "standalone", renderer: BooleanControl },
@@ -76,6 +79,8 @@ const FIELD_CONTROL_REGISTRY = {
   },
   select: { kind: "field", type: "select", renderer: SelectControl },
   icon: { kind: "field", type: "icon", renderer: IconControl },
+  emoji: { kind: "field", type: "emoji", renderer: DefaultInputControl },
+  color: { kind: "field", type: "color", renderer: DefaultInputControl },
   checkbox: { kind: "field", type: "checkbox", renderer: DefaultInputControl },
   textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
   time: { kind: "field", type: "input-time", renderer: DefaultInputControl },
@@ -85,6 +90,7 @@ const FIELD_CONTROL_REGISTRY = {
     renderer: DefaultInputControl,
   },
   timezone: { kind: "field", type: "custom", renderer: TimezoneControl },
+  topic: { kind: "field", type: "custom", renderer: TopicControl },
 
   default: {
     kind: "field",

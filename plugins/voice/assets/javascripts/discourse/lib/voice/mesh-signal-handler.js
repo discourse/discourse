@@ -1,3 +1,4 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import PeerManager from "./peer-manager";
 import { iceUfrag } from "./sdp-utils";
 import { participantCanSpeak } from "./stage-roles";
@@ -67,6 +68,20 @@ export default class MeshSignalHandler {
     return iCanSpeak || theyCanSpeak;
   }
 
+  // The relay batches one envelope per recipient (payload.events, in send
+  // order); a single-event payload.data is still accepted for compatibility.
+  async handle(roomId, payload) {
+    const events = Array.isArray(payload.events)
+      ? payload.events
+      : payload.data
+        ? [payload.data]
+        : [];
+
+    for (const data of events) {
+      await this.#handleEvent(roomId, payload, data);
+    }
+  }
+
   // A relayed signal is server-attested proof the sender holds a live
   // participant session in this room: the server only relays for senders who
   // joined and only to recipients still present. The local roster
@@ -96,20 +111,6 @@ export default class MeshSignalHandler {
       (signalType === "offer" || signalType === "candidate") &&
       this.#canEngageEarlyOffer(roomId)
     );
-  }
-
-  // The relay batches one envelope per recipient (payload.events, in send
-  // order); a single-event payload.data is still accepted for compatibility.
-  async handle(roomId, payload) {
-    const events = Array.isArray(payload.events)
-      ? payload.events
-      : payload.data
-        ? [payload.data]
-        : [];
-
-    for (const data of events) {
-      await this.#handleEvent(roomId, payload, data);
-    }
   }
 
   async #handleEvent(roomId, payload, data) {
@@ -145,10 +146,7 @@ export default class MeshSignalHandler {
       return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] 📥 received ${data.type} from user ${remoteUserId} in room ${roomId}`
-    );
+    voiceLog.info(`[voice] 📥 received signal from peer in room ${roomId}`);
     let pc = await this.#peerManager.create(roomId, remoteUserId);
     if (!pc) {
       return;
@@ -182,9 +180,8 @@ export default class MeshSignalHandler {
         const priorUfrag = iceUfrag(pc.remoteDescription?.sdp);
         const incomingUfrag = iceUfrag(data.sdp);
         if (priorUfrag && incomingUfrag && priorUfrag !== incomingUfrag) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] remote ICE restart from user ${remoteUserId}; recreating peer`
+          voiceLog.info(
+            "[voice] remote ICE restart from peer; recreating peer"
           );
           this.#peerManager.destroy(roomId, remoteUserId);
           pc = await this.#peerManager.create(roomId, remoteUserId);
@@ -196,15 +193,13 @@ export default class MeshSignalHandler {
 
       if (pc.signalingState === "have-local-offer") {
         if (this.#getCurrentUserId() < remoteUserId) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] glare detected, rolling back local offer for user ${remoteUserId}`
+          voiceLog.info(
+            "[voice] glare detected, rolling back local offer for peer"
           );
           await pc.setLocalDescription({ type: "rollback" });
         } else {
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] glare detected, ignoring remote offer from user ${remoteUserId}`
+          voiceLog.info(
+            "[voice] glare detected, ignoring remote offer from peer"
           );
           return;
         }
@@ -224,26 +219,20 @@ export default class MeshSignalHandler {
         );
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
-        this.#signaling.send(roomId, remoteUserId, answer).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to send answer", error);
+        this.#signaling.send(roomId, remoteUserId, answer).catch(() => {
+          voiceLog.warn("[voice] failed to send answer");
         });
 
         await this.#onOfferHandled(roomId);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] failed to handle offer from user ${remoteUserId}`,
-          error
-        );
+      } catch {
+        voiceLog.warn("[voice] failed to handle offer from peer");
       }
     } else if (data.type === "answer") {
       this.#peerManager.clearOfferRetry(roomId, remoteUserId);
 
       if (pc.signalingState !== "have-local-offer") {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] ignoring answer in state ${pc.signalingState} from user ${remoteUserId}`
+        voiceLog.warn(
+          `[voice] ignoring answer in state ${pc.signalingState} from peer`
         );
         return;
       }
@@ -255,12 +244,8 @@ export default class MeshSignalHandler {
           remoteUserId,
           pc
         );
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] failed to handle answer from user ${remoteUserId}`,
-          error
-        );
+      } catch {
+        voiceLog.warn("[voice] failed to handle answer from peer");
       }
     } else if (data.type === "candidate") {
       this.#peerManager.clearOfferRetry(roomId, remoteUserId);
@@ -276,12 +261,8 @@ export default class MeshSignalHandler {
 
       try {
         await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice] failed to add ICE candidate from user ${remoteUserId}`,
-          error
-        );
+      } catch {
+        voiceLog.warn("[voice] failed to add ICE candidate from peer");
       }
     }
   }

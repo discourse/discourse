@@ -188,10 +188,10 @@ export default class ReorderCategories extends Component {
 
   <template>
     <DModal
-      @title={{i18n "categories.reorder.title"}}
+      class="reorder-categories"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="reorder-categories"
+      @title={{i18n "categories.reorder.title"}}
     >
       <:body>
         <table>
@@ -204,11 +204,11 @@ export default class ReorderCategories extends Component {
           <tbody>
             {{#each this.sortedEntries as |entry|}}
               <tr
-                data-category-id={{entry.category.id}}
                 class={{if
                   (eq this.highlightedCategoryId entry.category.id)
                   "highlighted"
                 }}
+                data-category-id={{entry.category.id}}
               >
                 <td>
                   <div class={{concat "reorder-categories-depth-" entry.depth}}>
@@ -219,20 +219,20 @@ export default class ReorderCategories extends Component {
                 <td>
                   <div class="reorder-categories-actions">
                     <input
-                      {{on "change" (withEventValue (fn this.change entry))}}
-                      value={{entry.position}}
-                      type="number"
                       min="0"
+                      type="number"
+                      value={{entry.position}}
+                      {{on "change" (withEventValue (fn this.change entry))}}
                     />
                     <DButton
+                      class="btn-default no-text move-up"
                       @action={{fn this.move entry -1}}
                       @icon="arrow-up"
-                      class="btn-default no-text move-up"
                     />
                     <DButton
+                      class="btn-default no-text move-down"
                       @action={{fn this.move entry 1}}
                       @icon="arrow-down"
-                      class="btn-default no-text move-down"
                     />
                   </div>
                 </td>
@@ -244,10 +244,10 @@ export default class ReorderCategories extends Component {
 
       <:footer>
         <DButton
-          @action={{this.save}}
-          @label="categories.reorder.save"
-          @disabled={{not this.changed}}
           class="btn-primary"
+          @action={{this.save}}
+          @disabled={{not this.changed}}
+          @label="categories.reorder.save"
         />
       </:footer>
     </DModal>

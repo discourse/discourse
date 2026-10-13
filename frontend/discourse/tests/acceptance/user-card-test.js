@@ -1,8 +1,9 @@
 import { getOwner } from "@ember/owner";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { longDate } from "discourse/lib/formatter";
 import { cloneJSON } from "discourse/lib/object";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -22,6 +23,74 @@ acceptance("User Card", function (needs) {
     assert.strictEqual(currentURL(), "/u/charlie/summary");
     assert.dom(".user-card").doesNotExist();
     assert.dom(".card-content").doesNotExist();
+  });
+});
+
+acceptance("Category Card", function (needs) {
+  needs.user();
+  needs.settings({ enable_category_hashtag_cards: true });
+
+  needs.pretender((server, helper) => {
+    server.get("/t/280.json", () => {
+      const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
+      topic.post_stream.posts[0].cooked =
+        '<p>The <a class="hashtag-cooked" data-type="category" data-id="1" href="/c/bug/1"><span>bug</span></a> category.</p>';
+      return helper.response(topic);
+    });
+  });
+
+  test("opens a category card from a topic post without navigating", async function (assert) {
+    const topicUrl = "/t/internationalization-localization/280";
+    await visit(topicUrl);
+    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+
+    assert
+      .dom(".category-card .card-content")
+      .exists("the category card opens within a topic");
+    assert.strictEqual(currentURL(), topicUrl, "the topic remains open");
+
+    await triggerKeyEvent(".category-card", "keyup", "Escape");
+
+    assert
+      .dom(".category-card .card-content")
+      .doesNotExist("Escape closes the card");
+  });
+
+  test("closes the category card when navigating away", async function (assert) {
+    const topicUrl = "/t/internationalization-localization/280";
+    await visit(topicUrl);
+    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+
+    assert.dom(".category-card .card-content").exists("the card opens");
+
+    await visit("/latest");
+
+    assert
+      .dom(".category-card .card-content")
+      .doesNotExist("navigation clears the card content");
+    assert
+      .dom('.fk-d-menu[data-identifier="category-card"]')
+      .doesNotExist("navigation removes the floating menu");
+
+    await visit(topicUrl);
+    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+
+    assert
+      .dom(".category-card .card-content")
+      .exists("the card can reopen after navigation");
+  });
+
+  test("navigates to the category when category cards are disabled", async function (assert) {
+    this.siteSettings.enable_category_hashtag_cards = false;
+
+    await visit("/t/internationalization-localization/280");
+
+    assert.dom(".category-card").doesNotExist("the card is not mounted");
+
+    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+
+    assert.strictEqual(currentURL(), "/c/bug/1", "the category opens normally");
+    assert.dom(".category-card").doesNotExist("no category card opens");
   });
 });
 

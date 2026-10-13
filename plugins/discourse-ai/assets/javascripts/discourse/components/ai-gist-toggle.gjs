@@ -55,9 +55,9 @@ export default class AiGistToggle extends Component {
   <template>
     {{#if this.gists.showToggle}}
       <DMenu
-        @modalForMobile={{true}}
         @autofocus={{true}}
         @identifier="topic-list-layout"
+        @modalForMobile={{true}}
         @onRegisterApi={{this.onRegisterApi}}
         @triggerClass="btn-default btn-icon"
       >
@@ -71,11 +71,11 @@ export default class AiGistToggle extends Component {
                 class={{if (eq this.currentButton.id button.id) "--selected"}}
               >
                 <DButton
-                  @label={{button.label}}
-                  @icon={{button.icon}}
                   class="btn-transparent
                     {{if button.description '--with-description'}}"
                   @action={{fn this.onSelect button.id}}
+                  @icon={{button.icon}}
+                  @label={{button.label}}
                 >
                   {{#if button.description}}
                     <div class="btn__description">

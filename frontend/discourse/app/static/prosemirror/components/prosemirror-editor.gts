@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
@@ -47,6 +48,7 @@ import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -118,7 +120,7 @@ type NodeViewComponent = ComponentLike<{
     dom: HTMLElement;
     contentDOM?: HTMLElement;
     pluginParams: PluginParams;
-    options: Record<string, unknown>;
+    options?: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -148,10 +150,11 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare siteSettings: SiteSettings;
 
   @service declare appEvents: AppEventsService;
+  @service declare a11y: A11yService;
   @service declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
-  view: EditorView;
+  declare view: EditorView;
   declare parser: Parser;
   declare serializer: Serializer;
   declare textManipulation: TextManipulation;
@@ -190,6 +193,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         site: this.site,
         siteSettings: this.siteSettings,
         appEvents: this.appEvents,
+        a11y: this.a11y,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
         markdownOptions: this.args.markdownOptions,
@@ -308,8 +312,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         paste: (view, event) => {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
+          const { clipboardData } = event;
+          assert("A paste event carries clipboard data", clipboardData);
           if (
-            event.clipboardData.files.length > 0 &&
+            clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -327,9 +333,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
             return;
           }
 
-          if (
-            [...event.dataTransfer.items].some((item) => item.kind === "file")
-          ) {
+          const { dataTransfer } = event;
+          assert("A drop event carries a data transfer", dataTransfer);
+          if ([...dataTransfer.items].some((item) => item.kind === "file")) {
             // Skip processing the drop event (e.g. Safari cross-window content drag),
             // Uppy's DropTarget should handle that instead.
             return true;
@@ -345,7 +351,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       },
     });
 
-    this.textManipulation = new TextManipulation(getOwner(this), {
+    this.textManipulation = new TextManipulation(getOwner(this)!, {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
@@ -490,14 +496,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
-          @node={{nodeView.node}}
-          @view={{nodeView.view}}
-          @getPos={{nodeView.getPos}}
-          @dom={{nodeView.dom}}
           @contentDOM={{nodeView.contentDOM}}
-          @pluginParams={{nodeView.pluginParams}}
-          @options={{nodeView.options}}
+          @dom={{nodeView.dom}}
+          @getPos={{nodeView.getPos}}
+          @node={{nodeView.node}}
           @onSetup={{nodeView.setComponentInstance}}
+          @options={{nodeView.options}}
+          @pluginParams={{nodeView.pluginParams}}
+          @view={{nodeView.view}}
         />
       {{~/in-element~}}
     {{/each}}

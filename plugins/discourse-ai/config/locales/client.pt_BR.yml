@@ -17,6 +17,16 @@ pt_BR:
         categories:
           discourse_ai: "Discourse IA"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Perguntar à IA"
+        ask_ai:
+          title: "Perguntar à IA"
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falha"
         emotion:
           title: "Gesto"
         reports:
@@ -783,11 +793,6 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
-          anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-3-1-pro-preview: "O modelo mais inteligente do Google"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -965,9 +970,23 @@ pt_BR:
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Padrão"
+          option_on: "Ligado"
+          option_off: "Desligado"
+          apply: "Aplicar"
         expand_view_label: "Expandir visualização"
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
+        share: "Compartilhar"
+        create_link: "Criar link"
+        copied: "Copiou para área de transferência"
+        copy_link: "Copiar link"
+        copy_embed: "Copiar incorporado"
+        new_tab: "Exibir na aba nova"
+        filter_all: "Todas"
+        filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
         llm: "Modelo:"

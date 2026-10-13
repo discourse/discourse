@@ -1,6 +1,7 @@
 import { i18n } from "discourse-i18n";
 import ChannelsListDirect from "../../channels-list-direct";
 import Navbar from "../navbar";
+import ChannelListOptionsButton from "../navbar/channel-list-options-button";
 
 const ChatRoutesDirectMessages = <template>
   <div class="c-routes --direct-messages">
@@ -8,7 +9,7 @@ const ChatRoutesDirectMessages = <template>
       <navbar.Title @title={{i18n "chat.direct_messages.title"}} />
       <navbar.Actions as |action|>
         <action.OpenDrawerButton />
-        <action.NewDirectMessageButton />
+        <ChannelListOptionsButton @section="dms" />
       </navbar.Actions>
     </Navbar>
 

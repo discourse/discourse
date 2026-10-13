@@ -1,5 +1,4 @@
 import { hash } from "@ember/helper";
-import BrowseChannelsButton from "./browse-channels-button";
 import CloseDrawerButton from "./close-drawer-button";
 import ClosePinsButton from "./close-pins-button";
 import CloseThreadButton from "./close-thread-button";
@@ -7,7 +6,6 @@ import CloseThreadsButton from "./close-threads-button";
 import Filter from "./filter";
 import FullPageButton from "./full-page-button";
 import NewChannelButton from "./new-channel-button";
-import NewDirectMessageButton from "./new-direct-message-button";
 import OpenDrawerButton from "./open-drawer-button";
 import PinnedMessagesButton from "./pinned-messages-button";
 import ThreadSettingsButton from "./thread-settings-button";
@@ -20,8 +18,6 @@ const ChatNavbarActions = <template>
     {{yield
       (hash
         OpenDrawerButton=OpenDrawerButton
-        BrowseChannelsButton=BrowseChannelsButton
-        NewDirectMessageButton=NewDirectMessageButton
         NewChannelButton=NewChannelButton
         ThreadTrackingDropdown=ThreadTrackingDropdown
         CloseThreadButton=CloseThreadButton

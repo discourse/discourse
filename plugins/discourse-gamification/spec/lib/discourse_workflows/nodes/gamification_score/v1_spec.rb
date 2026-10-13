@@ -4,6 +4,7 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
   fab!(:user)
 
   let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
+
   after { sandbox.dispose }
 
   before do

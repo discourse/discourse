@@ -24,9 +24,13 @@ module Jobs
           session.close!(at: left_at)
           ::Voice::ParticipantTracker.remove(session.room_id, session.user_id)
 
-          user = User.find_by(id: session.user_id)
           room = ::Voice::Room.find_by(id: session.room_id)
-          ::Voice::BadgeGranterHooks.on_leave(user, session, room: room) if user && room
+          if room && ::Voice::ParticipantTracker.human_user_ids(room.id).empty?
+            ::Voice::AgentManager.evict_agents_in_room!(room)
+          end
+
+          user = User.find_by(id: session.user_id)
+          ::Voice::BadgeGranterHooks.on_leave(user, session) if user
         end
       end
     end

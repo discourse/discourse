@@ -15,15 +15,7 @@ ca:
         reading_time:
           title: Temps de lectura.
         chat_usage:
-          messages: missatges
           author: Vós
           author_others: "%{username}"
-        invites:
-          title: Invitacions
-          invitee_posts: Publicacions creades
-          invitee_likes: '''M''agrada'' donats'
-        new_user_interactions:
-          likes_given: '''M''agrada'' donats'
-          mentions: Mencions
         writing_analysis:
           menu_other: Altres

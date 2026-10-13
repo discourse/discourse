@@ -42,28 +42,28 @@ export default class SidebarAnonymousTagsSection extends Component {
   <template>
     {{#if this.displaySection}}
       <Section
-        @sectionName="tags"
-        @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
-        @collapsable={{@collapsable}}
         @activeLink={{this.activeLink}}
+        @collapsable={{@collapsable}}
         @expandWhenActive={{@expandActiveSection}}
+        @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+        @sectionName="tags"
       >
 
         {{#each this.sectionLinks as |sectionLink|}}
           <SectionLink
+            data-tag-name={{sectionLink.tagName}}
+            @content={{sectionLink.text}}
+            @currentWhen={{sectionLink.currentWhen}}
+            @models={{sectionLink.models}}
+            @prefixColor={{sectionLink.prefixColor}}
+            @prefixType={{sectionLink.prefixType}}
+            @prefixValue={{sectionLink.prefixValue}}
+            @route={{sectionLink.route}}
             @scrollIntoView={{and
               @scrollActiveLinkIntoView
               (eq sectionLink.name this.activeLink.name)
             }}
-            @route={{sectionLink.route}}
-            @content={{sectionLink.text}}
             @title={{sectionLink.title}}
-            @currentWhen={{sectionLink.currentWhen}}
-            @prefixType={{sectionLink.prefixType}}
-            @prefixValue={{sectionLink.prefixValue}}
-            @prefixColor={{sectionLink.prefixColor}}
-            @models={{sectionLink.models}}
-            data-tag-name={{sectionLink.tagName}}
           />
         {{/each}}
 

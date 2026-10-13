@@ -15,16 +15,8 @@ hy:
         reading_time:
           title: Կարդալու ժամանակը
         chat_usage:
-          messages: հաղորդագրություն
           author: Դուք
           author_others: "%{username}"
           status_online: "● օնլայն"
-        invites:
-          title: Հրավերներ
-          invitee_posts: Ստեղծած Գրառում
-          invitee_likes: Տրված Հավանումները
-        new_user_interactions:
-          likes_given: Տրված Հավանումները
-          mentions: Հիշատակումներ
         writing_analysis:
           menu_other: Այլ

@@ -27,6 +27,11 @@ it:
               label: ID dell'argomento
     discourse_events:
       title: "Eventi"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifica"
+            none: "Nessuna"
       on_holiday: "In vacanza"
       disable_holiday: "Disabilita"
       enable_holiday: "Abilita"
@@ -353,6 +358,9 @@ it:
       edit_event: "Modifica evento"
       export_event: "Esporta evento"
       created_by: "Creato da"
+      other_hosts:
+        one: "e %{count} altro"
+        other: "e %{count} altri"
       bulk_invite: "Invito collettivo"
       close_event: "Chiudi evento"
       open_event: "Apri evento"
@@ -510,6 +518,8 @@ it:
           placeholder: "Facoltativo, valore predefinito titolo dell'argomento"
         invitees:
           label: "Gruppi invitati"
+        hosts:
+          label: "Host"
         event_type:
           public:
             title: "Pubblico"

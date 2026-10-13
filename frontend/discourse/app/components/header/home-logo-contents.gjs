@@ -5,30 +5,30 @@ const HomeLogoContents = <template>
   {{#if @minimized}}
     {{#if @logoSmallUrl}}
       <Logo
-        @key="logo-small"
-        @url={{@logoSmallUrl}}
-        @title={{@title}}
         @darkUrl={{@logoSmallUrlDark}}
+        @key="logo-small"
+        @title={{@title}}
+        @url={{@logoSmallUrl}}
       />
     {{else}}
       {{dIcon "house"}}
     {{/if}}
   {{else if @showMobileLogo}}
     <Logo
-      @key="logo-mobile"
-      @url={{@mobileLogoUrl}}
-      @title={{@title}}
       @darkUrl={{@mobileLogoUrlDark}}
+      @key="logo-mobile"
+      @title={{@title}}
+      @url={{@mobileLogoUrl}}
     />
   {{else if @logoUrl}}
     <Logo
-      @key="logo-big"
-      @url={{@logoUrl}}
-      @title={{@title}}
       @darkUrl={{@logoUrlDark}}
+      @key="logo-big"
+      @title={{@title}}
+      @url={{@logoUrl}}
     />
   {{else}}
-    <div id="site-text-logo" class="text-logo">
+    <div class="text-logo" id="site-text-logo">
       {{@title}}
     </div>
   {{/if}}

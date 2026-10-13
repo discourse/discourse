@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 lt:
+  js:
+    spoiler:
+      label:
+        show: "Rodyti paslėptą turinį"
+    composer:
+      spoiler_text: "Šis tekstas bus sulietas."

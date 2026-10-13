@@ -389,7 +389,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:site-settings"
     );
     const site = getOwnerWithFallback(this).lookup("service:site");
-    const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
     const designWizard = getOwnerWithFallback(this).lookup(
@@ -430,24 +429,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
           }))
         );
       }
-    }
-
-    // Mods cannot access themes
-    if (currentUser.admin) {
-      store.findAll("theme").then((themes) => {
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.content
-            .filter((theme) => !theme.component)
-            .map((theme) => theme.name)
-        );
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.content
-            .filter((theme) => theme.component)
-            .map((theme) => theme.name)
-        );
-      });
     }
 
     if (siteSettings.enable_form_templates) {
@@ -528,17 +509,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return !currentUser.admin && currentUser.moderator;
   }
 
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
+  }
+
   filterNoResultsDescription(filter) {
     const escapedFilter = escapeExpression(filter);
 
     i18n("sidebar.no_results.description_admin_search", {
       filter: escapedFilter,
     });
-  }
-
-  get onSearchClick() {
-    getOwnerWithFallback(this)
-      .lookup("service:modal")
-      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

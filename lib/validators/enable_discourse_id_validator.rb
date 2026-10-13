@@ -27,6 +27,6 @@ class EnableDiscourseIdValidator
   private
 
   def credentials_missing?
-    SiteSetting.discourse_id_client_id.blank? || SiteSetting.discourse_id_client_secret.blank?
+    !Auth::DiscourseIdAuthenticator.new.configured?
   end
 end

@@ -8,9 +8,9 @@ import { ajax } from "discourse/lib/ajax";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import { or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
@@ -19,6 +19,7 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { loadCategory } from "../../lib/boards-categories";
 import { columnColorVariable } from "../../lib/boards-column-helpers";
 
 export default class BoardsTopicCardDetail extends Component {
@@ -45,13 +46,6 @@ export default class BoardsTopicCardDetail extends Component {
     return trustHTML(
       emojiUnescape(escapeExpression(this.args.model.card.fancyTitle || ""))
     );
-  }
-
-  get category() {
-    if (!this.topic?.category_id) {
-      return null;
-    }
-    return Category.findById(this.topic.category_id);
   }
 
   get allAssignedUsers() {
@@ -122,24 +116,31 @@ export default class BoardsTopicCardDetail extends Component {
 
   <template>
     <DModal
-      @title={{this.topicTitle}}
-      @closeModal={{@closeModal}}
       class="discourse-boards-topic-card-detail-modal"
+      @closeModal={{@closeModal}}
+      @title={{this.topicTitle}}
       {{didInsert this.viewCard}}
     >
       <:body>
 
         {{#if
           (or
-            this.category
+            this.topic.category_id
             this.tagsHtml
             this.allAssignedUsers.length
             this.columnData
           )
         }}
           <div class="discourse-boards-topic-card-detail__meta">
-            {{#if this.category}}
-              {{dCategoryBadge this.category link=true}}
+            {{#if this.topic.category_id}}
+              <DAsyncContent
+                @asyncData={{loadCategory}}
+                @context={{this.topic.category_id}}
+              >
+                <:content as |category|>
+                  {{dCategoryBadge category link=true}}
+                </:content>
+              </DAsyncContent>
             {{/if}}
             {{#if this.tagsHtml}}
               <span class="discourse-boards-topic-card-detail__tags">
@@ -151,8 +152,8 @@ export default class BoardsTopicCardDetail extends Component {
                 {{dIcon "user-plus"}}
                 {{#each this.allAssignedUsers as |user|}}
                   <a
-                    href="/u/{{user.username}}/activity/assigned"
                     class="discourse-boards-topic-card-detail__username"
+                    href="/u/{{user.username}}/activity/assigned"
                   >{{user.username}}</a>
                 {{/each}}
               </span>
@@ -186,8 +187,8 @@ export default class BoardsTopicCardDetail extends Component {
           {{else}}
             <div class="discourse-boards-topic-card-detail__cooked">
               <DDecoratedHtml
-                @html={{trustHTML this.cooked}}
                 @className="cooked"
+                @html={{trustHTML this.cooked}}
               />
             </div>
           {{/if}}
@@ -212,9 +213,8 @@ export default class BoardsTopicCardDetail extends Component {
       </:body>
       <:footer>
         <DButton
-          @href={{this.topicUrl}}
           class="btn-primary"
-          @action={{this.viewTopic}}
+          @href={{this.topicUrl}}
           @icon="up-right-from-square"
           @label="boards.board.view_topic"
         />

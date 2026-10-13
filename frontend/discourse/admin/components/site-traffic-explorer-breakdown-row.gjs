@@ -13,21 +13,21 @@ function filterLabel(row) {
 export default <template>
   <label class="site-traffic-explorer__row" data-test-site-traffic-row>
     <input
-      id={{@inputId}}
-      class="site-traffic-explorer__row-checkbox"
-      type="checkbox"
       aria-label={{filterLabel @row}}
       checked={{@checked}}
+      class="site-traffic-explorer__row-checkbox"
+      id={{@inputId}}
+      type="checkbox"
       {{on "change" @onToggle}}
     />
 
     {{#if @rowLink}}
       {{! eslint-disable-next-line ember/template-no-nested-interactive }}
       <a
+        class="site-traffic-explorer__row-link"
         href={{@rowLink.href}}
         rel={{@rowLink.rel}}
         target={{@rowLink.target}}
-        class="site-traffic-explorer__row-link"
       >
         <SiteTrafficExplorerDimensionLabel
           @dimension={{@dimension}}

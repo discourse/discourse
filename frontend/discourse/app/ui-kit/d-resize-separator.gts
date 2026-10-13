@@ -268,8 +268,8 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
   @tracked
   _announced: {
     now: number | undefined;
-    min: number | undefined;
-    max: number | undefined;
+    min: number | null | undefined;
+    max: number | null | undefined;
   } | null = null;
 
   constructor(owner: Owner, args: DResizeSeparatorSignature["Args"]) {
@@ -500,13 +500,13 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
       class="d-resize-separator"
       tabindex="0"
       ...attributes
-      role="separator"
-      data-resize-axis={{this.axis}}
-      aria-orientation={{this.orientation}}
       aria-label={{@label}}
-      aria-valuenow={{this.valueNow}}
-      aria-valuemin={{this.valueMin}}
+      aria-orientation={{this.orientation}}
       aria-valuemax={{this.valueMax}}
+      aria-valuemin={{this.valueMin}}
+      aria-valuenow={{this.valueNow}}
+      data-resize-axis={{this.axis}}
+      role="separator"
       {{! Before the refresh below, which reads the box this resolves. }}
       {{measureBox this @measure}}
       {{didInsert this.refresh}}

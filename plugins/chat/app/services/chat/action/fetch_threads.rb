@@ -49,7 +49,7 @@ module Chat
           .where("last_message.deleted_at IS NULL")
           .where("chat_threads.replies_count > 0")
           .order(
-            "CASE WHEN user_chat_thread_memberships.last_read_message_id IS NULL OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id THEN true ELSE false END DESC, last_message.created_at DESC",
+            "CASE WHEN user_chat_thread_memberships.id IS NOT NULL AND (user_chat_thread_memberships.last_read_message_id IS NULL OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id) THEN true ELSE false END DESC, last_message.created_at DESC",
           )
           .limit(limit)
           .offset(offset)

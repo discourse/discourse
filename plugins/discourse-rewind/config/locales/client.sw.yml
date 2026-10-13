@@ -15,15 +15,7 @@ sw:
         reading_time:
           title: Mda wa kusoma
         chat_usage:
-          messages: ujumbe
           author: Wewe
           author_others: "%{username}"
-        invites:
-          title: Waliokaribishwa
-          invitee_posts: Machapisho Yaliotengenezwa
-          invitee_likes: Umetoa Likes
-        new_user_interactions:
-          likes_given: Umetoa Likes
-          mentions: Kutajwa
         writing_analysis:
           menu_other: Nyingine

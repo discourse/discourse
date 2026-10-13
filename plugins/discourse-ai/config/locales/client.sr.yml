@@ -8,6 +8,9 @@ sr:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Neuspešno"
         reports:
           filters:
             sort_by:
@@ -230,6 +233,14 @@ sr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Подразумевано"
+          apply: "Primeni"
+        share: "Podeli"
+        create_link: "Napravi link"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           next_log: "Dalje"

@@ -13,6 +13,13 @@ describe DiscourseAi::Discoveries::Retrieval do
   fab!(:post_2) { Fabricate(:post, topic: topic_2, user: staff_user, raw: "Second useful answer") }
   fab!(:post_3) { Fabricate(:post, topic: topic_3, raw: "Third useful answer") }
   fab!(:private_post) { Fabricate(:post, topic: private_topic, raw: "Private answer") }
+  fab!(:embedding_definition)
+
+  before do
+    enable_current_plugin
+    SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+    SiteSetting.ai_embeddings_enabled = true
+  end
 
   def source(post, excerpt: post.raw)
     {
@@ -27,6 +34,22 @@ describe DiscourseAi::Discoveries::Retrieval do
   end
 
   describe "#call" do
+    it "uses semantic retrieval with embeddings configured even when full-page semantic search is disabled" do
+      SiteSetting.ai_embeddings_semantic_search_enabled = false
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1)] },
+          semantic_retriever: ->(_query) { [source(post_2)] },
+        ).call("猫")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to contain_exactly(
+        topic_1.id,
+        topic_2.id,
+      )
+    end
+
     it "uses separate prepared queries for keyword and semantic retrieval" do
       lexical_retriever = instance_spy(Proc, call: [source(post_1)])
       semantic_retriever = instance_spy(Proc, call: [source(post_2)])
@@ -335,6 +358,17 @@ describe DiscourseAi::Discoveries::Retrieval do
     before { SearchIndexer.enable }
     after { SearchIndexer.disable }
 
+    it "finds keyword matches without requesting embeddings when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+      embedding_request = stub_request(:post, embedding_definition.url).to_return(status: 500)
+      SearchIndexer.index(post_1, force: true)
+
+      result = described_class.new(user:).call("useful")
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
+      expect(embedding_request).not_to have_been_requested
+    end
+
     it "preserves category filters, includes subcategories, and excludes inaccessible topics" do
       child_category = Fabricate(:category, parent_category: category)
       token = "discoveryneedle#{SecureRandom.hex(6)}"
@@ -352,7 +386,9 @@ describe DiscourseAi::Discoveries::Retrieval do
       )
     end
 
-    it "finds only personal messages the user can see" do
+    it "finds only personal messages the user can see without embeddings" do
+      SiteSetting.ai_embeddings_enabled = false
+      embedding_request = stub_request(:post, embedding_definition.url).to_return(status: 500)
       token = "privateneedle#{SecureRandom.hex(6)}"
       personal_message = Fabricate(:private_message_post, recipient: user, raw: token)
       inaccessible_message = Fabricate(:private_message_post, raw: token)
@@ -360,11 +396,12 @@ describe DiscourseAi::Discoveries::Retrieval do
         SearchIndexer.index(post, force: true)
       end
 
-      result = described_class.new(user:).call("#{token} in:messages", semantic_query: "")
+      result = described_class.new(user:).call("#{token} in:messages")
 
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
         [personal_message.topic_id],
       )
+      expect(embedding_request).not_to have_been_requested
     end
   end
 end

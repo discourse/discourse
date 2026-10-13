@@ -126,6 +126,12 @@ acceptance("Assigned topic", function (needs) {
         "shows indirect assign notes"
       );
     assert
+      .dom(".discourse-tags > li:has(.assigned-to)")
+      .exists(
+        { count: 2 },
+        "user and group assignment each render in their own li"
+      );
+    assert
       .dom("#topic-footer-dropdown-reassign")
       .exists("shows reassign dropdown at the bottom of the topic");
   });

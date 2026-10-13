@@ -54,18 +54,14 @@ ug:
             one: ئەڭ ياخشى يازمىڭىز
             other: ئەڭ ياخشى %{count} يازمىڭىز
         ai_usage:
-          title: سۈنئىي ئەقىل ئىشلىتىلىشى
           total_requests: جەمئىي ئىلتىماس
           total_tokens: جەمئىي پەرمان تاختىسى
           success_rate: مۇۋەپپەقىيەت نىسبىتى
-          favorite_features: ئەڭ كۆپ ئىشلىتىلىدىغان ئىقتىدار
-          favorite_models: ئەڭ كۆپ ئىشلىتىلىدىغان سۈنئىي ئەقىل مودېلى
           wake_up: "ئويغان، %{username}…"
           system_title: "سۈنئىي ئەقىل ئىشلىتىلىشى بايقالدى"
           section_features: "ئالىي ئىقتىدار"
           section_models: "ئالىي مودېل"
         assignments:
-          title: تەقسىمات
           total_assigned: ماڭا تەقسىم قىلىندى
           completed: تەقسىمات تاماملاندى
           pending: تەقسىمات كېچىكتۈرۈلدى
@@ -73,13 +69,6 @@ ug:
           completion_rate: تاماملاش نىسبىتى
         chat_usage:
           title: سۆھبەت پائالىيىتى
-          total_messages: جەمئىي ئۇچۇر
-          dm_messages: بىۋاسىتە ئۇچۇر
-          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
-          reactions_received: تاپشۇرۇۋالغان ئىنكاس
-          avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
-          favorite_channels: ياقتۇرىدىغان قانال
-          messages: ئۇچۇر
           bot_name: XxRewindBotxX
           author: سىز
           author_others: "%{username}"
@@ -97,24 +86,7 @@ ug:
           message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
           message_5: "ياقتۇرىدىغان قانىلىڭىز:"
           dancing_baby_alt: "ئۇسسۇل ئويناۋاتقان بوۋاق"
-        favorite_gifs:
-          title:
-            one: سىز ئەڭ ياقتۇرىدىغان GIF
-            other: سىز ئەڭ ياقتۇرىدىغان %{count} GIF
-          total_usage:
-            one: '%{count} قېتىم ئىشلەتكەن'
-            other: جەمئىي %{count} قېتىم ئىشلەتكەن
         invites:
-          title: تەكلىپ
-          total_invites: جەمئىي يوللانغان تەكلىپ
-          redeemed: قوبۇل قىلىنغان تەكلىپ
-          redemption_rate: قوبۇل قىلىش نىسبىتى
-          avg_trust_level: ئوتتۇرىچە ئىشەنچ دەرىجىسى
-          invitee_impact: تەكلىپ قىلىنغانلارنىڭ تەسىرى
-          invitee_posts: قۇرغان يازما
-          invitee_topics: باشلىغان تېما
-          invitee_likes: بېرىلگەن ياقتۇرۇش
-          most_active_invitee: ئەڭ ئاكتىپ تەكلىپ قىلىنغانلار
           guest_book_title: سۆز قالدۇرۇش دەپتىرى
           guest_book_subtitle: جامائەت تەكلىپىڭىز
           label_invitations_sent: "تەكلىپ يوللاندى:"
@@ -126,22 +98,9 @@ ug:
           label_likes_given: "ياقتۇرۇش سانى:"
           section_most_active: ئەڭ ئاكتىپ مېھمان
         new_user_interactions:
-          title: يېڭى ئىشلەتكۈچىگە يېتەكچىلىك قىلىش
-          subtitle:
-            one: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
-            other: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
-          subtitle_others:
-            one: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
-            other: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
           new_member:
             one: "%{count} يېڭى ئەزا"
             other: "%{count} يېڭى ئەزا"
-          total_interactions: جەمئىي تەسىرلىشىش قېتىم سانى
-          unique_new_users: بىردىنبىر يېڭى ئىشلەتكۈچى
-          likes_given: بېرىلگەن ياقتۇرۇش
-          replies: يازمىغا جاۋاب
-          mentions: ئاتاش
-          topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
           contributions_helped: تۆھپىڭىز ياردەم قىلدى
           contributions_helped_others: "%{username} نىڭ تۆھپىسى ياردەم بەردى"
         time_of_day_activity:

@@ -30,6 +30,14 @@ export default class UppyChunkedUploader extends UploaderPlugin {
     this.uploaderEvents = Object.create(null);
   }
 
+  install() {
+    this._install(this._upload.bind(this));
+  }
+
+  uninstall() {
+    this._uninstall(this._upload.bind(this));
+  }
+
   _resetUploaderReferences(fileID, opts = {}) {
     if (this.uploaders[fileID]) {
       this.uploaders[fileID].abort({ really: opts.abort || false });
@@ -83,9 +91,7 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       };
 
       const upload = new UppyChunkedUpload(file, {
-        getChunkSize: this.opts.getChunkSize
-          ? this.opts.getChunkSize.bind(this)
-          : null,
+        getChunkSize: this.opts.getChunkSize?.bind(this),
 
         onStart,
         onProgress,
@@ -119,20 +125,6 @@ export default class UppyChunkedUploader extends UploaderPlugin {
         resolve(`upload ${file.id} was canceled`);
       });
 
-      this._onFilePause(file.id, (isPaused) => {
-        if (isPaused) {
-          upload.pause();
-        } else {
-          next(() => {
-            upload.start();
-          });
-        }
-      });
-
-      this._onPauseAll(file.id, () => {
-        upload.pause();
-      });
-
       this._onResumeAll(file.id, () => {
         if (file.error) {
           upload.abort();
@@ -154,23 +146,6 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       if (fileID === file.id) {
         cb(file.id);
       }
-    });
-  }
-
-  _onFilePause(fileID, cb) {
-    this.uploaderEvents[fileID].on("upload-pause", (targetFileID, isPaused) => {
-      if (fileID === targetFileID) {
-        cb(isPaused);
-      }
-    });
-  }
-
-  _onPauseAll(fileID, cb) {
-    this.uploaderEvents[fileID].on("pause-all", () => {
-      if (!this.uppy.getFile(fileID)) {
-        return;
-      }
-      cb();
     });
   }
 
@@ -199,13 +174,5 @@ export default class UppyChunkedUploader extends UploaderPlugin {
     });
 
     return Promise.all(promises);
-  }
-
-  install() {
-    this._install(this._upload.bind(this));
-  }
-
-  uninstall() {
-    this._uninstall(this._upload.bind(this));
   }
 }

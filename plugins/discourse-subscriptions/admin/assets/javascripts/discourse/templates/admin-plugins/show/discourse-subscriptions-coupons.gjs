@@ -29,16 +29,16 @@ export default <template>
               <td>{{coupon.times_redeemed}}</td>
               <td>
                 <Input
-                  @type="checkbox"
                   @checked={{coupon.active}}
+                  @type="checkbox"
                   {{on "click" (fn @controller.toggleActive coupon)}}
                 />
               </td>
               <td>
                 <DButton
+                  class="btn-danger btn btn-icon btn-no-text"
                   @action={{fn @controller.deleteCoupon coupon}}
                   @icon="trash-can"
-                  class="btn-danger btn btn-icon btn-no-text"
                 />
               </td>
             </tr>
@@ -49,11 +49,11 @@ export default <template>
 
     {{#unless @controller.creating}}
       <DButton
+        class="btn btn-icon btn-primary create-coupon"
         @action={{@controller.openCreateForm}}
+        @icon="plus"
         @label="discourse_subscriptions.admin.coupons.create"
         @title="discourse_subscriptions.admin.coupons.create"
-        @icon="plus"
-        class="btn btn-icon btn-primary create-coupon"
       />
     {{/unless}}
 

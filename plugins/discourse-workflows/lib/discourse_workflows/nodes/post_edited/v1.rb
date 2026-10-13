@@ -22,6 +22,13 @@ module DiscourseWorkflows
                   Schema::POST_SCHEMA,
                   Schema::TOPIC_LIST_ITEM_SCHEMA,
                   Schema::USER_SCHEMA,
+                  Schema.document(
+                    "editor" => {
+                      "type" => %w[object null],
+                      "description" => "User who performed the edit, when available",
+                      "properties" => Schema::USER_PROPERTIES,
+                    },
+                  ),
                 ),
             },
           ],
@@ -32,8 +39,7 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
             trust_levels: {
               type: :multi_options,
               required: false,
@@ -58,28 +64,19 @@ module DiscourseWorkflows
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
-            user: user_data(@post.user),
+            user: serialize_user(@post.user),
+            editor: serialize_user(@revisor&.editor),
           }
         end
 
         def matches?(trigger_ctx)
-          matches_post_scope?(trigger_ctx.get_node_parameter("post_scope", "first_post")) &&
-            matches_category_ids?(
-              @post.topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(
-              @post.topic,
-              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
-            ) && matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
+          return false if !matches_post_scope?(trigger_ctx.get_node_parameter("post_scope"))
+          return false if !matches_topic_filters?(@post.topic, trigger_ctx)
+
+          matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
         end
 
         private
-
-        def user_data(user)
-          serialize_user(user)
-        end
 
         def matches_post_scope?(post_scope)
           case post_scope

@@ -108,11 +108,11 @@ const CategoryStyleMock = <template>
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
-      type="button"
+      aria-pressed={{if (eq @homepage "categories") "false" "true"}}
       class="design-wizard__homepage-card
         {{unless (eq @homepage 'categories') '--selected'}}"
-      aria-pressed={{if (eq @homepage "categories") "false" "true"}}
       data-homepage="topics"
+      type="button"
       {{on "click" (fn @onSelectHomepage "latest")}}
     >
       <span
@@ -124,11 +124,11 @@ const DesignWizardHomepageSection = <template>
       {{i18n "design_wizard.homepage.topics"}}
     </button>
     <button
-      type="button"
+      aria-pressed={{if (eq @homepage "categories") "true" "false"}}
       class="design-wizard__homepage-card
         {{if (eq @homepage 'categories') '--selected'}}"
-      aria-pressed={{if (eq @homepage "categories") "true" "false"}}
       data-homepage="categories"
+      type="button"
       {{on "click" (fn @onSelectHomepage "categories")}}
     >
       <span class="design-wizard__homepage-thumbnail --categories">
@@ -147,11 +147,11 @@ const DesignWizardHomepageSection = <template>
         {{#let (categoryStyleKind @categoryPageStyle) as |selectedKind|}}
           {{#each CATEGORY_STYLE_OPTIONS as |option|}}
             <button
-              type="button"
+              aria-pressed={{if (eq selectedKind option.kind) "true" "false"}}
               class="design-wizard__style-block
                 {{if (eq selectedKind option.kind) '--selected'}}"
-              aria-pressed={{if (eq selectedKind option.kind) "true" "false"}}
               data-style={{option.value}}
+              type="button"
               {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
             >
               <span
@@ -174,11 +174,11 @@ const DesignWizardHomepageSection = <template>
       <div class="design-wizard__option-rows">
         {{#each TOPIC_PAGES as |page|}}
           <OptionRow
-            @label={{topicPageLabel page}}
-            @description={{topicPageDescription page}}
-            @selected={{eq page @homepage}}
-            @onSelect={{fn @onSelectHomepage page}}
             data-topic-page={{page}}
+            @description={{topicPageDescription page}}
+            @label={{topicPageLabel page}}
+            @onSelect={{fn @onSelectHomepage page}}
+            @selected={{eq page @homepage}}
           />
         {{/each}}
       </div>

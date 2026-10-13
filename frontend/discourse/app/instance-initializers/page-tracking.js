@@ -11,7 +11,6 @@ import {
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { sendDeferredPageview } from "./message-bus";
 
 let _preNavigationUrl = null;
 
@@ -20,21 +19,14 @@ export default {
   before: "message-bus",
 
   initialize(owner) {
-    const isErrorPage =
-      document.querySelector("meta#discourse-error")?.dataset.discourseError ===
-      "true";
-    if (!isErrorPage) {
-      sendDeferredPageview();
-    }
-
     // Tell our AJAX system to track a page transition
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
-    const dashboardImprovementsEnabled =
-      document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
-        ?.content === "true";
-    if (dashboardImprovementsEnabled) {
+    const isErrorPage =
+      document.querySelector("meta#discourse-error")?.dataset.discourseError ===
+      "true";
+    if (!isErrorPage) {
       router.on("routeDidChange", this.handleRouteDidChange);
     }
 
@@ -135,7 +127,7 @@ export default {
   },
 
   handleRouteWillChange(transition) {
-    // transition.from will be null on initial boot transition, which is already tracked as a pageview via the HTML request
+    // The initial transition is tracked by handleRouteDidChange.
     if (!transition.from) {
       return;
     }

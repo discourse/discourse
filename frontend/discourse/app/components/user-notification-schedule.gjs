@@ -21,16 +21,6 @@ class Day extends EmberObject {
   startTimeOptions = null;
   model = null;
 
-  @action
-  onChangeStartTime(val) {
-    this.startingTimeChangedForDay(val);
-  }
-
-  @action
-  onChangeEndTime(val) {
-    this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
-  }
-
   @computed("model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time")
   get startTimeValue() {
     return this.model?.user_notification_schedule[`day_${this.id}_start_time`];
@@ -46,6 +36,16 @@ class Day extends EmberObject {
   @computed("model.user_notification_schedule.day_{0,1,2,3,4,5,6}_end_time")
   get endTimeValue() {
     return this.model?.user_notification_schedule[`day_${this.id}_end_time`];
+  }
+
+  @action
+  onChangeStartTime(val) {
+    this.startingTimeChangedForDay(val);
+  }
+
+  @action
+  onChangeEndTime(val) {
+    this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
   }
 
   startingTimeChangedForDay(val) {
@@ -145,8 +145,8 @@ export default class UserNotificationSchedule extends Component {
           "user.notification_schedule.title"
         }}</label>
       <PreferenceCheckbox
-        @labelKey="user.notification_schedule.label"
         @checked={{this.model.user_notification_schedule.enabled}}
+        @labelKey="user.notification_schedule.label"
       />
 
       {{#if this.model.user_notification_schedule.enabled}}
@@ -157,12 +157,12 @@ export default class UserNotificationSchedule extends Component {
             {{#each this.days as |day|}}
               <UserNotificationScheduleDay
                 @day={{day.day}}
-                @startTimeOptions={{day.startTimeOptions}}
-                @startTimeValue={{day.startTimeValue}}
-                @onChangeStartTime={{day.onChangeStartTime}}
                 @endTimeOptions={{day.endTimeOptions}}
                 @endTimeValue={{day.endTimeValue}}
                 @onChangeEndTime={{day.onChangeEndTime}}
+                @onChangeStartTime={{day.onChangeStartTime}}
+                @startTimeOptions={{day.startTimeOptions}}
+                @startTimeValue={{day.startTimeValue}}
               />
             {{/each}}
           </tbody>

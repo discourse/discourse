@@ -92,8 +92,8 @@ module("Component | LazyVideo", function (hooks) {
     await render(
       <template>
         <LazyVideo
-          @videoAttributes={{this.attributes}}
           @onLoadedVideo={{this.onLoadedVideo}}
+          @videoAttributes={{this.attributes}}
         />
       </template>
     );

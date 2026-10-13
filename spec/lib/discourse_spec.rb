@@ -21,7 +21,7 @@ RSpec.describe Discourse do
   describe "running_in_rack" do
     after { ENV.delete("DISCOURSE_RUNNING_IN_RACK") }
 
-    it "should not be running in rack" do
+    it "is not running in Rack" do
       expect(Discourse.running_in_rack?).to eq(false)
       ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
       expect(Discourse.running_in_rack?).to eq(true)
@@ -250,12 +250,28 @@ RSpec.describe Discourse do
 
   describe "enabled_authenticators" do
     it "only returns enabled authenticators" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }.to change {
         Discourse.enabled_authenticators.length
       }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
+    end
+
+    it "does not return an enabled authenticator once its credentials are removed" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+      SiteSetting.enable_twitter_logins = true
+
+      expect { SiteSetting.twitter_consumer_secret = "" }.to change {
+        Discourse.enabled_authenticators.length
+      }.by(-1)
+
+      expect(SiteSetting.enable_twitter_logins).to eq(true)
+      expect(Discourse.enabled_authenticators).to be_empty
     end
   end
 
@@ -477,13 +493,13 @@ RSpec.describe Discourse do
 
       after { Discourse.reset_job_exception_stats! }
 
-      it "should not fail on incorrectly shaped hash" do
+      it "handles an incorrectly shaped hash" do
         expect do
           Discourse.handle_job_exception(FakeTestError.new, { job: "test" })
         end.to raise_error(FakeTestError)
       end
 
-      it "should collect job exception stats" do
+      it "collects job exception statistics" do
         # see MiniScheduler Manager which reports it like this
         # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
         exception_context = {
@@ -517,7 +533,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "should not fail when called" do
+    it "runs without an error" do
       exception = StandardError.new
 
       expect do Discourse.handle_job_exception(exception, nil, nil) end.to raise_error(

@@ -98,6 +98,16 @@ export default class Header extends Service {
     return true;
   }
 
+  get headerButtonsHidden() {
+    const buttonsToHide = new Set();
+    this.#hiders.forEach((buttons) => {
+      buttons.forEach((button) => {
+        buttonsToHide.add(button);
+      });
+    });
+    return Array.from(buttonsToHide);
+  }
+
   registerHider(ref, buttons) {
     const validButtons = buttons
       .map((button) => {
@@ -123,16 +133,6 @@ export default class Header extends Service {
     registerDestructor(ref, () => {
       this.#hiders.delete(ref);
     });
-  }
-
-  get headerButtonsHidden() {
-    const buttonsToHide = new Set();
-    this.#hiders.forEach((buttons) => {
-      buttons.forEach((button) => {
-        buttonsToHide.add(button);
-      });
-    });
-    return Array.from(buttonsToHide);
   }
 
   /**

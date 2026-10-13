@@ -19,7 +19,7 @@ export default class UnknownRoute extends DiscourseRoute {
       return;
     }
 
-    const result = await resolvePermalink(path, transition);
+    const result = await resolvePermalink(path, transition, this.router);
     // 404 body HTML, unless the permalink redirect already took over
     return result.type === "redirect" ? "" : result.html;
   }

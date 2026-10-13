@@ -17,20 +17,20 @@ export default class UnreadIndicator extends Component {
     this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
   }
 
+  get unreadIndicatorChannel() {
+    return `/private-messages/unread-indicator/${this.args.topic.id}`;
+  }
+
   @bind
   onMessage(data) {
     this.args.topic.set("unread_by_group_member", data.show_indicator);
   }
 
-  get unreadIndicatorChannel() {
-    return `/private-messages/unread-indicator/${this.args.topic.id}`;
-  }
-
   <template>
     {{~#if @topic.unread_by_group_member~}}
       &nbsp;<span
-        title={{i18n "topic.unread_indicator"}}
         class="badge badge-notification unread-indicator"
+        title={{i18n "topic.unread_indicator"}}
       >
         {{~dIcon "asterisk" label=(i18n "topic.unread_indicator")~}}
       </span>

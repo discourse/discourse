@@ -15,6 +15,19 @@ class UsernameValidator
     end
   end
 
+  def self.clashing_with_existing_route?(username)
+    normalized_username = User.normalize_username(username)
+    http_verbs = %w[GET POST PUT DELETE PATCH]
+    allowed_actions = %w[show update destroy]
+
+    http_verbs.any? do |verb|
+      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
+      allowed_actions.exclude?(path[:action])
+    rescue ActionController::RoutingError
+      false
+    end
+  end
+
   def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation

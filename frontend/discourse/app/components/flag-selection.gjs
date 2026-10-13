@@ -6,6 +6,11 @@ import { i18n } from "discourse-i18n";
 
 // Mostly hacks because `flag.hbs` didn't use `radio-button`
 export default class FlagSelection extends Component {
+  @observes("nameKey")
+  selectedChanged() {
+    next(this, this._selectRadio);
+  }
+
   _selectRadio() {
     this.element.querySelector("input[type='radio']").checked = false;
 
@@ -18,11 +23,6 @@ export default class FlagSelection extends Component {
     if (selector) {
       selector.checked = "true";
     }
-  }
-
-  @observes("nameKey")
-  selectedChanged() {
-    next(this, this._selectRadio);
   }
 
   <template>

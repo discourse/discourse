@@ -30,6 +30,7 @@ RSpec.describe Jobs::VoiceLivekitProbe do
   end
 
   it "stores the failure and logs it with the [voice-livekit] prefix" do
+    SiteSetting.voice_verbose_logging = true
     list_rooms_stub.to_timeout
     Rails.logger.expects(:warn).with(regexp_matches(/\[voice-livekit\] connectivity probe failed/))
 

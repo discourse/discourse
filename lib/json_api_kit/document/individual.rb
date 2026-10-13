@@ -4,10 +4,10 @@ module JsonApiKit
   class Document
     class Individual < Document
       class << self
-        def contract_class = Request::Contract::Individual
+        def input_class = Request::Input::Individual
 
-        def for(id, parameters, resource:, guardian:, urls:)
-          build(parameters, resource:, urls:) { resource.find(id, it, guardian:) }
+        def for(id, parameters, resource:, client:)
+          build(parameters, resource:, client:) { |params, instance| instance.find(id, params) }
         end
       end
 
@@ -15,7 +15,7 @@ module JsonApiKit
 
       def primary_records = [query.record]
 
-      def data = ResourceObject.new(contents.primary.sole, urls:).to_h
+      def data = ResourceObject.new(contents.primary.sole, client:, fieldsets:).to_h
     end
   end
 end

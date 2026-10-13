@@ -27,6 +27,16 @@ da:
           title: "Dato/klokkeslæt input"
         menus:
           title: "Menuer"
+        context_menu:
+          actions:
+            duplicate: "Dupliker"
+            delete: "Slet"
+        reorderable_list:
+          policies_pinned: "Fastgjort"
+          policies_required: "Obligatoriske"
+          table_field: "Felt"
+          table_type: "Type"
+          cross_list_primary: "Primær"
         font_scale:
           title: "Skrifttype"
         colors:

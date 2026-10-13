@@ -38,8 +38,8 @@ export default class PostAssignmentsDisplay extends Component {
     {{else if this.assignedTo}}
       <p class="assigned-to">
         <AssignedToPost
-          @assignedToUser={{this.assignedToUser}}
           @assignedToGroup={{this.assignedToGroup}}
+          @assignedToUser={{this.assignedToUser}}
           @href={{this.assignedHref}}
           @post={{this.post}}
         />

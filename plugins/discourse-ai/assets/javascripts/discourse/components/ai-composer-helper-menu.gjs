@@ -171,8 +171,8 @@ export default class AiComposerHelperMenu extends Component {
         {{/if}}
 
         <AiHelperOptionsList
-          @options={{this.helperOptions}}
           @customPromptValue={{this.customPromptValue}}
+          @options={{this.helperOptions}}
           @performAction={{this.suggestChanges}}
           @shortcutVisible={{true}}
         />

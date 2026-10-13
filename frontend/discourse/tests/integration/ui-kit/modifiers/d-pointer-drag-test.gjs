@@ -371,8 +371,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       await render(
         <template>
           <button
-            type="button"
             class="dpd-target"
+            type="button"
             {{dPointerDrag onDragStart=onDragStart}}
           ></button>
         </template>
@@ -397,13 +397,13 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       await render(
         <template>
           <button
-            type="button"
             class="dpd-secondary"
+            type="button"
             {{dPointerDrag onDragStart=vetoed}}
           ></button>
           <button
-            type="button"
             class="dpd-vetoed"
+            type="button"
             {{dPointerDrag onDragStart=vetoed}}
           ></button>
         </template>

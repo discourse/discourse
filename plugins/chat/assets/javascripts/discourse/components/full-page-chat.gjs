@@ -5,9 +5,9 @@ const FullPageChat = <template>
   {{#each (array @channel) as |channel|}}
     <ChatChannel
       @channel={{channel}}
-      @targetMessageId={{@targetMessageId}}
       @isFiltering={{@isFiltering}}
       @onToggleFilter={{@onToggleFilter}}
+      @targetMessageId={{@targetMessageId}}
     />
   {{/each}}
 </template>;

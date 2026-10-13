@@ -17,11 +17,11 @@ const DesignWizardSearchSection = <template>
   <div class="design-wizard__option-rows">
     {{#each EXPERIENCES as |experience|}}
       <OptionRow
-        @label={{experienceLabel experience}}
-        @description={{experienceDescription experience}}
-        @selected={{eq experience @searchExperience}}
-        @onSelect={{fn @onSelect experience}}
         data-search-experience={{experience}}
+        @description={{experienceDescription experience}}
+        @label={{experienceLabel experience}}
+        @onSelect={{fn @onSelect experience}}
+        @selected={{eq experience @searchExperience}}
       />
     {{/each}}
   </div>

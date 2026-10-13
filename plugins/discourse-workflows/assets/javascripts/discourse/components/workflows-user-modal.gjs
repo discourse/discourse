@@ -49,7 +49,7 @@ export default class WorkflowsUserModal extends Component {
     // While awaiting, the server's close_modal broadcast may have already
     // closed this modal — and the workflow may have shown the next one.
     // Closing again here would close that new modal instead.
-    if (!this.isDestroying && !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.args.closeModal();
     }
   }
@@ -68,10 +68,10 @@ export default class WorkflowsUserModal extends Component {
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
-      @beforeClose={{this.propagateDismissal}}
       class="workflows-user-modal"
+      @beforeClose={{this.propagateDismissal}}
+      @closeModal={{@closeModal}}
+      @title={{@model.title}}
     >
       <:body>
         {{#if @model.body}}
@@ -82,9 +82,9 @@ export default class WorkflowsUserModal extends Component {
         {{#each this.buttons as |button|}}
           <DButton
             class={{button.styleClass}}
-            @translatedLabel={{button.label}}
             @action={{fn this.respond button}}
             @disabled={{this.submitting}}
+            @translatedLabel={{button.label}}
           />
         {{/each}}
       </:footer>

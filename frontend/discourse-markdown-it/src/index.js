@@ -50,6 +50,10 @@ export default class DiscourseMarkdownIt {
     this.options = options;
   }
 
+  get linkify() {
+    return this.options.engine.linkify;
+  }
+
   disableSanitizer() {
     this.options.sanitizer = this.options.discourse.sanitizer = NOOP;
   }
@@ -76,9 +80,5 @@ export default class DiscourseMarkdownIt {
 
   sanitize(html) {
     return this.options.sanitizer(html).trim();
-  }
-
-  get linkify() {
-    return this.options.engine.linkify;
   }
 }

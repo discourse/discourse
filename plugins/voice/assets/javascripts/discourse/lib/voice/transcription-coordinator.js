@@ -1,8 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
+import {
+  isSttModel,
+  preferredSttModel,
+  setPreferredSttModel,
+  sttModelUrl,
+} from "./stt-models";
 import SubtitlesManager from "./subtitles";
 import TranscriptDraftSync from "./transcript-draft-sync";
 import { transcriptToMarkdown } from "./transcript-markdown";
@@ -18,6 +26,7 @@ export default class TranscriptionCoordinator {
   @tracked progress = null;
   @tracked captions = [];
   @tracked revision = 0;
+  @tracked sttModel = preferredSttModel();
 
   #subtitles;
   #transcript;
@@ -100,18 +109,13 @@ export default class TranscriptionCoordinator {
           this.progress = Math.min(100, Math.round((loaded / total) * 100));
         }
       },
-      onError: (error) => this.#handleError(error),
+      onError: () => this.#handleError(),
     });
 
     this.enabled = this.available && this.#subtitles.isPreferred();
     this.#subtitles.setEnabled(this.enabled, {
       modelBaseUrl: this.#modelBaseUrl,
     });
-  }
-
-  destroy() {
-    this.#subtitles.destroy();
-    this.#transcriptDraft.dispose();
   }
 
   get available() {
@@ -122,7 +126,40 @@ export default class TranscriptionCoordinator {
   }
 
   get #modelBaseUrl() {
-    return this.#siteSettings.voice_stt_model_base_url || null;
+    return sttModelUrl(
+      this.sttModel,
+      this.#siteSettings.voice_stt_model_base_url
+    );
+  }
+
+  get recording() {
+    manuallyTrack(this.revision);
+    return this.#transcript.recording;
+  }
+
+  get roomId() {
+    manuallyTrack(this.revision);
+    return this.#transcript.roomId;
+  }
+
+  get entries() {
+    manuallyTrack(this.revision);
+    return this.#transcript.entries;
+  }
+
+  get entriesRoomId() {
+    manuallyTrack(this.revision);
+    return this.#transcript.entriesRoomId;
+  }
+
+  get startedAt() {
+    manuallyTrack(this.revision);
+    return this.#transcript.startedAt;
+  }
+
+  destroy() {
+    this.#subtitles.destroy();
+    this.#transcriptDraft.dispose();
   }
 
   toggle() {
@@ -131,29 +168,13 @@ export default class TranscriptionCoordinator {
     this.#syncSttEngine();
   }
 
-  get recording() {
-    this.revision;
-    return this.#transcript.recording;
-  }
-
-  get roomId() {
-    this.revision;
-    return this.#transcript.roomId;
-  }
-
-  get entries() {
-    this.revision;
-    return this.#transcript.entries;
-  }
-
-  get entriesRoomId() {
-    this.revision;
-    return this.#transcript.entriesRoomId;
-  }
-
-  get startedAt() {
-    this.revision;
-    return this.#transcript.startedAt;
+  setSttModel(model) {
+    if (!isSttModel(model) || model === this.sttModel) {
+      return;
+    }
+    this.sttModel = model;
+    setPreferredSttModel(model);
+    this.#syncSttEngine();
   }
 
   isTranscribingRoom(roomId) {
@@ -182,6 +203,77 @@ export default class TranscriptionCoordinator {
     if (this.isTranscribingRoom(roomId)) {
       this.#stopRecording();
     }
+  }
+
+  // Hands the transcript over to the composer: recording stops, the last
+  // utterances are flushed into the draft, and the draft opens for editing.
+  // The server copy wins — the user may have edited it in another session.
+  async openDraft() {
+    const draftKey = this.#transcriptDraft.key;
+    if (!draftKey) {
+      return;
+    }
+
+    await this.#stopRecording();
+
+    let draft = null;
+    let draftSequence = this.#transcriptDraft.sequence;
+    try {
+      const result = await Draft.get(draftKey);
+      draft = result.draft;
+      draftSequence = result.draft_sequence ?? draftSequence;
+    } catch {
+      // fall through to the locally built copy
+    }
+    draft ||= this.#draftData();
+    if (!draft) {
+      return;
+    }
+
+    this.#openComposer({ draft, draftKey, draftSequence });
+  }
+
+  // Mirrors the local pipeline into the transcriber while recording. Safe to
+  // call repeatedly: attach is a no-op for an unchanged track and rebuilds
+  // the tap when a device switch or suppression change replaced it.
+  syncLocalTap() {
+    const currentUserId = this.#getCurrentUserId();
+    if (!this.recording || !currentUserId) {
+      return;
+    }
+
+    const roomId = this.roomId;
+    const localStream = this.#getLocalStream();
+    if (localStream) {
+      this.#subtitles.attach(roomId, currentUserId, localStream);
+    } else {
+      this.#subtitles.detach(roomId, currentUserId);
+    }
+  }
+
+  attachRemote(roomId, userId, stream) {
+    this.#subtitles.attach(roomId, userId, stream);
+  }
+
+  detach(roomId, userId) {
+    this.#subtitles.detach(roomId, userId);
+  }
+
+  detachRoom(roomId) {
+    this.#subtitles.detachRoom(roomId);
+    // Rejoining should start with a clean overlay, not replay whatever was
+    // on screen (or still in the transcription queue) when we left.
+    if (this.captions.length) {
+      this.captions = this.captions.filter(
+        (caption) => Number(caption.roomId) !== Number(roomId)
+      );
+    }
+  }
+
+  captionsFor(roomId) {
+    return this.captions.filter(
+      (caption) => Number(caption.roomId) === Number(roomId)
+    );
   }
 
   #stopRecording() {
@@ -268,77 +360,6 @@ export default class TranscriptionCoordinator {
     };
   }
 
-  // Hands the transcript over to the composer: recording stops, the last
-  // utterances are flushed into the draft, and the draft opens for editing.
-  // The server copy wins — the user may have edited it in another session.
-  async openDraft() {
-    const draftKey = this.#transcriptDraft.key;
-    if (!draftKey) {
-      return;
-    }
-
-    await this.#stopRecording();
-
-    let draft = null;
-    let draftSequence = this.#transcriptDraft.sequence;
-    try {
-      const result = await Draft.get(draftKey);
-      draft = result.draft;
-      draftSequence = result.draft_sequence ?? draftSequence;
-    } catch {
-      // fall through to the locally built copy
-    }
-    draft ||= this.#draftData();
-    if (!draft) {
-      return;
-    }
-
-    this.#openComposer({ draft, draftKey, draftSequence });
-  }
-
-  // Mirrors the local pipeline into the transcriber while recording. Safe to
-  // call repeatedly: attach is a no-op for an unchanged track and rebuilds
-  // the tap when a device switch or suppression change replaced it.
-  syncLocalTap() {
-    const currentUserId = this.#getCurrentUserId();
-    if (!this.recording || !currentUserId) {
-      return;
-    }
-
-    const roomId = this.roomId;
-    const localStream = this.#getLocalStream();
-    if (localStream) {
-      this.#subtitles.attach(roomId, currentUserId, localStream);
-    } else {
-      this.#subtitles.detach(roomId, currentUserId);
-    }
-  }
-
-  attachRemote(roomId, userId, stream) {
-    this.#subtitles.attach(roomId, userId, stream);
-  }
-
-  detach(roomId, userId) {
-    this.#subtitles.detach(roomId, userId);
-  }
-
-  detachRoom(roomId) {
-    this.#subtitles.detachRoom(roomId);
-    // Rejoining should start with a clean overlay, not replay whatever was
-    // on screen (or still in the transcription queue) when we left.
-    if (this.captions.length) {
-      this.captions = this.captions.filter(
-        (caption) => Number(caption.roomId) !== Number(roomId)
-      );
-    }
-  }
-
-  captionsFor(roomId) {
-    return this.captions.filter(
-      (caption) => Number(caption.roomId) === Number(roomId)
-    );
-  }
-
   // One caption line per utterance: interim passes update the line in place
   // while the speaker is still talking, the final pass replaces it, and a
   // null text withdraws it (VAD misfire, or a final that heard nothing).
@@ -393,9 +414,8 @@ export default class TranscriptionCoordinator {
 
   // Model or runtime failures turn the toggles back off (mirroring the noise
   // suppression contract) so the UI never shows an enabled-but-dead state.
-  #handleError(error) {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] subtitles failed", error);
+  #handleError() {
+    voiceLog.warn("[voice] subtitles failed");
 
     if (!this.enabled && !this.recording) {
       return;

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::DeleteTopic do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
 
@@ -17,6 +17,25 @@ RSpec.describe DiscourseAi::Agents::Tools::DeleteTopic do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews both directions with the topic title and explicit states" do
+    target = post.topic
+    target.update!(deleted_at: nil)
+    action_tool = tool(topic_id: target.id, deleted: true, reason: "Testing")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(action_tool.approval_title))
+    expect(title.at_css("a").text).to eq(target.title)
+    expect(title.at_css("a")["href"]).to eq(target.url)
+    expect(action_tool.approval_changes).to eq(
+      [{ label: "Changing status:", before: "Active", after: "Deleted" }],
+    )
+    expect(action_tool.approval_parameters).to be_empty
+    expect(target.reload.deleted_at).to eq(nil)
+
+    target.update!(deleted_at: Time.current)
+    expect(tool(topic_id: target.id, deleted: false, reason: "Testing").approval_changes).to eq(
+      [{ label: "Changing status:", before: "Deleted", after: "Active" }],
+    )
+  end
 
   it "deletes the topic when deleted is true" do
     topic_id = post.topic_id

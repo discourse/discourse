@@ -12,6 +12,7 @@
 enabled_site_setting :discourse_captcha_enabled
 
 register_svg_icon "hand"
+register_asset "stylesheets/common/captcha-configuration-test.scss", :admin
 
 module ::DiscourseCaptcha
   PLUGIN_NAME = "discourse-captcha"
@@ -19,12 +20,23 @@ end
 
 require_relative "lib/discourse_captcha/engine"
 require_relative "lib/discourse_captcha/captcha_provider"
+require_relative "lib/discourse_captcha/captcha_verification"
+require_relative "lib/discourse_captcha/create_users_controller_patch"
+require_relative "lib/discourse_captcha/session_controller_patch"
+require_relative "lib/discourse_captcha/hcaptcha_provider"
+require_relative "lib/discourse_captcha/recaptcha_provider"
+require_relative "lib/discourse_captcha/recaptcha_v3_provider"
 
 after_initialize do
+  add_admin_route("discourse_captcha.title", "discourse-captcha", use_new_show_route: true)
+
   reloadable_patch { UsersController.include(DiscourseCaptcha::CreateUsersControllerPatch) }
+  reloadable_patch { SessionController.prepend(DiscourseCaptcha::SessionControllerPatch) }
 
   require_relative "app/services/problem_check/hcaptcha_configuration"
   require_relative "app/services/problem_check/recaptcha_configuration"
+  require_relative "app/services/problem_check/recaptcha_v3_configuration"
   register_problem_check ProblemCheck::HcaptchaConfiguration
   register_problem_check ProblemCheck::RecaptchaConfiguration
+  register_problem_check ProblemCheck::RecaptchaV3Configuration
 end

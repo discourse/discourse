@@ -52,44 +52,44 @@ export default class BooleanControl extends Component {
   <template>
     {{#if this.expressionMode}}
       <@form.Field
+        @format={{this.format}}
         @name={{@fieldName}}
+        @onSet={{@onSet}}
+        @showOptional={{@showOptional}}
         @title={{this.label}}
         @tooltip={{this.tooltip}}
-        @showOptional={{@showOptional}}
         @type="custom"
-        @format={{this.format}}
         @validation={{this.validation}}
-        @onSet={{@onSet}}
         as |field|
       >
         <field.Control>
           <ExpressionWrapper
-            @field={{field}}
-            @schema={{@schema}}
-            @placeholder={{this.placeholder}}
-            @supportsExpression={{this.supportsExpression}}
             @dynamicValueHint={{@dynamicValueHint}}
+            @field={{field}}
+            @placeholder={{this.placeholder}}
+            @schema={{@schema}}
             @session={{@session}}
+            @supportsExpression={{this.supportsExpression}}
           />
         </field.Control>
       </@form.Field>
     {{else}}
       <@form.Field
+        @format={{this.format}}
         @name={{@fieldName}}
+        @onSet={{@onSet}}
+        @showOptional={{@showOptional}}
         @title={{this.label}}
         @tooltip={{this.tooltip}}
-        @showOptional={{@showOptional}}
         @type="toggle"
-        @format={{this.format}}
         @validation={{this.validation}}
-        @onSet={{@onSet}}
         as |field|
       >
         <ExpressionWrapper
           @field={{field}}
           @schema={{@schema}}
-          @supportsExpression={{this.supportsExpression}}
           @session={{@session}}
+          @supportsExpression={{this.supportsExpression}}
         >
           <field.Control />
         </ExpressionWrapper>

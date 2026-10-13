@@ -7,9 +7,9 @@ import { tagName } from "@ember-decorators/component";
 export default class ReviewableFieldTextarea extends Component {
   <template>
     <Textarea
+      class="reviewable-input-textarea"
       @value={{this.value}}
       {{on "change" this.valueChanged}}
-      class="reviewable-input-textarea"
     />
   </template>
 }

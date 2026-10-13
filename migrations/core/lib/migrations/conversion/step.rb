@@ -6,7 +6,8 @@ module Migrations
     # two roles:
     #
     # * `source` enumerates the items (`items`, `max_progress`).
-    # * `processor` handles one item at a time (`process`). Per-worker state is
+    # * `processor` handles one item at a time (`process`), or a slice of them
+    #   (`process_batch`) when it declares a `batch_size`. Per-worker state is
     #   built in its `setup` hook which runs after the worker has started, never
     #   in the constructor. `setup` must not create IntermediateDB records, only
     #   `process` writes; `setup` runs under `SetupGuard`, so a write raises

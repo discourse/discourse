@@ -55,23 +55,23 @@ export default class PostVotingCommentEditor extends Component {
     >
       <PostVotingCommentComposer
         @onInput={{this.updateValue}}
-        @raw={{@raw}}
         @onKeyDown={{this.onKeyDown}}
+        @raw={{@raw}}
       />
 
       <DButton
+        class="btn-primary post-voting-comments__comment-editor-submit"
         @action={{this.saveComment}}
         @disabled={{this.submitDisabled}}
-        @label="post_voting.post.post_voting_comment.edit"
         @icon="pencil"
-        class="btn-primary post-voting-comments__comment-editor-submit"
+        @label="post_voting.post.post_voting_comment.edit"
       />
 
       <DButton
-        @display="link"
-        @action={{@onCancel}}
-        @label="post_voting.post.post_voting_comment.cancel"
         class="post-voting-comments__comment-editor-cancel"
+        @action={{@onCancel}}
+        @display="link"
+        @label="post_voting.post.post_voting_comment.cancel"
       />
     </div>
   </template>

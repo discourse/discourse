@@ -41,120 +41,120 @@ import UserNotificationsDropdownExample from "../../examples/atoms/dropdowns/use
 import userNotificationsDropdownSource from "../../examples/atoms/dropdowns/user-notifications-dropdown?source=file";
 
 export default <template>
-  <StyleguideExample @title="<ComboBox>" @code={{comboBoxSource}}>
+  <StyleguideExample @code={{comboBoxSource}} @title="<ComboBox>">
     <ComboBoxExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="filterable <ComboBox>"
     @code={{comboBoxFilterableSource}}
+    @title="filterable <ComboBox>"
   >
     <ComboBoxFilterableExample @categories={{@dummy.categories}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<ComboBox> with a default state"
     @code={{comboBoxNoneSource}}
+    @title="<ComboBox> with a default state"
   >
     <ComboBoxNoneExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<ComboBox> clearable"
     @code={{comboBoxClearableSource}}
+    @title="<ComboBox> clearable"
   >
     <ComboBoxClearableExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<TopicNotificationsTracking>"
     @code={{topicNotificationsTrackingSource}}
+    @title="<TopicNotificationsTracking>"
   >
     <TopicNotificationsTrackingExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="<CategoryChooser>" @code={{categoryChooserSource}}>
+  <StyleguideExample @code={{categoryChooserSource}} @title="<CategoryChooser>">
     <CategoryChooserExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="<PinnedButton>" @code={{pinnedButtonSource}}>
+  <StyleguideExample @code={{pinnedButtonSource}} @title="<PinnedButton>">
     <PinnedButtonExample @topic={{@dummy.pinnedTopic}} />
   </StyleguideExample>
 
-  <StyleguideExample @title="<PinnedOptions>" @code={{pinnedOptionsSource}}>
+  <StyleguideExample @code={{pinnedOptionsSource}} @title="<PinnedOptions>">
     <PinnedOptionsExample @topic={{@dummy.pinnedTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<CategoriesAdminDropdown>"
     @code={{categoriesAdminDropdownSource}}
+    @title="<CategoriesAdminDropdown>"
   >
     <CategoriesAdminDropdownExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<CategoryNotificationsTracking>"
     @code={{categoryNotificationsTrackingSource}}
+    @title="<CategoryNotificationsTracking>"
   >
     <CategoryNotificationsTrackingExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DropdownSelectBox>"
     @code={{dropdownSelectBoxSource}}
+    @title="<DropdownSelectBox>"
   >
     <DropdownSelectBoxExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<FutureDateInputSelector>"
     @code={{futureDateInputSelectorSource}}
+    @title="<FutureDateInputSelector>"
   >
     <FutureDateInputSelectorExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="<MultiSelect>" @code={{multiSelectSource}}>
+  <StyleguideExample @code={{multiSelectSource}} @title="<MultiSelect>">
     <MultiSelectExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
-  <StyleguideExample @title="<MiniTagChooser>" @code={{miniTagChooserSource}}>
+  <StyleguideExample @code={{miniTagChooserSource}} @title="<MiniTagChooser>">
     <div class="inline-form">
       <MiniTagChooserExample />
     </div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<MiniTagChooser> with useHeaderFilter=true"
     @code={{miniTagChooserHeaderFilterSource}}
+    @title="<MiniTagChooser> with useHeaderFilter=true"
   >
     <div class="inline-form">
       <MiniTagChooserHeaderFilterExample />
     </div>
   </StyleguideExample>
 
-  <StyleguideExample @title="admin <GroupChooser>" @code={{groupChooserSource}}>
+  <StyleguideExample @code={{groupChooserSource}} @title="admin <GroupChooser>">
     <GroupChooserExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
-  <StyleguideExample @title="<ListSetting>" @code={{listSettingSource}}>
+  <StyleguideExample @code={{listSettingSource}} @title="<ListSetting>">
     <ListSettingExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<ListSetting> with a name property"
     @code={{listSettingNamePropertySource}}
+    @title="<ListSetting> with a name property"
   >
     <ListSettingNamePropertyExample @onChange={{@dummyAction}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<UserNotificationsDropdown>"
     @code={{userNotificationsDropdownSource}}
+    @title="<UserNotificationsDropdown>"
   >
     <UserNotificationsDropdownExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="<DIconGridPicker>" @code={{iconGridPickerSource}}>
+  <StyleguideExample @code={{iconGridPickerSource}} @title="<DIconGridPicker>">
     <IconGridPickerExample />
   </StyleguideExample>
 </template>

@@ -34,8 +34,8 @@ export default <template>
 
   <section class="search-container">
     <PluginOutlet
-      @name="full-page-search-above-search-header"
       @connectorTagName="div"
+      @name="full-page-search-above-search-header"
       @outletArgs={{lazyHash searchTerm=@controller.searchTerm}}
     />
     <div class="search-header" role="search">
@@ -46,20 +46,20 @@ export default <template>
       </h1>
 
       <DHorizontalOverflowNav
-        @ariaLabel={{i18n "search.type.label"}}
         class="search-types"
+        @ariaLabel={{i18n "search.type.label"}}
       >
         {{#each @controller.searchTypes key="id" as |searchType|}}
           <li>
             {{! a plain button, not a DButton: the nav styles this element
                 directly, and the button classes would fight them }}
             <button
-              type="button"
               class={{dConcatClass
                 "search-types__type"
                 (if (eq @controller.activeSearchType searchType.id) "active")
               }}
               data-search-type={{searchType.id}}
+              type="button"
               {{on "click" (fn @controller.setSearchType searchType.id)}}
             >{{searchType.name}}</button>
           </li>
@@ -69,12 +69,12 @@ export default <template>
       <div class="search-bar">
         <div class="search-bar__field">
           <SearchTextField
-            @value={{@controller.searchTerm}}
+            class="full-page-search search no-blur search-query"
+            type="search"
             @aria-label={{i18n "search.search_term_label"}}
             @enter={{fn @controller.search (hash collapseFilters=true)}}
             @hasAutofocus={{@controller.hasAutofocus}}
-            type="search"
-            class="full-page-search search no-blur search-query"
+            @value={{@controller.searchTerm}}
           />
 
           {{#if @controller.searchTerm}}
@@ -82,12 +82,12 @@ export default <template>
           {{/if}}
         </div>
         <DButton
+          class="btn-primary search-cta"
           @action={{fn @controller.search (hash collapseFilters=true)}}
-          @icon={{@controller.searchButtonIcon}}
-          @label={{@controller.searchButtonLabel}}
           @ariaLabel={{@controller.searchButtonLabel}}
           @disabled={{@controller.searchButtonDisabled}}
-          class="btn-primary search-cta"
+          @icon={{@controller.searchButtonIcon}}
+          @label={{@controller.searchButtonLabel}}
         />
       </div>
 
@@ -97,9 +97,9 @@ export default <template>
           <div class="search-context">
             <label>
               <Input
-                @type="checkbox"
                 name="searchContext"
                 @checked={{@controller.searchContextEnabled}}
+                @type="checkbox"
               />
               {{@controller.searchContextDescription}}
             </label>
@@ -124,15 +124,15 @@ export default <template>
             }}
           >
             <SearchAdvancedOptions
-              @searchTerm={{readonly @controller.searchTerm}}
+              @addSearchResults={{@controller.addSearchResults}}
+              @expandFilters={{@controller.expandFilters}}
+              @model={{@controller.model}}
               @onChangeSearchTerm={{fn (mut @controller.searchTerm)}}
               @search={{fn @controller.search (hash collapseFilters=true)}}
               @searchButtonDisabled={{@controller.searchButtonDisabled}}
-              @expandFilters={{@controller.expandFilters}}
-              @sortOrder={{@controller.sortOrder}}
+              @searchTerm={{readonly @controller.searchTerm}}
               @searchType={{@controller.search_type}}
-              @addSearchResults={{@controller.addSearchResults}}
-              @model={{@controller.model}}
+              @sortOrder={{@controller.sortOrder}}
             />
           </PluginOutlet>
         </div>
@@ -150,8 +150,8 @@ export default <template>
 
     <div class="search-advanced">
       <PluginOutlet
-        @name="full-page-search-below-search-header"
         @connectorTagName="div"
+        @name="full-page-search-below-search-header"
         @outletArgs={{lazyHash
           search=@controller.searchTerm
           type=@controller.search_type
@@ -164,42 +164,42 @@ export default <template>
       {{#if @controller.hasResults}}
         {{#if @controller.usingDefaultSearchType}}
           <div
+            ariaLabel={{i18n "search.sort_or_bulk_actions"}}
             class={{@controller.searchInfoClassNames}}
             role="region"
-            ariaLabel={{i18n "search.sort_or_bulk_actions"}}
           >
             {{#if @controller.canBulkSelect}}
               <DButton
+                class="btn-default bulk-select"
+                @action={{@controller.toggleBulkSelect}}
                 @icon="list"
                 @title="topics.bulk.toggle"
-                @action={{@controller.toggleBulkSelect}}
-                class="btn-default bulk-select"
               />
             {{/if}}
             {{#if @controller.bulkSelectEnabled}}
               {{#if @controller.hasUnselectedResults}}
                 <DButton
-                  @icon="square-check"
-                  @action={{@controller.selectAll}}
-                  @label="search.select_all"
                   class="btn-default bulk-select-all"
+                  @action={{@controller.selectAll}}
+                  @icon="square-check"
+                  @label="search.select_all"
                 />
               {{/if}}
 
               {{#if @controller.hasSelection}}
                 <DButton
-                  @icon="far-square"
-                  @action={{@controller.clearAll}}
-                  @label="search.clear_all"
                   class="btn-default bulk-select-clear"
+                  @action={{@controller.clearAll}}
+                  @icon="far-square"
+                  @label="search.clear_all"
                 />
               {{/if}}
             {{/if}}
             {{#if @controller.canBulkSelect}}
               {{#if @controller.bulkSelectHelper.selected}}
                 <SearchBulkSelectDropdown
-                  @bulkSelectHelper={{@controller.bulkSelectHelper}}
                   @afterBulkActionComplete={{@controller.afterBulkActionComplete}}
+                  @bulkSelectHelper={{@controller.bulkSelectHelper}}
                 />
               {{/if}}
             {{/if}}
@@ -209,24 +209,24 @@ export default <template>
                 {{i18n "search.sort_by"}}
               </label>
               <ComboBox
-                @value={{@controller.sortOrder}}
                 @content={{@controller.sortOrders}}
-                @onChange={{@controller.setSortOrder}}
                 @id="search-sort-by"
+                @onChange={{@controller.setSortOrder}}
                 @options={{hash castInteger=true}}
+                @value={{@controller.sortOrder}}
               />
             </div>
           </div>
         {{/if}}
 
-        <h2 class="result-count" id="search-result-count" aria-live="polite">
+        <h2 aria-live="polite" class="result-count" id="search-result-count">
           {{trustHTML @controller.resultCountLabel}}
         </h2>
       {{/if}}
 
       <PluginOutlet
-        @name="full-page-search-below-search-info"
         @connectorTagName="div"
+        @name="full-page-search-below-search-info"
         @outletArgs={{lazyHash search=@controller.searchTerm}}
       />
 
@@ -234,13 +234,13 @@ export default <template>
         {{dLoadingSpinner size="medium"}}
       {{else}}
         <div
-          class="search-results"
-          role="region"
           aria-label={{if
             @controller.q
             (i18n "search.results_page" term=@controller.q)
             (i18n "search.results")
           }}
+          class="search-results"
+          role="region"
         >
           <DLoadMore @action={{@controller.loadMore}}>
             {{#if
@@ -249,20 +249,20 @@ export default <template>
               )
             }}
               <PluginOutlet
-                @name="full-page-search-before-results"
                 @connectorTagName="div"
+                @name="full-page-search-before-results"
                 @outletArgs={{lazyHash
                   model=@controller.model
                   searchTerm=@controller.searchTerm
                 }}
               />
               <SearchResultEntries
-                @posts={{@controller.searchResultPosts}}
                 @bulkSelectEnabled={{@controller.bulkSelectEnabled}}
-                @selected={{@controller.bulkSelectHelper.selected}}
                 @highlightQuery={{@controller.highlightQuery}}
-                @searchLogId={{@controller.model.grouped_search_result.search_log_id}}
                 @isPMOnly={{@controller.isPMOnly}}
+                @posts={{@controller.searchResultPosts}}
+                @searchLogId={{@controller.model.grouped_search_result.search_log_id}}
+                @selected={{@controller.bulkSelectHelper.selected}}
               />
 
               <DConditionalLoadingSpinner @condition={{@controller.loading}}>
@@ -352,7 +352,7 @@ export default <template>
                   {{#if @controller.model.users}}
                     <div class="user-items">
                       {{#each @controller.model.users as |user|}}
-                        <DUserLink @user={{user}} class="fps-user-item">
+                        <DUserLink class="fps-user-item" @user={{user}}>
                           {{dAvatar user imageSize="large"}}
 
                           <div class="user-titles">

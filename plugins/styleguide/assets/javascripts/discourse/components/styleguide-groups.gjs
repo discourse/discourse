@@ -62,10 +62,10 @@ export default class StyleguideGroups extends Component {
 
   <template>
     <StyleguideSubnav
-      @groups={{@groups}}
-      @section={{@section}}
       @activeId={{this.activeId}}
       @ariaLabel={{@ariaLabel}}
+      @groups={{@groups}}
+      @section={{@section}}
     />
 
     <div

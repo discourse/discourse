@@ -212,12 +212,16 @@ nb_NO:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Gå til hovedinnhold"
     skip_user_nav: "Gå til profilinnhold"
+    reorder:
+      removed: "Fjernet %{label}"
+      position: "%{position} av %{total}"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     emails_are_disabled_non_staff: "Utgående e-post er deaktivert for brukere som ikke er blant staben."
     software_update_prompt:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
     back_button: "Forrige"
+    confirm_button: "Bekreft"
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
@@ -704,6 +708,9 @@ nb_NO:
       user_label: "Bruker"
       timeline:
         target_deleted: "Post slettet"
+      author_penalty:
+        toast:
+          undo: "Angre"
       notes:
         delete: "Slett"
       topic_label: "Emne"
@@ -1284,7 +1291,6 @@ nb_NO:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne brukeren er en moderator"
       admin_tooltip: "Denne brukeren er en administrator"
-      silenced_tooltip: "Denne brukeren er dempet"
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse: "
@@ -1342,6 +1348,12 @@ nb_NO:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen"
       apps: "Programmer"
+      mcp_authorizations:
+        details: "Detaljer"
+        never: "Aldri"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Trekk tilbake tilgang"
       undo_revoke_access: "Angre tilbaketrekking av tilgang"
       api_approved: "Godkjent:"
@@ -1606,7 +1618,6 @@ nb_NO:
         upload_title: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
         logo_small: "Nettstedets lille logo. Brukes som standard."
-        use_custom: "Eller last opp en egendefinert avatar:"
       change_profile_background:
         title: "bakgrunns bildet"
         instructions: "Profiloverskrifter vil være sentrert og har en standardbredde på 1110 piksler."
@@ -2115,7 +2126,6 @@ nb_NO:
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke «Logg inn» for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Lei av å bla gjennom de samme innleggene? Når du oppretter en konto, kommer du alltid tilbake til hvor du slapp. Med en konto kan du også bli varslet om nye svar, lagre bokmerker og bruke likeklikk for å takke andre. Vi kan alle jobbe sammen for å gjøre dette fellesskapet flott :heart:"
     offline_indicator:
       no_internet: "Ingen internettforbindelse."
       refresh_page: "Oppdater siden"
@@ -2474,8 +2484,7 @@ nb_NO:
       edit_shared_draft: "Rediger delt utkast"
       discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
-      title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
-      title_placeholder_redesign: "Tittel"
+      title_placeholder: "Tittel"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
@@ -3700,6 +3709,7 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      latest_topics: "Siste emner"
       description_expand: "Vis mer"
       description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"
@@ -3924,6 +3934,7 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "tilbakestill"
         button:
           label: "Filtrer"
       latest:
@@ -4063,9 +4074,6 @@ nb_NO:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Har gjort seg fortjent til dette merket"
-        other: "Har gjort seg fortjent til dette merket %{count} ganger"
       granted_on: "Tildelt %{date}"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"
@@ -4396,6 +4404,61 @@ nb_NO:
       config:
         developer:
           title: "Utvikler"
+        mcp:
+          tabs:
+            access: "Tilgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tilgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slett"
+          primitives:
+            group_by_options:
+              provider: "Tilbyder"
+              kind: "Type"
+            provider: "Tilbyder"
+            kind: "Type"
+          clients:
+            actions: "Handlinger"
+            block: "Blokker"
+            presets:
+              custom: "Egendefinert"
+            automatic: "Automatisk"
+          authorizations:
+            user: "Bruker"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tid"
+            user: "Bruker"
+            duration: "Varighet"
+          values:
+            server_status:
+              disabled: "Deaktivert"
+            client_trust:
+              approved: "Godkjent"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              success: "Suksess"
+              error: "Feil"
+            primitive_state:
+              enabled: "Aktivert"
+              disabled: "Deaktivert"
+            primitive_kind:
+              all: "Alle typer"
+            primitive_risk:
+              moderation: "Moderering"
+            filter:
+              all: "Alle"
+          never: "Aldri"
+          actions:
+            revoke: "Trekk tilbake"
         emojis:
           title: "Emoji"
         flags:
@@ -4624,6 +4687,7 @@ nb_NO:
         site_traffic:
           series:
             anonymous: "Anonym"
+          crawler_learn_more: "Finn ut mer"
         period:
           last_7_days: "Siste 7 dager"
           last_30_days: "Siste 30 dager"
@@ -5085,6 +5149,7 @@ nb_NO:
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
           discard: "Forkast"
+          leave: "Forlat"
           delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
@@ -5673,12 +5738,11 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        search: "Søk etter tekst du ønsker å endre"
+        search_label: "Søk"
+        theme_disabled: "Deaktivert"
+        filters: "Filter"
         edit: "Endre"
-        revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
-        go_back: "Tilbake til søk"
-        recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: "Bare vis overstyrte"
         outdated:
           dismiss: "Avslå"

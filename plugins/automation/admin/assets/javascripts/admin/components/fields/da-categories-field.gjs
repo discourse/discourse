@@ -8,20 +8,15 @@ import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
 
 export default class CategoriesField extends BaseField {
-  @action
-  onChangeCategories(categories) {
-    if (isBlank(categories)) {
-      this.mutValue(undefined);
-      return;
-    }
-
-    this.mutValue(categories.map((item) => item.id));
+  get categories() {
+    const ids = this.args.field?.metadata?.value || [];
+    return ids.map((id) => Category.findById(id)).filter(Boolean);
   }
 
   <template>
     <section class="field categories-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <CategorySelector
@@ -36,8 +31,13 @@ export default class CategoriesField extends BaseField {
     </section>
   </template>
 
-  get categories() {
-    const ids = this.args.field?.metadata?.value || [];
-    return ids.map((id) => Category.findById(id)).filter(Boolean);
+  @action
+  onChangeCategories(categories) {
+    if (isBlank(categories)) {
+      this.mutValue(undefined);
+      return;
+    }
+
+    this.mutValue(categories.map((item) => item.id));
   }
 }

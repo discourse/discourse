@@ -106,7 +106,7 @@ export default class LivePreview extends Component {
 
   @action
   async loadPreview() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

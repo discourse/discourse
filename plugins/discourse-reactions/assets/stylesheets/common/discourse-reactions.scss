@@ -25,7 +25,8 @@ html.discourse-reactions-no-select {
         display: none;
       }
 
-      .emoji {
+      .emoji,
+      .d-icon {
         width: 1em;
         height: 1em;
 
@@ -103,7 +104,8 @@ html.discourse-reactions-no-select {
     cursor: not-allowed;
     border-radius: var(--d-border-radius);
 
-    .emoji {
+    .emoji,
+    .d-icon {
       pointer-events: none;
       height: 1.2em;
       width: 1.2em;

@@ -3,9 +3,9 @@ import Form from "discourse/components/form";
 export default <template>
   <Form as |form|>
     <form.Field
-      @title="Enabled"
-      @name="enabled"
       @format="full"
+      @name="enabled"
+      @title="Enabled"
       @type="radio-group"
       as |field|
     >

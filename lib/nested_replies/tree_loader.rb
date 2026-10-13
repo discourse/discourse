@@ -44,8 +44,24 @@ module NestedReplies
           .posts
           .where("posts.reply_to_post_number IS NULL OR posts.reply_to_post_number = 1")
           .where(post_number: 2..) # exclude OP itself
-      scope = apply_visibility(scope)
+      scope = apply_root_visibility(scope)
       apply_sort(scope, sort)
+    end
+
+    def apply_root_visibility(scope)
+      scope = apply_visibility(scope)
+      return scope if guardian.is_staff?
+
+      # Keep this lookup correlated so the topic/reply index bounds each root's child search.
+      visible_children =
+        apply_visibility(Post.unscoped.from("posts child_posts"), posts_table: "child_posts")
+          .where("child_posts.topic_id = posts.topic_id")
+          .where("child_posts.reply_to_post_number = posts.post_number")
+          .where("child_posts.post_number > 1")
+          .select("1")
+          .offset(0)
+
+      scope.where("posts.deleted_at IS NULL OR EXISTS (#{visible_children.to_sql})")
     end
 
     def apply_sort(scope, sort)
@@ -66,7 +82,9 @@ module NestedReplies
       pinned_post_ids.each do |pid|
         idx = roots.index { |p| p.id == pid }
         if idx
-          pinned_in_page << roots.delete_at(idx) if roots[idx].deleted_at.nil?
+          if roots[idx].deleted_at.nil? || !guardian.is_staff?
+            pinned_in_page << roots.delete_at(idx)
+          end
         else
           pinned_missing_ids << pid
         end
@@ -74,12 +92,12 @@ module NestedReplies
 
       if pinned_missing_ids.present?
         fetched =
-          load_posts_for_tree(apply_visibility(topic.posts.where(id: pinned_missing_ids))).index_by(
-            &:id
-          )
+          load_posts_for_tree(
+            apply_root_visibility(topic.posts.where(id: pinned_missing_ids)),
+          ).index_by(&:id)
         pinned_missing_ids.each do |pid|
           post = fetched[pid]
-          pinned_in_page << post if post && post.deleted_at.nil?
+          pinned_in_page << post if post && (post.deleted_at.nil? || !guardian.is_staff?)
         end
       end
 
@@ -93,13 +111,14 @@ module NestedReplies
       scope
     end
 
-    def apply_visibility(scope)
+    def apply_visibility(scope, posts_table: "posts")
       scope = scope.unscope(where: :deleted_at)
-      scope = scope.where(post_type: visible_post_types)
+      scope = scope.where("#{posts_table}.post_type IN (?)", visible_post_types)
       if guardian.user&.whisperer?
         scope =
           scope.where(
-            "post_type != :whisper OR action_code IS NULL OR action_code = ''",
+            "#{posts_table}.post_type != :whisper OR #{posts_table}.action_code IS NULL OR " \
+              "#{posts_table}.action_code = ''",
             whisper: Post.types[:whisper],
           )
       end

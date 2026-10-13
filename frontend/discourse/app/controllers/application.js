@@ -27,29 +27,6 @@ export default class ApplicationController extends Controller {
   _showSiteHeader = true;
   @tracked _showSidebar;
 
-  get isCurrentAdminRoute() {
-    return this.router.currentRouteName?.startsWith("admin");
-  }
-
-  get upcomingChangeBodyClasses() {
-    if (!this.siteSettings.currentUserUpcomingChanges) {
-      return "";
-    }
-
-    const classes = [];
-
-    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
-      if (
-        this.siteSettings[key] &&
-        this.site.upcoming_changes_with_css.includes(key)
-      ) {
-        classes.push(`uc-${dasherize(key)}`);
-      }
-    });
-
-    return classes.join(" ");
-  }
-
   get showSiteHeader() {
     if (EmbedMode.enabled) {
       return false;
@@ -81,6 +58,29 @@ export default class ApplicationController extends Controller {
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
+  }
+
+  get isCurrentAdminRoute() {
+    return this.router.currentRouteName?.startsWith("admin");
+  }
+
+  get upcomingChangeBodyClasses() {
+    if (!this.siteSettings.currentUserUpcomingChanges) {
+      return "";
+    }
+
+    const classes = [];
+
+    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
+      if (
+        this.siteSettings[key] &&
+        this.site.upcoming_changes_with_css.includes(key)
+      ) {
+        classes.push(`uc-${dasherize(key)}`);
+      }
+    });
+
+    return classes.join(" ");
   }
 
   get shouldHideScrollableContentAbove() {
@@ -117,10 +117,6 @@ export default class ApplicationController extends Controller {
   @computed
   get showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
-  }
-
-  _mainOutletAnimate() {
-    document.body.classList.remove("sidebar-animate");
   }
 
   get sidebarEnabled() {
@@ -205,5 +201,9 @@ export default class ApplicationController extends Controller {
         console.warn("Failed to measure init-to-paint", e);
       }
     });
+  }
+
+  _mainOutletAnimate() {
+    document.body.classList.remove("sidebar-animate");
   }
 }

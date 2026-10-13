@@ -2,13 +2,13 @@ import SortableColumn from "./sortable-column";
 
 const ViewsCell = <template>
   <SortableColumn
-    @sortable={{@sortable}}
+    @activeOrder={{@activeOrder}}
+    @ascending={{@ascending}}
+    @changeSort={{@changeSort}}
+    @name="views"
     @number="true"
     @order="views"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="views"
+    @sortable={{@sortable}}
   />
 </template>;
 

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import CategoryCardContents from "discourse/components/category-card-contents";
 import GroupCardContents from "discourse/components/group-card-contents";
 import UserCardContents from "discourse/components/user-card-contents";
 import routeAction from "discourse/helpers/route-action";
@@ -10,6 +11,7 @@ import PluginOutlet from "./plugin-outlet";
 
 export default class CardContainer extends Component {
   @service site;
+  @service siteSettings;
   @controller topic;
 
   @action
@@ -34,18 +36,22 @@ export default class CardContainer extends Component {
 
     <PluginOutlet @name="user-card-content-container">
       <UserCardContents
-        @topic={{this.topic.model}}
-        @showUser={{this.showUser}}
-        @filterPosts={{this.filterPosts}}
-        @composePrivateMessage={{routeAction "composePrivateMessage"}}
         role="dialog"
+        @composePrivateMessage={{routeAction "composePrivateMessage"}}
+        @filterPosts={{this.filterPosts}}
+        @showUser={{this.showUser}}
+        @topic={{this.topic.model}}
       />
     </PluginOutlet>
 
     <GroupCardContents
-      @topic={{this.topic.model}}
-      @showUser={{this.showUser}}
       @showGroup={{this.showGroup}}
+      @showUser={{this.showUser}}
+      @topic={{this.topic.model}}
     />
+
+    {{#if this.siteSettings.enable_category_hashtag_cards}}
+      <CategoryCardContents />
+    {{/if}}
   </template>
 }

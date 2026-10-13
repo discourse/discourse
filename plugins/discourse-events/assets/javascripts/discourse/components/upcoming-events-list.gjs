@@ -260,9 +260,9 @@ export default class UpcomingEventsList extends Component {
             {{this.errorMessage}}
           </div>
           <DButton
+            class="btn-link upcoming-events-list__try-again"
             @action={{this.updateEventsList}}
             @label="discourse_post_event.upcoming_events_list.try_again"
-            class="btn-link upcoming-events-list__try-again"
           />
         {{/if}}
 
@@ -305,8 +305,8 @@ export default class UpcomingEventsList extends Component {
 
       <div class="upcoming-events-list__footer">
         <LinkTo
-          @route="discourse-post-event-upcoming-events"
           class="upcoming-events-list__view-all"
+          @route="discourse-post-event-upcoming-events"
         >
           {{this.viewAllLabel}}
         </LinkTo>

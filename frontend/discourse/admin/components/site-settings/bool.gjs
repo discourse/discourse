@@ -22,10 +22,10 @@ export default class Bool extends Component {
   <template>
     <label class="checkbox-label">
       <input
-        {{on "input" this.onToggle}}
-        type="checkbox"
         checked={{this.enabled}}
         disabled={{@disabled}}
+        type="checkbox"
+        {{on "input" this.onToggle}}
       />
       <span {{linkifySettingLinks @setting.description}}>{{trustHTML
           @setting.description

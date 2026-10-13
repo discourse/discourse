@@ -8,6 +8,10 @@ sw:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Tarehe"
+          outcomes:
+            failed: "Kushindwa"
         reports:
           filters:
             sort_by:
@@ -219,6 +223,13 @@ sw:
         providers:
           google: "Google"
           fake: "Binafsi"
+      ai_artifact:
+        editor:
+          version: "Toleo"
+          default: "Halisi"
+          apply: "Tumia"
+        share: "Shirikisha"
+        filter_all: "Yote"
       ai_bot:
         debug_ai_modal:
           request: "Ombi"

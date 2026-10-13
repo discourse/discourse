@@ -16,9 +16,9 @@ export default class Category extends FilterComponent {
 
   <template>
     <SearchAdvancedCategoryChooser
-      @value={{this.category}}
       @onChange={{this.onChange}}
       @options={{hash filterable=true disabled=this.filter.disabled}}
+      @value={{this.category}}
     />
   </template>
 }

@@ -348,6 +348,12 @@ pt_BR:
     skip_to_last_reply: "Ir para a última resposta"
     skip_to_top: "Pular para o topo"
     skip_user_nav: "Pular para o conteúdo do perfil"
+    reorder:
+      remove: "Remover %{label}"
+      removed: "Removeu %{label}"
+      move_up: "Mover para cima"
+      move_down: "Mover para baixo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_no_smtp: "O envio de e-mails está desativado porque nenhum servidor SMTP foi configurado. Não é possível enviar nenhum tipo de e-mail."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários(as) que não são da equipe."
@@ -357,6 +363,7 @@ pt_BR:
     notifications_tracking:
       tooltip: "Nível de notificação: %{level}"
     back_button: "Voltar"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}"
@@ -504,18 +511,9 @@ pt_BR:
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
         icebreakers:
-          fun_facts:
-            title: "Quais são algumas curiosidades interessantes sobre você?"
-            body: "Olá a todos! Estou animada para começar esta nova comunidade. Para começar, que tal cada um de nós compartilhar uma curiosidade sobre si? Eu começo: adoro caminhar na natureza e descobrir novas trilhas! E você? Conte algo interessante sobre você!"
-          coolest_thing_you_have_seen_today:
-            title: "Qual foi a coisa mais legal que você viu hoje?"
-            body: "Qual foi a coisa mais legal que você viu ou vivenciou hoje? Pode ser qualquer coisa, desde um lindo pôr do sol até um ato aleatório de bondade. Eu começo: vi um cachorro ajudando uma pessoa idosa a atravessar a rua!"
           introduce_yourself:
             title: "Apresente-se"
             body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
-          what_is_your_favorite_food:
-            title: "Qual é a sua comida favorita?"
-            body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
     design_wizard:
       back: "Voltar"
       next: "Próximo"
@@ -1037,6 +1035,9 @@ pt_BR:
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
+      author_penalty:
+        toast:
+          undo: "Desfazer"
       notes:
         add_note_description: "Adicione uma observação para fornecer contexto a outros moderadores."
         add_note_button: "Adicionar observação"
@@ -1689,7 +1690,6 @@ pt_BR:
       admin: "%{user} é administrador(a)"
       moderator_tooltip: "Este(a) usuário(a) é moderador(a)"
       admin_tooltip: "Este(a) usuário(a) é administrador(a)"
-      silenced_tooltip: "Este(a) usuário(a) está silenciado(a)"
       suspended_notice: "Este(a) usuário(a) está suspenso(a) até %{date}."
       suspended_permanently: "Este(a) usuário(a) está suspenso(a)."
       suspended_reason: "Motivo: "
@@ -1748,6 +1748,16 @@ pt_BR:
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler"
       apps: "Aplicativos"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Escopos"
+        details: "Detalhes"
+        last_used: "Último uso"
+        never: "Nunca"
+        status: "Status"
+        statuses:
+          active: "Ativo(a)"
+          revoked: "Regovado(a)"
       revoke_access: "Revogar acesso"
       undo_revoke_access: "Desfazer revogação de acesso"
       api_approved: "Aprovada:"
@@ -2040,7 +2050,6 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou envie um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -2623,7 +2632,7 @@ pt_BR:
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
-      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente. :heart:"
+      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente."
     offline_indicator:
       no_internet: "Sem conexão à internet."
       refresh_page: "Atualizar página"
@@ -3087,8 +3096,7 @@ pt_BR:
       cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
-      title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -4567,6 +4575,7 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      latest_topics: "Últimos tópicos"
       description_updated: "Descrição atualizada"
       description_expand: "Exibir mais"
       description_collapse: "Exibir menos"
@@ -4854,6 +4863,7 @@ pt_BR:
       with_category: "%{filter} %{category} tópicos"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "redefinir"
         button:
           label: "Filtro"
       latest:
@@ -5029,9 +5039,6 @@ pt_BR:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Emblema obtido %{count} vez"
-        other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
       others_count:
         one: "Concedido a outros %{count} vez"
@@ -5066,16 +5073,18 @@ pt_BR:
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
     download_calendar:
-      title: "Baixar calendário"
+      title: "Adicionar ao calendário"
+      calendar: "Calendário"
       save_ics: "Baixar arquivo .ics"
       save_google: "Adicionar ao Google calendar"
       remember: "Não perguntar novamente"
-      remember_explanation: "(você pode alterar esta preferência nas suas preferências de usuário(a))"
       download: "Download"
       default_calendar: "Calendário padrão"
       default_calendar_instruction: "Determine qual calendário deve ser usado ao salvar datas"
       add_to_calendar: "Adicionar ao calendário"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Calendário da Apple"
       ics: "ICS"
       default_title: "Evento agendado"
     tagging:
@@ -5781,6 +5790,74 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
+        mcp:
+          tabs:
+            access: "Acesso"
+            activity: "Atividade"
+          overview:
+            status: "Status"
+            tools: "Ferramentas"
+          access:
+            title: "Acesso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Ações"
+            edit: "Editar"
+            delete: "Excluir"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Escopo"
+              provider: "Provedor"
+              kind: "Tipo"
+            provider: "Provedor"
+            kind: "Tipo"
+            scope: "Escopo"
+            state: "Estado"
+            scopes: "Escopos"
+          clients:
+            actions: "Ações"
+            block: "Bloqueado(a)"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizadas"
+            automatic: "Automático"
+          authorizations:
+            user: "Usuário(a)"
+            last_used: "Último uso"
+            status: "Status"
+            actions: "Ações"
+          activity:
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuário(a)"
+            duration: "Duração"
+          values:
+            server_status:
+              disabled: "Desativados"
+            client_trust:
+              approved: "Aprovado (approved)"
+            authorization_status:
+              active: "Ativo(a)"
+              revoked: "Regovado(a)"
+            activity_outcome:
+              success: "Sucesso"
+              error: "Erro"
+            primitive_state:
+              enabled: "Ativados"
+              disabled: "Desativados"
+            primitive_kind:
+              all: "Todos os tipos"
+              tool: "Ferramenta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Somente leitura"
+              moderation: "Moderação"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"
@@ -6231,6 +6308,7 @@ pt_BR:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Endereço IP"
         series:
           anonymous_human: "Anônimo(a)"
@@ -6347,6 +6425,7 @@ pt_BR:
           series:
             anonymous: "Anônimo(a)"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"
@@ -7283,8 +7362,8 @@ pt_BR:
           upload: "Enviar"
           select_component: "Selecione um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
-          unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
+          leave: "Sair"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"
@@ -8391,13 +8470,14 @@ pt_BR:
           multiselect: "Multisseleção"
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
-        search: "Pesquise o texto que você gostaria de editar"
+        search_label: "Pesquisar"
+        theme_disabled: "Desativados"
+        filters: "Filtros"
+        status:
+          invalid: "Inválido"
         title: "Textos do site"
         edit: "Editar"
-        revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter suas alterações?"
-        go_back: "Voltar para pesquisa"
-        recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
         show_overriden: "Exibir apenas substituídos"
         show_outdated: "Mostrar somente desatualizado/inválido"
         show_untranslated: "Mostrar apenas sem tradução"

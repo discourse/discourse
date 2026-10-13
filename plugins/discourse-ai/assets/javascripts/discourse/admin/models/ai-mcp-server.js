@@ -44,6 +44,10 @@ const CREATE_ATTRIBUTES = [
 ];
 
 export default class AiMcpServer extends RestModel {
+  get oauthStartPath() {
+    return `/admin/plugins/discourse-ai/ai-mcp-servers/${this.id}/oauth/start`;
+  }
+
   createProperties() {
     return this.getProperties(CREATE_ATTRIBUTES);
   }
@@ -64,10 +68,6 @@ export default class AiMcpServer extends RestModel {
       data: JSON.stringify({ ai_mcp_server: data }),
       contentType: "application/json",
     });
-  }
-
-  get oauthStartPath() {
-    return `/admin/plugins/discourse-ai/ai-mcp-servers/${this.id}/oauth/start`;
   }
 
   async disconnectOAuth() {

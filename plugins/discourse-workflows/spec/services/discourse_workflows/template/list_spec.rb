@@ -17,46 +17,45 @@ RSpec.describe DiscourseWorkflows::Template::List do
       it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
-    context "when templates exist" do
-      it { is_expected.to run_successfully }
-
-      it "returns templates with the expected attributes" do
-        template = result[:templates].first
-        expect(template).to include(:id, :name, :description, :node_types)
-      end
-
-      it "includes known templates from config/templates" do
-        ids = result[:templates].map { |t| t[:id] }
-        expect(ids).to include("auto-tag-topics")
-      end
-    end
-
-    context "when a template file has invalid JSON" do
-      before do
-        FileUtils.mkdir_p(DiscourseWorkflows::TEMPLATES_PATH)
-        File.write(
-          File.join(DiscourseWorkflows::TEMPLATES_PATH, "broken.json"),
-          "not valid json{{{",
-        )
-      end
-
-      after { FileUtils.rm_f(File.join(DiscourseWorkflows::TEMPLATES_PATH, "broken.json")) }
-
-      it { is_expected.to run_successfully }
-
-      it "skips the malformed template" do
-        ids = result[:templates].map { |t| t[:id] }
-        expect(ids).not_to include("broken")
-      end
-    end
-
-    context "when no template files exist" do
+    context "when there are no templates" do
       before { DiscourseWorkflows::TemplateStore.stubs(:summaries).returns([]) }
 
       it { is_expected.to run_successfully }
+    end
 
-      it "returns an empty array" do
-        expect(result[:templates]).to eq([])
+    context "when every node type is available" do
+      it { is_expected.to run_successfully }
+
+      it "returns available template summaries without plugins or requirements" do
+        template = result[:templates].find { |t| t[:id] == "auto-tag-topics" }
+        expect(template).to include(plugins: [], missing_requirements: [], available: true)
+      end
+    end
+
+    context "when a template relies on plugin nodes" do
+      before do
+        SiteSetting.chat_enabled = false
+        DiscourseWorkflows::TemplateStore.stubs(:summaries).returns(
+          [
+            {
+              id: "needs-plugins",
+              node_types: %w[
+                trigger:topic_created
+                action:send_chat_message
+                action:chat_approval
+                action:not_installed
+              ],
+            },
+          ],
+        )
+      end
+
+      it "lists each plugin once and unexplained nodes as requirements" do
+        expect(result[:templates].first).to include(
+          plugins: [{ name: "Chat", enabled: false }],
+          missing_requirements: [{ node_type: "action:not_installed", reason_key: nil }],
+          available: false,
+        )
       end
     end
   end

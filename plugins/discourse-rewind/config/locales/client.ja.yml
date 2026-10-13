@@ -12,7 +12,6 @@ ja:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "網目状のスプライン..."
       viewing_other_user: "<strong>%{username}</strong> の Discourse Rewind レポートを表示中です。"
@@ -82,18 +81,14 @@ ja:
           title_others:
             other: "%{username} の投稿上位 %{count}"
         ai_usage:
-          title: AI の使用状況
           total_requests: 合計リクエスト
           total_tokens: 合計トークン
           success_rate: 成功率
-          favorite_features: 最も使用された機能
-          favorite_models: 最も使用された AI モデル
           wake_up: "目を覚まして、%{username}..."
           system_title: "AI の使用が検出されました"
           section_features: "上位機能"
           section_models: "上位モデル"
         assignments:
-          title: タスク
           total_assigned: 自分に割り当てられたタスク
           total_assigned_others: "が %{username} に割り当てました"
           completed: 完了したタスク
@@ -102,11 +97,6 @@ ja:
           completion_rate: 完了率
         chat_usage:
           title: チャットアクティビティ
-          total_messages: 合計メッセージ数
-          reactions_received: 受け取ったリアクション
-          avg_message_length: 平均メッセージ長
-          favorite_channels: お気に入りのチャンネル
-          messages: メッセージ
           bot_name: XxRewindBotxX
           author: あなた
           author_others: "%{username}"
@@ -128,25 +118,7 @@ ja:
           message_4: "平均メッセージ長は <strong>%{length}</strong> 文字でした"
           message_5: "お気に入りのチャンネル:"
           dancing_baby_alt: "ダンシングベイビー"
-        favorite_gifs:
-          title:
-            other: あなたのお気に入りの GIF 上位 %{count}
-          title_others:
-            other: "%{username} のお気に入りの GIF 上位 %{count}"
-          total_usage:
-            other: 合計 %{count} 回使用
         invites:
-          title: 招待
-          total_invites: 送信した合計招待数
-          redeemed: 承諾された招待数
-          redemption_rate: 承諾率
-          avg_trust_level: 平均信頼レベル
-          invitee_impact: あなたの招待者のインパクト
-          invitee_impact_others: "%{username} の招待者のインパクト"
-          invitee_posts: 作成した投稿数
-          invitee_topics: 開始したトピック数
-          invitee_likes: '「いいね！」した数'
-          most_active_invitee: 最もアクティブな招待者
           guest_book_title: ゲストブック
           guest_book_subtitle: あなたのコミュニティーへの招待
           guest_book_subtitle_others: "%{username} のコミュニティーへの招待"
@@ -159,19 +131,8 @@ ja:
           label_likes_given: "与えられた「いいね！」数:"
           section_most_active: 最もアクティブなゲスト
         new_user_interactions:
-          title: 新しいユーザーのメンタリング
-          subtitle:
-            other: 今年、%{count} 人の新規ユーザーを支援しました
-          subtitle_others:
-            other: "%{username} は今年、%{count} 人の新規ユーザーを支援しました"
           new_member:
             other: "%{count} 人の新規メンバー"
-          total_interactions: 合計インタラクション
-          unique_new_users: ユニーク新規ユーザー
-          likes_given: '「いいね！」した数'
-          replies: 投稿への返信
-          mentions: メンション
-          topics_with_new_users: 新規ユーザーのトピック
           contributions_helped: あなたの貢献が役立ちました
           contributions_helped_others: "%{username} の貢献が役立ちました"
         time_of_day_activity:

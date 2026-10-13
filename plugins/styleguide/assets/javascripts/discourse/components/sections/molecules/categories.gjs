@@ -3,7 +3,7 @@ import CategoryBadgeExample from "../../examples/molecules/category-badge";
 import categoryBadgeSource from "../../examples/molecules/category-badge?source=file";
 
 export default <template>
-  <StyleguideExample @title="categoryBadge" @code={{categoryBadgeSource}}>
+  <StyleguideExample @code={{categoryBadgeSource}} @title="categoryBadge">
     <CategoryBadgeExample @categories={{@dummy.categories}} />
   </StyleguideExample>
 </template>

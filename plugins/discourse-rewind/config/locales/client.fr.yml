@@ -12,7 +12,6 @@ fr:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Réticulation des splines..."
       viewing_other_user: "Vous consultez le rapport Discourse Rewind de <strong>%{username}</strong>."
@@ -92,18 +91,14 @@ fr:
             one: "Meilleure publication de %{username}"
             other: "%{count} meilleures publications de %{username}"
         ai_usage:
-          title: Utilisation de l'IA
           total_requests: Nombre total de requêtes
           total_tokens: Nombre total de jetons
           success_rate: Taux de réussite
-          favorite_features: Fonctionnalités les plus utilisées
-          favorite_models: Modèles d'IA les plus utilisés
           wake_up: "Réveillez-vous, %{username}..."
           system_title: "UTILISATION DE L'IA DÉTECTÉE"
           section_features: "PRINCIPALES FONCTIONNALITÉS"
           section_models: "LES MEILLEURS MODÈLES"
         assignments:
-          title: Attributions
           total_assigned: Attribué à moi
           total_assigned_others: "Attribué à %{username}"
           completed: Tâches terminées
@@ -112,13 +107,6 @@ fr:
           completion_rate: Taux d'achèvement
         chat_usage:
           title: Activité de discussion
-          total_messages: Nombre total de messages
-          dm_messages: Messages directs
-          unique_dm_channels: Conversations par messages directs
-          reactions_received: Réactions reçues
-          avg_message_length: Longueur moyenne des messages
-          favorite_channels: Canaux préférés
-          messages: messages
           bot_name: XxRewindBotxX
           author: Vous
           author_others: "%{username}"
@@ -144,28 +132,7 @@ fr:
           message_4: "La longueur moyenne de vos messages était de <strong>%{length}</strong> caractères"
           message_5: "Vos canaux préférés :"
           dancing_baby_alt: "Bébé dansant"
-        favorite_gifs:
-          title:
-            one: Votre GIF préféré
-            other: Vos %{count} GIF préférés
-          title_others:
-            one: "Le GIF préféré de %{username}"
-            other: "Les %{count} GIF préférés de %{username}"
-          total_usage:
-            one: Utilisé %{count} fois
-            other: Utilisé %{count} fois au total
         invites:
-          title: Invitations
-          total_invites: Nombre total d'invitations envoyées
-          redeemed: Invitations acceptées
-          redemption_rate: Taux d'acceptation
-          avg_trust_level: Niveau de confiance moyen
-          invitee_impact: Impact de vos invités
-          invitee_impact_others: "Impact des invités de %{username}"
-          invitee_posts: Publications créées
-          invitee_topics: Sujets lancés
-          invitee_likes: '« J''aime » donnés'
-          most_active_invitee: Invité le plus actif
           guest_book_title: Livre d'or
           guest_book_subtitle: Invitations de votre communauté
           guest_book_subtitle_others: "Invitations de la communauté de %{username}"
@@ -178,22 +145,9 @@ fr:
           label_likes_given: "Mentions « J'aime » attribuées :"
           section_most_active: Invité le plus actif
         new_user_interactions:
-          title: Mentorat des nouveaux utilisateurs
-          subtitle:
-            one: Vous avez aidé %{count} nouvel utilisateur cette année
-            other: Vous avez aidé %{count} nouveaux utilisateurs cette année
-          subtitle_others:
-            one: "%{username} a aidé %{count} un nouvel utilisateur cette année"
-            other: "%{username} a aidé %{count} nouveaux utilisateurs cette année"
           new_member:
             one: "%{count} nouveau membre"
             other: "%{count} nouveaux membres"
-          total_interactions: Nombre total d'interactions
-          unique_new_users: Nouveaux utilisateurs uniques
-          likes_given: '« J''aime » donnés'
-          replies: Réponses aux publications
-          mentions: Mentions
-          topics_with_new_users: Sujets avec de nouveaux utilisateurs
           contributions_helped: Vos contributions ont été utiles
           contributions_helped_others: "Les contributions de %{username} ont été utiles"
         time_of_day_activity:

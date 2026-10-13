@@ -89,10 +89,10 @@ export default class SearchBulkSelectDropdown extends Component {
 
   <template>
     <TopicBulkSelectDropdown
-      @bulkSelectHelper={{this.topicBulkSelectHelper}}
       @afterBulkActionComplete={{@afterBulkActionComplete}}
-      @extraButtons={{this.extraButtons}}
+      @bulkSelectHelper={{this.topicBulkSelectHelper}}
       @excludedButtonIds={{array "delete-topics"}}
+      @extraButtons={{this.extraButtons}}
       @onAction={{this.handleAction}}
     />
   </template>

@@ -36,7 +36,7 @@ RSpec.describe UserStat do
           expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
 
-        it "won't record a second view as a different topic" do
+        it "does not count a repeat view as another topic" do
           TopicViewItem.add(topic.id, "127.0.0.1", user.id)
           expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
@@ -218,6 +218,7 @@ RSpec.describe UserStat do
   describe ".update_distinct_badge_count" do
     fab!(:user)
     let(:stat) { user.user_stat }
+
     fab!(:badge1, :badge)
     fab!(:badge2, :badge)
 

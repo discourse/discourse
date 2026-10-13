@@ -8,6 +8,10 @@ sv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Misslyckad"
         reports:
           filters:
             sort_by:
@@ -275,6 +279,14 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Tillämpa"
+        share: "Dela"
+        filter_all: "Alla"
+        filter_standalone: "Fristående"
       ai_bot:
         debug_ai_modal:
           duration_label: "Varaktighet:"

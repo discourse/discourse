@@ -9,14 +9,14 @@ export default class BooleanField extends BaseField {
   <template>
     <section class="field boolean-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <Input
-            @type="checkbox"
-            @checked={{@field.metadata.value}}
-            {{on "input" this.onInput}}
             disabled={{@field.isDisabled}}
+            @checked={{@field.metadata.value}}
+            @type="checkbox"
+            {{on "input" this.onInput}}
           />
 
           <DAFieldDescription @description={{@description}} />

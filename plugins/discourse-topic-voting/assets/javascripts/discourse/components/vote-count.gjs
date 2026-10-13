@@ -81,15 +81,15 @@ export default class VoteCount extends Component {
   <template>
     {{#if this.showVoterMenu}}
       <DMenu
-        @identifier="vote-count-voters"
-        @triggerComponent={{VoteCountTrigger}}
-        @onShow={{this.loadVoters}}
-        @modalForMobile={{true}}
-        @placement="right"
         class={{dConcatClass
           "voting-wrapper__count"
           (if (eq @topic.vote_count 0) "no-votes")
         }}
+        @identifier="vote-count-voters"
+        @modalForMobile={{true}}
+        @onShow={{this.loadVoters}}
+        @placement="right"
+        @triggerComponent={{VoteCountTrigger}}
       >
         <:trigger>
           <span class="voting-wrapper__count-text">{{this.displayCount}}</span>

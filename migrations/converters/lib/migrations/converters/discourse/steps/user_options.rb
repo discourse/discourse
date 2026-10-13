@@ -34,6 +34,7 @@ module Migrations
               enable_upcoming_change_available_notifications:
                 item[:enable_upcoming_change_available_notifications],
               external_links_in_new_tab: item[:external_links_in_new_tab],
+              hidden_composer_toolbar_buttons: item[:hidden_composer_toolbar_buttons],
               hide_presence: item[:hide_presence],
               hide_profile: item[:hide_profile],
               hide_profile_and_presence: item[:hide_profile_and_presence],

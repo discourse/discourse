@@ -3,6 +3,8 @@
 module DiscourseAi
   module Completions
     class Prompt
+      include UploadEncoding
+
       INVALID_TURN = Class.new(StandardError)
 
       attr_reader :messages, :tools, :system_message_text
@@ -172,6 +174,10 @@ module DiscourseAi
 
       def native_tool?(id)
         native_tools.include?(id)
+      end
+
+      def record_upload_skip(upload_id:, filename:, message:)
+        record_skip(upload_skips, upload_id: upload_id, filename: filename, message: message)
       end
 
       def encoded_uploads(
@@ -366,7 +372,9 @@ module DiscourseAi
           raise INVALID_TURN
         end
 
-        raise INVALID_TURN if new_turn[:type] == :tool && last_turn[:type] != :tool_call
+        if new_turn[:type] == :tool && !%i[tool_call tool].include?(last_turn[:type])
+          raise INVALID_TURN
+        end
         raise INVALID_TURN if new_turn[:type] == :model && last_turn[:type] == :model
       end
     end

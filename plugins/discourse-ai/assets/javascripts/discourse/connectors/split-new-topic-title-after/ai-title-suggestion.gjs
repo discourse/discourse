@@ -9,8 +9,8 @@ export default class AiTitleSuggestion extends Component {
 
   <template>
     <AiSplitTopicSuggester
-      @selectedPosts={{@outletArgs.selectedPosts}}
       @mode="suggest_title"
+      @selectedPosts={{@outletArgs.selectedPosts}}
       @updateAction={{@outletArgs.updateTopicName}}
     />
   </template>

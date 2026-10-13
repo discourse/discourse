@@ -125,15 +125,15 @@ export default class AdminFlagsForm extends Component {
 
   <template>
     <BackButton
-      @route="adminConfig.flags"
       @label="admin.config_areas.flags.back"
+      @route="adminConfig.flags"
     />
     <div class="admin-config-area">
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
           <:content>
-            <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
-              <form.Alert @type="warning" @icon="circle-info">
+            <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
+              <form.Alert @icon="circle-info" @type="warning">
                 {{#if this.isUpdate}}
                   {{i18n "admin.config_areas.flags.form.edit_warning"}}
                 {{else}}
@@ -142,55 +142,55 @@ export default class AdminFlagsForm extends Component {
               </form.Alert>
 
               <form.Field
+                @format="large"
                 @name="name"
                 @title={{i18n "admin.config_areas.flags.form.name"}}
-                @validation="required|length:3,200"
-                @format="large"
                 @type="input"
+                @validation="required|length:3,200"
                 as |field|
               >
                 <field.Control />
               </form.Field>
 
               <form.Field
+                @format="large"
                 @name="description"
                 @title={{i18n "admin.config_areas.flags.form.description"}}
-                @validation="required|length:3,1000"
-                @format="large"
                 @type="textarea"
+                @validation="required|length:3,1000"
                 as |field|
               >
                 <field.Control @height={{60}} />
               </form.Field>
 
               <form.Field
+                @format="large"
                 @name="appliesTo"
                 @title={{i18n "admin.config_areas.flags.form.applies_to"}}
-                @validation="required"
-                @validate={{this.validateAppliesTo}}
-                @format="large"
                 @type="custom"
+                @validate={{this.validateAppliesTo}}
+                @validation="required"
                 as |field|
               >
                 <field.Control>
                   <MultiSelect
-                    @id={{field.id}}
-                    @value={{field.value}}
-                    @onChange={{field.set}}
-                    @content={{this.appliesToValues}}
-                    @options={{hash allowAny=false}}
                     class="admin-flag-form__applies-to"
+                    @content={{this.appliesToValues}}
+                    @id={{field.id}}
+                    @onChange={{field.set}}
+                    @options={{hash allowAny=false}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
 
               <form.CheckboxGroup as |checkboxGroup|>
                 <checkboxGroup.Field
+                  @format="full"
                   @name="requireMessage"
                   @title={{i18n
                     "admin.config_areas.flags.form.require_message"
                   }}
-                  @format="full"
                   @type="checkbox"
                   as |field|
                 >
@@ -202,9 +202,9 @@ export default class AdminFlagsForm extends Component {
                 </checkboxGroup.Field>
 
                 <checkboxGroup.Field
+                  @format="full"
                   @name="enabled"
                   @title={{i18n "admin.config_areas.flags.form.enabled"}}
-                  @format="full"
                   @type="checkbox"
                   as |field|
                 >
@@ -212,11 +212,11 @@ export default class AdminFlagsForm extends Component {
                 </checkboxGroup.Field>
 
                 <checkboxGroup.Field
+                  @format="full"
                   @name="autoActionType"
                   @title={{i18n
                     "admin.config_areas.flags.form.auto_action_type"
                   }}
-                  @format="full"
                   @type="checkbox"
                   as |field|
                 >

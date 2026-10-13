@@ -194,9 +194,9 @@ module Voice
       rescue StandardError => e
         # Delivery is best-effort: the recording is safe and listed in the
         # admin panel even when the PM cannot be created.
-        Rails.logger.warn(
+        Voice.warn(
           "[voice-livekit] recording PM failed for recording #{recording.id}: " \
-            "#{e.class} #{e.message}",
+            "#{e.class}",
         )
       end
 

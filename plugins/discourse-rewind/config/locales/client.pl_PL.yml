@@ -12,7 +12,6 @@ pl_PL:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Łączenie siatki..."
       viewing_other_user: "Przeglądasz raport <strong>%{username}w Discourse Rewind</strong> ."
@@ -112,18 +111,14 @@ pl_PL:
             many: "%{count} najlepszych wpisów %{username}"
             other: "%{count} najlepszych wpisów %{username}"
         ai_usage:
-          title: Wykorzystanie AI
           total_requests: Łączna liczba żądań
           total_tokens: Łączna liczba tokenów
           success_rate: Wskaźnik sukcesu
-          favorite_features: Najczęściej używane funkcje
-          favorite_models: Najczęściej używane modele AI
           wake_up: "Obudź się, %{username}..."
           system_title: "WYKRYTO UŻYCIE AI"
           section_features: "NAJWAŻNIEJSZE FUNKCJE"
           section_models: "NAJLEPSZE MODELE"
         assignments:
-          title: Przypisania
           total_assigned: Przypisane do mnie
           total_assigned_others: "Przypisany do %{username}"
           completed: Przypisania zakończone
@@ -132,13 +127,6 @@ pl_PL:
           completion_rate: Wskaźnik ukończenia
         chat_usage:
           title: Aktywność czatu
-          total_messages: Łączna liczba wiadomości
-          dm_messages: Wiadomości bezpośrednie
-          unique_dm_channels: Rozmowy z wiadomościami bezpośrednimi
-          reactions_received: Otrzymane reakcje
-          avg_message_length: Średnia długość wiadomości
-          favorite_channels: Ulubione kanały
-          messages: wiadomości
           bot_name: XxRewindBotxX
           author: Ty
           author_others: "%{username}"
@@ -172,34 +160,7 @@ pl_PL:
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"
           dancing_baby_alt: "Tańczące dziecko"
-        favorite_gifs:
-          title:
-            one: Twój ulubiony GIF
-            few: Twoje %{count} ulubione GIF-y
-            many: Twoich %{count} ulubionych GIF-ów
-            other: Twoich %{count} ulubionych GIF-ów
-          title_others:
-            one: "Ulubiony GIF %{username}"
-            few: "%{count} ulubione GIF-y %{username}"
-            many: "%{count} ulubionych GIF-ów %{username}"
-            other: "%{count} ulubionych GIF-ów %{username}"
-          total_usage:
-            one: Wykorzystano %{count} raz
-            few: Wykorzystano %{count} razy
-            many: Wykorzystano %{count} razy
-            other: Wykorzystano %{count} razy
         invites:
-          title: Zaproszenia
-          total_invites: Łączna liczba wysłanych zaproszeń
-          redeemed: Zaakceptowane zaproszenia
-          redemption_rate: Współczynnik akceptacji
-          avg_trust_level: Średni poziom zaufania
-          invitee_impact: Wpływ zaproszonych osób
-          invitee_impact_others: "Wpływ zaproszonych gości %{username}"
-          invitee_posts: Napisane wpisy
-          invitee_topics: Rozpoczęte tematy
-          invitee_likes: Polubienia
-          most_active_invitee: Najbardziej aktywny zaproszony
           guest_book_title: Księga gości
           guest_book_subtitle: Zaproszenia do Twojej społeczności
           guest_book_subtitle_others: "Zaproszenia społecznościowe użytkownika %{username}"
@@ -212,28 +173,11 @@ pl_PL:
           label_likes_given: "Przyznane polubienia:"
           section_most_active: Najbardziej aktywny gość
         new_user_interactions:
-          title: Mentorowanie nowych użytkowników
-          subtitle:
-            one: Pomogłeś %{count} nowemu użytkownikowi w tym roku
-            few: Pomogłeś %{count} nowym użytkownikom w tym roku
-            many: Pomogłeś %{count} nowym użytkownikom w tym roku
-            other: Pomogłeś %{count} nowym użytkownikom w tym roku
-          subtitle_others:
-            one: "%{username} pomógł %{count} nowemu użytkownikowi w tym roku"
-            few: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
-            many: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
-            other: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
           new_member:
             one: "%{count} nowy członek"
             few: "%{count} nowych członków"
             many: "%{count} nowych członków"
             other: "%{count} nowych członków"
-          total_interactions: Łączna liczba interakcji
-          unique_new_users: Unikalni nowi użytkownicy
-          likes_given: Polubienia
-          replies: Odpowiedzi na wpisy
-          mentions: Wzmianki
-          topics_with_new_users: Tematy z nowymi użytkownikami
           contributions_helped: twój wkład pomógł
           contributions_helped_others: "Wkład użytkownika %{username} pomógł"
         time_of_day_activity:

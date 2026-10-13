@@ -72,9 +72,9 @@ export default class ChatChannelName extends Component {
 
         {{#if this.showUserStatus}}
           <DUserStatusMessage
-            @status={{get this.users "0.status"}}
-            @showDescription={{if this.site.mobileView "true"}}
             class="chat-channel__user-status-message"
+            @showDescription={{if this.site.mobileView "true"}}
+            @status={{get this.users "0.status"}}
           />
         {{/if}}
 

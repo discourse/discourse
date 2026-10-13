@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 sr:
+  markdown_endpoints:
+    latest: "Poslednje"
+    categories: "Kategorije"
+    tags: "Tagovi"
+    previous_page: "Prethodna strana"
+    next_page: "Sledeća strana"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
+    event:
+      location: "Lokacija"
+  mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
+    oauth:
+      deny: "Odbij"
   llms_txt:
     sections:
       optional: "Opciono"
@@ -281,6 +296,7 @@ sr:
   password_reset:
     title: "Resetujte Šifru"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       logged_in: "Prijavljen"
       anonymous: "Anonimno"
@@ -769,8 +785,6 @@ sr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

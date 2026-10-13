@@ -7,6 +7,8 @@
 vi:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Kiểm tra"
       missing_token: "Vui lòng hoàn thành xác minh Captcha."
       verification_failed: "Xác minh Captcha thất bại. Vui lòng thử lại."
       placeholder: chỗ trống

@@ -89,32 +89,32 @@ export default class CredentialsManager extends PaginatedListManager {
 
   <template>
     <AdminTable
-      @items={{this.items}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.items}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
     >
       <:empty>
         <EmptyState
+          @buttonLabel="discourse_workflows.credentials.add_first"
+          @description={{i18n
+            "discourse_workflows.credentials.empty_description"
+          }}
           @emoji="locked_with_key"
+          @onAction={{this.addCredential}}
           @title={{i18n
             "discourse_workflows.credentials.empty_title"
             username=this.currentUser.displayName
           }}
-          @description={{i18n
-            "discourse_workflows.credentials.empty_description"
-          }}
-          @buttonLabel="discourse_workflows.credentials.add_first"
-          @onAction={{this.addCredential}}
         />
       </:empty>
       <:toolbar>
         <DButton
-          @action={{this.addCredential}}
-          @label="discourse_workflows.credentials.add"
-          @icon="plus"
           class="btn-primary btn-small"
+          @action={{this.addCredential}}
+          @icon="plus"
+          @label="discourse_workflows.credentials.add"
         />
       </:toolbar>
       <:head>
@@ -148,25 +148,25 @@ export default class CredentialsManager extends PaginatedListManager {
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.editCredential credential}}
               @label="discourse_workflows.edit"
               @title="discourse_workflows.credentials.edit"
-              class="btn-default btn-small"
             />
             <DMenu
+              @icon="ellipsis-vertical"
               @identifier="workflows-credential-menu"
               @title={{i18n "discourse_workflows.more_options"}}
-              @icon="ellipsis-vertical"
               @triggerClass="btn-default"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   <dropdown.item>
                     <DButton
+                      class="btn-danger"
                       @action={{fn this.deleteCredential credential}}
                       @icon="trash-can"
                       @label="discourse_workflows.delete"
-                      class="btn-danger"
                     />
                   </dropdown.item>
                 </DDropdownMenu>

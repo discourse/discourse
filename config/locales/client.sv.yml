@@ -217,12 +217,16 @@ sv:
     topic_admin_menu: "ämnesåtgärder"
     skip_to_main_content: "Hoppa till huvudinnehållet"
     skip_user_nav: "Hoppa till profilinnehållet"
+    reorder:
+      removed: "Tog bort %{label}"
+      position: "%{position} av %{total}"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
     back_button: "Tillbaka"
+    confirm_button: "Bekräfta"
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
@@ -689,6 +693,9 @@ sv:
       user_label: "Användare"
       timeline:
         target_deleted: "Inlägg raderat"
+      author_penalty:
+        toast:
+          undo: "Ångra"
       notes:
         delete: "Radera"
       topic_label: "Ämne"
@@ -1248,7 +1255,6 @@ sv:
       admin: "%{user} är en administrator"
       moderator_tooltip: "Den här användaren är moderator"
       admin_tooltip: "Den här användaren är administrator"
-      silenced_tooltip: "Denna användare är tystad."
       suspended_notice: "Den här användaren är avstängd till %{date}."
       suspended_permanently: "Denna användare är avstängd."
       suspended_reason: "Anledning: "
@@ -1304,6 +1310,15 @@ sv:
       tracked_topics_link: "Visa"
       automatically_unpin_topics: "Ta automatiskt ner ämnen när jag når botten"
       apps: "Appar"
+      mcp_authorizations:
+        endpoint: "Resurs"
+        scopes: "Omfattningar"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Återkallad"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
       api_approved: "Godkänd:"
@@ -1513,7 +1528,6 @@ sv:
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte lika stora."
         logo_small: "Webbplatsens lilla logotyp. Används som standard."
-        use_custom: "Eller ladda upp en anpassad avatar:"
       change_profile_background:
         title: "Profilrubrik"
         instructions: "Profilrubriken kommer att centreras, samt ha en standardbredd på 1110px."
@@ -1973,7 +1987,7 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk."
     offline_indicator:
       no_internet: "Ingen internetanslutning."
       refresh_page: "Uppdatera sida"
@@ -2328,8 +2342,7 @@ sv:
       edit_shared_draft: "Redigera delat utkast"
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
-      title_placeholder: "Vad handlar ämnet om i en kort mening?"
-      title_placeholder_redesign: "Rubrik"
+      title_placeholder: "Rubrik"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
@@ -3540,6 +3553,7 @@ sv:
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       no_description: "Lägg till en beskrivning för den här kategorin."
+      latest_topics: "Aktuella ämnen"
       description_expand: "Visa mer"
       description_collapse: "Visa mindre"
       already_used: "Den här färgen används redan av en annan kategori"
@@ -3761,6 +3775,7 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       filter:
+        reset: "återställ"
         button:
           label: "Filter"
       latest:
@@ -3911,9 +3926,6 @@ sv:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Förtjänade den här utmärkelsen %{count} gång"
-        other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
       others_count:
         one: "Beviljad till andra %{count} gång"
@@ -3948,11 +3960,11 @@ sv:
       favorite_max_not_reached: "Markera denna utmärkelse som favorit"
       favorite_count: "%{count}/%{max} utmärkelser markerade som favorit"
     download_calendar:
-      title: "Ladda ner kalender"
+      title: "Lägg till i kalender"
+      calendar: "Kalender"
       save_ics: "Ladda ner .ics -fil"
       save_google: "Lägg till i Google -kalender"
       remember: "Fråga mig inte igen"
-      remember_explanation: "(du kan ändra denna inställning under dina användarinställningar)"
       download: "Ladda ner"
       default_calendar: "Standardkalender"
       default_calendar_instruction: "Bestäm vilken kalender som ska användas när datum sparas"
@@ -4461,6 +4473,67 @@ sv:
           title: "Om din webbplats"
         developer:
           title: "Utvecklare"
+        mcp:
+          tabs:
+            access: "Tillgång"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tillgång"
+            group: "Grupp"
+            groups: "Grupper"
+            actions: "Åtgärder"
+            edit: "Redigera"
+            delete: "Radera"
+          primitives:
+            group_by_options:
+              scope: "Omfattning"
+              provider: "Leverantör"
+              kind: "Typ"
+            provider: "Leverantör"
+            kind: "Typ"
+            scope: "Omfattning"
+            scopes: "Omfattningar"
+          clients:
+            actions: "Åtgärder"
+            block: "Blockera"
+            presets:
+              custom: "Anpassad"
+            automatic: "Automatisk"
+          authorizations:
+            user: "Användare"
+            status: "Status"
+            actions: "Åtgärder"
+          activity:
+            time: "Tid"
+            user: "Användare"
+            duration: "Varaktighet"
+          values:
+            server_status:
+              disabled: "Inaktiverad"
+            client_trust:
+              approved: "Godkända"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Återkallad"
+            activity_outcome:
+              success: "Lyckades"
+              error: "Fel"
+            primitive_state:
+              enabled: "Aktiverad"
+              disabled: "Inaktiverad"
+            primitive_kind:
+              all: "Alla typer"
+              resource: "Resurs"
+            primitive_risk:
+              read: "Skrivskyddad"
+              moderation: "Moderering"
+            filter:
+              all: "Alla"
+          never: "Aldrig"
+          actions:
+            revoke: "Återkalla"
         emojis:
           title: "Emoji"
         flags:
@@ -4604,6 +4677,7 @@ sv:
         apply: "Tillämpa"
         filters:
           browser: "Webbläsare"
+          language: "Språk"
           ip: "IP-adress"
         series:
           anonymous_human: "Anonym"
@@ -4702,6 +4776,7 @@ sv:
           series:
             anonymous: "Anonym"
             crawlers: "Sökrobotar"
+          crawler_learn_more: "Läs mer"
         period:
           last_7_days: "Senaste 7 dagarna"
           last_30_days: "Senaste 30 dagarna"
@@ -5381,8 +5456,8 @@ sv:
           upload: "Ladda upp"
           select_component: "Välj en komponent…"
           unsaved_changes_alert: "Du har inte sparat dina ändringar ännu, vill du förkasta dem och fortsätta?"
-          unsaved_parent_themes: "Du har inte tilldelat komponenter till teman, vill du fortsätta?"
           discard: "Förkasta"
+          leave: "Lämna"
           stay: "Stanna"
           delete_upload_confirm: "Radera denna uppladdning? (Temats CSS kan sluta fungera!)"
           component_on_themes: "Inkludera komponent i dessa teman"
@@ -6212,12 +6287,11 @@ sv:
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
       site_text:
-        search: "Sök efter texten som du vill redigera"
+        search_label: "Sök"
+        theme_disabled: "Inaktiverad"
+        filters: "Filter"
         edit: "Redigera"
-        revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
-        go_back: "Tillbaka till sökningen"
-        recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         show_outdated: "Visa endast inaktuella/ogiltiga"
         locale: "Språk:"

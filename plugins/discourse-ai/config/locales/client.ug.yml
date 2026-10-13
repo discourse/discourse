@@ -16,6 +16,12 @@ ug:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "قايتا سىنا"
+          date: "چېسلا"
+          outcomes:
+            failed: "مەغلۇب بولدى"
         reports:
           filters:
             sort_by:
@@ -295,6 +301,17 @@ ug:
         providers:
           google: "Google"
           fake: "ئىختىيارى"
+      ai_artifact:
+        editor:
+          version: "نەشرى"
+          default: "كۆڭۈلدىكى"
+          option_on: "ئوچۇق"
+          option_off: "تاقاق"
+          apply: "قوللان"
+        share: "ھەمبەھىر"
+        create_link: "ئۇلانما قۇر"
+        copy_link: "ئۇلانما كۆچۈر"
+        filter_all: "ھەممىسى"
       ai_bot:
         debug_ai_modal:
           duration_label: "داۋاملىشىش ۋاقتى:"

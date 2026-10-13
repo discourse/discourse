@@ -173,7 +173,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{dRovingFocus orientation="horizontal" itemSelector="[role=option]"}}
         >
           <button class="a" role="option">A</button>
-          <button class="b" role="option" disabled>B</button>
+          <button class="b" disabled role="option">B</button>
           <button class="c" role="option" style="display: none;">C</button>
           <button class="d" role="option">D</button>
         </div>
@@ -252,10 +252,10 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <li>
             <button class="handle a" type="button">A</button>
             <button
-              class="switch-a"
-              type="button"
-              role="switch"
               aria-checked="false"
+              class="switch-a"
+              role="switch"
+              type="button"
             ></button>
           </li>
           <li>
@@ -321,7 +321,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -390,7 +390,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -426,7 +426,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: focus stays on the controller, aria-activedescendant tracks", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -474,7 +474,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -515,7 +515,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <button
           class="refilter"
           type="button"
@@ -565,7 +565,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=first highlights the first item on insert", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -608,7 +608,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -623,8 +623,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{#each state.items key="id" as |item|}}
             <button
               class="opt"
-              role="option"
               id={{item.id}}
+              role="option"
             >{{item.id}}</button>
           {{/each}}
         </div>
@@ -662,7 +662,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -677,8 +677,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{#each state.items key="id" as |item|}}
             <button
               class="opt"
-              role="option"
               id={{item.id}}
+              role="option"
             >{{item.id}}</button>
           {{/each}}
         </div>
@@ -717,7 +717,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=selected-or-first prefers the selected item over the first", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -729,8 +729,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             entryFocus="selected-or-first"
           }}
         >
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="true">B</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="true" class="b" role="option">B</button>
         </div>
       </template>
     );
@@ -753,7 +753,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // avoid highlighting an arbitrary row; a restored selection is not arbitrary.
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -765,8 +765,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             entryFocus="selected-or-none"
           }}
         >
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="true">B</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="true" class="b" role="option">B</button>
         </div>
       </template>
     );
@@ -777,7 +777,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=selected-or-none leaves the cursor empty when nothing is selected", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -789,8 +789,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             entryFocus="selected-or-none"
           }}
         >
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="false">B</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="false" class="b" role="option">B</button>
         </div>
       </template>
     );
@@ -815,7 +815,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -828,9 +828,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             entryFocus="selected-or-first"
           }}
         >
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="true">B</button>
-          <button class="c" role="option" aria-selected="false">C</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="true" class="b" role="option">B</button>
+          <button aria-selected="false" class="c" role="option">C</button>
         </div>
       </template>
     );
@@ -862,7 +862,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -921,7 +921,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -934,9 +934,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             resetKey=state.resetKey
           }}
         >
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="true">B</button>
-          <button class="c" role="option" aria-selected="false">C</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="true" class="b" role="option">B</button>
+          <button aria-selected="false" class="c" role="option">C</button>
         </div>
       </template>
     );
@@ -977,7 +977,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <button
           class="refilter"
           type="button"
@@ -1020,7 +1020,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: entryFocus=none highlights nothing until an Arrow key", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1049,7 +1049,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1096,7 +1096,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1143,7 +1143,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1180,7 +1180,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: first ArrowUp seeds the last option", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1212,7 +1212,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1348,14 +1348,14 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button
+            aria-selected="false"
             class="unmarked-a"
             role="option"
-            aria-selected="false"
           >A</button>
           <button
+            aria-selected="false"
             class="unmarked-b"
             role="option"
-            aria-selected="false"
           >B</button>
         </div>
         <div
@@ -1367,11 +1367,11 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button
+            aria-selected="false"
             class="marked-a"
             role="option"
-            aria-selected="false"
           >A</button>
-          <button class="marked-b" role="option" aria-selected="true">B</button>
+          <button aria-selected="true" class="marked-b" role="option">B</button>
         </div>
       </template>
     );
@@ -1710,7 +1710,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{dRovingFocus itemSelector="[role=option]"}}
         >
           <button class="i0" role="option">0</button>
-          <button class="i1" role="option" aria-disabled="true">1</button>
+          <button aria-disabled="true" class="i1" role="option">1</button>
           <button class="i2" role="option">2</button>
           <button class="i3" role="option">3</button>
           <button class="i4" role="option">4</button>
@@ -1782,7 +1782,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode steps one item at a time even over a grid", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -1940,7 +1940,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: keys mid-composition leave the highlight alone", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -2004,7 +2004,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button class="a" role="option">A</button>
-          <button class="b" role="option" aria-disabled="true">B</button>
+          <button aria-disabled="true" class="b" role="option">B</button>
         </div>
       </template>
     );
@@ -2031,7 +2031,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // would leave the group with no working arrow key and therefore no way to seed a cursor.
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -2502,9 +2502,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
           <button class="a" role="option">A</button>
           <button
+            aria-disabled={{if state.disabled "true" "false"}}
             class="b"
             role="option"
-            aria-disabled={{if state.disabled "true" "false"}}
           >B</button>
           <button class="c" role="option">C</button>
         </div>
@@ -2533,9 +2533,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
-          <button class="a" role="option" aria-selected="false">A</button>
-          <button class="b" role="option" aria-selected="true">B</button>
-          <button class="c" role="option" aria-selected="false">C</button>
+          <button aria-selected="false" class="a" role="option">A</button>
+          <button aria-selected="true" class="b" role="option">B</button>
+          <button aria-selected="false" class="c" role="option">C</button>
         </div>
       </template>
     );
@@ -2563,7 +2563,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button class="a" data-control>A</button>
-          <button class="b" data-control aria-current="page">B</button>
+          <button aria-current="page" class="b" data-control>B</button>
           <button class="c" data-control>C</button>
         </div>
       </template>
@@ -2583,9 +2583,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div role="radiogroup" {{dRovingFocus itemSelector="[role=radio]"}}>
-          <button class="a" role="radio" aria-checked="false">A</button>
-          <button class="b" role="radio" aria-checked="true">B</button>
-          <button class="c" role="radio" aria-checked="false">C</button>
+          <button aria-checked="false" class="a" role="radio">A</button>
+          <button aria-checked="true" class="b" role="radio">B</button>
+          <button aria-checked="false" class="c" role="radio">C</button>
         </div>
       </template>
     );
@@ -2628,7 +2628,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       <template>
         <div {{dRovingFocus itemSelector=".opt"}}>
           <button class="opt a" type="button">A</button>
-          <button class="opt b" type="button" inert>B</button>
+          <button class="opt b" inert type="button">B</button>
           <button class="opt c" type="button">C</button>
         </div>
       </template>
@@ -2921,7 +2921,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -2948,7 +2948,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: fallbackSkipsMarked seeds past a marked first item", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -2961,8 +2961,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             fallbackSkipsMarked=true
           }}
         >
-          <button class="a" role="option" aria-selected="true">A</button>
-          <button class="b" role="option" aria-selected="false">B</button>
+          <button aria-selected="true" class="a" role="option">A</button>
+          <button aria-selected="false" class="b" role="option">B</button>
         </div>
       </template>
     );
@@ -3009,7 +3009,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="owner" role="combobox" aria-owns="owned-option" />
+        <input aria-owns="owned-option" class="owner" role="combobox" />
         <div
           role="listbox"
           {{dRovingFocus
@@ -3020,7 +3020,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             entryFocus="first"
           }}
         >
-          <button id="owned-option" class="a" role="option">A</button>
+          <button class="a" id="owned-option" role="option">A</button>
         </div>
       </template>
     );
@@ -3036,7 +3036,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -3068,7 +3068,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -3104,7 +3104,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           role="listbox"
           {{dRovingFocus
@@ -3140,7 +3140,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: a non-primary pointer press does not move the cursor", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -3174,7 +3174,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -3187,9 +3187,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             onActiveChange=onActiveChange
           }}
         >
-          <button class="a" role="option" data-label="a">A</button>
-          <button class="b" role="option" data-label="b">B</button>
-          <button class="c" role="option" data-label="c">C</button>
+          <button class="a" data-label="a" role="option">A</button>
+          <button class="b" data-label="b" role="option">B</button>
+          <button class="c" data-label="c" role="option">C</button>
         </div>
       </template>
     );
@@ -3238,7 +3238,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // author's own tabindex values are stripped and items they excluded become tab stops.
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <input aria-controls="rf-lb" class="search" role="combobox" />
         <div
           id="rf-lb"
           role="listbox"
@@ -3281,10 +3281,10 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <button class="i1" role="option">1</button>
           <button class="i2" role="option">2</button>
           <button class="i3" role="option">3</button>
-          <button class="i4" role="option" aria-disabled="true">4</button>
+          <button aria-disabled="true" class="i4" role="option">4</button>
           <button class="i5" role="option">5</button>
           <button class="i6" role="option">6</button>
-          <button class="i7" role="option" aria-disabled="true">7</button>
+          <button aria-disabled="true" class="i7" role="option">7</button>
           <button class="i8" role="option">8</button>
         </div>
       </template>
@@ -3320,7 +3320,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <button class="i2" role="option">2</button>
           <button class="i3" role="option">3</button>
           <button class="i4" role="option">4</button>
-          <button class="i5" role="option" aria-disabled="true">5</button>
+          <button aria-disabled="true" class="i5" role="option">5</button>
           <button class="i6" role="option">6</button>
         </div>
       </template>
@@ -3356,7 +3356,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <button class="i1" role="option">1</button>
           <button class="i2" role="option">2</button>
           <button class="i3" role="option">3</button>
-          <button class="i4" role="option" aria-disabled="true">4</button>
+          <button aria-disabled="true" class="i4" role="option">4</button>
         </div>
       </template>
     );
@@ -3391,7 +3391,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <button class="i2" role="option">2</button>
           <button class="i3" role="option">3</button>
           <button class="i4" role="option">4</button>
-          <button class="i5" role="option" aria-disabled="true">5</button>
+          <button aria-disabled="true" class="i5" role="option">5</button>
         </div>
       </template>
     );
@@ -3430,7 +3430,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           <button class="i4" role="option">4</button>
           <button class="i5" role="option">5</button>
           <button class="i6" role="option">6</button>
-          <button class="i7" role="option" aria-disabled="true">7</button>
+          <button aria-disabled="true" class="i7" role="option">7</button>
         </div>
       </template>
     );
@@ -3467,9 +3467,9 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button
+            aria-disabled={{if state.disabled "true" "false"}}
             class="a"
             role="option"
-            aria-disabled={{if state.disabled "true" "false"}}
           >A</button>
           <button class="b" role="option">B</button>
         </div>
@@ -3504,7 +3504,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <button class="item a">A</button>
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-          <button class="item b" aria-disabled="true">B</button>
+          <button aria-disabled="true" class="item b">B</button>
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <button class="item c">C</button>
         </div>
@@ -3540,7 +3540,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <button class="item a">A</button>
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-          <button class="item b" aria-disabled="true">B</button>
+          <button aria-disabled="true" class="item b">B</button>
         </div>
       </template>
     );
@@ -3626,8 +3626,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div
-          role="listbox"
           dir="rtl"
+          role="listbox"
           {{dRovingFocus
             orientation="vertical"
             itemSelector=".item"
@@ -3656,8 +3656,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div
-          role="listbox"
           dir="rtl"
+          role="listbox"
           {{dRovingFocus
             orientation="horizontal"
             itemSelector=".item"
@@ -3760,8 +3760,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div
-          role="listbox"
           aria-multiselectable="true"
+          role="listbox"
           {{dRovingFocus
             orientation="vertical"
             itemSelector=".item"
@@ -3769,8 +3769,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             fallbackSkipsMarked=true
           }}
         >
-          <button class="item a" role="option" aria-selected="true">A</button>
-          <button class="item b" role="option" aria-selected="false">B</button>
+          <button aria-selected="true" class="item a" role="option">A</button>
+          <button aria-selected="false" class="item b" role="option">B</button>
         </div>
       </template>
     );
@@ -3788,8 +3788,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div
-          role="listbox"
           aria-multiselectable="true"
+          role="listbox"
           {{dRovingFocus
             orientation="vertical"
             itemSelector=".item"
@@ -3797,8 +3797,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             fallbackSkipsMarked=true
           }}
         >
-          <button class="item a" role="option" aria-selected="false">A</button>
-          <button class="item b" role="option" aria-selected="true">B</button>
+          <button aria-selected="false" class="item a" role="option">A</button>
+          <button aria-selected="true" class="item b" role="option">B</button>
         </div>
       </template>
     );
@@ -3823,8 +3823,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await render(
       <template>
         <div
-          role="listbox"
           aria-multiselectable="true"
+          role="listbox"
           {{dRovingFocus
             orientation="vertical"
             itemSelector=".item"
@@ -3832,8 +3832,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             fallbackSkipsMarked=true
           }}
         >
-          <button class="item a" role="option" aria-selected="true">A</button>
-          <button class="item b" role="option" aria-selected="true">B</button>
+          <button aria-selected="true" class="item a" role="option">A</button>
+          <button aria-selected="true" class="item b" role="option">B</button>
         </div>
       </template>
     );
@@ -3861,12 +3861,12 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           }}
         >
           <button
+            aria-current={{emptyToken}}
             class="item a"
             role="option"
-            aria-current={{emptyToken}}
           >A</button>
-          <button class="item b" role="option" aria-current="false">B</button>
-          <button class="item c" role="option" aria-current="page">C</button>
+          <button aria-current="false" class="item b" role="option">B</button>
+          <button aria-current="page" class="item c" role="option">C</button>
           <button class="item d" role="option">D</button>
         </div>
       </template>
@@ -3891,7 +3891,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("fallbackSkipsMarked does not treat aria-current=false as marked", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" aria-controls="rf-current-lb" />
+        <input aria-controls="rf-current-lb" class="search" role="combobox" />
         <div
           id="rf-current-lb"
           role="listbox"
@@ -3904,8 +3904,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             fallbackSkipsMarked=true
           }}
         >
-          <button class="item a" role="option" aria-current="false">A</button>
-          <button class="item b" role="option" aria-current="false">B</button>
+          <button aria-current="false" class="item a" role="option">A</button>
+          <button aria-current="false" class="item b" role="option">B</button>
         </div>
       </template>
     );

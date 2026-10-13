@@ -9,6 +9,8 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
     "noEmit": false,
     "noEmitOnError": false,
     "declaration": true,

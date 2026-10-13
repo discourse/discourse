@@ -32,101 +32,101 @@ import transparentStatesSource from "../../examples/atoms/buttons/transparent-st
 
 export default <template>
   <StyleguideExample
-    @title="DButton - icon only - sizes (large, default, small)"
     @code={{iconSizesSource}}
+    @title="DButton - icon only - sizes (large, default, small)"
   >
     <IconSizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon only - states"
     @code={{iconStatesSource}}
+    @title="DButton - icon only - states"
   >
     <IconStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - text only - sizes (large, default, small)"
     @code={{textSizesSource}}
+    @title="DButton - text only - sizes (large, default, small)"
   >
     <TextSizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - text only - states"
     @code={{textStatesSource}}
+    @title="DButton - text only - states"
   >
     <TextStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - sizes (large, default, small)"
     @code={{iconTextSizesSource}}
+    @title="DButton - icon and text - sizes (large, default, small)"
   >
     <IconTextSizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - states"
     @code={{iconTextStatesSource}}
+    @title="DButton - icon and text - states"
   >
     <IconTextStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - sizes"
     @code={{primarySizesSource}}
+    @title="DButton - icon and text - sizes"
   >
     <PrimarySizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - btn-primary - states"
     @code={{primaryStatesSource}}
+    @title="DButton - icon and text - btn-primary - states"
   >
     <PrimaryStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - btn-danger - sizes"
     @code={{dangerSizesSource}}
+    @title="DButton - icon and text - btn-danger - sizes"
   >
     <DangerSizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - icon and text - btn-danger - states"
     @code={{dangerStatesSource}}
+    @title="DButton - icon and text - btn-danger - states"
   >
     <DangerStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - btn-flat - icon only - sizes"
     @code={{flatSizesSource}}
+    @title="DButton - btn-flat - icon only - sizes"
   >
     <FlatSizesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - btn-flat - states"
     @code={{flatStatesSource}}
+    @title="DButton - btn-flat - states"
   >
     <FlatStatesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DButton - btn-transparent - states"
     @code={{transparentStatesSource}}
+    @title="DButton - btn-transparent - states"
   >
     <TransparentStatesExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="DButton - link" @code={{linkSource}}>
+  <StyleguideExample @code={{linkSource}} @title="DButton - link">
     <LinkExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="DToggleSwitch" @code={{toggleSwitchSource}}>
+  <StyleguideExample @code={{toggleSwitchSource}} @title="DToggleSwitch">
     <ToggleSwitchExample />
   </StyleguideExample>
 </template>

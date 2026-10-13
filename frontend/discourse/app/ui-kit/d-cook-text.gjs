@@ -23,7 +23,7 @@ export default class DCookText extends Component {
   async loadCookedText() {
     const rawText = this.args.rawText;
     const cooked = await waitForPromise(cook(rawText));
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     if (this.args.rawText !== rawText) {

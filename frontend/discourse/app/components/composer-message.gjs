@@ -38,8 +38,8 @@ const ComposerMessage = <template>
     }}
       {{#if MessageComponent}}
         <MessageComponent
-          @message={{@message}}
           @closeMessage={{@closeMessage}}
+          @message={{@message}}
           @shareModal={{@shareModal}}
           @switchPM={{this.switchPM}}
         />

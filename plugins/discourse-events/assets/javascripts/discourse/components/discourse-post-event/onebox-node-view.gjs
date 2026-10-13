@@ -43,6 +43,7 @@ export function topicIdFromUrl(url) {
 export default class DiscoursePostEventOneboxNodeView extends Component {
   constructor() {
     super(...arguments);
+    this.args.dom.classList.add("onebox-wrapper");
     this.args.onSetup?.(this);
   }
 
@@ -60,8 +61,8 @@ export default class DiscoursePostEventOneboxNodeView extends Component {
 
   <template>
     <DiscoursePostEventOneboxPreview
-      @topicId={{this.topicId}}
       @fallbackHtml={{@node.attrs.html}}
+      @topicId={{this.topicId}}
     />
   </template>
 }

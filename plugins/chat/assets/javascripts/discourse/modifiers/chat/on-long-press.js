@@ -70,7 +70,7 @@ export default class ChatOnLongPress extends Modifier {
     this.element.addEventListener("touchend", this.onCancel);
     this.element.addEventListener("touchcancel", this.onCancel);
     this.timeout = discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

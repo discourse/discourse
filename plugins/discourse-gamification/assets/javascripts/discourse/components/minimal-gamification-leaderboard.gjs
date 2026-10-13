@@ -47,8 +47,8 @@ export default class extends Component {
     <div class="leaderboard -minimal">
       <div class="page__header">
         <LinkTo
-          @route="gamificationLeaderboard.byName"
           @model={{this.model.leaderboard.id}}
+          @route="gamificationLeaderboard.byName"
         >
           <h3 class="page__title">{{this.model.leaderboard.name}}</h3>
         </LinkTo>
@@ -76,7 +76,7 @@ export default class extends Component {
       {{/if}}
 
       {{#each this.model.users as |rank index|}}
-        <MinimalGamificationLeaderboardRow @rank={{rank}} @index={{index}} />
+        <MinimalGamificationLeaderboardRow @index={{index}} @rank={{rank}} />
       {{/each}}
     </div>
   </template>

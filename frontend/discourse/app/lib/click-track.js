@@ -88,11 +88,13 @@ export default {
 
     const tracking = isValidLink(link);
 
-    // Return early for mentions and group mentions. This is not in
-    // isValidLink because returning true here allows the group card
-    // to pop up. If we returned false it would not.
+    // Card triggers must reach their delegated listeners without navigating.
     if (
-      ["mention", "mention-group"].some((name) => link.classList.contains(name))
+      ["mention", "mention-group"].some((name) =>
+        link.classList.contains(name)
+      ) ||
+      (link.matches('a.hashtag-cooked[data-type="category"][data-id]') &&
+        owner?.lookup("service:site-settings")?.enable_category_hashtag_cards)
     ) {
       return true;
     }

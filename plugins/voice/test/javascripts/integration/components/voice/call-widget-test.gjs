@@ -55,7 +55,15 @@ class VoiceWebrtcStub extends Service {
     return true;
   }
 
-  canPublishVideo() {
+  screenShareAllowedIn() {
+    return true;
+  }
+
+  canPublishCamera() {
+    return true;
+  }
+
+  canPublishScreen() {
     return true;
   }
 
@@ -127,6 +135,17 @@ module("Integration | Component | voice/call-widget", function (hooks) {
         ],
       },
     ];
+  });
+
+  test("offers the agent invitation in the widget room menu", async function (assert) {
+    this.owner.lookup("service:site").set("voice_livekit_agent_bot_id", -2);
+    Object.assign(this.voiceRooms.rooms[0], {
+      public: true,
+      expected_transport: "livekit",
+    });
+    await render(<template><VoiceCallWidget /></template>);
+    await click("button[data-identifier='voice-widget-room-menu']");
+    assert.dom(".voice-invite-agent").hasText("Invite LiveKit agent");
   });
 
   test("keeps video watching and participant tiles live in widget mode", async function (assert) {

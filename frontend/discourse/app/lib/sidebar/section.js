@@ -61,6 +61,21 @@ export default class Section {
     return Boolean(this.#canEditLinks) && !this.section.section_type;
   }
 
+  get headerActions() {
+    if (this.#canEditLinks) {
+      return [
+        {
+          action: () => this.openForm(),
+          title: i18n("sidebar.sections.custom.edit"),
+        },
+      ];
+    }
+  }
+
+  get headerActionIcon() {
+    return "pencil";
+  }
+
   async openForm(link, linkDropIndex) {
     const json = await ajax(`/sidebar_sections/${this.section.id}.json`).catch(
       popupAjaxError
@@ -103,21 +118,6 @@ export default class Section {
     if (link) {
       return this.openForm(link, linkDropIndex);
     }
-  }
-
-  get headerActions() {
-    if (this.#canEditLinks) {
-      return [
-        {
-          action: () => this.openForm(),
-          title: i18n("sidebar.sections.custom.edit"),
-        },
-      ];
-    }
-  }
-
-  get headerActionIcon() {
-    return "pencil";
   }
 
   /**

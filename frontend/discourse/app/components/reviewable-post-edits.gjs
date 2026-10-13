@@ -63,11 +63,11 @@ export default class ReviewablePostEdits extends Component {
     {{#if this.hasEdits}}
       <div class="post-info edits">
         <DButton
+          class="btn-icon-text btn-flat {{this.historyClass}}"
           @action={{this.showEditHistory}}
           @icon="pencil"
           @translatedLabel={{this.editCount}}
           @translatedTitle={{this.editedTitle}}
-          class="btn-icon-text btn-flat {{this.historyClass}}"
         />
       </div>
     {{/if}}

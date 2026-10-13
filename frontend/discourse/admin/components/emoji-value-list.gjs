@@ -30,6 +30,10 @@ export default class EmojiValueList extends Component {
       });
   }
 
+  get showUpDownButtons() {
+    return this.collection.length > 1;
+  }
+
   @action
   emojiSelected(code) {
     if (!this.#validateInput(code)) {
@@ -57,10 +61,6 @@ export default class EmojiValueList extends Component {
     }
 
     this.#saveValues(newCollection);
-  }
-
-  get showUpDownButtons() {
-    return this.collection.length > 1;
   }
 
   @action
@@ -150,38 +150,38 @@ export default class EmojiValueList extends Component {
           {{#each this.collection key="value" as |data index|}}
             <li class="value" data-index={{index}}>
               <DButton
-                @action={{fn this.removeValue data}}
-                @icon="xmark"
-                @disabled={{not data.isEditable}}
                 class="btn-default remove-value-btn btn-small"
+                @action={{fn this.removeValue data}}
+                @disabled={{not data.isEditable}}
+                @icon="xmark"
               />
 
               <div
                 class="value-input emoji-details
                   {{if data.isEditable 'can-edit'}}
                   {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-                {{on "click" (fn this.editValue index)}}
                 role="button"
+                {{on "click" (fn this.editValue index)}}
               >
                 <img
-                  height="15px"
-                  width="15px"
-                  src={{data.emojiUrl}}
                   class="emoji-list-emoji"
+                  height="15px"
+                  src={{data.emojiUrl}}
+                  width="15px"
                 />
                 <span class="emoji-name">{{data.value}}</span>
               </div>
 
               {{#if this.showUpDownButtons}}
                 <DButton
+                  class="btn-default shift-up-value-btn btn-small"
                   @action={{fn this.shift -1 index}}
                   @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
                 />
                 <DButton
+                  class="btn-default shift-down-value-btn btn-small"
                   @action={{fn this.shift 1 index}}
                   @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
                 />
               {{/if}}
             </li>
@@ -191,11 +191,11 @@ export default class EmojiValueList extends Component {
 
       <div class="value">
         <EmojiPicker
+          @btnClass="btn-default"
+          @didSelectEmoji={{this.emojiSelected}}
           @label={{i18n
             "admin.site_settings.emoji_list.add_emoji_button.label"
           }}
-          @didSelectEmoji={{this.emojiSelected}}
-          @btnClass="btn-default"
         />
       </div>
     </div>

@@ -98,11 +98,11 @@ export default class AiSummaryTrigger extends Component {
           {{this.creditLimitTooltipModifier}}
         >
           <DButton
-            @label="summary.buttons.generate"
-            @icon="discourse-sparkles"
+            class="btn-default ai-summarization-button"
             @action={{this.openAiSummaryModal}}
             @disabled={{this.isDisabled}}
-            class="btn-default ai-summarization-button"
+            @icon="discourse-sparkles"
+            @label="summary.buttons.generate"
           />
         </section>
       {{/if}}

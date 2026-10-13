@@ -31,20 +31,20 @@ const ImportRowControls = <template>
     <div class="admin-emoji-import__conflict-resolution">
       <label>
         <input
-          type="radio"
-          name={{concat "resolution-" @row.name}}
-          value="incoming"
           checked={{eq (or (get @resolutions @row.name) "incoming") "incoming"}}
+          name={{concat "resolution-" @row.name}}
+          type="radio"
+          value="incoming"
           {{on "change" (fn @onSetResolution @row.name "incoming")}}
         />
         {{i18n "admin.emoji.import_use_incoming"}}
       </label>
       <label>
         <input
-          type="radio"
-          name={{concat "resolution-" @row.name}}
-          value="keep"
           checked={{eq (get @resolutions @row.name) "keep"}}
+          name={{concat "resolution-" @row.name}}
+          type="radio"
+          value="keep"
           {{on "change" (fn @onSetResolution @row.name "keep")}}
         />
         {{i18n "admin.emoji.import_keep_existing"}}
@@ -91,25 +91,25 @@ const ImportSection = <template>
             <td class="d-table__cell --overview">
               {{#if row.incoming_url}}
                 <img
+                  alt={{i18n "admin.emoji.import_incoming_alt" name=row.name}}
                   class="emoji emoji-custom"
                   src={{row.incoming_url}}
-                  alt={{i18n "admin.emoji.import_incoming_alt" name=row.name}}
                 />
               {{/if}}
               {{#if (eq @category "conflict")}}
                 {{#if row.existing_url}}
                   <span
-                    class="admin-emoji-import__existing-value"
                     aria-label={{i18n
                       "admin.emoji.import_existing_alt"
                       name=row.name
                     }}
+                    class="admin-emoji-import__existing-value"
                   >
                     <img
-                      class="emoji emoji-custom"
-                      src={{row.existing_url}}
                       alt=""
                       aria-hidden="true"
+                      class="emoji emoji-custom"
+                      src={{row.existing_url}}
                     />
                   </span>
                 {{/if}}
@@ -127,8 +127,8 @@ const ImportSection = <template>
               {{row.group}}
               {{#if (eq @category "conflict")}}
                 <span
-                  class="admin-emoji-import__existing-value"
                   aria-label={{i18n "admin.emoji.import_existing_group_alt"}}
+                  class="admin-emoji-import__existing-value"
                 >
                   {{row.existing_group}}
                 </span>
@@ -137,9 +137,9 @@ const ImportSection = <template>
             <td class="d-table__cell --controls">
               <ImportRowControls
                 @category={{@category}}
-                @row={{row}}
-                @resolutions={{@resolutions}}
                 @onSetResolution={{@onSetResolution}}
+                @resolutions={{@resolutions}}
+                @row={{row}}
               />
             </td>
           </tr>
@@ -258,7 +258,7 @@ export default class AdminConfigAreasEmojisImport extends Component {
   }
 
   <template>
-    <BackButton @route="adminEmojis.index" @label="admin.emoji.back" />
+    <BackButton @label="admin.emoji.back" @route="adminEmojis.index" />
     <div class="admin-emoji-import">
 
       {{#if this.isPreviewPhase}}
@@ -281,27 +281,27 @@ export default class AdminConfigAreasEmojisImport extends Component {
           {{#if rows.length}}
             <ImportSection
               @category={{category}}
-              @rows={{rows}}
-              @resolutions={{this.resolutions}}
-              @onSetResolution={{this.setResolution}}
-              @newCount={{this.summaryCounts.newCount}}
               @identicalCount={{this.summaryCounts.identicalCount}}
+              @newCount={{this.summaryCounts.newCount}}
+              @onSetResolution={{this.setResolution}}
+              @resolutions={{this.resolutions}}
+              @rows={{rows}}
             />
           {{/if}}
         {{/each-in}}
 
         <div class="admin-emoji-import__actions">
           <DButton
+            class="btn-primary"
             @action={{this.confirm}}
-            @label="admin.emoji.import_confirm"
             @disabled={{this.isConfirming}}
             @isLoading={{this.isConfirming}}
-            class="btn-primary"
+            @label="admin.emoji.import_confirm"
           />
           <DButton
+            class="btn-default"
             @action={{this.cancel}}
             @label="cancel"
-            class="btn-default"
           />
         </div>
 
@@ -314,16 +314,16 @@ export default class AdminConfigAreasEmojisImport extends Component {
           <br />
           <a
             href={{getURL "/emoji-import-sample.zip"}}
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
           >{{i18n "admin.emoji.import_download_sample"}}</a>
         </p>
         <div class="inputs">
           <input
-            type="file"
             accept=".zip"
             class="admin-emoji-import__file-input"
             disabled={{this.isUploading}}
+            type="file"
             {{on "change" this.uploadZip}}
           />
           {{#if this.isUploading}}

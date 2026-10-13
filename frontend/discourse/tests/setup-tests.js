@@ -335,6 +335,11 @@ export default async function setupTests(config) {
       app.destroy();
     });
 
+    // The inspector shim's global list would otherwise pin the destroyed app's registry.
+    globalThis.emberInspectorApps = globalThis.emberInspectorApps?.filter(
+      (entry) => entry.app !== app
+    );
+
     resetPretender();
     clearPresenceState();
 

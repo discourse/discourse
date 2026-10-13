@@ -215,6 +215,11 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
+  @computed("secondFactorToken")
+  get isSecondFactorTokenValid() {
+    return this.secondFactorToken?.length > 0;
+  }
+
   resetState() {
     this.set("message", null);
     this.set("messageIsError", false);
@@ -311,11 +316,6 @@ export default class SecondFactorAuthController extends Controller {
       },
       { userVerification: "required" }
     );
-  }
-
-  @computed("secondFactorToken")
-  get isSecondFactorTokenValid() {
-    return this.secondFactorToken?.length > 0;
   }
 
   @action

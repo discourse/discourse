@@ -22,19 +22,27 @@ export default class GroupRequestsController extends Controller {
     );
   }
 
+  @computed("order", "asc", "filter")
+  get memberParams() {
+    return { order: this.order, asc: this.asc, filter: this.filter };
+  }
+
+  get hasRequesters() {
+    return this.model.requesters?.length > 0;
+  }
+
+  @computed
+  get filterPlaceholder() {
+    if (this.currentUser && this.currentUser.admin) {
+      return "groups.members.filter_placeholder_admin";
+    } else {
+      return "groups.members.filter_placeholder";
+    }
+  }
+
   @observes("filterInput")
   filterInputChanged() {
     this._setFilter();
-  }
-
-  @debounce(500)
-  _setFilter() {
-    this.set("filter", this.filterInput);
-  }
-
-  @observes("order", "asc", "filter")
-  _filtersChanged() {
-    this.findRequesters(true);
   }
 
   findRequesters(refresh) {
@@ -55,24 +63,6 @@ export default class GroupRequestsController extends Controller {
     model.findRequesters(this.memberParams, refresh).finally(() => {
       this.set("loading", false);
     });
-  }
-
-  @computed("order", "asc", "filter")
-  get memberParams() {
-    return { order: this.order, asc: this.asc, filter: this.filter };
-  }
-
-  get hasRequesters() {
-    return this.model.requesters?.length > 0;
-  }
-
-  @computed
-  get filterPlaceholder() {
-    if (this.currentUser && this.currentUser.admin) {
-      return "groups.members.filter_placeholder_admin";
-    } else {
-      return "groups.members.filter_placeholder";
-    }
   }
 
   handleRequest(data) {
@@ -121,5 +111,15 @@ export default class GroupRequestsController extends Controller {
       order: field,
       asc,
     });
+  }
+
+  @debounce(500)
+  _setFilter() {
+    this.set("filter", this.filterInput);
+  }
+
+  @observes("order", "asc", "filter")
+  _filtersChanged() {
+    this.findRequesters(true);
   }
 }

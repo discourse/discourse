@@ -59,10 +59,10 @@ export default <template>
   {{/unless}}
 
   <DiscourseTopic
-    @multiSelect={{@controller.multiSelect}}
     @enteredAt={{@controller.enteredAt}}
-    @topic={{@controller.model}}
     @hasScrolled={{@controller.hasScrolled}}
+    @multiSelect={{@controller.multiSelect}}
+    @topic={{@controller.model}}
   >
     <TopicSkipLinks
       @postStream={{@controller.model.postStream}}
@@ -78,10 +78,10 @@ export default <template>
       {{#if @controller.shouldRenderNestedView}}
         {{#let @controller.nestedController as |nested|}}
           <PostTextSelection
-            @quoteState={{nested.quoteState}}
-            @selectText={{nested.selectText}}
             @buildQuoteMarkdown={{nested.buildQuoteMarkdown}}
             @editPost={{nested.editPost}}
+            @quoteState={{nested.quoteState}}
+            @selectText={{nested.selectText}}
             @topic={{@controller.model}}
           />
 
@@ -90,82 +90,82 @@ export default <template>
               {{unless nested.multiSelect 'hidden'}}"
           >
             <SelectedPosts
-              @selectedPostsCount={{nested.selectedPostsCount}}
-              @canSelectAll={{nested.canSelectAll}}
-              @canDeselectAll={{nested.canDeselectAll}}
-              @canDeleteSelected={{nested.canDeleteSelected}}
-              @canMergeTopic={{nested.canMergeTopic}}
               @canChangeOwner={{nested.canChangeOwner}}
+              @canDeleteSelected={{nested.canDeleteSelected}}
+              @canDeselectAll={{nested.canDeselectAll}}
               @canMergePosts={{nested.canMergePosts}}
-              @toggleMultiSelect={{nested.toggleMultiSelect}}
-              @mergePosts={{nested.mergePosts}}
+              @canMergeTopic={{nested.canMergeTopic}}
+              @canSelectAll={{nested.canSelectAll}}
               @deleteSelected={{nested.deleteSelected}}
               @deselectAll={{nested.deselectAll}}
+              @mergePosts={{nested.mergePosts}}
               @selectAll={{nested.selectAll}}
+              @selectedPostsCount={{nested.selectedPostsCount}}
+              @toggleMultiSelect={{nested.toggleMultiSelect}}
             />
           </div>
 
           <Nested
-            @topic={{@controller.model}}
-            @opPost={{nested.opPost}}
-            @rootNodes={{nested.rootNodes}}
-            @hasMoreRoots={{nested.hasMoreRoots}}
-            @loadingMore={{nested.loadingMore}}
-            @loadMoreRoots={{nested.loadMoreRoots}}
-            @sort={{nested.sort}}
-            @effectiveSort={{nested.effectiveSort}}
-            @changeSort={{nested.changeSort}}
-            @replyToPost={{nested.replyToPost}}
-            @editPost={{nested.editPost}}
-            @deletePost={{nested.deletePost}}
-            @recoverPost={{nested.recoverPost}}
-            @showFlags={{nested.showFlags}}
-            @showHistory={{nested.showHistory}}
+            @ancestorsTruncated={{nested.ancestorsTruncated}}
+            @buffered={{nested.buffered}}
+            @cancelEditingTopic={{nested.cancelEditingTopic}}
+            @canEditTags={{nested.canEditTags}}
             @changeNotice={{nested.changeNotice}}
             @changePostOwner={{nested.changePostOwner}}
-            @grantBadge={{nested.grantBadge}}
-            @lockPost={{nested.lockPost}}
-            @unlockPost={{nested.unlockPost}}
-            @permanentlyDeletePost={{nested.permanentlyDeletePost}}
-            @rebakePost={{nested.rebakePost}}
-            @showPagePublish={{nested.showPagePublish}}
-            @togglePostType={{nested.togglePostType}}
-            @toggleWiki={{nested.toggleWiki}}
-            @unhidePost={{nested.unhidePost}}
-            @postNumber={{nested.postNumber}}
+            @changeSort={{nested.changeSort}}
+            @clearScrollAnchor={{nested.clearScrollAnchor}}
+            @collapseReplies={{nested.collapseReplies}}
             @contextMode={{nested.contextMode}}
             @contextNoAncestors={{nested.contextNoAncestors}}
-            @ancestorsTruncated={{nested.ancestorsTruncated}}
-            @targetPostNumber={{nested.targetPostNumber}}
-            @initialFocusedPath={{nested.initialFocusedPath}}
-            @setFocusedPostNumber={{nested.setFocusedPostNumber}}
-            @saveScrollPosition={{nested.saveScrollPosition}}
-            @viewFullThread={{nested.viewFullThread}}
-            @viewParentContext={{nested.viewParentContext}}
-            @pinnedPostIds={{nested.pinnedPostIds}}
-            @newRootPostCount={{nested.newRootPostCount}}
-            @loadNewRoots={{nested.loadNewRoots}}
+            @deletePost={{nested.deletePost}}
             @editingTopic={{nested.editingTopic}}
-            @startEditingTopic={{nested.startEditingTopic}}
-            @cancelEditingTopic={{nested.cancelEditingTopic}}
-            @finishedEditingTopic={{nested.finishedEditingTopic}}
-            @showCategoryChooser={{nested.showCategoryChooser}}
-            @canEditTags={{nested.canEditTags}}
-            @buffered={{nested.buffered}}
-            @topicCategoryChanged={{nested.topicCategoryChanged}}
-            @topicTagsChanged={{nested.topicTagsChanged}}
-            @minimumRequiredTags={{nested.minimumRequiredTags}}
+            @editPost={{nested.editPost}}
+            @effectiveSort={{nested.effectiveSort}}
             @expansionState={{nested.expansionState}}
             @fetchedChildrenCache={{nested.fetchedChildrenCache}}
-            @scrollAnchor={{nested.scrollAnchor}}
-            @clearScrollAnchor={{nested.clearScrollAnchor}}
-            @showActivityLog={{nested.showActivityLog}}
-            @collapseReplies={{nested.collapseReplies}}
+            @finishedEditingTopic={{nested.finishedEditingTopic}}
+            @grantBadge={{nested.grantBadge}}
+            @hasMoreRoots={{nested.hasMoreRoots}}
+            @initialFocusedPath={{nested.initialFocusedPath}}
+            @loadingMore={{nested.loadingMore}}
+            @loadMoreRoots={{nested.loadMoreRoots}}
+            @loadNewRoots={{nested.loadNewRoots}}
+            @lockPost={{nested.lockPost}}
+            @minimumRequiredTags={{nested.minimumRequiredTags}}
             @multiSelect={{nested.multiSelect}}
-            @togglePostSelection={{nested.togglePostSelection}}
-            @selectReplies={{nested.selectReplies}}
-            @selectBelow={{nested.selectBelow}}
+            @newRootPostCount={{nested.newRootPostCount}}
+            @opPost={{nested.opPost}}
+            @permanentlyDeletePost={{nested.permanentlyDeletePost}}
+            @pinnedPostIds={{nested.pinnedPostIds}}
+            @postNumber={{nested.postNumber}}
             @postSelected={{nested.postSelected}}
+            @rebakePost={{nested.rebakePost}}
+            @recoverPost={{nested.recoverPost}}
+            @replyToPost={{nested.replyToPost}}
+            @rootNodes={{nested.rootNodes}}
+            @saveScrollPosition={{nested.saveScrollPosition}}
+            @scrollAnchor={{nested.scrollAnchor}}
+            @selectBelow={{nested.selectBelow}}
+            @selectReplies={{nested.selectReplies}}
+            @setFocusedPostNumber={{nested.setFocusedPostNumber}}
+            @showActivityLog={{nested.showActivityLog}}
+            @showCategoryChooser={{nested.showCategoryChooser}}
+            @showFlags={{nested.showFlags}}
+            @showHistory={{nested.showHistory}}
+            @showPagePublish={{nested.showPagePublish}}
+            @sort={{nested.sort}}
+            @startEditingTopic={{nested.startEditingTopic}}
+            @targetPostNumber={{nested.targetPostNumber}}
+            @togglePostSelection={{nested.togglePostSelection}}
+            @togglePostType={{nested.togglePostType}}
+            @toggleWiki={{nested.toggleWiki}}
+            @topic={{@controller.model}}
+            @topicCategoryChanged={{nested.topicCategoryChanged}}
+            @topicTagsChanged={{nested.topicTagsChanged}}
+            @unhidePost={{nested.unhidePost}}
+            @unlockPost={{nested.unlockPost}}
+            @viewFullThread={{nested.viewFullThread}}
+            @viewParentContext={{nested.viewParentContext}}
           />
         {{/let}}
       {{else}}
@@ -173,8 +173,8 @@ export default <template>
         {{#unless @controller.shouldHideScrollableContentAbove}}
           <div class="container">
             <DiscourseBanner
-              @overlay={{@controller.hasScrolled}}
               @hide={{@controller.model.errorLoading}}
+              @overlay={{@controller.hasScrolled}}
             />
           </div>
         {{/unless}}
@@ -186,8 +186,8 @@ export default <template>
 
           <span>
             <PluginOutlet
-              @name="topic-above-post-stream"
               @connectorTagName="div"
+              @name="topic-above-post-stream"
               @outletArgs={{lazyHash
                 model=@controller.model
                 editFirstPost=@controller.editFirstPost
@@ -200,8 +200,8 @@ export default <template>
           {{#if @controller.model.postStream.firstPostPresent}}
             <TopicTitle
               @cancelled={{@controller.cancelEditingTopic}}
-              @save={{@controller.finishedEditingTopic}}
               @model={{@controller.model}}
+              @save={{@controller.finishedEditingTopic}}
             >
               {{#if @controller.editingTopic}}
                 <div class="edit-topic-title">
@@ -210,31 +210,31 @@ export default <template>
                   />
 
                   <TopicTitleEditor
-                    @isEditingLocalization={{@controller.editingTopicLocalization}}
-                    @translationTitle={{@controller.translationTitle}}
-                    @translationLocale={{@controller.translationLocale}}
-                    @bufferedTitle={{@controller.buffered.title}}
-                    @model={{@controller.model}}
                     @buffered={{@controller.buffered}}
+                    @bufferedTitle={{@controller.buffered.title}}
+                    @isEditingLocalization={{@controller.editingTopicLocalization}}
+                    @model={{@controller.model}}
+                    @translationLocale={{@controller.translationLocale}}
+                    @translationTitle={{@controller.translationTitle}}
                   />
 
                   <TopicMetadata
                     @buffered={{@controller.buffered}}
-                    @model={{@controller.model}}
-                    @showCategoryChooser={{@controller.showCategoryChooser}}
                     @canEditTags={{@controller.canEditTags}}
                     @minimumRequiredTags={{@controller.minimumRequiredTags}}
-                    @onSave={{@controller.finishedEditingTopic}}
+                    @model={{@controller.model}}
                     @onCancel={{@controller.cancelEditingTopic}}
+                    @onSave={{@controller.finishedEditingTopic}}
+                    @showCategoryChooser={{@controller.showCategoryChooser}}
                     @topicCategoryChanged={{@controller.topicCategoryChanged}}
                     @topicTagsChanged={{@controller.topicTagsChanged}}
                   >
                     {{#if @controller.canRemoveTopicFeaturedLink}}
                       <a
-                        href
-                        {{on "click" @controller.removeFeaturedLink}}
                         class="remove-featured-link"
+                        href
                         title={{i18n "composer.remove_featured_link"}}
+                        {{on "click" @controller.removeFeaturedLink}}
                       >
                         {{dIcon "circle-xmark"}}
                         {{@controller.featuredLinkDomain}}
@@ -245,20 +245,20 @@ export default <template>
 
               {{else}}
                 <h1
-                  data-topic-id={{@controller.model.id}}
                   {{! Prevent duplicating the topic title heading on screen readers when the header is displaying the title
                 in the header }}
                   aria-hidden={{booleanString
                     @controller.titleIsVisibleOnHeader
                   }}
+                  data-topic-id={{@controller.model.id}}
                 >
                   {{#unless @controller.model.is_warning}}
                     {{#if @controller.canSendPms}}
                       <PrivateMessageGlyph
-                        @shouldShow={{@controller.model.isPrivateMessage}}
-                        @href={{@controller.pmPath}}
-                        @title="topic_statuses.personal_message.title"
                         @ariaLabel="user.messages.inbox"
+                        @href={{@controller.pmPath}}
+                        @shouldShow={{@controller.model.isPrivateMessage}}
+                        @title="topic_statuses.personal_message.title"
                       />
                     {{else}}
                       <PrivateMessageGlyph
@@ -270,9 +270,9 @@ export default <template>
                   {{#if @controller.model.details.loaded}}
                     <TopicStatus @topic={{@controller.model}} />
                     <a
+                      class="fancy-title"
                       href={{@controller.model.url}}
                       {{on "click" @controller.handleTitleClick}}
-                      class="fancy-title"
                     >
                       {{trustHTML @controller.model.fancyTitle~}}
                       {{~#if @controller.model.details.can_edit~}}
@@ -294,8 +294,8 @@ export default <template>
                   @outletArgs={{lazyHash topic=@controller.model}}
                 >
                   <TopicCategory
-                    @topic={{@controller.model}}
                     class="topic-category"
+                    @topic={{@controller.model}}
                   />
                 </PluginOutlet>
 
@@ -314,16 +314,16 @@ export default <template>
                   <div>
                     <a
                       href={{@controller.model.publishedPage.url}}
-                      target="_blank"
                       rel="noopener noreferrer"
+                      target="_blank"
                     >{{@controller.model.publishedPage.url}}</a>
                   </div>
                 </div>
                 <div class="controls">
                   <DButton
+                    @action={{routeAction "showPagePublish"}}
                     @icon="file"
                     @label="topic.publish_page.publishing_settings"
-                    @action={{routeAction "showPagePublish"}}
                   />
                 </div>
               </div>
@@ -336,18 +336,18 @@ export default <template>
               class="selected-posts {{unless @controller.multiSelect 'hidden'}}"
             >
               <SelectedPosts
-                @selectedPostsCount={{@controller.selectedPostsCount}}
-                @canSelectAll={{@controller.canSelectAll}}
-                @canDeselectAll={{@controller.canDeselectAll}}
-                @canDeleteSelected={{@controller.canDeleteSelected}}
-                @canMergeTopic={{@controller.canMergeTopic}}
                 @canChangeOwner={{@controller.canChangeOwner}}
+                @canDeleteSelected={{@controller.canDeleteSelected}}
+                @canDeselectAll={{@controller.canDeselectAll}}
                 @canMergePosts={{@controller.canMergePosts}}
-                @toggleMultiSelect={{@controller.toggleMultiSelect}}
-                @mergePosts={{@controller.mergePosts}}
+                @canMergeTopic={{@controller.canMergeTopic}}
+                @canSelectAll={{@controller.canSelectAll}}
                 @deleteSelected={{@controller.deleteSelected}}
                 @deselectAll={{@controller.deselectAll}}
+                @mergePosts={{@controller.mergePosts}}
                 @selectAll={{@controller.selectAll}}
+                @selectedPostsCount={{@controller.selectedPostsCount}}
+                @toggleMultiSelect={{@controller.toggleMultiSelect}}
               />
             </div>
 
@@ -357,31 +357,31 @@ export default <template>
               <div class="topic-map --bottom">
                 <TopicMap
                   @model={{@controller.model}}
-                  @topicDetails={{@controller.model.details}}
                   @postStream={{@controller.model.postStream}}
+                  @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                  @removeAllowedUser={{@controller.removeAllowedUser}}
+                  @showInvite={{routeAction "showInvite"}}
                   @showPMMap={{eq
                     @controller.model.archetype
                     "private_message"
                   }}
-                  @showInvite={{routeAction "showInvite"}}
-                  @removeAllowedGroup={{@controller.removeAllowedGroup}}
-                  @removeAllowedUser={{@controller.removeAllowedUser}}
+                  @topicDetails={{@controller.model.details}}
                 />
               </div>
             {{/if}}
 
-            <PluginOutlet @name="above-timeline" @connectorTagName="div" />
+            <PluginOutlet @connectorTagName="div" @name="above-timeline" />
 
             <TopicNavigation
-              @topic={{@controller.model}}
+              class="topic-navigation"
               @jumpToDate={{@controller.jumpToDate}}
               @jumpToIndex={{@controller.jumpToIndex}}
-              class="topic-navigation"
+              @topic={{@controller.model}}
               as |info toggleProgressExpansion|
             >
               <PluginOutlet
-                @name="topic-navigation"
                 @connectorTagName="div"
+                @name="topic-navigation"
                 @outletArgs={{lazyHash
                   topic=@controller.model
                   renderTimeline=info.renderTimeline
@@ -391,66 +391,66 @@ export default <template>
 
               {{#if info.renderTimeline}}
                 <TopicTimeline
-                  @info={{info}}
-                  @model={{@controller.model}}
-                  @replyToPost={{@controller.replyToPost}}
-                  @showTopReplies={{@controller.showTopReplies}}
-                  @jumpToPostPrompt={{@controller.jumpToPostPrompt}}
+                  @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                  @convertToPublicTopic={{@controller.convertToPublicTopic}}
+                  @deleteTopic={{@controller.deleteTopic}}
                   @enteredIndex={{@controller.enteredIndex}}
-                  @prevEvent={{info.prevEvent}}
-                  @jumpTop={{@controller.jumpTop}}
+                  @fullscreen={{info.topicProgressExpanded}}
+                  @info={{info}}
                   @jumpBottom={{@controller.jumpBottom}}
                   @jumpEnd={{@controller.jumpEnd}}
                   @jumpToIndex={{@controller.jumpToIndex}}
-                  @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                  @jumpTop={{@controller.jumpTop}}
+                  @jumpToPostPrompt={{@controller.jumpToPostPrompt}}
+                  @model={{@controller.model}}
+                  @prevEvent={{info.prevEvent}}
+                  @recoverTopic={{@controller.recoverTopic}}
+                  @replyToPost={{@controller.replyToPost}}
+                  @resetBumpDate={{@controller.resetBumpDate}}
+                  @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
+                  @showFeatureTopic={{routeAction "showFeatureTopic"}}
                   @showTopicSlowModeUpdate={{routeAction
                     "showTopicSlowModeUpdate"
                   }}
-                  @deleteTopic={{@controller.deleteTopic}}
-                  @recoverTopic={{@controller.recoverTopic}}
-                  @toggleClosed={{@controller.toggleClosed}}
-                  @toggleArchived={{@controller.toggleArchived}}
-                  @toggleVisibility={{@controller.toggleVisibility}}
                   @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-                  @showFeatureTopic={{routeAction "showFeatureTopic"}}
-                  @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
-                  @resetBumpDate={{@controller.resetBumpDate}}
-                  @convertToPublicTopic={{@controller.convertToPublicTopic}}
-                  @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
-                  @fullscreen={{info.topicProgressExpanded}}
+                  @showTopReplies={{@controller.showTopReplies}}
+                  @toggleArchived={{@controller.toggleArchived}}
+                  @toggleClosed={{@controller.toggleClosed}}
+                  @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                  @toggleVisibility={{@controller.toggleVisibility}}
                 />
               {{else}}
                 <TopicProgress
+                  @jumpToPost={{@controller.jumpToPost}}
+                  @onExpandToggle={{toggleProgressExpansion}}
                   @prevEvent={{info.prevEvent}}
                   @topic={{@controller.model}}
-                  @onExpandToggle={{toggleProgressExpansion}}
-                  @jumpToPost={{@controller.jumpToPost}}
                 >
                   <PluginOutlet
-                    @name="before-topic-progress"
                     @connectorTagName="div"
+                    @name="before-topic-progress"
                     @outletArgs={{lazyHash
                       model=@controller.model
                       jumpToPost=@controller.jumpToPost
                     }}
                   />
                   <TopicAdminMenu
-                    @topic={{@controller.model}}
-                    @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                    @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                    @convertToPublicTopic={{@controller.convertToPublicTopic}}
+                    @deleteTopic={{@controller.deleteTopic}}
+                    @recoverTopic={{@controller.recoverTopic}}
+                    @resetBumpDate={{@controller.resetBumpDate}}
+                    @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
+                    @showFeatureTopic={{routeAction "showFeatureTopic"}}
                     @showTopicSlowModeUpdate={{routeAction
                       "showTopicSlowModeUpdate"
                     }}
-                    @deleteTopic={{@controller.deleteTopic}}
-                    @recoverTopic={{@controller.recoverTopic}}
-                    @toggleClosed={{@controller.toggleClosed}}
-                    @toggleArchived={{@controller.toggleArchived}}
-                    @toggleVisibility={{@controller.toggleVisibility}}
                     @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-                    @showFeatureTopic={{routeAction "showFeatureTopic"}}
-                    @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
-                    @resetBumpDate={{@controller.resetBumpDate}}
-                    @convertToPublicTopic={{@controller.convertToPublicTopic}}
-                    @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                    @toggleArchived={{@controller.toggleArchived}}
+                    @toggleClosed={{@controller.toggleClosed}}
+                    @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                    @toggleVisibility={{@controller.toggleVisibility}}
+                    @topic={{@controller.model}}
                   />
                   {{#if @controller.model.has_localized_content}}
                     <TopicContentLanguagePreferences />
@@ -459,8 +459,8 @@ export default <template>
               {{/if}}
 
               <PluginOutlet
-                @name="topic-navigation-bottom"
                 @connectorTagName="div"
+                @name="topic-navigation-bottom"
                 @outletArgs={{lazyHash model=@controller.model}}
               />
             </TopicNavigation>
@@ -468,14 +468,14 @@ export default <template>
             <div class="row">
               <section
                 class="topic-area"
-                id="topic"
                 data-topic-id={{@controller.model.id}}
+                id="topic"
               >
                 <div class="posts-wrapper">
                   <span>
                     <PluginOutlet
-                      @name="topic-above-posts"
                       @connectorTagName="div"
+                      @name="topic-above-posts"
                       @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
@@ -486,57 +486,57 @@ export default <template>
 
                   {{#unless @controller.model.postStream.loadingFilter}}
                     <PostStream
-                      @postStream={{@controller.model.postStream}}
-                      @canCreatePost={{@controller.model.details.can_create_post}}
-                      @multiSelect={{@controller.multiSelect}}
-                      @selectedPostsCount={{@controller.selectedPostsCount}}
-                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
-                      @selectedQuery={{@controller.selectedQuery}}
-                      @gaps={{@controller.model.postStream.gaps}}
-                      @showReadIndicator={{@controller.model.show_read_indicator}}
-                      @streamFilters={{@controller.model.postStream.streamFilters}}
-                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
-                      @highestPostNumber={{@controller.highestPostNumber}}
-                      @showFlags={{@controller.showPostFlags}}
-                      @editPost={{@controller.editPost}}
-                      @showHistory={{routeAction "showHistory"}}
-                      @showLogin={{routeAction "showLogin"}}
-                      @showRawEmail={{routeAction "showRawEmail"}}
-                      @deletePost={{@controller.deletePost}}
-                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
-                      @recoverPost={{@controller.recoverPost}}
-                      @expandHidden={{@controller.expandHidden}}
-                      @toggleBookmark={{@controller.toggleBookmark}}
-                      @togglePostType={{@controller.togglePostType}}
-                      @rebakePost={{@controller.rebakePost}}
-                      @changePostOwner={{@controller.changePostOwner}}
-                      @grantBadge={{@controller.grantBadge}}
-                      @changeNotice={{@controller.changeNotice}}
-                      @lockPost={{@controller.lockPost}}
-                      @unlockPost={{@controller.unlockPost}}
-                      @unhidePost={{@controller.unhidePost}}
-                      @replyToPost={{@controller.replyToPost}}
-                      @toggleWiki={{@controller.toggleWiki}}
-                      @showTopReplies={{@controller.showTopReplies}}
+                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
                       @cancelFilter={{@controller.cancelFilter}}
-                      @removeAllowedUser={{@controller.removeAllowedUser}}
-                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
-                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @canCreatePost={{@controller.model.details.can_create_post}}
+                      @changeNotice={{@controller.changeNotice}}
+                      @changePostOwner={{@controller.changePostOwner}}
                       @currentPostChanged={{@controller.currentPostChanged}}
                       @currentPostScrolled={{@controller.currentPostScrolled}}
-                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
-                      @togglePostSelection={{@controller.togglePostSelection}}
-                      @selectReplies={{@controller.selectReplies}}
-                      @selectBelow={{@controller.selectBelow}}
-                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @deletePost={{@controller.deletePost}}
+                      @editPost={{@controller.editPost}}
+                      @expandHidden={{@controller.expandHidden}}
                       @fillGapAfter={{@controller.fillGapAfter}}
-                      @showInvite={{routeAction "showInvite"}}
-                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
                       @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
-                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @gaps={{@controller.model.postStream.gaps}}
+                      @grantBadge={{@controller.grantBadge}}
+                      @highestPostNumber={{@controller.highestPostNumber}}
+                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
+                      @lockPost={{@controller.lockPost}}
+                      @multiSelect={{@controller.multiSelect}}
+                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
                       @postSelected={{@controller.postSelected}}
-                      @topicPageQueryParams={{@controller.topicPageQueryParams}}
+                      @postStream={{@controller.model.postStream}}
+                      @rebakePost={{@controller.rebakePost}}
+                      @recoverPost={{@controller.recoverPost}}
+                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                      @removeAllowedUser={{@controller.removeAllowedUser}}
+                      @replyToPost={{@controller.replyToPost}}
+                      @selectBelow={{@controller.selectBelow}}
+                      @selectedPostsCount={{@controller.selectedPostsCount}}
+                      @selectedQuery={{@controller.selectedQuery}}
+                      @selectReplies={{@controller.selectReplies}}
+                      @showFlags={{@controller.showPostFlags}}
+                      @showHistory={{routeAction "showHistory"}}
+                      @showInvite={{routeAction "showInvite"}}
+                      @showLogin={{routeAction "showLogin"}}
+                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @showRawEmail={{routeAction "showRawEmail"}}
+                      @showReadIndicator={{@controller.model.show_read_indicator}}
+                      @showTopReplies={{@controller.showTopReplies}}
+                      @streamFilters={{@controller.model.postStream.streamFilters}}
+                      @toggleBookmark={{@controller.toggleBookmark}}
+                      @togglePostSelection={{@controller.togglePostSelection}}
+                      @togglePostType={{@controller.togglePostType}}
+                      @toggleWiki={{@controller.toggleWiki}}
                       @topic={{@controller.model}}
+                      @topicPageQueryParams={{@controller.topicPageQueryParams}}
+                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @unhidePost={{@controller.unhidePost}}
+                      @unlockPost={{@controller.unlockPost}}
+                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
                     />
                   {{/unless}}
 
@@ -585,10 +585,10 @@ export default <template>
                                 @outletArgs={{lazyHash pending=pending}}
                               />
                               <DButton
-                                @label="review.delete"
-                                @icon="trash-can"
-                                @action={{fn @controller.deletePending pending}}
                                 class="btn-danger"
+                                @action={{fn @controller.deletePending pending}}
+                                @icon="trash-can"
+                                @label="review.delete"
                               />
                             </div>
                           </div>
@@ -608,12 +608,12 @@ export default <template>
                         </div>
 
                         <LinkTo
-                          @route="review"
                           @query={{hash
                             topic_id=@controller.model.id
                             type="ReviewableQueuedPost"
                             status="pending"
                           }}
+                          @route="review"
                         >
                           {{i18n "review.view_pending"}}
                         </LinkTo>
@@ -626,19 +626,19 @@ export default <template>
                     />
 
                     <TopicTimerInfo
-                      @topicClosed={{@controller.model.closed}}
-                      @statusType={{@controller.model.topic_timer.status_type}}
-                      @statusUpdate={{@controller.model.topic_status_update}}
-                      @executeAt={{@controller.model.topic_timer.execute_at}}
                       @basedOnLastPost={{@controller.model.topic_timer.based_on_last_post}}
-                      @durationMinutes={{@controller.model.topic_timer.duration_minutes}}
                       @categoryId={{@controller.model.topic_timer.category_id}}
-                      @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
+                      @durationMinutes={{@controller.model.topic_timer.duration_minutes}}
+                      @executeAt={{@controller.model.topic_timer.execute_at}}
                       @removeTopicTimer={{fn
                         @controller.removeTopicTimer
                         @controller.model.topic_timer.status_type
                         "topic_timer"
                       }}
+                      @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
+                      @statusType={{@controller.model.topic_timer.status_type}}
+                      @statusUpdate={{@controller.model.topic_status_update}}
+                      @topicClosed={{@controller.model.closed}}
                     />
 
                     {{#if @controller.showSelectedPostsAtBottom}}
@@ -648,18 +648,18 @@ export default <template>
                           {{if @controller.showSelectedPostsAtBottom 'hidden'}}"
                       >
                         <SelectedPosts
-                          @selectedPostsCount={{@controller.selectedPostsCount}}
-                          @canSelectAll={{@controller.canSelectAll}}
-                          @canDeselectAll={{@controller.canDeselectAll}}
-                          @canDeleteSelected={{@controller.canDeleteSelected}}
-                          @canMergeTopic={{@controller.canMergeTopic}}
                           @canChangeOwner={{@controller.canChangeOwner}}
+                          @canDeleteSelected={{@controller.canDeleteSelected}}
+                          @canDeselectAll={{@controller.canDeselectAll}}
                           @canMergePosts={{@controller.canMergePosts}}
-                          @toggleMultiSelect={{@controller.toggleMultiSelect}}
-                          @mergePosts={{@controller.mergePosts}}
+                          @canMergeTopic={{@controller.canMergeTopic}}
+                          @canSelectAll={{@controller.canSelectAll}}
                           @deleteSelected={{@controller.deleteSelected}}
                           @deselectAll={{@controller.deselectAll}}
+                          @mergePosts={{@controller.mergePosts}}
                           @selectAll={{@controller.selectAll}}
+                          @selectedPostsCount={{@controller.selectedPostsCount}}
+                          @toggleMultiSelect={{@controller.toggleMultiSelect}}
                         />
                       </div>
                     {{/if}}
@@ -668,8 +668,8 @@ export default <template>
                 </DConditionalLoadingSpinner>
 
                 <PluginOutlet
-                  @name="topic-area-bottom"
                   @connectorTagName="div"
+                  @name="topic-area-bottom"
                   @outletArgs={{lazyHash model=@controller.model}}
                 />
               </section>
@@ -684,36 +684,36 @@ export default <template>
               {{#if @controller.currentUser}}
                 <span>
                   <PluginOutlet
-                    @name="topic-above-footer-buttons"
                     @connectorTagName="div"
+                    @name="topic-above-footer-buttons"
                     @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
 
                 {{#if @controller.showTopicFooterButtons}}
                   <TopicFooterButtons
-                    @topic={{@controller.model}}
-                    @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                    @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                    @convertToPublicTopic={{@controller.convertToPublicTopic}}
+                    @deferTopic={{@controller.deferTopic}}
+                    @deleteTopic={{@controller.deleteTopic}}
+                    @editFirstPost={{@controller.editFirstPost}}
+                    @recoverTopic={{@controller.recoverTopic}}
+                    @replyToPost={{@controller.replyToPost}}
+                    @resetBumpDate={{@controller.resetBumpDate}}
+                    @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
+                    @showFeatureTopic={{routeAction "showFeatureTopic"}}
+                    @showFlagTopic={{routeAction "showFlagTopic"}}
                     @showTopicSlowModeUpdate={{routeAction
                       "showTopicSlowModeUpdate"
                     }}
-                    @deleteTopic={{@controller.deleteTopic}}
-                    @recoverTopic={{@controller.recoverTopic}}
-                    @toggleClosed={{@controller.toggleClosed}}
-                    @toggleArchived={{@controller.toggleArchived}}
-                    @toggleVisibility={{@controller.toggleVisibility}}
                     @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-                    @showFeatureTopic={{routeAction "showFeatureTopic"}}
-                    @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
-                    @resetBumpDate={{@controller.resetBumpDate}}
-                    @convertToPublicTopic={{@controller.convertToPublicTopic}}
-                    @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
-                    @toggleBookmark={{@controller.toggleBookmark}}
-                    @showFlagTopic={{routeAction "showFlagTopic"}}
+                    @toggleArchived={{@controller.toggleArchived}}
                     @toggleArchiveMessage={{@controller.toggleArchiveMessage}}
-                    @editFirstPost={{@controller.editFirstPost}}
-                    @deferTopic={{@controller.deferTopic}}
-                    @replyToPost={{@controller.replyToPost}}
+                    @toggleBookmark={{@controller.toggleBookmark}}
+                    @toggleClosed={{@controller.toggleClosed}}
+                    @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                    @toggleVisibility={{@controller.toggleVisibility}}
+                    @topic={{@controller.model}}
                   />
                 {{/if}}
               {{else}}
@@ -725,8 +725,8 @@ export default <template>
 
             <span>
               <PluginOutlet
-                @name="topic-above-suggested"
                 @connectorTagName="div"
+                @name="topic-above-suggested"
                 @outletArgs={{lazyHash model=@controller.model}}
               />
             </span>
@@ -752,18 +752,18 @@ export default <template>
                   {{#if @controller.model.noRetry}}
                     {{#unless @controller.currentUser}}
                       <DButton
+                        class="btn-primary topic-retry"
                         @action={{routeAction "showLogin"}}
                         @icon="user"
                         @label="log_in"
-                        class="btn-primary topic-retry"
                       />
                     {{/unless}}
                   {{else}}
                     <DButton
+                      class="btn-primary topic-retry"
                       @action={{@controller.retryLoading}}
                       @icon="arrows-rotate"
                       @label="errors.buttons.again"
-                      class="btn-primary topic-retry"
                     />
                   {{/if}}
                 </div>
@@ -777,10 +777,10 @@ export default <template>
 
         {{#each (array @controller.model) as |topic|}}
           <PostTextSelection
-            @quoteState={{@controller.quoteState}}
-            @selectText={{@controller.selectText}}
             @buildQuoteMarkdown={{@controller.buildQuoteMarkdown}}
             @editPost={{@controller.editPost}}
+            @quoteState={{@controller.quoteState}}
+            @selectText={{@controller.selectText}}
             @topic={{topic}}
           />
         {{/each}}

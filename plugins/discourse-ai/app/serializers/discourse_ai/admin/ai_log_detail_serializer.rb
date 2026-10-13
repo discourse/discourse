@@ -19,9 +19,12 @@ module DiscourseAi
                  :post_id,
                  :request_tokens,
                  :response_tokens,
+                 :reasoning_tokens,
                  :cache_read_tokens,
                  :cache_write_tokens,
                  :response_status,
+                 :outcome,
+                 :stop_reason,
                  :duration_msecs,
                  :time_to_first_token_msecs,
                  :spending,
@@ -40,6 +43,10 @@ module DiscourseAi
           object.raw_response_payload,
           truncated: raw_response_payload_truncated,
         )
+      end
+
+      def outcome
+        AiLogSerializerHelpers.outcome(object)
       end
 
       def provider_name

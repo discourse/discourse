@@ -477,18 +477,18 @@ RSpec.describe "tasks/release" do
     let(:pr_list_json) do
       [
         {
-          "number" => 1,
-          "title" => "Security fix one",
-          "body" =>
-            "Description for fix one\nhttps://github.com/discourse/discourse/security/advisories/GHSA-1111-2222-3333",
-          "headRefName" => "security-fix-one",
-        },
-        {
           "number" => 2,
           "title" => "Security fix two",
           "body" =>
             "https://github.com/discourse/discourse/security/advisories/GHSA-aaaa-bbbb-cccc",
           "headRefName" => "security-fix-two",
+        },
+        {
+          "number" => 1,
+          "title" => "Security fix one",
+          "body" =>
+            "Description for fix one\nhttps://github.com/discourse/discourse/security/advisories/GHSA-1111-2222-3333",
+          "headRefName" => "security-fix-one",
         },
       ].to_json
     end

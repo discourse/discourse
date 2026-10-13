@@ -140,26 +140,26 @@ export default class ExplorerSchema extends Component {
   <template>
     {{#if @hideSchema}}
       <DButton
-        @action={{this.expandSchema}}
-        @icon="chevron-left"
-        @ariaLabel="explorer.schema.show"
         class="schema__toggle --expand no-text unhide"
+        @action={{this.expandSchema}}
+        @ariaLabel="explorer.schema.show"
+        @icon="chevron-left"
       />
     {{else}}
       <div class="schema">
         <div class="schema-search">
           {{dIcon "magnifying-glass" class="schema-search__icon"}}
           <input
-            type="text"
             class="schema-search__input"
             placeholder={{i18n "explorer.schema.search_tables"}}
+            type="text"
             {{on "input" (withEventValue this.filterChanged)}}
           />
           <DButton
-            @action={{this.collapseSchema}}
-            @icon="chevron-right"
-            @ariaLabel="explorer.schema.hide"
             class="schema__toggle --collapse no-text"
+            @action={{this.collapseSchema}}
+            @ariaLabel="explorer.schema.hide"
+            @icon="chevron-right"
           />
         </div>
 

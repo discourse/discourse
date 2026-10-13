@@ -14,10 +14,6 @@ import SelectedFlair from "./selected-flair";
 })
 @pluginApiIdentifiers(["flair-chooser"])
 export default class FlairChooser extends ComboBoxComponent {
-  modifyComponentForRow() {
-    return FlairRow;
-  }
-
   @computed("value", "content.[]", "selectKit.noneItem")
   get selectedContent() {
     const content = (this.content || []).find(
@@ -29,5 +25,9 @@ export default class FlairChooser extends ComboBoxComponent {
     } else {
       return this.selectKit.noneItem;
     }
+  }
+
+  modifyComponentForRow() {
+    return FlairRow;
   }
 }

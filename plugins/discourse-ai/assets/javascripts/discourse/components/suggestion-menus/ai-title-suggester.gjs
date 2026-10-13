@@ -99,25 +99,25 @@ export default class AiTitleSuggester extends Component {
   <template>
     {{#if this.showSuggestionButton}}
       <DMenu
-        @title={{i18n "discourse_ai.ai_helper.suggest"}}
+        @contentClass="ai-suggestions-menu"
         @icon={{this.triggerIcon}}
         @identifier="ai-title-suggester"
+        @modalForMobile={{true}}
         @onClose={{this.onClose}}
+        @onRegisterApi={{this.onRegisterApi}}
+        @title={{i18n "discourse_ai.ai_helper.suggest"}}
         @triggerClass="suggestion-button suggest-titles-button {{if
           this.loading
           'is-loading'
         }}"
-        @contentClass="ai-suggestions-menu"
-        @onRegisterApi={{this.onRegisterApi}}
-        @modalForMobile={{true}}
         @untriggers={{array}}
         {{on "click" this.loadSuggestions}}
       >
         <:content>
           {{#if this.showDropdown}}
             <AiTitleSuggestionsList
-              @suggestions={{this.suggestions}}
               @onSelect={{this.applySuggestion}}
+              @suggestions={{this.suggestions}}
             />
           {{/if}}
         </:content>

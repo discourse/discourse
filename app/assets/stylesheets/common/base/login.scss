@@ -43,6 +43,10 @@ body.invite-page {
     flex-direction: column;
     width: 400px;
 
+    &__password {
+      width: 100%;
+    }
+
     .input {
       position: relative;
       margin-bottom: 1em;

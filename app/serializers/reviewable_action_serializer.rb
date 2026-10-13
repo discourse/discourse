@@ -12,7 +12,8 @@ class ReviewableActionSerializer < ApplicationSerializer
              :server_action,
              :client_action,
              :require_reject_reason,
-             :completed_message
+             :completed_message,
+             :penalty_effect
 
   def label
     I18n.t(object.label)
@@ -52,5 +53,9 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def include_require_reject_reason?
     object.require_reject_reason.present?
+  end
+
+  def include_penalty_effect?
+    object.penalty_effect.present?
   end
 end

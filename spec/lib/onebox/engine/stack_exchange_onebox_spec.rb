@@ -31,7 +31,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
         expect(described_class === URI("http://#{domain}/a/55503")).to eq(true)
       end
 
-      it "matches question with long URL on #{domain}" do
+      it "matches an answer URL with a fragment on #{domain}" do
         expect(
           described_class === URI("http://#{domain}/questions/55495/title-of-question/55503#55503"),
         ).to eq(true)

@@ -116,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -814,6 +818,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 
