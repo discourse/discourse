@@ -208,6 +208,9 @@ en:
         invalid_query: "Invalid query: %{errors}"
         invalid_row: "Invalid row: %{errors}"
         filter_required: "Filter must not be empty"
+        no_columns_to_insert: "Cannot insert a row without any column values."
+        empty_column_expression: "Column '%{column}' has an empty expression."
+        invalid_columns: "Columns must be an object of column names to values, got '%{value}'."
       workflow_version:
         referenced_by_workflow: "Cannot delete a workflow version that is still referenced as the current or active version."
       workflow_call:

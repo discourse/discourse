@@ -53,7 +53,10 @@ module DiscourseWorkflows
       end
 
       def insert_rows(rows, return_type)
-        inserted_rows = rows.map { |row| @facade.insert(build_row_input(row)) }
+        # Validate every row up front so an invalid row fails before any row is inserted.
+        row_inputs =
+          rows.map { |row| build_row_input(row).tap { |input| ensure_insertable!(input) } }
+        inserted_rows = row_inputs.map { |row_input| @facade.insert(row_input) }
 
         case return_type.to_s
         when "all"
@@ -70,28 +73,27 @@ module DiscourseWorkflows
       def update_rows(options)
         options = normalize_options(options)
         query = build_query(options, optional_filter: false)
-        row_input = build_row_input(options["data"] || {})
+        row_input = build_row_input(options["data"])
         rows = @facade.query(query)[:rows]
 
         return dry_run_update_rows(rows, row_input) if options["dry_run"]
 
-        rows.filter_map { |row| @facade.update_row(row_id: row.fetch("id"), row_input:) }
+        update_matching_rows(rows, row_input)
       end
 
       def upsert_row(options)
         options = normalize_options(options)
         query = build_query(options, optional_filter: false)
-        row_input = build_row_input(options["data"] || {})
+        row_input = build_row_input(options["data"])
         matching_rows = @facade.query(query)[:rows]
 
         if matching_rows.present?
           return dry_run_update_rows(matching_rows, row_input) if options["dry_run"]
 
-          matching_rows.filter_map { |row| @facade.update_row(row_id: row.fetch("id"), row_input:) }
-        elsif options["dry_run"]
-          [dry_run_insert_row(row_input)]
+          update_matching_rows(matching_rows, row_input)
         else
-          [@facade.insert(row_input)]
+          ensure_insertable!(row_input)
+          [options["dry_run"] ? dry_run_insert_row(row_input) : @facade.insert(row_input)]
         end
       end
 
@@ -172,9 +174,22 @@ module DiscourseWorkflows
 
       def build_row_input(data)
         row_input =
-          @facade.build_row_input(data: @columns_resolver.resolve(data || {}), fill_missing: false)
+          @facade.build_row_input(data: @columns_resolver.resolve(data), fill_missing: false)
         raise_invalid(:row, row_input) if row_input.invalid?
         row_input
+      end
+
+      def ensure_insertable!(row_input)
+        return if row_input.columns.present?
+
+        raise ArgumentError, I18n.t("discourse_workflows.errors.data_table.no_columns_to_insert")
+      end
+
+      # Nothing to write still counts as a match, so the rows flow on unchanged.
+      def update_matching_rows(rows, row_input)
+        return rows if row_input.columns.empty?
+
+        rows.filter_map { |row| @facade.update_row(row_id: row.fetch("id"), row_input:) }
       end
 
       def dry_run_update_rows(rows, row_input)

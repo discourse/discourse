@@ -642,6 +642,21 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
   end
 
+  describe ".empty_expression?" do
+    it "is true only for an expression with nothing to evaluate" do
+      {
+        "=" => true,
+        "=  " => true,
+        "={{ }}" => true,
+        "= {{   }} " => true,
+        "={{ x }}" => false,
+        "={{ }}{{ x }}" => false,
+        "" => false,
+        nil => false,
+      }.each { |value, expected| expect(described_class.empty_expression?(value)).to eq(expected) }
+    end
+  end
+
   describe ".resolve" do
     fab!(:user)
 
