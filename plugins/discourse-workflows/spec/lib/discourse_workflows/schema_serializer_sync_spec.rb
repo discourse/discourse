@@ -53,13 +53,6 @@ RSpec.describe DiscourseWorkflows::Schema do
     )
   end
 
-  it "matches BasicUserSerializer" do
-    expect_ledger(
-      described_class::BASIC_USER_PROPERTIES,
-      serialized_keys(BasicUserSerializer, user),
-    )
-  end
-
   it "matches DiscourseWorkflows::PostSerializer" do
     expect_ledger(
       described_class::POST_PROPERTIES,

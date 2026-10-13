@@ -53,6 +53,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatMessageCreated::V1 do
       id: message.id,
       message: message.message,
       chat_channel_id: channel.id,
+      url: message.full_url,
     )
     expect(output[:channel]).to include(id: channel.id, slug: channel.slug)
     expect(output[:user]).to include(
@@ -60,6 +61,13 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatMessageCreated::V1 do
       username: user.username,
       avatar_template: user.avatar_template,
     )
+    expect(output).to match_node_output_schema(described_class)
+  end
+
+  it "returns a nil user when there is no user", :aggregate_failures do
+    output = described_class.new(message, channel, nil).output
+
+    expect(output[:user]).to be_nil
     expect(output).to match_node_output_schema(described_class)
   end
 

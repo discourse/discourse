@@ -112,15 +112,6 @@ module DiscourseWorkflows
       }
     JSON
 
-    BASIC_USER_PROPERTIES = JSON.parse(<<~JSON).freeze
-      {
-        "id": { "type": "integer" },
-        "username": { "type": "string" },
-        "name": { "type": ["string", "null"] },
-        "avatar_template": { "type": "string" }
-      }
-    JSON
-
     USER_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },
@@ -176,9 +167,26 @@ module DiscourseWorkflows
 
     TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "Workflow topic payload")
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
-    BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
     ACTOR_SCHEMA = document("actor" => nullable_user("User who performed the action"))
+    ASSIGNEE_PROPERTIES = {
+      "type" => "object",
+      "properties" => {
+        "type" => {
+          "type" => %w[string null],
+        },
+        "user" => {
+          "type" => "object",
+          "x-optional" => true,
+          "properties" => USER_PROPERTIES,
+        },
+        "group" => {
+          "type" => "object",
+          "x-optional" => true,
+          "properties" => BASIC_GROUP_PROPERTIES,
+        },
+      },
+    }.freeze
     IP_LOCATION_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "type": ["object", "null"],

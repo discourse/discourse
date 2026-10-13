@@ -59,10 +59,7 @@ module DiscourseWorkflows
 
       case assignee
       when ::User
-        base.merge(
-          type: "user",
-          user: serialize_record(assignee, BasicUserSerializer, scope: guardian),
-        )
+        base.merge(type: "user", user: serialize_user(assignee, guardian:))
       when ::Group
         base.merge(
           type: "group",
