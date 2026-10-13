@@ -242,20 +242,20 @@ plugins:
       - discourse_workflows_workflow_versions
       - discourse_workflows_workflows
     columns: {}
+  live:
+    tables:
+      - live_co_presences
+      - live_invites
+      - live_recordings
+      - live_room_memberships
+      - live_rooms
+      - live_sessions
+    columns: {}
   poll:
     tables:
       - poll_options
       - poll_votes
       - polls
-    columns: {}
-  voice:
-    tables:
-      - voice_co_presences
-      - voice_invites
-      - voice_recordings
-      - voice_room_memberships
-      - voice_rooms
-      - voice_sessions
     columns: {}
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
@@ -291,8 +291,8 @@ plugin_checksums:
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
   discourse-workflows: 61c0d4b94a17ad401490893981b23dd4
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
+  live: 5d2055c156c12692f3a93b32b49826ea
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
-  voice: cf9c46b63d1ee4c208e822201838cd52
 failed_plugins: []
 incomplete: false

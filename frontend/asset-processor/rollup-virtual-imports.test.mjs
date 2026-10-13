@@ -101,7 +101,7 @@ describe("virtual:entrypoint", () => {
       // so a plugin is free to keep these below the top level.
       const nested = entrypoint(
         [
-          "discourse/app/services/voice-webrtc.js",
+          "discourse/app/services/live-webrtc.js",
           "discourse/lib/discourse-markdown/spoiler.js",
           "discourse-markdown/graphviz.js",
           "pre-initializers/h-captcha.js",
@@ -111,7 +111,7 @@ describe("virtual:entrypoint", () => {
       );
 
       for (const name of [
-        "discourse/app/services/voice-webrtc",
+        "discourse/app/services/live-webrtc",
         "discourse/lib/discourse-markdown/spoiler",
         "discourse-markdown/graphviz",
         "pre-initializers/h-captcha",
