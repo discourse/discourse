@@ -59,6 +59,22 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
       expect(output).to match_node_output_schema(klass)
     end
 
+    context "with V2" do
+      %w[PostDestroyed PostRecovered].each do |node|
+        context "with #{node}" do
+          let(:klass) { "DiscourseWorkflows::Nodes::#{node}::V2".constantize }
+
+          it "returns the author as user and the acting user as actor", :aggregate_failures do
+            output = trigger.output
+
+            expect(output[:user]).to include(id: post.user.id, username: post.user.username)
+            expect(output[:actor]).to include(id: actor.id, username: actor.username)
+            expect(output).to match_node_output_schema(klass)
+          end
+        end
+      end
+    end
+
     it "keeps topic-derived post fields when the topic went down with the post",
        :aggregate_failures do
       PostDestroyer.new(actor, first_post).destroy

@@ -96,7 +96,7 @@ module DiscourseWorkflows
     def tags
       return [] if topic.blank? || !SiteSetting.tagging_enabled
 
-      topic.tags.visible(scope).pluck(:name)
+      topic.visible_tags(scope).map(&:name)
     end
 
     def upload_ids

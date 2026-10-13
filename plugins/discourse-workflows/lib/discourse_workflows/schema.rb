@@ -171,6 +171,7 @@ module DiscourseWorkflows
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
     ACTOR_SCHEMA = document("actor" => nullable_user("User who performed the action"))
     POST_AUTHOR_SCHEMA = document("user" => nullable_user("Post author"))
+    TOPIC_AUTHOR_SCHEMA = document("user" => nullable_user("Topic author"))
     ASSIGNEE_PROPERTIES = {
       "type" => "object",
       "properties" => {
