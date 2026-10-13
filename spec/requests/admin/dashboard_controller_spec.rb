@@ -36,7 +36,7 @@ RSpec.describe Admin::DashboardController do
       },
     ]
 
-    Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+    DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
   end
 
   describe "#index" do
