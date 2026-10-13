@@ -6,6 +6,8 @@
 
 he:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "רישום מנהלים בלבד"
     user_api_key:
       title: 'אישור של „%{application_name}”'
       authorize: "אישור"
@@ -521,7 +523,9 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      launch_in_easy_steps: "הקמת הקהילה שלך"
       select_theme:
+        title: "התאמת האתר שלך"
         action: "הצגת האפשרויות"
         completed: "שינוי האפשרויות"
         show_light_screenshot: "הצגת צילום מסך בהיר"
@@ -531,6 +535,7 @@ he:
         action: "יצירת הזמנה"
       start_posting:
         action: "הצגת רעיונות"
+        completed: "הצגת רעיונות נוספים"
         choose_option: "איך בא לך להתחיל?"
         predefined_topics: "תבניות שוברות קרח"
         predefined_topics_subtitle: "לספק לחברים חדשים נושא לשיחה, נא לבחור תבנית לעריכה וליצור תבנית משלך."
@@ -555,6 +560,7 @@ he:
       launch: "אשף עיצוב"
       sections:
         theme: "ערכת עיצוב"
+        colors: "צבע ברירת מחדל"
         fonts: "גופנים"
         homepage: "דף הבית"
         welcome_banner: "כרזת קבלת פנים"
@@ -572,7 +578,9 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+          only: "קטגוריות בלבד"
       welcome_banner:
+        enable: "הצגת כרזת קבלת פנים"
         location: "מקום כרזה"
         locations:
           below_site_header: "מתחת לכותרת האתר"
@@ -1352,6 +1360,7 @@ he:
             from_alias_hint: "כינוי בו יש להשתמש בתור כתוב מאת בעת שליחת הודעות SMTP קבוצתיות בדוא״ל. נא לשים לב שאולי חלק מספקי הדוא״ל לא תומכים בזה, נא להיעזר בתיעוד של ספק הדוא״ל שלך."
         membership:
           title: חברות
+          join_method_title: "איך משתמשים יכולים להצטרף?"
           join_method:
             invite: "בהזמנה בלבד"
         categories:
@@ -1702,7 +1711,11 @@ he:
           none: "כבוי"
           all: "פעיל"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
+        perm_default: "הפעלת התראות"
+        perm_denied_btn: "ההרשאה נדחתה"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
+        disable: "השבתת התראות"
+        enable: "הפעלת התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "התעלמות"
@@ -1833,12 +1846,19 @@ he:
       automatically_unpin_topics: "ביטול נעיצה אוטומטית של נושאים עם הגעה לתחתית"
       apps: "אפליקציות"
       mcp_authorizations:
+        title: "יישומי MCP"
+        application: "שם היישום"
         endpoint: "משאב"
         scopes: "תחומים"
+        permissions: "הרשאות (%{count})"
         details: "פרטים"
         last_used: "שימוש אחרון"
+        tokens: "אסימונים פעילים"
         never: "לעולם לא"
         status: "מצב"
+        revoke: "שלילת גישה"
+        revoked: "הגישה של שרת ה־MCP נשללה."
+        empty: "אין יישומי MCP שמחוברים לחשבון שלך."
         statuses:
           active: "פעיל"
           server_disabled: "השרת הושבת"
@@ -2745,6 +2765,7 @@ he:
         }.
     learn_more: "מידע נוסף…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>משוב…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -2863,6 +2884,9 @@ he:
       email_label: "דוא״ל"
       continue_button: "המשך"
       verify_button: "המשך"
+      code_resent: "שלחנו קוד חדש."
+      use_different_email: "להשתמש בכתובת דוא״ל חלופית"
+      use_password_instead: "להיכנס עם הסיסמה שלך במקום"
       signup_title: "יצירת חשבון משלך"
       account_ready_continue: "המשך"
       username_label: "שם משתמש"
