@@ -199,4 +199,56 @@ describe "Admin Flags Page" do
     admin_flags_page.visit.toggle_flag_menu("off_topic")
     expect(admin_flags_page).to have_no_item_action("move-up")
   end
+
+  # TODO (ui-kit-reorderable-list-cleanup) fold these over the reordering in
+  # the first example once the change ships.
+  context "when enable_new_reordering_controls is enabled" do
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "keeps a flag where the admin moved it through the menu" do
+      admin_flags_page.visit
+
+      admin_flags_page.move_up_via_list("illegal")
+      expect(admin_flags_page).to have_saved_flag("illegal")
+      admin_flags_page.move_to_top_via_list("notify_moderators")
+      expect(admin_flags_page).to have_saved_flag("notify_moderators")
+
+      page.refresh
+
+      expect(admin_flags_page).to have_flags_in_order(
+        "Send @%{username} a message",
+        "Something Else",
+        "Off-Topic",
+        "Inappropriate",
+        "Illegal",
+        "Spam",
+      )
+    end
+
+    it "keeps a flag where the admin dragged it" do
+      admin_flags_page.visit
+
+      admin_flags_page.drag_flag_above("off_topic", "illegal")
+      expect(admin_flags_page).to have_flags_in_order(
+        "Send @%{username} a message",
+        "Inappropriate",
+        "Spam",
+        "Off-Topic",
+        "Illegal",
+        "Something Else",
+      )
+      expect(admin_flags_page).to have_saved_flag("off_topic")
+
+      page.refresh
+
+      expect(admin_flags_page).to have_flags_in_order(
+        "Send @%{username} a message",
+        "Inappropriate",
+        "Spam",
+        "Off-Topic",
+        "Illegal",
+        "Something Else",
+      )
+    end
+  end
 end

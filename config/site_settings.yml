@@ -4829,6 +4829,15 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
+  enable_new_reordering_controls:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
     default: false
     client: true

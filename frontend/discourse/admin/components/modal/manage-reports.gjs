@@ -20,6 +20,8 @@ const VISIBLE_CAP = 10;
 const SEARCH_DEBOUNCE_MS = 200;
 const ARIA_LABEL_PREFIX = "admin.dashboard.reports_section.modal";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `manage-reports-reorderable.gjs` replaces it.
 export default class ManageReports extends Component {
   @tracked allKeys = [];
   @tracked providers = [];

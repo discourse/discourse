@@ -530,6 +530,7 @@ Discourse::Application.routes.draw do
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
+          put "move"
           member { get "/" => "flags#edit" }
         end
 
