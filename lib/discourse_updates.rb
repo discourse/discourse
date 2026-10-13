@@ -187,18 +187,20 @@ module DiscourseUpdates
     end
 
     def merge_new_features_with_upcoming_changes(new_features)
-      # Any new features that have an upcoming_change_setting_name that is not
-      # in the permanent upcoming changes list are excluded, since sites can
-      # have different versions of Discourse deployed and may not have the
-      # upcoming change or the same status.
+      # Only show feed items for upcoming changes that are permanent on this site,
+      # or that were permanent here before their setting was removed.
       permanent_upcoming_change_names =
         UpcomingChanges.permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
       new_features.reject! do |feature|
-        if feature[:upcoming_change_setting_name].present?
-          !permanent_upcoming_change_names.include?(feature[:upcoming_change_setting_name])
-        else
-          false
-        end
+        setting_name = feature[:upcoming_change_setting_name]
+        next false if setting_name.blank?
+
+        retired =
+          !SiteSetting.has_setting?(setting_name) &&
+            UpcomingChanges.current_statuses.dig(setting_name, :status) == "permanent"
+        next false if retired
+
+        !permanent_upcoming_change_names.include?(setting_name)
       end
 
       return new_features if permanent_upcoming_change_names.blank?

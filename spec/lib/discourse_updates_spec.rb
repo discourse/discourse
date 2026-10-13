@@ -580,7 +580,7 @@ RSpec.describe DiscourseUpdates do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
           expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
-            :enable_upload_debug_mode,
+            "enable_upload_debug_mode",
           )
         end
       end
@@ -592,7 +592,47 @@ RSpec.describe DiscourseUpdates do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
           expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
-            :enable_upload_debug_mode,
+            "enable_upload_debug_mode",
+          )
+        end
+      end
+
+      context "when the upcoming change setting has been removed" do
+        let(:upcoming_change_setting_name) { "enable_removed_feature" }
+
+        def record_status_change(new_value)
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_removed_feature",
+            event_data: {
+              "previous_value" => "stable",
+              "new_value" => new_value,
+            },
+          )
+        end
+
+        it "keeps the feed item when the change was permanent on this site" do
+          record_status_change("permanent")
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "excludes the feed item when the change was not permanent on this site" do
+          record_status_change("beta")
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "excludes the feed item when this site never recorded the change" do
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_removed_feature",
           )
         end
       end
