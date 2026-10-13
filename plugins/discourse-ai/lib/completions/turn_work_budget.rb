@@ -5,6 +5,11 @@ module DiscourseAi
     # Work is new generation/evidence, never request usage or a monetary estimate.
     class TurnWorkBudget
       MAX_FINAL_ANSWER_TOKENS = 2048
+      # Thinking room on top of the visible final-answer cap, so a model
+      # that cannot disable thinking does not spend the answer budget
+      # deliberating. The final provider ceiling is the sum of the two.
+      MAX_FINAL_THINKING_ALLOWANCE = 2048
+      PLANNING_RESERVE_TOKENS = 2500
 
       Reservation = Struct.new(:tokens, :owner, :released)
       private_constant :Reservation
@@ -49,22 +54,71 @@ module DiscourseAi
       end
 
       def generation_options(options, maximum:, final: false, tools: false, root: false)
-        available = remaining
-        maximum = [maximum, MAX_FINAL_ANSWER_TOKENS].min if final
-        maximum = [maximum, available].min if !final || !root
-        maximum = [maximum, [available / 2, 1].max].min if !final && tools
-        resolved = options.merge(max_tokens: maximum, max_tokens_is_total: true)
-        resolved[:thinking_effort] = "none" if final
+        resolved = options.dup
+        thinking_allowance = resolved.delete(:thinking_allowance)
+
+        # Finalization is the bot's own bounded policy ("answer now"): the
+        # visible answer gets MAX_FINAL_ANSWER_TOKENS, with a separate
+        # thinking allowance on top bounding the provider ceiling.
+        if final
+          total_ceiling = MAX_FINAL_ANSWER_TOKENS + MAX_FINAL_THINKING_ALLOWANCE
+          maximum = [maximum || total_ceiling, total_ceiling].min
+        end
+
+        # A visible-response intent is not a provider ceiling: derive the
+        # provider total (visible + thinking allowance) and let any genuine
+        # provider ceiling (explicit max_tokens or model cap) bound it.
+        if !final && options[:max_response_tokens].to_i.positive?
+          derived =
+            options[:max_response_tokens].to_i +
+              (thinking_allowance || ThinkingConfig.response_allowance(options[:thinking_effort]))
+          maximum = maximum ? [maximum, derived].min : derived
+        end
+
+        # Nothing configured means no provider ceiling is sent at all; the
+        # budget still accounts for actual usage after each generation.
+        if maximum
+          available = remaining
+          maximum = [maximum, available].min if !final || !root
+          maximum = [maximum, [available / 2, 1].max].min if !final && tools
+          resolved = resolved.merge(max_tokens: maximum, max_tokens_is_total: true)
+        else
+          resolved.delete(:max_tokens)
+          resolved.delete(:max_tokens_is_total)
+        end
+
+        if final
+          existing_response = resolved[:max_response_tokens].to_i
+          resolved[:max_response_tokens] = [
+            existing_response.positive? ? existing_response : MAX_FINAL_ANSWER_TOKENS,
+            MAX_FINAL_ANSWER_TOKENS,
+            maximum,
+          ].min
+          resolved[:thinking_effort] = "none"
+        end
+
         resolved
       end
 
       # Capacity/history checks must precede the root-final claim; a duplicate claim returns nil.
       def reserve_generation_output(provider_output, max_tokens:, final: false, root: false)
-        maximum = [provider_output.to_i, max_tokens].max
-        if final && maximum > MAX_FINAL_ANSWER_TOKENS
+        # With no provider ceiling, the work reservation is a planning
+        # estimate only (context admission uses the provider output
+        # separately); it must not consume the whole remaining budget and
+        # starve helpers invoked while this generation is in flight.
+        maximum =
+          if max_tokens.nil?
+            [provider_output.to_i, PLANNING_RESERVE_TOKENS].min
+          else
+            [provider_output.to_i, max_tokens.to_i].max
+          end
+        if final && max_tokens && provider_output.to_i > max_tokens.to_i
           raise ContextPreparation::Error.new("final_output_limit")
         end
-        reservation = reserve_output(maximum, final: final && root, allow_overshoot: root)
+        # With no provider ceiling the generation is accounted post-hoc, so
+        # admission soft-reserves what work remains instead of rejecting.
+        reservation =
+          reserve_output(maximum, final: final && root, allow_overshoot: root || max_tokens.nil?)
         raise ContextPreparation::Error.new("turn_budget_exhausted") if !reservation
         if final && root && !claim_final_answer
           release_output(reservation)

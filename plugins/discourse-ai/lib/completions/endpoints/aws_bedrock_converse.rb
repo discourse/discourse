@@ -221,11 +221,16 @@ module DiscourseAi
                 processor.cache_read_input_tokens if processor.cache_read_input_tokens
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
-              update_completion_state(log, call_status, cancelled: cancelled)
+              update_completion_state(
+                log,
+                call_status,
+                cancelled: cancelled,
+                response_limit_tripped: !!execution_context&.response_limit_tripped,
+              )
               execution_context&.settle_generation(
                 tokens: log.response_tokens,
                 tokenizer: tokenizer,
-                complete: call_status == :success,
+                complete: call_status == :success && !cancelled,
               )
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
               log.response_status ||= 200 if call_status == :success
@@ -235,6 +240,7 @@ module DiscourseAi
               log.duration_msecs = (Time.now - start_time) * 1000
               log.time_to_first_token_msecs = time_to_first_token_msecs
               log.save!
+              execution_context.audit_log_id = log.id if execution_context
 
               execution_context&.token_usage_tracker&.add_from_audit_log(
                 log,
@@ -284,8 +290,11 @@ module DiscourseAi
 
         def default_options(dialect)
           options = {}
-          apply_anthropic_thinking_config!(options) if supports_anthropic_thinking?
-          apply_anthropic_effort_config!(options) if supports_anthropic_thinking?
+          if supports_anthropic_thinking?
+            options[:max_tokens] = effective_max_output_tokens
+            apply_anthropic_thinking_config!(options)
+            apply_anthropic_effort_config!(options)
+          end
 
           options
         end
@@ -346,7 +355,7 @@ module DiscourseAi
           options = default_options(dialect).merge(model_params.except(:response_format))
           apply_anthropic_thinking_config!(options)
 
-          params = { model_id: llm_model.name, messages: prompt.messages }
+          params = { model_id: bedrock_model_id, messages: prompt.messages }
 
           params[:system] = prompt.system if prompt.system.present?
 

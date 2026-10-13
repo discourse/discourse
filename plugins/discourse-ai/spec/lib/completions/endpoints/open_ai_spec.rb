@@ -538,7 +538,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
         response_status: 200,
         response_tokens: 1,
       )
-      expect(execution.work_budget.used).to eq(1)
+      # Cancelled streams settle as incomplete: exposed output wins over an
+      # early usage snapshot.
+      expect(execution.work_budget.used).to eq(
+        DiscourseAi::Completions::Llm.proxy(model).tokenizer.size(partial),
+      )
     end
   end
 
@@ -1250,6 +1254,34 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
         expect(body_parsed["messages"].first["content"]).to eq("You are a bot")
       end
 
+      it "supports gpt-6, remaps max_tokens, and uses developer message" do
+        model.update!(name: "gpt-6.1-sol")
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            "You are a bot",
+            messages: [type: :user, content: "hello"],
+          )
+        dialect = compliance.dialect(prompt: prompt)
+
+        body_parsed = nil
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+          body:
+            proc do |body|
+              body_parsed = JSON.parse(body)
+              true
+            end,
+        ).to_return(status: 200, body: { choices: [{ message: { content: "ok" } }] }.to_json)
+
+        endpoint.perform_completion!(dialect, user, { max_tokens: 321 })
+
+        expect(body_parsed["model"]).to eq("gpt-6.1-sol")
+        expect(body_parsed["max_completion_tokens"]).to eq(321)
+        expect(body_parsed["max_tokens"]).to be_nil
+        expect(body_parsed["messages"].first["role"]).to eq("developer")
+        expect(body_parsed["messages"].first["content"]).to eq("You are a bot")
+      end
+
       context "with tools" do
         it "returns a function invocation" do
           compliance.streaming_mode_tools(open_ai_mock)
@@ -1688,6 +1720,74 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("max")
     end
 
+    it "maps none to low for GPT-6 Astra, which does not support none" do
+      model.update!(name: "gpt-6-astra")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
+    it "maps none to low for GPT-6.1 Sol snapshots, which do not support none" do
+      model.update!(name: "gpt-6.1-sol-2026-09-01", provider_params: { reasoning_effort: "none" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
+    it "keeps none for GPT-6 Sol, which supports none" do
+      model.update!(name: "gpt-6-sol")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
+    it "uses native max effort for GPT-6 Astra" do
+      model.update!(name: "gpt-6-astra")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("max")
+    end
+
     it "uses native max effort for future OpenAI models by default" do
       model.update!(name: "gpt-5.7")
 
@@ -1748,6 +1848,14 @@ TEXT
       prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
 
       expect(prepared_params).not_to have_key(:reserved_output_tokens)
+    end
+
+    it "reserves output room when none maps to low on GPT-6.1 Sol" do
+      model.update!(name: "gpt-6.1-sol")
+
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(25_000)
     end
 
     it "treats standard reasoning mode as a no-op for Chat Completions" do

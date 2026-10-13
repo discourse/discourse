@@ -477,8 +477,14 @@ module DiscourseAi
       def generate_with_work_budget!(execution_context, options, final: false, &block)
         options =
           @work_budget.generation_options(
-            options,
-            maximum: @bot.model.max_output_tokens.presence || 2500,
+            options.merge(
+              thinking_allowance:
+                DiscourseAi::Completions::ThinkingConfig.response_allowance_for(
+                  llm_model: @bot.model,
+                  effort: options[:thinking_effort],
+                ),
+            ),
+            maximum: @bot.model.max_output_tokens.presence,
             final: final,
             tools: @prompt.tools.present?,
             root: true,

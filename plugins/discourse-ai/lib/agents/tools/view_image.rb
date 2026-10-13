@@ -101,7 +101,7 @@ module DiscourseAi
                       ai_agent_id: agent&.id,
                     )
                     .compact,
-                max_tokens: MAX_OUTPUT_TOKENS,
+                max_response_tokens: MAX_OUTPUT_TOKENS,
                 cancel_manager: context.cancel_manager,
                 execution_context: context.execution_context,
               ),

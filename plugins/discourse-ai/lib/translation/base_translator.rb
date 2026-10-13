@@ -117,7 +117,7 @@ module DiscourseAi
 
       def get_translation(text:, bot:, translation_user:, output_tokens:)
         context = translation_context(text:, translation_user:)
-        llm_args = { max_tokens: output_tokens }
+        llm_args = { max_response_tokens: output_tokens }
 
         structured_output = nil
         result = +""

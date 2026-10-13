@@ -241,7 +241,34 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
   end
 
   describe "default_options" do
-    it "does not set max_tokens by default" do
+    it "sets max_tokens to the known model cap by default" do
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(4096)
+    end
+
+    it "assumes a 64k cap for unrecognised Claude models when no limit is configured" do
+      model.update!(name: "claude-sonnet-99")
+
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(64_000)
+    end
+
+    it "uses the configured limit over the known cap" do
+      model.update!(max_output_tokens: 2000)
+
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(2000)
+    end
+
+    it "does not set max_tokens for non-Claude models" do
+      model.update!(name: "amazon.nova-pro-v1:0")
+
       prompt = DiscourseAi::Completions::Prompt.new("hello")
       dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
 
@@ -260,6 +287,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
 
     it "configures reasoning with budget tokens" do
+      model.update!(max_output_tokens: 8192)
       model.provider_params["enable_reasoning"] = true
       model.provider_params["reasoning_tokens"] = 4096
 
@@ -447,6 +475,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
 
     it "passes thinking config for Claude models" do
+      model.update!(max_output_tokens: 8192)
       response = mock_converse_response
       client = stub_sdk_client(response: response)
 
@@ -494,7 +523,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       end
     end
 
-    it "passes model name directly as model_id to SDK" do
+    it "translates friendly model names to Bedrock model IDs for the SDK" do
       response = mock_converse_response
       client = stub_sdk_client(response: response)
 
@@ -502,8 +531,31 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       llm.generate("hello", user: user)
 
       expect(client).to have_received(:converse) do |params|
-        expect(params[:model_id]).to eq("claude-3-sonnet")
+        expect(params[:model_id]).to eq("anthropic.claude-3-sonnet-20240229-v1:0")
         expect(params[:system]).to be_present
+      end
+    end
+
+    it "translates newer friendly names and passes qualified IDs through" do
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+      seen_model_ids = []
+      allow(client).to receive(:converse) do |params|
+        seen_model_ids << params[:model_id]
+        response
+      end
+
+      {
+        "claude-opus-4-1" => "anthropic.claude-opus-4-1-20250805-v1:0",
+        "claude-opus-4-5" => "anthropic.claude-opus-4-5-20251101-v1:0",
+        "claude-sonnet-4-6" => "anthropic.claude-sonnet-4-6",
+        "claude-opus-4-8" => "anthropic.claude-opus-4-8",
+        "global.anthropic.claude-sonnet-4-6" => "global.anthropic.claude-sonnet-4-6",
+        "amazon.nova-pro-v1:0" => "amazon.nova-pro-v1:0",
+      }.each do |friendly_name, bedrock_id|
+        model.update!(name: friendly_name)
+        DiscourseAi::Completions::Llm.proxy("custom:#{model.id}").generate("hello", user: user)
+        expect(seen_model_ids.last).to eq(bedrock_id)
       end
     end
 

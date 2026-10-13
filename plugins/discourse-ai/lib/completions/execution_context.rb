@@ -9,7 +9,9 @@ module DiscourseAi
                     :generated_output,
                     :generation_event_id,
                     :generation_settled,
-                    :root_reply_completed
+                    :root_reply_completed,
+                    :response_limit_tripped,
+                    :audit_log_id
       attr_reader :audit_logger, :structured_audit_logger, :upload_skips
 
       def initialize(
