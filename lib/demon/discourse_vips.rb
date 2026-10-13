@@ -33,7 +33,6 @@ class Demon::DiscourseVips < Demon::Base
     @worker_process&.shutdown
     @worker_process = nil
     @pid = nil
-    @started = false
     raise
   end
 
