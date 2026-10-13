@@ -46,25 +46,57 @@ acceptance("Badges", function (needs) {
       "CustomBadge"
     );
   });
+
+  test("closes the title picker when leaving the badge page", async function (assert) {
+    await visit("/badges/50/custombadge");
+    await click(".badge-grant-info .btn-default");
+
+    assert.dom(".badge-set-title").exists();
+
+    await visit("/badges");
+    await visit("/badges/50/custombadge");
+
+    assert.dom(".badge-set-title").doesNotExist();
+    assert.dom(".badge-grant-info .btn-default").exists();
+  });
 });
 
 acceptance("Badges - filtered by username", function (needs) {
   needs.user();
 
+  const grant = (id, badgeId, userId) => ({
+    id,
+    granted_at: "2014-07-03T06:36:46.939-04:00",
+    badge_id: badgeId,
+    user_id: userId,
+    granted_by_id: -1,
+  });
+
+  let customBadgeGrants;
+
+  needs.hooks.beforeEach(() => {
+    customBadgeGrants = [grant(9001, 50, 19), grant(9002, 50, 11234)];
+  });
+
   needs.pretender((server, helper) => {
-    server.get("/user_badges.json", ({ queryParams: { username } }) => {
-      const { user_badges, ...payload } = cloneJSON(
-        badgesFixtures["/user_badges.json"]
-      );
-      const user = payload.users.find((u) => u.username === username);
-      const userBadges = user_badges.filter((ub) => ub.user_id === user.id);
-      payload.user_badge_info = {
-        grant_count: userBadges.length,
-        username,
-        user_badges: userBadges,
-      };
-      return helper.response(payload);
-    });
+    server.get(
+      "/user_badges.json",
+      ({ queryParams: { badge_id, username } }) => {
+        const { user_badges, ...payload } = cloneJSON(
+          badgesFixtures["/user_badges.json"]
+        );
+        const user = payload.users.find((u) => u.username === username);
+        const userBadges = [...user_badges, ...customBadgeGrants].filter(
+          (ub) => ub.badge_id === Number(badge_id) && ub.user_id === user.id
+        );
+        payload.user_badge_info = {
+          grant_count: userBadges.length,
+          username,
+          user_badges: userBadges,
+        };
+        return helper.response(payload);
+      }
+    );
   });
 
   test("shows another user's data, not the current user's", async function (assert) {
@@ -84,10 +116,31 @@ acceptance("Badges - filtered by username", function (needs) {
       .doesNotExist("the viewer's title picker is hidden");
   });
 
+  test("doesn't mark the badge as granted when the filtered user lacks it", async function (assert) {
+    await visit("/badges/50/custombadge?username=daydreamer");
+
+    assert
+      .dom(".show-badge-details .check-display")
+      .doesNotExist("the viewer holding the badge doesn't count");
+    assert.dom(".show-badge-details .badge-granted").doesNotExist();
+    assert.dom(".badge-grant-info .btn-default").doesNotExist();
+  });
+
   test("keeps the title picker when filtered to the current user", async function (assert) {
     await visit("/badges/50/custombadge?username=eviltrout");
 
     assert.dom(".badge-grant-info .btn-default").exists();
+  });
+
+  test("hides the others link when the filtered user holds every grant", async function (assert) {
+    customBadgeGrants = Array.from({ length: 10 }, (_, i) =>
+      grant(9100 + i, 50, 11234)
+    );
+
+    await visit("/badges/50/custombadge?username=allard");
+
+    assert.dom(".badges-granted .badge-info").exists({ count: 10 });
+    assert.dom("#show-others-with-badge-link").doesNotExist();
   });
 });
 
