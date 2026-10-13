@@ -694,6 +694,7 @@ class BulkImport::Generic < BulkImport::Base
     import_optimized_images
 
     import_topic_users
+    import_event_invitee_topic_tracking
     update_topic_users
     import_bookmarks
 
@@ -3036,6 +3037,38 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topic_users.close
+  end
+
+  # Mirrors Invitee#update_topic_tracking!. Runs after the imported topic users, so an
+  # explicit subscription from the source wins, and before update_topic_users, which
+  # keeps the level because the row has a notification reason.
+  def import_event_invitee_topic_tracking
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing topic tracking of event invitees..."
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    levels = TopicUser.notification_levels
+
+    DB.exec(
+      <<~SQL,
+      INSERT INTO topic_users (user_id, topic_id, notification_level, notifications_changed_at,
+                               notifications_reason_id)
+      SELECT i.user_id, p.topic_id,
+             CASE i.status WHEN :going THEN :watching WHEN :interested THEN :tracking ELSE :regular END,
+             i.created_at, :user_changed
+        FROM discourse_post_event_invitees i
+             JOIN posts p ON p.id = i.post_id
+       WHERE i.status IS NOT NULL
+          ON CONFLICT (user_id, topic_id) DO NOTHING
+    SQL
+      going: statuses[:going],
+      interested: statuses[:interested],
+      watching: levels[:watching],
+      tracking: levels[:tracking],
+      regular: levels[:regular],
+      user_changed: TopicUser.notification_reasons[:user_changed],
+    )
   end
 
   def update_topic_users

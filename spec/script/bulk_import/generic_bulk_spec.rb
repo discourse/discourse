@@ -918,6 +918,63 @@ if generic_import_dependencies_available
           expect(imported_invitees).to be_empty
         end
       end
+
+      describe "#import_event_invitee_topic_tracking" do
+        fab!(:not_going_attendee, :user)
+        fab!(:muting_attendee, :user)
+
+        it "sets the topic tracking like an RSVP, keeping imported subscriptions" do
+          statuses = DiscourseEvents::Events::Invitee.statuses
+          levels = TopicUser.notification_levels
+          signed_up_at = Time.utc(2017, 3, 4, 5, 6, 7)
+          DiscourseEvents::Events::Invitee.insert_all!(
+            [
+              [attendee, :going],
+              [other_attendee, :interested],
+              [not_going_attendee, :not_going],
+              [muting_attendee, :going],
+            ].map do |user, status|
+              {
+                post_id: vienna_post.id,
+                user_id: user.id,
+                status: statuses[status],
+                created_at: signed_up_at,
+                updated_at: signed_up_at,
+              }
+            end,
+          )
+          # Posting history alone would make this attendee track the topic.
+          Fabricate(:post, topic: vienna_post.topic, user: attendee)
+          TopicUser.create!(
+            user: muting_attendee,
+            topic: vienna_post.topic,
+            notification_level: levels[:muted],
+            notifications_reason_id: TopicUser.notification_reasons[:user_changed],
+          )
+
+          importer.import_event_invitee_topic_tracking
+          importer.update_topic_users
+
+          expect(
+            TopicUser
+              .where(topic: vienna_post.topic)
+              .where.not(user: vienna_post.user)
+              .pluck(:user_id, :notification_level, :notifications_reason_id),
+          ).to contain_exactly(
+            [attendee.id, levels[:watching], TopicUser.notification_reasons[:user_changed]],
+            [other_attendee.id, levels[:tracking], TopicUser.notification_reasons[:user_changed]],
+            [
+              not_going_attendee.id,
+              levels[:regular],
+              TopicUser.notification_reasons[:user_changed],
+            ],
+            [muting_attendee.id, levels[:muted], TopicUser.notification_reasons[:user_changed]],
+          )
+          expect(TopicUser.find_by(user: attendee).notifications_changed_at).to eq_time(
+            signed_up_at,
+          )
+        end
+      end
     end
 
     describe "mapping selection" do
