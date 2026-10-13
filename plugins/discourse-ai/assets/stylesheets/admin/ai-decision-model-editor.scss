@@ -1,0 +1,9 @@
+.ai-decision-model-editor {
+  &__test-failure {
+    color: var(--danger);
+  }
+
+  &__test-success {
+    color: var(--success);
+  }
+}

@@ -44,6 +44,11 @@ RSpec.describe AiSecret do
       expect(ai_secret.in_use?).to eq(true)
     end
 
+    it "returns true when used by a decision_model" do
+      Fabricate(:decision_model, ai_secret: ai_secret)
+      expect(ai_secret.in_use?).to eq(true)
+    end
+
     it "returns true when referenced in provider_params as string" do
       Fabricate(
         :llm_model,
@@ -136,10 +141,10 @@ RSpec.describe AiSecret do
     it "lists all models using this secret" do
       llm = Fabricate(:llm_model, ai_secret: ai_secret)
       embedding = Fabricate(:embedding_definition, ai_secret: ai_secret)
+      Fabricate(:decision_model, ai_secret: ai_secret)
 
       usage = ai_secret.used_by
-      expect(usage.length).to eq(2)
-      expect(usage.map { |u| u[:type] }).to contain_exactly("llm", "embedding")
+      expect(usage.map { |u| u[:type] }).to contain_exactly("llm", "embedding", "decision_model")
     end
 
     it "lists tools using this secret" do

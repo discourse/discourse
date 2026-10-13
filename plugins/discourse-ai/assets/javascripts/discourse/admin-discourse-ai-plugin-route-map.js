@@ -40,6 +40,15 @@ export default {
       }
     );
 
+    this.route(
+      "discourse-ai-decision-models",
+      { path: "ai-decision-models" },
+      function () {
+        this.route("new");
+        this.route("edit", { path: "/:id/edit" });
+      }
+    );
+
     this.route("discourse-ai-features", { path: "ai-features" }, function () {
       this.route("edit", { path: "/:id/edit" });
     });

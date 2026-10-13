@@ -25,6 +25,7 @@ register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 register_asset "stylesheets/admin/ai-logs.scss", :admin
+register_asset "stylesheets/admin/ai-decision-model-editor.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 

@@ -103,6 +103,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_decision_model: "Create AI decision model"
+            update_ai_decision_model: "Update AI decision model"
+            delete_ai_decision_model: "Delete AI decision model"
             create_ai_secret: "Create AI secret"
             update_ai_secret: "Update AI secret"
             delete_ai_secret: "Delete AI secret"
@@ -1118,7 +1121,7 @@ en:
 
       secrets:
         short_title: "Credentials"
-        description: "Manage authentication credentials shared across LLMs, embeddings, and tools."
+        description: "Manage authentication credentials shared across LLMs, embeddings, decision models, and tools."
         name: "Name"
         secret: "Value"
         select_secret: "Select a credential..."
@@ -1137,6 +1140,7 @@ en:
         used_by: "Used by"
         not_used: "Not in use"
         embedding: "Embedding"
+        decision_model: "Decision model"
         cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
         tool: "Tool"
         mcp_server: "MCP server"
@@ -1558,6 +1562,39 @@ en:
             other: "%{count} matches found - showing related results."
         quick_search:
           suffix: "in all topics and posts with AI"
+
+      decision_models:
+        short_title: "Decision models"
+        description: "Decision models answer typed questions about content (yes or no, pick one option, or rate on a scale) and return a probability for every answer. They are much faster and cheaper than LLMs for classification and routing."
+        new: "New decision model"
+        back: "Back to decision models"
+        save: "Save"
+        saved: "Decision model saved"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to remove this decision model?"
+        empty: "You haven't set up any decision models yet"
+        presets: "Select a preset..."
+        configure_manually: "Configure manually"
+        edit: "Edit"
+        display_name: "Name"
+        name: "Model ID"
+        provider: "API"
+        url: "URL"
+        api_key: "API key"
+        vision_enabled: "Vision enabled"
+        hints:
+          name: "The model identifier sent to the API, for example jev-latest."
+          url: "The full endpoint URL, for example https://api.typesafe.ai/v1/systemone."
+          api_key: "Optional for self-hosted endpoints that don't require authentication."
+          vision_enabled: "The model can evaluate images alongside text."
+        providers:
+          system_one: "System One"
+          open_ai: "OpenAI Decisions"
+          fake: "Custom"
+        tests:
+          title: "Run test"
+          success: "Success! The model is %{percentage}% sure the test message is a greeting."
+          failure: "Asking the model a test question resulted in: %{error}"
 
       ai_artifact:
         editor:

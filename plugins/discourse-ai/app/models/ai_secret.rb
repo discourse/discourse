@@ -8,6 +8,7 @@ class AiSecret < ActiveRecord::Base
 
   has_many :llm_models, dependent: :nullify
   has_many :embedding_definitions, dependent: :nullify
+  has_many :decision_models, dependent: :nullify
   has_many :ai_tool_secret_bindings, dependent: :destroy
   has_many :ai_mcp_servers, dependent: :nullify
   has_many :oauth_client_secret_mcp_servers,
@@ -16,8 +17,8 @@ class AiSecret < ActiveRecord::Base
            dependent: :nullify
 
   def in_use?
-    llm_models.exists? || embedding_definitions.exists? || used_by_provider_params? ||
-      ai_tool_secret_bindings.exists? || ai_mcp_servers.exists? ||
+    llm_models.exists? || embedding_definitions.exists? || decision_models.exists? ||
+      used_by_provider_params? || ai_tool_secret_bindings.exists? || ai_mcp_servers.exists? ||
       oauth_client_secret_mcp_servers.exists?
   end
 
@@ -26,6 +27,9 @@ class AiSecret < ActiveRecord::Base
     llm_models.each { |llm| usage << { type: "llm", name: llm.display_name, id: llm.id } }
     embedding_definitions.each do |ed|
       usage << { type: "embedding", name: ed.display_name, id: ed.id }
+    end
+    decision_models.each do |dm|
+      usage << { type: "decision_model", name: dm.display_name, id: dm.id }
     end
     provider_param_llms.each do |llm|
       usage << { type: "llm_provider_param", name: llm.display_name, id: llm.id }

@@ -45,6 +45,11 @@ export default {
           description: "discourse_ai.embeddings.description",
         },
         {
+          label: "discourse_ai.decision_models.short_title",
+          route: "adminPlugins.show.discourse-ai-decision-models",
+          description: "discourse_ai.decision_models.description",
+        },
+        {
           label: "discourse_ai.tools.short_title",
           route: "adminPlugins.show.discourse-ai-tools",
           description: "discourse_ai.tools.subheader_description",
