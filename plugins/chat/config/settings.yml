@@ -16,7 +16,7 @@ chat:
   chat_allowed_groups:
     type: group_list
     list_type: compact
-    default: "1|2|11" # @admins, @moderators, @trust_level_1
+    default: "1|2|4|10" # @admins, @moderators, @anonymous_users, @trust_level_0
     mandatory_values: "1|2" # @admins, @moderators
     allow_any: false
     client: true
