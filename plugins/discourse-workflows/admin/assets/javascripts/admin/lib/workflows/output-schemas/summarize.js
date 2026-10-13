@@ -1,5 +1,5 @@
 import { fixedCollectionRows } from "../property-engine";
-import { summarizeOutputKey } from "../summarize-output-key";
+import { fieldKey, summarizeOutputKey } from "../summarize-output-key";
 
 const DRAFT_URI = "https://json-schema.org/draft/2020-12/schema";
 const NUMBER_TYPE = { type: ["number", "null"] };
@@ -34,18 +34,17 @@ function splitFieldList(value) {
     .filter(Boolean);
 }
 
-function leafName(field) {
-  return field.includes(".") ? field.split(".").pop() : field;
-}
-
 export default function summarizeOutputSchemas(configuration = {}) {
   const properties = {};
 
-  for (const field of splitFieldList(configuration.fields_to_split_by)) {
-    properties[leafName(field)] = ANY_TYPE;
+  const splitFields = splitFieldList(configuration.fields_to_split_by);
+  const rows = fixedCollectionRows(configuration.fields_to_summarize);
+
+  for (const field of splitFields) {
+    properties[fieldKey(field, splitFields)] = ANY_TYPE;
   }
-  for (const row of fixedCollectionRows(configuration.fields_to_summarize)) {
-    properties[summarizeOutputKey(row)] = schemaTypeFor(row);
+  for (const row of rows) {
+    properties[summarizeOutputKey(row, rows)] = schemaTypeFor(row);
   }
 
   return [{ $schema: DRAFT_URI, type: "object", properties }];
