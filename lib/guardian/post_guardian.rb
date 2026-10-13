@@ -327,10 +327,10 @@ module PostGuardian
     return Post.with_deleted if is_admin?
     return Post.none if !is_staff? && !category_group_moderation_allowed?
 
-    topics = visible_topic_scope(Topic.with_deleted)
+    topics = visible_topic_scope(Topic.with_deleted.where("topics.id = posts.topic_id"))
     topics = topics.where(category_id: category_group_moderator_scope.select(:id)) if !is_staff?
 
-    Post.with_deleted.secured(self).where(topic_id: topics.select(:id))
+    Post.with_deleted.secured(self).where("EXISTS (#{topics.select(1).to_sql})")
   end
 
   def can_review_post?(post)
