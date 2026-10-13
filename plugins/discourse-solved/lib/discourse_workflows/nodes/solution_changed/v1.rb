@@ -57,7 +57,11 @@ if defined?(DiscourseWorkflows)
           end
 
           def output
-            { change: @change, post: serialize_post(@post), topic: topic_data(topic) }
+            {
+              change: @change,
+              post: serialize_post(@post),
+              topic: serialize_topic_list_item(topic),
+            }
           end
 
           def matches?(trigger_ctx)

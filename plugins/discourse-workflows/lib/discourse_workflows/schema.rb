@@ -165,7 +165,7 @@ module DiscourseWorkflows
       }
     JSON
 
-    TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "TopicListItemSerializer payload")
+    TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "Workflow topic payload")
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
     BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
@@ -187,7 +187,9 @@ module DiscourseWorkflows
       }
     JSON
 
-    USER_ACTION_PROPERTIES = JSON.parse(<<~JSON).freeze
+    USER_ACTION_PROPERTIES =
+      JSON
+        .parse(<<~JSON)
           {
             "title": { "type": ["string", "null"] },
             "bio_raw": { "type": ["string", "null"] },
@@ -196,21 +198,19 @@ module DiscourseWorkflows
             "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
             "trust_level_locked": { "type": "boolean" },
-            "user_fields": { "type": "object" },
-            "groups": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": { "type": "integer" },
-                  "name": { "type": "string" },
-                  "full_name": { "type": ["string", "null"] },
-                  "automatic": { "type": "boolean" }
-                }
-              }
-            }
+            "user_fields": { "type": "object" }
           }
         JSON
+        .merge(
+          "groups" => {
+            "type" => "array",
+            "items" => {
+              "type" => "object",
+              "properties" => BASIC_GROUP_PROPERTIES,
+            },
+          },
+        )
+        .freeze
 
     USER_STATS_PROPERTIES = JSON.parse(<<~JSON).freeze
           {
