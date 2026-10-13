@@ -15,6 +15,7 @@ module Migrations
               info: item[:info],
               last_used: item[:last_used],
               provider_uid: item[:provider_uid],
+              avatar_upload_id: nil,
             )
           end
         end

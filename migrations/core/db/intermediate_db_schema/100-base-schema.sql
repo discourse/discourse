@@ -487,12 +487,13 @@ CREATE TABLE upload_sources
 
 CREATE TABLE user_associated_accounts
 (
-    user_id       NUMERIC   NOT NULL,
-    provider_name TEXT      NOT NULL,
-    created_at    DATETIME,
-    info          JSON_TEXT,
-    last_used     DATETIME,
-    provider_uid  TEXT      NOT NULL,
+    user_id          NUMERIC   NOT NULL,
+    provider_name    TEXT      NOT NULL,
+    avatar_upload_id TEXT,
+    created_at       DATETIME,
+    info             JSON_TEXT,
+    last_used        DATETIME,
+    provider_uid     TEXT      NOT NULL,
     PRIMARY KEY (user_id, provider_name)
 );
 
