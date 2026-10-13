@@ -44,6 +44,18 @@ DiscourseEvent.trigger(:topic_status_updated, topic, status, enabled, acting_use
 
 Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enabled, payload = {})` and read `payload[:acting_user]`. Specs that assert exact event params must include `{ acting_user: ... }`.
 
+## Breaking output changes
+
+Renaming or removing an output key, or changing its meaning, breaks saved workflows. Ship a new version instead; additive keys can go in the existing version.
+
+- Freeze V1 and mark it, after `description(...)`: `deprecated(superseded_by: "2.0", changes: { "editor" => "actor" })`.
+- The shared `node_descriptions.<identifier>` locale describes the latest version. If it no longer fits V1, add `description_key: "discourse_workflows.node_descriptions.<identifier>_v1"` to `deprecated(...)` with V1's text; V2 does not inherit it.
+- `class V2 < V1` in `v2.rb`, calling `description(superclass.description.merge(version: "2.0", output_contracts: [{ schema: V2_OUTPUT_SCHEMA }]))`, then override `output` / `execute` or a private `serialize_*` helper.
+- Core nodes self-register; plugin nodes need `register_discourse_workflows_node(...::V2)` next to V1.
+- Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
+- Deprecated versions keep running for saved workflows, are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them after a deprecation window.
+- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones.
+
 ## Output conventions
 
 - URLs are absolute (`Discourse.base_url + ...`, `full_url`). Keep existing relative keys such as `post_url`.

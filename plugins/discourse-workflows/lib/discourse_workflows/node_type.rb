@@ -124,6 +124,18 @@ module DiscourseWorkflows
       end
     end
 
+    def self.deprecated(superseded_by:, changes: {}, description_key: nil, notice_key: nil)
+      @deprecation = { superseded_by:, changes:, description_key:, notice_key: }.compact.freeze
+    end
+
+    def self.deprecation
+      @deprecation
+    end
+
+    def self.deprecated?
+      deprecation.present?
+    end
+
     def self.identifier
       description.fetch(:name) { raise NotImplementedError }
     end
