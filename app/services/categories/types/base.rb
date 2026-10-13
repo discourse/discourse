@@ -420,13 +420,14 @@ module Categories
 
         private
 
-        def site_setting_overridden?(setting_name)
-          SiteSetting.provider.find(setting_name.to_sym).present?
-        end
-
         def resolved_configuration_schema
           schema = configuration_schema
           return {} if schema.blank?
+
+          overridden_site_settings =
+            if schema[:site_settings].present?
+              SiteSetting.provider.all.map { |setting| setting.name.to_s }.to_set
+            end
 
           entries = {
             general_category_settings: [],
@@ -456,7 +457,7 @@ module Categories
               key: setting_name.to_s,
               default: config[:default],
               current: SiteSetting.public_send(setting_name),
-              overridden: site_setting_overridden?(setting_name),
+              overridden: overridden_site_settings.include?(setting_name.to_s),
               type: config[:type] || meta[:type],
               label: config[:label] || meta[:humanized_name],
               choices: config[:choices] || meta[:choices],
