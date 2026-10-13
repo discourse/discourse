@@ -58,7 +58,7 @@ module("Integration | ui-kit | DBadgeCard", function (hooks) {
       <template><DBadgeCard @badge={{badge}} @count={{1234}} /></template>
     );
 
-    assert.dom(".badge-granted").hasText("Earned 1.2k times");
+    assert.dom(".badge-granted").hasText("Granted 1.2k times");
   });
 
   test("hides the grant count when @count is 1", async function (assert) {
