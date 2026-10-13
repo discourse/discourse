@@ -9,7 +9,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import SimpleListReorderable from "discourse/admin/components/simple-list-reorderable";
+import SimpleList from "discourse/admin/components/simple-list";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -25,9 +25,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
   test("adding a value", async function (assert) {
     const values = "vinkas\nosama";
     await render(
-      <template>
-        <DMenus /><SimpleListReorderable @values={{values}} />
-      </template>
+      <template><DMenus /><SimpleList @values={{values}} /></template>
     );
 
     assert
@@ -62,7 +60,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable
+        <SimpleList
           @allowAny={{false}}
           @choices={{choices}}
           @values={{values}}
@@ -91,7 +89,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @onChange={{onChange}} @values={{values}} />
+        <SimpleList @onChange={{onChange}} @values={{values}} />
       </template>
     );
 
@@ -109,9 +107,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
   test("removing a value", async function (assert) {
     const values = "vinkas\nosama";
     await render(
-      <template>
-        <DMenus /><SimpleListReorderable @values={{values}} />
-      </template>
+      <template><DMenus /><SimpleList @values={{values}} /></template>
     );
 
     await click(
@@ -131,7 +127,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @inputDelimiter="|" @values="vinkas|osama" />
+        <SimpleList @inputDelimiter="|" @values="vinkas|osama" />
       </template>
     );
 
@@ -155,7 +151,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable @inputDelimiter="|" @values={{state.values}} />
+        <SimpleList @inputDelimiter="|" @values={{state.values}} />
       </template>
     );
 
@@ -178,7 +174,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <SimpleListReorderable
+        <SimpleList
           @allowAny={{false}}
           @choices={{choices}}
           @inputDelimiter="|"
@@ -202,10 +198,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
 
     await render(
       <template>
-        <DMenus /><SimpleListReorderable
-          @inputDelimiter="|"
-          @values={{values}}
-        />
+        <DMenus /><SimpleList @inputDelimiter="|" @values={{values}} />
       </template>
     );
 
@@ -222,10 +215,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
 
     await render(
       <template>
-        <DMenus /><SimpleListReorderable
-          @inputDelimiter="|"
-          @values={{values}}
-        />
+        <DMenus /><SimpleList @inputDelimiter="|" @values={{values}} />
       </template>
     );
 

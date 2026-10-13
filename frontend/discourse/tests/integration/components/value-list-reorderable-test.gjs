@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import ValueListReorderable from "discourse/admin/components/value-list-reorderable";
+import ValueList from "discourse/admin/components/value-list";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -19,9 +19,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     this.set("values", "vinkas\nosama");
 
     await render(
-      <template>
-        <DMenus /><ValueListReorderable @values={{this.values}} />
-      </template>
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
     );
 
     assert
@@ -47,9 +45,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     this.set("values", "vinkas\nosama");
 
     await render(
-      <template>
-        <DMenus /><ValueListReorderable @values={{this.values}} />
-      </template>
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
     );
 
     await fillIn(
@@ -68,9 +64,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     this.set("values", "vinkas\nosama");
 
     await render(
-      <template>
-        <DMenus /><ValueListReorderable @values={{this.values}} />
-      </template>
+      <template><DMenus /><ValueList @values={{this.values}} /></template>
     );
 
     await click(
@@ -99,10 +93,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ValueListReorderable
-          @choices={{this.choices}}
-          @values={{this.values}}
-        />
+        <ValueList @choices={{this.choices}} @values={{this.values}} />
       </template>
     );
 
@@ -126,7 +117,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ValueListReorderable @inputType="array" @values={{this.values}} />
+        <ValueList @inputType="array" @values={{this.values}} />
       </template>
     );
 
@@ -153,7 +144,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
     await render(
       <template>
         <DMenus />
-        <ValueListReorderable @inputDelimiter="|" @values={{this.values}} />
+        <ValueList @inputDelimiter="|" @values={{this.values}} />
       </template>
     );
 
