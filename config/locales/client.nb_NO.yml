@@ -4074,9 +4074,6 @@ nb_NO:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Har gjort seg fortjent til dette merket"
-        other: "Har gjort seg fortjent til dette merket %{count} ganger"
       granted_on: "Tildelt %{date}"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"

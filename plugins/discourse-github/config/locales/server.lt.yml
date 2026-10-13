@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 lt:
+  dashboard:
+    problem:
+      github_linkback_access_token_invalid: "„GitHub“ atmetė {{setting:github_linkback_access_token}}. Sugeneruokite naują prieigos raktą ir atnaujinkite nustatymą."
+      github_badges_repo_not_found: "GitHub saugykla <code>%{repo}</code> {{setting:github_badges_repos}} neegzistuoja arba {{setting:github_linkback_access_token}} negali prie jos prieiti, todėl jo įnašai nėra įskaitomi ženkliukams gauti."
+      github_badges_repo_moved: "„GitHub“ saugykla <code>%{repo}</code> perkelta į <code>%{new_name}</code>. Atnaujinkite {{setting:github_badges_repos}} , kad būtų naudojamas naujas pavadinimas."

@@ -5503,8 +5503,6 @@ zh_CN:
         search_open: "打开管理员界面的搜索"
         search_full_page: "打开整页管理员搜索"
     badges:
-      earned_n_times:
-        other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
       others_count:
         other: "授予他人 %{count} 次"

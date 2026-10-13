@@ -5469,9 +5469,6 @@ ur:
       admin:
         title: "منتظم"
     badges:
-      earned_n_times:
-        one: "یہ تمغہ %{count} دفعہ حاصل کیا"
-        other: "یہ تمغہ %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
       others_count:
         one: "دوسروں کو %{count} دفعہ نوازا"

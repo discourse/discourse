@@ -3880,9 +3880,6 @@ te:
       admin:
         title: "నిర్వాహకుడు"
     badges:
-      earned_n_times:
-        one: "ఈ బ్యాడ్జ్ %{count} సారి సంపాదించారు"
-        other: "ఈ బ్యాడ్జ్ %{count} సార్లు సంపాదించారు"
       granted_on: "%{date} న మంజూరు చేయబడింది"
       others_count:
         one: "ఇతరులకు %{count} సారి మంజూరు చేయబడింది"

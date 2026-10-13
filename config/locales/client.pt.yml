@@ -4333,9 +4333,6 @@ pt:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Ganhou este distintivo %{count} vez"
-        other: "Ganhou este crachá %{count} vezes"
       granted_on: "Concedido %{date}"
       title: Crachás
       allow_title: "Pode usar este crachá como título"

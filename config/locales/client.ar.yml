@@ -6596,13 +6596,6 @@ ar:
         search_open: "فتح مربع البحث في واجهة المسؤول"
         search_full_page: "فتح صفحة البحث الكاملة في واجهة المسؤول"
     badges:
-      earned_n_times:
-        zero: "تم منحك هذه الشارة %{count} مرة"
-        one: "تم منحك هذه الشارة مرة واحدة (%{count})"
-        two: "تم منحك هذه الشارة مرتين (%{count})"
-        few: "تم منحك هذه الشارة %{count} مرات"
-        many: "تم منحك هذه الشارة %{count} مرة"
-        other: "تم منحك هذه الشارة %{count} مرة"
       granted_on: "تم منحه بتاريخ %{date}"
       others_count:
         zero: "تم منحها للآخرين %{count} مرة"

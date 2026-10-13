@@ -3521,8 +3521,6 @@ ko:
       admin:
         title: "관리자"
     badges:
-      earned_n_times:
-        other: "이 배지를 %{count}번 획득했습니다"
       granted_on: "%{date}에 획득"
       title: 배지
       allow_title: "이 배지를 타이틀로 사용할 수 있습니다"

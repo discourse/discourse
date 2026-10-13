@@ -5161,9 +5161,6 @@ tr_TR:
       admin:
         title: "Yönetici"
     badges:
-      earned_n_times:
-        one: "Bu rozeti %{count} kez kazandı"
-        other: "Bu rozeti %{count} kez kazandı"
       granted_on: "%{date} tarihinde verildi"
       others_count:
         one: "Başkalarına %{count} kez verildi"

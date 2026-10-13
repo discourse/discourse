@@ -3649,10 +3649,6 @@ ro:
       admin:
         title: "Administrator"
     badges:
-      earned_n_times:
-        one: "A primit acest ecuson o dată"
-        few: "A primit acest ecuson de %{count} ori"
-        other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat %{date}"
       title: Insigne
       multiple_grant: "Poți primi asta de mai multe ori"

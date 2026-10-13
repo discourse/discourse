@@ -5367,11 +5367,6 @@ cs:
       admin:
         title: "Administrace"
     badges:
-      earned_n_times:
-        one: "Získal/a tento odznak %{count} krát"
-        few: "Získal/a tento odznak %{count} krát"
-        many: "Získal/a tento odznak %{count} krát"
-        other: "Získal/a tento odznak %{count} krát"
       granted_on: "Udělen %{date}"
       others_count:
         one: "Uděleno ostatním %{count}x"

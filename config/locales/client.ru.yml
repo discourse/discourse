@@ -5495,11 +5495,6 @@ ru:
       admin:
         title: "Администрирование"
     badges:
-      earned_n_times:
-        one: "Заработал(а) эту награду %{count} раз"
-        few: "Заработал(а) эту награду %{count} раза"
-        many: "Заработал(а) эту награду %{count} раз"
-        other: "Заработал(а) эту награду %{count} раза"
       granted_on: "Выдана %{date}"
       others_count:
         one: "Выдана другим %{count} раз"

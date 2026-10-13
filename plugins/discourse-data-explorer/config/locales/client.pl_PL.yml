@@ -43,6 +43,7 @@ pl_PL:
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
       title: "Eksplorator danych"
       create: "Utwórz"
+      new_query: "Nowe zapytanie"
       create_placeholder: "Nazwa zapytania…"
       description_placeholder: "Wprowadź opis zapytania"
       ai:

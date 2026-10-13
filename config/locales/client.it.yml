@@ -4619,9 +4619,6 @@ it:
       admin:
         title: "Amministrazione"
     badges:
-      earned_n_times:
-        one: "Ha guadagnato questo distintivo %{count} volta"
-        other: "Ha guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnato il %{date}"
       others_count:
         one: "Concesso ad altri %{count} volta"

@@ -5527,9 +5527,6 @@ fr:
         search_open: "Ouvrir la recherche pour l'interface d'administration"
         search_full_page: "Ouvrir la recherche d'administration en pleine page"
     badges:
-      earned_n_times:
-        one: "A reçu ce badge %{count} fois"
-        other: "A reçu ce badge %{count} fois"
       granted_on: "Attribué le %{date}"
       others_count:
         one: "Accordé aux autres %{count} fois"
