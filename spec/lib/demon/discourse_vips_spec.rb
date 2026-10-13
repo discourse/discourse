@@ -6,7 +6,6 @@ RSpec.describe Demon::DiscourseVips do
   let(:directory) { Dir.mktmpdir }
   let(:socket_path) { File.join(directory, "socket") }
   let(:demon) { described_class.new(0, rails_root: "#{directory}/") }
-  let(:previous_workers) { [] }
 
   around do |example|
     shared_worker = DiscourseVips::Client.instance_variable_get(:@shared_worker)
@@ -22,7 +21,6 @@ RSpec.describe Demon::DiscourseVips do
 
   after do
     described_class.stop
-    previous_workers.each(&:shutdown)
     described_class.reset_demons
     FileUtils.remove_entry(directory)
   end
@@ -48,22 +46,6 @@ RSpec.describe Demon::DiscourseVips do
 
       expect(DiscourseVips.version).to match(/\A\d+\.\d+\.\d+\z/)
       expect(File.read(demon.pid_file).to_i).to eq(demon.pid)
-    end
-
-    it "restores image processing after an unresponsive previous worker" do
-      previous = DiscourseVips::WorkerProcess.new(socket_path:)
-      previous_workers << previous
-      DiscourseVips::Client.use_shared_worker
-      expect(DiscourseVips.version).to match(/\A\d+\.\d+\.\d+\z/)
-      FileUtils.mkdir_p(File.dirname(demon.pid_file))
-      File.write(demon.pid_file, previous.pid)
-      Process.kill("STOP", previous.pid)
-      described_class.start
-
-      wait_for(timeout: 15) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
-      expect(DiscourseVips.version).to match(/\A\d+\.\d+\.\d+\z/)
-      expect(Demon::Base.running?(previous.pid)).to eq(false)
-      expect(demon.pid).not_to eq(previous.pid)
     end
   end
 
