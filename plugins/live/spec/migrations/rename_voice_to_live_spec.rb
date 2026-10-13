@@ -99,6 +99,29 @@ RSpec.describe RenameVoiceToLive do
     expect(UpcomingChangeEvent.where(upcoming_change_name: "voice_enabled")).to be_empty
   end
 
+  context "with an existing session reviewable" do
+    fab!(:session, :live_session, refind: false)
+
+    it "preserves the target and reuses the reviewable for subsequent flags" do
+      reviewable = Fabricate(:reviewable)
+      DB.exec(
+        "UPDATE reviewables SET type = 'ReviewableVoiceUser', type_source = 'voice', target_type = 'Voice::Session', target_id = ? WHERE id = ?",
+        session.id,
+        reviewable.id,
+      )
+
+      described_class.new.up
+
+      migrated_reviewable = Reviewable.find(reviewable.id)
+      expect(migrated_reviewable).to be_a(ReviewableLiveUser)
+      expect(migrated_reviewable.type_source).to eq("live")
+      expect(migrated_reviewable.target).to eq(session)
+      expect(ReviewableLiveUser.needs_review!(created_by: session.user, target: session).id).to eq(
+        reviewable.id,
+      )
+    end
+  end
+
   it "renames reviewables, plugin store rows, badge groupings and chat thread markers" do
     reviewable = Fabricate(:reviewable)
     DB.exec(

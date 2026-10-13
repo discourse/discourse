@@ -101,7 +101,12 @@ class RenameVoiceToLive < ActiveRecord::Migration[8.0]
 
     execute <<~SQL
       UPDATE reviewables
-      SET type = 'ReviewableLiveUser', type_source = 'live'
+      SET type = 'ReviewableLiveUser',
+          type_source = 'live',
+          target_type = CASE
+            WHEN target_type = 'Voice::Session' THEN 'Live::Session'
+            ELSE target_type
+          END
       WHERE type = 'ReviewableVoiceUser'
     SQL
 
