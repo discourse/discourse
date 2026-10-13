@@ -223,11 +223,11 @@ function setupPostVoting(needs) {
   });
 }
 
-acceptance("Post Voting | Mobile deep links", function (needs) {
+acceptance("anon user on mobile", function (needs) {
   setupPostVoting(needs);
   needs.mobileView();
 
-  test("topic class survives without the first post and is removed on navigation", async function (assert) {
+  test("deep linking past the first post keeps the topic class and removes it on navigation", async function (assert) {
     await visit("/t/internationalization-localization/280/2");
 
     assert.dom("#post_1").doesNotExist("the first post is not loaded");
