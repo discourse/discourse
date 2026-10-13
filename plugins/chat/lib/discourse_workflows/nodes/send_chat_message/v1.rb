@@ -51,12 +51,14 @@ if defined?(DiscourseWorkflows)
                     },
                     "username" => {
                       "type" => "string",
+                      "x-optional" => true,
                     },
                     "usernames" => {
                       "type" => "array",
                       "items" => {
                         "type" => "string",
                       },
+                      "x-optional" => true,
                     },
                   },
                 },
