@@ -19,6 +19,7 @@ export function setupComposerPosition(
   let editorFocused = document.activeElement === editor;
   let scrollLocked = false;
   let scrollLockTargets = null;
+  let pinnedScrollY = null;
 
   function shouldLockScroll() {
     const ipadHardwareKeyboard =
@@ -48,6 +49,30 @@ export function setupComposerPosition(
     }
   }
 
+  // The keyboard's space-bar trackpad moves the caret without touch events,
+  // so the touchmove lock can't stop its autoscroll from overflowing the
+  // editor into the page and panning the visual viewport.
+  function restorePinnedScroll() {
+    if (
+      Math.abs(window.scrollY - pinnedScrollY) > 1 ||
+      window.visualViewport?.offsetTop > 1
+    ) {
+      window.scrollTo({ top: pinnedScrollY, behavior: "instant" });
+    }
+  }
+
+  function pinScroll() {
+    pinnedScrollY = window.scrollY;
+    window.addEventListener("scroll", restorePinnedScroll);
+    window.visualViewport?.addEventListener("scroll", restorePinnedScroll);
+  }
+
+  function unpinScroll() {
+    window.removeEventListener("scroll", restorePinnedScroll);
+    window.visualViewport?.removeEventListener("scroll", restorePinnedScroll);
+    pinnedScrollY = null;
+  }
+
   function refreshScrollLock() {
     if (shouldLockScroll() && !scrollLocked) {
       scrollLockTargets = getAllowedScrollTargets();
@@ -56,12 +81,14 @@ export function setupComposerPosition(
         passive: false,
       });
       lock(scrollLockTargets);
+      pinScroll();
       scrollLocked = true;
     } else if (!shouldLockScroll() && scrollLocked) {
       editor.removeEventListener("touchmove", selectionTouchmoveGuard, {
         capture: true,
       });
       unlock(scrollLockTargets);
+      unpinScroll();
       scrollLockTargets = null;
       scrollLocked = false;
     }
@@ -138,6 +165,7 @@ export function setupComposerPosition(
           capture: true,
         });
         unlock(scrollLockTargets);
+        unpinScroll();
         scrollLockTargets = null;
         scrollLocked = false;
       }
