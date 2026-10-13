@@ -42,7 +42,7 @@ module DiscourseWorkflows
             include_subcategories: include_subcategories,
             tag_names: tag_names,
             limit: MAX_TOPICS_PER_RUN,
-          ).map { |topic| { topic: topic_data(topic) } }
+          ).map { |topic| { topic: serialize_topic_list_item(topic) } }
         end
 
         def self.stale_topics(
@@ -74,16 +74,6 @@ module DiscourseWorkflows
           scope = scope.joins(:tags).where(tags: { name: tag_names }).distinct if tag_names.any?
 
           scope.limit(limit).to_a
-        end
-
-        def self.topic_data(topic)
-          MultiJson.load(
-            DiscourseWorkflows::TopicListItemSerializer.new(
-              topic,
-              scope: Discourse.system_user.guardian,
-              root: false,
-            ).to_json,
-          ).deep_symbolize_keys
         end
       end
     end

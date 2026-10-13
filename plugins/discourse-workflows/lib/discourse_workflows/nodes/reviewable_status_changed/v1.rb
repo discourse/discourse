@@ -56,7 +56,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { reviewable: reviewable_data(@reviewable).merge(status: @status) }
+          { reviewable: serialize_reviewable(@reviewable).merge(status: @status) }
         end
 
         def matches?(trigger_ctx)

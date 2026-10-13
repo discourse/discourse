@@ -41,9 +41,9 @@ if defined?(DiscourseWorkflows)
 
           def output
             {
-              event: event_data(starts_at: event.starts_at, ends_at: event.ends_at),
-              post: post_data,
-              topic: topic_data(topic),
+              event: serialize_event(starts_at: event.starts_at, ends_at: event.ends_at),
+              post: serialize_event_post,
+              topic: serialize_topic_list_item(topic),
               user: serialize_user(user),
               participation: {
                 status: removed? ? nil : status_name(@invitee.status),
@@ -51,7 +51,7 @@ if defined?(DiscourseWorkflows)
                 removed: removed?,
                 recurring: !removed? && !!@invitee.recurring,
               },
-              stats: stats_data,
+              stats: serialize_event_stats,
             }
           end
 

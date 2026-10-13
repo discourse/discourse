@@ -135,7 +135,7 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
           guardian.ensure_can_see_group!(group)
-          serialized_group = group_data(group, guardian)
+          serialized_group = serialize_group(group, guardian)
 
           return { group: serialized_group } if config["operation"] == "get"
 
@@ -184,7 +184,7 @@ module DiscourseWorkflows
           )
         end
 
-        def group_data(group, guardian)
+        def serialize_group(group, guardian)
           serialize_record(group, WebHookGroupSerializer, scope: guardian)
         end
 
