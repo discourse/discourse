@@ -204,7 +204,7 @@ module DiscourseAi
             end
           end
 
-        bot.reply(context, llm_args: { max_tokens: }, &buffer_blk)
+        bot.reply(context, llm_args: { max_response_tokens: max_tokens }, &buffer_blk)
 
         if tool_output && summary.blank?
           raise MissingToolOutput, "The model did not set a topic summary"

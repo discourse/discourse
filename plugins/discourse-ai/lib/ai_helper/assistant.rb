@@ -290,7 +290,7 @@ module DiscourseAi
             end
           end
 
-        bot.reply(context, llm_args: { max_tokens: 1024 }, &buffer_blk)
+        bot.reply(context, llm_args: { max_response_tokens: 1024 }, &buffer_blk)
 
         raw_caption = ""
 

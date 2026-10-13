@@ -35,6 +35,7 @@ module DiscourseAi
                     temperature: options["temperature"],
                     top_p: options["top_p"],
                     max_tokens: options["max_tokens"],
+                    max_response_tokens: options["max_response_tokens"],
                     thinking_effort: options["thinking_effort"],
                     stop_sequences: options["stop_sequences"],
                   )

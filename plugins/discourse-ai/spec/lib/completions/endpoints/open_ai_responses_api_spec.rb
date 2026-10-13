@@ -577,6 +577,31 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(parsed_body[:reasoning]).to include(effort: "none", summary: "auto")
   end
 
+  it "maps none to low for GPT-6.1 Sol, which does not support none" do
+    model.update!(name: "gpt-6.1-sol", provider_params: { reasoning_effort: "none" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to include(effort: "low", summary: "auto")
+  end
+
   it "strips temperature and top_p when reasoning_effort is set" do
     model.update!(provider_params: { reasoning_effort: "high" })
 

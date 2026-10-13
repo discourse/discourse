@@ -818,7 +818,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           ["Not executed — work allowance or tool batch limit reached."],
         )
         expect(final.tool_choice).to eq(:none)
-        expect(options[1][:max_tokens]).to eq(2048)
+        expect(options[1][:max_tokens]).to eq(4096)
         generation = DiscourseAi::Completions::GeneratedOutput.new
         calls.each { |call| generation << call }
         generation << "Batch summary"
@@ -859,7 +859,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           options
             .select { |option| option[:feature_name] == "bot" }
             .map { |option| option[:max_tokens] },
-        ).to eq([2000, 2048])
+        ).to eq([2000, 4096])
         expect(options.map { |option| option[:feature_name] }).not_to include("context_compression")
       end
     end
@@ -877,7 +877,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       state["work_budget"]["used"] = 5000
       Discourse.redis.setex(key, described_class::RESUME_STATE_TTL_SECONDS, state.to_json)
       allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(:prompt_capacity).and_return(
-        [100, 20_000, 4096],
+        [100, 20_000, 8192],
       )
       session =
         build_session(

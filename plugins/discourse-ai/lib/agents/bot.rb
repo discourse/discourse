@@ -24,6 +24,7 @@ module DiscourseAi
 
       TOKEN_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
         [The turn work allowance has been reached — no further tool calls are available.]
+        Answer directly from what you have; do not spend tokens deliberating at length.
         Provide your final response now using the information already gathered.
         Do not describe additional tool calls or future work as though you will perform them.
         If the task is not fully complete, clearly state what was accomplished
@@ -31,15 +32,18 @@ module DiscourseAi
       TEXT
       TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
         [The tool invocation limit has been reached — no further tool calls are available.]
+        Answer directly from what you have; do not spend tokens deliberating at length.
         Provide your final response now using the information already gathered.
         If the evidence is insufficient, say so instead of attempting another tool call.
       TEXT
       COMPLETION_LIMIT_FINAL_ANSWER_HINT = <<~TEXT.strip
         [The shared completion safety limit has been reached — no further tool calls are available.]
+        Answer directly from what you have; do not spend tokens deliberating at length.
         Provide one final response using the information already gathered.
       TEXT
       LEGACY_BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
+        Answer directly from what you have; do not spend tokens deliberating at length.
         Provide your final response using the information already gathered.
         If the task is not fully complete, clearly state what was accomplished
         and what still needs to be done so the user can continue in a follow-up message.
@@ -307,8 +311,14 @@ module DiscourseAi
           root_generation = context.subagent_depth.to_i.zero?
           generation_options =
             work_budget.generation_options(
-              llm_kwargs,
-              maximum: llm_kwargs[:max_tokens] || model.max_output_tokens.presence || 2500,
+              llm_kwargs.merge(
+                thinking_allowance:
+                  DiscourseAi::Completions::ThinkingConfig.response_allowance_for(
+                    llm_model: model,
+                    effort: llm_kwargs[:thinking_effort],
+                  ),
+              ),
+              maximum: llm_kwargs[:max_tokens] || model.max_output_tokens.presence,
               final: final_answer_requested,
               tools: prompt.tools.present? && prompt.tool_choice != :none,
               root: root_generation,

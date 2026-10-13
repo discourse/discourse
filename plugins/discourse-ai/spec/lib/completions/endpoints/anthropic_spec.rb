@@ -405,8 +405,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(execution.work_budget.remaining).to eq(15_950)
     expect(execution.work_budget.limit).to eq(32_000)
     llm.generate("Legacy", user: Discourse.system_user, max_tokens: 16_000, thinking_effort: "high")
-    expect(bodies.last["max_tokens"]).to eq(64_000)
-    expect(bodies.last["thinking"]["budget_tokens"]).to eq(48_000)
+    expect(bodies.last["max_tokens"]).to eq(32_384)
+    expect(bodies.last["thinking"]["budget_tokens"]).to eq(16_384)
     expect(request).to have_been_requested.twice
   ensure
     execution&.work_budget&.release_output(parent_reservation)
@@ -603,6 +603,100 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.request_tokens).to eq(25)
     expect(log.raw_request_payload).to eq(expected_body.to_json)
     expect(log.raw_response_payload.strip).to eq(body.strip)
+  end
+
+  describe "default max_tokens" do
+    it "reserves the effective cap for prompt admission when nothing is configured" do
+      endpoint = described_class.new(model)
+
+      expect(endpoint.prepare_model_params({})[:reserved_output_tokens]).to eq(4096)
+
+      model.update!(name: "claude-sonnet-4-6")
+      expect(described_class.new(model).prepare_model_params({})[:reserved_output_tokens]).to eq(
+        128_000,
+      )
+    end
+
+    it "maps friendly names to canonical API model names" do
+      dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+
+      {
+        "claude-4-opus" => "claude-opus-4-20250514",
+        "claude-4-sonnet" => "claude-sonnet-4-20250514",
+        "claude-3-5-sonnet" => "claude-3-5-sonnet-20241022",
+        "claude-opus-4-5" => "claude-opus-4-5-20251101",
+        "claude-sonnet-4-5-20250929" => "claude-sonnet-4-5-20250929",
+      }.each do |friendly_name, canonical_name|
+        model.update!(name: friendly_name)
+        expect(described_class.new(model).default_options(dialect)[:model]).to eq(canonical_name)
+      end
+    end
+
+    it "uses the known cap for newer models when no limit is configured" do
+      model.update!(name: "claude-sonnet-4-6")
+      dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+
+      options = described_class.new(model).default_options(dialect)
+
+      expect(options[:max_tokens]).to eq(128_000)
+    end
+
+    it "uses the known cap for dated snapshots when no limit is configured" do
+      model.update!(name: "claude-haiku-4-5-20251001")
+      dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+
+      options = described_class.new(model).default_options(dialect)
+
+      expect(options[:max_tokens]).to eq(64_000)
+    end
+
+    it "assumes a 64k cap for unrecognised models when no limit is configured" do
+      model.update!(name: "claude-sonnet-99")
+      dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+
+      options = described_class.new(model).default_options(dialect)
+
+      expect(options[:max_tokens]).to eq(64_000)
+    end
+
+    it "uses the configured limit over the known cap" do
+      model.update!(name: "claude-sonnet-4-6", max_output_tokens: 2000)
+      dialect = DiscourseAi::Completions::Dialects::Claude.new(prompt, model)
+
+      options = described_class.new(model).default_options(dialect)
+
+      expect(options[:max_tokens]).to eq(2000)
+    end
+
+    it "clamps explicit requests to the known cap when no limit is configured" do
+      model.update!(name: "claude-sonnet-4-6")
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-sonnet-4-6",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user, max_tokens: 200_000)
+
+      expect(parsed_body[:max_tokens]).to eq(128_000)
+    end
   end
 
   it "supports non streaming tool calls" do
@@ -845,6 +939,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
     model.provider_params["enable_reasoning"] = true
     model.provider_params["reasoning_tokens"] = 10_000
+    model.max_output_tokens = 40_000
     model.save!
 
     proxy = DiscourseAi::Completions::Llm.proxy(model)
@@ -902,6 +997,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
   it "configures adaptive thinking with effort" do
     model.update!(
+      max_output_tokens: 32_000,
       provider_params: {
         enable_reasoning: true,
         adaptive_thinking: true,
@@ -2279,7 +2375,13 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
   describe "adaptive thinking" do
     it "sends adaptive thinking config when enabled" do
-      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+      model.update!(
+        max_output_tokens: 32_000,
+        provider_params: {
+          enable_reasoning: true,
+          adaptive_thinking: true,
+        },
+      )
 
       parsed_body = nil
       stub_request(:post, url).with(
@@ -2315,6 +2417,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
     it "adaptive_thinking takes priority over enable_reasoning" do
       model.update!(
+        max_output_tokens: 32_000,
         provider_params: {
           adaptive_thinking: true,
           enable_reasoning: true,

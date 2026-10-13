@@ -301,9 +301,23 @@ module DiscourseAi
           end
         end
 
-        def update_completion_state(log, call_status, cancelled: false)
-          log.stop_reason = output_stop_reason&.to_s&.slice(0, 50).presence
+        def update_completion_state(
+          log,
+          call_status,
+          cancelled: false,
+          response_limit_tripped: false
+        )
           log.reasoning_tokens = reported_reasoning_tokens
+
+          # A response-limit cut is our own doing: the reply was trimmed to
+          # the caller's visible-response cap and generation aborted.
+          if response_limit_tripped
+            log.stop_reason = "max_response_tokens"
+            log.completion_state = AiApiAuditLog::CompletionState::TRUNCATED if @visible_output
+            return
+          end
+
+          log.stop_reason = output_stop_reason&.to_s&.slice(0, 50).presence
           # Cancellation is a user action, not an incomplete completion.
           return if cancelled || call_status != :success
 
@@ -924,11 +938,16 @@ module DiscourseAi
           log.raw_response_payload = response_raw
           log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
-          update_completion_state(log, call_status, cancelled: cancelled)
+          update_completion_state(
+            log,
+            call_status,
+            cancelled: cancelled,
+            response_limit_tripped: !!execution_context&.response_limit_tripped,
+          )
           execution_context&.settle_generation(
             tokens: log.response_tokens,
             tokenizer: tokenizer,
-            complete: call_status == :success,
+            complete: call_status == :success && !cancelled,
           )
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
@@ -938,6 +957,7 @@ module DiscourseAi
           log.duration_msecs = (Time.now - start_time) * 1000
           log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
+          execution_context.audit_log_id = log.id if execution_context
 
           execution_context&.token_usage_tracker&.add_from_audit_log(
             log,
