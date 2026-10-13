@@ -161,6 +161,19 @@ RSpec.describe Live::UserStatusManager do
   describe ".clear_stale_statuses" do
     fab!(:other_user, :user)
 
+    it "clears statuses owned before the plugin rename" do
+      user.set_status!("In Watercooler", "studio_microphone")
+      other_user.set_status!("AFK in Watercooler", "zzz")
+      Discourse.redis.sadd("voice:status_owners", [user.id, other_user.id])
+      freeze_time(1.minute.from_now)
+
+      described_class.clear_stale_statuses([])
+
+      expect(user.reload.user_status).to be_nil
+      expect(other_user.reload.user_status).to be_nil
+      expect(Discourse.redis.smembers("voice:status_owners")).to be_empty
+    end
+
     it "clears Live statuses of users not in the live set" do
       described_class.set_live_status(user, room)
       described_class.set_live_status(other_user, room)

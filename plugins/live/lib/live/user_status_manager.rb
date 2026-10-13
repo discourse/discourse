@@ -8,7 +8,8 @@ module Live
     # ownership — anyone can pick zzz from the status picker — and the sweep
     # must never touch a status it didn't set. Self-healing: heartbeats
     # re-add, and Redis drops the key once the set empties.
-    OWNERS_KEY = "live:status_owners"
+    # Keep the persisted key so statuses without an expiry remain eligible for cleanup.
+    OWNERS_KEY = "voice:status_owners"
     # A status younger than this is skipped by the sweep: it may have been set
     # by a join that raced the sweep's liveness snapshot, and the heartbeat
     # only refreshes statuses that still exist, so a wrong clear would stick.
