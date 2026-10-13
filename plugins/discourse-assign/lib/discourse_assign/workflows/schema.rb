@@ -71,6 +71,25 @@ module DiscourseAssign
           ASSIGNMENT_SCHEMA,
           DiscourseWorkflows::Schema::ACTOR_SCHEMA,
         ).freeze
+
+      ASSIGNMENT_V2_SCHEMA =
+        DiscourseWorkflows::Schema.document(
+          "assignment" => {
+            "type" => "object",
+            "properties" =>
+              ASSIGNMENT_SCHEMA.dig("properties", "assignment", "properties").transform_keys(
+                "assigned_by_user" => "assigned_by",
+              ),
+          },
+        )
+
+      ASSIGNMENT_V2_OUTPUT_SCHEMA =
+        DiscourseWorkflows::Schema.merge(
+          DiscourseWorkflows::Schema::POST_SCHEMA,
+          DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
+          ASSIGNMENT_V2_SCHEMA,
+          DiscourseWorkflows::Schema::ACTOR_SCHEMA,
+        ).freeze
     end
   end
 end

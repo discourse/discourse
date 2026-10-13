@@ -26,6 +26,14 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          deprecated(
+            superseded_by: "2.0",
+            changes: {
+              "user" => "actor",
+            },
+            notice_key: "discourse_workflows.node_deprecated.user_is_topic_author",
+          )
+
           def initialize(vote, *)
             super(parameters: {})
             @vote = vote
