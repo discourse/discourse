@@ -2584,9 +2584,6 @@ et:
       admin:
         title: "Adminn"
     badges:
-      earned_n_times:
-        one: "Teenis selle märgise %{count} kord"
-        other: "Teenis selle märgise %{count} korda"
       granted_on: "Märgistatud %{date}"
       title: Märgised
       badge_count:

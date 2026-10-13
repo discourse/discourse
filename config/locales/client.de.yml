@@ -5528,9 +5528,6 @@ de:
         search_open: "Suche der Administrationsoberfläche öffnen"
         search_full_page: "Ganzseitensuche für Administratoren öffnen"
     badges:
-      earned_n_times:
-        one: "Abzeichen %{count}-mal erhalten"
-        other: "Abzeichen %{count}-mal erhalten"
       granted_on: "Verliehen %{date}"
       others_count:
         one: "%{count} Mal an andere vergeben"

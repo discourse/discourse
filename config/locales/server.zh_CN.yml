@@ -2849,6 +2849,7 @@ zh_CN:
     improved_crawler_detection: "启用改进的爬虫跟踪功能，从而可更精准地识别疑似爬虫，并确保流量统计的准确性。"
     enable_invite_modal_with_roles: "启用重新设计的邀请流程，管理员可以直接以管理员身份邀请他人。受邀者注册后即成为版主，在邀请人通过电子邮件确认后，受邀者将成为管理员。"
     update_pending_users_reminder_default: "我们将{{setting:pending_users_reminder_delay_minutes}}设置的默认值更新为 30 分钟，以便管理人员在有新成员等待审批时能够及时收到通知。如果您之前更改过此设置，则此次更改不会生效。"
+    update_whispers_allowed_groups_default: "我们正在更新 {{setting:whispers_allowed_groups}} 设置的默认值，允许管理员和版主默认发送私密回复。如果你此前修改过此设置，现有配置将保持不变，除非你将其重置为默认值。"
     sidebar_user_navigation: "将用户页面（个人资料、活动、通知、消息、邀请和偏好设置）的导航从水平标签栏移至独立的侧边栏面板，与管理后台的导航方式相同。在移动设备上，该面板可通过汉堡菜单访问。"
     enable_generated_llms_txt: "当未上传自定义文件时，生成简洁的 /llms.txt 文件。该文档描述了公共发现路径、首选的 Discourse MCP 接口以及负责的代理访问权限。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
     enable_markdown_endpoints: "支持以 Markdown 格式提供主题和主题列表，通过 .md URL 和带有 Accept: text/markdown 标头的请求来实现。常规的可见性和个人资料隐私规则始终适用。"

@@ -4622,9 +4622,6 @@ fi:
       admin:
         title: "Ylläpitäjä"
     badges:
-      earned_n_times:
-        one: "On ansainnut tämän kunniamerkin %{count} kerran"
-        other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
       others_count:
         one: "Myönnetty muille %{count} kerran"

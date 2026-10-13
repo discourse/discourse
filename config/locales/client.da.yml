@@ -3968,9 +3968,6 @@ da:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Blev tildelt dette emblem %{count} gang"
-        other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
       others_count:
         one: "Givet til andre %{count} gang"

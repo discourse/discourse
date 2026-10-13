@@ -1441,6 +1441,7 @@ lt:
     privacy_policy_url: "Jei turite Privatumo politikos dokumentą, talpinamą kitur, kurį norite naudoti, pateikite visą URL čia."
     num_flaggers_to_close_topic: "Mažiausias unikalių pranešimų skaičius, kurio reikia, kad tema būtų automatiškai sustabdyta intervencijai"
     num_hours_to_close_topic: "Valandų skaičius pristabdyti temą intervencijai."
+    allow_all_users_to_flag_illegal_content: "Leisti pranešti apie neteisėtą turinį visiems, įskaitant 0 patikimumo lygio ir nutildytus vartotojus. Anoniminiai vartotojai matys informaciją, kurią jie turi siųsti el. paštu administratoriams, norėdami pranešti apie neteisėtą turinį. Šis nustatymas turi pirmenybę prieš {{setting:flag_post_allowed_groups}}."
     incoming_email_prefer_html: "Įeinantiems el. laiškams naudokite HTML, o ne tekstą."
     display_name_on_email_from: "Rodyti visus vardus el. pašte iš laukų"
     unsubscribe_via_email: "Leiskite naudotojams atšaukti el. laiškų prenumeratą išsiųsdami el. laišką, kurio temoje arba tekste yra „atsisakyti prenumeratos“."
@@ -1503,6 +1504,8 @@ lt:
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
+    enable_main_outlet_grid_layout_change: "Įdėkite redagavimo skydelį pagrindiniame tinklelyje, kad temos galėtų jį išdėstyti tinklelio stulpelyje, ir naudokite siauresnę šoninę juostą."
+    update_whispers_allowed_groups_default: "Atnaujiname numatytąjį „ {{setting:whispers_allowed_groups}} “ nustatymą, kad darbuotojai iš pradžių galėtų siųsti privačias žinutes. Jei anksčiau buvote pakeitę šį nustatymą, jūsų konfigūracija nesikeis, nebent nustatymą atstatytumėte į numatytąjį."
     sidebar_user_navigation: "Perkelia vartotojo puslapių navigaciją — profilį, veiklą, pranešimus, žinutes, kvietimus ir nustatymus — iš horizontalių skirtukų juostų į atskirą šoninį skydelį, kaip tai daroma administratoriaus srityje. Mobiliajame įrenginyje šis skydelis pasiekiamas per svetainės meniu kampe."
     errors:
       invalid_email: "Neteisingas el. pašto adresas."
@@ -2627,6 +2630,11 @@ lt:
     restricted_tag_disallowed: 'Jūs negalite naudoti žymos „%{tag}“.'
     restricted_tag_remove_disallowed: 'Negalite pašalinti žymos „%{tag}“.'
     forbidden:
+      required_tag_group:
+        one: 'Prieš naudodami šią žymą, iš žymų grupės „%{tag_group_name}“ pasirinkite žymą „ %{count}“'
+        few: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
+        many: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
+        other: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
       has_synonyms: '„%{tag_name}“ negalima naudoti, nes jis turi sinonimų.'
     invalid_target_tag: "negali būti sinonimo sinonimas"
     synonyms_exist: "neleidžiama, kol yra sinonimų"

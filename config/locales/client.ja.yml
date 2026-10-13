@@ -4615,8 +4615,6 @@ ja:
       admin:
         title: "管理者"
     badges:
-      earned_n_times:
-        other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
       others_count:
         other: "他の人に %{count} 回付与しました"

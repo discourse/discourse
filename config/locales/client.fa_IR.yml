@@ -4358,9 +4358,6 @@ fa_IR:
       admin:
         title: "مدیر کل"
     badges:
-      earned_n_times:
-        one: "این مدال را %{count} بار به دست آورده"
-        other: "این مدال را %{count} بار به دست آورده"
       granted_on: "اعطا شده %{date}"
       others_count:
         one: "%{count} بار به دیگران اعطا شده است"

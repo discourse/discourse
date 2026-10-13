@@ -2906,9 +2906,6 @@ ca:
       admin:
         title: "Administració"
     badges:
-      earned_n_times:
-        one: "Ha rebut aquesta insígnia %{count} vegada."
-        other: "Ha rebut aquesta insígnia%{count} vegades."
       granted_on: "Concedit %{date}"
       title: Insígnies
       allow_title: "Podeu fer servir aquesta insígnia com a títol"

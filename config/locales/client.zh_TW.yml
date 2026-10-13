@@ -5453,8 +5453,6 @@ zh_TW:
         search_open: "開啟管理介面的搜尋"
         search_full_page: "開啟全頁管理搜尋"
     badges:
-      earned_n_times:
-        other: "授予徽章 %{count} 次"
       granted_on: "授予於%{date}"
       others_count:
         other: "授予他人 %{count} 次"

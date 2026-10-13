@@ -19,6 +19,9 @@ lt:
     emotion_neutral:
       title: "😐 Neutrali"
   discourse_ai:
+    ai_artifact:
+      share_version_conflict: "Ši nuoroda jau publikuoja kitą versiją. Atnaujinkite ir pasirinkite „Atnaujinti prisegtą versiją“, kad ją pakeistumėte."
+      uploads_cannot_be_shared: "Šis artefaktas nurodo įkėlimus, kurie gali būti privatūs. Prieš publikuodami atskirą nuorodą, pašalinkite įkėlimo nuorodas."
     multiple_models: "Keli modeliai"
     tools:
       presets:

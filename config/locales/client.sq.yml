@@ -3829,9 +3829,6 @@ sq:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Kjo stemë është fituar %{count} herë"
-        other: "Kjo stemë është fituar %{count} herë"
       granted_on: "Atribuar më %{date}"
       title: Stemat
       allow_title: "Mund t'a përdorësh këtë stemë si titull"

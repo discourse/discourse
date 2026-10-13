@@ -4856,10 +4856,6 @@ hr:
       admin:
         title: "Administrator"
     badges:
-      earned_n_times:
-        one: "Dobio/la ovu značku %{count} put"
-        few: "Dobio/la ovu značku %{count} puta"
-        other: "Dobio/la ovu značku %{count} puta"
       granted_on: "Odobreno %{date}"
       others_count:
         one: "Dodijeljeno drugima %{count} put"

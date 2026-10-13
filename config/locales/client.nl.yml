@@ -5135,9 +5135,6 @@ nl:
       admin:
         title: "Beheerder"
     badges:
-      earned_n_times:
-        one: "Deze badge is %{count} keer verdiend"
-        other: "Deze badge is %{count} keer verdiend"
       granted_on: "Toegekend op %{date}"
       others_count:
         one: "%{count} keer toegekend aan anderen"

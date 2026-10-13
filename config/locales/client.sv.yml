@@ -3926,9 +3926,6 @@ sv:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Förtjänade den här utmärkelsen %{count} gång"
-        other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
       others_count:
         one: "Beviljad till andra %{count} gång"

@@ -2526,6 +2526,7 @@ he:
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
     reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
+    update_whispers_allowed_groups_default: "אנחנו מעדכנים את ברירת המחדל של ההגדרה {{setting:whispers_allowed_groups}} כדי לאפשר לסגל לפרסם לחישות כברירת מחדל. אם שינית את ההגדרה הזאת בעבר, ההגדרות שלך לא ישתנו אלא אם כן הן תתאפסנה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."

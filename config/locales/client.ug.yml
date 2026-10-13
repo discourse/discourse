@@ -4982,9 +4982,6 @@ ug:
       admin:
         title: "باشقۇرغۇچى"
     badges:
-      earned_n_times:
-        one: "بۇ تارتۇققا %{count} قېتىم ئېرىشكەن"
-        other: "بۇ تارتۇققا %{count} قېتىم ئېرىشكەن"
       granted_on: "ئىجازەت ۋاقتى %{date}"
       others_count:
         one: "باشقىلارغا %{count} قېتىم ئىجازەت بەرگەن"

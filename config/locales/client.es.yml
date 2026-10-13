@@ -5074,9 +5074,6 @@ es:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Medalla ganada %{count} vez"
-        other: "Medalla ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
       others_count:
         one: "Concedido a otros %{count} vez"

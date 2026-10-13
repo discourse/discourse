@@ -2938,10 +2938,6 @@ bs_BA:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Zaradio / la sam ovu oznaku %{count} time"
-        few: "Zaradili ste ovu oznaku %{count} puta"
-        other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"

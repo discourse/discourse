@@ -3582,9 +3582,6 @@ hy:
       admin:
         title: "Ադմին"
     badges:
-      earned_n_times:
-        one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
-        other: "Վաստակել է այս կրծքանշանը %{count} անգամ"
       granted_on: "Շնորհված է %{date}"
       others_count:
         one: "Ուրիշներին շնորհվել է %{count} անգամ"

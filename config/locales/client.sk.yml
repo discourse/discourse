@@ -4979,11 +4979,6 @@ sk:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Získal tento odkaz %{count}-krát"
-        few: "Získal tento odkaz %{count}-krát"
-        many: "Získal tento odkaz %{count}-krát"
-        other: "Získal tento odkaz %{count}-krát"
       granted_on: "Udelený dňa %{date}"
       others_count:
         one: "Udelené ostatným %{count} krát"

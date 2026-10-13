@@ -4966,9 +4966,6 @@ hu:
       admin:
         title: "Adminisztrátor"
     badges:
-      earned_n_times:
-        one: "Nyerte ezt a jelvényt %{count} idővel"
-        other: "%{count} alkalommal szerezte meg ezt a jelvényt"
       granted_on: "Kiadva %{date}"
       others_count:
         one: "Másoknak %{count} alkalommal megadva"

@@ -4655,8 +4655,6 @@ vi:
       admin:
         title: "Quản trị"
     badges:
-      earned_n_times:
-        other: "Đã giành được huy hiệu này %{count} lần"
       granted_on: "Đã trao %{date}"
       others_count:
         other: "Đã trao cho những người khác %{count} lần"

@@ -3194,9 +3194,6 @@ gl:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Gañou esta insignia %{count} vez"
-        other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"

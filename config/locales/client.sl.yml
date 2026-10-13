@@ -3461,11 +3461,6 @@ sl:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Prislužili to značko %{count} krat"
-        two: "Prislužili to značko %{count} krat"
-        few: "Prislužili to značko %{count} krat"
-        other: "Prislužili to značko %{count} krat"
       granted_on: "Podeljeno %{date}"
       title: Značke
       allow_title: "To značko lahko uporabite kot naziv"

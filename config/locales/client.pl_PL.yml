@@ -6365,11 +6365,6 @@ pl_PL:
         search_open: "Otwórz wyszukiwanie dla interfejsu administratora"
         search_full_page: "Otwórz wyszukiwanie dla interfejsu administratora na całym ekranie"
     badges:
-      earned_n_times:
-        one: "Otrzymano tę odznakę %{count} raz"
-        few: "Otrzymano tą odznakę %{count} razy"
-        many: "Otrzymano tą odznakę %{count} razy"
-        other: "Otrzymano tą odznakę %{count} razy"
       granted_on: "Przyznano %{date}"
       others_count:
         one: "Przyznane innym %{count} raz"
@@ -6394,6 +6389,11 @@ pl_PL:
         few: "%{number} przyznane"
         many: "%{number} przyznanych"
         other: "%{number} przyznanych"
+      granted_times:
+        one: "Przyznano %{number} czasu"
+        few: "Przyznano %{number} czasu"
+        many: "Przyznano %{number} czasu"
+        other: "Przyznano %{number} czasu"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
       none: "(brak)"
       successfully_granted: "Przyznano %{badge} użytkownikowi %{username}"

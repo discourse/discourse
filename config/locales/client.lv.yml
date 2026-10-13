@@ -2727,10 +2727,6 @@ lv:
       admin:
         title: "Administrators"
     badges:
-      earned_n_times:
-        zero: "Nopelnīja šo žetonu %{count} reizes"
-        one: "Nopelnīja šo žetonu %{count} reizi"
-        other: "Nopelnīja šo žetonu %{count} reizes"
       granted_on: "Piešķirts %{date}"
       title: Žetoni
       allow_title: "Jūs varat izmantot šo žetonu kā titulu"
