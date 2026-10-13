@@ -14,17 +14,40 @@ zh_CN:
     next_page: "下一页"
     empty: "没有要显示的条目。"
     replies: "回复"
+    post_author: "作者： %{author}"
+    post_date: "发布日期： %{timestamp}"
     last_updated: "最近更新："
     event:
       name: "活动"
+      start: "开始"
+      end: "结束"
       location: "位置"
       link: "链接"
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "无法创建类别。"
+      category_delete_confirmation_required: "类别删除必须得到确认"
+      category_delete_name_mismatch: "类别名称不匹配"
+      category_not_found: "未找到类别"
+      category_update_failed: "类别无法更新"
+      category_update_required: "必须至少提供一个类别字段。"
       draft_sequence_conflict: "草稿序号冲突"
       draft_too_long: "草稿太长了"
+      group_create_failed: "无法创建群组"
+      group_delete_confirmation_required: "群组删除必须得到确认"
+      group_delete_name_mismatch: "群组名称不匹配"
+      group_member_selector_required: "请提供用户名、用户ID或用户邮箱中的任意一个。"
+      group_user_limit:
+        other: "选择不超过 %{count} 个用户。"
+      group_membership_request_not_found: "该用户没有待处理的入群申请。"
       group_not_found: "未找到群组"
+      group_post_single_cursor: "请提供 before_post_id 或 before，不要同时提供两者。"
+      group_request_reason_required: "申请加入群组时需要提供理由"
+      group_update_existing_users_required:
+        other: "此更改也会影响 %{count} 中的现有成员。请再次调用 update_existing_users 方法，以决定是否对他们应用此更改。"
+      group_update_failed: "该群组无法更新"
+      group_update_required: "至少提供一个要更新的群组字段"
       invalid_date: "无效日期"
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
@@ -67,13 +90,19 @@ zh_CN:
       site_setting_value_forbidden: "重置站点设置时，请勿提供值。"
       site_setting_value_required: "设置站点设置时，请提供值"
       site_setting_verification_failed: "无法验证站点设置更新。"
+      theme_create_failed: "主题创建失败。"
+      theme_not_found: "主题未找到"
+      theme_update_failed: "主题无法更新"
+      theme_update_required: "至少提供一个主题字段以供更新"
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
       upload_not_found: "未找到上传文件"
       upload_too_large: "上传文件过大"
-      user_update_required: "至少提供一个个人资料字段以供更新"
+      user_create_failed: "无法创建用户"
+      user_deactivation_pending_review: "在停用该账户之前，请查看该用户的待批准情况。"
       user_not_found: "用户未找到"
+      user_update_required: "至少提供一个个人资料字段以供更新"
     oauth:
       authorize_title: "授权 MCP 客户端"
       client_request: "%{client_name} 请求访问 %{site_name}。"
@@ -711,6 +740,8 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
+      users_not_found: "没有匹配的用户帐户： %{values}"
+      conflicting_notification_defaults: "每个类别或标签只能有一个默认通知级别。"
       cannot_add_emails: "只有用户名才能用于将成员添加到此群组。如需通过电子邮件邀请，请使用“邀请”按钮。"
       counting_too_many_email_domains:
         other: "一次最多可以统计 %{count} 个电子邮件域"
@@ -1817,6 +1848,8 @@ zh_CN:
         total_users: "活跃用户帐户总数"
       description: "显示按登录提供商分组的关联帐户数量。仅在启用社交登录方法时适用。"
   dashboard:
+    reports:
+      cap_reached: "仪表盘已显示最大报告数量 %{max} 。请先移除一个报告，然后再添加另一个。"
     problem:
       twitter_login: 'X 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">站点设置</a>中检查凭据。'
       group_email_credentials: '群组“<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>”的电子邮件凭据存在问题。在解决此问题之前，不会从群组收件箱发送任何电子邮件。%{error}'
@@ -2396,7 +2429,7 @@ zh_CN:
     reviewable_default_visibility: "除非满足此优先级，否则不显示可审核条目"
     reviewable_low_priority_threshold: "除非使用 '（任何）' 筛选器，否则优先级筛选器会隐藏不符合此分数的可审核条目。"
     high_trust_flaggers_auto_hide_posts: "新用户帖子在被 TL3+ 用户举报为垃圾信息后会被自动隐藏"
-    allow_all_users_to_flag_illegal_content: "匿名用户将看到需要通过电子邮件向管理员举报非法内容的信息。此设置优先于{{setting:flag_post_allowed_groups}}。"
+    allow_all_users_to_flag_illegal_content: "允许任何人举报非法内容，包括信任等级为 0 的用户和已被禁言的用户。匿名用户将看到相关信息，提示他们需要通过电子邮件联系管理员来举报非法内容。此设置优先于 {{setting:flag_post_allowed_groups}}。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
     slow_mode_prevents_editing: "在 {{setting:editing_grace_period}} 之后，“慢速模式”会阻止编辑吗？"
@@ -2754,8 +2787,9 @@ zh_CN:
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
-    enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
     enable_composer_redesign: "启用重新设计的编辑器。"
+    enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
+    enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2815,7 +2849,10 @@ zh_CN:
     improved_crawler_detection: "启用改进的爬虫跟踪功能，从而可更精准地识别疑似爬虫，并确保流量统计的准确性。"
     enable_invite_modal_with_roles: "启用重新设计的邀请流程，管理员可以直接以管理员身份邀请他人。受邀者注册后即成为版主，在邀请人通过电子邮件确认后，受邀者将成为管理员。"
     update_pending_users_reminder_default: "我们将{{setting:pending_users_reminder_delay_minutes}}设置的默认值更新为 30 分钟，以便管理人员在有新成员等待审批时能够及时收到通知。如果您之前更改过此设置，则此次更改不会生效。"
+    update_whispers_allowed_groups_default: "我们正在更新 {{setting:whispers_allowed_groups}} 设置的默认值，允许管理员和版主默认发送私密回复。如果你此前修改过此设置，现有配置将保持不变，除非你将其重置为默认值。"
+    sidebar_user_navigation: "将用户页面（个人资料、活动、通知、消息、邀请和偏好设置）的导航从水平标签栏移至独立的侧边栏面板，与管理后台的导航方式相同。在移动设备上，该面板可通过汉堡菜单访问。"
     enable_generated_llms_txt: "当未上传自定义文件时，生成简洁的 /llms.txt 文件。该文档描述了公共发现路径、首选的 Discourse MCP 接口以及负责的代理访问权限。要调整自动访问，请配置 {{setting:slow_down_crawler_user_agents}} 和 {{setting:slow_down_crawler_rate}}。"
+    enable_markdown_endpoints: "支持以 Markdown 格式提供主题和主题列表，通过 .md URL 和带有 Accept: text/markdown 标头的请求来实现。常规的可见性和个人资料隐私规则始终适用。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_date: "日期格式无效。请输入有效日期。"
@@ -2895,6 +2932,7 @@ zh_CN:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
+      uncategorized_category_missing: "“允许未分类主题”功能无法启用，因为“未分类”类别已不存在。"
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 站点设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
       content_localization_language_switcher_requirements: "语言切换器需要启用 {{setting:allow_user_locale}} ，并且 {{setting:content_localization_supported_locales}} 至少包含一种语言。 {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -3190,6 +3228,7 @@ zh_CN:
     wrong_invite_code: "您输入的邀请码不正确。"
     reserved_username: "不允许使用该用户名。"
     missing_user_field: "您尚未填写所有必填用户字段"
+    missing_user_field_details: "填写必填的用户字段 '%{name}' (ID: %{id})。"
     missing_username: "请输入一个用户名"
     missing_full_name: "请输入您的全名"
     auth_complete: "身份验证完成。"
@@ -4546,6 +4585,16 @@ zh_CN:
         如果您没有选择禁用双重身份验证 (2FA)，则可能有人盗用了您的帐户。
 
         如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
+    account_associated:
+      title: "新关联账户"
+      subject_template: "[%{email_prefix}] 新的关联帐户"
+      subject_template_improved: "新关联账户"
+      text_body_template: |
+        一个 %{provider_name} 账户刚刚与您在 %{site_name}上的账户进行了关联。现在可以使用该账户登录。
+
+        如果您是本人操作的，则无需采取其他措施。
+
+        如果您并非本人操作，则可能有人获得了您账户的访问权限。 [查看您的关联账户](%{base_url}/my/preferences/account)，[查看您的现有会话](%{base_url}/my/preferences/security)，并考虑更改密码。
     digest:
       why: "自 %{since} 以来 %{site_link} 的简要摘要"
       since_last_visit: "自从您上次访问以来"
@@ -5274,6 +5323,8 @@ zh_CN:
       restricted_to:
         other: "仅在以下类别中可用：%{category_names}"
       restricted_to_truncated: "仅在以下版本中可用： %{category_names}和其他 %{more_count} 个"
+      required_tag_group:
+        other: '在使用此标签之前，请从“%{tag_group_name}”标签组中选择 %{count} 个更多标签'
       synonym: '请改用“%{tag_name}”'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
       one_tag_per_topic_group: '与“%{tag_names}”冲突（每个话题仅允许一个标签）'
@@ -5424,12 +5475,14 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
+    admin_onboarding_topic_option: "已选选项： %{option}\n选项 ID： %{option_id}"
     redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
     unknown: "未知"
     site_setting:
       update_existing_users: "更新现有用户？%{value}"
+      missing_category_reset: "由于它指向的类别（id %{category_id}）已不存在，因此重置为默认值。"
     user_merged: "%{username} 已被合并到此帐户"
     user_delete_self: "被自己从 %{url} 删除"
     webhook_deactivation_reason: "您的网络钩子已自动停用。我们收到了多个 '%{status}' HTTP 状态失败响应。"

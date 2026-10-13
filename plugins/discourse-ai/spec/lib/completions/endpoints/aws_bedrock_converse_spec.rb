@@ -10,6 +10,141 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
 
   before { enable_current_plugin }
 
+  it "captures streamed truncation with SDK snake-case metadata" do
+    stub_sdk_client do |listeners|
+      fire_message_start(listeners)
+      fire_content_block_delta(listeners, text: "Answer")
+      fire_event(
+        listeners,
+        :message_stop,
+        Aws::BedrockRuntime::Types::MessageStopEvent.new(stop_reason: "max_tokens"),
+      )
+      fire_metadata(listeners)
+    end
+    model.to_llm.generate("Input", user: user) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      stop_reason: "max_tokens",
+      completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+    )
+  end
+
+  it "captures streamed normal completion with SDK snake-case metadata" do
+    stub_sdk_client do |listeners|
+      fire_message_start(listeners)
+      fire_content_block_delta(listeners, text: "Answer")
+      fire_event(
+        listeners,
+        :message_stop,
+        Aws::BedrockRuntime::Types::MessageStopEvent.new(stop_reason: "end_turn"),
+      )
+      fire_metadata(listeners)
+    end
+    model.to_llm.generate("Input", user: user) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      stop_reason: "end_turn",
+      completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+    )
+  end
+
+  describe "completion metadata" do
+    it "records SDK stop reasons and limits in non-streaming responses" do
+      response = mock_converse_response(text: "Partial")
+      response.stop_reason = "max_tokens"
+      stub_sdk_client(response: response)
+      model.to_llm.generate("Input", user: user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "max_tokens",
+        reasoning_tokens: nil,
+      )
+    end
+
+    it "forwards streamed message-stop reasons even without content" do
+      stub_sdk_client do |listeners|
+        fire_message_start(listeners)
+        fire_event(
+          listeners,
+          :message_stop,
+          Aws::BedrockRuntime::Types::MessageStopEvent.new(stop_reason: "max_tokens"),
+        )
+        fire_metadata(listeners, output_tokens: 100)
+      end
+      model.to_llm.generate("Input", user: user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "max_tokens",
+        response_tokens: 100,
+      )
+    end
+
+    it "classifies non-streaming structured output before returning early" do
+      response = mock_converse_response(text: '{"message":"Answer"}')
+      response.stop_reason = "max_tokens"
+      stub_sdk_client(response: response)
+      prompt = DiscourseAi::Completions::Prompt.new("Input")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+      endpoint.perform_completion!(
+        dialect,
+        user,
+        {
+          response_format: {
+            json_schema: {
+              schema: {
+                properties: {
+                  message: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+      )
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "max_tokens",
+      )
+    end
+  end
+
+  it "bounds unexpected SDK stop reasons before persisting" do
+    reason = "x" * 100
+    response = mock_converse_response
+    response.stop_reason = reason
+    stub_sdk_client(response: response)
+    model.to_llm.generate("Input", user: user)
+    expect(AiApiAuditLog.last.stop_reason).to eq(reason.first(50))
+  end
+
+  it "classifies broken structured streaming output after finishing its buffer" do
+    stub_sdk_client do |listeners|
+      fire_message_start(listeners)
+      fire_content_block_delta(listeners, text: "{broken")
+      fire_message_stop(listeners)
+      fire_metadata(listeners)
+    end
+    partials = []
+    prompt = DiscourseAi::Completions::Prompt.new("Input")
+    dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+    params = {
+      response_format: {
+        json_schema: {
+          schema: {
+            properties: {
+              message: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+    }
+    endpoint.perform_completion!(dialect, user, params) { |partial| partials << partial }
+    expect(partials.last).to be_a(DiscourseAi::Completions::StructuredOutput)
+    expect(partials.last.to_s).to eq("{broken")
+    expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::COMPLETE)
+  end
+
   def mock_converse_response(text: "Hello world", input_tokens: 10, output_tokens: 5)
     response =
       Aws::BedrockRuntime::Types::ConverseResponse.new(
@@ -106,7 +241,34 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
   end
 
   describe "default_options" do
-    it "does not set max_tokens by default" do
+    it "sets max_tokens to the known model cap by default" do
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(4096)
+    end
+
+    it "assumes a 64k cap for unrecognised Claude models when no limit is configured" do
+      model.update!(name: "claude-sonnet-99")
+
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(64_000)
+    end
+
+    it "uses the configured limit over the known cap" do
+      model.update!(max_output_tokens: 2000)
+
+      prompt = DiscourseAi::Completions::Prompt.new("hello")
+      dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
+
+      expect(endpoint.default_options(dialect)[:max_tokens]).to eq(2000)
+    end
+
+    it "does not set max_tokens for non-Claude models" do
+      model.update!(name: "amazon.nova-pro-v1:0")
+
       prompt = DiscourseAi::Completions::Prompt.new("hello")
       dialect = DiscourseAi::Completions::Dialects::Converse.new(prompt, model)
 
@@ -125,6 +287,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
 
     it "configures reasoning with budget tokens" do
+      model.update!(max_output_tokens: 8192)
       model.provider_params["enable_reasoning"] = true
       model.provider_params["reasoning_tokens"] = 4096
 
@@ -290,6 +453,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       end
     expect(execution.work_budget.used).to eq(model.to_llm.tokenizer.size("Partial answer"))
     expect(execution.token_usage_tracker.response).to be > 0
+    expect(AiApiAuditLog.last.completion_state).to be_nil
     expect(AiApiAuditLog.last.raw_request_payload).to be_present
   end
 
@@ -311,6 +475,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
 
     it "passes thinking config for Claude models" do
+      model.update!(max_output_tokens: 8192)
       response = mock_converse_response
       client = stub_sdk_client(response: response)
 
@@ -358,7 +523,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       end
     end
 
-    it "passes model name directly as model_id to SDK" do
+    it "translates friendly model names to Bedrock model IDs for the SDK" do
       response = mock_converse_response
       client = stub_sdk_client(response: response)
 
@@ -366,8 +531,31 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       llm.generate("hello", user: user)
 
       expect(client).to have_received(:converse) do |params|
-        expect(params[:model_id]).to eq("claude-3-sonnet")
+        expect(params[:model_id]).to eq("anthropic.claude-3-sonnet-20240229-v1:0")
         expect(params[:system]).to be_present
+      end
+    end
+
+    it "translates newer friendly names and passes qualified IDs through" do
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+      seen_model_ids = []
+      allow(client).to receive(:converse) do |params|
+        seen_model_ids << params[:model_id]
+        response
+      end
+
+      {
+        "claude-opus-4-1" => "anthropic.claude-opus-4-1-20250805-v1:0",
+        "claude-opus-4-5" => "anthropic.claude-opus-4-5-20251101-v1:0",
+        "claude-sonnet-4-6" => "anthropic.claude-sonnet-4-6",
+        "claude-opus-4-8" => "anthropic.claude-opus-4-8",
+        "global.anthropic.claude-sonnet-4-6" => "global.anthropic.claude-sonnet-4-6",
+        "amazon.nova-pro-v1:0" => "amazon.nova-pro-v1:0",
+      }.each do |friendly_name, bedrock_id|
+        model.update!(name: friendly_name)
+        DiscourseAi::Completions::Llm.proxy("custom:#{model.id}").generate("hello", user: user)
+        expect(seen_model_ids.last).to eq(bedrock_id)
       end
     end
 

@@ -214,6 +214,9 @@ ca:
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
     skip_user_nav: "Ves al contingut principal"
+    reorder:
+      removed: "Ha suprimit %{label}"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     emails_are_disabled_non_staff: "El correu electrònic sortint ha estat desactivat per a usuaris que no siguin del personal."
     software_update_prompt:
@@ -1773,8 +1776,7 @@ ca:
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
       discard: "Descarta"
-      title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
-      title_placeholder_redesign: "Títol"
+      title_placeholder: "Títol"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
@@ -2904,9 +2906,6 @@ ca:
       admin:
         title: "Administració"
     badges:
-      earned_n_times:
-        one: "Ha rebut aquesta insígnia %{count} vegada."
-        other: "Ha rebut aquesta insígnia%{count} vegades."
       granted_on: "Concedit %{date}"
       title: Insígnies
       allow_title: "Podeu fer servir aquesta insígnia com a títol"
@@ -3216,6 +3215,7 @@ ca:
             block: "Bloca"
             presets:
               custom: "Personalitzat"
+            automatic: "Automàtic"
           authorizations:
             user: "Usuari"
             status: "Estat"
@@ -3929,6 +3929,7 @@ ca:
           upload: "Carrega"
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
+          leave: "Abandona"
           stay: "Roman"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"

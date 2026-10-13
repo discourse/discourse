@@ -208,6 +208,13 @@ be:
         display_name: "Імя"
         providers:
           google: "Google"
+      ai_artifact:
+        editor:
+          version: "Версія"
+          default: "Прадвызначаная"
+          apply: "Прымяніць"
+        share: "Абагуліць"
+        filter_all: "Усе"
       ai_bot:
         debug_ai_modal:
           request: "запыт"

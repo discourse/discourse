@@ -309,6 +309,8 @@ en:
       view_dashboard: "Explore all subjects and questions on the dashboard"
       disclaimer: "AI-generated observations describe the questions asked, not the quality or helpfulness of their answers. Suggested follow-ups are possibilities to investigate, not confirmed gaps. Questions can appear in multiple subjects."
     ai_artifact:
+      share_version_conflict: "This link already publishes a different version. Refresh and choose Update pinned version to change it."
+      uploads_cannot_be_shared: "This artifact references uploads that may be private. Remove the upload references before publishing a standalone link."
       errors:
         max_keys_exceeded:
           one: "You can only have %{count} key in the artifact."

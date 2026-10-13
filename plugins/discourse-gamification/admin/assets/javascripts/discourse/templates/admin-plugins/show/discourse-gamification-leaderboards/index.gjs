@@ -20,6 +20,7 @@ export default <template>
           <actions.Primary
             class="leaderboard-admin__btn-new"
             @action={{fn (mut @controller.creatingNew) true}}
+            @icon="plus"
             @label="gamification.leaderboard.new"
             @title="gamification.leaderboard.new"
           />

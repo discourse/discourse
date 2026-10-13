@@ -414,6 +414,19 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+      ai_artifact:
+        editor:
+          version: "Έκδοση"
+          default: "Προεπιλογή"
+          option_on: "Ενεργό"
+          option_off: "Ανενεργό"
+          apply: "Εφαρμογή"
+        share: "Κοινοποίηση"
+        create_link: "Δημιουργία συνδέσμου"
+        copy_link: "Αντιγραφή συνδέσμου"
+        filter_all: "Όλα"
+        filter_standalone: "Αυτόνομη"
+        filter_conversation: "Συνομιλία"
       ai_bot:
         title: "AI bot"
         llm: "Μοντέλο:"

@@ -57,6 +57,29 @@ ro:
           title: "Copii de siguranță"
       read_post:
         unknown_post: "articol"
+      chat_tool_approval:
+        topic_states:
+          open: "Deschide"
+          closed: "Închis"
+          active: "Activă"
+          deleted: "Șters"
+        solution_post: "Distribuie postarea #%{number}"
+        duration_label: "Durată:"
+        user_duration:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
+        post_states:
+          locked: "Blocat"
+        posts_label: "Articole"
+        category_label: "Categorie"
+        category_fields:
+          name: "nume"
+          description: "descriere"
+          color: "culoare"
+          text_color: "culoare text"
+        approve_label: "Da"
+        reject_label: "Nu"
       tool_summary:
         suspend_user: "Suspendă utilizatorul"
         silence_user: "Redu la tăcere utilizatorul"

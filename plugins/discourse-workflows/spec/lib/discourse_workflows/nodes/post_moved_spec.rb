@@ -78,6 +78,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
           trigger_context(
             "category_ids" => [destination_category.id.to_s],
             "tag_names" => [tag.name],
+            "topic_ids" => [destination_topic.id],
           ),
         ),
       ).to eq(true)
@@ -131,7 +132,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
       )
     end
 
-    it "returns false when the destination topic does not match category or tags" do
+    it "returns false when the destination topic does not match category, tags, or topics" do
       other_category = Fabricate(:category)
       trigger = described_class.new(moved_post, source_topic.id)
 
@@ -139,10 +140,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
         false,
       )
       expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)
+      expect(trigger.matches?(trigger_context("topic_ids" => [source_topic.id]))).to eq(false)
     end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

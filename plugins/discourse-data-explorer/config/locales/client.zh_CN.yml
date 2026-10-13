@@ -91,6 +91,12 @@ zh_CN:
       undo: "舍弃更改"
       delete: "删除"
       recover: "取消删除查询"
+      dashboard:
+        add: "添加到仪表板"
+        remove: "从仪表板中移除"
+        added: "查询已添加到仪表板"
+        removed: "查询已从仪表板中移除。"
+        unmountable: "带有必填参数且没有默认值的查询无法显示在仪表板上。"
       sql_label: "SQL"
       run_with_explain: "使用查询计划运行"
       run_options: "更多运行选项"

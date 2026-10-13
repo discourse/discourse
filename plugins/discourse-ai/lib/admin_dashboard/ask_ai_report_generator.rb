@@ -51,7 +51,7 @@ module DiscourseAi
             top_p: agent.top_p,
             thinking_effort: agent.thinking_effort,
             response_format: response_format(agent),
-            max_tokens: 8000,
+            max_response_tokens: 8000,
           )
         result = JSON.parse(DiscourseAi::Completions::Llm.text_from_response(response))
         ids = asks.map(&:first)

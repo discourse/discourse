@@ -25,6 +25,26 @@ lv:
           title: "Dublējums (Backups)"
       read_post:
         unknown_post: "ieraksts"
+      chat_tool_approval:
+        topic_states:
+          open: "Atvērt"
+          closed: "Slēgts"
+          active: "Aktīvs"
+          deleted: "Dzēsts"
+        solution_post: "Ieraksts #%{number}"
+        duration_label: "Ilgums:"
+        user_duration:
+          zero: "%{count} dienas"
+          one: "%{count} diena"
+          other: "%{count} dienas"
+        posts_label: "Ieraksti"
+        category_label: "Sadaļa"
+        category_fields:
+          name: "vārda"
+          description: "apraksts"
+          color: "krāsa"
+        approve_label: "Jā"
+        reject_label: "Nē"
       tool_summary:
         search: "Meklēt"
         time: "Laiks"

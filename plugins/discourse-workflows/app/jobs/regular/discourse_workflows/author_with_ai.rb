@@ -49,14 +49,30 @@ module Jobs
           parsed = validate_patch_proposal(parsed)
         end
 
-        publish_progress(:summarizing)
-        persist_response(parsed)
-        publish_terminal(parsed)
+        finish(parsed)
       rescue => e
-        publish_error(e.message)
+        Discourse.warn_exception(e, message: "discourse-workflows: AI authoring failed")
+        begin
+          finish({ "status" => "error", "message" => e.message })
+        rescue => finish_error
+          # Still end the client's wait if recording the question fails too.
+          Discourse.warn_exception(
+            finish_error,
+            message: "discourse-workflows: AI authoring failed",
+          )
+          publish_error(e.message)
+        end
       end
 
       private
+
+      def finish(parsed)
+        parsed = ask_how_to_proceed(parsed) if parsed["status"] == "error"
+
+        publish_progress(:summarizing)
+        persist_response(parsed)
+        publish_terminal(parsed)
+      end
 
       def find_agent_record
         configured_agent_id = SiteSetting.discourse_workflows_workflow_authoring_agent.to_i
@@ -112,17 +128,15 @@ module Jobs
       def authoring_context_instructions
         context_tools = {
           workflow_node_catalog:
-            "Call this with targeted queries for node parameters, output contracts, capabilities, and examples.",
+            "Call this with exact node types from the node menu for their parameters, output contracts, examples, and notes.",
           workflow_ai_agent_catalog:
             "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
-          workflow_graph_context:
-            "Call this with workflow_id when you need the current graph nodes and connections.",
+          workflow_node_details:
+            "Call this with node IDs from the workflow outline for parameters, connections, fields, and recorded output.",
           workflow_validate_patch:
             "Call this to dry-run candidate operations and inspect inferred node_fields.",
-          workflow_script_context:
-            "Call this before writing Code node JavaScript to inspect the runtime API and mode rules.",
           workflow_validate_script:
-            "Call this with exact Code node mode and code; repair any errors before returning a proposal.",
+            "Call this to run Code node scripts against recorded workflow data or your own test data; test edge cases and repair errors before returning a proposal.",
           workflow_authoring_result:
             "Call this exactly once when authoring is complete; it is the final response.",
         }
@@ -137,17 +151,16 @@ module Jobs
           ] = "Call this before asking the admin to choose an external chat integration channel or before setting action:send_chat_integration_message channel_id. Use returned matches; never invent provider names, channel labels, or IDs."
         end
 
-        payload = {
-          workflow: workflow_summary,
-          trigger_author_field_facts: TRIGGER_AUTHOR_FIELD_FACTS,
-          context_tools: context_tools,
-        }
+        payload = { workflow: workflow_summary, context_tools: context_tools }
 
         <<~TEXT
           Important workflow field facts:
           #{TRIGGER_AUTHOR_FIELD_FACTS.map { |fact| "- #{fact}" }.join("\n")}
 
-          Compact workflow authoring context. Full graph and node catalog are intentionally not preloaded; use workflow_graph_context and workflow_node_catalog tools for details:
+          Workflow outline:
+          #{::DiscourseWorkflows::Ai::WorkflowOutline.text(@session.workflow)}
+
+          Workflow authoring context:
           #{JSON.generate(payload)}
         TEXT
       end
@@ -156,18 +169,9 @@ module Jobs
         workflow = @session.workflow
         return nil if workflow.blank?
 
-        nodes = workflow.nodes || []
-        connection_count =
-          ::DiscourseWorkflows::WorkflowDocument.connection_records(
-            nodes,
-            workflow.connections || {},
-          ).length
-
         {
           id: workflow.id,
           name: workflow.name,
-          node_count: nodes.length,
-          connection_count: connection_count,
           published: workflow.published?,
           has_unpublished_changes: workflow.has_unpublished_changes?,
           version_id: workflow.version_id,
@@ -387,17 +391,8 @@ module Jobs
         operations = normalized_patch_operations(proposal[:operations])
         proposal["operations"] = operations
         validations = code_script_validations(operations)
+        # Shown in review rather than failing the run; the admin decides whether to ask for a fix.
         proposal["script_validations"] = validations if validations.present?
-
-        if validations.any? { |validation| !validation["valid"] }
-          return(
-            parsed.merge(
-              "status" => "error",
-              "message" => invalid_script_message(validations),
-              "proposal" => json_safe(proposal),
-            )
-          )
-        end
 
         parsed.merge("proposal" => json_safe(proposal))
       end
@@ -440,29 +435,31 @@ module Jobs
         parsed.merge("proposal" => json_safe(proposal))
       end
 
+      # Hand failures back to the admin as a question rather than ending the conversation.
+      def ask_how_to_proceed(parsed)
+        problem =
+          ::DiscourseWorkflows::Ai::Truncation.text(
+            parsed["message"].presence || I18n.t("discourse_workflows.ai.error_invalid_response"),
+            1_000,
+          )
+        parsed.merge(
+          "status" => "needs_clarification",
+          "questions" => [
+            {
+              "id" => "how_to_proceed",
+              "question" =>
+                I18n.t("discourse_workflows.ai.how_to_proceed.question", problem: problem),
+              "options" => [{ "label" => I18n.t("discourse_workflows.ai.how_to_proceed.fix") }],
+              "custom_allowed" => true,
+            },
+          ],
+        )
+      end
+
       def code_scripts_present?(parsed)
         operations = normalized_patch_operations(proposal_for(parsed)[:operations])
         operations.any? do |operation|
           code_script_for_operation(normalized_hash(operation)).present?
-        end
-      end
-
-      def invalid_script_message(validations)
-        details =
-          validations
-            .select { |validation| !validation["valid"] }
-            .flat_map do |validation|
-              node_name =
-                validation["node_name"].presence ||
-                  I18n.t("discourse_workflows.ai.default_code_node_name")
-              Array.wrap(validation["errors"]).map { |error| "#{node_name}: #{error}" }
-            end
-            .join("; ")
-
-        if details.present?
-          I18n.t("discourse_workflows.ai.error_invalid_script_with_errors", errors: details)
-        else
-          I18n.t("discourse_workflows.ai.error_invalid_script")
         end
       end
 
@@ -471,14 +468,17 @@ module Jobs
           script = code_script_for_operation(normalized_hash(operation))
           next if script.blank?
 
-          result = validate_code_script(script)
+          errors =
+            ::DiscourseWorkflows::Ai::Tools::WorkflowValidateScript.static_errors(
+              script[:mode],
+              script[:code],
+            )
           {
             "operation_index" => index,
             "node_name" => script[:node_name],
             "mode" => script[:mode],
-            "valid" => result[:valid],
-            "errors" => result[:errors] || [],
-            "warnings" => result[:warnings] || [],
+            "valid" => errors.empty?,
+            "errors" => errors,
           }
         end
       end
@@ -520,16 +520,6 @@ module Jobs
           mode: code_mode(parameters, existing_parameters),
           code: (parameters.key?(:code) ? parameters[:code] : existing_parameters["code"]).to_s,
         }
-      end
-
-      def validate_code_script(script)
-        context = ::DiscourseAi::Agents::BotContext.new(messages: [], user: @user)
-        ::DiscourseWorkflows::Ai::Tools::WorkflowValidateScript.new(
-          { mode: script[:mode], code: script[:code] },
-          bot_user: Discourse.system_user,
-          llm: nil,
-          context: context,
-        ).invoke
       end
 
       def code_mode(parameters, existing_parameters = {})
@@ -604,6 +594,8 @@ module Jobs
           latest_response: parsed,
           proposed_patch: parsed["proposal"] || {},
           risk_level: proposal_for(parsed)["risk_level"],
+          # Lets follow-ups ("fix it", answers) build on what was proposed and why it failed.
+          messages: @session.messages + [{ "type" => "model", "content" => parsed.to_json }],
         )
       end
 

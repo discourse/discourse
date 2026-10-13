@@ -28,6 +28,7 @@ module DiscourseAi
           Errno::ECONNREFUSED,
           Errno::ECONNRESET,
           Errno::ETIMEDOUT,
+          EOFError,
           SocketError,
           OpenSSL::SSL::SSLError,
         ]
@@ -264,6 +265,72 @@ module DiscourseAi
 
         protected
 
+        def output_stop_reason
+          nil
+        end
+
+        def output_limit_reached?
+          false
+        end
+
+        def reported_reasoning_tokens
+          nil
+        end
+
+        def reset_attempt_state!
+          @processor = nil
+          @decoder = nil
+          @json_decoder = nil
+          @visible_output = false
+        end
+
+        def visible_partial?(partial)
+          case partial
+          when Thinking
+            false
+          when String
+            partial.present?
+          when ToolCall
+            true
+          when StructuredOutput
+            partial.content?
+          when Array
+            partial.any? { |item| visible_partial?(item) }
+          else
+            false
+          end
+        end
+
+        def update_completion_state(
+          log,
+          call_status,
+          cancelled: false,
+          response_limit_tripped: false
+        )
+          log.reasoning_tokens = reported_reasoning_tokens
+
+          # A response-limit cut is our own doing: the reply was trimmed to
+          # the caller's visible-response cap and generation aborted.
+          if response_limit_tripped
+            log.stop_reason = "max_response_tokens"
+            log.completion_state = AiApiAuditLog::CompletionState::TRUNCATED if @visible_output
+            return
+          end
+
+          log.stop_reason = output_stop_reason&.to_s&.slice(0, 50).presence
+          # Cancellation is a user action, not an incomplete completion.
+          return if cancelled || call_status != :success
+
+          log.completion_state =
+            if !@visible_output
+              AiApiAuditLog::CompletionState::EMPTY
+            elsif output_limit_reached?
+              AiApiAuditLog::CompletionState::TRUNCATED
+            else
+              AiApiAuditLog::CompletionState::COMPLETE
+            end
+        end
+
         def tokenizer
           llm_model.tokenizer_class
         end
@@ -447,6 +514,7 @@ module DiscourseAi
             )
 
           loop do
+            reset_attempt_state!
             call_status = :error
             response_data = +""
             response_raw = +""
@@ -507,7 +575,7 @@ module DiscourseAi
 
                     # Some providers rely on prefill to return structured outputs, so the start
                     # of the JSON won't be included in the response. Supply it to keep JSON valid.
-                    structured_output << +"{" if structured_output && @forced_json_through_prefill
+                    structured_output.prefill if structured_output && @forced_json_through_prefill
 
                     xml_tool_processor = build_xml_tool_processor(dialect, partial_tool_calls)
                     xml_stripper = build_xml_stripper(dialect)
@@ -647,6 +715,7 @@ module DiscourseAi
                   partials_raw: partials_raw,
                   request_attempts: request_attempts.presence,
                   call_status: call_status,
+                  cancelled: cancelled,
                   start_time: request_started_at,
                   time_to_first_token_msecs: time_to_first_token_msecs,
                   feature_name: feature_name,
@@ -758,13 +827,14 @@ module DiscourseAi
             if partial.is_a?(String)
               partial = xml_stripper << partial if xml_stripper && !partial.empty?
 
-              if structured_output.present?
+              if partial && structured_output.present?
                 structured_output << partial if !partial.empty?
                 partial = structured_output
               end
             end
             if partial
               record_first_token.call if should_record_first_token
+              @visible_output ||= visible_partial?(partial)
               orig_blk.call(partial)
             end
           end
@@ -824,12 +894,12 @@ module DiscourseAi
           structured_output:
         )
           if xml_stripper
-            stripped = xml_stripper.finish
-            if stripped.present?
-              response_data << stripped
-              result = []
-              result = (xml_tool_processor << stripped) if xml_tool_processor
-              result.each { |partial| blk.call(partial) }
+            # Preserve legacy return data without exposing buffered reasoning through the block.
+            unstripped = xml_stripper.finish
+            response_data << unstripped if unstripped.present?
+            stripped = xml_stripper.finish_visible
+            if stripped.present? && xml_tool_processor
+              (xml_tool_processor << stripped).each { |partial| blk.call(partial) }
             end
           end
 
@@ -841,6 +911,7 @@ module DiscourseAi
 
         def finish_structured_output_streaming(structured_output, blk)
           structured_output.finish
+          @visible_output ||= structured_output.content?
           if structured_output.broken?
             # signal last partial output which will get parsed
             # by best effort json parser
@@ -857,6 +928,7 @@ module DiscourseAi
           partials_raw:,
           request_attempts:,
           call_status:,
+          cancelled:,
           start_time:,
           time_to_first_token_msecs:,
           feature_name:,
@@ -866,10 +938,16 @@ module DiscourseAi
           log.raw_response_payload = response_raw
           log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
+          update_completion_state(
+            log,
+            call_status,
+            cancelled: cancelled,
+            response_limit_tripped: !!execution_context&.response_limit_tripped,
+          )
           execution_context&.settle_generation(
             tokens: log.response_tokens,
             tokenizer: tokenizer,
-            complete: call_status == :success,
+            complete: call_status == :success && !cancelled,
           )
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
@@ -879,6 +957,7 @@ module DiscourseAi
           log.duration_msecs = (Time.now - start_time) * 1000
           log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
+          execution_context.audit_log_id = log.id if execution_context
 
           execution_context&.token_usage_tracker&.add_from_audit_log(
             log,
@@ -1131,12 +1210,22 @@ module DiscourseAi
             end
           end
 
+          # Legacy return values include stripped-only text; audit visibility must not.
+          visible_response_data = response_data
           if xml_stripper
+            visible_response_data = []
             response_data.map! do |partial|
-              stripped = (xml_stripper << partial) if partial.is_a?(String)
-              stripped.presence || partial
+              if partial.is_a?(String)
+                stripped = xml_stripper << partial
+                visible_response_data << stripped
+                stripped.presence || partial
+              else
+                visible_response_data << partial
+                partial
+              end
             end
             response_data << xml_stripper.finish
+            visible_response_data << xml_stripper.finish_visible
           end
 
           response_data.reject!(&:blank?)
@@ -1145,8 +1234,20 @@ module DiscourseAi
             response_data.each { |data| structured_output << data if data.is_a?(String) }
             structured_output.finish
 
+            visible_structured_output = structured_output
+            if xml_stripper
+              visible_structured_output = StructuredOutput.new({})
+              visible_structured_output.prefill if @forced_json_through_prefill
+              visible_response_data.each do |partial|
+                visible_structured_output << partial if partial.is_a?(String)
+              end
+              visible_structured_output.finish
+            end
+            @visible_output = visible_structured_output.content?
             return structured_output
           end
+
+          @visible_output = visible_partial?(visible_response_data)
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1

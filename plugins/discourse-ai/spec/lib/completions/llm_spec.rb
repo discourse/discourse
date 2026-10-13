@@ -44,6 +44,136 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
   before { enable_current_plugin }
 
+  describe "max_response_tokens" do
+    it "trims streamed text at the cap, ignores thinking, and does not trip the caller's cancel manager" do
+      cancel = DiscourseAi::Completions::CancelManager.new
+      thinking = DiscourseAi::Completions::Thinking.new(message: "thinking " * 20)
+      received = []
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [[thinking, "one two three four five six seven eight"]],
+      ) do
+        llm.generate(
+          "Input",
+          user: user,
+          max_response_tokens: 3,
+          cancel_manager: cancel,
+        ) { |partial| received << partial }
+      end
+
+      expect(received).to include(thinking)
+      expect(llm.tokenizer.size(received.select { |partial| partial.is_a?(String) }.join)).to be <=
+        3
+      expect(cancel.cancelled?).to eq(false)
+    end
+
+    it "truncates a non-streamed string result" do
+      result = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["one two three four five six seven eight"],
+      ) { result = llm.generate("Input", user: user, max_response_tokens: 3) }
+
+      expect(llm.tokenizer.size(result)).to be <= 3
+    end
+
+    it "does not trim tool calls" do
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "call_1",
+          name: "echo",
+          parameters: {
+            text: "one two three four five six seven eight",
+          },
+        )
+      received = []
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[tool_call]]) do
+        llm.generate("Input", user: user, max_response_tokens: 3) { |partial| received << partial }
+      end
+
+      expect(received).to eq([tool_call])
+    end
+
+    it "translates the cap to a provider ceiling with a thinking allowance" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ok"]) do |endpoint|
+        llm.generate("Input", user: user, max_response_tokens: 10, thinking_effort: "high")
+
+        expect(endpoint.model_params[:max_tokens]).to eq(10 + 16_384)
+      end
+    end
+
+    it "translates the cap to a provider ceiling when no thinking is requested" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ok"]) do |endpoint|
+        llm.generate("Input", user: user, max_response_tokens: 10)
+
+        expect(endpoint.model_params[:max_tokens]).to eq(10)
+      end
+    end
+
+    it "records a truncated completion when the limiter cuts a real stream" do
+      stub_response(body: streaming_body(content: "one two three four five six seven eight"))
+      execution = DiscourseAi::Completions::ExecutionContext.new
+      received = +""
+
+      llm.generate(
+        "Input",
+        user: user,
+        max_response_tokens: 3,
+        execution_context: execution,
+      ) { |partial| received << partial if partial.is_a?(String) }
+
+      expect(llm.tokenizer.size(received)).to be <= 3
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+      expect(AiApiAuditLog.last.stop_reason).to eq("max_response_tokens")
+    end
+
+    it "records a truncated completion for a non-streamed cut without an execution context" do
+      stub_response(body: success_body(content: "one two three four five six seven eight"))
+
+      result = llm.generate("Input", user: user, max_response_tokens: 3)
+
+      expect(llm.tokenizer.size(result)).to be <= 3
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+      expect(AiApiAuditLog.last.stop_reason).to eq("max_response_tokens")
+    end
+
+    it "does not truncate structured output returned as a string" do
+      stub_response(body: success_body(content: "{\"answer\":\"one two three four five\"}"))
+
+      result =
+        llm.generate(
+          "Input",
+          user: user,
+          max_response_tokens: 3,
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "answer",
+              schema: {
+                type: "object",
+                properties: {
+                  answer: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        )
+
+      expect(DiscourseAi::Completions::Llm.text_from_response(result)).to include("four five")
+    end
+
+    it "keeps an explicit provider ceiling over the translated cap" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ok"]) do |endpoint|
+        llm.generate("Input", user: user, max_tokens: 500, max_response_tokens: 10)
+
+        expect(endpoint.model_params[:max_tokens]).to eq(500)
+      end
+    end
+  end
+
   describe "turn work settlement" do
     it "blocks unadmitted helper generations when work or the shared completion bound is exhausted" do
       request = stub_response
@@ -881,6 +1011,47 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
         expect(result).to be_a(DiscourseAi::Completions::StructuredOutput)
         expect(result.to_s).to eq('{"message":"ok"}')
+      end
+
+      it "retries an unexpected streaming EOF before any output is generated" do
+        response = instance_double(Net::HTTPResponse, code: "200")
+        reads = 0
+        allow(response).to receive(:read_body) do |&block|
+          reads += 1
+          raise EOFError, "end of file reached" if reads == 1
+          block.call(streaming_body(content: "Recovered answer"))
+        end
+        http = instance_double(Net::HTTP)
+        allow(http).to receive(:request).and_yield(response)
+        allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+        visible = []
+
+        llm.generate("Hello", user: user) { |partial| visible << partial }
+
+        expect(visible.join).to eq("Recovered answer")
+        expect(http).to have_received(:request).twice
+      end
+
+      it "reports an unexpected streaming EOF after partial output without retrying" do
+        partial = "Partial answer"
+        response = instance_double(Net::HTTPResponse, code: "200")
+        allow(response).to receive(:read_body) do |&block|
+          block.call(streaming_body(content: partial))
+          raise EOFError, "end of file reached"
+        end
+        http = instance_double(Net::HTTP)
+        allow(http).to receive(:request).and_yield(response)
+        allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+        visible = []
+
+        expect {
+          llm.generate("Hello", user: user) { |fragment| visible << fragment }
+        }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+          "end of file reached",
+        )
+        expect(visible.join).to eq(partial)
+        expect(http).to have_received(:request).once
       end
 
       it "retries network errors twice" do

@@ -29,8 +29,7 @@ module DiscourseWorkflows
           event: :post_moved,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
 
@@ -54,15 +53,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_category_ids?(
-            destination_topic.category_id,
-            category_ids_parameter(trigger_ctx),
-            include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          ) &&
-            matches_tags?(
-              destination_topic,
-              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
-            )
+          matches_topic_filters?(destination_topic, trigger_ctx)
         end
 
         private

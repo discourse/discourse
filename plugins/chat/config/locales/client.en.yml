@@ -759,6 +759,9 @@ en:
       flagging:
         action: "Flag message"
 
+      anonymous_flagging:
+        description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
+
       emoji_picker:
         favorites: "Frequently used"
         smileys_&_emotion: "Smileys and emotion"

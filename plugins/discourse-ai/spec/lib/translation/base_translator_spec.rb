@@ -122,6 +122,7 @@ describe DiscourseAi::Translation::BaseTranslator do
       DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do |_, _, _, options|
         expect(translator.translate).to eq(llm_response)
         expect(options.last[:max_tokens]).to eq(2500)
+        expect(options.last[:max_response_tokens]).to eq(2500)
       end
     end
 

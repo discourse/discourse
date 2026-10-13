@@ -174,6 +174,9 @@ gl:
         enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
         disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
+    reorder:
+      removed: "Retirou ao %{label} o"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
@@ -1905,8 +1908,7 @@ gl:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
-      title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -3192,9 +3194,6 @@ gl:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Gañou esta insignia %{count} vez"
-        other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"
@@ -3539,6 +3538,7 @@ gl:
             block: "Bloquear"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             status: "Estado"
@@ -4308,8 +4308,8 @@ gl:
             must_be_unique: "O nome da variábel non é correcto. Debe ser exclusivo."
           upload: "Cargar"
           unsaved_changes_alert: "Aínda non gardou os cambios. Quere desbotalos e continuar?"
-          unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
+          leave: "Abandonar"
           stay: "Deixar"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"

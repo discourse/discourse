@@ -26,10 +26,17 @@ module ::DiscourseWorkflows
     agent = review_agent(exec_ctx, item_index:)
     return if !agent
 
+    agent_id = agent.fetch("id").to_s
+
     reviewable.with_lock do
+      DiscourseWorkflows::ReviewableAgent.insert_all(
+        [{ reviewable_id: reviewable.id, ai_agent_id: agent_id, created_at: Time.current }],
+        unique_by: %i[reviewable_id ai_agent_id],
+      )
+
+      # Keep legacy readers working during the rollback window.
       payload = reviewable.payload || {}
       agent_ids = Array(payload["workflow_review_agent_ids"])
-      agent_id = agent.fetch("id").to_s
       next if agent_ids.include?(agent_id)
 
       reviewable.update!(
@@ -141,12 +148,14 @@ after_initialize do
     [
       :workflow_review_agent_id,
       proc do |results, value|
-        agent_id = value.to_s[/\A[1-9]\d*\z/]
-        next results if !agent_id
+        agent_id = value.to_s
+        next results if !agent_id.match?(/\A-?[1-9][0-9]*\z/)
 
         results.where(
-          "(reviewables.payload::jsonb -> 'workflow_review_agent_ids') ? :agent_id",
-          agent_id:,
+          id:
+            DiscourseWorkflows::ReviewableAgent.where(ai_agent_id: agent_id.to_i).select(
+              :reviewable_id,
+            ),
         )
       end,
     ],
@@ -155,10 +164,9 @@ after_initialize do
 
       AiAgent
         .where(<<~SQL)
-          id IN (
-            SELECT json_array_elements_text(payload -> 'workflow_review_agent_ids')::bigint
-            FROM reviewables
-            WHERE payload -> 'workflow_review_agent_ids' IS NOT NULL
+          EXISTS (
+            SELECT 1 FROM discourse_workflows_reviewable_agents
+            WHERE discourse_workflows_reviewable_agents.ai_agent_id = ai_agents.id
           )
         SQL
         .order(:name)
@@ -199,15 +207,18 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/base"
     require_relative "lib/discourse_workflows/ai/graph_digest"
     require_relative "lib/discourse_workflows/ai/progress_publisher"
+    require_relative "lib/discourse_workflows/ai/truncation"
+    require_relative "lib/discourse_workflows/ai/sample"
+    require_relative "lib/discourse_workflows/ai/node_menu"
+    require_relative "lib/discourse_workflows/ai/workflow_outline"
     require_relative "lib/discourse_workflows/ai/tools/workflow_node_catalog"
     require_relative "lib/discourse_workflows/ai/tools/workflow_ai_agent_catalog"
-    require_relative "lib/discourse_workflows/ai/tools/workflow_graph_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_node_details"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_patch"
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
     require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
-    require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"
 

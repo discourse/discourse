@@ -29,6 +29,45 @@ RSpec.describe "Agent attribution on workflow flags" do
 
   before { SiteSetting.discourse_ai_enabled = true }
 
+  def attributed_agent_ids(reviewable)
+    DiscourseWorkflows::ReviewableAgent.where(reviewable_id: reviewable.id).pluck(:ai_agent_id)
+  end
+
+  it "attributes flags raised by a built-in agent with a negative ID" do
+    agent = AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+    agent.update!(enabled: true)
+    post = Fabricate(:post)
+    graph =
+      build_workflow_graph do |builder|
+        builder.node "trigger", "trigger:manual"
+        builder.node "agent",
+                     "action:ai_agent",
+                     configuration: {
+                       agent_id: agent.id,
+                       llm_model_id: llm.id,
+                       prompt: "Check post",
+                     }
+        builder.node "flag",
+                     "action:flag_post",
+                     configuration: {
+                       post_id: post.id,
+                       flag_type: "review",
+                     }
+        builder.chain "trigger", "agent", "flag"
+      end
+    workflow = Fabricate(:discourse_workflows_workflow, published: true, **graph)
+
+    execution =
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Flag this post"]) do
+        DiscourseWorkflows::Executor.new(workflow, "trigger", {}).run
+      end
+
+    expect(execution.status).to eq("success")
+    reviewable = ReviewablePost.find_by!(target: post)
+    expect(attributed_agent_ids(reviewable)).to eq([agent.id])
+    expect(reviewable.payload["workflow_review_agent_ids"]).to eq([agent.id.to_s])
+  end
+
   it "preserves agent attribution after a timed wait resumes" do
     graph =
       build_workflow_graph do |builder|
@@ -71,10 +110,9 @@ RSpec.describe "Agent attribution on workflow flags" do
     end
 
     expect(execution.reload.status).to eq("success")
-    expect(ReviewablePost.find_by!(target: post).payload["workflow_review_agent_ids"]).to eq(
-      [spam_agent.id.to_s],
-    )
-    expect(ReviewablePost.find_by!(target: post).reviewable_scores.last.reason).to eq(
+    reviewable = ReviewablePost.find_by!(target: post)
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
+    expect(reviewable.reviewable_scores.last.reason).to eq(
       I18n.t(
         "discourse_workflows.flag_post.flagged_by_agent",
         agent_name: spam_agent.name,
@@ -121,12 +159,57 @@ RSpec.describe "Agent attribution on workflow flags" do
       ) { DiscourseWorkflows::Executor.new(workflow, "trigger", { post_id: post.id }).run }
 
     expect(execution.status).to eq("success")
-    expect(
-      ReviewablePost.find_by!(target: post).payload.to_h["workflow_review_agent_ids"],
-    ).to be_nil
-    expect(ReviewablePost.find_by!(target: post).reviewable_scores.last.reason).to eq(
+    reviewable = ReviewablePost.find_by!(target: post)
+    expect(attributed_agent_ids(reviewable)).to be_empty
+    expect(reviewable.reviewable_scores.last.reason).to eq(
       I18n.t("discourse_workflows.flag_post.flagged_by_workflow", workflow_name: workflow.name),
     )
+  end
+
+  it "records the attribution once when the same agent flags a post again" do
+    graph =
+      build_workflow_graph do |builder|
+        builder.node "trigger", "trigger:manual"
+        builder.node "agent",
+                     "action:ai_agent",
+                     configuration: {
+                       agent_id: spam_agent.id,
+                       prompt: "Check spam",
+                     }
+        builder.node "flag",
+                     "action:flag_post",
+                     configuration: {
+                       post_id: "={{ $trigger.post_id }}",
+                       flag_type: "review",
+                     }
+        builder.chain "trigger", "agent", "flag"
+      end
+    workflow =
+      Fabricate(:discourse_workflows_workflow, name: "Moderation", published: true, **graph)
+    post = Fabricate(:post)
+
+    execution =
+      DiscourseAi::Completions::Llm.with_prepared_responses([{ verdict: "yes" }.to_json]) do
+        DiscourseWorkflows::Executor.new(workflow, "trigger", { post_id: post.id }).run
+      end
+
+    expect(execution.status).to eq("success")
+    reviewable = ReviewablePost.find_by!(target: post)
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
+    expect(reviewable.payload["workflow_review_agent_ids"]).to eq([spam_agent.id.to_s])
+
+    expect do
+      DiscourseAi::Completions::Llm.with_prepared_responses([{ verdict: "yes" }.to_json]) do
+        DiscourseWorkflows::Executor.new(workflow, "trigger", { post_id: post.id }).run
+      end
+    end.not_to change { reviewable.reviewable_scores.count }
+
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
+
+    reviewable.update!(payload: { raw: "replaced by a legacy process" })
+
+    expect(reviewable.reload.payload["workflow_review_agent_ids"]).to be_nil
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
   end
 
   it "adds the agent attribution to a flagged user's provenance note" do
@@ -155,23 +238,22 @@ RSpec.describe "Agent attribution on workflow flags" do
       end
 
     expect(execution.status).to eq("success")
-    expect(ReviewableUser.find_by!(target: user).payload["workflow_review_agent_ids"]).to eq(
-      [spam_agent.id.to_s],
-    )
-    expect(ReviewableUser.find_by!(target: user).reviewable_notes.last.content).to eq(
+    reviewable = ReviewableUser.find_by!(target: user)
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
+    expect(reviewable.reviewable_notes.last.content).to eq(
       I18n.t(
         "discourse_workflows.flag_user.flagged_by_agent",
         agent_name: spam_agent.name,
         workflow_name: workflow.name,
       ),
     )
-    reviewable = ReviewableUser.find_by!(target: user)
+
     expect do
       DiscourseAi::Completions::Llm.with_prepared_responses([{ verdict: "yes" }.to_json]) do
         DiscourseWorkflows::Executor.new(workflow, "trigger", { username: user.username }).run
       end
     end.not_to change { reviewable.reviewable_scores.count }
-    expect(reviewable.reload.payload["workflow_review_agent_ids"]).to eq([spam_agent.id.to_s])
+    expect(attributed_agent_ids(reviewable)).to eq([spam_agent.id])
 
     graph[:nodes].find { |node| node["id"] == "agent" }["parameters"]["agent_id"] = billing_agent.id
     other_workflow = Fabricate(:discourse_workflows_workflow, published: true, **graph)
@@ -179,10 +261,7 @@ RSpec.describe "Agent attribution on workflow flags" do
       DiscourseWorkflows::Executor.new(other_workflow, "trigger", { username: user.username }).run
     end
 
-    expect(reviewable.reload.payload["workflow_review_agent_ids"]).to contain_exactly(
-      spam_agent.id.to_s,
-      billing_agent.id.to_s,
-    )
+    expect(attributed_agent_ids(reviewable)).to contain_exactly(spam_agent.id, billing_agent.id)
     expect(reviewable.reviewable_scores.count).to eq(2)
   end
 
@@ -245,7 +324,7 @@ RSpec.describe "Agent attribution on workflow flags" do
           workflow_name: workflow.name,
         ),
       )
-      expect(score.reviewable.payload["workflow_review_agent_ids"]).to eq([agent.id.to_s])
+      expect(attributed_agent_ids(score.reviewable)).to eq([agent.id])
       expect(score.context).to eq("discourse_workflows:workflow:#{workflow.id}")
     end
   end

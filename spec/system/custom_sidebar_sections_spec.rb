@@ -38,17 +38,90 @@ describe "Custom sidebar sections" do
 
   include_examples "creating custom sections"
 
-  it "allows the user to create custom section with /my link" do
+  it "allows the user to create sections with different link formats" do
     sign_in user
     visit("/latest")
 
     sidebar.click_add_section_button
-    section_modal.fill_name("My section")
+    section_modal.fill_name("Preferences section")
     section_modal.fill_link("My preferences", "/my/preferences")
     section_modal.save
 
-    expect(sidebar).to have_section("My section")
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Preferences section")
     expect(sidebar).to have_section_link("My preferences", target: "_self")
+
+    sidebar.click_add_section_button
+    section_modal.fill_name("Published page section")
+    section_modal.fill_link("Published Page", "/pub/test")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Published page section")
+    expect(sidebar).to have_section_link("Published Page", target: "_self")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("External link section")
+
+    section_modal.fill_link("Discourse Homepage", "https://discourse.org")
+    expect(section_modal).to have_enabled_save
+
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("External link section")
+    expect(sidebar).to have_section_link(
+      "Discourse Homepage",
+      href: "https://discourse.org",
+      target: "_blank",
+    )
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Anchor section")
+    section_modal.fill_link("Faq", "/faq#anchor")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Anchor section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#anchor")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Query section")
+    section_modal.fill_link("Faq", "/faq?a=b")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Query section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Heading section")
+    section_modal.fill_link("Faq", "/faq#someheading")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Heading section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
   it "prioritizes exact url matches over ember routes" do
@@ -87,94 +160,6 @@ describe "Custom sidebar sections" do
 
     sidebar.click_section_link("Home")
     expect(page).to have_css("#navigation-bar .active a[href='/read']")
-  end
-
-  it "allows the user to create custom section with /pub link" do
-    sign_in user
-    visit("/latest")
-
-    sidebar.click_add_section_button
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Published Page", "/pub/test")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Published Page", target: "_self")
-  end
-
-  it "allows the user to create custom section with external link" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-
-    section_modal.fill_link("Discourse Homepage", "https://discourse.org")
-    expect(section_modal).to have_enabled_save
-
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link(
-      "Discourse Homepage",
-      href: "https://discourse.org",
-      target: "_blank",
-    )
-  end
-
-  it "allows the user to create custom section with anchor" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq#anchor")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#anchor")
-  end
-
-  it "allows the user to create custom section with query param" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq?a=b")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
-  end
-
-  it "allows the user to create custom section with anchor link" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq#someheading")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
   it "allows typing in the icon picker filter input" do

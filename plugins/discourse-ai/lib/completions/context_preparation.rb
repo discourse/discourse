@@ -4,7 +4,6 @@ module DiscourseAi
   module Completions
     class ContextPreparation
       MAX_CALLS = 8
-      MAX_OUTPUT_TOKENS = 2048
       MAX_SECONDS = 90
       MAX_ALLOWANCE_TOKENS = 1_000_000
       RETAINED_ATTACHMENTS_ACK = "The preceding attachments are retained historical evidence."
@@ -87,7 +86,6 @@ module DiscourseAi
       def initialize(llm, threshold: 80, calls: 0, spent_tokens: 0, elapsed_seconds: 0)
         @llm = llm
         @threshold = threshold || 80
-        @summary_output_tokens = [MAX_OUTPUT_TOKENS, [llm.max_prompt_tokens.to_i / 8, 1].max].min
         allowance = [[llm.max_prompt_tokens.to_i * 2, 64_000].max, MAX_ALLOWANCE_TOKENS].min
         @budget =
           Budget.new(
@@ -358,8 +356,7 @@ module DiscourseAi
           high = remaining.length
           while low < high
             midpoint = (low + high + 1) / 2
-            size, capacity =
-              @llm.prompt_capacity(build_prompt.call(midpoint), max_tokens: @summary_output_tokens)
+            size, capacity = @llm.prompt_capacity(build_prompt.call(midpoint))
             if size <= capacity
               low = midpoint
             else
@@ -376,8 +373,7 @@ module DiscourseAi
           compression_prompt = build_prompt.call(low)
           remaining.slice!(0, low)
           offset += low
-          input_size, input_capacity, output_reserve =
-            @llm.prompt_capacity(compression_prompt, max_tokens: @summary_output_tokens)
+          input_size, input_capacity, output_reserve = @llm.prompt_capacity(compression_prompt)
           raise Error.new("summary_input_overflow") if input_size > input_capacity
           now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           @budget.record_elapsed(now - started_at)
@@ -390,11 +386,11 @@ module DiscourseAi
                !options[:subagent_execution_state].reserve_completion
             raise Error.new("completion_limit")
           end
+          # Uncapped: thinking tokens count against max_tokens and could leave no summary.
           response =
             @llm.generate(
               compression_prompt,
               user: options[:user],
-              max_tokens: @summary_output_tokens,
               feature_name: "context_compression",
               feature_context: options[:feature_context],
               execution_context: options[:execution_context],

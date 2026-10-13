@@ -108,17 +108,19 @@ Pre-built assets ship in the [discourse_voice_assets](https://github.com/discour
 
 ## Live Subtitles
 
-Opt-in, viewer-side captions: the user who enables subtitles transcribes the remote audio they already receive with [parakeet.js](https://github.com/ysdede/parakeet.js) (NVIDIA Parakeet TDT 0.6b v3, multilingual) — no audio leaves the browser and nothing is required from the other participants, on either transport.
+Opt-in, viewer-side captions: the user who enables subtitles transcribes the remote audio they already receive with [parakeet.js](https://github.com/ysdede/parakeet.js) running Moondream's Parakeet Ultra or Redux (fine-tunes of NVIDIA Parakeet TDT 0.6b v3, 25 languages) — no audio leaves the browser and nothing is required from the other participants, on either transport.
 
 ```
 remote stream → Silero VAD (per participant) → utterance PCM → Worker (Parakeet, WebGPU) → caption overlay
 ```
 
-Each remote mic stream gets a [Silero VAD](https://github.com/ricky0123/vad) finding utterance boundaries; while a speaker keeps talking, the utterance-so-far is re-transcribed every ~1.5s as a provisional line that updates in place, and the speech-end pass finalizes it. Utterances are transcribed by one shared model in a Web Worker (fp32 encoder on WebGPU, int8 decoder on single-threaded WASM — fp16 encoders silently produce empty transcriptions on some GPU stacks, and multithreaded WASM would require COOP/COEP headers). Requires WebGPU; gated by the `voice_subtitles_enabled` site setting.
+Each remote mic stream gets a [Silero VAD](https://github.com/ricky0123/vad) finding utterance boundaries; while a speaker keeps talking, the utterance-so-far is re-transcribed every ~1.5s as a provisional line that updates in place, and the speech-end pass finalizes it. Utterances are transcribed by one shared model in a Web Worker (quantized encoder on WebGPU, int8 decoder on single-threaded WASM — multithreaded WASM would require COOP/COEP headers). Requires WebGPU; gated by the `voice_subtitles_enabled` site setting.
 
-The runtime bundles (worker, VAD, onnxruntime, ~41 MB) are pinned and shipped in the discourse_voice_assets gem (served here from `public/javascripts/<gem version>/stt/`, built by the gem's `scripts/build-stt-assets.sh`). The ~2.5 GB model weights are **not** committed: they download on first use from Discourse's HuggingFace repository (kept in a durable Cache API store), or from a self-hosted mirror configured via `voice_stt_model_base_url` — see [docs/subtitles-model-mirror.md](docs/subtitles-model-mirror.md) for what to mirror and how.
+Each user picks the model in their voice settings (stored per browser, like the noise-suppression mode; registry in `lib/voice/stt-models.js`): **Best quality** (Parakeet Ultra, 4-bit encoder, ~410 MB, the default) or **Smaller** (Parakeet Redux, ternary encoder stored as 2-bit, ~210 MB, less accurate in noise and in several languages). Switching reloads the worker on the new model, and the worker keeps only the current model in storage.
 
-An end-to-end smoke check (`scripts/smoke-stt-worker.mjs`, real model on WebGPU in headless Chromium) lives in the gem alongside the build script.
+The runtime bundles (worker, VAD, onnxruntime, ~30 MB) are pinned and shipped in the discourse_voice_assets gem (served here from `public/javascripts/<gem version>/stt/`, built by the gem's `scripts/build-stt-assets.sh`). The model weights are **not** committed: they download on first use from Discourse's HuggingFace repository ([Discourse/Discourse-STT](https://huggingface.co/Discourse/Discourse-STT), pinned to a commit; kept in a durable Cache API store), or from a self-hosted mirror configured via `voice_stt_model_base_url` — see [docs/subtitles-model-mirror.md](docs/subtitles-model-mirror.md) for what to mirror and how.
+
+An end-to-end smoke check (`scripts/smoke-stt-worker.mjs`, real model on WebGPU in Chromium) lives in the gem alongside the build script.
 
 ## Development
 

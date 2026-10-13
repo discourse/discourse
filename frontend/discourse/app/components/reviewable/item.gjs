@@ -353,7 +353,10 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      onSaved: () => performAction().catch(popupAjaxError),
+      onSaved: (result) =>
+        performAction({ post_version: result.payload.version }).catch(
+          popupAjaxError
+        ),
     });
   }
 
@@ -616,7 +619,7 @@ export default class ReviewableItem extends Component {
   async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.args.reviewable;
 
-    let performAction = async () => {
+    let performAction = async (actionData = {}) => {
       this.disabled = true;
 
       let version = reviewable.version;
@@ -626,6 +629,7 @@ export default class ReviewableItem extends Component {
         send_email: reviewable.sendEmail,
         reject_reason: reviewable.rejectReason,
         ...additionalData,
+        ...actionData,
       };
 
       (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
@@ -716,7 +720,7 @@ export default class ReviewableItem extends Component {
       postId: reviewable.post_id,
       postEdit: reviewable.raw ?? reviewable.payload?.raw,
       reviewableId: reviewable.id,
-      before: performAction,
+      perform: performAction,
     });
   }
 

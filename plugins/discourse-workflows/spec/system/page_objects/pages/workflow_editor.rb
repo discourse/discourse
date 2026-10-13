@@ -137,6 +137,19 @@ module PageObjects
           self
         end
 
+        def filter_by_topic(topic)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='topic_ids'] .topic-selector")
+          selector.expand
+          selector.search(topic.id.to_s)
+          selector.select_row_by_value(topic.id)
+          self
+        end
+
+        def has_topic_filter?(topic)
+          page.has_css?("[data-name='topic_ids'] .select-kit-header", text: topic.title)
+        end
+
         def has_fixed_topic_filters?(category)
           page.has_css?("[data-name='category_ids'] .select-kit-header", text: category.name) &&
             page.has_css?("[data-name='include_subcategories']") &&
@@ -285,6 +298,24 @@ module PageObjects
         def has_condition_port_labels?
           page.has_css?(".workflow-rete-node__port-pill", text: "true", wait: 10) &&
             page.has_css?(".workflow-rete-node__port-pill", text: "false", wait: 10)
+        end
+
+        def has_publish_banner?
+          page.has_css?(".workflows-publish-banner")
+        end
+
+        def has_no_publish_banner?
+          page.has_no_css?(".workflows-publish-banner")
+        end
+
+        def click_publish
+          find(".workflows-publish-banner__btn.btn-primary").click
+          self
+        end
+
+        def click_discard
+          find(".workflows-publish-banner__btn.btn-default").click
+          self
         end
 
         private

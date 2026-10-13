@@ -259,6 +259,7 @@ module DiscourseAi
               @source
                 .topic
                 .posts
+                .joins(:topic)
                 .where("post_number <= ?", source.post_number)
                 .where(post_type: types),
               category: @source.topic.category,

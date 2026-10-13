@@ -44,6 +44,36 @@ RSpec.describe DiscourseAi::Completions::HistorySnapshot do
     )
   end
 
+  it "captures PM history when category group moderation is enabled" do
+    SiteSetting.enable_category_group_moderation = true
+
+    snapshot = post_snapshot(source)
+
+    expect(snapshot.metadata["source_id"]).to eq(source.id)
+  end
+
+  it "excludes other users' hidden PM posts from a category moderator's history" do
+    SiteSetting.enable_category_group_moderation = true
+    group = Fabricate(:group)
+    group.add(user)
+    Fabricate(:category_moderation_group, group: group)
+    source.update!(hidden: true)
+    hidden_post = Fabricate(:post, topic: source.topic, user: other_user, hidden: true)
+    latest = Fabricate(:post, topic: source.topic, user: user)
+
+    snapshot = post_snapshot(latest)
+
+    expect(snapshot.user_turn_count).to eq(2)
+    hidden_post.update!(raw: "Changed hidden evidence")
+    expect { snapshot.verify! }.not_to raise_error
+
+    source.update!(raw: "Changed reader-owned hidden evidence")
+    expect { snapshot.verify! }.to raise_error(
+      DiscourseAi::Completions::ContextPreparation::Error,
+      /history_changed/,
+    )
+  end
+
   it "retains the first eligible bot answer after the initial PM user post is deleted" do
     reply = Fabricate(:post, topic: source.topic, user: bot_user, raw: "Retained bot evidence")
     latest = Fabricate(:post, topic: source.topic, user: user, raw: "Continue the conversation")

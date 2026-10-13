@@ -114,6 +114,12 @@ module DiscourseAi
       true
     end
 
+    def can_inspect_ai_shares?(owner)
+      return false if anonymous? || !owner
+
+      owner.id == user.id || is_admin?
+    end
+
     def can_destroy_shared_ai_bot_conversation?(conversation)
       return false if anonymous?
 

@@ -305,6 +305,31 @@ ru:
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
       read_post:
         unknown_post: "публикация"
+      chat_tool_approval:
+        topic_states:
+          open: "Открытые"
+          closed: "Закрытое"
+          active: "Активна"
+          deleted: "Удалённые"
+        solution_post: "Cообщение #%{number}"
+        duration_label: "Продолжительность:"
+        user_duration:
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дней"
+          other: "%{count} дня"
+        post_states:
+          locked: "Заблокировано"
+        posts_label: "Количество сообщений"
+        category_label: "Категория"
+        category_fields:
+          name: "Название"
+          description: "описание"
+          color: "цвет"
+          text_color: "цвет текста"
+        approve_label: "Да"
+        reject_label: "Нет"
+        empty_value: "Пустой"
       agents:
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
         admin_dashboard_highlights:

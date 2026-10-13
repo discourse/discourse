@@ -50,8 +50,7 @@ if defined?(DiscourseWorkflows)
                 required: false,
                 no_data_expression: true,
               },
-              **CATEGORY_FILTER_PROPERTIES,
-              **TAG_FILTER_PROPERTIES,
+              **TOPIC_SCOPE_FILTER_PROPERTIES,
             },
           )
 
@@ -84,9 +83,10 @@ if defined?(DiscourseWorkflows)
           def matches?(trigger_ctx)
             filter = trigger_ctx.get_node_parameter("reaction").to_s.delete(":").presence
 
-            matches_changes?(trigger_ctx, change) &&
-              (filter.nil? || [reaction, @previous_reaction].include?(filter)) &&
-              matches_topic_filters?(@post.topic, trigger_ctx)
+            return false if !matches_changes?(trigger_ctx, change)
+            return false if filter && [reaction, @previous_reaction].exclude?(filter)
+
+            matches_topic_filters?(@post.topic, trigger_ctx)
           end
 
           private

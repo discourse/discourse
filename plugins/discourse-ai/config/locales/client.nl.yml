@@ -1167,9 +1167,24 @@ nl:
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
+        editor:
+          version: "Versie"
+          default: "Standaard"
+          option_on: "Aan"
+          option_off: "Uit"
+          apply: "Toepassen"
         expand_view_label: "Weergave uitvouwen"
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
+        share: "Delen"
+        create_link: "Link maken"
+        copied: "Gekopieerd naar klembord"
+        copy_link: "Link kopiëren"
+        copy_embed: "Insluiting kopiëren"
+        new_tab: "Weergeven in nieuw tabblad"
+        filter_all: "Alles"
+        filter_standalone: "Losstaand"
+        filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
         agent: "Agent:"
