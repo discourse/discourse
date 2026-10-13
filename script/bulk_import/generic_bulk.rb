@@ -25,6 +25,8 @@ class BulkImport::Generic < BulkImport::Base
   DELTA_IMPORT = ENV["DELTA_IMPORT"].present?
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
+  # Same quote pairs as the BBCode parser accepts (QUOTATION_MARKS in discourse-markdown-it).
+  BBCODE_QUOTATION_MARKS = ["\"\"", "''", "«»", "“”", "””", "‘’", "„“", "‚’", "‹›"]
 
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
@@ -681,6 +683,7 @@ class BulkImport::Generic < BulkImport::Base
     import_answers
     import_gamification_scores
     import_post_events
+    import_event_invitees
 
     import_badge_groupings
     import_badges
@@ -2694,6 +2697,7 @@ class BulkImport::Generic < BulkImport::Base
         )
       end
     url = event["url"]
+    location = event_location(event)
     custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
 
     text = +"[event"
@@ -2702,9 +2706,10 @@ class BulkImport::Generic < BulkImport::Base
     text << %{ end="#{format_event_time(ends_at, timezone)}"} if ends_at
     text << %{ timezone="#{timezone}"}
     text << %{ status="#{status}"} if status
-    text << %{ name="#{name}"} if name
-    text << %{ url="#{url}"} if url
-    custom_fields.each { |key, value| text << %{ #{key}="#{value}"} } if custom_fields
+    text << bbcode_attribute("name", name) if name
+    text << bbcode_attribute("url", url) if url
+    text << bbcode_attribute("location", location) if location
+    custom_fields&.each { |key, value| text << bbcode_attribute(key, value) }
     text << "]\n"
     text << "[/event]\n"
     text
@@ -2717,6 +2722,20 @@ class BulkImport::Generic < BulkImport::Base
 
   def format_event_time(time, timezone)
     time.in_time_zone(timezone).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # Line breaks would end the BBCode tag, and the plugin stores at most 1000 characters.
+  def event_location(event)
+    event["location"]&.squish.presence&.[](0..999)
+  end
+
+  # Picks a quote pair that doesn't occur in the value, so it needs no escaping.
+  def bbcode_attribute(name, value)
+    value = value.to_s
+    marks = BBCODE_QUOTATION_MARKS.find { |pair| pair.chars.none? { |mark| value.include?(mark) } }
+    return %{ #{name}="#{value.delete('"')}"} unless marks
+
+    %{ #{name}=#{marks[0]}#{value}#{marks[1]}}
   end
 
   def import_post_custom_fields
@@ -4364,6 +4383,7 @@ class BulkImport::Generic < BulkImport::Base
         original_ends_at: to_datetime(row["ends_at"]),
         name: row["name"],
         url: row["url"] ? row["url"][0..999] : nil,
+        location: event_location(row),
         custom_fields: row["custom_fields"] || default_custom_fields,
         timezone:,
         raw_invitees:
@@ -4424,6 +4444,66 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     post_events.close
+  end
+
+  def import_event_invitees
+    unless defined?(DiscourseEvents::Events)
+      puts "", "Skipping event invitees, because the events plugin is not installed."
+      return
+    end
+
+    unless @source_db.get_first_value(
+             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'event_invitees'",
+           )
+      return
+    end
+
+    puts "", "Importing event invitees..."
+
+    invitees = query(<<~SQL)
+      SELECT event_invitees.*, events.post_id AS event_post_id, events.status AS event_status
+        FROM event_invitees
+             JOIN events ON events.id = event_invitees.event_id
+       ORDER BY event_invitees.event_id, event_invitees.user_id
+    SQL
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    public_status = DiscourseEvents::Events::Event.statuses[:public]
+    # The default scope hides suspended, silenced and staged users.
+    existing_invitees = DiscourseEvents::Events::Invitee.unscoped.pluck(:post_id, :user_id).to_set
+
+    create_event_invitees(invitees) do |row|
+      post_id = post_id_from_imported_id(row["event_post_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless post_id && user_id
+
+      # The plugin removes invitees from standalone events and from private events
+      # without invited groups, which is all the importer creates besides public ones.
+      if row["event_status"] != public_status
+        log_import_issue(
+          "event invitee skipped (event isn't public)",
+          "user #{row["user_id"]} of event #{row["event_id"]}",
+        )
+        next
+      end
+
+      status = row["status"] || statuses[:going]
+      if statuses.values.exclude?(status)
+        log_import_issue(
+          "event invitee skipped (unknown status)",
+          "status #{status} of user #{row["user_id"]} in event #{row["event_id"]}",
+        )
+        next
+      end
+
+      next unless existing_invitees.add?([post_id, user_id])
+
+      created_at = to_datetime(row["created_at"])
+
+      { post_id:, user_id:, status:, created_at:, updated_at: created_at }
+    end
+
+    invitees.close
   end
 
   def import_tag_users
