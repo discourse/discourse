@@ -2,6 +2,13 @@
 
 module DiscourseWorkflows
   class ExpressionResolver
+    EMPTY_EXPRESSION = /\A=\s*(\{\{\s*\}\})?\s*\z/
+
+    # Mirrored by isEmptyExpression in property-engine.js.
+    def self.empty_expression?(value)
+      value.is_a?(String) && EMPTY_EXPRESSION.match?(value)
+    end
+
     def self.find_matching_close(template, start)
       depth = 1
       cursor = start
