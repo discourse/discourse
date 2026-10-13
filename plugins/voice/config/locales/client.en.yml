@@ -193,6 +193,7 @@ en:
         draft_topic: "Open transcript draft"
         stop_and_open: "Stop recording and open draft"
         draft_title: "Call transcript: %{room}"
+        source_label: "Call transcript"
         unknown_speaker: "unknown speaker"
       stage:
         promoted_to_speaker: "You've been made a speaker."

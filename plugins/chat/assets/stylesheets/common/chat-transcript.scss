@@ -314,14 +314,17 @@
     }
   }
 
-  > .chat-transcript + .chat-transcript:not([data-channel-name]) {
+  > .chat-transcript
+    + .chat-transcript:not([data-channel-name], [data-source]) {
     margin-top: 0;
     border-top: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
 
-  > .chat-transcript:has(+ .chat-transcript:not([data-channel-name])) {
+  > .chat-transcript:has(
+      + .chat-transcript:not([data-channel-name], [data-source])
+    ) {
     margin-bottom: 0;
     border-bottom: none;
     border-bottom-left-radius: 0;

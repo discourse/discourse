@@ -7,6 +7,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import { transcriptSourcePresentation } from "discourse/plugins/chat/discourse/lib/transcript-source-types";
 
 export default function groupChatTranscripts(
   element,
@@ -169,10 +170,11 @@ function ownTimestamp(transcript) {
   return transcript.querySelector(".chat-transcript-datetime");
 }
 
-// Only a transcript's first block names the channel. Later blocks aren't always
-// marked chained, e.g. one author's messages are split where a thread starts.
+// Only a transcript's first block names the channel or source. Later blocks aren't
+// always marked chained, e.g. one author's messages are split where a thread starts.
 function isContinuation(transcript) {
-  return !transcript.dataset.channelName;
+  const { channelName, source } = transcript.dataset;
+  return !channelName && !source;
 }
 
 function expandThread(transcript) {
@@ -190,9 +192,15 @@ function buildGroup(transcript, services) {
   const group = document.createElement("div");
   group.classList.add("chat-transcript-group");
 
-  const { channelName, channelId } = transcript.dataset;
-  if (channelName) {
-    group.append(buildTranscriptHeader(channelName, channelId, services));
+  const { channelName, channelId, source, sourceType } = transcript.dataset;
+  const name = channelName || source;
+  if (name) {
+    group.append(
+      buildTranscriptHeader(
+        { channelName, channelId, source, sourceType },
+        services
+      )
+    );
 
     transcript.querySelector(":scope > .chat-transcript-meta")?.remove();
     transcript
@@ -207,8 +215,8 @@ function buildGroup(transcript, services) {
   body.setAttribute("role", "region");
   body.setAttribute(
     "aria-label",
-    channelName
-      ? i18n("chat.quote.transcript_region", { channel: channelName })
+    name
+      ? i18n("chat.quote.transcript_region", { channel: name })
       : i18n("chat.quote.transcript_label")
   );
   group.append(body);
@@ -216,22 +224,43 @@ function buildGroup(transcript, services) {
   return group;
 }
 
-export function buildTranscriptHeader(channelName, channelId, services) {
+/**
+ * Heads a transcript with the chat channel it was quoted from, or with an
+ * unlinked source presented by its registered source type.
+ */
+export function buildTranscriptHeader(
+  { channelName, channelId, source, sourceType },
+  services
+) {
   const header = document.createElement("div");
   header.classList.add("chat-transcript-group__header");
 
-  const channel = document.createElement(channelId ? "a" : "span");
+  const fromChannel = !!channelName;
+  const linked = fromChannel && channelId;
+
+  const channel = document.createElement(linked ? "a" : "span");
   channel.classList.add("hashtag-cooked", "chat-transcript-group__channel");
-  if (channelId) {
+  if (linked) {
     channel.href = channelPath(channelId);
   }
-  channel.innerHTML = `${channelIconHTML(channelId, services)}<span>${emojiUnescape(
-    escapeExpression(channelName)
+
+  let iconMarkup, labelText;
+  if (fromChannel) {
+    iconMarkup = channelIconHTML(channelId, services);
+    labelText = i18n("chat.quote.transcript_label");
+  } else {
+    const presentation = transcriptSourcePresentation(sourceType);
+    iconMarkup = iconHTML(presentation.icon);
+    labelText = presentation.label;
+  }
+
+  channel.innerHTML = `${iconMarkup}<span>${emojiUnescape(
+    escapeExpression(fromChannel ? channelName : source)
   )}</span>`;
 
   // channels the user hasn't joined (or that haven't loaded yet) need a lookup
   if (
-    channelId &&
+    linked &&
     getHashtagTypeClasses().channel &&
     !findChannel(channelId, services)
   ) {
@@ -246,7 +275,7 @@ export function buildTranscriptHeader(channelName, channelId, services) {
 
   const label = document.createElement("span");
   label.classList.add("chat-transcript-group__label");
-  label.textContent = i18n("chat.quote.transcript_label");
+  label.textContent = labelText;
 
   header.append(channel, label);
   return header;

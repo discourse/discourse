@@ -63,6 +63,39 @@ class ChatSetupInit {
         }
       });
 
+      // transcripts are post content, so they're decorated even for users who
+      // can't chat, anons included
+      api.decorateCookedElement((elem) => {
+        const currentUser = owner.lookup("service:current-user");
+        const currentUserTimezone = currentUser?.user_option?.timezone;
+        const chatTranscriptElements =
+          elem.querySelectorAll(".chat-transcript");
+
+        chatTranscriptElements.forEach((el) => {
+          const dateTimeRaw = el.dataset["datetime"];
+          const dateTimeEl = el.querySelector(
+            ".chat-transcript-datetime a, .chat-transcript-datetime span"
+          );
+
+          if (currentUserTimezone) {
+            dateTimeEl.innerText = moment
+              .tz(dateTimeRaw, currentUserTimezone)
+              .format(i18n("dates.long_no_year"));
+          } else {
+            dateTimeEl.innerText = moment(dateTimeRaw).format(
+              i18n("dates.long_no_year")
+            );
+          }
+
+          dateTimeEl.dataset.dateFormatted = true;
+        });
+
+        groupChatTranscripts(elem, {
+          site: owner.lookup("service:site"),
+          chatChannelsManager: owner.lookup("service:chat-channels-manager"),
+        });
+      });
+
       if (!this.chatService.userCanChat) {
         // include chat elements for anons (except header icon)
         if (
@@ -165,39 +198,6 @@ class ChatSetupInit {
           },
         });
       }
-
-      // we want to decorate the chat quote dates regardless
-      // of whether the current user has chat enabled
-      api.decorateCookedElement((elem) => {
-        const currentUser = owner.lookup("service:current-user");
-        const currentUserTimezone = currentUser?.user_option?.timezone;
-        const chatTranscriptElements =
-          elem.querySelectorAll(".chat-transcript");
-
-        chatTranscriptElements.forEach((el) => {
-          const dateTimeRaw = el.dataset["datetime"];
-          const dateTimeEl = el.querySelector(
-            ".chat-transcript-datetime a, .chat-transcript-datetime span"
-          );
-
-          if (currentUserTimezone) {
-            dateTimeEl.innerText = moment
-              .tz(dateTimeRaw, currentUserTimezone)
-              .format(i18n("dates.long_no_year"));
-          } else {
-            dateTimeEl.innerText = moment(dateTimeRaw).format(
-              i18n("dates.long_no_year")
-            );
-          }
-
-          dateTimeEl.dataset.dateFormatted = true;
-        });
-
-        groupChatTranscripts(elem, {
-          site: owner.lookup("service:site"),
-          chatChannelsManager: owner.lookup("service:chat-channels-manager"),
-        });
-      });
 
       if (!this.chatService.userCanChat || EmbedMode.enabled) {
         return;

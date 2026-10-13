@@ -5,6 +5,10 @@ import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
+import {
+  registerTranscriptSourceType,
+  resetTranscriptSourceTypes,
+} from "discourse/plugins/chat/discourse/lib/transcript-source-types";
 
 const site = { hashtag_icons: { channel: "comment" } };
 
@@ -17,6 +21,10 @@ function render(html) {
 
 module("Unit | lib | group-chat-transcripts", function (hooks) {
   setupTest(hooks);
+
+  hooks.afterEach(function () {
+    resetTranscriptSourceTypes();
+  });
 
   test("groups a multi-author transcript under one channel header", function (assert) {
     const element = render(`
@@ -126,6 +134,56 @@ module("Unit | lib | group-chat-transcripts", function (hooks) {
 
     assert.dom(".chat-transcript-group__thread", element).doesNotExist();
     assert.dom(".chat-transcript-thread-header", element).hasText("Ideas");
+  });
+
+  test("heads a transcript with an unlinked source", function (assert) {
+    registerTranscriptSourceType("meeting", {
+      icon: "users",
+      label: "chat.quote.default_thread_title",
+    });
+
+    const element = render(`
+      <div class="chat-transcript chat-transcript-chained" data-message-id="1" data-source="Weekly sync" data-source-type="meeting">
+        <div class="chat-transcript-datetime"><span title="t1">first</span></div>
+      </div>
+      <div class="chat-transcript chat-transcript-chained" data-message-id="2"></div>
+    `);
+
+    assert.dom(".chat-transcript-group", element).exists({ count: 1 });
+    assert
+      .dom(".chat-transcript-group__body > .chat-transcript", element)
+      .exists({ count: 2 });
+    assert
+      .dom("span.chat-transcript-group__channel", element)
+      .hasText("Weekly sync");
+    assert
+      .dom(".chat-transcript-group__channel .d-icon-users", element)
+      .exists();
+    assert.dom(".chat-transcript-group__label", element).hasText("Thread");
+    assert.dom(".chat-transcript-datetime a", element).doesNotExist();
+    assert
+      .dom(".chat-transcript-group__body", element)
+      .hasAria("label", "Transcript from Weekly sync");
+  });
+
+  test("presents an unregistered source type generically", function (assert) {
+    const element = render(`
+      <div class="chat-transcript" data-source="Weekly sync" data-source-type="nope"></div>
+    `);
+
+    assert
+      .dom(".chat-transcript-group__channel .d-icon-comment", element)
+      .exists();
+    assert.dom(".chat-transcript-group__label", element).hasText("Transcript");
+  });
+
+  test("starts a new group at a block naming a source", function (assert) {
+    const element = render(`
+      <div class="chat-transcript" data-channel-name="general" data-channel-id="7"></div>
+      <div class="chat-transcript" data-source="Weekly sync"></div>
+    `);
+
+    assert.dom(".chat-transcript-group", element).exists({ count: 2 });
   });
 
   test("keeps adjacent separate quotes in separate groups", function (assert) {

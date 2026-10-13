@@ -128,6 +128,23 @@ haha **ok** _cool_
       assert.strictEqual(value, multiMessagesMultiUserMarkdown);
     });
 
+    test("transcript named by an unlinked source", async function (assert) {
+      const sourceMarkdown = `[chat quote="martin;1;2025-03-20T07:12:55Z" source="Weekly sync" sourceType=meeting chained=true]
+test
+[/chat]
+[chat quote="hunter;2;2025-03-20T07:13:04Z" chained=true]
+haha
+[/chat]
+`;
+      const [{ value }] = await setupRichEditor(assert, sourceMarkdown);
+
+      assert.dom(".chat-transcript-group__header").exists({ count: 1 });
+      assert.dom("span.chat-transcript-group__channel").hasText("Weekly sync");
+      assert.dom(".chat-transcript-group__label").hasText("Transcript");
+
+      assert.strictEqual(value, sourceMarkdown);
+    });
+
     test("messages in a thread", async function (assert) {
       const threadMessagesMarkdown = `[chat quote="martin;29854;2025-03-20T07:12:57Z" channel="design gems :tada:" channelId=95 multiQuote=true threadId=124 threadTitle="Some cool thread title"]
 thread op message

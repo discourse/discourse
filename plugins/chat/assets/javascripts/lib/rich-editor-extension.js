@@ -13,6 +13,8 @@ const extension = {
         datetime: {},
         channel: {},
         channelId: {},
+        source: { default: null },
+        sourceType: { default: null },
         html: {},
         rawContent: {},
         multiQuote: {},
@@ -38,16 +40,24 @@ const extension = {
           wrapperElement.classList.add("chat-transcript-chained");
         }
 
-        // only a transcript's first block names the channel; later blocks join
-        // its box, which the stylesheet finds through this attribute
-        let headerElement;
+        // only a transcript's first block names the channel or source; later
+        // blocks join its box, which the stylesheet finds through these attributes
         if (node.attrs.channel) {
           wrapperElement.dataset.channelName = node.attrs.channel;
+        } else if (node.attrs.source) {
+          wrapperElement.dataset.source = node.attrs.source;
+        }
 
+        let headerElement;
+        if (node.attrs.channel || node.attrs.source) {
           const owner = getOwnerWithFallback();
           headerElement = buildTranscriptHeader(
-            node.attrs.channel,
-            node.attrs.channelId,
+            {
+              channelName: node.attrs.channel,
+              channelId: node.attrs.channelId,
+              source: node.attrs.source,
+              sourceType: node.attrs.sourceType,
+            },
             {
               site: owner.lookup("service:site"),
               chatChannelsManager: owner.lookup(
@@ -181,6 +191,8 @@ const extension = {
         datetime: token.attrGet("data-datetime"),
         channel: token.attrGet("data-channel-name"),
         channelId: token.attrGet("data-channel-id"),
+        source: token.attrGet("data-source"),
+        sourceType: token.attrGet("data-source-type"),
         chained: token.attrGet("data-chained"),
         multiQuote: token.attrGet("data-multiquote"),
         threadId: token.attrGet("data-thread-id"),
