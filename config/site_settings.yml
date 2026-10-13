@@ -4835,10 +4835,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      # TODO (ui-kit-reorderable-list-cleanup) raise to "experimental" once the
-      # meta topic exists; a non-conceptual status requires learn_more_url.
-      status: "conceptual"
+      status: "alpha"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
     default: false
     client: true
