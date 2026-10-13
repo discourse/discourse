@@ -61,6 +61,21 @@ RSpec.describe RenameVoiceToLive do
     )
   end
 
+  it "preserves voice in the rest of a setting name" do
+    DB.exec(
+      "INSERT INTO site_settings (name, data_type, value, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
+      "voice_max_voice_quality",
+      SiteSettings::TypeSupervisor.types[:enum],
+      "standard",
+    )
+
+    described_class.new.up
+
+    expect(
+      DB.query_single("SELECT name, value FROM site_settings WHERE name LIKE '%max%quality'"),
+    ).to eq(%w[live_max_voice_quality standard])
+  end
+
   it "moves upcoming change history to the new setting name" do
     UpcomingChangeEvent.where(upcoming_change_name: %w[voice_enabled live_enabled]).delete_all
     UpcomingChangeEvent.create!(event_type: :added, upcoming_change_name: "voice_enabled")

@@ -64,21 +64,21 @@ class RenameVoiceToLive < ActiveRecord::Migration[8.0]
 
     execute <<~SQL
       UPDATE site_settings
-      SET name = REPLACE(name, 'voice_', 'live_')
+      SET name = REGEXP_REPLACE(name, '^voice_', 'live_')
       WHERE name LIKE 'voice\\_%'
-        AND REPLACE(name, 'voice_', 'live_') NOT IN (SELECT name FROM site_settings)
+        AND REGEXP_REPLACE(name, '^voice_', 'live_') NOT IN (SELECT name FROM site_settings)
     SQL
 
     execute <<~SQL
       UPDATE site_setting_groups
-      SET name = REPLACE(name, 'voice_', 'live_')
+      SET name = REGEXP_REPLACE(name, '^voice_', 'live_')
       WHERE name LIKE 'voice\\_%'
-        AND REPLACE(name, 'voice_', 'live_') NOT IN (SELECT name FROM site_setting_groups)
+        AND REGEXP_REPLACE(name, '^voice_', 'live_') NOT IN (SELECT name FROM site_setting_groups)
     SQL
 
     execute <<~SQL
       UPDATE site_setting_localizations
-      SET setting_name = REPLACE(setting_name, 'voice_', 'live_')
+      SET setting_name = REGEXP_REPLACE(setting_name, '^voice_', 'live_')
       WHERE setting_name LIKE 'voice\\_%'
     SQL
 
