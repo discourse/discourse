@@ -13,28 +13,15 @@ RSpec.describe DiscourseWorkflows::NodeType do
     }
   end
 
-  it "requires nodes that override output_schemas to name an editor-side resolver" do
-    overriding =
-      DiscourseWorkflows::NodeType.registered_nodes.select do |node_class|
-        node_class.singleton_class.instance_methods(false).include?(:output_schemas)
-      end
-
-    expect(overriding).to be_present
-    expect(overriding.reject(&:output_schema_resolver)).to be_empty
-  end
-
   it "requires every node without a user-defined output to declare it" do
     user_defined_output = %w[
       action:code
-      action:data_table
-      action:form
       action:modal
       action:set_fields
       action:split_out
       action:sql
       action:workflow_call
       flow:sticky_note
-      trigger:form
       trigger:manual
       trigger:workflow_call
     ]
