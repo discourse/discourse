@@ -59,6 +59,7 @@ export default class BooleanControl extends Component {
         @title={{this.label}}
         @tooltip={{this.tooltip}}
         @type="custom"
+        @validate={{@validate}}
         @validation={{this.validation}}
         as |field|
       >

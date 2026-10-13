@@ -1,21 +1,23 @@
 import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
-  fieldControl,
+  keyedValue,
+  withoutKey,
+} from "../../../lib/workflows/keyed-collection";
+import {
   fieldValue,
   findNodeType,
-  isExpression,
   normalizePropertyOptions,
   propertyDescription,
   propertyLabel,
+  usesInlineBooleanControl,
 } from "../../../lib/workflows/property-engine";
 import WorkflowsEmptyState from "../empty-state";
+import CollectionAddMenu from "./collection-add-menu";
+import CollectionOptionRow from "./collection-option-row";
 import Field from "./field";
 
 export default class Collection extends Component {
@@ -64,7 +66,7 @@ export default class Collection extends Component {
   }
 
   get currentValue() {
-    return this.args.formApi?.get(this.args.fieldName) || {};
+    return keyedValue(this.args.formApi?.get(this.args.fieldName));
   }
 
   get options() {
@@ -87,21 +89,9 @@ export default class Collection extends Component {
     return this.availableOptions.length > 0;
   }
 
-  usesInlineControl(option) {
-    return (
-      fieldControl(option) === "boolean" &&
-      !isExpression(this.currentValue[option.name])
-    );
-  }
-
   @action
-  collectionRowClass(option) {
-    return [
-      "workflows-property-engine__collection-row",
-      this.usesInlineControl(option) ? "--inline-control" : null,
-    ]
-      .filter(Boolean)
-      .join(" ");
+  usesInlineControl(option) {
+    return usesInlineBooleanControl(option, this.currentValue[option.name]);
   }
 
   @action
@@ -124,9 +114,10 @@ export default class Collection extends Component {
 
   @action
   removeOption(option) {
-    const nextValue = { ...this.currentValue };
-    delete nextValue[option.name];
-    this.args.formApi.set(this.args.fieldName, nextValue);
+    this.args.formApi.set(
+      this.args.fieldName,
+      withoutKey(this.currentValue, option.name)
+    );
   }
 
   @action
@@ -188,71 +179,43 @@ export default class Collection extends Component {
       {{else}}
         <@form.Object @name={{@fieldName}} as |object item|>
           {{#each this.selectedOptions key="name" as |option|}}
-            <div class={{this.collectionRowClass option}}>
-
-              <DButton
-                class="workflows-property-engine__collection-delete"
-                @action={{fn this.removeOption option}}
-                @icon="xmark"
-                @translatedAriaLabel={{i18n
-                  "discourse_workflows.property_engine.remove_assignment"
-                  name=(this.optionLabel option)
-                }}
-                @translatedTitle={{i18n
-                  "discourse_workflows.property_engine.remove_assignment"
-                  name=(this.optionLabel option)
-                }}
+            <CollectionOptionRow
+              @inlineControl={{this.usesInlineControl option}}
+              @onRemove={{fn this.removeOption option}}
+              @removeLabel={{i18n
+                "discourse_workflows.property_engine.remove_assignment"
+                name=(this.optionLabel option)
+              }}
+            >
+              <Field
+                @configuration={{item}}
+                @connections={{@connections}}
+                @credentials={{@credentials}}
+                @fieldName={{option.name}}
+                @form={{object}}
+                @formApi={{@formApi}}
+                @label={{this.optionLabel option}}
+                @node={{@node}}
+                @nodeDefinition={{this.nodeDefinition}}
+                @nodeParameters={{@nodeParameters}}
+                @nodes={{@nodes}}
+                @nodeType={{@nodeType}}
+                @nodeTypes={{@nodeTypes}}
+                @schema={{option}}
+                @session={{@session}}
+                @showOptional={{false}}
               />
-
-              <div class="workflows-property-engine__collection-fields">
-                <Field
-                  @configuration={{item}}
-                  @connections={{@connections}}
-                  @credentials={{@credentials}}
-                  @fieldName={{option.name}}
-                  @form={{object}}
-                  @formApi={{@formApi}}
-                  @label={{this.optionLabel option}}
-                  @node={{@node}}
-                  @nodeDefinition={{this.nodeDefinition}}
-                  @nodeParameters={{@nodeParameters}}
-                  @nodes={{@nodes}}
-                  @nodeType={{@nodeType}}
-                  @nodeTypes={{@nodeTypes}}
-                  @schema={{option}}
-                  @session={{@session}}
-                  @showOptional={{false}}
-                />
-              </div>
-            </div>
-
+            </CollectionOptionRow>
           {{/each}}
         </@form.Object>
 
         {{#if this.hasAvailableOptions}}
-          <DMenu
-            class="btn btn-default workflows-property-engine__add-attrs-btn"
-            @inline={{true}}
-            @modalForwardRecipient={{true}}
-          >
-            <:trigger>
-              {{this.addOptionLabel}}
-              {{dIcon "chevron-down"}}
-            </:trigger>
-            <:content as |menu|>
-              <DDropdownMenu as |dropdown|>
-                {{#each this.availableOptions key="name" as |option|}}
-                  <dropdown.item>
-                    <DButton
-                      class="btn-transparent"
-                      @action={{fn this.addOption option menu.close}}
-                      @translatedLabel={{this.optionLabel option}}
-                    />
-                  </dropdown.item>
-                {{/each}}
-              </DDropdownMenu>
-            </:content>
-          </DMenu>
+          <CollectionAddMenu
+            @label={{this.addOptionLabel}}
+            @onAdd={{this.addOption}}
+            @optionLabel={{this.optionLabel}}
+            @options={{this.availableOptions}}
+          />
         {{/if}}
       {{/if}}
     </@form.Section>

@@ -450,6 +450,26 @@ export function wholeExpressionBody(value) {
     : null;
 }
 
+/**
+ * Whether the value is an expression with nothing to evaluate, e.g. `=` or
+ * `={{ }}`. Mirrors ExpressionResolver.empty_expression? on the server.
+ */
+export function isEmptyExpression(value) {
+  return isExpression(value) && /^=\s*(\{\{\s*\}\})?\s*$/.test(value);
+}
+
+/**
+ * Whether a field renders its boolean toggle inline, which only applies
+ * outside expression mode.
+ *
+ * @param {object} schema - The field schema.
+ * @param {any} value - The field's current value.
+ * @returns {boolean}
+ */
+export function usesInlineBooleanControl(schema, value) {
+  return fieldControl(schema) === "boolean" && !isExpression(value);
+}
+
 /** Mirrors ExpressionResolver.find_matching_close on the server. */
 function findMatchingClose(template, start) {
   let depth = 1;

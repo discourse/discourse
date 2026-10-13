@@ -12,6 +12,7 @@ import {
   getPropertySchema,
   i18nPrefix,
   i18nScope,
+  isEmptyExpression,
   localeKeyPart,
   normalizeOptions,
   propertyDescription,
@@ -562,6 +563,23 @@ module("Unit | Utility | workflows property engine", function () {
       [42, null],
     ].forEach(([input, expected]) => {
       assert.strictEqual(wholeExpressionBody(input), expected, String(input));
+    });
+  });
+
+  test("isEmptyExpression", function (assert) {
+    [
+      ["=", true],
+      ["=  ", true],
+      ["={{ }}", true],
+      ["={{   }}", true],
+      ["= {{ }} ", true],
+      ["={{ x }}", false],
+      ["={{ }}{{ x }}", false],
+      ["", false],
+      [null, false],
+      [false, false],
+    ].forEach(([input, expected]) => {
+      assert.strictEqual(isEmptyExpression(input), expected, String(input));
     });
   });
 });
