@@ -478,6 +478,26 @@ RSpec.describe DiscourseWorkflows::Schema do
       unregister_workflow_nodes(v1_class, v2_class)
     end
 
+    it "resolves each node once per distinct input" do
+      data_table = Fabricate(:discourse_workflows_data_table)
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "trigger", "trigger:manual"
+          builder.node "table",
+                       "action:data_table",
+                       parameters: {
+                         "operation" => "get",
+                         "data_table_id" => data_table.id,
+                       }
+          builder.connect "trigger", "table"
+        end
+      allow(DiscourseWorkflows::DataTable).to receive(:find_by).and_call_original
+
+      described_class.resolve_graph(graph[:nodes], graph[:connections])
+
+      expect(DiscourseWorkflows::DataTable).to have_received(:find_by).once
+    end
+
     it "selects the source schema by output position" do
       schemas =
         %w[kept rejected].map { |field| described_class.document(field => { "type" => "boolean" }) }
@@ -750,8 +770,7 @@ RSpec.describe DiscourseWorkflows::Schema do
       end
 
       expect { described_class.resolve_graph(graph[:nodes], graph[:connections]) }.to raise_error(
-        ArgumentError,
-        "Output schema graph did not converge",
+        DiscourseWorkflows::Schema::GraphResolver::NotConverged,
       )
     end
 

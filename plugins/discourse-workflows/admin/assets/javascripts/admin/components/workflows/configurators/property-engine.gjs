@@ -116,6 +116,7 @@ export default class PropertyEngineConfigurator extends Component {
               @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
               @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @onChange={{@onChange}}
               @schema={{field}}
               @session={{@session}}
             />
