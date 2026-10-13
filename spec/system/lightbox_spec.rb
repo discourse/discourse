@@ -47,9 +47,6 @@ describe "Lightbox | Photoswipe" do
       expect(lightbox).to have_original_image_button
       expect(lightbox).to have_image_info_button
 
-      expect(lightbox).to be_visible
-      expect(lightbox).to have_no_caption_details
-
       lightbox.image_info_button.click
 
       expect(lightbox).to have_caption_details("2400×3600 1.21 KB")

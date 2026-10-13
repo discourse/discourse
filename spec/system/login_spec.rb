@@ -137,7 +137,6 @@ shared_examples "login scenarios" do
       screenshot_marker(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
-      expect(page).to have_css(".login-welcome")
       expect(page.body).not_to include(topic.title)
       expect(page.body).not_to include(topic2.title)
 
