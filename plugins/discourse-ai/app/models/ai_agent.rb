@@ -81,7 +81,7 @@ class AiAgent < ActiveRecord::Base
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
 
   def self.all_agents(enabled_only: true)
-    agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    agent_cache[:value] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
       agent_cache[:value].select { |p| p.enabled }
@@ -312,10 +312,14 @@ class AiAgent < ActiveRecord::Base
       end
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
     enabled_mcp_server_assignments =
-      ai_agent_mcp_servers
-        .includes(:ai_mcp_server)
-        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
     enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
     selected_tool_names_by_server =
       enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
