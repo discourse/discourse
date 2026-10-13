@@ -144,7 +144,6 @@ class CategoryList
 
   def find_categories
     query = Category.secured(@guardian)
-    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     query = self.class.order_categories(query)
 
     paginate = paginate_results?
@@ -179,18 +178,7 @@ class CategoryList
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )
-      if SiteSetting.content_localization_enabled
-        subcategories_query = subcategories_query.includes(:localizations)
-      end
       @categories += subcategories_query
-    end
-
-    if SiteSetting.content_localization_enabled
-      @categories.each { |c| LocalizationAttributesReplacer.localize_category(c, I18n.locale) }
-    end
-
-    if Site.preloaded_category_custom_fields.any?
-      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
     end
 
     include_subcategories = @options[:include_subcategories] == true
@@ -225,12 +213,25 @@ class CategoryList
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 
+    displayed_categories = categories_with_descendants
+    associations = CategoryList.included_associations
+    associations << :localizations if SiteSetting.content_localization_enabled
     ActiveRecord::Associations::Preloader.new(
-      records: categories_with_descendants,
-      associations: CategoryList.included_associations,
+      records: displayed_categories,
+      associations: associations,
     ).call
 
-    Category.preload_user_fields!(@guardian, categories_with_descendants)
+    if SiteSetting.content_localization_enabled
+      displayed_categories.each do |c|
+        LocalizationAttributesReplacer.localize_category(c, I18n.locale)
+      end
+    end
+
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(displayed_categories, Site.preloaded_category_custom_fields)
+    end
+
+    Category.preload_user_fields!(@guardian, displayed_categories)
   end
 
   def prune_empty
