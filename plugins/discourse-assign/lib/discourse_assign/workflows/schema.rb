@@ -7,7 +7,7 @@ module DiscourseAssign
         "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
         "type" => "object",
         "properties" => {
-          "assignee" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES,
+          "assignee" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES.merge("x-optional" => true),
           "previously_assigned" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES,
         },
       }.freeze

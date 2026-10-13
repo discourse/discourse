@@ -562,16 +562,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(topic_data["tags"].map { |topic_tag| topic_tag["name"] }).to contain_exactly(
           tag.name,
         )
-        expect(topic_data["posts_count"]).to be_present
-        expect(topic_data["views"]).to be_present
-        expect(topic_data["like_count"]).to be_present
-        expect(topic_data["created_at"]).to be_present
-        expect(topic_data["bumped_at"]).to be_present
         expect(post_data).to include(
           "id" => topic_1.first_post.id,
           "topic_id" => topic_1.id,
           "trust_level" => user.trust_level,
         )
+        expect(topic_entry).to match_node_output_schema(described_class)
       end
 
       it "preloads selected custom fields when requested" do

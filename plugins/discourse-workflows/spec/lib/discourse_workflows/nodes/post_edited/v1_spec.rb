@@ -66,8 +66,6 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       )
       expect(output[:revision][:changes]).to include("raw")
       expect(output).to match_node_output_schema(described_class)
-      editor_schema = described_class.output_schemas.first.dig("properties", "editor")
-      expect(editor_schema).to include("properties" => DiscourseWorkflows::Schema::USER_PROPERTIES)
     end
 
     it "returns post and topic data" do

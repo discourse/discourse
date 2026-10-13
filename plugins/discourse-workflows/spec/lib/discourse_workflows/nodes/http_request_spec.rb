@@ -42,7 +42,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         "headers" => include("content-type" => "application/json"),
         "status_code" => 200,
       )
-      expect(result).to have_key("status_message")
+      expect(result).to match_node_output_schema(described_class, configuration: config)
     end
 
     it "splits top-level JSON array responses into separate output items" do
