@@ -169,11 +169,10 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.slug" => "string",
       "topic.archived" => "boolean",
       "post.post_url" => "string",
+      "post.upload_ids" => "array<integer>",
+      "topic.custom_fields" => "object",
     )
-    expect(output_fields_by_type.fetch("action:topic")).not_to include(
-      "post.trust_level",
-      "post.upload_ids",
-    )
+    expect(output_fields_by_type.fetch("action:topic")).not_to include("post.trust_level")
     expect(output_fields_by_type.fetch("action:topic_tags")).to include(
       "topic_id" => "integer",
       "tag_names" => "array<string>",

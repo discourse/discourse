@@ -37,6 +37,24 @@ module DiscourseWorkflows
             "WebHookPostSerializer payload",
           )
 
+        def self.output_contracts_for(topic_schema, post_schema)
+          [
+            {
+              variants: [
+                {
+                  schema: topic_schema,
+                  display_options: {
+                    show: {
+                      operation: ["set_custom_fields"],
+                    },
+                  },
+                },
+              ],
+              schema: Schema.merge(topic_schema, post_schema),
+            },
+          ]
+        end
+
         description(
           name: "action:topic",
           version: "1.0",
@@ -48,21 +66,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
-          output_contracts: [
-            {
-              variants: [
-                {
-                  schema: TOPIC_SCHEMA,
-                  display_options: {
-                    show: {
-                      operation: ["set_custom_fields"],
-                    },
-                  },
-                },
-              ],
-              schema: Schema.merge(TOPIC_SCHEMA, TOPIC_POST_SCHEMA),
-            },
-          ],
+          output_contracts: output_contracts_for(TOPIC_SCHEMA, TOPIC_POST_SCHEMA),
           properties: {
             operation: {
               type: :options,
@@ -223,6 +227,14 @@ module DiscourseWorkflows
           },
         )
 
+        deprecated(
+          superseded_by: "2.0",
+          changes: {
+            "post.trust_level" => "user.trust_level",
+          },
+          notice_key: "discourse_workflows.node_deprecated.topic_v1",
+        )
+
         def self.load_options_context(context)
           case context.method_name
           when "topic_custom_fields"
@@ -328,8 +340,8 @@ module DiscourseWorkflows
           topic = post.topic
 
           {
-            topic: serialize_topic(topic, guardian: guardian),
-            post: serialize_topic_post(post),
+            **serialize_topic_result(topic, guardian),
+            post: serialize_topic_post(post, guardian),
             post_id: post.id,
             post_number: post.post_number,
           }
@@ -342,15 +354,7 @@ module DiscourseWorkflows
           custom_field_names = config["custom_field_names"]
           ::Topic.preload_custom_fields([topic], custom_field_names) if custom_field_names.present?
 
-          {
-            topic:
-              serialize_topic(
-                topic,
-                guardian: actor.guardian,
-                custom_field_names: custom_field_names,
-              ),
-            post: serialize_topic_post(topic.first_post),
-          }
+          serialize_topic_with_post(topic, actor.guardian, custom_field_names:)
         end
 
         def list_topics(exec_ctx, config, item_index)
@@ -377,25 +381,15 @@ module DiscourseWorkflows
           topics = topic_list.topics.slice(offset, limit) || []
           ActiveRecord::Associations::Preloader.new(
             records: topics,
-            associations: {
-              first_post: :user,
-            },
+            associations: [:user, { first_post: %i[user uploads] }],
           ).call
+          topics.each { |topic| topic.first_post&.association(:topic)&.target = topic }
 
           custom_field_names = config["custom_field_names"]
           ::Topic.preload_custom_fields(topics, custom_field_names) if custom_field_names.present?
 
-          topics.map do |topic|
-            {
-              topic:
-                serialize_topic(
-                  topic,
-                  guardian: actor.guardian,
-                  custom_field_names: custom_field_names,
-                ),
-              post: serialize_topic_post(topic.first_post),
-            }
-          end
+          guardian = actor.guardian
+          topics.map { |topic| serialize_topic_with_post(topic, guardian, custom_field_names:) }
         end
 
         def close_topic(exec_ctx, config, item_index)
@@ -406,10 +400,7 @@ module DiscourseWorkflows
           topic.update_status("closed", true, actor)
 
           topic.reload
-          {
-            topic: serialize_topic(topic, guardian: actor.guardian),
-            post: serialize_topic_post(topic.first_post),
-          }
+          serialize_topic_with_post(topic, actor.guardian)
         end
 
         def archive_topic(exec_ctx, config, item_index)
@@ -421,10 +412,7 @@ module DiscourseWorkflows
           topic.update_status("archived", true, actor)
 
           topic.reload
-          {
-            topic: serialize_topic(topic, guardian: guardian),
-            post: serialize_topic_post(topic.first_post),
-          }
+          serialize_topic_with_post(topic, guardian)
         end
 
         def bump_topic(exec_ctx, config, item_index)
@@ -447,10 +435,7 @@ module DiscourseWorkflows
           end
 
           topic.reload
-          {
-            topic: serialize_topic(topic, guardian: guardian),
-            post: serialize_topic_post(topic.first_post),
-          }
+          serialize_topic_with_post(topic, guardian)
         end
 
         def set_custom_fields(exec_ctx, config, item_index)
@@ -465,10 +450,24 @@ module DiscourseWorkflows
             topic.save_custom_fields
           end
 
+          serialize_topic_result(topic, guardian, custom_field_names: custom_fields.keys)
+        end
+
+        def serialize_topic_result(topic, guardian, custom_field_names: [])
+          { topic: serialize_topic(topic, guardian:, custom_field_names:) }
+        end
+
+        def serialize_topic_with_post(topic, guardian, custom_field_names: [])
           {
-            topic:
-              serialize_topic(topic, guardian: guardian, custom_field_names: custom_fields.keys),
+            **serialize_topic_result(topic, guardian, custom_field_names:),
+            post: serialize_topic_post(topic.first_post, guardian),
           }
+        end
+
+        def serialize_topic_post(post, _guardian)
+          return if post.blank?
+
+          serialize_record(post, WebHookPostSerializer)
         end
 
         def custom_fields_from_entries(entries)
@@ -478,12 +477,6 @@ module DiscourseWorkflows
 
             fields[key] = entry["value"]
           end
-        end
-
-        def serialize_topic_post(post)
-          return if post.blank?
-
-          serialize_record(post, WebHookPostSerializer)
         end
       end
     end
