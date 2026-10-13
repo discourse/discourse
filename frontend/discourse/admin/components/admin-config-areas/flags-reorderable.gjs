@@ -53,11 +53,9 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   /**
-   * Applies a committed move optimistically and persists it through the
-   * single-step reorder endpoint, rolling back on failure. Arrow moves are
-   * always adjacent steps, which is why the surface stays arrows-only for
-   * now: a pointer drag could jump several rows at once, which this endpoint
-   * cannot express.
+   * Applies a committed move optimistically and persists where the flag
+   * landed, rolling back on failure. The server orders only the flags that
+   * can move, so the position sent is the flag's place among those.
    *
    * @param {Object} move - The normalized move from the list.
    */
@@ -67,10 +65,14 @@ export default class AdminConfigAreasFlags extends Component {
     this.setPending(move.item, true);
     this.flags.splice(0, this.flags.length, ...move.proposedToItems);
 
-    const direction = move.toIndex > move.fromIndex ? "down" : "up";
     try {
-      await ajax(`/admin/config/flags/${move.item.id}/reorder/${direction}`, {
+      await ajax(`/admin/config/flags/${move.item.id}/move`, {
         type: "PUT",
+        data: {
+          position: move.proposedToItems
+            .filter(this.movable)
+            .indexOf(move.item),
+        },
       });
     } catch (error) {
       this.flags.splice(0, this.flags.length, ...fallbackFlags);
