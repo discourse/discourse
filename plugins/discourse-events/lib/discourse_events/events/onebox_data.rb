@@ -37,7 +37,11 @@ module DiscourseEvents
 
         # the topic being viewed, only when it's itself an event (cheap custom-field
         # check, so non-event topic views do no extra work)
-        topic = @posts.first.topic
+        self_topic_id = @posts.first.topic_id
+        self_onebox_marker = %{data-topic="#{self_topic_id}"}
+        topic = @posts.first.topic if @posts.any? { |post|
+          post.cooked&.include?(self_onebox_marker)
+        }
         own_topic_id = topic&.event_starts_at ? topic.id : nil
 
         topic_ids = links.map(&:last)
