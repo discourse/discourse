@@ -54,7 +54,7 @@ Renaming or removing an output key, or changing its meaning, breaks saved workfl
 - Core nodes self-register; plugin nodes need `register_discourse_workflows_node(...::V2)` next to V1.
 - Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
 - Deprecated versions keep running for saved workflows, are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them after a deprecation window.
-- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones.
+- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks `superseded_by`.
 
 ## Output conventions
 

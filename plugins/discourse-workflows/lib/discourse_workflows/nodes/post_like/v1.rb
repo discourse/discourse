@@ -48,6 +48,8 @@ module DiscourseWorkflows
           },
         )
 
+        deprecated(superseded_by: "2.0", changes: { "username" => "actor.username" })
+
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map.with_index do |_item, item_index|
@@ -81,6 +83,10 @@ module DiscourseWorkflows
             raise_node_error!(result.errors.full_messages.join(", "), item_index:) if result.failed?
           end
 
+          serialize_result(post, actor, changed)
+        end
+
+        def serialize_result(post, actor, changed)
           { post_id: post.id, username: actor.username, actor: serialize_user(actor), changed: }
         end
       end

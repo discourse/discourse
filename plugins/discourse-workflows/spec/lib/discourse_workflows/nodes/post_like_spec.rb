@@ -55,3 +55,24 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLike::V1 do
     end
   end
 end
+
+RSpec.describe DiscourseWorkflows::Nodes::PostLike::V2 do
+  fab!(:post)
+  fab!(:actor, :user)
+
+  it "returns the liker as actor", :aggregate_failures do
+    result =
+      execute_node(
+        configuration: {
+          "operation" => "like",
+          "post_id" => post.id.to_s,
+          "actor_username" => actor.username,
+        },
+      )
+
+    expect(result).to include("post_id" => post.id, "changed" => true)
+    expect(result["actor"]).to include("id" => actor.id, "username" => actor.username)
+    expect(result).not_to have_key("username")
+    expect(result).to match_node_output_schema(described_class)
+  end
+end
