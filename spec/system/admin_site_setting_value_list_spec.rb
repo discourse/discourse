@@ -73,6 +73,21 @@ describe "Admin Site Setting Value Lists" do
         end
       end
 
+      it "keeps an emoji where the admin moved it" do
+        settings_page.visit("default_emoji_reactions")
+
+        settings_page.move_list_value_to_top("default_emoji_reactions", "tada")
+        settings_page.save_setting("default_emoji_reactions")
+        expect(settings_page).to have_overridden_setting("default_emoji_reactions")
+
+        page.refresh
+
+        expect(settings_page).to have_list_values_in_order(
+          "default_emoji_reactions",
+          %w[tada +1 heart],
+        )
+      end
+
       # The menu is portaled and positioned asynchronously, so focusing a
       # destination before it has been placed asks the browser to scroll to
       # wherever the float still sits, which throws the reader to the top of the

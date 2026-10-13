@@ -112,6 +112,27 @@ describe "Admin Dashboard Redesign | Reports section" do
         expect(modal.enabled_identifiers).to eq(%w[core_report:topics core_report:signups])
       end
     end
+
+    it "keeps report sizes when admins add and reorder reports" do
+      Fabricate(:tall_admin_dashboard_report, position: 0)
+      Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
+
+      page.visit("/admin")
+      dashboard.open_manage_reports_via_cog
+      expect(modal).to have_open
+      modal.toggle("core_report:admin_logins")
+      modal.reorderable("core_report:topics").move(:top)
+      modal.apply
+      expect(modal).to have_closed
+
+      page.refresh
+      expect(dashboard).to have_cards_in_order(
+        %w[core_report:topics core_report:signups core_report:admin_logins],
+      )
+      expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+      expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
+      expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
+    end
   end
 
   it "lets admins customize the reports section via the manage-reports modal" do

@@ -230,6 +230,21 @@ module PageObjects
         self
       end
 
+      def move_list_value_to_top(setting_name, value)
+        PageObjects::Components::ReorderableList.new(
+          "#{setting_row_selector(setting_name)} .value[data-reorderable-key='#{value}']",
+        ).move(:top)
+        self
+      end
+
+      def has_list_values_in_order?(setting_name, values)
+        list = "#{setting_row_selector(setting_name)} .values"
+        has_css?("#{list} .value", count: values.size) &&
+          values.each_with_index.all? do |value, index|
+            has_css?("#{list} .value:nth-child(#{index + 1})[data-reorderable-key='#{value}']")
+          end
+      end
+
       def category_setting(setting_name)
         PageObjects::Components::SelectKit.new(
           "#{setting_row_selector(setting_name)} .category-chooser",
