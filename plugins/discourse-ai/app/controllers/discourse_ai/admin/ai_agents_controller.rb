@@ -640,6 +640,8 @@ module DiscourseAi
             selected_tool_names: mcp_server_tool_names[assignment.ai_mcp_server_id.to_s],
           )
         end
+
+        ai_agent.bump_cache
       end
 
       def hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)
