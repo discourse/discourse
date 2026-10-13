@@ -41,6 +41,8 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          deprecated(superseded_by: "2.0", changes: { "acting_user" => "actor" })
+
           def initialize(board, card_payload, acting_user, *)
             super(parameters: {})
             card_payload = card_payload.with_indifferent_access

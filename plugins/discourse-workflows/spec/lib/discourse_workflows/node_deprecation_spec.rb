@@ -7,12 +7,17 @@ RSpec.describe DiscourseWorkflows::NodeType do
         DiscourseWorkflows::Registry.nodes(include_disabled_plugins: true).select(&:deprecated?)
 
       expect(deprecated.map(&:name)).to contain_exactly(
+        "DiscourseWorkflows::Nodes::Assigned::V1",
+        "DiscourseWorkflows::Nodes::CardMoved::V1",
         "DiscourseWorkflows::Nodes::PostDestroyed::V1",
         "DiscourseWorkflows::Nodes::PostEdited::V1",
         "DiscourseWorkflows::Nodes::PostLike::V1",
         "DiscourseWorkflows::Nodes::PostLikeChanged::V1",
+        "DiscourseWorkflows::Nodes::PostReactionChanged::V1",
         "DiscourseWorkflows::Nodes::PostRecovered::V1",
         "DiscourseWorkflows::Nodes::Topic::V1",
+        "DiscourseWorkflows::Nodes::TopicReceivedVote::V1",
+        "DiscourseWorkflows::Nodes::Unassigned::V1",
       )
     end
 
