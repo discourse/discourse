@@ -179,6 +179,54 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   before { enable_current_plugin }
 
+  it "classifies non-streaming reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { message: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(body: payload.to_json)
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true)
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
+  it "classifies streamed reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { delta: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(
+      body: "data: #{payload.to_json}\n\ndata: [DONE]\n\n",
+    )
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
   def capture_payload_for_completion(**generation_args)
     captured_payload = nil
     stub =

@@ -90,6 +90,7 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         expect(prompt.messages.last).to eq(original.last)
         expect(prompts.first.skip_trim).to eq(true)
         expect(options.first).to include(user: user, feature_name: "context_compression")
+        expect(options.first[:max_tokens]).to be_nil
         evidence = prompts.first.messages.last[:content]
         expect(evidence).to include(original[1][:content], original[3][:content])
         expect(evidence).not_to include(original.last[:content])

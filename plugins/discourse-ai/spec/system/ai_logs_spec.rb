@@ -64,6 +64,22 @@ RSpec.describe "AI logs admin page" do
     sign_in(admin)
   end
 
+  it "surfaces empty completions with reasoning usage and the raw stop reason in details" do
+    log.update!(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      reasoning_tokens: 10,
+      stop_reason: "length",
+    )
+    ai_logs_page.visit
+    ai_logs_page.select_outcome(I18n.t("js.discourse_ai.logs.empty"))
+    expect(ai_logs_page).to have_log(log)
+    expect(page).to have_css(".ai-logs__status-icon.--warning.d-icon-triangle-exclamation")
+    ai_logs_page.open_log(log)
+    expect(page).to have_css(".ai-log-detail-modal__metadata", text: "Empty response (200)")
+    expect(page).to have_css(".ai-log-detail-modal__metadata-reasoning", text: "10")
+    expect(page).to have_css(".ai-log-detail-modal__metadata-stop-reason", text: "length")
+  end
+
   it "applies outcome, feature, and ID filters" do
     Fabricate(:ai_api_audit_log, feature_name: "other-feature")
     ai_logs_page.visit

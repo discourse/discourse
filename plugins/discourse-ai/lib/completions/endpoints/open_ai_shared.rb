@@ -69,6 +69,20 @@ module DiscourseAi
           model_params
         end
 
+        protected
+
+        def output_stop_reason
+          processor.stop_reason
+        end
+
+        def output_limit_reached?
+          processor.output_limit_reached
+        end
+
+        def reported_reasoning_tokens
+          processor.reasoning_tokens
+        end
+
         private
 
         def disable_streaming?

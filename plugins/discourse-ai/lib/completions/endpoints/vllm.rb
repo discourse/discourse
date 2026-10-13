@@ -120,6 +120,14 @@ module DiscourseAi
           )
         end
 
+        protected
+
+        def reset_attempt_state!
+          super
+          @thinking = nil
+          @tool_batch_id = nil
+        end
+
         private
 
         def attach_tool_batch(result, response_id)
