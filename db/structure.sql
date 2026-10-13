@@ -5539,11 +5539,14 @@ ALTER SEQUENCE public.discourse_workflows_tags_id_seq OWNED BY public.discourse_
 CREATE TABLE public.discourse_workflows_variables (
     id bigint NOT NULL,
     key character varying(100) NOT NULL,
-    value character varying(1000) DEFAULT ''::character varying NOT NULL,
+    value text,
     description text,
     created_by_id integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    workflow_id bigint,
+    variable_type character varying(30) DEFAULT 'string'::character varying NOT NULL,
+    type_options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -5761,7 +5764,8 @@ CREATE TABLE public.discourse_workflows_workflow_versions (
     created_by_id integer NOT NULL,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    variables_schema jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -19924,10 +19928,17 @@ CREATE INDEX idx_dwf_variables_on_created_by_id ON public.discourse_workflows_va
 
 
 --
--- Name: idx_dwf_variables_on_key; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_variables_on_key_global; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_variables_on_key ON public.discourse_workflows_variables USING btree (key);
+CREATE UNIQUE INDEX idx_dwf_variables_on_key_global ON public.discourse_workflows_variables USING btree (key) WHERE (workflow_id IS NULL);
+
+
+--
+-- Name: idx_dwf_variables_on_workflow_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_variables_on_workflow_key ON public.discourse_workflows_variables USING btree (workflow_id, key) WHERE (workflow_id IS NOT NULL);
 
 
 --
@@ -25883,6 +25894,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172757'),
 ('20260914140746'),
 ('20260914032737'),
+('20260913105655'),
 ('20260910110851'),
 ('20260910033302'),
 ('20260910030427'),
@@ -25893,6 +25905,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
+('20260904171256'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),

@@ -268,7 +268,7 @@ module DiscourseWorkflows
 
         NOTES = {
           "action:code" => [
-            "The default value of the code property documents the runtime variables: $input, $json, $(\"Node name\"), $vars, $site_settings, $execution, $current_user, $helpers and console.",
+            "The default value of the code property documents the runtime variables: $input, $json, $(\"Node name\"), $vars, $workflow_vars, $site_settings, $execution, $current_user, $helpers and console.",
             "runOnceForAllItems must return an array of items such as [{ json: { ... } }]; plain objects are normalized under json.",
             "runOnceForEachItem must return one object per input item, not an array, and cannot use $input.first, $input.last, $input.all or $input.itemMatching.",
             "Output items may use the reserved keys json, pairedItem, error and index; do not mix them with plain fields.",
