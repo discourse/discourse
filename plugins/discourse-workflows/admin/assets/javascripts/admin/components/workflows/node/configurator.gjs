@@ -46,6 +46,7 @@ import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
 import OutputContext from "../context/output";
 import { takenNodeNames } from "../editor/node-factory";
+import DeprecationNotice from "./deprecation-notice";
 import LivePreview from "./live-preview";
 
 function credentialSlotLabel(slot) {
@@ -413,6 +414,12 @@ export default class NodeConfigurator extends Component {
   }
 
   @action
+  upgradeNode() {
+    this.handleClose();
+    this.args.model.onUpgrade();
+  }
+
+  @action
   async executeStep() {
     try {
       await this.saveCurrentConfiguration();
@@ -600,6 +607,10 @@ export default class NodeConfigurator extends Component {
                 }}</span>
             </div>
           {{/if}}
+          <DeprecationNotice
+            @deprecation={{this.resolvedNodeType.deprecation}}
+            @onUpgrade={{this.upgradeNode}}
+          />
           <div
             class={{dConcatClass
               "workflows-configurator-modal__columns"

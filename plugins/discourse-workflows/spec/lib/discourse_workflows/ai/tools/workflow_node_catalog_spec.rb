@@ -72,6 +72,19 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(invoke_tool([hidden_node_type])).to include(nodes: [], unknown_types: [hidden_node_type])
   end
 
+  it "returns the latest version for types with deprecated versions" do
+    register_versioned_workflow_nodes(
+      "action:catalog_deprecation_test",
+      v1_deprecation: {
+        superseded_by: "2.0",
+      },
+    )
+
+    result = invoke_tool(["action:catalog_deprecation_test"])
+
+    expect(result[:nodes].pluck(:version)).to eq(["2.0"])
+  end
+
   it "includes Code node runtime notes" do
     code_node = invoke_tool(["action:code"])[:nodes].first
 
