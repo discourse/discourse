@@ -175,8 +175,6 @@ RSpec.describe "AI Bot - Homepage" do
     end
 
     it "shows an error when trying to submit while uploads are in progress" do
-      user.user_option.update!(timezone: nil)
-
       ai_pm_homepage.visit
       expect(ai_pm_homepage).to have_homepage
 
