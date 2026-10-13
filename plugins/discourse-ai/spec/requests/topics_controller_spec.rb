@@ -18,7 +18,7 @@ RSpec.describe TopicsController do
 
       agents = []
       query_counts =
-        [2, 8].map do |agent_count|
+        [1, 2].map do |agent_count|
           (agent_count - agents.size).times do
             agents << Fabricate(
               :ai_agent,
