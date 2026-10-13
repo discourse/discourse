@@ -26,6 +26,10 @@ module DiscourseWorkflows
       { "$schema" => DRAFT_URI, "type" => "object", "properties" => properties }.freeze
     end
 
+    def self.nullable_user(description)
+      { "type" => %w[object null], "description" => description, "properties" => USER_PROPERTIES }
+    end
+
     def self.entity_extension(name, properties)
       {
         "$schema" => DRAFT_URI,
@@ -50,6 +54,7 @@ module DiscourseWorkflows
         "posts_count": { "type": "integer" },
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
+        "username": { "type": ["string", "null"], "description": "Username of the topic author" },
         "tags": {
           "type": "array",
           "items": {
@@ -61,7 +66,7 @@ module DiscourseWorkflows
             }
           }
         },
-        "first_post_id": { "type": "integer" },
+        "first_post_id": { "type": ["integer", "null"] },
         "visible": { "type": "boolean" },
         "visibility_reason_id": { "type": "integer" },
         "closed": { "type": "boolean" },
@@ -84,12 +89,16 @@ module DiscourseWorkflows
         "post_number": { "type": "integer" },
         "post_type": { "type": "integer" },
         "reply_to_post_number": { "type": ["integer", "null"] },
+        "reply_to_post_id": { "type": ["integer", "null"] },
+        "reply_to_username": { "type": ["string", "null"] },
         "topic_id": { "type": "integer" },
         "topic_slug": { "type": "string" },
         "topic_title": { "type": "string" },
         "post_url": { "type": "string", "description": "Relative URL of the post" },
+        "url": { "type": "string", "description": "Absolute URL of the post" },
         "category_id": { "type": ["integer", "null"] },
         "category_name": { "type": ["string", "null"] },
+        "category_slug": { "type": ["string", "null"] },
         "user_id": { "type": "integer" },
         "username": { "type": "string" },
         "created_at": { "type": "string", "format": "date-time" },
@@ -169,6 +178,7 @@ module DiscourseWorkflows
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
     BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
+    ACTOR_SCHEMA = document("actor" => nullable_user("User who performed the action"))
     IP_LOCATION_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "type": ["object", "null"],
@@ -194,6 +204,7 @@ module DiscourseWorkflows
             "title": { "type": ["string", "null"] },
             "bio_raw": { "type": ["string", "null"] },
             "website": { "type": ["string", "null"] },
+            "location": { "type": ["string", "null"] },
             "profile_background_upload_id": { "type": ["integer", "null"] },
             "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
@@ -345,7 +356,7 @@ module DiscourseWorkflows
 
     USER_SEEN_SCHEMA =
       document(
-        BASIC_USER_SCHEMA.fetch("properties").merge(
+        USER_SCHEMA.fetch("properties").merge(
           "seen" => {
             "type" => "object",
             "description" => "User seen event details",
@@ -369,7 +380,10 @@ module DiscourseWorkflows
         ),
       )
 
-    REVIEWABLE_PROPERTIES = JSON.parse(<<~JSON).freeze
+    REVIEWABLE_PROPERTIES = {
+      "target_user" => nullable_user("User the reviewable is about"),
+      "created_by" => nullable_user("User who flagged or queued the item"),
+    }.merge(JSON.parse(<<~JSON)).freeze
       {
         "id": { "type": "integer" },
         "type": { "type": "string" },
@@ -378,7 +392,10 @@ module DiscourseWorkflows
         "target_id": { "type": ["integer", "null"] },
         "topic_id": { "type": ["integer", "null"] },
         "category_id": { "type": ["integer", "null"] },
-        "score": { "type": "number" },
+        "chat_channel_id": { "type": ["integer", "null"] },
+        "score": { "type": "number", "description": "Total review score. Flag scores are added after the item is queued, so this is usually 0 when the item is created" },
+        "potential_spam": { "type": "boolean" },
+        "url": { "type": "string", "description": "Absolute URL of the item in the review queue" },
         "created_at": { "type": ["string", "null"], "format": "date-time" }
       }
     JSON

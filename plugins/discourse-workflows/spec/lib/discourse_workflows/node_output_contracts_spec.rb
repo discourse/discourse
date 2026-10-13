@@ -93,11 +93,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
   it "unions the group variants in contention when the operation is an expression" do
     node_class = DiscourseWorkflows::Nodes::Group::V1
-    add_remove_schema =
-      DiscourseWorkflows::Schema.merge(
-        DiscourseWorkflows::Schema::GROUP_SCHEMA,
-        DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
-      )
+    add_remove_schema = node_class::GROUP_ACTION_SCHEMA
 
     expect(
       node_class.output_schemas({ "operation" => "add" }, input_schemas: [input_schema]),

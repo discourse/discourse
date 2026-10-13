@@ -12,11 +12,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeSerializer do
       expect(version.dig(:output_contracts, 0, :variants)).to eq(
         [
           {
-            schema:
-              DiscourseWorkflows::Schema.merge(
-                DiscourseWorkflows::Schema::GROUP_SCHEMA,
-                DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
-              ),
+            schema: DiscourseWorkflows::Nodes::Group::V1::GROUP_ACTION_SCHEMA,
             mode: :replace,
             display_options: {
               show: {

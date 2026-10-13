@@ -6,6 +6,21 @@ module DiscourseWorkflows
       class V1 < NodeType
         include HttpHelpers
 
+        FULL_RESPONSE_SCHEMA =
+          Schema.document(
+            "status_code" => {
+              "type" => "integer",
+            },
+            "status_message" => {
+              "type" => %w[string null],
+            },
+            "headers" => {
+              "type" => "object",
+            },
+            "body" => {
+            },
+          )
+
         description(
           name: "action:http_request",
           version: "1.0",
@@ -16,6 +31,20 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            {
+              variants: [
+                {
+                  schema: FULL_RESPONSE_SCHEMA,
+                  display_options: {
+                    show: {
+                      full_response: [true],
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           properties: {
             method: {
               type: :options,

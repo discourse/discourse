@@ -38,7 +38,7 @@ module DiscourseWorkflows
                     "type" => "string",
                   },
                   "reviewable_id" => {
-                    "type" => "integer",
+                    "type" => %w[integer null],
                   },
                   "post_hidden" => {
                     "type" => "boolean",

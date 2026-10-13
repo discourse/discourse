@@ -9,7 +9,10 @@ module DiscourseWorkflows
                :post_number,
                :post_type,
                :reply_to_post_number,
+               :reply_to_post_id,
+               :reply_to_username,
                :post_url,
+               :url,
                :username,
                :user_id,
                :created_at,
@@ -20,6 +23,7 @@ module DiscourseWorkflows
                :score,
                :category_id,
                :category_name,
+               :category_slug,
                :tags,
                :upload_ids,
                :raw,
@@ -45,6 +49,22 @@ module DiscourseWorkflows
       ::Post.url(topic.slug, topic.id, object.post_number)
     end
 
+    def url
+      "#{Discourse.base_url}#{post_url}"
+    end
+
+    def reply_to_post_id
+      if object.has_attribute?(:reply_to_post_id)
+        object[:reply_to_post_id]
+      else
+        object.reply_to_post&.id
+      end
+    end
+
+    def reply_to_username
+      object.reply_to_user&.username
+    end
+
     def username
       object.user&.username
     end
@@ -67,6 +87,10 @@ module DiscourseWorkflows
 
     def category_name
       topic&.category&.name
+    end
+
+    def category_slug
+      topic&.category&.slug_for_url
     end
 
     def tags

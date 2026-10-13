@@ -28,6 +28,30 @@ module DiscourseWorkflows
                       "description" => "User who performed the edit, when available",
                       "properties" => Schema::USER_PROPERTIES,
                     },
+                    "revision" => {
+                      "type" => %w[object null],
+                      "description" =>
+                        "Revision created by the edit, null for edits within the grace period",
+                      "properties" => {
+                        "number" => {
+                          "type" => "integer",
+                        },
+                        "edit_reason" => {
+                          "type" => %w[string null],
+                        },
+                        "changes" => {
+                          "type" => "array",
+                          "description" => "Names of the modified fields",
+                          "items" => {
+                            "type" => "string",
+                          },
+                        },
+                        "previous_raw" => {
+                          "type" => %w[string null],
+                          "description" => "Raw before the edit, null when the raw did not change",
+                        },
+                      },
+                    },
                   ),
                 ),
             },
@@ -48,10 +72,9 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
+        def initialize(post, _topic_changed = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
           @revisor = revisor
         end
 
@@ -62,10 +85,11 @@ module DiscourseWorkflows
 
         def output
           {
-            post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
+            post: serialize_post(@post, include_cooked: true),
             topic: serialize_topic_list_item(@post.topic),
             user: serialize_user(@post.user),
             editor: serialize_user(@revisor&.editor),
+            revision: serialize_revision,
           }
         end
 
@@ -77,6 +101,18 @@ module DiscourseWorkflows
         end
 
         private
+
+        def serialize_revision
+          revision = @revisor&.post_revision
+          return if revision.blank?
+
+          {
+            number: revision.number,
+            edit_reason: @post.edit_reason,
+            changes: revision.modifications.keys,
+            previous_raw: revision.modifications.dig("raw", 0),
+          }
+        end
 
         def matches_post_scope?(post_scope)
           case post_scope
