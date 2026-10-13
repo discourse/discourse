@@ -656,12 +656,15 @@ if generic_import_dependencies_available
       end
     end
 
-    describe "event timezones" do
+    describe "events" do
       fab!(:vienna_post, :post)
       fab!(:untimed_post, :post)
       fab!(:invalid_post, :post)
+      fab!(:attendee, :user)
+      fab!(:other_attendee, :user)
 
       let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:import_issue_log_path) { File.join(Dir.mktmpdir, "issues.log") }
       let(:importer) do
         described_class.allocate.tap do |instance|
           instance.instance_variable_set(:@source_db, source_db)
@@ -673,10 +676,8 @@ if generic_import_dependencies_available
             :@topic_id_by_post_id,
             [vienna_post, untimed_post, invalid_post].to_h { |post| [post.id, post.topic_id] },
           )
-          instance.instance_variable_set(
-            :@import_issue_log_path,
-            File.join(Dir.mktmpdir, "issues.log"),
-          )
+          instance.instance_variable_set(:@users, { 10 => attendee.id, 11 => other_attendee.id })
+          instance.instance_variable_set(:@import_issue_log_path, import_issue_log_path)
           instance.instance_variable_set(
             :@raw_connection,
             ActiveRecord::Base.connection.raw_connection,
@@ -684,30 +685,34 @@ if generic_import_dependencies_available
           instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
         end
       end
+      let(:public_status) { DiscourseEvents::Events::Event.statuses[:public] }
+      let(:standalone_status) { DiscourseEvents::Events::Event.statuses[:standalone] }
 
       before { skip "requires the events plugin" unless defined?(DiscourseEvents::Events) }
 
       after { source_db.close }
 
-      def create_events_table(with_timezone: true)
+      def create_events_table(new_columns: true)
         source_db.execute(<<~SQL)
           CREATE TABLE events (
             id INTEGER, post_id INTEGER, status INTEGER, starts_at DATETIME, ends_at DATETIME,
-            name TEXT, url TEXT, custom_fields JSON_TEXT #{", timezone TEXT" if with_timezone}
+            name TEXT, url TEXT, custom_fields JSON_TEXT
+            #{", location TEXT, timezone TEXT" if new_columns}
           )
         SQL
       end
 
-      def insert_event(id, timezone = nil)
-        columns = %w[id post_id status starts_at ends_at]
-        values = [id, id, 0, "2026-07-01T08:00:00Z", "2026-07-01T09:30:00Z"]
-        if timezone
-          columns << "timezone"
-          values << timezone
-        end
+      def insert_event(id, **attributes)
+        row = {
+          id:,
+          post_id: id,
+          status: 0,
+          starts_at: "2026-07-01T08:00:00Z",
+          ends_at: "2026-07-01T09:30:00Z",
+        }.merge(attributes)
         source_db.execute(
-          "INSERT INTO events (#{columns.join(", ")}) VALUES (#{(["?"] * values.size).join(", ")})",
-          values,
+          "INSERT INTO events (#{row.keys.join(", ")}) VALUES (#{(["?"] * row.size).join(", ")})",
+          row.values,
         )
       end
 
@@ -715,10 +720,14 @@ if generic_import_dependencies_available
         source_db.get_first_row("SELECT * FROM events WHERE id = ?", id)
       end
 
+      def import_issues
+        File.exist?(import_issue_log_path) ? File.read(import_issue_log_path) : ""
+      end
+
       describe "#event_bbcode" do
         it "writes start and end as local times in the event's timezone" do
           create_events_table
-          insert_event(1, "Europe/Vienna")
+          insert_event(1, timezone: "Europe/Vienna")
 
           bbcode = importer.event_bbcode(event_row(1))
 
@@ -733,7 +742,7 @@ if generic_import_dependencies_available
         it "falls back to UTC for missing and invalid timezones" do
           create_events_table
           insert_event(2)
-          insert_event(3, "+01:00")
+          insert_event(3, timezone: "+01:00")
 
           [2, 3].each do |id|
             expect(importer.event_bbcode(event_row(id))).to include(
@@ -742,20 +751,55 @@ if generic_import_dependencies_available
           end
         end
 
-        it "uses UTC when the events table has no timezone column" do
-          create_events_table(with_timezone: false)
+        it "writes the location as one line of at most 1000 characters" do
+          create_events_table
+          insert_event(1, location: "Town Hall\nRoom 1")
+          insert_event(2, location: "x" * 1200)
+
+          expect(importer.event_bbcode(event_row(1))).to include(%{ location="Town Hall Room 1"})
+          expect(importer.event_bbcode(event_row(2))).to include(%{ location="#{"x" * 1000}"})
+        end
+
+        it "quotes attributes so the plugin reads them back unchanged" do
+          SiteSetting.discourse_post_event_enabled = true
+          SiteSetting.discourse_post_event_allowed_custom_fields = "room"
+          create_events_table
+          insert_event(
+            1,
+            status: public_status,
+            name: %{The "Old" Town Hall},
+            location: %{The "Old" Town Hall, 'Room' «1»},
+            custom_fields: { room: %{"A" 'B'} }.to_json,
+          )
+
+          bbcode = importer.event_bbcode(event_row(1))
+          post = Fabricate.build(:post, raw: bbcode)
+
+          expect(bbcode).to include(%{ location=“The "Old" Town Hall, 'Room' «1»”})
+          expect(DiscourseEvents::Events::Parser.extract_events(post).first).to include(
+            name: %{The "Old" Town Hall},
+            location: %{The "Old" Town Hall, 'Room' «1»},
+            room: CGI.escapeHTML(%{"A" 'B'}),
+          )
+        end
+
+        it "uses UTC and no location when the events table has neither column" do
+          create_events_table(new_columns: false)
           insert_event(1)
 
-          expect(importer.event_bbcode(event_row(1))).to include('timezone="UTC"')
+          bbcode = importer.event_bbcode(event_row(1))
+
+          expect(bbcode).to include('timezone="UTC"')
+          expect(bbcode).not_to include("location")
         end
       end
 
       describe "#import_post_events" do
         it "imports valid timezones and logs invalid ones" do
           create_events_table
-          insert_event(1, "Europe/Vienna")
+          insert_event(1, timezone: "Europe/Vienna")
           insert_event(2)
-          insert_event(3, "+01:00")
+          insert_event(3, timezone: "+01:00")
 
           importer.import_post_events
 
@@ -768,18 +812,110 @@ if generic_import_dependencies_available
             [untimed_post.id, "UTC"],
             [invalid_post.id, "UTC"],
           )
-          expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to eq(
-            "[invalid event timezone, using UTC] +01:00 (event 3)\n",
+          expect(import_issues).to eq("[invalid event timezone, using UTC] +01:00 (event 3)\n")
+        end
+
+        it "imports the location" do
+          create_events_table
+          insert_event(1, location: "Town Hall")
+          insert_event(2)
+          insert_event(3, location: "x" * 1200)
+
+          importer.import_post_events
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :location),
+          ).to contain_exactly(
+            [vienna_post.id, "Town Hall"],
+            [untimed_post.id, nil],
+            [invalid_post.id, "x" * 1000],
           )
         end
 
-        it "imports events from intermediate databases without a timezone column" do
-          create_events_table(with_timezone: false)
+        it "imports events from intermediate databases without the new columns" do
+          create_events_table(new_columns: false)
           insert_event(1)
 
           importer.import_post_events
 
-          expect(DiscourseEvents::Events::Event.find(vienna_post.id).timezone).to eq("UTC")
+          event = DiscourseEvents::Events::Event.find(vienna_post.id)
+          expect(event.timezone).to eq("UTC")
+          expect(event.location).to be_nil
+        end
+      end
+
+      describe "#import_event_invitees" do
+        def create_invitees_table
+          source_db.execute(<<~SQL)
+            CREATE TABLE event_invitees (
+              event_id INTEGER, user_id INTEGER, status INTEGER, created_at DATETIME
+            )
+          SQL
+        end
+
+        def insert_invitee(event_id, user_id, status: nil, created_at: "2017-03-04T05:06:07Z")
+          source_db.execute(
+            "INSERT INTO event_invitees VALUES (?, ?, ?, ?)",
+            [event_id, user_id, status, created_at],
+          )
+        end
+
+        def imported_invitees
+          DiscourseEvents::Events::Invitee
+            .unscoped
+            .order(:post_id, :user_id)
+            .pluck(:post_id, :user_id, :status, :notified, :created_at)
+        end
+
+        it "imports sign-ups of public events as notified attendees" do
+          going = DiscourseEvents::Events::Invitee.statuses[:going]
+          interested = DiscourseEvents::Events::Invitee.statuses[:interested]
+          create_events_table
+          create_invitees_table
+          # The intermediate event id differs from the post id on purpose.
+          insert_event(101, post_id: 1, status: public_status)
+          insert_invitee(101, 10)
+          insert_invitee(101, 11, status: interested)
+
+          importer.import_event_invitees
+          importer.import_event_invitees
+
+          signed_up_at = Time.utc(2017, 3, 4, 5, 6, 7)
+          expect(imported_invitees).to eq(
+            [
+              [vienna_post.id, attendee.id, going, true, signed_up_at],
+              [vienna_post.id, other_attendee.id, interested, true, signed_up_at],
+            ],
+          )
+        end
+
+        it "skips invitees that can't be imported" do
+          create_events_table
+          create_invitees_table
+          insert_event(1, status: public_status)
+          insert_event(2, status: standalone_status)
+          insert_event(99, status: public_status)
+          insert_invitee(1, 99)
+          insert_invitee(99, 10)
+          insert_invitee(2, 10)
+          insert_invitee(1, 11, status: 42)
+
+          importer.import_event_invitees
+
+          expect(imported_invitees).to be_empty
+          expect(import_issues.lines).to contain_exactly(
+            "[event invitee skipped (event isn't public)] user 10 of event 2\n",
+            "[event invitee skipped (unknown status)] status 42 of user 11 in event 1\n",
+          )
+        end
+
+        it "skips intermediate databases without an event_invitees table" do
+          create_events_table(new_columns: false)
+
+          expect { importer.import_event_invitees }.not_to raise_error
+          expect(imported_invitees).to be_empty
         end
       end
     end
