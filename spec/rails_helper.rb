@@ -225,14 +225,6 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
-  config.around(:each, type: :system) do |example|
-    previous_forgery_protection = ActionController::Base.allow_forgery_protection
-    ActionController::Base.allow_forgery_protection = true
-    example.run
-  ensure
-    ActionController::Base.allow_forgery_protection = previous_forgery_protection
-  end
-
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
     SystemDrivers.register!(example)

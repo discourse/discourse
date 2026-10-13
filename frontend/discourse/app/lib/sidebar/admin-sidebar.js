@@ -2,6 +2,7 @@ import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
+import { ajax } from "discourse/lib/ajax";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
@@ -389,7 +390,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:site-settings"
     );
     const site = getOwnerWithFallback(this).lookup("service:site");
-    const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
     const designWizard = getOwnerWithFallback(this).lookup(
@@ -434,18 +434,14 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     // Mods cannot access themes
     if (currentUser.admin) {
-      store.findAll("theme").then((themes) => {
+      ajax("/admin/themes").then(({ themes }) => {
         this.adminSidebarStateManager.setLinkKeywords(
           "admin_themes_and_components",
-          themes.content
-            .filter((theme) => !theme.component)
-            .map((theme) => theme.name)
+          themes.filter((theme) => !theme.component).map((theme) => theme.name)
         );
         this.adminSidebarStateManager.setLinkKeywords(
           "admin_themes_and_components",
-          themes.content
-            .filter((theme) => theme.component)
-            .map((theme) => theme.name)
+          themes.filter((theme) => theme.component).map((theme) => theme.name)
         );
       });
     }
