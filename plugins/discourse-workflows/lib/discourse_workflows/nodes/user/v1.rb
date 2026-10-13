@@ -270,6 +270,7 @@ module DiscourseWorkflows
             title: user.title,
             bio_raw: profile&.bio_raw,
             website: profile&.website,
+            location: profile&.location,
             profile_background_upload_id: profile&.profile_background_upload_id,
             card_background_upload_id: profile&.card_background_upload_id,
             manual_locked_trust_level: user.manual_locked_trust_level,

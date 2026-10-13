@@ -82,7 +82,12 @@ module DiscourseWorkflows
         target_id: reviewable.target_id,
         topic_id: reviewable.topic_id,
         category_id: reviewable.category_id,
+        chat_channel_id: reviewable.try(:chat_message)&.chat_channel_id,
         score: reviewable.score,
+        potential_spam: reviewable.potential_spam,
+        url: "#{Discourse.base_url}/review/#{reviewable.id}",
+        target_user: serialize_user(reviewable.target_user),
+        created_by: serialize_user(reviewable.created_by),
         created_at: reviewable.created_at&.iso8601,
       }
     end
