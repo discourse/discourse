@@ -12,7 +12,11 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def self.action_aliases
-    { agree_and_keep_hidden: :agree_and_delete, delete_and_agree: :agree_and_delete }
+    {
+      agree_and_keep_hidden: :agree_and_delete,
+      agree_and_keep_deleted: :agree_and_keep_comment,
+      delete_and_agree: :agree_and_delete,
+    }
   end
 
   def flagged_by_user_ids
@@ -126,6 +130,46 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
+         :agree_and_keep_hidden
+      {
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: comment.created_at.to_date.iso8601,
+        automated_detection: "No",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    end
+  end
 
   def agree
     yield if block_given?
