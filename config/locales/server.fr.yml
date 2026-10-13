@@ -13,6 +13,10 @@ fr:
     next_page: "Page suivante"
     replies: "Réponses"
     last_updated: "Dernière mise à jour "
+    event:
+      location: "Emplacement"
+      link: "Insérer un lien"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Le brouillon est trop long"
@@ -878,6 +882,7 @@ fr:
       description_too_long:
         one: "La description est trop longue (maximum %{count} caractère)."
         other: "La description est trop longue (maximum %{count} caractères)."
+      special_category_permissions: "Cette catégorie est préconfigurée et ses paramètres de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas l'utiliser, supprimez-la plutôt que de la réutiliser."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
       disallowed_tags_generic: "Ce sujet contient des étiquettes interdites."

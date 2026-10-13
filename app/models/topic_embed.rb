@@ -7,6 +7,7 @@ class TopicEmbed < ActiveRecord::Base
 
   belongs_to :topic
   belongs_to :post
+  has_many :topic_embed_aliases, dependent: :delete_all
   validates :embed_url, presence: true
   validates :embed_url, uniqueness: true
   validates :embed_content_cache, length: { maximum: EMBED_CONTENT_CACHE_MAX_LENGTH }
@@ -320,7 +321,20 @@ class TopicEmbed < ActiveRecord::Base
       embed_url = response.url if original_uri.host == canonical_uri.host
     end
 
-    TopicEmbed.import(import_user, embed_url, response.title, response.body)
+    transaction do
+      post = TopicEmbed.import(import_user, embed_url, response.title, response.body)
+      topic_embed = post&.topic&.topic_embed
+      alias_attributes = TopicEmbedAlias.key_attributes(url)
+
+      if topic_embed && alias_attributes[:url_key] != embed_url_key(topic_embed.embed_url)
+        TopicEmbedAlias.upsert(
+          alias_attributes.merge(topic_embed_id: topic_embed.id),
+          unique_by: :url_hash,
+        )
+      end
+
+      post
+    end
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
@@ -363,7 +377,10 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_embed_by_url(embed_url)
-    with_embed_urls([embed_url]).min_by(&:id)
+    with_embed_urls([embed_url]).min_by(&:id) ||
+      joins(:topic_embed_aliases).find_by(
+        topic_embed_aliases: TopicEmbedAlias.key_attributes(embed_url),
+      )
   end
 
   def self.with_embed_urls(urls)

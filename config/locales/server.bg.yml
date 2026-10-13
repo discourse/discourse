@@ -13,6 +13,8 @@ bg:
     next_page: "Следваща страница"
     replies: "Отговори"
     last_updated: "Последна актуализация"
+    event:
+      location: "Локация"
   mcp:
     errors:
       topic_not_found: "Темата не е намерена"

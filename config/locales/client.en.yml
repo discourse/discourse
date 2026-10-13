@@ -398,6 +398,25 @@ en:
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
+    reorder:
+      announcement: "Moved %{label} to position %{position} of %{total}"
+      announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"
+      handle: "Reorder %{label}"
+      handle_description: "Use the arrow keys to move between rows. Press Enter for move options."
+      handle_description_drag_only: "Drag to move this row."
+      remove: "Remove %{label}"
+      removed: "Removed %{label}"
+      move_up: "Move up"
+      move_down: "Move down"
+      move_to_top: "Move to top"
+      move_to_bottom: "Move to bottom"
+      move_to_list: "Move to %{list}"
+      position: "%{position} of %{total}"
+      at_start: "%{label} is already first"
+      at_end: "%{label} is already last"
+      move_refused: "Could not move %{label}"
+      add_item: "Add an item"
+
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
@@ -602,19 +621,20 @@ en:
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
         back: "Back"
+        category_unavailable: "This category is unavailable for posting."
         icebreakers:
-          fun_facts:
-            title: "What are some fun facts about you?"
-            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
-          coolest_thing_you_have_seen_today:
-            title: "What's the coolest thing you've seen today?"
-            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          plan_categories:
+            title: "What categories should we start with?"
+            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
+          plan_invites:
+            title: "Which members should we invite before we launch?"
+            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
           introduce_yourself:
             title: "Introduce yourself"
             body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          what_is_your_favorite_food:
-            title: "What is your favorite food?"
-            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+          write_your_own:
+            title: "Write your own"
+            body: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
@@ -1257,6 +1277,9 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
+        mentions_not_notified:
+          one: "%{usernames} will not be notified because they do not have access to this reviewable."
+          other: "%{usernames} will not be notified because they do not have access to this reviewable."
       topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
@@ -2343,10 +2366,12 @@ en:
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
+        current_avatar: "Current picture"
+        associated_account: "%{provider} picture"
         upload_title: "Upload your picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
         logo_small: "Site's small logo. Used by default."
-        use_custom: "Or upload a custom avatar:"
+        use_custom: "Or choose another picture:"
 
       change_profile_background:
         title: "Profile Header"
@@ -2844,6 +2869,7 @@ en:
     user_status:
       save: "Save"
       set_custom_status: "Set custom status"
+      edit_status: "Edit status"
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
@@ -3025,7 +3051,7 @@ en:
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
+      value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great."
 
     offline_indicator:
       no_internet: "No internet connection."
@@ -3674,8 +3700,7 @@ en:
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
-      title_placeholder: "What is this discussion about in one brief sentence?"
-      title_placeholder_redesign: "Title"
+      title_placeholder: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
@@ -6633,6 +6658,7 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      back_to_admin: "Back to Admin"
       filter_links: "Filter links..."
       clear_filter: "Clear filter"
       no_results:
@@ -7124,8 +7150,15 @@ en:
             client_id_description: "An identifier for this application. Enter the same value when configuring the client."
             redirect_uris: "Redirect URIs"
             redirect_uris_description: "Where the browser returns after a user approves access. Enter one exact URI per line."
+            management: "Registration updates"
+            manual: "Managed by admins"
+            automatic: "Automatic"
+            manual_description: "Admins manage this client's name and redirect URIs. Metadata refreshes will not change them, so keep them up to date."
+            automatic_description: "The name and redirect URIs update from published client metadata. Changing either switches both to admin management."
             create: "Add client"
             created: "OAuth client added."
+            edit: "Edit OAuth client"
+            updated: "OAuth client updated."
             empty: "No OAuth clients are registered."
             no_results: "No OAuth clients match this search."
             detail_title: "Client details"
@@ -7147,11 +7180,12 @@ en:
             empty: "No MCP authorizations match this filter."
           activity:
             title: "Activity and diagnostics"
-            description: "Review privacy-minimized protocol activity and aggregate diagnostics."
+            description: "Review MCP activity."
             tool_calls: "Tool calls"
-            errors: "Errors"
-            rate_limits: "Rate limits"
+            failed_tool_calls: "Failed tool calls"
+            rate_limits: "Rate-limited requests"
             p95_latency: "95th percentile latency"
+            no_latency: "—"
             search_placeholder: "Search by user, client, tool, or exact request ID"
             outcome: "Outcome"
             time: "Time"
@@ -9192,8 +9226,9 @@ en:
           upload: "Upload"
           select_component: "Select a component…"
           unsaved_changes_alert: "You haven't saved your changes yet, do you want to discard them and move on?"
-          unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
+          unsaved_parent_themes: "You haven't added this component to any themes, so it won't appear anywhere. Do you still want to leave?"
           discard: "Discard"
+          leave: "Leave"
           stay: "Stay"
           css_html: "Custom Code"
           edit_css_html: "Edit Code"
@@ -9589,6 +9624,7 @@ en:
           filter_date_time: "Filter date and time"
           actions:
             permanently_delete_post_revisions: "permanently delete post revisions"
+            mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_username: "change username"
@@ -10393,13 +10429,30 @@ en:
 
       site_text:
         description: "You can customize any of the text on your forum."
-        search: "Search for the text you'd like to edit"
+        search: "Search text or translation keys"
+        search_label: "Search"
+        theme: "Theme or component"
+        all_themes: "All site texts"
+        theme_disabled: "Disabled"
+        filters: "Filters"
+        filters_active:
+          one: "Filters (%{count})"
+          other: "Filters (%{count})"
+        edit_title: "Edit site text"
+        default_text: "Default text"
+        value_label: "Your text · %{language}"
+        invalid_title: "Invalid interpolation placeholders"
+        invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
+        status:
+          customized: "Customized"
+          outdated: "Outdated"
+          invalid: "Invalid"
         title: "Site texts"
         edit: "Edit"
-        revert: "Revert Changes"
+        revert: "Revert to default"
         revert_confirm: "Are you sure you want to revert your changes?"
-        go_back: "Back to Search"
-        recommended: "We recommend customizing the following text to suit your needs:"
+        go_back: "Back to results"
+        recommended: "Suggested texts to customize"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
         show_untranslated: "Only show untranslated"

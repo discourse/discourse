@@ -86,14 +86,33 @@ article.streaming {
   }
 }
 
-.topic-body .agent-flair {
+.topic-body .agent-flair,
+.topic-body .agent-flair__model {
   order: 2;
-  font-size: var(--font-down-1);
   transform: translateY(0.04em);
 
   @include viewport.until(sm) {
     transform: translateY(0.1em);
   }
+}
+
+.topic-body .agent-flair {
+  font-weight: bold;
+}
+
+.topic-body .agent-flair__model {
+  font-size: var(--font-down-1);
+}
+
+.agent-flair__model,
+.ai-chat-message__model {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.ai-chat-message__model {
+  display: block;
+  margin-top: 0.25em;
 }
 
 details.ai-quote {

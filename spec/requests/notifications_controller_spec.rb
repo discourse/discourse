@@ -29,6 +29,32 @@ def delete_notification(resp_code, matcher)
 end
 
 RSpec.describe NotificationsController do
+  describe "#index" do
+    it "hides reviewable titles in recent notifications and history after losing category access" do
+      SiteSetting.enable_mentions = true
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      sign_in(moderator)
+
+      get "/notifications.json", params: { recent: true }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["notifications"].size).to eq(1)
+
+      category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.topic.update!(category: category)
+      reviewable.update!(category: category)
+
+      [true, false].each do |recent|
+        get "/notifications.json", params: { recent: recent ? true : nil }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["notifications"]).to be_empty
+        expect(response.body).not_to include(reviewable.topic.title)
+      end
+    end
+  end
+
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
@@ -502,6 +528,34 @@ RSpec.describe NotificationsController do
             notifications.each do |notification|
               expect(notification["acting_user_avatar_template"]).to be_present
             end
+          end
+        end
+
+        context "with names disabled" do
+          fab!(:mentioner) { Fabricate(:user, name: "Hidden Mentioner Name") }
+
+          before { SiteSetting.enable_names = false }
+
+          it "does not expose a mentioner's full name" do
+            post = Fabricate(:post, user: mentioner, raw: "@#{user.username}")
+            PostAlerter.post_created(post)
+
+            mention_notification =
+              user.notifications.find_by!(
+                notification_type: Notification.types[:mentioned],
+                topic: post.topic,
+              )
+            expect(mention_notification.data_hash[:display_name]).to eq(mentioner.name)
+
+            get "/notifications.json"
+
+            expect(response.status).to eq(200)
+            notification =
+              response.parsed_body["notifications"].find do |item|
+                item["id"] == mention_notification.id
+              end
+            expect(notification["data"]).not_to have_key("display_name")
+            expect(response.body).not_to include(mentioner.name)
           end
         end
 

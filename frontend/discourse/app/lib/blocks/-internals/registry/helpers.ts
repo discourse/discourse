@@ -40,7 +40,7 @@ interface AssertRegistryNotFrozenOptions {
   entityType: string;
 
   /** Name of the entity being registered. */
-  entityName: string;
+  entityName: string | undefined;
 }
 
 /**

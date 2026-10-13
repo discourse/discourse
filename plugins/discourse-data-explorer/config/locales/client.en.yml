@@ -108,6 +108,12 @@ en:
       undo: "Discard changes"
       delete: "Delete"
       recover: "Undelete query"
+      dashboard:
+        add: "Add to dashboard"
+        remove: "Remove from dashboard"
+        added: "Query added to dashboard"
+        removed: "Query removed from dashboard"
+        unmountable: "Queries with required parameters that have no default value can't be shown on the dashboard"
       sql_label: "SQL"
       run_with_explain: "Run with query plan"
       run_options: "More run options"

@@ -167,6 +167,16 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
     end
 
+    it "lets silenced users flag illegal content when allow_all_users_to_flag_illegal_content" do
+      UserSilencer.silence(user, admin)
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be false
+    end
+
     it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy

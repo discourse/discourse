@@ -11,3 +11,22 @@ en:
       group: "group"
       category: "Category"
       badge: "Badge"
+    uploads:
+      existing_summary: "found %{existing} existing, %{missing} missing"
+      deleting_surplus: "deleting %{count} surplus uploads"
+      surplus_found: "found %{count} surplus uploads (run with delete_surplus_uploads to remove them)"
+      upload_failed: "failed to create upload %{id}: %{error}"
+      insert_failed: "failed to record upload %{id}: %{error}"
+      fixer_missing_summary:
+        one: "removed %{count} missing upload"
+        other: "removed %{count} missing uploads"
+      fixer_error_detail: "upload %{id}: %{error}"
+      fixer_error_summary:
+        one: "could not check %{count} upload (error: %{errors})"
+        other: "could not check %{count} uploads (sample errors: %{errors})"
+      optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
+      optimizer_no_images: "no optimized images were created for upload with sha1 %{sha1}"
+      optimizer_failed: "failed to optimize upload with sha1 %{sha1}: %{error}"
+      interrupted: "Interrupted. The run is resumable — run the command again to continue."
+      s3_uploads_disabled: "WARNING: S3 upload settings are configured, but enable_s3_uploads is false. Files will be stored locally."
+      s3_public_access_failed: "The S3 test upload could not be read without credentials (HTTP %{status}). Check the bucket's public access configuration, including s3_enable_access_control_tags."

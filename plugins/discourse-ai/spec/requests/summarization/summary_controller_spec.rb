@@ -100,9 +100,10 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
 
       it "returns a fresh cached summary" do
         summary = create_cached_summary(topic)
-        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        queries = track_sql_queries { get "/discourse-ai/summarization/t/#{topic.id}.json" }
 
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "llm_models"/)).to be_empty
 
         response_summary = response.parsed_body
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(
@@ -329,8 +330,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_gist", params: { topic_ids: topic_ids }
 
@@ -422,8 +422,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_summary", params: { topic_ids: topic_ids }
 

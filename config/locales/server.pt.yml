@@ -13,6 +13,9 @@ pt:
     next_page: "Próxima página"
     replies: "Respostas"
     last_updated: "Última atualização"
+    event:
+      location: "Localização"
+      link: "Hiperligação"
   mcp:
     errors:
       topic_not_found: "Tópico não encontrado"

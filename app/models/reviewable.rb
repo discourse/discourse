@@ -150,6 +150,14 @@ class Reviewable < ActiveRecord::Base
     self.type_source = Reviewable.source_for(type)
   end
 
+  def title_for_notification(user)
+    topic&.title.presence || payload&.dig("title").presence ||
+      I18n.t(
+        topic_id ? "js.review.topics.deleted" : "js.review.title",
+        locale: user.effective_locale,
+      )
+  end
+
   def created_new!
     self.created_new = true
     self.topic = target.topic if topic.blank? && target.is_a?(Post)
@@ -428,6 +436,32 @@ class Reviewable < ActiveRecord::Base
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
+
+      if SiteSetting.dsa_reporting_enabled
+        attributes =
+          dsa_statement_attributes(
+            action_id:,
+            result:,
+            automated_detection: dsa_automated_detection,
+            automated_decision:
+              dsa_automated_decision(
+                performed_by:,
+                decision_automation: args[:decision_automation],
+              ),
+          )
+
+        if attributes
+          DsaStatementOfRecord.create!(
+            reviewable_id: id,
+            payload:
+              attributes.merge(
+                application_date: Date.current.iso8601,
+                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
+                source_type: "SOURCE_VOLUNTARY",
+              ),
+          )
+        end
+      end
     end
 
     result.after_commit.call if result && result.after_commit
@@ -997,6 +1031,132 @@ class Reviewable < ActiveRecord::Base
 
   private
 
+  # Returns the DSA statement attributes for a successfully completed action.
+  #
+  # Override in subclasses to declare each action's decision and subject metadata.
+  # Return nil when the action should not produce a statement.
+  #
+  # Called inside the moderation transaction after the action and reviewable updates
+  # succeed, when the dsa_reporting_enabled site setting is enabled. A hash creates
+  # one pending statement.
+  # Failure to save the statement rolls back the transaction.
+  #
+  # Keys must be symbols. Each hash must include :content_type, :content_date,
+  # :automated_detection, :automated_decision, and at least one decision field.
+  #
+  # Decision fields:
+  #
+  # * :decision_visibility [Array<String>] One or more of:
+  #   * DECISION_VISIBILITY_CONTENT_REMOVED
+  #   * DECISION_VISIBILITY_CONTENT_DISABLED
+  #   * DECISION_VISIBILITY_CONTENT_DEMOTED
+  #   * DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_LABELLED
+  #   * DECISION_VISIBILITY_OTHER
+  # * :decision_visibility_other [String] Required for DECISION_VISIBILITY_OTHER.
+  #   Maximum 500 characters.
+  # * :decision_account [String] One of:
+  #   * DECISION_ACCOUNT_SUSPENDED
+  #   * DECISION_ACCOUNT_TERMINATED
+  # * :decision_provision [String] One of:
+  #   * DECISION_PROVISION_PARTIAL_SUSPENSION
+  #   * DECISION_PROVISION_TOTAL_SUSPENSION
+  #   * DECISION_PROVISION_PARTIAL_TERMINATION
+  #   * DECISION_PROVISION_TOTAL_TERMINATION
+  # * :decision_monetary [String] One of:
+  #   * DECISION_MONETARY_SUSPENSION
+  #   * DECISION_MONETARY_TERMINATION
+  #   * DECISION_MONETARY_OTHER
+  # * :decision_monetary_other [String] Required for DECISION_MONETARY_OTHER.
+  #   Maximum 500 characters.
+  #
+  # Subject fields:
+  #
+  # * :content_type [Array<String>] Required. One or more of:
+  #   * CONTENT_TYPE_APP
+  #   * CONTENT_TYPE_AUDIO
+  #   * CONTENT_TYPE_IMAGE
+  #   * CONTENT_TYPE_PRODUCT
+  #   * CONTENT_TYPE_SYNTHETIC_MEDIA
+  #   * CONTENT_TYPE_TEXT
+  #   * CONTENT_TYPE_VIDEO
+  #   * CONTENT_TYPE_OTHER
+  # * :content_type_other [String] Required when :content_type includes
+  #   CONTENT_TYPE_OTHER. Maximum 500 characters. Use "User account" for accounts.
+  # * :content_date [String] Required. Subject creation date in YYYY-MM-DD format,
+  #   on or after 2000-01-01. Use the account creation date for account subjects.
+  # * :content_language [String] Optional. Uppercase ISO 639-1 language code.
+  #
+  # Restriction expiry fields, in YYYY-MM-DD format:
+  #
+  # * :end_date_visibility_restriction [String]
+  # * :end_date_account_restriction [String]
+  # * :end_date_service_restriction [String]
+  # * :end_date_monetary_restriction [String]
+  #
+  # These fields are optional. Omit them for an indefinite restriction.
+  # Each expiry must be on or after the application date.
+  #
+  # Automation fields:
+  #
+  # * :automated_detection [String] Required. "Yes" or "No", indicating whether
+  #   automated means identified the content.
+  # * :automated_decision [String] Required. One of:
+  #   * AUTOMATED_DECISION_FULLY
+  #   * AUTOMATED_DECISION_PARTIALLY
+  #   * AUTOMATED_DECISION_NOT_AUTOMATED
+  #
+  # Multiple decision fields may describe the same action. Reviewable#perform
+  # supplies :application_date, :territorial_scope, and :source_type.
+  # Pending statements receive their grounds, category, and supporting explanation
+  # during human classification.
+  #
+  # @param action_id [Symbol] Requested action ID, before alias resolution.
+  # @param result [Reviewable::PerformResult] Successful action result, including
+  #   :deleted_user or :removed_avatar when returned by the action.
+  # @param automated_detection [String] Computed detection value: "Yes" or "No".
+  # @param automated_decision [String] Computed AUTOMATED_DECISION_* value.
+  # @return [Hash{Symbol => String, Array<String>}, nil] Statement attributes,
+  #   or nil when no statement applies.
+  # @example Report a human decision on a manually flagged post
+  #   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+  #     return unless action_id == :agree_and_edit
+  #
+  #     {
+  #       decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+  #       decision_visibility_other: "Content edited",
+  #       content_type: ["CONTENT_TYPE_TEXT"],
+  #       content_date: post.created_at.to_date.iso8601,
+  #       automated_detection:,
+  #       automated_decision:,
+  #     }
+  #   end
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    nil
+  end
+
+  def dsa_automated_detection
+    automated =
+      reviewable_scores.where(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: %w[watched_word fast_typer auto_silence_regex email_spam suspect_user],
+      ).exists?
+
+    if DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, automated, self)
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def dsa_automated_decision(performed_by:, decision_automation:)
+    return "AUTOMATED_DECISION_PARTIALLY" if decision_automation == :partial
+    return "AUTOMATED_DECISION_FULLY" if decision_automation == :full || !performed_by.human?
+
+    "AUTOMATED_DECISION_NOT_AUTOMATED"
+  end
+
   def can_review_target?(guardian)
     post = target_post
     !post || guardian.can_review_post?(post)
@@ -1095,7 +1255,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

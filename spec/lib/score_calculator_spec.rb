@@ -7,6 +7,69 @@ RSpec.describe ScoreCalculator do
   fab!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
   let(:topic) { post.topic }
 
+  describe "#calculate" do
+    it "ranks every post in an eligible topic without changing excluded topics" do
+      cutoff = 1.day.ago
+      old_post = Fabricate(:post, topic: topic, reads: 333)
+      old_post.update_columns(created_at: 1.year.ago, percent_rank: nil)
+      post.update_column(:percent_rank, nil)
+      another_post.update_column(:percent_rank, nil)
+      topic.update_column(:bumped_at, cutoff + 1.second)
+
+      old_topic_post = Fabricate(:post, reads: 999, percent_rank: 0.25)
+      old_topic_post.topic.update_column(:bumped_at, cutoff)
+      long_topic_post = Fabricate(:post, reads: 999, percent_rank: 0.25)
+      long_topic_post.topic.update_column(:posts_count, 500)
+
+      ScoreCalculator.new(reads: 1).calculate(min_topic_age: cutoff, max_topic_length: 500)
+
+      expect(
+        [old_post.reload.percent_rank, another_post.reload.percent_rank, post.reload.percent_rank],
+      ).to eq([0.0, 0.5, 1.0])
+      expect([old_topic_post.reload.percent_rank, long_topic_post.reload.percent_rank]).to eq(
+        [0.25, 0.25],
+      )
+      expect([old_topic_post.topic.reload.score, long_topic_post.topic.reload.score]).to eq(
+        [nil, nil],
+      )
+    end
+
+    it "gives tied scores the same rank and calculates the average across all topic posts" do
+      third_post = Fabricate(:post, topic: topic, reads: 222)
+      topic.update_columns(score: nil, like_count: 2, posts_count: 3)
+      SiteSetting.stubs(:summary_likes_required).returns(2)
+      SiteSetting.stubs(:summary_posts_required).returns(3)
+      SiteSetting.stubs(:summary_score_threshold).returns(222)
+
+      ScoreCalculator.new(reads: 1).calculate(min_topic_age: 1.day.ago)
+
+      expect(
+        [
+          another_post.reload.percent_rank,
+          third_post.reload.percent_rank,
+          post.reload.percent_rank,
+        ],
+      ).to eq([0.0, 0.0, 1.0])
+      expect(topic.reload.score).to eq(185)
+      expect(topic.has_summary).to eq(true)
+
+      SiteSetting.stubs(:summary_score_threshold).returns(223)
+      ScoreCalculator.new(reads: 1).calculate(min_topic_age: 1.day.ago)
+      expect(topic.reload.has_summary).to eq(false)
+    end
+
+    it "recalculates excluded topics when called without filters" do
+      topic.update_columns(bumped_at: 1.year.ago, posts_count: 500, score: nil)
+      post.update_column(:percent_rank, nil)
+      another_post.update_column(:percent_rank, nil)
+
+      ScoreCalculator.new(reads: 1).calculate
+
+      expect([another_post.reload.percent_rank, post.reload.percent_rank]).to eq([0.0, 1.0])
+      expect(topic.reload.score).to eq(166.5)
+    end
+  end
+
   context "with weightings" do
     before do
       ScoreCalculator.new(reads: 3).calculate

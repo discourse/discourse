@@ -13,6 +13,8 @@ sq:
     next_page: "Faqja tjetër"
     replies: "Përgjigjet"
     last_updated: "Përditësimi i fundit"
+    event:
+      location: "Vendndodhja"
   mcp:
     errors:
       draft_too_long: "Mesazhi shembull është shumë i gjatë"

@@ -76,10 +76,7 @@ module DiscourseGithubPlugin
     end
 
     def self.grant_committer_badges!
-      emails =
-        GithubCommit.where(merge_commit: false, role_id: CommitsPopulator::ROLES[:committer]).pluck(
-          :email,
-        )
+      emails = configured_commits.where(role_id: CommitsPopulator::ROLES[:committer]).pluck(:email)
 
       bronze, silver, gold = committer_badges
 
@@ -92,10 +89,7 @@ module DiscourseGithubPlugin
 
     def self.grant_contributor_badges!
       emails =
-        GithubCommit.where(
-          merge_commit: false,
-          role_id: CommitsPopulator::ROLES[:contributor],
-        ).pluck(:email)
+        configured_commits.where(role_id: CommitsPopulator::ROLES[:contributor]).pluck(:email)
 
       bronze, silver, gold = contributor_badges
 
@@ -108,6 +102,13 @@ module DiscourseGithubPlugin
       )
       granter.add_badge(gold, as_title: true, threshold: SiteSetting.github_gold_badge_min_commits)
       granter.grant!
+    end
+
+    def self.configured_commits
+      GithubCommit.where(
+        merge_commit: false,
+        repo_id: GithubRepo.where(name: GithubRepo.names).select(:id),
+      )
     end
 
     def self.ensure_badge(name, attrs)

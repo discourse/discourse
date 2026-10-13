@@ -23,6 +23,41 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     sinon.restore();
   });
 
+  test("channel manager updates model attribution when streaming finishes", function (assert) {
+    const channel = this.fabricators.channel();
+    const message = this.fabricators.message({ channel, streaming: true });
+    channel.messagesManager.addMessages([message]);
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+
+    manager.handleEditMessage({
+      chat_message: {
+        id: message.id,
+        streaming: false,
+        ai_llm_name: "Model 猫",
+      },
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
+  test("thread manager updates model attribution when streaming finishes", function (assert) {
+    const channel = this.fabricators.channel();
+    const thread = this.fabricators.thread({ channel });
+    const message = this.fabricators.message({ channel, streaming: true });
+    thread.messagesManager.addMessages([message]);
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+
+    manager.handleEditMessage({
+      chat_message: {
+        id: message.id,
+        streaming: false,
+        ai_llm_name: "Model 猫",
+      },
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
   test("channel manager syncs uploads when matching staged message is sent", function (assert) {
     const channel = this.fabricators.channel({ id: 11 });
     const manager = new ChatChannelSubscriptionManager(this, channel);

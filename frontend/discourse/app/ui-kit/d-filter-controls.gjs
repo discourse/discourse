@@ -38,6 +38,8 @@ const ResetButton = <template>
  * client: provide searchableProps and filterFn in dropdownOptions
  * server: provide onTextFilterChange or onDropdownFilterChange callbacks
  *
+ * The inlineFilters block places controls beside the search input, outside the drawer.
+ *
  * @component DFilterControls
  * @param {Array} array - The dataset to display
  * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
@@ -63,6 +65,7 @@ const ResetButton = <template>
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
  *                                               closed, receiving the new expanded state as a boolean
+ * @param {String} [toggleLabel] - Optional translated label for the filter drawer button.
  * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active.
  *                                                     The block renders alongside the dropdowns, sharing the drawer
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
@@ -497,8 +500,11 @@ export default class DFilterControls extends Component {
               />
             {{/if}}
 
+            {{yield to="inlineFilters"}}
+
             {{#if this.showDropdownFilterToggle}}
               <DButton
+                aria-expanded={{if this.showFilterDropdowns "true" "false"}}
                 class="btn-default d-filter-controls__toggle-filters"
                 @action={{this.toggleFilters}}
                 @icon={{if
@@ -507,6 +513,7 @@ export default class DFilterControls extends Component {
                   "filter"
                 }}
                 @title="filter_controls.toggle"
+                @translatedLabel={{@toggleLabel}}
               />
               {{#if this.showResetButton}}
                 <ResetButton
@@ -547,7 +554,7 @@ export default class DFilterControls extends Component {
                   {{/each}}
                 </DNativeSelect>
               {{/each-in}}
-            {{else}}
+            {{else if this.dropdownOptions.length}}
               <DNativeSelect
                 aria-label={{this.singleDropdownLabel}}
                 class={{dConcatClass

@@ -3,12 +3,12 @@
 class ReviewableVoiceUser < Reviewable
   include ReviewableActionBuilder
 
-  def serializer
-    ReviewableVoiceUserSerializer
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
   end
 
-  def self.action_aliases
-    { agree_and_suspend: :agree_and_keep, agree_and_silence: :agree_and_keep }
+  def serializer
+    ReviewableVoiceUserSerializer
   end
 
   def session
@@ -52,6 +52,20 @@ class ReviewableVoiceUser < Reviewable
     build_action(actions, :ignore, icon: "xmark")
   end
 
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
   def perform_agree_and_keep(_performed_by, _args)
     create_result(:success, :approved) do |result|
       result.update_flag_stats = { status: :agreed, user_ids: flagged_by_user_ids }
@@ -69,6 +83,39 @@ class ReviewableVoiceUser < Reviewable
   def perform_ignore(_performed_by, _args)
     create_result(:success, :ignored) do |result|
       result.update_flag_stats = { status: :ignored, user_ids: flagged_by_user_ids }
+    end
+  end
+
+  private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
     end
   end
 end
@@ -101,7 +148,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

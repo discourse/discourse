@@ -21,6 +21,9 @@ en:
         run_sql: "Ran SQL query"
         submit_query: "Submitted generated query %{name}"
   discourse_data_explorer:
+    mcp:
+      query_failed: "The query could not be run: %{message}"
+      query_not_found: "Query not found"
     ai:
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."

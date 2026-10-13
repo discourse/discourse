@@ -57,6 +57,36 @@ class RouterStub extends Service.extend(Evented) {
 module("Integration | ui-kit | DFilterControls", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("supports inline controls and a checkbox-only filter drawer", async function (assert) {
+    await render(
+      <template>
+        <DFilterControls
+          @filterDropdownsExpanded={{false}}
+          @forceShowDropdownFilterToggle={{true}}
+          @showTextFilter={{false}}
+          @toggleLabel="Filters"
+        >
+          <:inlineFilters><input aria-label="Inline control" /></:inlineFilters>
+          <:additionalFilters><label><input type="checkbox" />Only customized</label></:additionalFilters>
+        </DFilterControls>
+      </template>
+    );
+    assert
+      .dom('[aria-label="Inline control"]')
+      .exists("inline controls stay visible");
+    assert
+      .dom(".d-filter-controls__toggle-filters")
+      .hasText("Filters", "toggle accepts a label");
+    assert.dom('input[type="checkbox"]').doesNotExist("drawer starts closed");
+    await click(".d-filter-controls__toggle-filters");
+    assert
+      .dom('input[type="checkbox"]')
+      .exists("drawer exposes additional filters");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .doesNotExist("no empty select is rendered");
+  });
+
   test("renders text filter input", async function (assert) {
     this.set("data", SAMPLE_DATA);
 

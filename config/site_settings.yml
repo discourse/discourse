@@ -465,6 +465,9 @@ basic:
     refresh: true
     disallowed_groups: "0|4|5"
     area: "group_permissions"
+    upcoming_change_default_override:
+      upcoming_change: "update_whispers_allowed_groups_default"
+      new_default: "3"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
@@ -1425,6 +1428,7 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
@@ -3157,7 +3161,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti|perplexity-user|claude-user"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -4059,6 +4063,7 @@ uncategorized:
   staff_category_id:
     default: -1
     hidden: true
+    client: true
     area: "categories"
   uncategorized_category_id:
     default: -1
@@ -4824,16 +4829,17 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
-  enable_new_post_reactions_menu:
+  enable_composer_redesign:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "permanent"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/389820"
-  enable_composer_redesign:
+      status: "beta"
+      impact: "other,all_members"
+      body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_main_outlet_grid_layout_change:
     default: false
     client: true
     hidden: true
@@ -4842,7 +4848,7 @@ experimental:
       status: "alpha"
       impact: "other,all_members"
       body_class: true
-      learn_more_url: "https://meta.discourse.org/t/-/407849"
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
   enable_composer_toolbar_customization:
     default: false
     client: true
@@ -4881,6 +4887,10 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_reporting_enabled:
+    default: false
+    hidden: true
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -5012,3 +5022,22 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  update_whispers_allowed_groups_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/414354"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

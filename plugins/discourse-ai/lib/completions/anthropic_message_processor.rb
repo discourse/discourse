@@ -50,7 +50,8 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
               :output_tokens,
               :cache_creation_input_tokens,
               :cache_read_input_tokens,
-              :output_thinking
+              :output_thinking,
+              :stop_reason
 
   def initialize(streaming_mode:, partial_tool_calls: false, output_thinking: false)
     @streaming_mode = streaming_mode
@@ -63,6 +64,14 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     @partial_tool_calls = partial_tool_calls
     @output_thinking = output_thinking
     @thinking = nil
+  end
+
+  def output_limit_reached
+    @stop_reason == "max_tokens"
+  end
+
+  def reasoning_tokens
+    nil
   end
 
   def to_tool_calls
@@ -204,6 +213,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
       @cache_creation_input_tokens = usage[:cache_creation_input_tokens]
       @cache_read_input_tokens = usage[:cache_read_input_tokens]
     elsif parsed[:type] == "message_delta"
+      @stop_reason = parsed.dig(:delta, :stop_reason) || @stop_reason
       @output_tokens =
         parsed.dig(:usage, :output_tokens) || parsed.dig(:delta, :usage, :output_tokens)
     elsif parsed[:type] == "message_stop"
@@ -222,6 +232,7 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     parsed = payload
     parsed = JSON.parse(payload, symbolize_names: true) if payload.is_a?(String)
 
+    @stop_reason = parsed[:stop_reason]
     content = parsed.dig(:content)
     @anthropic_content_blocks = content.deep_dup if content.is_a?(Array)
     if content.is_a?(Array)

@@ -129,6 +129,8 @@ export default class AiLogs extends Component {
         label: i18n("discourse_ai.logs.successful"),
       },
       { value: "failed", label: i18n("discourse_ai.logs.failed") },
+      { value: "empty", label: i18n("discourse_ai.logs.empty") },
+      { value: "truncated", label: i18n("discourse_ai.logs.truncated") },
     ];
   }
 

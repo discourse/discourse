@@ -13,6 +13,9 @@ fi:
     next_page: "Seuraava sivu"
     replies: "Vastaukset"
     last_updated: "Viimeksi päivitetty"
+    event:
+      location: "Paikka"
+      link: "Linkki"
   mcp:
     errors:
       draft_too_long: "Luonnos on liian pitkä"

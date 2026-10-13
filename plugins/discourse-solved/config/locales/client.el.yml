@@ -24,6 +24,10 @@ el:
               buckets:
                 lt_1h: "< 1 ώρα"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Αφαιρέθηκε"
+        tag_names: "Ετικέτες"
     notifications:
       alt:
         solved:

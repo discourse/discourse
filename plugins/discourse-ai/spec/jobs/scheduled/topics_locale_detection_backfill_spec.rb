@@ -77,6 +77,20 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     expect { job.execute({ limit: 10 }) }.not_to raise_error
   end
 
+  context "when relocalize quota is exhausted" do
+    before do
+      DiscourseAi::Translation::TopicLocalizer::MAX_QUOTA_PER_DAY.times do
+        DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, "")
+      end
+    end
+
+    it "skips locale detection for topics that have exceeded quota" do
+      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).never
+
+      job.execute({})
+    end
+  end
+
   it "logs a summary after running" do
     DiscourseAi::Translation::TopicLocaleDetector.stubs(:detect_locale)
     DiscourseAi::Translation::VerboseLogger.expects(:log).with(includes("Detected 1 topic locales"))

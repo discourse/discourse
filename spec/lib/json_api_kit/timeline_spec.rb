@@ -16,15 +16,17 @@ RSpec.describe JsonApiKit::Timeline do
   let(:first) { described_class::FIRST_RELEASE }
   let(:middle) { JsonApiKit::ApiVersion.parse("2026-11-15") }
   let(:latest) { JsonApiKit::ApiVersion.parse("2027-01-05") }
+  let(:changes) do
+    [
+      JsonApiKitSpec::MiddleTimelineChange.new(__FILE__),
+      JsonApiKitSpec::LatestTimelineChange.new(__FILE__),
+    ]
+  end
+  let(:version_changes) { JsonApiKit::VersionChanges.new(changes) }
 
   before do
     freeze_time(Date.new(2027, 1, 20))
-    allow(JsonApiKit::VersionChange).to receive(:all).and_return(
-      [
-        JsonApiKitSpec::MiddleTimelineChange.new(__FILE__),
-        JsonApiKitSpec::LatestTimelineChange.new(__FILE__),
-      ],
-    )
+    allow(JsonApiKit::VersionChanges).to receive(:core).and_return(version_changes)
   end
 
   describe ".first" do
@@ -39,7 +41,7 @@ RSpec.describe JsonApiKit::Timeline do
     end
 
     context "when there is no change" do
-      before { allow(JsonApiKit::VersionChange).to receive(:all).and_return([]) }
+      let(:changes) { [] }
 
       it "returns the first release" do
         expect(described_class.current).to eq(first)

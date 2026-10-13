@@ -1987,6 +1987,16 @@ RSpec.describe Group do
       expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag1.id])
     end
 
+    it "moves a tag between levels without clearing the previous level" do
+      group.update!(tracking_tags: [tag1.name])
+
+      group.reload.update!(watching_tags: [tag1.name])
+
+      expect(
+        group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+      ).to eq([[tag1.id, NotificationLevels.all[:watching]]])
+    end
+
     it "can apply default notifications for admins group" do
       group = Group.find(Group::AUTO_GROUPS[:admins])
       group.tracking_category_ids = [category1.id]

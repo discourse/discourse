@@ -111,6 +111,7 @@ describe "Composer - ProseMirror - Pasting content" do
   it "ignores text/html content if Files are present" do
     open_composer
     paste_and_click_image
+    expect(composer).to have_no_animated_images
     expect(rich).to have_no_css("img[src^='data:']")
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor

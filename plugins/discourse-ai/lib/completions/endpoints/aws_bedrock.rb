@@ -216,6 +216,23 @@ module DiscourseAi
           end
         end
 
+        def reset_attempt_state!
+          super
+          @raw_response = nil
+        end
+
+        def output_stop_reason
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
+        end
+
+        def output_limit_reached?
+          dialect.is_a?(DiscourseAi::Completions::Dialects::Claude) && super
+        end
+
+        def reported_reasoning_tokens
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
+        end
+
         def processor
           if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
             claude_processor

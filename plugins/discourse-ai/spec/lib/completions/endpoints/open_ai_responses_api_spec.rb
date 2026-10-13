@@ -7,6 +7,44 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAiResponses do
     Fabricate(:llm_model, provider: "open_ai", url: "https://api.openai.com/v1/responses")
   end
 
+  it "uses total Responses output once including invisible reasoning and tool arguments" do
+    response = {
+      output: [
+        { type: "reasoning", id: "reason", encrypted_content: "opaque" * 1000, summary: [] },
+        {
+          type: "function_call",
+          id: "function",
+          call_id: "call",
+          name: "echo",
+          arguments: '{"string":"result"}',
+        },
+      ],
+      usage: {
+        input_tokens: 150_000,
+        output_tokens: 120,
+        input_tokens_details: {
+          cached_tokens: 0,
+        },
+        output_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, model.url).to_return(body: response.to_json)
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
+    model.to_llm.generate(
+      "Read",
+      user: Discourse.system_user,
+      output_thinking: true,
+      execution_context: execution,
+    )
+    expect(execution.work_budget.used).to eq(120)
+    expect(AiApiAuditLog.last.response_tokens).to eq(120)
+  end
+
   let(:prompt_with_tools) do
     prompt = DiscourseAi::Completions::Prompt.new("echo: Hello")
     prompt.tools = [

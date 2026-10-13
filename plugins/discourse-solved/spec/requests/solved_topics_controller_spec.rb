@@ -102,6 +102,65 @@ describe DiscourseSolved::SolvedTopicsController do
       end
     end
 
+    context "with activity visibility restrictions" do
+      before { SiteSetting.hide_new_user_profiles = false }
+
+      it "allows the target user and administrators to see hidden activity" do
+        SiteSetting.hide_user_activity_tab = true
+
+        sign_in(user)
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        sign_in(admin)
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+      end
+
+      it "blocks another user's activity only when activity is hidden" do
+        SiteSetting.hide_user_activity_tab = false
+        sign_in(another_user)
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        SiteSetting.hide_user_activity_tab = true
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
+      end
+
+      it "blocks anonymous access to activity only when activity is hidden" do
+        SiteSetting.login_required = false
+        SiteSetting.hide_user_profiles_from_public = false
+        SiteSetting.hide_user_activity_tab = false
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        SiteSetting.hide_user_activity_tab = true
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
+      end
+
+      it "blocks moderators from viewing another user's hidden activity" do
+        SiteSetting.hide_user_activity_tab = true
+        sign_in(Fabricate(:moderator))
+
+        get "/solution/by_user.json", params: { username: user.username }
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
+      end
+    end
+
     context "when accessing without username" do
       it "returns 400 for the current user" do
         sign_in(user)

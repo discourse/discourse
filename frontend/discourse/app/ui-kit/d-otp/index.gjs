@@ -79,6 +79,7 @@ export default class DOTP extends Component {
     return this.otp.join("");
   }
 
+  /** @param {string} value */
   normalizeInput(value) {
     if (this.args.normalizeInput) {
       return this.args.normalizeInput(value);
@@ -87,6 +88,7 @@ export default class DOTP extends Component {
     return value.replace(/[^0-9]/g, "");
   }
 
+  /** @param {number} index */
   @action
   showSeparator(index) {
     return (
@@ -96,6 +98,7 @@ export default class DOTP extends Component {
     );
   }
 
+  /** @param {HTMLInputElement} element */
   @action
   focusInput(element) {
     if (!this.autoFocus) {

@@ -110,8 +110,7 @@ class AiAgent < ActiveRecord::Base
       else
         :value_everyone_allowed
       end
-    agents =
-      agent_cache[key] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    agents = agent_cache[key] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
       agents.select(&:enabled)
@@ -379,10 +378,14 @@ class AiAgent < ActiveRecord::Base
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
     reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
     enabled_mcp_server_assignments =
-      ai_agent_mcp_servers
-        .includes(:ai_mcp_server)
-        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
     enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
     selected_tool_names_by_server =
       enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
@@ -450,6 +453,10 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def self.ensure_users!
+    where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
+  end
+
   def self.detach_user!(user_id)
     return if where(user_id: user_id).update_all(user_id: nil) == 0
 
@@ -467,24 +474,32 @@ class AiAgent < ActiveRecord::Base
     user.present? || supports_bot_user?
   end
 
-  def create_user!
-    raise "User already exists" if user_id && User.exists?(user_id)
-
-    # note .invalid is a reserved TLD which will route nowhere
-    user =
-      User.new(
-        email: "#{SecureRandom.hex}@does-not-exist.invalid",
-        name: name.titleize,
-        username: UserNameSuggester.suggest(name + "_bot"),
-        active: true,
-        approved: true,
-        trust_level: TrustLevel[4],
-        id: DiscourseAi::BotUser.next_id,
+  def needs_user?
+    enabled? && supports_bot_user? &&
+      (
+        force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
+          allow_chat_direct_messages? || allow_chat_channel_mentions?
       )
-    user.save!(validate: false)
+  end
 
-    update!(user_id: user.id)
-    user
+  def ensure_user!
+    with_lock do
+      reload
+      return user if user_id.present? && User.exists?(user_id)
+
+      create_user_without_lock!
+    end
+  end
+
+  def create_user!
+    return create_user_without_lock! if new_record?
+
+    with_lock do
+      reload
+      raise "User already exists" if user_id && User.exists?(user_id)
+
+      create_user_without_lock!
+    end
   end
 
   def set_default_compression_threshold
@@ -522,6 +537,25 @@ class AiAgent < ActiveRecord::Base
 
     settings = AiModerationSetting.spam
     settings.update!(llm_model_id: default_llm_id) if settings&.ai_agent_id == id
+  end
+
+  def create_user_without_lock!
+    raise I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported") if !supports_bot_user?
+
+    user =
+      User.new(
+        email: "#{SecureRandom.hex}@does-not-exist.invalid",
+        name: name.titleize,
+        username: UserNameSuggester.suggest(name + "_bot"),
+        active: true,
+        approved: true,
+        trust_level: TrustLevel[4],
+        id: DiscourseAi::BotUser.next_id,
+      )
+    user.save!(validate: false)
+
+    update!(user_id: user.id)
+    user
   end
 
   def normalize_subagent_ids

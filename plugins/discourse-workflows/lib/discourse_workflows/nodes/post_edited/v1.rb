@@ -39,8 +39,7 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
             trust_levels: {
               type: :multi_options,
               required: false,
@@ -71,16 +70,10 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_post_scope?(trigger_ctx.get_node_parameter("post_scope", "first_post")) &&
-            matches_category_ids?(
-              @post.topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(
-              @post.topic,
-              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
-            ) && matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
+          return false if !matches_post_scope?(trigger_ctx.get_node_parameter("post_scope"))
+          return false if !matches_topic_filters?(@post.topic, trigger_ctx)
+
+          matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
         end
 
         private

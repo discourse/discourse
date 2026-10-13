@@ -159,6 +159,8 @@ function dynamicValueKey(schema = {}, fieldName) {
         : "group_id";
     case "tags":
       return "tag_names";
+    case "topic":
+      return "topic_ids";
     case "user":
       return ui.multiple ? "usernames" : "username";
     case "user_or_group":
@@ -304,6 +306,30 @@ export function fixedCollectionRows(value, groupName = "values") {
   return [];
 }
 
+const MATERIALIZED_CONTAINER_TYPES = [
+  "collection",
+  "fixed_collection",
+  "assignment_collection",
+  "array",
+];
+
+export function applySchemaDefaults(schema = {}, config = {}) {
+  for (const [key, fieldSchema] of Object.entries(schema)) {
+    if (config[key] != null) {
+      continue;
+    }
+
+    const type = fieldType(fieldSchema);
+    if (fieldSchema.default !== undefined) {
+      config[key] = cloneValue(fieldSchema.default);
+    } else if (MATERIALIZED_CONTAINER_TYPES.includes(type)) {
+      config[key] = fallbackValueForType(type);
+    }
+  }
+
+  return config;
+}
+
 export function fieldType(schema = {}) {
   return schema.type || "string";
 }
@@ -328,6 +354,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
 const TYPE_TO_CONTROL = {
   boolean: "boolean",
   icon: "icon",
+  emoji: "emoji",
   options: "select",
   multi_options: "multi_combo_box",
   collection: "collection",
@@ -354,7 +381,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(ui.expression);
   }
 
-  return ["string", "integer", "number", "float", "icon"].includes(
+  return ["string", "integer", "number", "float", "icon", "emoji"].includes(
     fieldType(schema)
   );
 }
@@ -463,6 +490,21 @@ export function fieldVisible(schema = {}, configuration = {}) {
 
 export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) === "visible";
+}
+
+export function pruneModeHiddenFields(schema = {}, configuration = {}) {
+  const pruned = { ...configuration };
+
+  for (const [name, field] of Object.entries(schema)) {
+    if (fieldUi(field).hidden) {
+      continue;
+    }
+    if (fieldDisplayState(field, configuration) === "hidden") {
+      delete pruned[name];
+    }
+  }
+
+  return pruned;
 }
 
 function rulesOutcome(rules, configuration) {

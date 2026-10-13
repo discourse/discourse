@@ -1597,6 +1597,17 @@ RSpec.describe SessionController do
         expect(response.parsed_body["trust_level"]).to eq(1)
       end
 
+      it "tells the deferred avatar selector whether the avatar can be edited" do
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["can_edit_avatar"]).to eq(true)
+
+        SiteSetting.auth_overrides_avatar = true
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["can_edit_avatar"]).to eq(false)
+      end
+
       it "waits for username selection before creating or authenticating an account" do
         User.set_callback(:create, :after, :ensure_in_trust_level_group)
 

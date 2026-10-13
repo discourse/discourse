@@ -10,7 +10,6 @@ vi:
       admin_dashboard_card:
         no_results: "Không có kết quả"
     explorer:
-      default_query: "Mặc định"
       view_query: "Xem"
       or: "hoặc"
       create: "Tạo"
@@ -36,6 +35,7 @@ vi:
       result_count:
         other: "%{count} kết quả."
       query_groups: "Nhóm"
+      query_tags: "Thẻ"
       query_description: "Mô tả"
       query_user: "Tạo bởi"
       column: "Cột %{number}"
