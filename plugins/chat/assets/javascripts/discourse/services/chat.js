@@ -9,6 +9,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   onPresenceChange,
   removeOnPresenceChange,
@@ -279,7 +280,12 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.chatStateManager.isActive) {
+      const active = applyValueTransformer(
+        "chat-presence-active",
+        this.chatStateManager.isActive
+      );
+
+      if (active) {
         this.presenceChannel.enter({ activeOptions: CHAT_ONLINE_OPTIONS });
       } else {
         this.presenceChannel.leave();
