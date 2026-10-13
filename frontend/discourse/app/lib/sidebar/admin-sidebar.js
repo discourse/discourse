@@ -2,7 +2,6 @@ import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
-import { ajax } from "discourse/lib/ajax";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
@@ -430,20 +429,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
           }))
         );
       }
-    }
-
-    // Mods cannot access themes
-    if (currentUser.admin) {
-      ajax("/admin/themes").then(({ themes }) => {
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.filter((theme) => !theme.component).map((theme) => theme.name)
-        );
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.filter((theme) => theme.component).map((theme) => theme.name)
-        );
-      });
     }
 
     if (siteSettings.enable_form_templates) {
