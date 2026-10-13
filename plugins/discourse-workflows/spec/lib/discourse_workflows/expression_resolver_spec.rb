@@ -321,6 +321,25 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ $trigger.tags }}")).to eq(%w[bug help])
     end
 
+    it "evaluates a single whole expression only when its braces close at the end" do
+      {
+        "={{ { id: $trigger.topic_id } }}" => {
+          "id" => 42,
+        },
+        "={{ {a: {b: 1} } }}" => {
+          "a" => {
+            "b" => 1,
+          },
+        },
+        "={{ (() => { return 1 })() }}" => 1,
+        "= {{ $trigger.topic_id }} " => 42,
+        "={{ JSON.stringify({ a: { b: 1 } }) }}" => '{"a":{"b":1}}',
+        "={{ 1 }} x {{ 2 }}" => "1 x 2",
+        "={{ $trigger.topic_id" => "{{ $trigger.topic_id",
+        "={{  }}" => nil,
+      }.each { |value, expected| expect(resolver.resolve(value)).to eq(expected), value }
+    end
+
     it "formats arrays when interpolating into a larger string" do
       expect(resolver.resolve("=tags: {{ $trigger.tags }}")).to eq("tags: bug, help")
     end

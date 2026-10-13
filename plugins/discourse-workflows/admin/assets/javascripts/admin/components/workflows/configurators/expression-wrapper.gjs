@@ -14,6 +14,7 @@ import {
 import {
   fieldType,
   isExpression,
+  wholeExpressionBody,
 } from "../../../lib/workflows/property-engine";
 import ExpressionInput from "./expression-input";
 
@@ -48,13 +49,6 @@ function plainTextValue(value) {
 
 function schemaType(schema) {
   return fieldType(schema);
-}
-
-function wholeExpressionBody(value) {
-  const expressionBody = value.slice(1).trim();
-  const match = expressionBody.match(/^\{\{\s*([\s\S]*?)\s*\}\}$/);
-
-  return match?.[1]?.trim() || null;
 }
 
 function parseJsonLiteral(value) {
