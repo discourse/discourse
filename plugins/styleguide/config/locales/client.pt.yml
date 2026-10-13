@@ -25,6 +25,11 @@ pt:
         context_menu:
           actions:
             delete: "Eliminar"
+        reorderable_list:
+          policies_pinned: "Fixado"
+          policies_required: "Necessário"
+          table_type: "Tipo"
+          cross_list_primary: "Principal"
         font_scale:
           title: "Sistema de Fontes"
         colors:

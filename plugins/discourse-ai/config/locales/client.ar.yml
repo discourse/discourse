@@ -830,8 +830,6 @@ ar:
         description: "الوصف"
         no_llm_selected: "لم يتم تحديد نموذج لغة"
         use_parent_llm: "استخدم نموذج اللغة الخاص بالوكيل"
-        max_turn_tokens: "الحد الأقصى لرموز الدور"
-        max_turn_tokens_help: "الحد الأقصى لإجمالي الرموز (المدخلات + المخرجات) المُستهلَكة عبر جميع استدعاءات نموذج اللغة الكبير (LLM) خلال رد واحد للروبوت. اترك الحقل فارغًا لاستخدام نصف نافذة سياق النموذج بشكلٍ افتراضي."
         compression_threshold: "حدّ الضغط"
         compression_threshold_help: "النسبة المئوية لاستخدام السياق (من 20 إلى 99) التي يبدأ عندها الضغط التلقائي. تؤدي القيم الأقل إلى بدء الضغط في وقت أبكر، ما يحافظ على مساحة أكبر."
         vision_enabled: تضمين تحميل الصور
@@ -1450,9 +1448,22 @@ ar:
         quick_search:
           suffix: "في كل الموضوعات والمنشورات بالذكاء الاصطناعي"
       ai_artifact:
+        editor:
+          version: "الإصدار"
+          default: "افتراضي"
+          apply: "تطبيق"
         expand_view_label: "توسيع العرض"
         collapse_view_label: "الخروج من وضع الشاشة الكاملة (ESC أو زر الرجوع)"
         click_to_run_label: "تشغيل أداة الويب"
+        share: "المشاركة"
+        create_link: "إنشاء رابط"
+        copied: "تم النسخ إلى الحافظة"
+        copy_link: "نسخ الرابط"
+        copy_embed: "نسخ الرابط المضمّن"
+        new_tab: "عرض في تبويب جديد"
+        filter_all: "الكل"
+        filter_standalone: "مستقل"
+        filter_conversation: "المحادثة"
       ai_bot:
         title: "روبوت الذكاء الاصطناعي"
         agent: "الوكيل:"

@@ -16,6 +16,7 @@ he:
       link: "קישור"
   mcp:
     errors:
+      category_not_found: "לא נמצאה קטגוריה"
       draft_too_long: "הטיוטה ארוכה מדי"
       topic_not_found: "הנושא לא נמצא"
     oauth:

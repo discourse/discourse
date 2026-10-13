@@ -25,6 +25,11 @@ lt:
         context_menu:
           actions:
             delete: "Pašalinti"
+        reorderable_list:
+          policies_pinned: "Prisegta"
+          policies_required: "Privalomi"
+          table_type: "Tipas"
+          cross_list_primary: "Pagrindinė"
         font_scale:
           title: "Šriftų sistema"
         colors:

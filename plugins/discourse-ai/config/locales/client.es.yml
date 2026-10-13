@@ -1163,9 +1163,23 @@ es:
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Por defecto"
+          option_on: "Activado"
+          option_off: "Desactivado"
+          apply: "Aplicar"
         expand_view_label: "Ampliar vista"
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
+        share: "Compartir"
+        create_link: "Crear enlace"
+        copied: "Copiado al portapapeles"
+        copy_link: "Copiar enlace"
+        copy_embed: "Copiar incrustación"
+        new_tab: "Mostrar en una pestaña nueva"
+        filter_all: "Todo"
+        filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
         agent: "Agente:"

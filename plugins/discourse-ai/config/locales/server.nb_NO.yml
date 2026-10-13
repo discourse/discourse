@@ -31,6 +31,25 @@ nb_NO:
           title: "Sikkerhetskopier"
       read_post:
         unknown_post: "innlegg"
+      chat_tool_approval:
+        topic_states:
+          open: "Åpne"
+          closed: "Lukket"
+          active: "Aktiv"
+          deleted: "Slettet"
+        solution_post: "Innlegg #%{number}"
+        duration_label: "Varighet:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dager"
+        posts_label: "Innlegg"
+        category_label: "Kategori"
+        category_fields:
+          name: "navn"
+          description: "beskrivelse"
+          color: "farge"
+        approve_label: "Ja"
+        reject_label: "Nei"
       tool_summary:
         search: "Søk"
         time: "Tid"

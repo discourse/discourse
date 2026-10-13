@@ -696,8 +696,11 @@ fi:
       chat_message_created:
         channel_id: "Kanava"
       send_chat_message:
+        targets:
+          channel: "Kanava"
         channel_id: "Kanava"
         message: "Viesti"
+        actor_username: "Lähettäjä"
       chat_approval:
         message: "Viesti"
         buttons: "Painikkeet"

@@ -802,9 +802,23 @@ fi:
         quick_search:
           suffix: "kaikissa ketjuissa ja viesteissä tekoälyllä"
       ai_artifact:
+        editor:
+          version: "Versio"
+          default: "Oletus"
+          option_on: "Käytössä"
+          option_off: "Pois käytöstä"
+          apply: "Käytä"
         expand_view_label: "Laajenna näkymä"
         collapse_view_label: "Poistu koko näytön tilasta (Esc- tai Takaisin-painike)"
         click_to_run_label: "Suorita artefakti"
+        share: "Jaa"
+        create_link: "Luo linkki"
+        copied: "Kopioitiin leikepöydälle"
+        copy_link: "Kopioi linkki"
+        copy_embed: "Kopioi upotus"
+        new_tab: "Näytä uudessa välilehdessä"
+        filter_all: "Kaikki"
+        filter_standalone: "Erillinen"
       ai_bot:
         title: "Tekoälybotti"
         llm: "Malli:"

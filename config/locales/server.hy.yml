@@ -16,6 +16,7 @@ hy:
       location: "Տեղակայություն"
   mcp:
     errors:
+      category_not_found: "Կատեգորիան չի գտնվել"
       topic_not_found: "Թեման չի գտնվել"
     oauth:
       deny: "Մերժել"
