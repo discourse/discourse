@@ -172,7 +172,12 @@ en:
         auto_gain_control: "Automatic gain control"
         auto_gain_control_hint: "Keeps your volume steady by adjusting the microphone level automatically."
         subtitles: "Show live subtitles"
-        subtitles_hint: "Generates captions for what others say, on your device — nothing is sent anywhere. Requires a GPU-capable browser and downloads a ~2.5 GB model once."
+        subtitles_hint: "Generates captions for what others say, on your device — nothing is sent anywhere. Requires a GPU-capable browser and downloads the subtitles model once."
+        subtitles_model: "Subtitles model"
+        subtitles_model_hint: "Best quality is the most accurate. Smaller downloads about half as much, but makes more mistakes in noisy rooms and in some languages."
+        subtitles_models:
+          ultra: "Best quality (~410 MB)"
+          redux: "Smaller (~210 MB)"
         subtitles_failed: "Subtitles couldn't be started, so they were turned off."
         test_output: "Test"
         choose_output: "Choose output device"

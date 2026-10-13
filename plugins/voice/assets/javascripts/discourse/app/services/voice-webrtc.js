@@ -521,6 +521,10 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.progress;
   }
 
+  get sttModel() {
+    return this.#transcription.sttModel;
+  }
+
   get captions() {
     return this.#transcription.captions;
   }
@@ -631,6 +635,11 @@ export default class VoiceWebrtcService extends Service {
 
   toggleSubtitles() {
     this.#transcription.toggle();
+  }
+
+  @action
+  setSttModel(model) {
+    this.#transcription.setSttModel(model);
   }
 
   isTranscribingRoom(roomId) {
