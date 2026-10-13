@@ -128,6 +128,11 @@ class CategoryList
       featured_topics_by_category_id[t.category_featured_topic_category_id] << t
     end
 
+    if Site.preloaded_category_custom_fields.present?
+      topic_categories = @all_topics.map(&:category).compact.uniq
+      Category.preload_custom_fields(topic_categories, Site.preloaded_category_custom_fields)
+    end
+
     categories_with_descendants.each do |category|
       category.displayable_topics = featured_topics_by_category_id[category.id]
     end

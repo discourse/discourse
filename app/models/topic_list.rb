@@ -162,6 +162,10 @@ class TopicList
       associations: topic_preloader_associations,
     ).call
 
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
     if preloaded_custom_fields.present?
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
