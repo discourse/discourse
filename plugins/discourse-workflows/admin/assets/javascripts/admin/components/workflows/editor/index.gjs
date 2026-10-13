@@ -6,6 +6,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import WorkflowEditorSession from "../../../lib/workflows/editor-session";
@@ -158,7 +159,6 @@ export default class WorkflowsEditor extends Component {
   ignoreDirty = () => false;
   undoManager = new UndoManager();
   currentSavePromise = null;
-  pendingGraphSnapshot = null;
   pendingSaveOptions = null;
   initialNodeHandled = false;
   workflowSession = new WorkflowEditorSession({
@@ -1053,11 +1053,10 @@ export default class WorkflowsEditor extends Component {
   async handleSubmit(options = {}) {
     if (this.saving) {
       if (options.throwOnError) {
-        await this.currentSavePromise;
+        await this.currentSavePromise?.catch(() => {});
         return this.handleSubmit(options);
       } else {
         this.pendingSave = true;
-        this.pendingGraphSnapshot = this.#captureGraphSnapshot();
         this.pendingSaveOptions = this.#mergePendingSaveOptions(
           this.pendingSaveOptions,
           options
@@ -1080,7 +1079,6 @@ export default class WorkflowsEditor extends Component {
   @action
   replaceWorkflow(workflow) {
     this.pendingSave = false;
-    this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
 
     this.args.workflow.setProperties({
@@ -1516,8 +1514,11 @@ export default class WorkflowsEditor extends Component {
         saveProperties.static_data = options.staticData;
       }
 
+      const sentGraph = this.#captureGraphSnapshot();
       await this.args.workflow.save(saveProperties);
-      this.#syncFromServer();
+      if (deepEqual(this.#captureGraphSnapshot(), sentGraph)) {
+        this.#syncFromServer();
+      }
 
       if (!this.isUndoRedo) {
         this.undoManager.commitAction(this.#captureGraphSnapshot());
@@ -1539,7 +1540,6 @@ export default class WorkflowsEditor extends Component {
     } finally {
       this.saving = false;
       if (this.pendingSave) {
-        const pendingSnapshot = this.pendingGraphSnapshot;
         const pendingOptions = this.pendingSaveOptions || {};
         if (
           options.staticData !== undefined &&
@@ -1551,11 +1551,7 @@ export default class WorkflowsEditor extends Component {
           );
         }
         this.pendingSave = false;
-        this.pendingGraphSnapshot = null;
         this.pendingSaveOptions = null;
-        if (pendingSnapshot) {
-          this.#applyGraphSnapshot(pendingSnapshot);
-        }
         this.handleSubmit(pendingOptions);
       }
     }
