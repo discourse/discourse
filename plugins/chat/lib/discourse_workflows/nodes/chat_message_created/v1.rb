@@ -128,7 +128,7 @@ if defined?(DiscourseWorkflows)
                 thread_id: @message.thread_id,
                 chat_channel_id: @message.chat_channel_id,
               },
-              channel: channel_data,
+              channel: serialize_channel,
               user: user_data,
             }
           end
@@ -141,7 +141,7 @@ if defined?(DiscourseWorkflows)
             serialize_record(@user, BasicUserSerializer)
           end
 
-          def channel_data
+          def serialize_channel
             scope = @user&.guardian || Discourse.system_user.guardian
             serialize_record(@channel, Chat::WorkflowChannelSerializer, scope:)
           end

@@ -28,7 +28,7 @@ if defined?(DiscourseWorkflows)
           topic_id.blank? || topic_id.to_i == topic&.id
         end
 
-        def event_data(starts_at:, ends_at:)
+        def serialize_event(starts_at:, ends_at:)
           {
             id: event.id,
             name: event.name,
@@ -46,14 +46,14 @@ if defined?(DiscourseWorkflows)
           }
         end
 
-        def post_data
+        def serialize_event_post
           post = event&.post
           return nil if post.blank?
 
           { id: post.id, post_number: post.post_number, url: post.url }
         end
 
-        def stats_data
+        def serialize_event_stats
           serialize_record(event, ::DiscourseEvents::Events::EventStatsSerializer)
         end
       end

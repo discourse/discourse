@@ -87,8 +87,8 @@ if defined?(DiscourseWorkflows)
                   methods: [:unicode_title],
                 ),
               card_moved: {
-                old_column: column_data(@old_column),
-                new_column: column_data(@new_column),
+                old_column: serialize_column(@old_column),
+                new_column: serialize_column(@new_column),
               },
               acting_user: serialize_record(@acting_user, BasicUserSerializer),
             }
@@ -96,7 +96,7 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def column_data(column)
+          def serialize_column(column)
             column&.as_json(
               only: BoardsSchema::COLUMN_PROPERTIES.keys - ["unicode_title"],
               methods: [:unicode_title],

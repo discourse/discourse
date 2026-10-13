@@ -63,7 +63,7 @@ module DiscourseWorkflows
         def output
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
-            topic: topic_data(@post.topic),
+            topic: serialize_topic_list_item(@post.topic),
             user: serialize_user(@post.user),
             editor: serialize_user(@revisor&.editor),
           }
