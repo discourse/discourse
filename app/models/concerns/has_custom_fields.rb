@@ -214,6 +214,7 @@ module HasCustomFields
   end
 
   def clear_custom_fields
+    association(:_custom_fields).reset
     @custom_fields = nil
     @custom_fields_orig = nil
   end
@@ -252,7 +253,7 @@ module HasCustomFields
       return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields, self.class.to_s)
     end
 
-    @custom_fields ||= refresh_custom_fields_from_db.dup
+    @custom_fields ||= refresh_custom_fields_from_db(use_preloaded: true).dup
   end
 
   def custom_fields=(data)
@@ -343,10 +344,15 @@ module HasCustomFields
 
   protected
 
-  def refresh_custom_fields_from_db
+  def refresh_custom_fields_from_db(use_preloaded: false)
     target = ActiveSupport::HashWithIndifferentAccess.new
-    _custom_fields
-      .order(:id)
+    fields =
+      if use_preloaded && _custom_fields.loaded?
+        _custom_fields.sort_by(&:id)
+      else
+        _custom_fields.order(:id)
+      end
+    fields
       .pluck(:name, :value)
       .each { |key, value| self.class.append_custom_field(target, key, value) }
     @custom_fields_orig = target

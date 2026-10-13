@@ -129,8 +129,10 @@ class CategoryList
     end
 
     if Site.preloaded_category_custom_fields.present?
-      topic_categories = @all_topics.map(&:category).compact.uniq
-      Category.preload_custom_fields(topic_categories, Site.preloaded_category_custom_fields)
+      ActiveRecord::Associations::Preloader.new(
+        records: @all_topics.map(&:category).compact,
+        associations: :_custom_fields,
+      ).call
     end
 
     categories_with_descendants.each do |category|

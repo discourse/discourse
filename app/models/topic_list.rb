@@ -163,7 +163,10 @@ class TopicList
     ).call
 
     if Site.preloaded_category_custom_fields.present?
-      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+      ActiveRecord::Associations::Preloader.new(
+        records: @topics.map(&:category).compact,
+        associations: :_custom_fields,
+      ).call
     end
 
     if preloaded_custom_fields.present?
