@@ -16,6 +16,48 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  describe ".all_agents" do
+    it "keeps association queries constant as more agents are loaded" do
+      agents = []
+      query_counts =
+        [2, 8].map do |agent_count|
+          (agent_count - agents.size).times do
+            agents << Fabricate(:ai_agent, user: Fabricate(:user), tools: [])
+          end
+
+          loaded_agents = nil
+          queries = track_sql_queries { loaded_agents = AiAgent.all_agents(enabled_only: false) }
+
+          agents.each do |agent|
+            loaded_agent = loaded_agents.find { |candidate| candidate.id == agent.id }
+            expect(loaded_agent.username).to eq(agent.user.username_lower)
+            expect(loaded_agent.mcp_server_ids).to eq([])
+          end
+
+          queries.size
+        end
+
+      expect(query_counts.last).to eq(query_counts.first)
+    end
+
+    it "keeps enabled MCP server assignments on the loaded agent" do
+      agent = Fabricate(:ai_agent, tools: [], user: Fabricate(:user))
+      enabled_server = Fabricate(:ai_mcp_server)
+      disabled_server = Fabricate(:ai_mcp_server, enabled: false)
+      agent.ai_mcp_servers << enabled_server
+      agent.ai_mcp_servers << disabled_server
+      Rails.cache.write(
+        DiscourseAi::Mcp::ToolRegistry.cache_key(enabled_server.id),
+        { "definitions" => [], "expires_at" => 1.hour.from_now.iso8601 },
+      )
+
+      loaded_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+
+      expect(loaded_agent.mcp_server_ids).to eq([enabled_server.id])
+      expect(loaded_agent.username).to eq(agent.user.username_lower)
+    end
+  end
+
   describe "#allowed_group_ids" do
     it "aliases Everyone while granular permissions are enabled without changing stored groups" do
       group = Fabricate(:group)
