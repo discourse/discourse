@@ -23,6 +23,7 @@ import {
   typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { nodeDescription, nodeLabel } from "../../../lib/workflows/node-utils";
+import { deprecationMessage } from "../node/deprecation-notice";
 import CanvasHoverToolbar from "./hover-toolbar";
 
 function resolveType(workflowsNodeTypes, node) {
@@ -384,6 +385,18 @@ export default class WorkflowNode extends Component {
                   </ul>
                 </div>
               </:content>
+            </DTooltip>
+          {{/if}}
+
+          {{#if this.resolvedNodeType.deprecation}}
+            <DTooltip
+              class="workflow-rete-node__deprecated-badge"
+              @content={{deprecationMessage this.resolvedNodeType.deprecation}}
+              @identifier="workflow-node-deprecated"
+            >
+              <:trigger>
+                {{dIcon "arrow-up"}}
+              </:trigger>
             </DTooltip>
           {{/if}}
         </div>
