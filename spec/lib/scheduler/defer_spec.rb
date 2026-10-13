@@ -41,6 +41,7 @@ RSpec.describe Scheduler::Defer do
     end
 
     it "runs jobs in a fair order" do
+      # "site1"/"site2" here are fairness-queue tags, not real dbs
       allow(RailsMultisite::ConnectionManagement).to receive(
         :with_connection,
       ) do |_database, &block|
