@@ -347,6 +347,20 @@ class Topic < ActiveRecord::Base
           )
         end
 
+  scope :allowed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
+    EXISTS (
+      SELECT 1
+      FROM topic_allowed_users tau
+      WHERE tau.topic_id = topics.id AND tau.user_id = :user_id
+    )
+    OR EXISTS (
+      SELECT 1
+      FROM topic_allowed_groups tg
+      JOIN group_users gu ON gu.group_id = tg.group_id AND gu.user_id = :user_id
+      WHERE tg.topic_id = topics.id
+    )
+  SQL
+
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }

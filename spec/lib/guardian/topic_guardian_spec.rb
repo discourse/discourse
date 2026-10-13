@@ -399,6 +399,38 @@ RSpec.describe TopicGuardian do
       ).to contain_exactly(topic.id, private_message_topic.id)
     end
 
+    it "returns private messages a moderator participates in, was warned in, or must review" do
+      direct_pm = Fabricate(:private_message_topic, recipient: moderator)
+      group_pm =
+        Fabricate(
+          :group_private_message_topic,
+          recipient_group: Fabricate(:group, users: [moderator]),
+        )
+      warning_pm = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      flagged_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: flagged_pm, category: nil)
+      resolved_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: resolved_flag_pm, status: :rejected)
+      ignored_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: ignored_flag_pm, score: -1)
+      ids = [
+        private_message_topic,
+        direct_pm,
+        group_pm,
+        warning_pm,
+        flagged_pm,
+        resolved_flag_pm,
+        ignored_flag_pm,
+      ].map(&:id)
+
+      expect(moderator.guardian.can_see_topic_ids(topic_ids: ids)).to contain_exactly(
+        direct_pm.id,
+        group_pm.id,
+        warning_pm.id,
+        flagged_pm.id,
+      )
+    end
+
     it "returns the topic ids for topics which are deleted but user is a category moderator of" do
       SiteSetting.enable_category_group_moderation = true
 
