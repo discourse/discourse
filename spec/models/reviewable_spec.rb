@@ -142,21 +142,24 @@ RSpec.describe Reviewable, type: :model do
       expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
     end
 
-    it "includes private-message reviewables for participating moderators" do
-      participant_moderator = Fabricate(:moderator)
-      participant_topic =
-        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
-      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
-      participant_reviewable =
-        ReviewablePost.needs_review!(
-          target: participant_post,
-          created_by: Discourse.system_user,
-          reviewable_by_moderator: true,
-        )
+    it "includes every reviewable on a flagged private message for moderators outside the conversation" do
+      flagged_reviewable =
+        Fabricate(:reviewable_flagged_post, target: pm_post, topic: pm_topic, category: nil)
 
-      expect(described_class.viewable_by(participant_moderator)).to exist(
-        id: participant_reviewable.id,
-      )
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: flagged_reviewable.id)
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for moderators allowed in the conversation" do
+      pm_topic.topic_allowed_users.create!(user: outsider_moderator)
+
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
+    end
+
+    it "excludes queued replies to private messages from moderators outside the conversation" do
+      queued_reply = Fabricate(:reviewable_queued_post, topic: pm_topic, category: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: queued_reply.id)
     end
   end
 
