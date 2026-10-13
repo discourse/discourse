@@ -176,6 +176,7 @@ export default class CategoryCalendar extends Component {
         @initialView={{this.categorySetting.defaultView}}
         @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @onLoadEvents={{this.loadEvents}}
+        @placeholder={{true}}
         @refreshKey={{this.refreshKey}}
         @weekends={{this.renderWeekends}}
       />
