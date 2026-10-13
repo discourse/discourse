@@ -764,6 +764,7 @@ en:
         fixed: "Fixed"
         plain: "Plain"
         dynamic: "Dynamic"
+        empty_expression: "Enter an expression or switch back to %{plain}"
       topic_control:
         unavailable_topic: "Topic #%{id}"
       expression_preview:
@@ -1390,6 +1391,10 @@ en:
         mapping_mode_auto: "Map automatically"
         columns_case_sensitive_hint_description: "Column mappings must match the data table column names exactly (case sensitive)"
         columns: "Columns"
+        add_column: "Add column"
+        add_all_columns: "All columns"
+        empty_column_placeholder: "Empty (NULL)"
+        missing_column: "Column %{name} can’t be written to this data table. Remove it, or the node fails when it runs."
         filter_combinator: "Match mode"
         filter_combinator_and: "All conditions must match"
         filter_combinator_or: "Any condition can match"
