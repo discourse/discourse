@@ -950,6 +950,8 @@ class BulkImport::Base
     recurrence
     timezone
     minimal
+    closed
+    image_upload_id
   ]
 
   POST_EVENT_INVITEE_COLUMNS = %i[post_id user_id status notified recurring created_at updated_at]
