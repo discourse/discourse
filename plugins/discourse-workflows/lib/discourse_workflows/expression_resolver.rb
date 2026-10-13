@@ -2,8 +2,6 @@
 
 module DiscourseWorkflows
   class ExpressionResolver
-    WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
-
     def self.find_matching_close(template, start)
       depth = 1
       cursor = start
@@ -58,7 +56,7 @@ module DiscourseWorkflows
       return value unless resolvable_string?(value)
 
       expression_body = value[1..].strip
-      whole_expression = expression_body.match(WHOLE_EXPRESSION_REGEX)&.captures&.first
+      whole_expression = whole_expression_body(expression_body)
 
       whole_expression ? js_evaluator.evaluate(whole_expression) : render_template(expression_body)
     end
@@ -176,6 +174,13 @@ module DiscourseWorkflows
       else
         resolve(value)
       end
+    end
+
+    def whole_expression_body(template)
+      return if !template.start_with?("{{")
+
+      close = self.class.find_matching_close(template, 2)
+      template[2...close].strip if close == template.length - 2
     end
 
     def resolvable_string?(value)

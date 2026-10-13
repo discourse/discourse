@@ -431,6 +431,49 @@ export function isExpression(value) {
   return typeof value === "string" && value.startsWith("=");
 }
 
+/**
+ * Returns the body of an expression value that is exactly one `{{ ... }}`,
+ * e.g. `$json.id` for `={{ $json.id }}`, and null otherwise.
+ */
+export function wholeExpressionBody(value) {
+  if (!isExpression(value)) {
+    return null;
+  }
+
+  const template = value.slice(1).trim();
+  if (!template.startsWith("{{")) {
+    return null;
+  }
+
+  return findMatchingClose(template, 2) === template.length - 2
+    ? template.slice(2, -2).trim() || null
+    : null;
+}
+
+/** Mirrors ExpressionResolver.find_matching_close on the server. */
+function findMatchingClose(template, start) {
+  let depth = 1;
+  let cursor = start;
+
+  while (cursor < template.length - 1) {
+    const pair = template.slice(cursor, cursor + 2);
+
+    if (pair === "{{") {
+      depth++;
+      cursor += 2;
+    } else if (pair === "}}") {
+      if (--depth === 0) {
+        return cursor;
+      }
+      cursor += 2;
+    } else {
+      cursor++;
+    }
+  }
+
+  return null;
+}
+
 export function credentialTypesForSlot(slot = {}) {
   return slot.credential_types || [slot.credential_type].filter(Boolean);
 }
