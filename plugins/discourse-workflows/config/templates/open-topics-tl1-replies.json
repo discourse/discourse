@@ -1,0 +1,134 @@
+{
+  "name": "Open topics, TL1 replies",
+  "description": "New members may start topics or reply in their own topics. Replies to other members’ topics become available at trust level 1. Choose a category on the trigger before publishing.",
+  "nodes": [
+    {
+      "id": "before-submission",
+      "type": "trigger:before_post_submission",
+      "typeVersion": "1.0",
+      "name": "Before post submission",
+      "parameters": {
+        "category_ids": [],
+        "include_subcategories": true
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 12,
+        "y": 20
+      }
+    },
+    {
+      "id": "check-reply",
+      "type": "condition:if",
+      "typeVersion": "1.0",
+      "name": "Check new-member reply",
+      "parameters": {
+        "combinator": "and",
+        "conditions": [
+          {
+            "id": "check-0",
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.submission.is_reply }}",
+            "rightValue": ""
+          },
+          {
+            "id": "check-1",
+            "operator": {
+              "type": "boolean",
+              "operation": "false",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.user.staff }}",
+            "rightValue": ""
+          },
+          {
+            "id": "check-2",
+            "operator": {
+              "type": "number",
+              "operation": "equals",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.user.trust_level }}",
+            "rightValue": "0"
+          },
+          {
+            "id": "check-3",
+            "operator": {
+              "type": "boolean",
+              "operation": "false",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.topic?.user_id === $json.user.id }}",
+            "rightValue": ""
+          }
+        ]
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 300,
+        "y": 20
+      }
+    },
+    {
+      "id": "reject-reply",
+      "type": "action:reject_submission",
+      "typeVersion": "1.0",
+      "name": "Explain reply limit",
+      "parameters": {
+        "message": "As a new member, you can start a topic or reply in your own topics. Replying to other members’ topics becomes available at trust level 1."
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 600,
+        "y": 20
+      }
+    },
+    {
+      "id": "category-note",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Choose a category",
+      "parameters": {
+        "content": "Select the category on Before post submission before publishing. Leave the category open to everyone; the workflow checks replies, not who may read or start topics."
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 12,
+        "y": -230
+      }
+    }
+  ],
+  "connections": {
+    "Before post submission": {
+      "main": [
+        [
+          {
+            "node": "Check new-member reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check new-member reply": {
+      "main": [
+        [
+          {
+            "node": "Explain reply limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  }
+}

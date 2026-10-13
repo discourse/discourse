@@ -24,6 +24,11 @@ import {
   typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { mergeImportedStaticData } from "../../../lib/workflows/static-data";
+import {
+  isSubmissionWorkflow,
+  SUBMISSION_REJECT_TYPE,
+  SUBMISSION_TRIGGER_TYPE,
+} from "../../../lib/workflows/submission-check";
 import { workflowNodeUrl, workflowUrl } from "../../../lib/workflows/urls";
 import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
 import { deserializeConnections } from "../../../models/workflow-connection";
@@ -46,6 +51,12 @@ import {
 import UndoManager from "./undo-manager";
 
 const MAX_NODES = 50;
+
+const SUBMISSION_WORKFLOW_PALETTE_TYPES = new Set([
+  SUBMISSION_TRIGGER_TYPE,
+  SUBMISSION_REJECT_TYPE,
+  "condition:if",
+]);
 
 function nodeTypeIdentifier(nodeType) {
   return nodeType?.name || nodeType?.identifier || nodeType?.type || "";
@@ -77,6 +88,32 @@ function shouldHideTriggerNodeTypes(context, nodes) {
   const sourceNode = nodes?.find((node) => node.clientId === sourceClientId);
 
   return isTriggerType(sourceNode?.type);
+}
+
+function nodeTypesForGraph(nodeTypes, nodes) {
+  if (isSubmissionWorkflow(nodes)) {
+    const hasTrigger = nodes.some(
+      (node) => node.type === SUBMISSION_TRIGGER_TYPE
+    );
+    return nodeTypes.filter((nodeType) => {
+      const type = nodeTypeIdentifier(nodeType);
+      return (
+        SUBMISSION_WORKFLOW_PALETTE_TYPES.has(type) &&
+        (!hasTrigger || type !== SUBMISSION_TRIGGER_TYPE)
+      );
+    });
+  }
+
+  const canAddSubmissionTrigger = (nodes || []).length === 0;
+
+  return nodeTypes.filter((nodeType) => {
+    const identifier = nodeTypeIdentifier(nodeType);
+
+    return (
+      identifier !== SUBMISSION_REJECT_TYPE &&
+      (identifier !== SUBMISSION_TRIGGER_TYPE || canAddSubmissionTrigger)
+    );
+  });
 }
 
 export function buildPastedGraph({
@@ -203,14 +240,15 @@ export default class WorkflowsEditor extends Component {
       return [];
     }
     const term = this.nodePanelSearchTerm?.toLowerCase().trim();
-    const nodeTypes = shouldHideTriggerNodeTypes(
-      this.nodePanelContext,
-      this.formApi?.get("nodes")
-    )
-      ? this.nodePanelNodeTypes.filter(
-          (nodeType) => !isTriggerType(nodeTypeIdentifier(nodeType))
-        )
-      : this.nodePanelNodeTypes;
+    const nodes = this.formApi?.get("nodes") || [];
+    const nodeTypes = nodeTypesForGraph(
+      shouldHideTriggerNodeTypes(this.nodePanelContext, nodes)
+        ? this.nodePanelNodeTypes.filter(
+            (nodeType) => !isTriggerType(nodeTypeIdentifier(nodeType))
+          )
+        : this.nodePanelNodeTypes,
+      nodes
+    );
 
     if (!term) {
       return nodeTypes;

@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import {
+  shouldEnableExecuteStep,
   shouldEnableManualTrigger,
   shouldShowExecuteStep,
   shouldShowManualTrigger,
@@ -106,6 +107,55 @@ module("Unit | Component | Workflows | Canvas | WorkflowNode", function () {
             return true;
           },
         }
+      )
+    );
+  });
+
+  test("disables manual trigger inside submission check workflows", function (assert) {
+    const node = {
+      name: "Before post submission",
+      type: "trigger:before_post_submission",
+      typeVersion: "1.0",
+    };
+    const nodeType = {
+      capabilities: {
+        manually_triggerable: true,
+      },
+    };
+
+    assert.true(shouldEnableManualTrigger(node, nodeType));
+    assert.false(shouldEnableManualTrigger(node, nodeType, null, true));
+    assert.false(
+      shouldEnableManualTrigger(
+        node,
+        nodeType,
+        {
+          isNodePinned() {
+            return true;
+          },
+        },
+        true
+      )
+    );
+  });
+
+  test("disables execute step inside submission check workflows", function (assert) {
+    const node = {
+      name: "Reject submission",
+      type: "action:reject_submission",
+      typeVersion: "1.0",
+    };
+
+    assert.true(shouldEnableExecuteStep(node));
+    assert.false(shouldEnableExecuteStep(node, true));
+    assert.false(
+      shouldEnableExecuteStep(
+        {
+          name: "Before post submission",
+          type: "trigger:before_post_submission",
+          typeVersion: "1.0",
+        },
+        false
       )
     );
   });

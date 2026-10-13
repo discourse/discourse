@@ -416,6 +416,57 @@ RSpec.describe NewPostManager do
     end
   end
 
+  describe "queued topic validation event" do
+    fab!(:category)
+
+    let(:handler) do
+      ->(_posting_user, _args, errors) do
+        errors.add(:base, "This topic was blocked before queueing")
+      end
+    end
+
+    before do
+      SiteSetting.approve_post_count = 100
+      DiscourseEvent.on(:validate_queued_topic, &handler)
+    end
+
+    after { DiscourseEvent.off(:validate_queued_topic, &handler) }
+
+    it "emits the event after category authorization" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "A private topic body",
+          title: "A private topic title",
+          category: private_category.id,
+        )
+
+      events = DiscourseEvent.track_events(:validate_queued_topic) { manager.perform }
+
+      expect(events).to be_empty
+      expect(ReviewableQueuedPost.where(target_created_by: user)).not_to exist
+    end
+
+    it "halts an authorized queued topic when a handler adds an error" do
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "An allowed topic body",
+          title: "An allowed topic title",
+          category: category.id,
+        )
+      result = nil
+
+      events = DiscourseEvent.track_events(:validate_queued_topic) { result = manager.perform }
+
+      expect(events.size).to eq(1)
+      expect(result.success?).to eq(false)
+      expect(result.errors.full_messages.join).to include("This topic was blocked before queueing")
+      expect(ReviewableQueuedPost.where(target_created_by: user)).not_to exist
+    end
+  end
+
   describe "extensibility priority" do
     after { NewPostManager.clear_handlers! }
 

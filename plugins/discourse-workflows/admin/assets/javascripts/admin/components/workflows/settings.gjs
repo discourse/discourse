@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
+import { isSubmissionWorkflow } from "../../lib/workflows/submission-check";
 import ErrorWorkflowChooser from "./error-workflow-chooser";
 import InUseDialog from "./in-use-dialog";
 
@@ -29,6 +30,10 @@ export default class WorkflowSettings extends Component {
           },
         ]
       : [];
+
+  get submissionWorkflow() {
+    return isSubmissionWorkflow(this.args.workflow.nodes);
+  }
 
   @action
   async deleteWorkflow() {
@@ -94,43 +99,51 @@ export default class WorkflowSettings extends Component {
       @onSet={{this.submitForm}}
       as |form|
     >
-      <form.Field
-        @description={{i18n
-          "discourse_workflows.settings.error_workflow_description"
-        }}
-        @format="full"
-        @name="errorWorkflowId"
-        @title={{i18n "discourse_workflows.settings.error_workflow"}}
-        @type="custom"
-        as |field|
-      >
-        <field.Control>
-          <ErrorWorkflowChooser
-            @content={{this.errorWorkflowContent}}
-            @onChange={{field.set}}
-            @options={{hash
-              none="discourse_workflows.settings.error_workflow_none"
-              excludeWorkflowId=@workflow.id
-            }}
-            @value={{field.value}}
-          />
-        </field.Control>
-      </form.Field>
+      {{#if this.submissionWorkflow}}
+        <form.Emphasis
+          @subtitle={{i18n
+            "discourse_workflows.submission_check.settings_hint"
+          }}
+        />
+      {{else}}
+        <form.Field
+          @description={{i18n
+            "discourse_workflows.settings.error_workflow_description"
+          }}
+          @format="full"
+          @name="errorWorkflowId"
+          @title={{i18n "discourse_workflows.settings.error_workflow"}}
+          @type="custom"
+          as |field|
+        >
+          <field.Control>
+            <ErrorWorkflowChooser
+              @content={{this.errorWorkflowContent}}
+              @onChange={{field.set}}
+              @options={{hash
+                none="discourse_workflows.settings.error_workflow_none"
+                excludeWorkflowId=@workflow.id
+              }}
+              @value={{field.value}}
+            />
+          </field.Control>
+        </form.Field>
 
-      <form.Field
-        @description={{i18n
-          "discourse_workflows.settings.timezone_description"
-        }}
-        @format="full"
-        @name="timezone"
-        @title={{i18n "discourse_workflows.settings.timezone"}}
-        @type="custom"
-        as |field|
-      >
-        <field.Control>
-          <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
-        </field.Control>
-      </form.Field>
+        <form.Field
+          @description={{i18n
+            "discourse_workflows.settings.timezone_description"
+          }}
+          @format="full"
+          @name="timezone"
+          @title={{i18n "discourse_workflows.settings.timezone"}}
+          @type="custom"
+          as |field|
+        >
+          <field.Control>
+            <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
+          </field.Control>
+        </form.Field>
+      {{/if}}
 
       <form.Emphasis
         @subtitle={{i18n "discourse_workflows.settings.delete_description"}}

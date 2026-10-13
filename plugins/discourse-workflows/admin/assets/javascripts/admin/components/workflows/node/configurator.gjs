@@ -7,6 +7,7 @@ import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -39,6 +40,7 @@ import {
   getPropertySchema,
   pruneModeHiddenFields,
 } from "../../../lib/workflows/property-engine";
+import { isSubmissionWorkflow } from "../../../lib/workflows/submission-check";
 import { runExecuteStep } from "../canvas/canvas-execute-step";
 import { shouldShowExecuteStep } from "../canvas/workflow-node";
 import CredentialControl from "../configurators/credential";
@@ -279,8 +281,22 @@ export default class NodeConfigurator extends Component {
     return this.saveStatus === "saving" || this.saveStatus === "saved";
   }
 
-  get canExecuteStep() {
+  get submissionWorkflow() {
+    return isSubmissionWorkflow(this.args.model.nodes);
+  }
+
+  get showExecuteStep() {
     return shouldShowExecuteStep(this.args.model.node);
+  }
+
+  get isExecuteStepEnabled() {
+    return !this.isUnavailable && !this.submissionWorkflow;
+  }
+
+  get executeStepLabel() {
+    return this.submissionWorkflow
+      ? i18n("discourse_workflows.submission_check.run_hint")
+      : i18n("discourse_workflows.execute_step.run");
   }
 
   @action
@@ -574,13 +590,21 @@ export default class NodeConfigurator extends Component {
               {{/if}}
             </span>
           {{/if}}
-          {{#if this.canExecuteStep}}
-            <DButton
-              class="btn-small workflows-configurator-modal__execute-step"
-              @action={{this.executeStep}}
-              @icon="play"
-              @label="discourse_workflows.execute_step.run"
-            />
+          {{#if this.showExecuteStep}}
+            <DTooltip
+              @content={{this.executeStepLabel}}
+              @identifier="workflows-configurator-execute-step"
+            >
+              <:trigger>
+                <DButton
+                  class="btn-small workflows-configurator-modal__execute-step"
+                  @action={{this.executeStep}}
+                  @disabled={{not this.isExecuteStepEnabled}}
+                  @icon="play"
+                  @label="discourse_workflows.execute_step.run"
+                />
+              </:trigger>
+            </DTooltip>
           {{/if}}
           <DButton
             class="btn-flat workflows-configurator-modal__close"
@@ -630,16 +654,18 @@ export default class NodeConfigurator extends Component {
                 >{{i18n
                     "discourse_workflows.configurator.tabs.parameters"
                   }}</button>
-                <button
-                  class={{dConcatClass
-                    "workflows-configurator__tab"
-                    (if (eq this.activeTab "settings") "is-active")
-                  }}
-                  type="button"
-                  {{on "click" (fn this.switchTab "settings")}}
-                >{{i18n
-                    "discourse_workflows.configurator.tabs.settings"
-                  }}</button>
+                {{#unless this.submissionWorkflow}}
+                  <button
+                    class={{dConcatClass
+                      "workflows-configurator__tab"
+                      (if (eq this.activeTab "settings") "is-active")
+                    }}
+                    type="button"
+                    {{on "click" (fn this.switchTab "settings")}}
+                  >{{i18n
+                      "discourse_workflows.configurator.tabs.settings"
+                    }}</button>
+                {{/unless}}
               </div>
 
               {{#if this.hasConfiguration}}

@@ -45,6 +45,30 @@ module("Unit | Component | workflows canvas", function (hooks) {
     assert.verifySteps(["browse"]);
   });
 
+  test("detects submission check workflows from the graph", function (assert) {
+    const args = { nodes: [] };
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    Object.defineProperty(canvas, "args", { value: args });
+
+    assert.false(canvas.submissionWorkflow, "an empty graph is not a check");
+
+    args.nodes = [{ type: "trigger:before_post_submission" }];
+    assert.true(
+      canvas.submissionWorkflow,
+      "the submission trigger marks the check"
+    );
+
+    args.nodes = [{ type: "action:reject_submission" }];
+    assert.true(canvas.submissionWorkflow, "a rejection marks the check");
+
+    args.nodes = [{ type: "trigger:manual" }];
+    assert.false(
+      canvas.submissionWorkflow,
+      "an ordinary trigger is not a check"
+    );
+  });
+
   test("publish success clears optimistic unpublished changes override", async function (assert) {
     pretender.put("/admin/plugins/discourse-workflows/workflows/1.json", () =>
       response({})

@@ -264,6 +264,49 @@ RSpec.describe DiscourseWorkflows::Workflow do
       expect(workflow).to be_valid
     end
 
+    it "rejects an error workflow for a submission check draft" do
+      other = Fabricate(:discourse_workflows_workflow, created_by: user)
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "submission-trigger", "trigger:before_post_submission"
+        end
+      workflow.assign_attributes(nodes: graph[:nodes], error_workflow_id: other.id)
+
+      expect(workflow).not_to be_valid
+      expect(workflow.errors[:error_workflow_id]).to include(
+        I18n.t("discourse_workflows.errors.submission_check.error_workflow_not_allowed"),
+      )
+    end
+
+    it "rejects an error workflow while an active submission check remains published" do
+      other = Fabricate(:discourse_workflows_workflow, created_by: user)
+      category = Fabricate(:category)
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "submission-trigger",
+                       "trigger:before_post_submission",
+                       configuration: {
+                         "category_ids" => [category.id],
+                       }
+          builder.node "submission-reject",
+                       "action:reject_submission",
+                       configuration: {
+                         "message" => "Wait before replying.",
+                       }
+          builder.chain "submission-trigger", "submission-reject"
+        end
+      workflow.update!(**graph)
+      workflow.snapshot!(user: user)
+      workflow.publish!
+      workflow.update!(nodes: [])
+      workflow.error_workflow_id = other.id
+
+      expect(workflow).not_to be_valid
+      expect(workflow.errors[:error_workflow_id]).to include(
+        I18n.t("discourse_workflows.errors.submission_check.error_workflow_not_allowed"),
+      )
+    end
+
     it "allows a nil error workflow" do
       workflow.error_workflow_id = nil
 

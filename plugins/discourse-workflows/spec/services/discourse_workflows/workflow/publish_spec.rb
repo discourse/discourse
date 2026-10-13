@@ -34,6 +34,28 @@ RSpec.describe DiscourseWorkflows::Workflow::Publish do
       it { is_expected.to fail_to_find_a_model(:workflow_version) }
     end
 
+    context "when a submission check draft is incomplete" do
+      before do
+        graph =
+          build_workflow_graph do |builder|
+            builder.node "trigger",
+                         "trigger:before_post_submission",
+                         configuration: {
+                           "category_ids" => [],
+                         }
+          end
+        workflow.update!(**graph)
+        workflow.snapshot!(user: user)
+      end
+
+      it { is_expected.to fail_a_step(:publish_workflow) }
+
+      it "keeps the workflow unpublished" do
+        result
+        expect(workflow.reload.active_version_id).to be_nil
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

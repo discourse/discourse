@@ -19,6 +19,13 @@ module DiscourseWorkflows
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
+        on_failed_policy(:not_submission_check) do
+          render json:
+                   failed_json.merge(
+                     errors: [I18n.t("discourse_workflows.errors.submission_check.cannot_run")],
+                   ),
+                 status: :unprocessable_entity
+        end
         on_model_not_found(:trigger_node) { raise Discourse::NotFound }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
       end

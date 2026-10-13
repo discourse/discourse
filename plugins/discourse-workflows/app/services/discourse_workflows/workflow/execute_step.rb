@@ -13,6 +13,7 @@ module DiscourseWorkflows
 
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :workflow
+    policy :not_submission_check
     model :workflow_snapshot
     model :step_node
     policy :step_node_executable
@@ -27,6 +28,10 @@ module DiscourseWorkflows
     step :enqueue_execution
 
     private
+
+    def not_submission_check(workflow:)
+      !SubmissionCheck::Graph.restricted?(workflow.nodes)
+    end
 
     def fetch_workflow(params:)
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)

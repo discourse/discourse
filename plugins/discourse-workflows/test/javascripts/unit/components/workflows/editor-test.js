@@ -196,6 +196,67 @@ module("Unit | Component | workflows editor", function () {
     );
   });
 
+  test("node panel restricts submission check workflows to their node types", function (assert) {
+    const editor = buildEditor({ id: 12 });
+    editor.nodePanelNodeTypes = [
+      { identifier: "trigger:before_post_submission" },
+      { identifier: "action:reject_submission" },
+      { identifier: "condition:if" },
+      { identifier: "trigger:manual" },
+      { identifier: "action:http_request" },
+    ];
+    editor.nodePanelContext = { canvasX: 10, canvasY: 20 };
+    editor.nodePanelSearchTerm = "";
+    setFormApi(editor, {
+      nodes: [
+        { clientId: "trigger-1", type: "trigger:before_post_submission" },
+      ],
+    });
+
+    assert.deepEqual(
+      editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
+      ["action:reject_submission", "condition:if"],
+      "only supported actions are offered, not a duplicate trigger"
+    );
+  });
+
+  test("node panel hides submission check node types in ordinary workflows", function (assert) {
+    const editor = buildEditor({ id: 12 });
+    editor.nodePanelNodeTypes = [
+      { identifier: "trigger:manual" },
+      { identifier: "trigger:before_post_submission" },
+      { identifier: "action:reject_submission" },
+      { identifier: "action:http_request" },
+    ];
+    editor.nodePanelContext = { canvasX: 10, canvasY: 20 };
+    editor.nodePanelSearchTerm = "";
+    setFormApi(editor, {
+      nodes: [{ clientId: "trigger-1", type: "trigger:manual" }],
+    });
+
+    assert.deepEqual(
+      editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
+      ["trigger:manual", "action:http_request"]
+    );
+  });
+
+  test("node panel offers the submission check trigger on an empty graph", function (assert) {
+    const editor = buildEditor({ id: 12 });
+    editor.nodePanelNodeTypes = [
+      { identifier: "trigger:manual" },
+      { identifier: "trigger:before_post_submission" },
+      { identifier: "action:reject_submission" },
+    ];
+    editor.nodePanelContext = { canvasX: 10, canvasY: 20 };
+    editor.nodePanelSearchTerm = "";
+    setFormApi(editor, { nodes: [] });
+
+    assert.deepEqual(
+      editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
+      ["trigger:manual", "trigger:before_post_submission"]
+    );
+  });
+
   test("buildPastedGraph duplicates nodes with unique names and remaps internal connections", function (assert) {
     const existingNodes = [
       {

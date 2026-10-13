@@ -182,7 +182,7 @@ export function nodeTypePorts(nodeTypeOrIdentifier, typeVersion = null) {
   const nodeType = resolveNodeTypeVersion(nodeTypeOrIdentifier, typeVersion);
   const ports = nodeType?.outputs || nodeType?.ports;
 
-  if (Array.isArray(ports) && ports.length > 0) {
+  if (Array.isArray(ports)) {
     return ports;
   }
 
