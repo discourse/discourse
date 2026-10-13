@@ -82,7 +82,10 @@ Discourse::Application.routes.draw do
   get "/voice/r/*path",
       to:
         redirect { |params, request|
-          ["/live/r/#{params[:path]}", request.query_string.presence].compact.join("?")
+          [
+            "#{Discourse.base_path}/live/r/#{params[:path]}",
+            request.query_string.presence,
+          ].compact.join("?")
         },
       format: false
 end

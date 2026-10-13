@@ -9,6 +9,14 @@ RSpec.describe "Pre-rename /voice routes" do
     expect(response).to redirect_to("/live/r/watercooler/invited-by/sam?join")
   end
 
+  it "keeps the subfolder prefix when redirecting" do
+    set_subfolder "/forum"
+
+    get "/voice/r/watercooler"
+
+    expect(response).to redirect_to("/forum/live/r/watercooler")
+  end
+
   it "still routes LiveKit webhooks to the webhook controller" do
     post "/voice/livekit/webhook",
          params: "{}",
