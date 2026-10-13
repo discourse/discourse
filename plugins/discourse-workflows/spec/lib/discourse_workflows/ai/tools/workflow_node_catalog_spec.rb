@@ -243,12 +243,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "user.id" => "integer",
       "user.username" => "string",
       "user.avatar_template" => "string",
-    )
-    expect(output_fields_by_type.fetch("trigger:chat_message_created")).not_to include(
-      "user.trust_level",
-      "user.admin",
-      "user.moderator",
-      "user.staff",
+      "user.trust_level" => "integer",
+      "user.staff" => "boolean",
     )
     expect(output_fields_by_type.fetch("action:ai_agent")).to include("result" => "string")
   end

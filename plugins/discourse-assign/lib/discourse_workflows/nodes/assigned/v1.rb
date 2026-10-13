@@ -5,6 +5,8 @@ if defined?(DiscourseWorkflows)
     module Nodes
       module Assigned
         class V1 < DiscourseWorkflows::NodeType
+          include DiscourseAssign::Workflows::AssignmentTrigger
+
           description(
             name: "trigger:assigned",
             version: "1.0",
@@ -17,7 +19,7 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.assign_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
             output_contracts: [
-              { schema: DiscourseAssign::Workflows::Schema::ASSIGNED_OUTPUT_SCHEMA },
+              { schema: DiscourseAssign::Workflows::Schema::ASSIGNMENT_OUTPUT_SCHEMA },
             ],
             properties: {
               topic_assignments_only: {
@@ -29,54 +31,6 @@ if defined?(DiscourseWorkflows)
               },
             },
           )
-
-          def initialize(assignment, *)
-            super(parameters: {})
-            @assignment = assignment
-          end
-
-          def valid?
-            @assignment.present? && @assignment.topic.present? &&
-              @assignment.assigned_to.present? && post.present?
-          end
-
-          def output
-            {
-              assignment: serialize_assignment,
-              post: serialize_post(post),
-              topic: serialize_record(@assignment.topic, TopicListItemSerializer),
-            }
-          end
-
-          def matches?(trigger_ctx)
-            !trigger_ctx.get_node_parameter("topic_assignments_only", false) || topic_assignment?
-          end
-
-          private
-
-          def serialize_assignment
-            {
-              id: @assignment.id,
-              target_type: @assignment.target_type,
-              target_id: @assignment.target_id,
-              topic_id: @assignment.topic_id,
-              topic_assignment: topic_assignment?,
-              assigned_to_id: @assignment.assigned_to_id,
-              assigned_to_type: @assignment.assigned_to_type,
-              assigned_to: serialize_assignee(@assignment.assigned_to),
-              assigned_by_user: serialize_record(@assignment.assigned_by_user, BasicUserSerializer),
-              note: @assignment.note,
-              status: @assignment.status,
-            }
-          end
-
-          def post
-            @post ||= @assignment.post
-          end
-
-          def topic_assignment?
-            @assignment.target_type == "Topic"
-          end
         end
       end
     end
