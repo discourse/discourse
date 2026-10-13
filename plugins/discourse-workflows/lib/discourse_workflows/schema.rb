@@ -170,6 +170,7 @@ module DiscourseWorkflows
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
     ACTOR_SCHEMA = document("actor" => nullable_user("User who performed the action"))
+    POST_AUTHOR_SCHEMA = document("user" => nullable_user("Post author"))
     ASSIGNEE_PROPERTIES = {
       "type" => "object",
       "properties" => {

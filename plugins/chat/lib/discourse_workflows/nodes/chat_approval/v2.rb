@@ -30,6 +30,7 @@ if defined?(DiscourseWorkflows)
                 "type" => "object",
                 "properties" => DiscourseWorkflows::Schema::USER_PROPERTIES,
               },
+              "actor" => DiscourseWorkflows::Schema.nullable_user("User who clicked the button"),
             },
           }.freeze
 
@@ -238,7 +239,12 @@ if defined?(DiscourseWorkflows)
 
             [
               DiscourseWorkflows::Item.wrap(
-                { value: interaction.action["value"].to_s, channel: channel_data, user: user_data },
+                {
+                  value: interaction.action["value"].to_s,
+                  channel: channel_data,
+                  user: user_data,
+                  actor: user_data,
+                },
                 paired_item: 0,
               ),
             ]

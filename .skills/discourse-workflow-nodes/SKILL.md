@@ -27,6 +27,23 @@ Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse
 - Never use `BasicUserSerializer` or `TopicListItemSerializer` in node files; `node_entity_builders_spec` fails if you do.
 - Groups: `BasicGroupSerializer` (`BASIC_GROUP_PROPERTIES`) or `WebHookGroupSerializer` (`GROUP_SCHEMA`).
 
+## `user` vs `actor`
+
+- `user` is the subject: the post/topic author, or the affected account.
+- `actor` is whoever performed the action, built with `serialize_user` and declared with `Schema::ACTOR_SCHEMA` (nullable).
+- Emit both, even when they are the same person (liker, voter, participant).
+- Output never uses `acting_user`; events never use `actor:`.
+
+## Events pass the acting user
+
+Fire events with the actor as a trailing `acting_user:` kwarg:
+
+```ruby
+DiscourseEvent.trigger(:topic_status_updated, topic, status, enabled, acting_user: user)
+```
+
+Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enabled, payload = {})` and read `payload[:acting_user]`. Specs that assert exact event params must include `{ acting_user: ... }`.
+
 ## Output conventions
 
 - URLs are absolute (`Discourse.base_url + ...`, `full_url`). Keep existing relative keys such as `post_url`.
