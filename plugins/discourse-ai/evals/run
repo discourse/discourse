@@ -51,7 +51,7 @@ end
 
 selected_evals =
   if cli.dataset_path.present?
-    DiscourseAi::Evals::Eval.from_dataset_csv(path: cli.dataset_path, feature: cli.feature_key)
+    cli.select_dataset_evals(path: cli.dataset_path, feature: cli.feature_key)
   else
     cli.select_evals(available_evals)
   end
