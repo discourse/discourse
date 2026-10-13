@@ -21,13 +21,13 @@ class CategoryList
   end
 
   def self.included_associations
-    [
-      :uploaded_background,
-      :uploaded_background_dark,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url],
+    %i[
+      uploaded_background
+      uploaded_background_dark
+      uploaded_logo
+      uploaded_logo_dark
+      topic_only_relative_url
+      subcategories
     ].concat(@included_associations || [])
   end
 
@@ -166,6 +166,21 @@ class CategoryList
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
+    load_only_roots =
+      @options[:parent_category_id].blank? && !paginate && query.is_a?(ActiveRecord::Relation) &&
+        @options[:include_subcategories] != true && query.limit_value.nil? &&
+        query.offset_value.nil? && query.select_values.empty? && !query.eager_loading?
+
+    if load_only_roots
+      root_subcategory_ids = Hash.new { |hash, key| hash[key] = [] }
+      query
+        .where.not(parent_category_id: nil)
+        .except(:includes)
+        .pluck(:id, :parent_category_id)
+        .each { |id, parent_id| root_subcategory_ids[parent_id] << id }
+      query = query.where(parent_category_id: nil)
+    end
+
     @categories = query.to_a
 
     if paginate && @options[:include_pagination] && query.offset(page * CATEGORIES_PER_PAGE).exists?
@@ -200,7 +215,9 @@ class CategoryList
 
     include_subcategories = @options[:include_subcategories] == true
 
-    if paginate
+    if load_only_roots
+      @categories.each { |category| category.subcategory_ids = root_subcategory_ids[category.id] }
+    elsif paginate
       subcategory_ids = {}
       Category
         .secured(@guardian)
