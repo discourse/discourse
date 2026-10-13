@@ -12,12 +12,12 @@ RSpec.describe TopicsController do
   describe "#show" do
     before { sign_in(user) }
 
-    it "preloads agents without N+1 queries for an HTML request when the bot is disabled" do
+    it "preloads agent MCP assignments for an HTML request when the bot is disabled" do
       get post.topic.relative_url
       expect(response.status).to eq(200)
 
       agents = []
-      query_counts =
+      mcp_query_counts =
         [1, 2].map do |agent_count|
           (agent_count - agents.size).times do
             agents << Fabricate(
@@ -39,12 +39,13 @@ RSpec.describe TopicsController do
           expect(current_user["ai_enabled_agents"].map { |agent| agent["id"] }).to include(
             *agents.map(&:id),
           )
-          expect(queries.grep(/FROM "ai_agent_mcp_servers"/)).to be_present
+          mcp_queries = queries.grep(/FROM "ai_agent_mcp_servers"/)
+          expect(mcp_queries).to be_present
 
-          queries.size
+          mcp_queries.size
         end
 
-      expect(query_counts.last).to eq(query_counts.first)
+      expect(mcp_query_counts.last).to eq(mcp_query_counts.first)
     end
   end
 end
