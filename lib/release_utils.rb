@@ -121,6 +121,52 @@ module ReleaseUtils
     end
   end
 
+  # Returns the OAuth scopes granted to the token `gh` is currently using, by
+  # reading the `X-OAuth-Scopes` header GitHub returns on authenticated requests.
+  # Returns [] for tokens that don't carry classic scopes (e.g. fine-grained PATs).
+  def self.gh_token_scopes
+    response = gh("api", "rate_limit", "--include", capture: true)
+    header = response.lines.find { |line| line.downcase.start_with?("x-oauth-scopes:") }
+    return [] if header.nil?
+    header.split(":", 2).last.split(",").map(&:strip).reject(&:empty?)
+  rescue StandardError => e
+    raise <<~MESSAGE
+      Unable to determine the current gh authentication status. Are you logged in?
+
+      Run `gh auth login` and try again.
+
+      Original error:
+      #{e.message}
+    MESSAGE
+  end
+
+  # The security-advisories REST API needs the `repo` scope (or the granular
+  # `repository_advisories:read`/`:write` pair) to list drafts and PATCH them.
+  def self.ensure_security_advisory_scopes!
+    return if test_mode?
+
+    scopes = gh_token_scopes
+    has_repo = scopes.include?("repo")
+    has_granular =
+      scopes.include?("repository_advisories:read") &&
+        scopes.include?("repository_advisories:write")
+
+    return if has_repo || has_granular
+
+    raise <<~MESSAGE
+      Your gh session is missing the GitHub scope required to read and update security advisories.
+
+      Current token scopes: #{scopes.empty? ? "(none)" : scopes.join(", ")}
+      Required: `repo` (or both `repository_advisories:read` and `repository_advisories:write`)
+
+      Grant the missing scope to your existing login by running:
+
+          gh auth refresh -h github.com -s repo
+
+      Then re-run this task.
+    MESSAGE
+  end
+
   def self.supported_version_info
     read_versions_json.select { |_version, info| info["supported"] }
   end
