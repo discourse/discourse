@@ -11,9 +11,8 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       DiscourseAi::Agents::Tools::Read,
       DiscourseAi::Agents::Tools::Time,
       DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
-      DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
+      DiscourseWorkflows::Ai::Tools::WorkflowNodeDetails,
       DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
-      DiscourseWorkflows::Ai::Tools::WorkflowScriptContext,
       DiscourseWorkflows::Ai::Tools::WorkflowValidateScript,
       DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
@@ -32,9 +31,11 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       "parameters.upload_ids",
       'With action:send_chat_message target "user" or "group", set target_usernames to an array of usernames or an expression',
       "Use search_chat_integration_channels before asking the admin to choose an external chat integration channel",
-      "call workflow_validate_script with the exact mode and code",
+      "then test the script with workflow_validate_script",
       "Do not add a Code node only to copy trigger fields forward",
       "create_ai_agent",
+      "Node menu (type: description):\n- ",
+      "- action:code: Run custom JavaScript code",
     )
   end
 
