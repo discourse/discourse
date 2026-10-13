@@ -662,6 +662,9 @@ if generic_import_dependencies_available
       fab!(:invalid_post, :post)
       fab!(:attendee, :user)
       fab!(:other_attendee, :user)
+      fab!(:members) { Fabricate(:group, name: "members", users: [attendee]) }
+      fab!(:staff_group) { Fabricate(:group, name: "staff_only") }
+      fab!(:image, :upload)
 
       let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
       let(:import_issue_log_path) { File.join(Dir.mktmpdir, "issues.log") }
@@ -677,6 +680,8 @@ if generic_import_dependencies_available
             [vienna_post, untimed_post, invalid_post].to_h { |post| [post.id, post.topic_id] },
           )
           instance.instance_variable_set(:@users, { 10 => attendee.id, 11 => other_attendee.id })
+          instance.instance_variable_set(:@groups, { 50 => members.id, 51 => staff_group.id })
+          instance.instance_variable_set(:@uploads_mapping, { "70" => image.id.to_s })
           instance.instance_variable_set(:@import_issue_log_path, import_issue_log_path)
           instance.instance_variable_set(
             :@raw_connection,
@@ -687,6 +692,7 @@ if generic_import_dependencies_available
       end
       let(:public_status) { DiscourseEvents::Events::Event.statuses[:public] }
       let(:standalone_status) { DiscourseEvents::Events::Event.statuses[:standalone] }
+      let(:private_status) { DiscourseEvents::Events::Event.statuses[:private] }
 
       before { skip "requires the events plugin" unless defined?(DiscourseEvents::Events) }
 
@@ -697,7 +703,7 @@ if generic_import_dependencies_available
           CREATE TABLE events (
             id INTEGER, post_id INTEGER, status INTEGER, starts_at DATETIME, ends_at DATETIME,
             name TEXT, url TEXT, custom_fields JSON_TEXT
-            #{", location TEXT, timezone TEXT" if new_columns}
+            #{", location TEXT, timezone TEXT, closed BOOLEAN, image_upload_id TEXT, allowed_group_ids JSON_TEXT" if new_columns}
           )
         SQL
       end
@@ -720,8 +726,44 @@ if generic_import_dependencies_available
         source_db.get_first_row("SELECT * FROM events WHERE id = ?", id)
       end
 
+      def event_bbcode(id)
+        importer.load_event_lookups
+        importer.event_bbcode(event_row(id))
+      end
+
       def import_issues
         File.exist?(import_issue_log_path) ? File.read(import_issue_log_path) : ""
+      end
+
+      describe "#import_posts" do
+        it "loads the event lookups before updating delta posts" do
+          create_events_table
+          insert_event(1, image_upload_id: "70")
+          posts =
+            Class
+              .new do
+                def close
+                end
+              end
+              .new
+          allow(importer).to receive_messages(
+            puts: nil,
+            start_delta_entity: nil,
+            finish_delta_entity: nil,
+            create_posts: nil,
+            delta_import?: true,
+          )
+          allow(importer).to receive(:query).and_call_original
+          allow(importer).to receive(:query).with(/FROM posts/).and_return(posts)
+          bbcode = nil
+          allow(importer).to receive(:update_delta_posts) {
+            bbcode = importer.event_bbcode(event_row(1))
+          }
+
+          importer.import_posts
+
+          expect(bbcode).to include(%{ image="#{image.short_url}"})
+        end
       end
 
       describe "#event_bbcode" do
@@ -729,7 +771,7 @@ if generic_import_dependencies_available
           create_events_table
           insert_event(1, timezone: "Europe/Vienna")
 
-          bbcode = importer.event_bbcode(event_row(1))
+          bbcode = event_bbcode(1)
 
           expect(bbcode).to include(
             'start="2026-07-01 10:00" end="2026-07-01 11:30" timezone="Europe/Vienna"',
@@ -745,7 +787,7 @@ if generic_import_dependencies_available
           insert_event(3, timezone: "+01:00")
 
           [2, 3].each do |id|
-            expect(importer.event_bbcode(event_row(id))).to include(
+            expect(event_bbcode(id)).to include(
               'start="2026-07-01 08:00" end="2026-07-01 09:30" timezone="UTC"',
             )
           end
@@ -756,8 +798,35 @@ if generic_import_dependencies_available
           insert_event(1, location: "Town Hall\nRoom 1")
           insert_event(2, location: "x" * 1200)
 
-          expect(importer.event_bbcode(event_row(1))).to include(%{ location="Town Hall Room 1"})
-          expect(importer.event_bbcode(event_row(2))).to include(%{ location="#{"x" * 1000}"})
+          expect(event_bbcode(1)).to include(%{ location="Town Hall Room 1"})
+          expect(event_bbcode(2)).to include(%{ location="#{"x" * 1000}"})
+        end
+
+        it "writes allowed groups of private events, the image and the closed flag" do
+          SiteSetting.discourse_post_event_enabled = true
+          create_events_table
+          insert_event(
+            1,
+            status: private_status,
+            allowed_group_ids: [50, 51, 52].to_json,
+            image_upload_id: "70",
+            closed: 1,
+          )
+          insert_event(2, status: public_status, allowed_group_ids: [50].to_json, closed: 0)
+
+          private_bbcode = event_bbcode(1)
+          public_bbcode = event_bbcode(2)
+
+          expect(
+            DiscourseEvents::Events::Parser.extract_events(
+              Fabricate.build(:post, raw: private_bbcode),
+            ).first,
+          ).to include(
+            "allowed-groups": "members,staff_only",
+            image: image.short_url,
+            closed: "true",
+          )
+          expect(public_bbcode).not_to include("allowed-groups", "image", "closed")
         end
 
         it "quotes attributes so the plugin reads them back unchanged" do
@@ -772,7 +841,7 @@ if generic_import_dependencies_available
             custom_fields: { room: %{"A" 'B'} }.to_json,
           )
 
-          bbcode = importer.event_bbcode(event_row(1))
+          bbcode = event_bbcode(1)
           post = Fabricate.build(:post, raw: bbcode)
 
           expect(bbcode).to include(%{ location=“The "Old" Town Hall, 'Room' «1»”})
@@ -787,7 +856,7 @@ if generic_import_dependencies_available
           create_events_table(new_columns: false)
           insert_event(1)
 
-          bbcode = importer.event_bbcode(event_row(1))
+          bbcode = event_bbcode(1)
 
           expect(bbcode).to include('timezone="UTC"')
           expect(bbcode).not_to include("location")
@@ -846,6 +915,47 @@ if generic_import_dependencies_available
         end
       end
 
+      describe "#import_post_events with groups, image and closed flag" do
+        it "imports them and logs groups that can't be used" do
+          create_events_table
+          insert_event(
+            1,
+            status: private_status,
+            allowed_group_ids: [50, 52].to_json,
+            image_upload_id: "70",
+            closed: 1,
+          )
+          insert_event(2, status: public_status, allowed_group_ids: [51].to_json)
+          insert_event(3, status: standalone_status)
+
+          importer.import_post_events
+          importer.import_event_upload_references
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :raw_invitees, :closed, :image_upload_id),
+          ).to contain_exactly(
+            [vienna_post.id, ["members"], true, image.id],
+            [untimed_post.id, [DiscourseEvents::Events::Event::PUBLIC_GROUP], false, nil],
+            [invalid_post.id, [], false, nil],
+          )
+          expect(vienna_post.reload.image_upload_id).to eq(image.id)
+          expect(vienna_post.topic.reload.image_upload_id).to eq(image.id)
+          expect(
+            UploadReference.where(
+              upload: image,
+              target_type: "DiscourseEvents::Events::Event",
+              target_id: vienna_post.id,
+            ),
+          ).to exist
+          expect(import_issues.lines).to contain_exactly(
+            "[event allowed groups not found] 52 (event 1)\n",
+            "[event allowed groups ignored (event isn't private)] event 2\n",
+          )
+        end
+      end
+
       describe "#import_event_invitees" do
         def create_invitees_table
           source_db.execute(<<~SQL)
@@ -879,6 +989,7 @@ if generic_import_dependencies_available
           insert_invitee(101, 10)
           insert_invitee(101, 11, status: interested)
 
+          importer.import_post_events
           importer.import_event_invitees
           importer.import_event_invitees
 
@@ -891,23 +1002,30 @@ if generic_import_dependencies_available
           )
         end
 
-        it "skips invitees that can't be imported" do
+        it "skips invitees the plugin wouldn't keep" do
           create_events_table
           create_invitees_table
           insert_event(1, status: public_status)
           insert_event(2, status: standalone_status)
+          insert_event(3, status: private_status, allowed_group_ids: [50].to_json)
           insert_event(99, status: public_status)
           insert_invitee(1, 99)
           insert_invitee(99, 10)
           insert_invitee(2, 10)
           insert_invitee(1, 11, status: 42)
+          insert_invitee(3, 10)
+          insert_invitee(3, 11)
 
+          importer.import_post_events
           importer.import_event_invitees
 
-          expect(imported_invitees).to be_empty
+          expect(imported_invitees.map { |invitee| invitee.first(2) }).to eq(
+            [[invalid_post.id, attendee.id]],
+          )
           expect(import_issues.lines).to contain_exactly(
-            "[event invitee skipped (event isn't public)] user 10 of event 2\n",
+            "[event invitee skipped (standalone event)] user 10 of event 2\n",
             "[event invitee skipped (unknown status)] status 42 of user 11 in event 1\n",
+            "[event invitee skipped (not in the event's allowed groups)] user 11 of event 3\n",
           )
         end
 

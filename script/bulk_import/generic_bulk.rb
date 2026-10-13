@@ -2367,6 +2367,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing posts..."
 
     start_delta_entity(:posts, "posts", :posts, @last_post_id)
+    load_event_lookups
     update_delta_posts if delta_import?
 
     posts = query(<<~SQL)
@@ -2699,6 +2700,8 @@ class BulkImport::Generic < BulkImport::Base
       end
     url = event["url"]
     location = event_location(event)
+    allowed_groups = event_allowed_group_names(event)
+    image = @event_image_urls_by_upload_id[event_image_upload_id(event)]
     custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
 
     text = +"[event"
@@ -2710,6 +2713,9 @@ class BulkImport::Generic < BulkImport::Base
     text << bbcode_attribute("name", name) if name
     text << bbcode_attribute("url", url) if url
     text << bbcode_attribute("location", location) if location
+    text << %{ allowed-groups="#{allowed_groups.join(",")}"} if allowed_groups.present?
+    text << %{ image="#{image}"} if image
+    text << %{ closed="true"} if to_boolean(event["closed"])
     custom_fields&.each { |key, value| text << bbcode_attribute(key, value) }
     text << "]\n"
     text << "[/event]\n"
@@ -2723,6 +2729,59 @@ class BulkImport::Generic < BulkImport::Base
 
   def format_event_time(time, timezone)
     time.in_time_zone(timezone).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # The plugin only keeps invited groups on private events. Public events invite
+  # everyone and standalone events nobody.
+  def event_allowed_group_names(event)
+    return [] if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+
+    event_allowed_group_ids(event).filter_map { |id| @group_names_by_id[id] }
+  end
+
+  def event_allowed_group_ids(event)
+    return [] if event["allowed_group_ids"].blank?
+
+    JSON.parse(event["allowed_group_ids"]).filter_map { |id| group_id_from_imported_id(id) }
+  end
+
+  # Events are converted while rows are copied, when the connection can't run queries.
+  def load_event_lookups
+    return unless defined?(DiscourseEvents::Events)
+
+    @group_names_by_id = Group.pluck(:id, :name).to_h
+
+    upload_ids =
+      if table_column_names("events").include?("image_upload_id")
+        query(
+          "SELECT DISTINCT image_upload_id FROM events WHERE image_upload_id IS NOT NULL",
+        ) { |rows| rows.filter_map { |row| upload_id_from_original_id(row["image_upload_id"]) } }
+      else
+        []
+      end
+    @event_image_urls_by_upload_id =
+      Upload.where(id: upload_ids).to_h { |upload| [upload.id, upload.short_url] }
+  end
+
+  def log_event_allowed_group_issues(event)
+    return if event["allowed_group_ids"].blank?
+
+    if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+      log_import_issue("event allowed groups ignored (event isn't private)", "event #{event["id"]}")
+      return
+    end
+
+    missing = JSON.parse(event["allowed_group_ids"]).reject { |id| group_id_from_imported_id(id) }
+    return if missing.empty?
+
+    log_import_issue(
+      "event allowed groups not found",
+      "#{missing.join(", ")} (event #{event["id"]})",
+    )
+  end
+
+  def event_image_upload_id(event)
+    upload_id_from_original_id(event["image_upload_id"]) if event["image_upload_id"].present?
   end
 
   # Line breaks would end the BBCode tag, and the plugin stores at most 1000 characters.
@@ -3869,8 +3928,23 @@ class BulkImport::Generic < BulkImport::Base
     SQL
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
+    import_event_upload_references
+
     import_content_upload_references("posts")
     import_content_upload_references("chat_messages")
+  end
+
+  def import_event_upload_references
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing upload references for events..."
+    DB.exec(<<~SQL, target_type: DiscourseEvents::Events::Event.name)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT image_upload_id, :target_type, id, NOW(), NOW()
+        FROM discourse_post_event_events
+       WHERE image_upload_id IS NOT NULL
+          ON CONFLICT DO NOTHING
+    SQL
   end
 
   def import_content_upload_references(type)
@@ -4392,10 +4466,11 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     default_custom_fields = "{}"
-    public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
-    standalone_invitees = "{}"
+    statuses = DiscourseEvents::Events::Event.statuses
+    array_encoder = PG::TextEncoder::Array.new
 
     existing_events = DiscourseEvents::Events::Event.pluck(:id).to_set
+    load_event_lookups
 
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
@@ -4409,6 +4484,18 @@ class BulkImport::Generic < BulkImport::Base
         )
       end
 
+      raw_invitees =
+        case row["status"]
+        when statuses[:public]
+          [DiscourseEvents::Events::Event::PUBLIC_GROUP]
+        when statuses[:private]
+          event_allowed_group_names(row)
+        else
+          []
+        end
+
+      log_event_allowed_group_issues(row)
+
       {
         id: post_id,
         status: row["status"],
@@ -4419,16 +4506,31 @@ class BulkImport::Generic < BulkImport::Base
         location: event_location(row),
         custom_fields: row["custom_fields"] || default_custom_fields,
         timezone:,
-        raw_invitees:
-          (
-            if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
-              public_group_invitees
-            else
-              standalone_invitees
-            end
-          ),
+        raw_invitees: array_encoder.encode(raw_invitees),
+        closed: to_boolean(row["closed"]),
+        image_upload_id: event_image_upload_id(row),
       }
     end
+
+    # Like Event#sync_image_to_post_and_topic, without waiting for a rebake.
+    DB.exec(<<~SQL)
+      UPDATE posts p
+         SET image_upload_id = e.image_upload_id
+        FROM discourse_post_event_events e
+       WHERE e.id = p.id
+         AND e.image_upload_id IS NOT NULL
+         AND p.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
+    DB.exec(<<~SQL)
+      UPDATE topics t
+         SET image_upload_id = p.image_upload_id
+        FROM posts p
+             JOIN discourse_post_event_events e ON e.id = p.id
+       WHERE p.topic_id = t.id
+         AND p.post_number = 1
+         AND e.image_upload_id IS NOT NULL
+         AND t.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
 
     puts "", "Importing event dates..."
 
@@ -4494,30 +4596,54 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing event invitees..."
 
     invitees = query(<<~SQL)
-      SELECT event_invitees.*, events.post_id AS event_post_id, events.status AS event_status
+      SELECT event_invitees.*, events.post_id AS event_post_id
         FROM event_invitees
              JOIN events ON events.id = event_invitees.event_id
        ORDER BY event_invitees.event_id, event_invitees.user_id
     SQL
 
     statuses = DiscourseEvents::Events::Invitee.statuses
-    public_status = DiscourseEvents::Events::Event.statuses[:public]
+    event_statuses = DiscourseEvents::Events::Event.statuses
+    events =
+      DiscourseEvents::Events::Event
+        .pluck(:id, :status, :raw_invitees)
+        .to_h { |id, status, groups| [id, { status:, groups: groups || [] }] }
+    private_event_groups =
+      events.values.filter_map do |event|
+        event[:groups] if event[:status] == event_statuses[:private]
+      end
+    group_members =
+      GroupUser
+        .joins(:group)
+        .where(groups: { name: private_event_groups.flatten.uniq })
+        .pluck(:user_id, "groups.name")
+        .to_set
     # The default scope hides suspended, silenced and staged users.
     existing_invitees = DiscourseEvents::Events::Invitee.unscoped.pluck(:post_id, :user_id).to_set
 
     create_event_invitees(invitees) do |row|
       post_id = post_id_from_imported_id(row["event_post_id"])
       user_id = user_id_from_imported_id(row["user_id"])
-      next unless post_id && user_id
+      event = events[post_id]
+      next unless event && user_id
 
-      # The plugin removes invitees from standalone events and from private events
-      # without invited groups, which is all the importer creates besides public ones.
-      if row["event_status"] != public_status
+      # The plugin removes invitees from standalone events, and from private events
+      # when they aren't in one of the allowed groups.
+      case event[:status]
+      when event_statuses[:standalone]
         log_import_issue(
-          "event invitee skipped (event isn't public)",
+          "event invitee skipped (standalone event)",
           "user #{row["user_id"]} of event #{row["event_id"]}",
         )
         next
+      when event_statuses[:private]
+        if event[:groups].none? { |group| group_members.include?([user_id, group]) }
+          log_import_issue(
+            "event invitee skipped (not in the event's allowed groups)",
+            "user #{row["user_id"]} of event #{row["event_id"]}",
+          )
+          next
+        end
       end
 
       status = row["status"] || statuses[:going]
