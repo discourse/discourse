@@ -6177,9 +6177,9 @@ en:
       awarded:
         one: "%{number} awarded"
         other: "%{number} awarded"
-      earned:
-        one: "Earned %{number} time"
-        other: "Earned %{number} times"
+      granted_times:
+        one: "Granted %{number} time"
+        other: "Granted %{number} times"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"

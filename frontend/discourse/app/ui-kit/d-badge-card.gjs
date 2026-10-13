@@ -30,7 +30,7 @@ export default class DBadgeCard extends Component {
         return i18n("badges.awarded", { count: total, number: dNumber(total) });
       }
     } else if (count > 1) {
-      return i18n("badges.earned", { count, number: dNumber(count) });
+      return i18n("badges.granted_times", { count, number: dNumber(count) });
     }
   }
 
