@@ -37,6 +37,7 @@ en:
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Create"
+      new_query: "New query"
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
       ai:
