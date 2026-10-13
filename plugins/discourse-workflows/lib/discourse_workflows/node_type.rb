@@ -92,7 +92,6 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
-      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
       previewable: false,
@@ -217,10 +216,6 @@ module DiscourseWorkflows
 
         Schema.augment(resolved, active_output_extensions(index, configuration))
       end
-    end
-
-    def self.output_schema_resolver
-      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
