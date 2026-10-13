@@ -110,8 +110,7 @@ class AiAgent < ActiveRecord::Base
       else
         :value_everyone_allowed
       end
-    agents =
-      agent_cache[key] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    agents = agent_cache[key] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
       agents.select(&:enabled)
@@ -379,10 +378,14 @@ class AiAgent < ActiveRecord::Base
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
     reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
     enabled_mcp_server_assignments =
-      ai_agent_mcp_servers
-        .includes(:ai_mcp_server)
-        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
     enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
     selected_tool_names_by_server =
       enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
