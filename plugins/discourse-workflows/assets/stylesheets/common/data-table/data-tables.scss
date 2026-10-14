@@ -62,8 +62,11 @@
     gap: var(--space-2);
   }
 
+  // Bounded height makes this the vertical scroller too, so the horizontal
+  // scrollbar stays on screen and the sticky header has something to stick to.
   &__scroll {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: max(50dvh, calc(100dvh - var(--top-offset) - var(--space-4)));
   }
 
   &__table {
@@ -80,10 +83,16 @@
     }
 
     th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
       padding: var(--space-2) var(--space-3);
       background: var(--primary-very-low);
       font-weight: 700;
       white-space: nowrap;
+
+      // collapsed borders belong to the table and scroll away from sticky cells
+      box-shadow: inset 0 -1px 0 var(--primary-low);
     }
 
     th.--id,
