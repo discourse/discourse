@@ -1579,6 +1579,8 @@ en:
         add_column: "Add column"
         column_options: "Column options"
         rename_column: "Rename"
+        move_column_left: "Move left"
+        move_column_right: "Move right"
         delete_column: "Delete column"
         delete_column_confirm: "Are you sure you want to delete the “%{name}” column and all its data? Workflows using this column will fail on their next run."
         add_row: "Add row"
