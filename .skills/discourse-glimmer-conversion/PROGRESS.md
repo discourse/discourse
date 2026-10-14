@@ -1,8 +1,10 @@
 # Glimmer conversion PRs
 
-- [#43357](https://github.com/discourse/discourse/pull/43357) ✅
+☑️ merged · ✅ approved · no mark: in review
+
+- [#43357](https://github.com/discourse/discourse/pull/43357) ☑️
   - badge-title
-- [#43385](https://github.com/discourse/discourse/pull/43385) ✅
+- [#43385](https://github.com/discourse/discourse/pull/43385) ☑️
   - plugins/chat/collapser
 - [#43390](https://github.com/discourse/discourse/pull/43390) ✅ (removed as unused)
   - group-member
@@ -13,25 +15,25 @@
   - admin/site-customization-change-details
   - ui-kit/d-color-picker
   - ui-kit/d-color-picker-choice
-- [#43396](https://github.com/discourse/discourse/pull/43396) ✅
+- [#43396](https://github.com/discourse/discourse/pull/43396) ☑️
   - categories-with-featured-topics
-- [#43397](https://github.com/discourse/discourse/pull/43397) ✅
+- [#43397](https://github.com/discourse/discourse/pull/43397) ☑️
   - admin/setting-validation-message
-- [#43398](https://github.com/discourse/discourse/pull/43398) ✅
+- [#43398](https://github.com/discourse/discourse/pull/43398) ☑️
   - user-summary-user
-- [#43399](https://github.com/discourse/discourse/pull/43399) ✅
+- [#43399](https://github.com/discourse/discourse/pull/43399) ☑️
   - plugins/discourse-assign/connectors/remind-assigns-frequency
-- [#43408](https://github.com/discourse/discourse/pull/43408) ✅
+- [#43408](https://github.com/discourse/discourse/pull/43408) ☑️
   - plugins/discourse-assign/connectors/assigned-list
-- [#43409](https://github.com/discourse/discourse/pull/43409) ✅
+- [#43409](https://github.com/discourse/discourse/pull/43409) ☑️
   - plugins/discourse-assign/connectors/assigned-topic-list
-- [#43410](https://github.com/discourse/discourse/pull/43410) ✅
+- [#43410](https://github.com/discourse/discourse/pull/43410) ☑️
   - user-summary-users-list
-- [#43411](https://github.com/discourse/discourse/pull/43411) ✅
+- [#43411](https://github.com/discourse/discourse/pull/43411) ☑️
   - plugins/discourse-subscriptions/connectors/subscriptions-campaign-topic-footer
-- [#43412](https://github.com/discourse/discourse/pull/43412) ✅
+- [#43412](https://github.com/discourse/discourse/pull/43412) ☑️
   - plugins/discourse-reactions/connectors/discourse-reactions-user-activity-reactions
-- [#43413](https://github.com/discourse/discourse/pull/43413) ✅
+- [#43413](https://github.com/discourse/discourse/pull/43413) ☑️
   - plugins/discourse-reactions/connectors/discourse-reactions-user-notification-reactions
 - [#43521](https://github.com/discourse/discourse/pull/43521) ✅
   - admin/admin-report-table-row

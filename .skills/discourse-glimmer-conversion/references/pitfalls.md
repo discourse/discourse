@@ -23,6 +23,11 @@ end of the matching section with the commit sha.
 - **Caller-side `@classNames`, `@class`, `@id`, `@tagName` stop doing anything.** Convert
   them to plain attributes at every call site and make sure the wrapper has
   `...attributes` (`4e417223e5d`, `d6d3fc86294`).
+- **A child's default delimiter can be the stored format.** `url-list` gave `ValueList` no
+  `@inputDelimiter`, so `ValueList` joined on its `"\n"` default, and the server splits
+  `default_avatars` on `"\n"` (`User`). Every other list setting is `"|"`-joined. When a
+  conversion moves the join into the component's callback, check what the server splits on
+  instead of copying the family's `"|"`.
 - **A class field the callers also pass is often two-way, not just overridable.** The script
   prints these under "class fields that call sites also pass as args" and the obvious reading —
   "a default the arg overrides" — is only half of it. `AdminEditableField` declared

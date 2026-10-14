@@ -28,8 +28,6 @@ INFRA = {
 BLOCKED = {
     "frontend/discourse/app/components/anonymous-topic-footer-buttons.gjs": "passes `this` to getTopicFooterButtons, which calls context.get(); needs the plugin API reworked",
     "frontend/discourse/app/components/discourse-root.js": "root element owning event dispatch; glimmerified once and reverted (27408c7e14b)",
-    "frontend/discourse/app/components/reviewable-field-editor.gjs": "passes @value into DEditor, which sets it; needs a data-flow redesign",
-    "frontend/discourse/admin/components/site-settings/url-list.gjs": "passes @values into ValueList, which sets it and hands back an array for a string setting",
 }
 EXTERNAL = [
     "all-the-plugins/official", "all-the-plugins/third-party",

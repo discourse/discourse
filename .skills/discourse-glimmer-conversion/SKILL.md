@@ -392,9 +392,10 @@ components on the second. [PLAN.md](PLAN.md) covers picking the next targets.
    `badge-title`, `admin/setting-validation-message`, `ui-kit/d-tap-tile`,
    `plugins/chat/collapser`, `plugins/discourse-assign/connectors/assigned-list` (keep
    `connectors/` — a plugin can have a component and a connector of the same name).
-2. **Then tick approved PRs.** For every first-level entry with no emoji, check
-   `gh pr view <num> --json reviewDecision --jq .reviewDecision`; when it is `APPROVED`,
-   append ` ✅` to that entry. Do this on every append so the log stays current.
+2. **Then refresh the status marks** with `scripts/refresh-progress.py`: ☑️ for a merged PR,
+   ✅ for an approved one, nothing otherwise. A merge mark replaces the approval tick and is
+   final; every other entry is rechecked, so a dismissed approval loses its tick. Do this on
+   every append so the log stays current.
 
 
 Branch from `origin/main`, not from whatever branch the work happened on, so unrelated
@@ -426,14 +427,15 @@ Done with the help of our glimmer conversion skill.
 `AdminReportTableRow` reads `options` directly from args instead of a class field.
 ```
 
-The bullets are the inventory and nothing else. The trailing sentences cover only what is
-specific: a service injection the classic component got implicitly, a dropped default, a
-redesigned two-way binding and its new callback, a call-site interface change, a
-pre-existing bug fixed, a behavior deliberately preserved that looks wrong. Leave out the
-mechanics every conversion performs (the base-class swap, `init` → `constructor`,
-`this.set` → `@tracked`, args moving to `@args`, a dropped `@tagName`); the title says the
-component was converted and the diff shows the rest. Never mention what did *not* need
-changing. When nothing is specific, the body is the sentence plus the inventory. Detail too
+The bullets are the inventory and nothing else. The trailing sentences cover only what a
+reviewer or a caller needs to know: an interface change (a new or renamed callback, a
+removed arg, a dropped default) and a pre-existing bug fixed. One short sentence each,
+saying what changed, not why or how: "`AdminEditableField` takes a `toggleEditing`
+callback; the caller owns `editing`." Leave out the mechanics (the base-class swap,
+`init` → `constructor`, `this.set` → `@tracked`, args moving to `@args`, a dropped
+`@tagName`, reads through `get()`, a `.js` → `.gjs` rename), and never explain what was
+kept or did not need changing (a preserved wrapper, an untouched call site); the diff shows
+all of it. When nothing is specific, the body is the sentence plus the inventory. Detail too
 long for one sentence — external consumers needing a follow-up, behavior you could not
 preserve — goes in the reply to the user, not in the commit.
 

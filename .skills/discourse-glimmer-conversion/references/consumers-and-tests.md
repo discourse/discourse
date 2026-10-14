@@ -137,7 +137,11 @@ over a dropped default the callers relied on.
 
 ### What to add
 
-- One test per redesigned two-way binding (callback fires, arg is not mutated).
+- One test per redesigned two-way binding (callback fires, arg is not mutated). Render the
+  converted component directly with a recording callback. A test through the real parent
+  cannot tell the callback from a classic child writing through a forwarded `@value` (see
+  data-flow §5): the in-place enum test on the theme editor still passed with `@onChange`
+  removed. Mutation-test against the direct test.
 - One test per arg that `didReceiveAttrs`/`didUpdateAttrs` used to react to (change the
   arg, `settled()`, assert the DOM or state followed).
 - One test per class-field default that callers override with an arg.

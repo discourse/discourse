@@ -176,6 +176,16 @@ write to whatever `this.x` resolves to.
 `withEventValue` is `discourse/helpers/with-event-value`. `DTextField` and `DTextarea`
 expose `@onChange`; select-kit expects `@value` + `@onChange`.
 
+The write-through is not specific to built-in inputs. Any classic child that `this.set`s its
+own arg reaches the caller's property when the Glimmer component forwards the arg untouched
+(`@value={{@value}}`): select-kit without `@onChange` (its deprecated implicit mutation),
+`ValueList` without `@onChange`, `DEditor`. So a pass-through conversion "works", with the
+binding hidden two levels down. Give the child its callback anyway (`@onChange` on
+`ComboBox`, `ValueList`) and route it to the caller's callback; the site-settings list family
+did (`changeValueCallback`, #43541 and the site-settings-lists PR). The write-through only
+breaks when the component *derives* the value it passes (a getter, a split string) or used
+to write it with its own `this.set`.
+
 ## 6. `{{action}}` and `{{mut}}` leftovers at call sites
 
 `{{action}}` and `(action)` no longer exist in Ember; they work here only through the

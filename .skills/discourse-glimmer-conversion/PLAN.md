@@ -41,12 +41,15 @@ Rules the ranking can't apply for you:
    pass is at best an override (`this.args.x ?? default`) and at worst a flag shared with
    the caller. `AdminEditableField`'s `editing` was the second kind and shipped broken
    (see Lessons).
-3. **`2way:` means a data-flow decision.** Especially when the arg goes into a classic child
-   that sets it (`DEditor`, `ValueList`). Leave these out of mixed batches.
+3. **`2way:` means a data-flow decision.** Leave these out of mixed batches. An arg
+   forwarded untouched into a classic child that sets it (`DEditor`, `ValueList`,
+   select-kit without `@onChange`) keeps working through Glimmer, but only because the write
+   goes through the reference, hidden. Give the child a callback anyway (data-flow §5).
 4. **Blocked, each needing its own PR or a decision** (the `BLOCKED` list in the script):
    `anonymous-topic-footer-buttons` (passes `this` into a plugin API that calls
-   `.get()`), `discourse-root` (converted once and reverted), `reviewable-field-editor`
-   and `site-settings/url-list` (arg mutated by a classic child).
+   `.get()`) and `discourse-root` (converted once and reverted). `reviewable-field-editor`
+   was listed for its `DEditor` write. The write-through finding above makes it an ordinary
+   callback conversion, as long as `DEditor` takes an `@onChange`.
 
 ## Batching
 
@@ -58,9 +61,8 @@ Rules the ranking can't apply for you:
 - Drop a member rather than rush it. If it needs a data-flow decision, a plugin-API change,
   or a test rewrite, it goes in its own PR and the next candidate takes its place.
 - Commit and PR share a title and body: the fixed opening sentence, class names grouped
-  by origin, then one sentence each for anything specific (implicit service injections, a
-  redesigned binding, a fixed bug, deliberately preserved oddities). Skip the mechanics
-  every conversion does.
+  by origin, then one short sentence per interface change or fixed bug, saying what
+  changed. Skip the mechanics and anything that was kept (a wrapper, a file rename).
 - Bugs found along the way are fixed when the fix is the same size as or smaller than
   preserving them (the `textParams` interpolation, the empty `as_sitesearch` input), and
   flagged otherwise.
@@ -101,12 +103,14 @@ Each has a full entry in `references/`; these are the ones that cost a CI round 
 
 ## Next
 
-1. **The site-settings list family as one themed effort**, not batch filler: `url-list`,
-   `host-list`, `simple-list`, `tag-group-list`, `named-list`, `enum`, `tag-list`,
-   `group-list`. They share a shape: `@value` passed into a classic `ValueList`-style child
-   that sets it, and `site-setting.gjs` picks the component by type. Settle the data flow
-   once (`changeValueCallback`, as `UploadedImageList` did in #43541), then convert the
-   family against it.
+1. **The site-settings list family** (`url-list`, `host-list`, `simple-list`,
+   `tag-group-list`, `named-list`, `enum`, `tag-list`, `group-list`) is converted on
+   `0-glimmer-site-settings-lists`. The contract: each component reads the stored string
+   from `@value`, converts it for its control, and reports the new stored string through
+   `@changeValueCallback`. That callback is the only write path, already passed by
+   `site-setting.gjs` and its four `trackChanges = false` subclasses. Delimiters differ:
+   `url_list` is newline-joined, the rest pipe-joined. Only `url-list` passed its arg into a
+   writing child; the other seven wrote their own `value`.
 2. **Resume ten-per-PR batches** from what's left once the family is out of the way:
    components with a hook or observer but no two-way args (`signup-cta`,
    `styleguide-section`, `flag-selection`).
