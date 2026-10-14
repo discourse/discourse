@@ -1,26 +1,39 @@
-# Phase 3 — Specialized pickers (breadth)
+# Phase 3 — Tags, categories and entity pickers (waves 1 and 2)
 
-**Goal:** every select-kit picker has a new-family equivalent behind its old tag; core
-call sites are codemodded.
+**Goal:** the hardest families join the flag first, while `DSelect` has no production consumer and
+an API change is cheapest. The alpha flag goes out after wave 1.
 
-See RFC: *Roadmap › Phase 3*, *Selected-value resolution*. (Maps to dev topic P3–P9.)
+See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. Re-sequenced
+2026-10-14.
 
 ## Tasks
 
-- ☐ **Category family**: chooser / drop / selector / admin-dropdown (hierarchy via
-  `@groupBy`; the "filter for more" sentinel).
-- ☐ **Tag family**: tag-chooser / mini-tag / tag-drop / tag-group / intersection +
-  `tag-utils`; reback FormKit's `tag-chooser`.
-- ☐ **User family**: user-chooser / email-group-user-chooser + `addUserSearchOption`.
-- ☐ **Long tail**: timezone, future-date, flair, form-template, group, list-setting,
-  color-palette(s), period, homepage-style, font.
-- ☐ **`DTopicSelect`** — the acceptance case for selected-value resolution (id→title,
-  content-only trigger skeleton, `@selected` escape hatch); fold in the parked handoff.
-  `TopicChooser` deprecated, not deleted.
-- ☐ **discourse-ai** — port off `modifySelectKit` to the transformer API (the real-world
-  acceptance test of the extension model).
+### Wave 1: tags and categories, composer included
+
+- ☐ **Category family:** chooser, drop, selector, search and report choosers. Rows reuse
+  `categoryBadgeHTML`.
+- ☐ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, and FormKit's
+  `tag-chooser` control. Rows reuse `dDiscourseTag` / `renderTag`.
+- ☐ **Composer:** tag and category pickers write the same `model.tags` / category shape in both
+  modes; drafts round-trip across modes.
+- ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.
+- ☐ **Customer `modifyClass` ports** for category-drop, tag-drop and category-chooser.
+- ☐ SCSS for these families migrated.
+- ☐ **Alpha:** staff plus a member group; member and anonymous coverage before exposure.
+
+### Wave 2: entity pickers and ui-kit wrappers
+
+- ☐ **User family:** user, email-group-user and group choosers on a shared user-search preset,
+  with `addUserSearchOption` and `customSearchOptions`; rewrite `DAccessControlGranteeChooser`.
+- ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
+  handoff.
+- ☐ **Long tail:** form template, timezone, flair, list setting, tag group, color, font and wizard
+  pickers.
+- ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
+  `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.
 
 ## Exit criteria
 
-- Every select-kit picker has a new-family equivalent behind a facade.
-- Core call sites codemodded; each family passes the a11y acceptance gate + manual SR matrix.
+- Every family above has joined: call sites branched, state survives a mode change, specs pass in
+  both modes, SCSS migrated, customization ports done.
+- Each family passes the a11y acceptance gate and the manual screen-reader matrix.

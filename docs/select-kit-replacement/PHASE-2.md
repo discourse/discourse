@@ -1,26 +1,34 @@
-# Phase 2 — Extension API GA + tooling + first high-traffic migrations
+# Phase 2 — Rollout foundations (wave 0)
 
-**Goal:** the plugin extension API is finalized and documented, migration tooling
-exists, and the highest-traffic pickers move behind their old tags.
+**Goal:** everything the rollout depends on is in place, with no user-visible change: the flag,
+the switch plumbing, the deprecations, the bridge contract, and test infrastructure that drives
+either implementation.
 
-See RFC: *Extension model*, *Legacy `modifySelectKit` bridge*, *Migration strategy*.
+See [`ROLLOUT.md`](ROLLOUT.md), *Rollout architecture* and *Waves*. Re-sequenced 2026-10-14: the
+facade and codemod plan this phase used to carry is superseded.
 
 ## Tasks
 
-- ☐ Finalize `select-content` / `select-on-change` transformers + the `modifySelectKit`
-  bridge (all fidelity requirements); register the deprecation ids; wire
-  `discourse-deprecation-collector` (per-use + per-component telemetry).
-- ☐ Build the codemod harness (`ember-template-recast` + jscodeshift): both import
-  specifiers + the runtime arg-alias table; `@options={{hash}}` → flat args; static
-  `@content` → `@load`.
-- ☐ Migrate the highest-traffic pickers behind facades under old tags (`combo-box`,
-  `category-chooser`).
-- ☐ Migrate FormKit's `select` control + the ~12 native `<select>` (`DNativeSelect`)
-  consumers; deprecate `DNativeSelect`. Full FormKit integration (validation / `name` /
-  form submit / `aria-invalid`).
+- ☐ **Modal Enter bug** (test-first): `DModal` submits on Enter inside a `DSelect` because its
+  exemption covers `.select-kit` but not `role="combobox"`.
+- ☐ **Flag** `enable_new_select_controls` (experimental, `body_class: true`) and the boot-snapshot
+  service, with a test helper and the list of joined families.
+- ☐ **Class root:** flip `.d-combobox` to `.d-select`.
+- ☐ **`modifyClass` deprecation:** detect select-kit classes after resolution, joined families only,
+  per source and target; throw in development, `notify-admin` in production; admin notices keyed
+  by id and source.
+- ☐ **Third-party deprecation** at import time, under `discourse.select-kit-rollout.*`.
+- ☐ **Bridge contract:** fixtures mirroring real `modifySelectKit` callers; add `triggerSearch`, a
+  working `isLoading`, row `classNames`, per-callback suppression, per-use telemetry.
+- ☐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported
+  APIs they move to.
+- ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`
+  helper, `form-kit-helper.js`, and callers that pass `.select-kit` roots. Specs pin the flag.
+- ☐ **Prep that also works with select-kit:** explicit `onChange` at the two-way sites, stable hooks
+  in place of `.select-kit` DOM queries, the wizard's `onChange`.
+- ☐ **Guideline:** DMenu vs DSelect in the ui-kit guide.
 
 ## Exit criteria
 
-- Extension API documented + GA; codemod runs clean on core.
-- Deprecation telemetry live.
-- FormKit `select` + native consumers migrated.
+- Flag, snapshot service and deprecations land with tests; no consumer has joined yet.
+- The test infrastructure passes against a family branched in both modes.

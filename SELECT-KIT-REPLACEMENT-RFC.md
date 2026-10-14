@@ -1141,6 +1141,13 @@ dependency not yet on `main`**), we harden it in this work:
 
 ## Migration strategy — deprecate + ban from core/bundled; no deletion
 
+> **Superseded (2026-10-14)** by
+> [`docs/select-kit-replacement/ROLLOUT.md`](docs/select-kit-replacement/ROLLOUT.md). The rollout
+> now runs behind an upcoming-change flag, core and bundled plugins migrate to the new API with a
+> switch at each call site, and there are no facades under the old tags. What still holds from
+> this section: select-kit is not deleted, third parties keep it with a deprecation, and core and
+> bundled plugins end up lint-banned from it.
+
 - **Introduce new components**; **freeze select-kit in place** (untouched, so its
   contract is literally identical for third parties); **codemod core + bundled
   plugins** off the old tags; **bridge `modifySelectKit`** into the new pipeline;

@@ -6,6 +6,10 @@ accessible, async-first ui-kit select family (`SelectEngine` + `DSelect`).
 - **Design source of truth:** [`SELECT-KIT-REPLACEMENT-RFC.md`](../../SELECT-KIT-REPLACEMENT-RFC.md)
   (worktree root) — the full RFC/plan. These per-phase docs are lean execution
   trackers that cross-link into it; they do not duplicate the design.
+- **Rollout:** [`ROLLOUT.md`](ROLLOUT.md) — how the replacement ships: one upcoming-change
+  flag, a switch at each core call site, least-ready-first waves, promotion gates. It supersedes
+  the RFC's "Migration strategy" section, and phases 2–5 below follow its waves (re-sequenced
+  2026-10-14).
 - **Public RFC:** dev.discourse.org topic #187302.
 
 Status legend: ☐ pending · ◐ in progress · ☑ done
@@ -14,10 +18,10 @@ Status legend: ☐ pending · ◐ in progress · ☑ done
 |---|---|---|
 | [0](PHASE-0.md) | Foundations (engine, `DSelect` single, primitives, bridge, TS) | ☑ done |
 | [1](PHASE-1.md) | Complete & consolidate the core family (typeahead default, `@multiple`, windowing, chrome, groups) | ◐ in progress |
-| [2](PHASE-2.md) | Extension API GA + tooling + first high-traffic migrations | ☐ |
-| [3](PHASE-3.md) | Specialized pickers (category / tag / user / long tail / `DTopicSelect` / discourse-ai) | ☐ |
-| [4](PHASE-4.md) | Bespoke dropdowns + test infrastructure | ☐ |
-| [5](PHASE-5.md) | Ban from core/bundled + finalize deprecation | ☐ |
+| [2](PHASE-2.md) | Rollout foundations: flag, switch plumbing, deprecations, bridge contract, test infra (wave 0) | ☐ |
+| [3](PHASE-3.md) | Tags, categories (composer included) and entity pickers (waves 1–2) | ☐ |
+| [4](PHASE-4.md) | Menu-shaped selects, action menus, generic and native selects (waves 3–4) | ☐ |
+| [5](PHASE-5.md) | Plugin subclasses, promotion to permanent, cleanup and ban (wave 5) | ☐ |
 
 ## Side trackers
 
@@ -42,4 +46,5 @@ lists a finer **0–11** breakdown; the mapping is:
 - Plan **P4** ≈ dev P3 (test infra) + P10 (bespoke dropdowns → `DMenu`).
 - Plan **P5** ≈ dev P11 (ban + finalize).
 
-Keep both in sync when scope shifts.
+Phases 2–5 were re-sequenced into the rollout waves on 2026-10-14, so this mapping to the dev
+topic is out of date until the topic is updated. Keep both in sync when scope shifts.

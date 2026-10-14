@@ -1,23 +1,31 @@
-# Phase 4 — Bespoke dropdowns + test infrastructure
+# Phase 4 — Menus, generic selects and native selects (waves 3 and 4)
 
-**Goal:** the remaining non-select dropdowns move to `DMenu`, and the `.select-kit-*`
-test infrastructure gains new-component support.
+**Goal:** the menu-shaped controls land on the right primitive, and the high-volume generic and
+native selects join the flag.
 
-See RFC: *Roadmap › Phase 4*, *Migration strategy*. (Maps to dev topic P3 + P10.)
+See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 2026-10-14.
 
 ## Tasks
 
-- ☐ **Bespoke dropdowns → `DMenu`/`DDropdownMenu`** (action menus, not value selects):
-  the notifications-button family and the remaining `dropdown-select-box` variants
-  (categories-admin, bulk-select-bookmarks, user-notifications). (composer-actions is
-  excluded — replaced independently by `composer-actions-new`.)
-- ☐ **Test infra rewrite** (do BEFORE the bulk migration so each component migration
-  doesn't churn dozens of specs): the JS helper `tests/helpers/select-kit-helper.js`
-  (~54 acceptance files) and the Ruby page object
-  `spec/system/page_objects/components/select_kit.rb` (~67 specs) to the new BEM/roles,
-  supporting BOTH old and new pickers; prove it on the first high-traffic picker.
+### Wave 3: menu-shaped value selects and action menus
+
+- ☐ **DSelect:** the notifications-button family, group dropdown, and value-type
+  `DropdownSelectBox` uses (composer translation selector, sidebar edit filter).
+- ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
+  category and tag admin dropdowns, bulk-select bookmarks. Callbacks registered on their
+  `modifySelectKit` identifiers keep running. (composer-actions is excluded; it is replaced
+  independently by `composer-actions-new`.)
+- ☐ `registerTopicFooterDropdown` gains an opt-in key.
+- ☐ Customer ports for the notifications buttons and discourse-assign's `reasonText` patch.
+
+### Wave 4: generic value selects and native selects
+
+- ☐ `ComboBox` and `MultiSelect` with static content, period chooser, notifications filter.
+- ☐ **FormKit `select` and `DNativeSelect`:** decide between new control types and a switch inside
+  the shared control; preserve value types, empty values, disabled state, labels and errors, form
+  participation, and query parameters (`d-filter-controls`). Deprecate `DNativeSelect`.
 
 ## Exit criteria
 
-- Core + bundled plugins fully off select-kit for these surfaces.
-- Test infra migrated; system specs re-verified green.
+- Every family above has joined, on the primitive the guideline picks.
+- FormKit and native consumers pass in both modes, including mobile.
