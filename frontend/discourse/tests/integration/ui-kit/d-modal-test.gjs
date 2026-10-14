@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
   click,
+  fillIn,
   find,
   focus,
   render,
@@ -15,6 +16,12 @@ import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelect from "discourse/ui-kit/select/d-select";
+
+const FRUITS = [
+  { id: 1, name: "Apple" },
+  { id: 2, name: "Banana" },
+];
 
 module("Integration | ui-kit | DModal", function (hooks) {
   setupRenderingTest(hooks);
@@ -735,6 +742,163 @@ module("Integration | ui-kit | DModal", function (hooks) {
       actionCalled,
       "pressing enter inside select-kit does not trigger the default button"
     );
+  });
+
+  module("enter on a DSelect", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.actionCalled = false;
+      this.selected = [];
+      this.someAction = () => (this.actionCalled = true);
+      this.onChange = (value) => this.selected.push(value);
+    });
+
+    test("an open typeahead selects the option instead of submitting the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <DSelect @items={{FRUITS}} @onChange={{this.onChange}} />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "app");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.deepEqual(
+        this.selected,
+        [1],
+        "Enter picks the highlighted option"
+      );
+      assert.false(this.actionCalled, "the modal does not submit as well");
+    });
+
+    test("a closed typeahead still submits the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <DSelect @items={{FRUITS}} @onChange={{this.onChange}} />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus("[role='combobox']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      // A closed typeahead is a text field with no use for Enter, so the modal keeps
+      // the key, as it does for any text field.
+      assert.true(this.actionCalled, "the modal submits");
+      assert.deepEqual(this.selected, [], "nothing is selected");
+    });
+
+    test("a closed static select opens instead of submitting the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <DSelect
+                @items={{FRUITS}}
+                @onChange={{this.onChange}}
+                @variant="static"
+              />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".d-combobox__trigger");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+
+      assert
+        .dom(".d-combobox__trigger")
+        .hasAttribute("aria-expanded", "true", "Enter opens the list");
+      assert.false(this.actionCalled, "the modal does not submit");
+    });
+
+    test("an open static select selects the active option instead of submitting the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <DSelect
+                @items={{FRUITS}}
+                @onChange={{this.onChange}}
+                @variant="static"
+              />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".d-combobox__trigger");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+
+      assert.deepEqual(this.selected, [1], "Enter picks the active option");
+      assert.false(this.actionCalled, "the modal does not submit as well");
+    });
+
+    test("the button variant's filter selects the option instead of submitting the modal", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <DSelect
+                @items={{FRUITS}}
+                @onChange={{this.onChange}}
+                @variant="button"
+              />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await click(".d-combobox__trigger");
+      await fillIn("[role='combobox']", "app");
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.deepEqual(this.selected, [1], "Enter picks the option");
+      assert.false(this.actionCalled, "the modal does not submit as well");
+    });
   });
 
   test("does not swallow keystrokes aimed at a modal stacked above it", async function (assert) {
