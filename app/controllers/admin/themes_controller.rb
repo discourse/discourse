@@ -36,7 +36,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def generate_key_pair
     require "sshkey"
-    k = SSHKey.generate
+    k = SSHKey.generate(bits: 4096)
     Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
     render json: { public_key: k.ssh_public_key }
   end

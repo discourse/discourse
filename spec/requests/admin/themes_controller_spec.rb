@@ -19,13 +19,15 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "can generate key pairs" do
+      it "generates 4096-bit RSA key pairs" do
         post "/admin/themes/generate_key_pair.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["private_key"]).to eq(nil)
         expect(json["public_key"]).to include("ssh-rsa ")
-        expect(Discourse.redis.get("ssh_key_#{json["public_key"]}")).not_to eq(nil)
+        private_key = Discourse.redis.get("ssh_key_#{json["public_key"]}")
+        expect(OpenSSL::PKey::RSA.new(private_key).n.num_bits).to eq(4096)
+        expect(SSHKey.new(private_key).ssh_public_key).to eq(json["public_key"])
       end
     end
 
@@ -246,13 +248,13 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
-      it "fails to import with a failing status" do
+      it "fails to import a non-existent remote" do
         post "/admin/themes/import.json", params: { remote: "non-existent" }
 
         expect(response.status).to eq(422)
       end
 
-      it "fails to import with a failing status" do
+      it "fails to import a remote with an excessively long hostname" do
         post "/admin/themes/import.json", params: { remote: "https://#{"a" * 10_000}.com" }
 
         expect(response.status).to eq(422)
@@ -1261,7 +1263,7 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response when an invalid id is given" do
+      it "returns the right response when an invalid id is given" do
         get "/admin/themes/9999/preview.json"
 
         expect(response.status).to eq(400)
@@ -1303,7 +1305,7 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should update a theme setting" do
+      it "updates a theme setting" do
         put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg", value: "green" }
 
         expect(response.status).to eq(200)
@@ -1316,7 +1318,7 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
-      it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
+      it "returns the right error when value used to update a theme setting of `objects` typed is invalid" do
         theme.set_field(
           target: :settings,
           name: "yaml",
@@ -1341,7 +1343,7 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
-      it "should be able to update a theme setting of `objects` typed" do
+      it "is able to update a theme setting of `objects` typed" do
         theme.set_field(
           target: :settings,
           name: "yaml",
@@ -1371,7 +1373,7 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
-      it "should clear a theme setting" do
+      it "clears a theme setting" do
         put "/admin/themes/#{theme.id}/setting.json", params: { name: "bg" }
         theme.reload
 
@@ -1425,7 +1427,7 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should update a theme translation" do
+      it "updates a theme translation" do
         put "/admin/themes/#{theme.id}.json",
             params: {
               theme: {
@@ -1439,7 +1441,7 @@ RSpec.describe Admin::ThemesController do
         theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
       end
 
-      it "should update a theme translation with locale" do
+      it "updates a theme translation with locale" do
         put "/admin/themes/#{theme.id}.json",
             params: {
               theme: {
@@ -1454,7 +1456,7 @@ RSpec.describe Admin::ThemesController do
         theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
       end
 
-      it "should fail update a theme translation when locale is wrong" do
+      it "fails update a theme translation when locale is wrong" do
         put "/admin/themes/#{theme.id}.json",
             params: {
               theme: {
@@ -1471,7 +1473,7 @@ RSpec.describe Admin::ThemesController do
         )
       end
 
-      it "should update other locale and do not change current one" do
+      it "updates other locale and do not change current one" do
         put "/admin/themes/#{theme.id}.json",
             params: {
               theme: {
