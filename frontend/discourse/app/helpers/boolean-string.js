@@ -2,7 +2,7 @@
  * Converts a boolean value to its string representation ("true" or "false").
  * When omitFalse is true (default), falsy values return undefined instead of "false".
  *
- * @param {boolean} value - The boolean value to convert
+ * @param {boolean | undefined} value - The boolean value to convert; `undefined` counts as false
  * @param {Object} [opts={ omitFalse: true }] - Options object
  * @param {boolean} [opts.omitFalse=true] - When true, falsy values return undefined instead of "false"
  * @returns {string|undefined} Returns "true" for truthy values, "false" for falsy values (unless omitted)

@@ -115,16 +115,21 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       @width="8ch"
                     />{{/if}}</:loading>
                 <:content as |selected|>
-                  {{#if selected.__unresolved}}
-                    {{#if @hasUnresolvedBlock}}
-                      {{yield selected to="unresolved"}}
+                  {{#if selected}}
+                    {{#if selected.__unresolved}}
+                      {{#if @hasUnresolvedBlock}}
+                        {{yield selected to="unresolved"}}
+                      {{else}}
+                        <SelectionLabel
+                          @engine={{@engine}}
+                          @item={{selected}}
+                        />
+                      {{/if}}
+                    {{else if @hasSelectionBlock}}
+                      {{yield selected to="selection"}}
                     {{else}}
                       <SelectionLabel @engine={{@engine}} @item={{selected}} />
                     {{/if}}
-                  {{else if @hasSelectionBlock}}
-                    {{yield selected to="selection"}}
-                  {{else}}
-                    <SelectionLabel @engine={{@engine}} @item={{selected}} />
                   {{/if}}
                 </:content>
               </DAsyncContent>
@@ -148,14 +153,19 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       @width="8ch"
                     />{{/if}}</:loading>
                 <:content as |selected|>
-                  {{#if selected.__unresolved}}
-                    {{#if @hasUnresolvedBlock}}
-                      {{yield selected to="unresolved"}}
+                  {{#if selected}}
+                    {{#if selected.__unresolved}}
+                      {{#if @hasUnresolvedBlock}}
+                        {{yield selected to="unresolved"}}
+                      {{else}}
+                        <SelectionLabel
+                          @engine={{@engine}}
+                          @item={{selected}}
+                        />
+                      {{/if}}
                     {{else}}
-                      <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                      {{yield selected to="selection"}}
                     {{/if}}
-                  {{else}}
-                    {{yield selected to="selection"}}
                   {{/if}}
                 </:content>
               </DAsyncContent>
@@ -235,19 +245,21 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               @width="8ch"
             />{{/if}}</:loading>
         <:content as |selected|>
-          <span class="d-combobox__value">
-            {{#if selected.__unresolved}}
-              {{#if @hasUnresolvedBlock}}
-                {{yield selected to="unresolved"}}
+          {{#if selected}}
+            <span class="d-combobox__value">
+              {{#if selected.__unresolved}}
+                {{#if @hasUnresolvedBlock}}
+                  {{yield selected to="unresolved"}}
+                {{else}}
+                  <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                {{/if}}
+              {{else if @hasSelectionBlock}}
+                {{yield selected to="selection"}}
               {{else}}
                 <SelectionLabel @engine={{@engine}} @item={{selected}} />
               {{/if}}
-            {{else if @hasSelectionBlock}}
-              {{yield selected to="selection"}}
-            {{else}}
-              <SelectionLabel @engine={{@engine}} @item={{selected}} />
-            {{/if}}
-          </span>
+            </span>
+          {{/if}}
         </:content>
         <:empty>
           <span class="d-combobox__placeholder">

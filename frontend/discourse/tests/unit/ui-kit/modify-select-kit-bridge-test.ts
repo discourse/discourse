@@ -24,14 +24,21 @@ function ids(descriptors: readonly SelectDescriptor[]) {
   return descriptors.map((descriptor) => descriptor.value);
 }
 
+/** The parts of the legacy component facade that these tests' callbacks read. */
+interface LegacyComponentFacade {
+  element: HTMLElement;
+  selectKit: { close(): void; select(...args: unknown[]): void };
+}
+
 module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     firedDeprecations.length = 0;
     if (!handlerRegistered) {
-      registerDeprecationHandler((_message, options) =>
-        firedDeprecations.push(options?.id)
+      registerDeprecationHandler(
+        (_message: string, options?: { id?: string }) =>
+          firedDeprecations.push(options?.id)
       );
       handlerRegistered = true;
     }
@@ -121,11 +128,17 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   });
 
   test("reconstructs the legacy (component, value, item) onChange signature", function (assert) {
-    let received;
+    let received:
+      | { component: LegacyComponentFacade; value: unknown; item: unknown }
+      | undefined;
     withPluginApi((api) => {
-      api.modifySelectKit("test-select").onChange((component, value, item) => {
-        received = { component, value, item };
-      });
+      api
+        .modifySelectKit("test-select")
+        .onChange(
+          (component: LegacyComponentFacade, value: unknown, item: unknown) => {
+            received = { component, value, item };
+          }
+        );
     });
 
     const engine = engineFor(getOwner(this), {
@@ -133,35 +146,42 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
     engine.select({ id: 7, name: "Seven" });
 
-    assert.strictEqual(received.value, 7, "the value id is passed");
+    assert.strictEqual(received?.value, 7, "the value id is passed");
     assert.deepEqual(
-      received.item,
+      received?.item,
       { id: 7, name: "Seven" },
       "a single item (not an array) is passed for single-select"
     );
     assert.strictEqual(
-      typeof received.component.selectKit.close,
+      typeof received?.component.selectKit.close,
       "function",
       "the component facade carries a selectKit surface"
     );
   });
 
   test("an injected action row's onSelect runs with the selectKit facade, not the engine", function (assert) {
-    let receivedFirstArg;
+    let receivedFirstArg: LegacyComponentFacade["selectKit"] | undefined;
     withPluginApi((api) => {
       api.modifySelectKit("test-select").prependContent(() => ({
         id: "action",
         name: "Do something",
-        onSelect: (selectKit) => (receivedFirstArg = selectKit),
+        onSelect: (selectKit: LegacyComponentFacade["selectKit"]) =>
+          (receivedFirstArg = selectKit),
       }));
     });
 
     const engine = engineFor(getOwner(this));
-    const actionRow = engine
+    const actionRows = engine
       .buildItems([])
-      .find((descriptor) => descriptor.value === "action");
+      .filter((descriptor) => descriptor.value === "action");
+    assert.strictEqual(
+      actionRows.length,
+      1,
+      "the injected action row is built"
+    );
+
     // `activate` takes the raw model: `onSelect` lives there, not on the descriptor.
-    engine.activate(actionRow.item);
+    engine.activate(actionRows[0].item);
 
     assert.notStrictEqual(
       receivedFirstArg,
@@ -169,20 +189,23 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       "the engine is not leaked to a legacy onSelect"
     );
     assert.strictEqual(
-      typeof receivedFirstArg.select,
+      typeof receivedFirstArg?.select,
       "function",
       "the legacy selectKit facade is passed instead"
     );
   });
 
   test("the facade exposes a resolvable owner and a live element", function (assert) {
-    let sawOwner, sawElement;
+    let sawOwner: Owner | undefined;
+    let sawElement: HTMLElement | undefined;
     const element = document.createElement("section");
     withPluginApi((api) => {
-      api.modifySelectKit("test-select").appendContent((component) => {
-        sawOwner = getOwner(component);
-        sawElement = component.element;
-      });
+      api
+        .modifySelectKit("test-select")
+        .appendContent((component: LegacyComponentFacade) => {
+          sawOwner = getOwner(component);
+          sawElement = component.element;
+        });
     });
 
     const engine = new SelectEngine({
@@ -212,10 +235,12 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   test("reuses one stable facade across renders", function (assert) {
     const seen = new Set();
     withPluginApi((api) => {
-      api.modifySelectKit("test-select").appendContent((component) => {
-        seen.add(component);
-        return { id: "x", name: "X" };
-      });
+      api
+        .modifySelectKit("test-select")
+        .appendContent((component: LegacyComponentFacade) => {
+          seen.add(component);
+          return { id: "x", name: "X" };
+        });
     });
 
     const engine = engineFor(getOwner(this));
@@ -228,10 +253,12 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   test("the facade survives a runtime multiple flip (engine identity is stable)", function (assert) {
     const seen = new Set();
     withPluginApi((api) => {
-      api.modifySelectKit("test-select").appendContent((component) => {
-        seen.add(component);
-        return { id: "x", name: "X" };
-      });
+      api
+        .modifySelectKit("test-select")
+        .appendContent((component: LegacyComponentFacade) => {
+          seen.add(component);
+          return { id: "x", name: "X" };
+        });
     });
 
     let multiple = false;
@@ -313,8 +340,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   });
 
   test("select-on-change behavior transformer wraps the controlled onChange", function (assert) {
-    let context;
-    let changedTo;
+    let context: { value: unknown } | undefined;
+    let changedTo: unknown;
     withPluginApi((api) => {
       api.registerBehaviorTransformer(
         "select-on-change",
@@ -332,7 +359,11 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
     engine.select({ id: 3, name: "Three" });
 
-    assert.strictEqual(context.value, 3, "the transformer sees the next value");
+    assert.strictEqual(
+      context?.value,
+      3,
+      "the transformer sees the next value"
+    );
     assert.strictEqual(changedTo, 3, "next() runs the default onChange");
   });
 });

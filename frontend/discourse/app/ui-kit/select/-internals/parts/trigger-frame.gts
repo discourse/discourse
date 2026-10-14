@@ -15,7 +15,7 @@ interface TriggerFrameSignature {
     /** The clear control's accessible name (`"Clear selection"` / `"Clear all"`). */
     clearLabel?: string;
     /** Clears the whole selection; stops the click from toggling the overlay. */
-    onClear?: (event: MouseEvent) => void;
+    onClear: (event: MouseEvent) => void;
     /** Focuses the control when a wrapping label forwards its activation to the sink. */
     onLabelActivate: (event: MouseEvent) => void;
   };

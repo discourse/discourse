@@ -11,8 +11,11 @@ interface ComboboxQueryInputSignature {
   Args: {
     /** The headless engine; the input reads/writes only its `filter` (the query). */
     engine: SelectEngine;
-    /** The listbox id, wired as `aria-controls`/`aria-owns` while open. */
-    listboxId: string;
+    /**
+     * The listbox id, wired as `aria-controls`/`aria-owns` while open. Absent while no
+     * listbox is rendered, so neither attribute points at a missing element.
+     */
+    listboxId?: string;
     /** Whether the overlay is open (drives `aria-expanded` and the open guards). */
     expanded: boolean;
     /** The input's accessible name (`aria-label`). */

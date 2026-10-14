@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel, next as nextRunloop, schedule } from "@ember/runloop";
@@ -53,7 +54,13 @@ export default class WindowedListCoordinator {
    * replaces the set rather than extending it). `buildItems` is recomputed per render on
    * purpose — its output reflects live selection/create/special state, not just `rawItems`.
    */
-  buildListItems = (rawItems: SelectItemModel[]): readonly ListRow[] => {
+  buildListItems = (
+    rawItems: SelectItemModel[] | undefined
+  ): readonly ListRow[] => {
+    // The list source always resolves to an object carrying `rawItems`; the async
+    // content wrapper's yield type just can't express that.
+    assert("The list content resolves before its rows are built", rawItems);
+
     const listboxId = this.#getListboxId();
     const items: OptionRow[] = this.#engine
       .buildItems(rawItems)
