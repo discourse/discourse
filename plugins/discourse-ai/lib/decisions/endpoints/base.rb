@@ -24,7 +24,7 @@ module DiscourseAi
           @decision_model = decision_model
         end
 
-        def headers
+        def headers(feature_name:, has_images:)
           headers = { "Content-Type" => "application/json" }
           api_key = decision_model.api_key
           headers["Authorization"] = "Bearer #{api_key}" if api_key.present?

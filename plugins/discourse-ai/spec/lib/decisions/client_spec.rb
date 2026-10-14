@@ -583,4 +583,48 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(request).to have_been_requested.times(malformed.size)
     end
   end
+
+  describe "request header providers" do
+    after { DiscourseAi::RequestHeaders.reset! }
+
+    it "sends registered routing headers with System One decisions" do
+      captured = nil
+      DiscourseAi::RequestHeaders.register do |context|
+        captured = context
+        { "X-Test-Feature" => context.feature_name }
+      end
+      decision_model.update!(vision_enabled: true)
+      request =
+        stub_request(:post, decision_model.url).with(
+          headers: {
+            "X-Test-Feature" => "workflow",
+            "Authorization" => "Bearer #{decision_model.api_key}",
+          },
+        ).to_return(body: response_body.to_json)
+
+      client.decide(
+        "Hello",
+        questions:,
+        images: ["data:image/png;base64,AAAA"],
+        feature_name: "workflow",
+      )
+
+      expect(request).to have_been_requested.once
+      expect(captured).to have_attributes(model: decision_model, has_images: true, streaming: false)
+    end
+
+    it "does not send them to OpenAI" do
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Feature" => "x" } }
+      decision_model.update!(provider: "open_ai", url: "https://api.openai.com/v1/decisions")
+      request =
+        stub_request(:post, decision_model.url)
+          .with { |req| !req.headers.key?("X-Test-Feature") }
+          .to_return(status: 400, body: "{}")
+
+      expect { client.decide("Hello", questions:, feature_name: "workflow") }.to raise_error(
+        DiscourseAi::Decisions::RequestFailed,
+      )
+      expect(request).to have_been_requested.once
+    end
+  end
 end

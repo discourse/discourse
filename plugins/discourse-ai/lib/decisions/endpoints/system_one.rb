@@ -10,6 +10,19 @@ module DiscourseAi
           AiApiAuditLog::Provider::SystemOne
         end
 
+        # Self-hosted System One engines sit behind the same routing proxy as
+        # self-hosted LLMs, so they get the same registered routing headers.
+        def headers(feature_name:, has_images:)
+          context =
+            RequestHeaders::Context.new(
+              model: decision_model,
+              feature_name:,
+              has_images:,
+              streaming: false,
+            )
+          super.merge(RequestHeaders.for(context))
+        end
+
         def payload(state:, questions:, images:)
           payload = {
             model: decision_model.name,

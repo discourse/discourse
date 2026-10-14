@@ -34,7 +34,8 @@ module DiscourseAi
           )
         started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         begin
-          response_body = post(uri, body, log)
+          headers = @endpoint.headers(feature_name:, has_images: images.present?)
+          response_body = post(uri, headers, body, log)
           begin
             parsed = JSON.parse(response_body)
             # Cloudflare Workers AI wraps answers in {result, success, errors}.
@@ -108,11 +109,11 @@ module DiscourseAi
 
       # @return [String] the body of the successful response; the audit log only keeps a
       #   redacted copy
-      def post(uri, body, log)
+      def post(uri, headers, body, log)
         attempts = []
         loop do
           begin
-            request = FinalDestination::HTTP::Post.new(uri.request_uri, @endpoint.headers)
+            request = FinalDestination::HTTP::Post.new(uri.request_uri, headers)
             request.body = body
             response =
               FinalDestination::HTTP.start(
