@@ -698,7 +698,8 @@ module ApplicationHelper
   end
 
   def theme
-    @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+    return @application_helper_theme if defined?(@application_helper_theme)
+    @application_helper_theme = @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
   end
 
   def user_dark_scheme_id
@@ -713,16 +714,24 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
+    return @dark_scheme_id if defined?(@dark_scheme_id)
+
     if user_dark_scheme_id
-      return user_dark_scheme_id unless theme_limits_color_schemes?
-      return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
+      return @dark_scheme_id = user_dark_scheme_id unless theme_limits_color_schemes?
+      if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
+        return @dark_scheme_id = user_dark_scheme_id
+      end
     end
 
-    theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
     dark_id = theme&.dark_color_scheme_id
-    return dark_id if dark_id.present?
-    return theme&.color_scheme_id if theme_limits_color_schemes?
-    -1
+    @dark_scheme_id =
+      if dark_id.present?
+        dark_id
+      elsif theme_limits_color_schemes?
+        theme&.color_scheme_id
+      else
+        -1
+      end
   end
 
   def theme_limits_color_schemes?
@@ -932,8 +941,8 @@ module ApplicationHelper
   end
 
   def dark_color_scheme?
-    return false if scheme_id.blank?
-    ColorScheme.find_by_id(scheme_id)&.is_dark?
+    return @dark_color_scheme if defined?(@dark_color_scheme)
+    @dark_color_scheme = scheme_id.present? ? ColorScheme.find_by_id(scheme_id)&.is_dark? : false
   end
 
   def forced_light_mode?

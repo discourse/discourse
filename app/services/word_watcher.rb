@@ -23,8 +23,23 @@ class WordWatcher
   end
 
   def self.clear_cache!
-    WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+    WatchedWord.actions.each do |action, _|
+      Discourse.cache.delete(cache_key(action))
+      [false, true].each do |regular_expressions|
+        Discourse.cache.delete(
+          compiled_regexps_cache_key(action: action, regular_expressions: regular_expressions),
+        )
+      end
+    end
   end
+
+  def self.compiled_regexps_cache_key(
+    action:,
+    regular_expressions: SiteSetting.watched_words_regular_expressions?
+  )
+    "watched-words-compiled:v#{CACHE_VERSION}:#{action}:#{regular_expressions}"
+  end
+  private_class_method :compiled_regexps_cache_key
 
   def self.words_for_action(action)
     WatchedWord
@@ -73,6 +88,18 @@ class WordWatcher
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   def self.compiled_regexps_for_action(action, raise_errors: false)
+    if cache_enabled? && !raise_errors
+      Discourse
+        .cache
+        .fetch(compiled_regexps_cache_key(action: action), expires_in: 1.day) do
+          compile_regexps_for_action(action)
+        end
+    else
+      compile_regexps_for_action(action, raise_errors: raise_errors)
+    end
+  end
+
+  def self.compile_regexps_for_action(action, raise_errors: false)
     words = cached_words_for_action(action)
     return [] if words.blank?
 
@@ -118,6 +145,7 @@ class WordWatcher
       end
       .compact
   end
+  private_class_method :compile_regexps_for_action
 
   def self.serialized_regexps_for_action(action)
     compiled_regexps_for_action(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }

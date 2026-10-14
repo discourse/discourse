@@ -36,7 +36,7 @@ class PostActionTypeView
     if overridden_by_plugin_or_skipped_db?
       return Enum.new(like: PostActionType::LIKE_POST_ACTION_ID).merge!(flag_settings.flag_types)
     end
-    Enum.new(like: PostActionType::LIKE_POST_ACTION_ID).merge(flag_types)
+    (@types ||= Enum.new(like: PostActionType::LIKE_POST_ACTION_ID).merge(flag_types)).dup
   end
 
   def overridden_by_plugin_or_skipped_db?
@@ -49,7 +49,8 @@ class PostActionTypeView
   end
 
   def public_types
-    types.except(*flag_types.keys << :notify_user)
+    return types.except(*flag_types.keys << :notify_user) if overridden_by_plugin_or_skipped_db?
+    (@public_types ||= types.except(*flag_types.keys << :notify_user)).dup
   end
 
   def public_type_ids
@@ -71,7 +72,7 @@ class PostActionTypeView
 
   def flag_types
     return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-    flag_enum(flags)
+    (@flag_types ||= flag_enum(flags)).dup
   end
 
   def score_types
@@ -90,7 +91,7 @@ class PostActionTypeView
 
   def notify_flag_types
     return flag_settings.notify_types if overridden_by_plugin_or_skipped_db?
-    flag_enum(all_flags.select { |flag| flag[:notify_type] })
+    (@notify_flag_types ||= flag_enum(all_flags.select { |flag| flag[:notify_type] })).dup
   end
 
   def topic_flag_types
@@ -102,12 +103,14 @@ class PostActionTypeView
   end
 
   def disabled_flag_types
-    flag_enum(all_flags.reject { |flag| flag[:enabled] })
+    (@disabled_flag_types ||= flag_enum(all_flags.reject { |flag| flag[:enabled] })).dup
   end
 
   def additional_message_types
     return flag_settings.additional_message_types if overridden_by_plugin_or_skipped_db?
-    flag_enum(all_flags.select { |flag| flag[:require_message] })
+    (
+      @additional_message_types ||= flag_enum(all_flags.select { |flag| flag[:require_message] })
+    ).dup
   end
 
   def names

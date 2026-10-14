@@ -7,7 +7,7 @@ module DiscourseReactions::ReactionsSerializerHelpers
 
     ActiveRecord::Associations::Preloader.new(
       records: posts,
-      associations: [:post_actions, { reactions: { reaction_users: :user } }],
+      associations: [:post_actions, { reactions: :reaction_users }],
     ).call
 
     post_ids = posts.map(&:id).uniq

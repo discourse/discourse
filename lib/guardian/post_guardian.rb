@@ -173,9 +173,9 @@ module PostGuardian
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
     # Editing a shared draft.
-    if can_see_post?(post) && can_create_post?(post.topic) &&
-         post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-         can_see_category?(post.topic.category) && can_see_shared_draft?
+    if post.topic.category_id == SiteSetting.shared_drafts_category.to_i && can_see_post?(post) &&
+         can_create_post?(post.topic) && can_see_category?(post.topic.category) &&
+         can_see_shared_draft?
       return true
     end
 
