@@ -182,6 +182,23 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
       "the dropdown panel fills the surface within its border"
     );
   });
+
+  test("a trigger wider than the menu's default max width still gets a matching dropdown", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 500px;">
+          <DSelect @items={{ITEMS}} @variant="button" />
+        </div>
+      </template>
+    );
+    await click(".d-combobox__trigger");
+
+    assert.strictEqual(
+      find(".fk-d-menu__inner-content").getBoundingClientRect().width,
+      find(".d-combobox__trigger").getBoundingClientRect().width,
+      "the dropdown is as wide as the trigger, not capped at 400px"
+    );
+  });
 });
 
 module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {

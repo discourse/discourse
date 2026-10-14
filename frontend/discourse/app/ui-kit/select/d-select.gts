@@ -581,12 +581,6 @@ export default class DSelect extends Component<DSelectSignature> {
         Inert on mobile, where the overlay is a DModal that owns its own containment. }}
       @inlineTabOrder={{true}}
       @matchTriggerWidth={{true}}
-      {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
-        wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox
-        overlay belongs to its field, so the field's width is the only bound. The CSS floor on
-        the combobox content class still stops a compact icon-only trigger from being matched
-        down to nothing. }}
-      @maxWidth="none"
       @modalForMobile={{true}}
       @offset={{@offset}}
       @onClose={{this.interaction.handleClose}}
