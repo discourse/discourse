@@ -25,7 +25,6 @@ module DiscourseAi
         @audit_logger = audit_logger
         @structured_audit_logger = structured_audit_logger
         @upload_skips = []
-        @preparation_state = { mutex: Mutex.new, budget: nil }
       end
 
       def for_new_turn
@@ -34,10 +33,6 @@ module DiscourseAi
           audit_logger: audit_logger,
           structured_audit_logger: structured_audit_logger,
         )
-      end
-
-      def share_preparation_budget(budget)
-        @preparation_state[:mutex].synchronize { @preparation_state[:budget] ||= budget }
       end
 
       def settle_generation(tokens: nil, tokenizer:, complete: true)

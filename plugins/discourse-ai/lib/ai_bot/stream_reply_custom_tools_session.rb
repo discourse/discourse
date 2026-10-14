@@ -118,6 +118,7 @@ module DiscourseAi
                 "accumulated_response_tokens" => @accumulated_response_tokens,
                 "accumulated_tokens" => @accumulated_tokens,
                 "preparation_tokens" => @preparation_tokens,
+                "completion_count" => @completion_count,
               ),
             )
             raise
@@ -269,9 +270,8 @@ module DiscourseAi
         @protected_user_index =
           payload["protected_user_index"] ||
             @prompt.messages.rindex { |entry| entry[:type] == :user }
-        @preparation_elapsed_seconds = payload["preparation_elapsed_seconds"].to_f
-        @preparation_calls = payload["preparation_calls"].to_i
-        @preparation_spent_tokens = payload["preparation_spent_tokens"].to_i
+        # Resume rounds provide a lower bound when a payload lacks an execution count.
+        @completion_count = payload.fetch("completion_count", @round_count).to_i
         @preparation_tokens = payload["preparation_tokens"].to_i
         work = payload.fetch("work_budget")
         @work_budget =
@@ -321,6 +321,12 @@ module DiscourseAi
             token_usage_tracker: token_usage_tracker,
             work_budget: @work_budget,
           )
+        @execution_state =
+          DiscourseAi::Agents::SubagentExecutionState.new(
+            execution_context: execution_context,
+            root_token_budget: @work_budget.limit,
+            completion_count: @completion_count.to_i,
+          )
         generate_options = {
           user: @user,
           temperature: @temperature,
@@ -333,9 +339,6 @@ module DiscourseAi
           DiscourseAi::Completions::ContextPreparation.new(
             llm,
             threshold: resolve_agent_record&.compression_threshold,
-            calls: @preparation_calls.to_i,
-            spent_tokens: @preparation_spent_tokens.to_i,
-            elapsed_seconds: @preparation_elapsed_seconds.to_f,
           )
         # Work admission is independent of history length and cache usage.
         if @work_budget.remaining <= 0
@@ -475,44 +478,88 @@ module DiscourseAi
       end
 
       def generate_with_work_budget!(execution_context, options, final: false, &block)
-        options =
-          @work_budget.generation_options(
-            options.merge(
-              thinking_allowance:
-                DiscourseAi::Completions::ThinkingConfig.response_allowance_for(
-                  llm_model: @bot.model,
-                  effort: options[:thinking_effort],
-                ),
-            ),
-            maximum: @bot.model.max_output_tokens.presence,
-            final: final,
-            tools: @prompt.tools.present?,
-            root: true,
-          )
-        prepare_prompt!(execution_context, options)
+        if !final && !@execution_state.completion_available?
+          request_completion_limit_final_answer!
+          final = true
+        end
+
+        generation_options = work_generation_options(options, final: final)
+        # Maintenance can use the last ordinary slot; reserve the reply only after it fits.
+        prepare_prompt!(execution_context, generation_options)
+        if !final && !@execution_state.reserve_completion
+          request_completion_limit_final_answer!
+          final = true
+          generation_options = work_generation_options(options, final: final)
+          size, capacity =
+            @bot.llm.prompt_capacity(
+              @prompt,
+              **generation_options.slice(
+                :max_tokens,
+                :thinking_effort,
+                :response_format,
+                :max_tokens_is_total,
+              ),
+            )
+          # Recheck the final hint/output allowance without another soft-threshold compression.
+          prepare_prompt!(execution_context, generation_options) if capacity <= 0 || size > capacity
+        end
+        if final && !@execution_state.reserve_root_final_completion
+          raise DiscourseAi::Completions::ContextPreparation::Error.new("completion_limit")
+        end
+
         _, _, provider_output =
           @bot.llm.prompt_capacity(
             @prompt,
-            **options.slice(:max_tokens, :thinking_effort, :max_tokens_is_total),
+            **generation_options.slice(
+              :max_tokens,
+              :thinking_effort,
+              :response_format,
+              :max_tokens_is_total,
+            ),
           )
         reservation =
           @work_budget.reserve_generation_output(
             provider_output,
-            max_tokens: options[:max_tokens],
+            max_tokens: generation_options[:max_tokens],
             final: final,
             root: true,
           )
         if !reservation
           raise DiscourseAi::Completions::ContextPreparation::Error.new("turn_budget_exhausted")
         end
-        @bot.llm.generate(@prompt, **options, work_generation_admitted: true, &block)
+        @bot.llm.generate(@prompt, **generation_options, work_generation_admitted: true, &block)
       ensure
         @work_budget.release_output(reservation)
+        @completion_count = @execution_state.completion_count
         tracker = execution_context.token_usage_tracker
         @accumulated_request_tokens = tracker.request
         @accumulated_response_tokens = tracker.response
         @accumulated_tokens = tracker.total
         @preparation_tokens = tracker.preparation_tokens
+      end
+
+      def work_generation_options(options, final:)
+        @work_budget.generation_options(
+          options.merge(
+            thinking_allowance:
+              DiscourseAi::Completions::ThinkingConfig.response_allowance_for(
+                llm_model: @bot.model,
+                effort: options[:thinking_effort],
+              ),
+          ),
+          maximum: @bot.model.max_output_tokens.presence,
+          final: final,
+          tools: @prompt.tools.present?,
+          root: true,
+        )
+      end
+
+      def request_completion_limit_final_answer!
+        @prompt.push(
+          type: :user,
+          content: DiscourseAi::Agents::Bot::COMPLETION_LIMIT_FINAL_ANSWER_HINT,
+        )
+        @prompt.tool_choice = :none
       end
 
       def prepare_prompt!(execution_context, options)
@@ -522,6 +569,7 @@ module DiscourseAi
             @prompt,
             user: @user,
             execution_context: execution_context,
+            subagent_execution_state: @execution_state,
             protected_user_index: @protected_user_index,
             **options.slice(:max_tokens, :thinking_effort, :response_format, :max_tokens_is_total),
             feature_context: {
@@ -647,9 +695,7 @@ module DiscourseAi
           history_snapshot: @history_snapshot.metadata,
           evidence_scope: @history_snapshot.evidence_scope,
           protected_user_index: @protected_user_index,
-          preparation_elapsed_seconds: @preparation.elapsed_seconds,
-          preparation_calls: @preparation.calls,
-          preparation_spent_tokens: @preparation.spent_tokens,
+          completion_count: @completion_count,
           preparation_tokens: @preparation_tokens,
           current_user_id: @current_user&.id,
           agent_id: @agent.id,
