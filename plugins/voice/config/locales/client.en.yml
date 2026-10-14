@@ -369,7 +369,7 @@ en:
             room_error: "Could not list participants: %{error}"
             no_rooms: "No live calls are using LiveKit right now."
         rooms_title: "Voice rooms"
-        create_room: "Add room"
+        create_room: "New room"
         edit: "Edit"
         update: "Update"
         create: "Create"
