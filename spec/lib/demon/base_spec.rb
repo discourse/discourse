@@ -104,11 +104,6 @@ RSpec.describe Demon::Base do
       previous, previous_release = previous_instance
       started = Queue.new
       release = Queue.new
-      replacement_started = Queue.new
-      demon_class.define_method(:run) do
-        replacement_started << true
-        super()
-      end
       pool = Scheduler::ThreadPool.new(min_threads: 1, max_threads: 1)
       pool.post do
         started << true
@@ -117,7 +112,7 @@ RSpec.describe Demon::Base do
       expect(started.pop(timeout: 5)).to eq(true)
       demon.start
       previous_release.write("x")
-      expect(replacement_started.pop(timeout: 5)).to eq(true)
+      wait_for(timeout: 5) { Scheduler::ThreadPool.paused? }
 
       stopping = Thread.new { demon.stop }
       wait_for(timeout: 5) { stopping.status == "sleep" || !stopping.alive? }
@@ -130,6 +125,7 @@ RSpec.describe Demon::Base do
       expect(described_class.running?(File.read(demon.pid_file).to_i)).to eq(false)
     ensure
       release&.push(true)
+      Scheduler::ThreadPool.resume
       stopping&.join(5)
       pool&.shutdown
       pool&.wait_for_termination(timeout: 5)

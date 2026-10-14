@@ -1052,7 +1052,9 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    Scheduler::ForkDrain.drain
+    resume_after_fork
+    Scheduler::Defer.pause
+    Scheduler::ThreadPool.pause
     ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 
     DiscourseVips.before_fork
@@ -1095,14 +1097,14 @@ module Discourse
   end
 
   def self.resume_after_fork
-    Scheduler::ForkDrain.resume
+    Scheduler::Defer.resume
+    Scheduler::ThreadPool.resume
   end
 
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    Scheduler::ForkDrain.reset_after_fork
     resume_after_fork
     Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
 

@@ -41,6 +41,33 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
   end
 
   describe "#post" do
+    it "starts new threads after a fork without running the parent's queued tasks" do
+      completed = Queue.new
+      pool.pause
+      pool.post { completed << :parent }
+
+      child =
+        fork do
+          pool.post { completed << :child }
+          exit!(completed.pop(timeout: 5) == :child ? 0 : 1)
+        end
+      _, status = Timeout.timeout(10) { Process.wait2(child) }
+      child = nil
+
+      expect(status).to be_success
+      pool.resume
+      expect(completed.pop(timeout: 5)).to eq(:parent)
+    ensure
+      pool.resume
+      if child
+        begin
+          Process.kill("KILL", child)
+          Process.waitpid(child)
+        rescue Errno::ESRCH, Errno::ECHILD
+        end
+      end
+    end
+
     it "executes submitted tasks" do
       completion_queue = Queue.new
 
@@ -116,39 +143,6 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       let(:min_threads) { 1 }
       let(:max_threads) { 1 }
 
-      it "starts new threads after a fork without running the parent's queued tasks" do
-        completed = Queue.new
-        started = Queue.new
-        release = Queue.new
-        pool.post do
-          started << true
-          release.pop
-        end
-        expect(started.pop(timeout: 5)).to eq(true)
-        pool.post { completed << :parent }
-
-        child =
-          fork do
-            pool.post { completed << :child }
-            exit!(completed.pop(timeout: 5) == :child ? 0 : 1)
-          end
-        _, status = Timeout.timeout(10) { Process.wait2(child) }
-        child = nil
-
-        expect(status).to be_success
-        release << true
-        expect(completed.pop(timeout: 5)).to eq(:parent)
-      ensure
-        release&.push(true)
-        if child
-          begin
-            Process.kill("KILL", child)
-            Process.waitpid(child)
-          rescue Errno::ESRCH, Errno::ECHILD
-          end
-        end
-      end
-
       it "processes tasks in FIFO order" do
         completion_queue = Queue.new
         control_queue = Queue.new
@@ -182,9 +176,6 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
   end
 
   describe "#shutdown" do
-    let(:min_threads) { 1 }
-    let(:max_threads) { 1 }
-
     it "rejects new tasks after shutdown" do
       pool.shutdown
 
@@ -201,13 +192,15 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
         completed << 0
       end
       expect(started.pop(timeout: 5)).to eq(true)
+      pool.pause
       3.times { |index| pool.post { completed << index + 1 } }
 
       pool.shutdown
+      expect(3.times.map { completed.pop(timeout: 5) }.sort).to eq([1, 2, 3])
       release << true
       pool.wait_for_termination(timeout: 5)
 
-      expect(4.times.map { completed.pop(timeout: 5) }).to eq([0, 1, 2, 3])
+      expect(completed.pop(timeout: 5)).to eq(0)
       expect(pool.stats[:thread_count]).to eq(0)
     ensure
       release << true
@@ -227,6 +220,15 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       expect(pool.idle?).to eq(false)
     ensure
       release << true
+    end
+
+    it "is false while tasks are queued" do
+      pool.pause
+      pool.post {}
+
+      expect(pool.idle?).to eq(false)
+    ensure
+      pool.resume
     end
   end
 
@@ -250,6 +252,56 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
 
       expect(described_class.wait_for_idle(timeout: 5)).to eq(true)
       expect(pool.idle?).to eq(true)
+    end
+  end
+
+  describe ".pause" do
+    after { described_class.resume }
+
+    it "waits for running tasks to finish" do
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      pool.post do
+        started << true
+        release.pop
+        completed << :completed
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      pausing = Thread.new { described_class.pause }
+      wait_for(timeout: 5) { pausing.status == "sleep" || !pausing.alive? }
+      expect(pausing.join(0.1)).to eq(nil)
+      release << true
+
+      expect(pausing.join(5)).to eq(pausing)
+      expect(completed.pop(timeout: 5)).to eq(:completed)
+    ensure
+      release << true
+      pausing&.join(5)
+    end
+
+    it "allows shutdown while paused" do
+      described_class.pause
+
+      pool.shutdown
+
+      expect { pool.wait_for_termination(timeout: 5) }.not_to raise_error
+    end
+  end
+
+  describe ".resume" do
+    after { described_class.resume }
+
+    it "runs tasks queued while paused" do
+      completed = Queue.new
+      described_class.pause
+      pool.post { completed << :completed }
+      expect(completed.pop(timeout: 0.1)).to eq(nil)
+
+      described_class.resume
+
+      expect(completed.pop(timeout: 5)).to eq(:completed)
     end
   end
 end
