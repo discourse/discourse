@@ -1,6 +1,7 @@
 import { currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import EmbedMode from "discourse/lib/embed-mode";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -62,6 +63,35 @@ acceptance("Permalink redirect for /t/:slug_or_id", function (needs) {
         replace: true,
       })
     );
+  });
+});
+
+acceptance("Permalink redirect for /t/:slug (embedded)", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/t/id_for/:slug", () => helper.response(404, {}));
+    server.get("/permalink-check.json", () =>
+      helper.response({
+        found: true,
+        target_url: "https://www.example.com",
+      })
+    );
+  });
+
+  test("opens the external permalink in a new tab when embedded", async function (assert) {
+    const originalEmbedMode = EmbedMode.enabled;
+    EmbedMode.enabled = true;
+
+    try {
+      const open = sinon.stub(window, "open").returns(null);
+      const redirectAbsolute = sinon.stub(DiscourseURL, "redirectAbsolute");
+
+      await visitWithRedirects("/t/some-slug-that-does-not-exist");
+
+      assert.true(open.calledWith("https://www.example.com", "_blank"));
+      assert.false(redirectAbsolute.called);
+    } finally {
+      EmbedMode.enabled = originalEmbedMode;
+    }
   });
 });
 

@@ -1,13 +1,14 @@
 import { ajax } from "discourse/lib/ajax";
+import EmbedMode from "discourse/lib/embed-mode";
 import DiscourseURL from "discourse/lib/url";
 
 /**
- * Follows a permalink for `path`, if one exists, redirecting to its target.
- * Internal targets are redirected within the router so the transition is
- * tracked; external ones do a full-page redirect that replaces the current
- * history entry, after aborting the current transition. Returns
- * `{ type: "redirect" }` once handled, otherwise a `{ type: "not-found", html }`
- * result carrying the server-rendered 404 page.
+ * Looks up a permalink for `path` and redirects to its target. Returns
+ * `{ type: "redirect" }` once handled, or `{ type: "not-found", html }`
+ * carrying the server-rendered 404 page.
+ *
+ * Redirects replace the permalink URL in the back stack: internal targets
+ * navigate within the router, external ones full-page (new tab when embedded).
  */
 export default async function resolvePermalink(path, transition, router) {
   const results = await ajax("/permalink-check.json", { data: { path } });
@@ -18,23 +19,21 @@ export default async function resolvePermalink(path, transition, router) {
 
   let url = results.target_url;
   if (transition?._discourse_anchor) {
-    // Remove the anchor from the permalink if present
-    url = url.split("#")[0];
-
-    // Add the anchor from the transition
-    url += `#${transition._discourse_anchor}`;
+    // Keep the navigation anchor over any anchor already in the target
+    url = url.split("#")[0] + `#${transition._discourse_anchor}`;
   }
 
   if (results.internal) {
-    // Redirect within the routing system so the transition is tracked
     router.replaceWith(url);
     return { type: "redirect" };
   }
 
-  // Replace the history entry so the permalink URL doesn't linger after the
-  // external redirect
   transition?.abort();
-  DiscourseURL.redirectAbsolute(url, { replace: true });
+  if (EmbedMode.enabled) {
+    DiscourseURL.routeTo(url);
+  } else {
+    DiscourseURL.redirectAbsolute(url, { replace: true });
+  }
 
   return { type: "redirect" };
 }
