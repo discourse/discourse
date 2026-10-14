@@ -129,9 +129,8 @@ module DiscourseAi
           ]
           candidate = copy_prompt(prompt, messages)
           candidate_size, candidate_capacity = @llm.prompt_capacity(candidate, **options)
-          if candidate_size >= size || candidate_size > candidate_capacity
-            raise Error.new("unusable_summary")
-          end
+          raise Error.new("summary_not_smaller") if candidate_size >= size
+          raise Error.new("summary_over_capacity") if candidate_size > candidate_capacity
           return :cancelled if cancel_manager&.cancelled?
           @protected_user_index = messages.length - tail.length
           prompt.messages.replace(messages)
@@ -339,7 +338,7 @@ module DiscourseAi
             execution_context: options[:execution_context],
             cancel_manager: options[:cancel_manager],
           ) { |partial| summary << partial if partial.is_a?(String) }
-          raise Error.new("unusable_summary") if summary.blank?
+          raise Error.new("empty_summary") if summary.blank?
         end
         summary
       end
