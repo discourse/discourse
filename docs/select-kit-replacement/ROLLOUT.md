@@ -99,19 +99,22 @@ Paths are relative to the repository root.
   close: `triggerSearch`, a working `isLoading`, row `classNames`, per-callback rather than
   identifier-wide suppression, and per-use telemetry (the RFC asks for it; the bridge warns once
   per engine today).
-- **`modifyClass` deprecation.** Detection happens after `_resolveClass`
-  (`frontend/discourse/app/lib/plugin-api.gjs:3965-3986`) by testing whether the resolved class is
-  a select-kit component. The existing hook at `plugin-api.gjs:3943` runs before resolution and
-  only sees the name. Testing the class catches nested names such as
-  `component:select-kit/select-kit-row` and third-party subclasses. It fires only for families
-  that have joined (that list lives with the deprecation), once per source and target, with the source taken from `api.source`
-  (`plugin-api.gjs:217-228`). It throws in development (a workflow entry with
-  `env: "development"`) and uses `notify-admin` in production. A family joins only after the known
-  repos that patch it are ported, so the throw only stops boot for unknown code. A plugin
-  initializer's throw stops boot (`frontend/discourse/app/app.js:363-364`), so the message names
-  the target, the source and the migration guide. Admin notices only reach admins' own sessions
-  and are deduplicated by id (`frontend/discourse/app/services/deprecation-warning-handler.js:49-63`);
-  they need to be keyed by id and source.
+- **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
+  After `modifyClass` or `modifyClassStatic` applies a patch, it fires
+  `discourse.select-kit-rollout.modify-class` when the patched class is exactly the default export
+  of a module in `MIGRATED_SELECT_KIT_MODULES` and `enable_new_select_controls` is on. The set holds
+  module paths (`"category-drop"`, `"select-kit/select-kit-row"`); a family adds its modules when
+  its converted call sites merge, so a patch on a module core still renders is never reported. Only
+  the exact class counts: a third-party subclass keeps rendering select-kit, so a patch on it keeps
+  working. The flag is read last, because a container lookup instantiates and caches the service,
+  which would stop it being patched later. The patch is applied first, so it still reaches
+  third-party call sites. The deprecation throws in development and uses `notify-admin` in
+  production; in development a plugin's throw stops its initializer and boot
+  (`frontend/discourse/app/app.js:363-364`), and a theme's is reported as a theme error. A family
+  joins only after the known repos that patch it are ported, so the throw only stops boot for
+  unknown code. The console line names the plugin or theme from `api.source`; the admin notice
+  stays one per id, as for every deprecation, and names the first source. The migration guide's URL
+  is added with the Meta topic when the flag leaves conceptual.
 - **Third-party deprecation.** Attribution happens at import time, because the render stack has no
   theme frame: a non-core module importing `discourse/select-kit/components/*` for a family that
   has joined. Ids use a `discourse.select-kit-rollout.*` namespace so the existing silence rules
@@ -212,7 +215,7 @@ customization ports are done.
   rendered; state round trips across modes; legacy and new controls mixed on one page; member,
   staff and anonymous paths; Foundation and Horizon, light and dark, mobile (DSelect opens a
   DModal) and screen readers; `script/check_strict_types` and `pnpm lint:types` clean.
-- **`modifyClass` deprecation:** boot tests with bundled, customer and theme initializers; nested
-  names, deferred targets, static modifications, and targets that aren't select-kit; per-source
-  deduplication.
+- **`modifyClass` deprecation:** unit tests cover the migrated-set gate, the flag, exact class vs
+  subclass, nested names, static patches, plugin and theme attribution, and throw-after-patch per
+  environment. Each family adds a boot test with a real plugin patch when it joins.
 - **Before beta:** the customer repos' own specs pass with the flag on.

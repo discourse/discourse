@@ -18,9 +18,13 @@ facade and codemod plan this phase used to carry is superseded.
   list; a family joins when its converted call sites merge. `body_class` waits for the first family
   that needs CSS.
 - ☐ **Class root:** flip `.d-combobox` to `.d-select`.
-- ☐ **`modifyClass` deprecation:** detect select-kit classes after resolution, joined families
-  only (the list lives here), per source and target; throw in development, `notify-admin` in
-  production; admin notices keyed by id and source.
+- ☑ **`modifyClass` deprecation** (`select-kit-modify-class-deprecation.ts`): fires after the
+  patch is applied, for the exact class of a module in `MIGRATED_SELECT_KIT_MODULES` while the flag
+  is on; throws in development, `notify-admin` in production; one admin notice per id. The set is
+  empty until wave 1. **When a family joins:** add its module paths to the set; any bundled-plugin
+  test that turns the flag on and patches that family then fails (QUnit raise-on-deprecation,
+  system specs' `EMBER_RAISE_ON_DEPRECATION`), which is intended; add a boot test with a real plugin
+  patch.
 - ☐ **Third-party deprecation** at import time, under `discourse.select-kit-rollout.*`.
 - ☐ **Bridge contract:** fixtures mirroring real `modifySelectKit` callers; add `triggerSearch`, a
   working `isLoading`, row `classNames`, per-callback suppression, per-use telemetry.
