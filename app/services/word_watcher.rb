@@ -23,21 +23,12 @@ class WordWatcher
   end
 
   def self.clear_cache!
-    WatchedWord.actions.each do |action, _|
-      Discourse.cache.delete(cache_key(action))
-      [false, true].each do |regular_expressions|
-        Discourse.cache.delete(
-          compiled_regexps_cache_key(action: action, regular_expressions: regular_expressions),
-        )
-      end
-    end
+    WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
   end
 
-  def self.compiled_regexps_cache_key(
-    action:,
-    regular_expressions: SiteSetting.watched_words_regular_expressions?
-  )
-    "watched-words-compiled:v#{CACHE_VERSION}:#{action}:#{regular_expressions}"
+  def self.compiled_regexps_cache_key(action:, words:, regular_expressions:)
+    digest = Digest::SHA256.hexdigest(Marshal.dump(words))
+    "watched-words-compiled:v#{CACHE_VERSION}:#{action}:#{regular_expressions}:#{digest}"
   end
   private_class_method :compiled_regexps_cache_key
 
@@ -88,21 +79,39 @@ class WordWatcher
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   def self.compiled_regexps_for_action(action, raise_errors: false)
-    if cache_enabled? && !raise_errors
-      Discourse
-        .cache
-        .fetch(compiled_regexps_cache_key(action: action), expires_in: 1.day) do
-          compile_regexps_for_action(action)
-        end
-    else
-      compile_regexps_for_action(action, raise_errors: raise_errors)
-    end
-  end
-
-  def self.compile_regexps_for_action(action, raise_errors: false)
     words = cached_words_for_action(action)
     return [] if words.blank?
 
+    regular_expressions = SiteSetting.watched_words_regular_expressions?
+
+    if cache_enabled? && !raise_errors
+      Discourse
+        .cache
+        .fetch(
+          compiled_regexps_cache_key(
+            action: action,
+            words: words,
+            regular_expressions: regular_expressions,
+          ),
+          expires_in: 1.day,
+        ) do
+          compile_regexps_for_action(
+            action: action,
+            words: words,
+            regular_expressions: regular_expressions,
+          )
+        end
+    else
+      compile_regexps_for_action(
+        action: action,
+        words: words,
+        regular_expressions: regular_expressions,
+        raise_errors: raise_errors,
+      )
+    end
+  end
+
+  def self.compile_regexps_for_action(action:, words:, regular_expressions:, raise_errors: false)
     words
       .values
       .group_by { |attrs| attrs[:case_sensitive] ? :case_sensitive : :case_insensitive }
@@ -113,7 +122,12 @@ class WordWatcher
         regexp =
           words
             .map do |word|
-              r = word_to_regexp(word, match_word: SiteSetting.watched_words_regular_expressions?)
+              r =
+                word_to_regexp(
+                  word,
+                  match_word: regular_expressions,
+                  regular_expressions: regular_expressions,
+                )
               begin
                 r if Regexp.new(r)
               rescue RegexpError => e
@@ -130,7 +144,7 @@ class WordWatcher
         next if regexp.blank?
 
         # Add word boundaries to the regexp for regular watched words
-        regexp = match_word_regexp(regexp) if !SiteSetting.watched_words_regular_expressions?
+        regexp = match_word_regexp(regexp) if !regular_expressions
 
         # Add case insensitive flag if needed
         begin
@@ -151,8 +165,12 @@ class WordWatcher
     compiled_regexps_for_action(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
   end
 
-  def self.word_to_regexp(word, match_word: true)
-    if SiteSetting.watched_words_regular_expressions?
+  def self.word_to_regexp(
+    word,
+    match_word: true,
+    regular_expressions: SiteSetting.watched_words_regular_expressions?
+  )
+    if regular_expressions
       regexp = word
       regexp = "(#{regexp})" if match_word
       regexp
