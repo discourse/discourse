@@ -255,19 +255,18 @@ module UserGuardian
   end
 
   def can_see_review_queue?
-    is_staff? ||
-      (
-        SiteSetting.enable_category_group_moderation &&
-          Reviewable
-            .joins(
-              "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
-            )
-            .where(
-              category_id: allowed_category_ids,
-              "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
-            )
-            .exists?
+    return true if is_staff?
+    return false if !category_group_moderation_allowed? || !@user.category_group_moderator?
+
+    Reviewable
+      .joins(
+        "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
       )
+      .where(
+        category_id: allowed_category_ids,
+        "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
+      )
+      .exists?
   end
 
   def can_see_summary_stats?(target_user)
