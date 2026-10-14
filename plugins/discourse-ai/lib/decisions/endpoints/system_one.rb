@@ -25,27 +25,25 @@ module DiscourseAi
             malformed!("answers must be an object")
           end
           validate_names!(body["answers"], questions)
-          answers =
-            questions.map do |question|
-              raw = body["answers"][question.name]
-              malformed!("invalid answer for #{question.name}") if !raw.is_a?(Hash)
-              probabilities = raw["probabilities"]
-              if question.type == :score && raw["type"] != "refusal"
-                keys = question.levels.each_index.map(&:to_s)
-                if !probabilities.is_a?(Hash) || probabilities.keys.sort != keys.sort
-                  malformed!("expected one probability per level for #{question.name}")
-                end
-                probabilities = keys.map { |key| probabilities[key] }
+          questions.map do |question|
+            raw = body["answers"][question.name]
+            malformed!("invalid answer for #{question.name}") if !raw.is_a?(Hash)
+            probabilities = raw["probabilities"]
+            if question.type == :score && raw["type"] != "refusal"
+              keys = question.levels.each_index.map(&:to_s)
+              if !probabilities.is_a?(Hash) || probabilities.keys.sort != keys.sort
+                malformed!("expected one probability per level for #{question.name}")
               end
-              parse_answer(
-                question,
-                raw,
-                WIRE_TYPES.fetch(question.type),
-                probability: raw["noul"],
-                probabilities:,
-              )
+              probabilities = keys.map { |key| probabilities[key] }
             end
-          answers
+            parse_answer(
+              question,
+              raw,
+              WIRE_TYPES.fetch(question.type),
+              probability: raw["noul"],
+              probabilities:,
+            )
+          end
         end
 
         private

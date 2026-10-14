@@ -26,9 +26,8 @@ module DiscourseAi
 
         def headers
           headers = { "Content-Type" => "application/json" }
-          headers[
-            "Authorization"
-          ] = "Bearer #{decision_model.api_key}" if decision_model.api_key.present?
+          api_key = decision_model.api_key
+          headers["Authorization"] = "Bearer #{api_key}" if api_key.present?
           headers
         end
 
@@ -55,7 +54,6 @@ module DiscourseAi
         end
 
         def parse_answer(question, raw, wire_type, probability:, probabilities:)
-          malformed!("missing answer for #{question.name}") if !raw.is_a?(Hash)
           if raw["type"] == "refusal"
             reason = raw["reason"] || raw["refusal"]
             if !reason.nil? && !reason.is_a?(String)

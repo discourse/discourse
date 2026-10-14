@@ -152,8 +152,14 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(result["team"].choice).to eq("billing")
     end
 
-    it "rejects malformed answers, probabilities, confidence and usage without retrying" do
+    it "rejects malformed answers, probabilities and confidence without retrying" do
       malformed = [
+        [],
+        response_body.deep_dup.tap { |body| body[:answers] = [] },
+        response_body.deep_dup.tap { |body| body[:answers][:urgent] = nil },
+        response_body.deep_dup.tap do |body|
+          body[:answers][:urgent] = { type: "refusal", reason: 1 }
+        end,
         response_body.deep_dup.tap { |body| body[:answers].delete(:urgent) },
         response_body.deep_dup.tap { |body| body[:answers][:extra] = body[:answers][:urgent] },
         response_body.deep_dup.tap { |body| body[:answers][:urgent][:type] = "predicate" },
@@ -167,6 +173,7 @@ RSpec.describe DiscourseAi::Decisions::Client do
         end,
         response_body.deep_dup.tap { |body| body[:answers][:severity][:probabilities]["3"] = 0.0 },
         response_body.deep_dup.tap { |body| body[:answers][:team][:confidence] = -0.1 },
+        response_body.deep_dup.tap { |body| body[:answers][:severity][:score] = 3 },
       ]
       request =
         stub_request(:post, decision_model.url).to_return(
@@ -254,16 +261,19 @@ RSpec.describe DiscourseAi::Decisions::Client do
     end
 
     it "does not retry SSRF failures" do
-      request =
-        stub_request(:post, decision_model.url).to_raise(
-          FinalDestination::SSRFError.new("Private host"),
-        )
+      WebMock.enable!(except: [:final_destination])
+      FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
+      stub_ip_lookup(URI(decision_model.url).host, ["169.254.169.254"])
+
       expect { client.decide("Hello", questions:, feature_name: "test") }.to raise_error(
         DiscourseAi::Decisions::RequestFailed,
+        /all resolved IPs were disallowed/,
       ) { |error| expect(error).not_to be_retryable }
-      expect(request).to have_been_requested.once
       expect(AiApiAuditLog.last).to have_attributes(response_status: 0, request_attempts: nil)
       expect(AiApiRequestStat.count).to eq(1)
+    ensure
+      WebMock.enable!
+      FinalDestination::SSRFDetector.disallow_ip_lookups_in_test!
     end
 
     it "sanitizes provider errors and does not retry rejected requests" do
@@ -347,8 +357,8 @@ RSpec.describe DiscourseAi::Decisions::Client do
 
     it "keeps valid answers when usage counts are unusable" do
       body =
-        response_body.deep_dup.tap do |b|
-          b[:usage] = { input_tokens: 296.0, output_tokens: 3_000_000_000 }
+        response_body.deep_dup.tap do |payload|
+          payload[:usage] = { input_tokens: 296.0, output_tokens: 3_000_000_000 }
         end
       stub_request(:post, decision_model.url).to_return(body: body.to_json)
 
@@ -373,13 +383,13 @@ RSpec.describe DiscourseAi::Decisions::Client do
     end
 
     it "resolves SRV endpoints and preserves the path" do
-      decision_model.update!(url: "srv://_decisions._tcp.example.com/v1/decide")
+      decision_model.update!(url: "srv://_decisions._tcp.example.com/v1/decide?region=eu")
       DiscourseAi::Utils::DnsSrv
         .stubs(:lookup)
         .with("_decisions._tcp.example.com")
         .returns(Resolv::DNS::Resource::IN::SRV.new(0, 0, 8443, "engine.example.com"))
       request =
-        stub_request(:post, "https://engine.example.com:8443/v1/decide").to_return(
+        stub_request(:post, "https://engine.example.com:8443/v1/decide?region=eu").to_return(
           body: response_body.to_json,
         )
       client.decide("Hello", questions:, feature_name: "test")
@@ -393,6 +403,13 @@ RSpec.describe DiscourseAi::Decisions::Client do
         DiscourseAi::Decisions::RequestFailed,
       ) { |error| expect(error).not_to be_retryable }
       expect(AiApiAuditLog.count).to eq(0)
+
+      DiscourseAi::Utils::DnsSrv.stubs(:lookup).raises(Resolv::ResolvTimeout)
+      expect { client.decide("Hello", questions:, feature_name: "test") }.to raise_error(
+        DiscourseAi::Decisions::RequestFailed,
+        /SRV lookup/,
+      ) { |error| expect(error).not_to be_retryable }
+      expect(AiApiAuditLog.count).to eq(0)
     end
 
     it "validates requests before transport or audit logging" do
@@ -404,21 +421,17 @@ RSpec.describe DiscourseAi::Decisions::Client do
         { images: ["data:image/png,AAAA"] },
         { images: ["data:image/png;base64,AAAA"] },
         { images: [123] },
+        { images: nil },
         { questions: [{ name: "invalid-name", type: "yes_no", instructions: "Question?" }] },
       ].each do |overrides|
         expect {
           client.decide("Hello", **{ questions:, feature_name: "test" }.merge(overrides))
         }.to raise_error(DiscourseAi::Decisions::InvalidRequest)
       end
-      ["", nil].each do |state|
-        expect {
-          client.decide(
-            state,
-            questions:,
-            images: ["data:image/png;base64,AAAA"],
-            feature_name: "test",
-          )
-        }.to raise_error(DiscourseAi::Decisions::InvalidRequest)
+      ["", nil, {}, [], 123].each do |state|
+        expect { client.decide(state, questions:, feature_name: "test") }.to raise_error(
+          DiscourseAi::Decisions::InvalidRequest,
+        )
       end
       expect(AiApiAuditLog.count).to eq(0)
       expect(AiApiRequestStat.count).to eq(0)
@@ -549,6 +562,8 @@ RSpec.describe DiscourseAi::Decisions::Client do
 
     it "rejects duplicate answers and missing or duplicate level probabilities" do
       malformed = [
+        open_ai_body.deep_dup.tap { |body| body[:answers] = {} },
+        open_ai_body.deep_dup.tap { |body| body[:answers][1][:probabilities] = {} },
         open_ai_body.deep_dup.tap { |body| body[:answers] << body[:answers].first },
         open_ai_body.deep_dup.tap { |body| body[:answers][2][:probabilities].pop },
         open_ai_body.deep_dup.tap do |body|

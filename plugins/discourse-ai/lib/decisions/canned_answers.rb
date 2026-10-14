@@ -32,27 +32,19 @@ module DiscourseAi
                 raise ArgumentError, "Invalid canned probability for #{question.name}"
               end
               Answers::YesNo.new(name: question.name, probability: probability.to_f)
-            when :choice
-              probabilities = distribution(question.choices, value)
-              Answers::Choice.new(
-                name: question.name,
-                choice: probabilities.max_by(&:last).first,
-                probabilities:,
-                confidence: probabilities.values.max,
-              )
-            when :score
-              probabilities = distribution(question.levels, value)
-              score =
-                probabilities.values.each_with_index.sum do |level_probability, index|
-                  level_probability * index
-                end
-              Answers::Score.new(
-                name: question.name,
-                score:,
-                level: probabilities.max_by(&:last).first,
-                probabilities:,
-                confidence: probabilities.values.max,
-              )
+            when :choice, :score
+              probabilities = distribution(question.choices || question.levels, value)
+              label, confidence = probabilities.max_by(&:last)
+              attributes = { name: question.name, probabilities:, confidence: }
+              if question.type == :choice
+                Answers::Choice.new(**attributes, choice: label)
+              else
+                score =
+                  probabilities.values.each_with_index.sum do |level_probability, index|
+                    level_probability * index
+                  end
+                Answers::Score.new(**attributes, score:, level: label)
+              end
             end
           end
         Result.new(answers:, provider_model: "canned", input_tokens: 0, output_tokens: 0)

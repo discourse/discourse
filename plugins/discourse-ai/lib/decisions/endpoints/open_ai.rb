@@ -34,34 +34,32 @@ module DiscourseAi
           end
           raw_answers = raw_answers.index_by { |answer| answer["name"] }
           validate_names!(raw_answers, questions)
-          answers =
-            questions.map do |question|
-              raw = raw_answers.fetch(question.name)
-              probabilities = nil
-              if question.type != :yes_no && raw["type"] != "refusal"
-                entries = raw["probabilities"]
-                if !entries.is_a?(Array) || !entries.all?(Hash)
-                  malformed!("probabilities must be a list of objects")
-                end
-                values = entries.map { |entry| entry["value"] }
-                expected =
-                  question.type == :choice ? question.choices : question.levels.each_index.to_a
-                if values.uniq.size != values.size || values.to_set != expected.to_set
-                  malformed!("expected one probability per choice or level")
-                end
-                probabilities = entries.to_h { |entry| [entry["value"], entry["probability"]] }
-                probabilities = expected.map { |value| probabilities[value] } if question.type ==
-                  :score
+          questions.map do |question|
+            raw = raw_answers.fetch(question.name)
+            probabilities = nil
+            if question.type != :yes_no && raw["type"] != "refusal"
+              entries = raw["probabilities"]
+              if !entries.is_a?(Array) || !entries.all?(Hash)
+                malformed!("probabilities must be a list of objects")
               end
-              parse_answer(
-                question,
-                raw,
-                WIRE_TYPES.fetch(question.type),
-                probability: raw["probability"],
-                probabilities:,
-              )
+              values = entries.map { |entry| entry["value"] }
+              expected =
+                question.type == :choice ? question.choices : question.levels.each_index.to_a
+              if values.uniq.size != values.size || values.to_set != expected.to_set
+                malformed!("expected one probability per choice or level")
+              end
+              probabilities = entries.to_h { |entry| [entry["value"], entry["probability"]] }
+              probabilities = expected.map { |value| probabilities[value] } if question.type ==
+                :score
             end
-          answers
+            parse_answer(
+              question,
+              raw,
+              WIRE_TYPES.fetch(question.type),
+              probability: raw["probability"],
+              probabilities:,
+            )
+          end
         end
 
         private

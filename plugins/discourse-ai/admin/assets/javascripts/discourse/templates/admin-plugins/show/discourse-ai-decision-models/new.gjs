@@ -1,8 +1,10 @@
-import AiDecisionModelsListEditor from "../../../../components/ai-decision-models-list-editor";
+import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form";
 
 export default <template>
-  <AiDecisionModelsListEditor
-    @currentDecisionModel={{@controller.model}}
-    @decisionModels={{@controller.allDecisionModels}}
-  />
+  <section class="admin-detail">
+    <AiDecisionModelEditorForm
+      @decisionModels={{@controller.allDecisionModels}}
+      @model={{@controller.model}}
+    />
+  </section>
 </template>

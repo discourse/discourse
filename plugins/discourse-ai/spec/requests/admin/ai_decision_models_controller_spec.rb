@@ -37,14 +37,31 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       expect(
         response.parsed_body.dig("meta", "ai_secrets").map { |secret| secret["id"] },
       ).to include(ai_secret.id)
+      expect(response.body).not_to include(ai_secret.secret, decision_model.api_key)
     end
+  end
 
-    it "is not accessible to moderators" do
+  describe "authorization" do
+    fab!(:decision_model)
+
+    it "restricts every action to administrators" do
       sign_in(Fabricate(:moderator))
-
-      get "/admin/plugins/discourse-ai/ai-decision-models.json"
-
-      expect(response.status).to eq(404)
+      base_path = "/admin/plugins/discourse-ai/ai-decision-models"
+      [
+        [:get, ""],
+        [:get, "/new"],
+        [:get, "/#{decision_model.id}/edit"],
+        [:post, ""],
+        [:put, "/#{decision_model.id}"],
+        [:delete, "/#{decision_model.id}"],
+        [:post, "/test"],
+      ].each do |method, path|
+        public_send(method, "#{base_path}#{path}.json", params: { ai_decision_model: valid_attrs })
+        expect(response.status).to eq(404)
+      end
+      expect(decision_model.reload.display_name).to eq("TypeSafe Jev")
+      expect(DecisionModel.count).to eq(1)
+      expect(AiApiAuditLog.count).to eq(0)
     end
   end
 
@@ -101,6 +118,14 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
           custom_type: "update_ai_decision_model",
         ).count,
       ).to eq(1)
+      put "/admin/plugins/discourse-ai/ai-decision-models/#{decision_model.id}.json",
+          params: {
+            ai_decision_model: {
+              provider: "unknown",
+            },
+          }
+      expect(response.status).to eq(422)
+      expect(decision_model.reload.provider).to eq("system_one")
     end
   end
 
@@ -189,23 +214,6 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       end
     end
 
-    it "reports providers that reject the test image" do
-      stub_request(:post, valid_attrs[:url]).to_return(
-        status: 400,
-        body: { detail: { error_type: "api_usage_error", message: "Invalid request." } }.to_json,
-      )
-
-      post "/admin/plugins/discourse-ai/ai-decision-models/test.json",
-           params: {
-             ai_decision_model: valid_attrs.merge(vision_enabled: true),
-           }
-
-      expect(response.parsed_body).to eq(
-        "success" => false,
-        "error" => "Request failed with status 400: Invalid request.",
-      )
-    end
-
     it "rate limits staff after six tests" do
       RateLimiter.enable
       DiscourseAi::Decisions.with_canned_answers(greeting: true) do
@@ -224,20 +232,24 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       end
     end
 
-    it "reports provider errors" do
-      stub_request(:post, valid_attrs[:url]).to_return(
-        status: 401,
-        body: { error: { message: "Invalid API key" } }.to_json,
-      )
+    it "reports provider errors for text and image requests" do
+      [[401, false], [400, true]].each do |status, vision_enabled|
+        stub_request(:post, valid_attrs[:url]).to_return(
+          status:,
+          body: { detail: { error_type: "api_usage_error", message: "Invalid request." } }.to_json,
+        )
 
-      post "/admin/plugins/discourse-ai/ai-decision-models/test.json",
-           params: {
-             ai_decision_model: valid_attrs,
-           }
+        post "/admin/plugins/discourse-ai/ai-decision-models/test.json",
+             params: {
+               ai_decision_model: valid_attrs.merge(vision_enabled:),
+             }
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["success"]).to eq(false)
-      expect(response.parsed_body["error"]).to include("401: Invalid API key")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          "success" => false,
+          "error" => "Request failed with status #{status}: Invalid request.",
+        )
+      end
     end
   end
 end

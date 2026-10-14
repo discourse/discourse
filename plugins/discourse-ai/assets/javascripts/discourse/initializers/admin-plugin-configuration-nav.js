@@ -31,9 +31,6 @@ export default {
           route: "adminPlugins.show.discourse-ai-llms",
           description: "discourse_ai.llms.preconfigured.description",
         },
-        // Workflows are the only consumer of decision models for now; show the tab
-        // unconditionally once another feature (e.g. spam detection) uses them.
-        // The route itself stays reachable directly.
         ...(siteSettings.enable_discourse_workflows
           ? [
               {

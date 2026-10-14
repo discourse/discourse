@@ -35,6 +35,7 @@ RSpec.describe DiscourseAi::Decisions::Question do
         [:name, "a" * 65],
         [:type, "unknown"],
         [:instructions, " "],
+        [:levels, %w[low high]],
         [:choices, ["only"]],
         [:choices, Array.new(256) { |index| index.to_s }],
         [:choices, ["same", " same "]],
@@ -52,6 +53,14 @@ RSpec.describe DiscourseAi::Decisions::Question do
           described_class.new(name: "severity", type: :score, instructions: "How bad?", levels:)
         }.to raise_error(DiscourseAi::Decisions::InvalidRequest, /severity.*levels/)
       end
+      expect { described_class.wrap({}) }.to raise_error(
+        DiscourseAi::Decisions::InvalidRequest,
+        /name:/,
+      )
+      expect { described_class.wrap(base.merge(type: "yes_no")) }.to raise_error(
+        DiscourseAi::Decisions::InvalidRequest,
+        /choices:/,
+      )
     end
 
     it "accepts the name and collection limits" do

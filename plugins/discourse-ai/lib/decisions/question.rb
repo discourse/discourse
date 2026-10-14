@@ -12,17 +12,10 @@ module DiscourseAi
         return question if question.is_a?(self)
         raise InvalidRequest, "Questions must be hashes" if !question.is_a?(Hash)
 
-        attributes = question.symbolize_keys
-        new(
-          **attributes.slice(:name, :type, :instructions, :choices, :levels).reverse_merge(
-            name: nil,
-            type: nil,
-            instructions: nil,
-          ),
-        )
+        new(**question.symbolize_keys.slice(:name, :type, :instructions, :choices, :levels))
       end
 
-      def initialize(name:, type:, instructions:, choices: nil, levels: nil)
+      def initialize(name: nil, type: nil, instructions: nil, choices: nil, levels: nil)
         @name = name.to_s.strip
         if !@name.match?(NAME_FORMAT)
           invalid!(:name, "must be an identifier of at most 64 characters")

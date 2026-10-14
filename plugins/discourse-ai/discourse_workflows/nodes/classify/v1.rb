@@ -243,9 +243,10 @@ if defined?(DiscourseWorkflows)
                 feature_name: "workflow",
                 user: Discourse.system_user,
               )
-            if result.refusals.present?
+            refusals = result.refusals
+            if refusals.present?
               exec_ctx.log.warn(
-                "Decision model refused questions: #{result.refusals.map(&:name).join(", ")}",
+                "Decision model refused questions: #{refusals.map(&:name).join(", ")}",
               )
             end
             result.answers.transform_values(&:to_h)

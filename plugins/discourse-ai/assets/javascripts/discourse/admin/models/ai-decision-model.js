@@ -17,13 +17,10 @@ export default class AiDecisionModel extends RestModel {
     return this.createProperties();
   }
 
-  async testConfig(config) {
-    return await ajax(
-      "/admin/plugins/discourse-ai/ai-decision-models/test.json",
-      {
-        type: "POST",
-        data: { ai_decision_model: config },
-      }
-    );
+  testConfig(config) {
+    return ajax("/admin/plugins/discourse-ai/ai-decision-models/test.json", {
+      type: "POST",
+      data: { ai_decision_model: config },
+    });
   }
 }

@@ -39,7 +39,12 @@ module DiscourseAi
         decision_model = DecisionModel.new(decision_model_params)
 
         if decision_model.save
-          log_decision_model_creation(decision_model)
+          DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_creation(
+            "decision_model",
+            decision_model,
+            logger_fields,
+            { decision_model_id: decision_model.id, subject: decision_model.display_name },
+          )
           render json: AiDecisionModelSerializer.new(decision_model), status: :created
         else
           render_json_error decision_model
@@ -51,7 +56,13 @@ module DiscourseAi
         initial_attributes = decision_model.attributes.dup
 
         if decision_model.update(decision_model_params)
-          log_decision_model_update(decision_model, initial_attributes)
+          DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_update(
+            "decision_model",
+            decision_model,
+            initial_attributes,
+            logger_fields,
+            { decision_model_id: decision_model.id, subject: decision_model.display_name },
+          )
           render json: AiDecisionModelSerializer.new(decision_model)
         else
           render_json_error decision_model
@@ -69,7 +80,10 @@ module DiscourseAi
             .merge(decision_model_id: decision_model.id, subject: decision_model.display_name)
 
         if decision_model.destroy
-          log_decision_model_deletion(details)
+          DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_deletion(
+            "decision_model",
+            details,
+          )
           head :no_content
         else
           render_json_error decision_model
@@ -147,32 +161,6 @@ module DiscourseAi
 
       def logger_fields
         { display_name: {}, name: {}, provider: {}, url: {}, ai_secret_id: {}, vision_enabled: {} }
-      end
-
-      def log_decision_model_creation(decision_model)
-        DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_creation(
-          "decision_model",
-          decision_model,
-          logger_fields,
-          { decision_model_id: decision_model.id, subject: decision_model.display_name },
-        )
-      end
-
-      def log_decision_model_update(decision_model, initial_attributes)
-        DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_update(
-          "decision_model",
-          decision_model,
-          initial_attributes,
-          logger_fields,
-          { decision_model_id: decision_model.id, subject: decision_model.display_name },
-        )
-      end
-
-      def log_decision_model_deletion(details)
-        DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_deletion(
-          "decision_model",
-          details,
-        )
       end
     end
   end

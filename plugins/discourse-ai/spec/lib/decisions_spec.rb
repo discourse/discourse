@@ -40,8 +40,6 @@ RSpec.describe DiscourseAi::Decisions do
             "high" => 0.75,
           },
         )
-        expect(result["team"].probabilities).to be_frozen
-        expect(result["severity"].probabilities).to be_frozen
         expect(result.to_h[:answers]["team"]).to eq(result["team"].to_h)
         expect { result["unknown"] }.to raise_error(KeyError)
         expect(canned.calls).to contain_exactly(
@@ -56,7 +54,7 @@ RSpec.describe DiscourseAi::Decisions do
       end
     end
 
-    it "supports boolean predicates, distributions, labels and refusals without value readers" do
+    it "supports boolean predicates, distributions, labels and refusals" do
       [true, false].each do |value|
         described_class.with_canned_answers(
           spam: value,
@@ -76,15 +74,6 @@ RSpec.describe DiscourseAi::Decisions do
         result = decision_model.decide("Hello", questions:, feature_name: "test")
         expect(result.refusals.map(&:name)).to eq(%w[spam team severity])
         expect(result["spam"].to_h).to eq(type: "refusal", reason: nil)
-        expect(result["spam"]).not_to respond_to(
-          :probability,
-          :choice,
-          :score,
-          :level,
-          :confidence,
-          :probabilities,
-          :yes?,
-        )
       end
     end
 
@@ -103,6 +92,24 @@ RSpec.describe DiscourseAi::Decisions do
         )
       end
       expect(DiscourseAi::Decisions::CannedAnswers.current).to be_nil
+    end
+
+    it "rejects invalid canned probabilities and distributions" do
+      [
+        { spam: -0.1 },
+        { team: "other" },
+        { team: {} },
+        { team: { billing: 2 } },
+        { severity: { low: Float::INFINITY } },
+      ].each do |overrides|
+        described_class.with_canned_answers(
+          **{ spam: true, team: "billing", severity: "low" }.merge(overrides),
+        ) do
+          expect {
+            decision_model.decide("Hello", questions:, feature_name: "test")
+          }.to raise_error(ArgumentError, /Invalid canned/)
+        end
+      end
     end
   end
 end
