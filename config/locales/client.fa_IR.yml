@@ -211,7 +211,6 @@ fa_IR:
       sk:
         name: اسلوواکی
     share:
-      topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
       twitter: "هم‌رسانی در X"
@@ -360,9 +359,6 @@ fa_IR:
     max_of_count:
       one: "حداکثر %{count}"
       other: "حداکثر %{count}"
-    character_count:
-      one: "%{count} نویسه"
-      other: "%{count} نویسه"
     period_chooser:
       aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:

@@ -153,7 +153,6 @@ bs_BA:
     date_range_picker:
       apply: "Snimi"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
@@ -276,10 +275,6 @@ bs_BA:
       one: "maksimalno %{count}"
       few: "maksimalno %{count}"
       other: "maksimalno %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
       pill: "Povezane Poruke"

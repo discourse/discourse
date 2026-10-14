@@ -292,7 +292,6 @@ el:
       zh_CN:
         name: Κινεζικά Απλοποιημένα
     share:
-      topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
       post: "ανάρτηση #%{postNumber} από @%{username}"
       close: "κλείσιμο"
       twitter: "Κοινοποίηση στο X"
@@ -484,9 +483,6 @@ el:
     max_of_count:
       one: "μέγιστο %{count}"
       other: "μέγιστο %{count}"
-    character_count:
-      one: "%{count} χαρακτήρα"
-      other: "%{count} χαρακτήρες"
     period_chooser:
       aria_label: "Φίλτρο ανά περίοδο"
     related_messages:

@@ -312,7 +312,6 @@ fr:
       zh_CN:
         name: Chinois simplifié
     share:
-      topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "publication #%{postNumber} par @%{username}"
       close: "fermer"
       twitter: "Partager sur X"
@@ -511,9 +510,6 @@ fr:
     max_of_count:
       one: "maximum sur %{count}"
       other: "maximum sur %{count}"
-    character_count:
-      one: "%{count} caractère"
-      other: "%{count} caractères"
     period_chooser:
       aria_label: "Filtrer par période"
     related_messages:

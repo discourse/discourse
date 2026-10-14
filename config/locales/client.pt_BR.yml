@@ -294,7 +294,6 @@ pt_BR:
       zh_CN:
         name: Chinês simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Compartilhar no X"
@@ -483,9 +482,6 @@ pt_BR:
     max_of_count:
       one: "máx de %{count}"
       other: "máx de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:

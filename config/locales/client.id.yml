@@ -130,7 +130,6 @@ id:
         last_7_days: "7 hari terakhir"
         last_30_days: "30 hari terakhir"
     share:
-      topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "kiriman #%{postNumber} oleh @%{username}"
       close: "tutup"
       facebook: "Bagikan di Facebook"
@@ -265,8 +264,6 @@ id:
     every_six_months: "setiap enam bulan"
     max_of_count:
       other: "maksimal dari %{count}"
-    character_count:
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Filter berdasarkan periode"
     related_messages:

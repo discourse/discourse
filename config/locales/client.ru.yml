@@ -354,7 +354,6 @@ ru:
       zh_CN:
         name: Китайский упрощенный
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "Сообщение #%{postNumber} от пользователя @%{username}"
       close: "закрыть"
       twitter: "Поделиться на X"
@@ -545,11 +544,6 @@ ru:
       few: "%{count} макс."
       many: "%{count} макс."
       other: "%{count} макс."
-    character_count:
-      one: "%{count} символ"
-      few: "%{count} символа"
-      many: "%{count} символов"
-      other: "%{count} символа"
     period_chooser:
       aria_label: "Фильтр по периоду"
     related_messages:

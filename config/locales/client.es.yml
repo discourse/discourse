@@ -286,7 +286,6 @@ es:
       zh_CN:
         name: Chino simplificado
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación n.º %{postNumber}, por @%{username}"
       close: "cerrar"
       twitter: "Compartir en X"
@@ -471,9 +470,6 @@ es:
     max_of_count:
       one: "máximo de %{count}"
       other: "máximo de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por periodo"
     related_messages:

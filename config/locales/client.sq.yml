@@ -161,7 +161,6 @@ sq:
       en:
         name: Anglisht
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "postimi #%{postNumber} nga @%{username}"
       close: "mbylle"
       twitter: "Shpërndaje në X"
@@ -303,9 +302,6 @@ sq:
     max_of_count:
       one: "max i %{count}"
       other: "max i %{count}"
-    character_count:
-      one: "%{count} shkronjë"
-      other: "%{count} shkronja"
     period_chooser:
       aria_label: "Filtro sipas periudhës"
     related_messages:

@@ -175,7 +175,6 @@ th:
       ja:
         name: ญี่ปุ่น
     share:
-      topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
       close: "ปิด"
       facebook: "แชร์บนเฟสบุ๊ค"
@@ -307,8 +306,6 @@ th:
     every_six_months: "ทุกหกเดือน"
     max_of_count:
       other: "สูงสุดของ %{count}"
-    character_count:
-      other: "%{count} ตัวอักษร"
     period_chooser:
       aria_label: "กรองตามช่วงเวลา"
     related_messages:
