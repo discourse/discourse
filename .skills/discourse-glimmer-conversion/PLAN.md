@@ -104,12 +104,12 @@ Each has a full entry in `references/`; these are the ones that cost a CI round 
 ## Next
 
 1. **The site-settings list family** (`url-list`, `host-list`, `simple-list`,
-   `tag-group-list`, `named-list`, `enum`, `tag-list`, `group-list`) is converted on
-   `0-glimmer-site-settings-lists`. The contract: each component reads the stored string
+   `tag-group-list`, `named-list`, `enum`, `tag-list`, `group-list`, `value-list`) is
+   converted in #44570. The contract: each component reads the stored string
    from `@value`, converts it for its control, and reports the new stored string through
    `@changeValueCallback`. That callback is the only write path, already passed by
    `site-setting.gjs` and its four `trackChanges = false` subclasses. Delimiters differ:
-   `url_list` is newline-joined, the rest pipe-joined. Only `url-list` passed its arg into a
+   `url_list` and `value_list` are newline-joined, the rest pipe-joined. Only `url-list` passed its arg into a
    writing child; the other seven wrote their own `value`.
 2. **Resume ten-per-PR batches** from what's left once the family is out of the way:
    components with a hook or observer but no two-way args (`signup-cta`,

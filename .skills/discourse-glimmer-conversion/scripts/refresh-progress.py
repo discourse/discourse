@@ -11,13 +11,15 @@ import subprocess
 
 PATH = os.path.join(os.path.dirname(__file__), "..", "PROGRESS.md")
 MERGED, APPROVED = "☑️", "✅"
+# CLICOLOR_FORCE/FORCE_COLOR in the environment make gh color its JSON even when piped
+PLAIN_ENV = {k: v for k, v in os.environ.items() if k not in ("CLICOLOR_FORCE", "FORCE_COLOR")} | {"NO_COLOR": "1"}
 ENTRY = re.compile(r"^(- \[#(\d+)\]\([^)]*\))(?: (?:☑️|✅))?(.*)$")
 
 
 def status(number):
     r = subprocess.run(
         ["gh", "pr", "view", number, "--repo", "discourse/discourse", "--json", "state,reviewDecision"],
-        capture_output=True, text=True,
+        capture_output=True, text=True, env=PLAIN_ENV,
     )
     if r.returncode != 0:
         raise SystemExit(f"gh pr view {number} failed: {r.stderr.strip()}")

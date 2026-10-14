@@ -6,7 +6,7 @@
   - badge-title
 - [#43385](https://github.com/discourse/discourse/pull/43385) ☑️
   - plugins/chat/collapser
-- [#43390](https://github.com/discourse/discourse/pull/43390) ✅ (removed as unused)
+- [#43390](https://github.com/discourse/discourse/pull/43390) ☑️ (removed as unused)
   - group-member
   - share-panel
   - discourse-tag-bound
@@ -35,51 +35,51 @@
   - plugins/discourse-reactions/connectors/discourse-reactions-user-activity-reactions
 - [#43413](https://github.com/discourse/discourse/pull/43413) ☑️
   - plugins/discourse-reactions/connectors/discourse-reactions-user-notification-reactions
-- [#43521](https://github.com/discourse/discourse/pull/43521) ✅
+- [#43521](https://github.com/discourse/discourse/pull/43521) ☑️
   - admin/admin-report-table-row
   - categories-and-latest-topics
   - categories-and-top-topics
   - plugins/discourse-subscriptions/connectors/subscriptions-campaign
   - plugins/discourse-subscriptions/connectors/subscriptions-campaign-sidebar
-- [#43522](https://github.com/discourse/discourse/pull/43522) ✅
+- [#43522](https://github.com/discourse/discourse/pull/43522) ☑️
   - admin/admin-report-inline-table
   - admin/staff-actions
   - ignored-user-list-item
   - plugins/discourse-captcha/connectors/captcha-fields-connector
   - plugins/discourse-subscriptions/connectors/billing
-- [#43526](https://github.com/discourse/discourse/pull/43526) ✅
+- [#43526](https://github.com/discourse/discourse/pull/43526) ☑️
   - admin/admin-report-counters
   - admin/images-uploader
   - plugins/discourse-assign/connectors/assigned-advanced-search
   - plugins/discourse-events/bulk-invite-sample-csv-file
   - plugins/styleguide/styleguide-icons
-- [#43531](https://github.com/discourse/discourse/pull/43531) ✅ (removed as unused)
+- [#43531](https://github.com/discourse/discourse/pull/43531) ☑️ (removed as unused)
   - plugins/discourse-assign/connectors/assigned-to-filter
-- [#43533](https://github.com/discourse/discourse/pull/43533) ✅
+- [#43533](https://github.com/discourse/discourse/pull/43533) ☑️
   - topic-category
   - ui-kit/d-tap-tile-grid
   - plugins/discourse-gamification/connectors/gamification-score
   - plugins/discourse-gamification/gamification-leaderboard-row
   - plugins/discourse-subscriptions/product-list
-- [#43534](https://github.com/discourse/discourse/pull/43534) ✅
+- [#43534](https://github.com/discourse/discourse/pull/43534) ☑️
   - admin/watched-word-uploader
   - categories-boxes-with-topics
   - plugins/discourse-ai/admin-report-emotion
   - plugins/discourse-subscriptions/product-item
   - plugins/discourse-templates/connectors/d-templates
-- [#43538](https://github.com/discourse/discourse/pull/43538) ✅
+- [#43538](https://github.com/discourse/discourse/pull/43538) ☑️
   - group-manage-logs-filter
   - group-manage-logs-row
   - selected-posts
   - subcategories-with-featured-topics
   - plugins/discourse-gamification/gamification-score
-- [#43540](https://github.com/discourse/discourse/pull/43540) ✅
+- [#43540](https://github.com/discourse/discourse/pull/43540) ☑️
   - modal/history/revisions
   - shared-draft-controls
   - slow-mode-info
   - plugins/discourse-cakeday/emoji-images
   - plugins/discourse-subscriptions/payment-plan
-- [#43541](https://github.com/discourse/discourse/pull/43541)
+- [#43541](https://github.com/discourse/discourse/pull/43541) ✅
   - admin/admin-editable-field
   - admin/admin-form-row
   - admin/admin-nav
@@ -101,3 +101,13 @@
   - reviewable-field
   - user-summary-category-search
   - user-summary-topics-list
+- [#44570](https://github.com/discourse/discourse/pull/44570)
+  - admin/site-settings/enum
+  - admin/site-settings/group-list
+  - admin/site-settings/host-list
+  - admin/site-settings/named-list
+  - admin/site-settings/simple-list
+  - admin/site-settings/tag-group-list
+  - admin/site-settings/tag-list
+  - admin/site-settings/url-list
+  - admin/site-settings/value-list

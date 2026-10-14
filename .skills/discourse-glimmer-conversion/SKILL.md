@@ -88,7 +88,7 @@ and `connectors/`, and the same directories in external plugins and themes) is i
 Inventory of what is left in core and bundled plugins:
 
 ```bash
-grep -rlE '^import Component from "@ember/component"' frontend/discourse plugins --include='*.js' --include='*.gjs' | grep -vE 'node_modules|/dist/|/tests?/'
+git grep --no-color -lE '^import (Component|ClassicComponent)(, \{[^}]*\})? from "@ember/component"' -- frontend/discourse plugins | grep -E '\.g?js$' | grep -vE 'node_modules|/dist/|/tests?/'
 ```
 
 To pick what to convert next, `scripts/rank-targets.py` ranks that inventory by risk and
@@ -394,8 +394,8 @@ components on the second. [PLAN.md](PLAN.md) covers picking the next targets.
    `connectors/` — a plugin can have a component and a connector of the same name).
 2. **Then refresh the status marks** with `scripts/refresh-progress.py`: ☑️ for a merged PR,
    ✅ for an approved one, nothing otherwise. A merge mark replaces the approval tick and is
-   final; every other entry is rechecked, so a dismissed approval loses its tick. Do this on
-   every append so the log stays current.
+   final: merged entries are never queried again. Every other entry is rechecked, so a
+   dismissed approval loses its tick. Do this on every append so the log stays current.
 
 
 Branch from `origin/main`, not from whatever branch the work happened on, so unrelated

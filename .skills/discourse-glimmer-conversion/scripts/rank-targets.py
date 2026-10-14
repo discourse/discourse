@@ -34,7 +34,11 @@ EXTERNAL = [
     "all-the-themes/official", "all-the-themes/third-party",
     "all-the-custom-plugins/plugins", "all-the-custom-themes/themes",
 ]
-MUTATING_ARGS = r"value|values|checked|selection|tags|content|status|topicTitle|categoryId|postAction|reason|capsLockOn"
+# forced-color variables in the environment would put escape codes into gh and git output
+PLAIN_ENV = {k: v for k, v in os.environ.items() if k not in ("CLICOLOR_FORCE", "FORCE_COLOR")} | {"NO_COLOR": "1"}
+# the default import, alone or alongside named ones (`{ Input }`), under either local name
+CLASSIC_IMPORT = r'^import (Component|ClassicComponent)(, \{[^}]*\})? from "@ember/component"'
+MUTATING_ARGS =r"value|values|checked|selection|tags|content|status|topicTitle|categoryId|postAction|reason|capsLockOn"
 HOOKS = ["didInsertElement", "willDestroyElement", "didDestroyElement", "didReceiveAttrs", "didUpdateAttrs",
          "didRender", "willRender", "willUpdate", "willClearRender", "willInsertElement"]
 EVENTS = r"click|doubleClick|keyDown|keyUp|keyPress|mouseEnter|mouseLeave|mouseDown|mouseUp|focusIn|focusOut|change|input|submit|dragOver|dragStart|drop|touchStart|touchEnd|scroll|paste"
@@ -42,7 +46,10 @@ END = r"([^A-Za-z0-9/_-]|$)"
 
 
 def run(args, ok=(0,)):
-    r = subprocess.run(args, capture_output=True, text=True)
+    if args[0] == "git":
+        # an inherited color.ui=always would wrap paths in escape codes and filter them all out
+        args = ["git", "-c", "color.ui=never", *args[1:]]
+    r = subprocess.run(args, capture_output=True, text=True, env=PLAIN_ENV)
     # git grep exits 1 on "no match"; anything else is a broken command, not an empty result
     if r.returncode not in ok:
         raise SystemExit(f"command failed ({r.returncode}): {' '.join(args)}\n{r.stderr[:400]}")
@@ -132,8 +139,10 @@ def main():
     ap.add_argument("--json")
     opts = ap.parse_args()
 
-    classic = [f.split(":", 1)[1] for f in git_grep_files(r'^import Component from "@ember/component"')]
+    classic = [f.split(":", 1)[1] for f in git_grep_files(CLASSIC_IMPORT)]
     classic = [f for f in classic if re.search(r"\.(js|gjs)$", f) and not re.search(r"node_modules|/dist/|/tests?/", f)]
+    if not classic:
+        raise SystemExit(f"no classic components found on {REF}; the grep is more likely broken than the job done")
     skip = in_flight()
     candidates = [f for f in classic if f not in INFRA and "/select-kit/" not in f and f not in skip]
     ext_blob = external_blob()
