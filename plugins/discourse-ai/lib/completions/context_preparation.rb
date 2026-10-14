@@ -387,20 +387,19 @@ module DiscourseAi
             raise Error.new("completion_limit")
           end
           # Uncapped: thinking tokens count against max_tokens and could leave no summary.
-          response =
-            @llm.generate(
-              compression_prompt,
-              user: options[:user],
-              feature_name: "context_compression",
-              feature_context: options[:feature_context],
-              execution_context: options[:execution_context],
-              cancel_manager: options[:cancel_manager],
-            )
+          summary = +""
+          @llm.generate(
+            compression_prompt,
+            user: options[:user],
+            feature_name: "context_compression",
+            feature_context: options[:feature_context],
+            execution_context: options[:execution_context],
+            cancel_manager: options[:cancel_manager],
+          ) { |partial| summary << partial if partial.is_a?(String) }
           now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           @budget.record_elapsed(now - started_at)
           started_at = now
           raise Error.new("preparation_timeout") if elapsed_seconds >= MAX_SECONDS
-          summary = Llm.text_from_response(response)
           raise Error.new("unusable_summary") if summary.blank?
         end
         summary

@@ -36,6 +36,28 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
   end
 
   describe "#prepare!" do
+    it "streams and buffers the compression summary" do
+      summary = "The codeword is QUARTZ-OTTER-731."
+      deltas = ["The codeword is ", "QUARTZ-OTTER-731."]
+      body =
+        deltas
+          .map { |delta| "data: #{{ choices: [{ delta: { content: delta } }] }.to_json}\n\n" }
+          .join
+      request =
+        stub_request(:post, model.url)
+          .with { |req| JSON.parse(req.body)["stream"] == true }
+          .to_return(status: 200, body: body + "data: [DONE]\n\n")
+      prompt = history_prompt
+
+      result = described_class.new(model.to_llm, threshold: 50).prepare!(prompt, user: user)
+
+      expect(result).to eq(:compressed)
+      expect(prompt.messages[1][:content]).to eq(
+        "<compressed_context>#{summary}</compressed_context>",
+      )
+      expect(request).to have_been_requested.once
+    end
+
     it "shares maintenance bounds across contexts forked before their first preparation" do
       stub_const(described_class, :MAX_CALLS, 2) do
         root =
@@ -79,8 +101,9 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
     it "compacts a small message count without summarizing the latest request" do
       prompt = history_prompt
       original = prompt.messages.deep_dup
+      thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        ["The codeword is QUARTZ-OTTER-731."],
+        [[thinking, "The codeword is ", "QUARTZ-OTTER-731."]],
       ) do |_, _, prompts, options|
         llm = DiscourseAi::Completions::Llm.proxy(model)
         result = described_class.new(llm, threshold: 50).prepare!(prompt, user: user)
@@ -88,6 +111,9 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         expect(result).to eq(:compressed)
         expect(prompt.messages.map { |message| message[:type] }).to eq(%i[system user model user])
         expect(prompt.messages.last).to eq(original.last)
+        expect(prompt.messages[1][:content]).to eq(
+          "<compressed_context>The codeword is QUARTZ-OTTER-731.</compressed_context>",
+        )
         expect(prompts.first.skip_trim).to eq(true)
         expect(options.first).to include(user: user, feature_name: "context_compression")
         expect(options.first[:max_tokens]).to be_nil
@@ -300,18 +326,21 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       prompt = history_prompt(repetitions: 5000)
       prompt.topic_id = post.topic_id
       prompt.post_id = post.id
-      stub_request(:post, model.url).to_return(
-        body: {
-          choices: [{ message: { content: "Summary retains QUARTZ-OTTER-731." } }],
-          usage: {
-            prompt_tokens: 100,
-            completion_tokens: 20,
-          },
-        }.to_json,
-        headers: {
-          "Content-Type" => "application/json",
+      response = {
+        choices: [{ delta: { content: "Summary retains QUARTZ-OTTER-731." } }],
+        usage: {
+          prompt_tokens: 100,
+          completion_tokens: 20,
         },
-      )
+      }
+      stub_request(:post, model.url)
+        .with { |request| JSON.parse(request.body)["stream"] == true }
+        .to_return(
+          body: "data: #{response.to_json}\n\ndata: [DONE]\n\n",
+          headers: {
+            "Content-Type" => "text/event-stream",
+          },
+        )
 
       expect(described_class.new(model.to_llm).prepare!(prompt, user: user)).to eq(:compressed)
 
