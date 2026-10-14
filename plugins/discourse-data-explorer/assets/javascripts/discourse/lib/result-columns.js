@@ -6,6 +6,7 @@ import HtmlViewComponent from "../components/result-types/html";
 import JsonViewComponent from "../components/result-types/json";
 import PostViewComponent from "../components/result-types/post";
 import ReltimeViewComponent from "../components/result-types/reltime";
+import ReviewableViewComponent from "../components/result-types/reviewable";
 import TagGroupViewComponent from "../components/result-types/tag-group";
 import TextViewComponent from "../components/result-types/text";
 import TopicViewComponent from "../components/result-types/topic";
@@ -17,6 +18,7 @@ export const VIEW_COMPONENTS = {
   text: TextViewComponent,
   post: PostViewComponent,
   reltime: ReltimeViewComponent,
+  reviewable: ReviewableViewComponent,
   badge: BadgeViewComponent,
   url: UrlViewComponent,
   user: UserViewComponent,
