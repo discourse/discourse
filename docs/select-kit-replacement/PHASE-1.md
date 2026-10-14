@@ -98,8 +98,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     parameter later is backward compatible. `:unresolved` yields the fallback item, and without
     it every surface uses the built-in label (not `:selection`, which now only ever receives
     resolved items). The styleguide reviewers picker uses all three. The
-    "input-holds-only-query composite trigger" once listed here was dropped: the RFC never
-    defined it. (Group flag UI landed with `@groupBy`; see the Decision 2 item below.)
+    "input-holds-only-query composite trigger" once listed here is also done. It is RFC
+    Decision 1b's split: with a `:selection` block, the rich markup renders beside the input
+    and the input carries only the query. `ad80441c0c7` refined it so that focusing the field
+    puts the label in the input, selected for overtype. (Group flag UI landed with `@groupBy`;
+    see the Decision 2 item below.)
   - ☑ **Runtime input reactivity** (`f6ed1eb9649`). The engine captured every input but
     `@value` in its constructor, so `@items`, `@selected`, `@multiple`, `@minChars` and
     `@allowCreate` were inert after mount — a foundation defect for the component meant to
