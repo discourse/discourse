@@ -312,7 +312,6 @@ de:
       zh_CN:
         name: Vereinfachtes Chinesisch
     share:
-      topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
       post: "Beitrag Nr. %{postNumber} von @%{username}"
       close: "Schließen"
       twitter: "Teilen auf X"
@@ -367,6 +366,12 @@ de:
     skip_to_last_reply: "Zur letzten Antwort springen"
     skip_to_top: "Zum Seitenanfang springen"
     skip_user_nav: "Zum Profilinhalt springen"
+    reorder:
+      remove: "%{label} entfernen"
+      removed: "%{label} entfernt"
+      move_up: "Nach oben"
+      move_down: "Nach unten"
+      position: "%{position} von %{total}"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     emails_are_disabled_no_smtp: "Die ausgehende E-Mail-Kommunikation ist deaktiviert, weil kein SMTP-Server konfiguriert wurde. Es können keinerlei E-Mails verschickt werden."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
@@ -505,9 +510,6 @@ de:
     max_of_count:
       one: "max. %{count}"
       other: "max. %{count}"
-    character_count:
-      one: "%{count} Zeichen"
-      other: "%{count} Zeichen"
     period_chooser:
       aria_label: "Filtern nach Zeitraum"
     related_messages:
@@ -2101,7 +2103,6 @@ de:
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
         logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
-        use_custom: "Oder lade einen eigenen Avatar hoch:"
       change_profile_background:
         title: "Profil-Kopfzeile"
         instructions: "Profil-Kopfzeilen werden zentriert und haben eine Standardbreite von 1110 px."
@@ -2705,7 +2706,7 @@ de:
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
-      value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit „Gefällt mir“ danken. Wir können alle zusammenarbeiten, um diese Community zu etwas Großartigem zu machen. :heart:"
+      value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit „Gefällt mir“ danken. Wir können alle zusammenarbeiten, um diese Community zu etwas Großartigem zu machen."
     offline_indicator:
       no_internet: "Keine Internetverbindung."
       refresh_page: "Seite aktualisieren"
@@ -3264,8 +3265,7 @@ de:
       cancel_edit: "Bearbeiten abbrechen"
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
-      title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
       topic_featured_link_placeholder: "Link zum Titel eingeben."
@@ -5524,9 +5524,6 @@ de:
         search_open: "Suche der Administrationsoberfläche öffnen"
         search_full_page: "Ganzseitensuche für Administratoren öffnen"
     badges:
-      earned_n_times:
-        one: "Abzeichen %{count}-mal erhalten"
-        other: "Abzeichen %{count}-mal erhalten"
       granted_on: "Verliehen %{date}"
       others_count:
         one: "%{count} Mal an andere vergeben"
@@ -6340,6 +6337,7 @@ de:
             use_preset: "Einrichten"
             presets:
               custom: "Benutzerdefiniert"
+            automatic: "Automatisch"
           authorizations:
             user: "Nutzer"
             scopes: "Gewährte Bereiche"
@@ -8111,8 +8109,8 @@ de:
           upload: "Hochladen"
           select_component: "Komponente auswählen …"
           unsaved_changes_alert: "Du hast deine Änderungen noch nicht gespeichert, möchtest du sie verwerfen und weitermachen?"
-          unsaved_parent_themes: "Du hast die Komponente keinen Themes zugeordnet, willst du fortfahren?"
           discard: "Verwerfen"
+          leave: "Verlassen"
           stay: "Bleiben"
           css_html: "Benutzerdefinierter Code"
           edit_css_html: "Code bearbeiten"

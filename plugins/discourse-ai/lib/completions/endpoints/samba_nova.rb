@@ -27,6 +27,14 @@ module DiscourseAi
           AiApiAuditLog::Provider::SambaNova
         end
 
+        protected
+
+        def reset_attempt_state!
+          super
+          @prompt_tokens = nil
+          @completion_tokens = nil
+        end
+
         private
 
         def model_uri

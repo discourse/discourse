@@ -44,7 +44,7 @@ export default class KeyValueField extends BaseField {
               @closeModal={{this.closeModal}}
               @model={{hash
                 value=this.value
-                updateValue=this.handleValueChange
+                updateValue=this.mutValue
                 settingName=@label
                 jsonSchema=this.jsonSchema
               }}
@@ -79,14 +79,6 @@ export default class KeyValueField extends BaseField {
       return i18n("discourse_automation.fields.key_value.label_with_count", {
         count: this.keyCount,
       });
-    }
-  }
-
-  @action
-  handleValueChange(value) {
-    if (value !== this.args.field.metadata.value) {
-      this.mutValue(value);
-      this.args.saveAutomation();
     }
   }
 

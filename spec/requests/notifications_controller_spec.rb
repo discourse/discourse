@@ -29,6 +29,32 @@ def delete_notification(resp_code, matcher)
 end
 
 RSpec.describe NotificationsController do
+  describe "#index" do
+    it "hides reviewable titles in recent notifications and history after losing category access" do
+      SiteSetting.enable_mentions = true
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      sign_in(moderator)
+
+      get "/notifications.json", params: { recent: true }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["notifications"].size).to eq(1)
+
+      category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.topic.update!(category: category)
+      reviewable.update!(category: category)
+
+      [true, false].each do |recent|
+        get "/notifications.json", params: { recent: recent ? true : nil }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["notifications"]).to be_empty
+        expect(response.body).not_to include(reviewable.topic.title)
+      end
+    end
+  end
+
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }

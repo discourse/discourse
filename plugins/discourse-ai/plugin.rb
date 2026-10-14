@@ -146,6 +146,17 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
 
+  register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    automated ||
+      reviewable
+        .reviewable_scores
+        .where(
+          "context LIKE ?",
+          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+        )
+        .exists?
+  end
+
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
   register_reviewable_type ReviewableAiToolAction
@@ -159,6 +170,12 @@ after_initialize do
   end
 
   on(:user_destroyed) do |user|
+    AiArtifactKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShareKeyValue.where(
+      ai_artifact_share_id: AiArtifactShare.where(user_id: user.id).select(:id),
+    ).delete_all
+    AiArtifactShareKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShare.where(user_id: user.id).delete_all
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
     DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)

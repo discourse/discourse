@@ -196,6 +196,22 @@ RSpec.describe Assignment do
         )
         create_missing_notifications
       end
+
+      it "creates the missing notification only for the given user" do
+        Fabricate(:post, topic: assignment.topic)
+        assignment.create_missing_notifications!(user_id: users.second.id)
+        expect(Notification.for_assignment(assignment).pluck(:user_id)).to contain_exactly(
+          users.first.id,
+          users.second.id,
+        )
+      end
+
+      it "creates nothing for a user who is not a member of the group" do
+        assignment.create_missing_notifications!(user_id: Fabricate(:user).id)
+        expect(Notification.for_assignment(assignment).pluck(:user_id)).to contain_exactly(
+          users.first.id,
+        )
+      end
     end
   end
 

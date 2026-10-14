@@ -1,13 +1,10 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class Billing extends Component {
   @service currentUser;
 
@@ -15,7 +12,7 @@ export default class Billing extends Component {
     return (
       this.currentUser &&
       this.currentUser.username.toLowerCase() ===
-        this.model.username.toLowerCase()
+        this.args.model.username.toLowerCase()
     );
   }
 

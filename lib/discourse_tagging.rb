@@ -508,6 +508,7 @@ module DiscourseTagging
   #   selected_tag_ids: an array of tag ids that are in the current selection
   #   only_tag_names: limit results to tags with these names
   #   exclude_synonyms: exclude synonyms from results
+  #   ignore_required_tag_groups: skip category-required tag groups when filtering for an input
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
   #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
@@ -641,14 +642,18 @@ module DiscourseTagging
     # - and no search term has been included
     required_tag_ids = nil
     required_category_tag_group = nil
-    if opts[:for_input] && category&.category_required_tag_groups.present? &&
-         (filter_for_non_admin || term.blank?)
-      category.category_required_tag_groups.each do |crtg|
+    remaining_required_tag_count = nil
+    category_required_tag_groups = category&.category_required_tag_groups
+    if !opts[:ignore_required_tag_groups] && opts[:for_input] &&
+         category_required_tag_groups.present? && (filter_for_non_admin || term.blank?)
+      category_required_tag_groups.each do |crtg|
         group_tags = crtg.tag_group.tags.pluck(:id)
-        next if (group_tags & selected_tag_ids).size >= crtg.min_count
+        selected_tag_count = (group_tags & selected_tag_ids).size
+        next if selected_tag_count >= crtg.min_count
         if filter_for_non_admin || group_tags.size >= opts[:limit].to_i
           required_category_tag_group = crtg
           required_tag_ids = group_tags
+          remaining_required_tag_count = crtg.min_count - selected_tag_count
           builder.where("id IN (?)", required_tag_ids)
         end
         break
@@ -722,6 +727,7 @@ module DiscourseTagging
           name: required_category_tag_group.tag_group.name,
           min_count: required_category_tag_group.min_count,
         }
+        context[:remaining_required_tag_count] = remaining_required_tag_count
       end
       [result, context]
     else

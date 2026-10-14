@@ -341,7 +341,10 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser.user_option.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -718,7 +721,6 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 

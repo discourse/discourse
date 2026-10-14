@@ -477,6 +477,20 @@ RSpec.describe PostSerializer do
     end
   end
 
+  context "without a bookmark or reviewable" do
+    fab!(:moderator)
+
+    it "queries bookmarks and reviewables only once" do
+      queries =
+        track_sql_queries do
+          PostSerializer.new(post, scope: moderator.guardian, root: false).as_json
+        end
+
+      expect(queries.count { |q| q.include?('FROM "bookmarks"') }).to eq(1)
+      expect(queries.count { |q| q.include?('FROM "reviewables"') }).to eq(1)
+    end
+  end
+
   context "with posts when group moderation is enabled" do
     fab!(:topic)
     fab!(:group_user)

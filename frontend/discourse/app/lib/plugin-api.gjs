@@ -62,6 +62,7 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   _INTERNAL_SOURCE_KEY,
@@ -164,7 +165,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
 

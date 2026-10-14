@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -27,6 +27,12 @@ const autofocus = modifier((element) => {
 function syncInputWidth(input) {
   input.style.setProperty("--col-name-length", input.value.length || 1);
 }
+
+// Lets CSS size the scroll box to end at the bottom of the viewport.
+const measureTopOffset = modifier((element) => {
+  const top = element.getBoundingClientRect().top + window.scrollY;
+  element.style.setProperty("--top-offset", `${top}px`);
+});
 
 const indeterminate = modifier((element, [value]) => {
   element.indeterminate = value;
@@ -63,11 +69,9 @@ export default class DataTableViewer extends Component {
     return this.rows === null || this.dataTable === null;
   }
 
+  @cached
   get columns() {
-    const reserved = ["id", "created_at", "updated_at"];
-    return (
-      this.dataTable?.columns?.filter((c) => !reserved.includes(c.name)) ?? []
-    );
+    return this.dataTable?.columns?.filter((c) => !c.reserved) ?? [];
   }
 
   get hasSelection() {
@@ -254,20 +258,15 @@ export default class DataTableViewer extends Component {
   async renameColumn(index, event) {
     this.editingColumnIndex = null;
     const newName = event.target.value.trim();
-    const column = this.columns[index];
-    const oldName = column.name;
+    const oldName = this.columns[index].name;
     if (!newName || newName === oldName) {
       return;
     }
     try {
-      const result = await ajax(
-        `${this.apiBasePath}/columns/${column.name}/rename.json`,
-        {
-          type: "PATCH",
-          data: { name: newName },
-        }
-      );
-      this.dataTable = result.data_table;
+      await ajax(`${this.apiBasePath}/columns/${oldName}/rename.json`, {
+        type: "PATCH",
+        data: { name: newName },
+      });
       await this.loadTable();
     } catch (e) {
       popupAjaxError(e);
@@ -284,7 +283,6 @@ export default class DataTableViewer extends Component {
             data: { name: data.name, column_type: data.type },
           });
           this.dataTable = result.data_table;
-          await this.loadTable();
         },
       },
     });
@@ -328,8 +326,8 @@ export default class DataTableViewer extends Component {
       </div>
 
       <DConditionalLoadingSpinner @condition={{this.isLoading}}>
-        <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
-          <div class="workflows-data-table-viewer__scroll">
+        <div class="workflows-data-table-viewer__scroll" {{measureTopOffset}}>
+          <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
             <table class="workflows-data-table-viewer__table">
               <thead>
                 <tr>
@@ -420,9 +418,9 @@ export default class DataTableViewer extends Component {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </DLoadMore>
           <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
-        </DLoadMore>
+        </div>
       </DConditionalLoadingSpinner>
     </div>
   </template>

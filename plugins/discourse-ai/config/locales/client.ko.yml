@@ -291,6 +291,17 @@ ko:
         providers:
           google: "구글"
           fake: "사용자 정의"
+      ai_artifact:
+        editor:
+          version: "버전"
+          default: "기본"
+          option_on: "켜기"
+          option_off: "끄기"
+          apply: "적용"
+        share: "공유하기"
+        create_link: "링크 만들기"
+        copy_link: "링크 복사"
+        filter_all: "모두"
       ai_bot:
         debug_ai_modal:
           duration_label: "기간:"

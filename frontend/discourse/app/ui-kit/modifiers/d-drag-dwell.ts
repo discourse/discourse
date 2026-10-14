@@ -361,9 +361,10 @@ export function registerDragDwell(
 
       dwell?.update(null);
       if (lastEvent) {
+        const endEvent = lastEvent;
         consumerMayThrow(() =>
           getArgsRef().onDwellEnd?.({
-            ...lastEvent,
+            ...endEvent,
             reason: "left",
             fired,
             droppedHere: false,

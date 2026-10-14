@@ -281,6 +281,15 @@ hr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Inačica"
+          default: "Zadano"
+          apply: "Primijeni"
+        share: "Podijeli"
+        create_link: "Kreirajte poveznicu"
+        copy_link: "Kopirajte poveznicu"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"

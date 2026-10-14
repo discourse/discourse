@@ -377,7 +377,18 @@ cs:
         quick_search:
           suffix: "ve všech tématech a příspěvcích s AI"
       ai_artifact:
+        editor:
+          version: "Verze"
+          default: "Výchozí"
+          option_on: "Zapnuto"
+          option_off: "Vypnuto"
+          apply: "Použít"
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
+        share: "Sdílet"
+        create_link: "Vytvořit odkaz"
+        copy_link: "Kopírovat odkaz"
+        filter_all: "Vše"
+        filter_standalone: "Samostatná"
       ai_bot:
         llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."

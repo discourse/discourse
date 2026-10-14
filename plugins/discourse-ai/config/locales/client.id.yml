@@ -307,6 +307,11 @@ id:
         semantic_search: "Topik (Semantik)"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
+      ai_artifact:
+        editor:
+          default: "Asal"
+          apply: "menerapkan"
+        filter_all: "Semua"
       ai_bot:
         llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."

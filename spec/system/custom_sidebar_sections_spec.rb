@@ -38,17 +38,90 @@ describe "Custom sidebar sections" do
 
   include_examples "creating custom sections"
 
-  it "allows the user to create custom section with /my link" do
+  it "allows the user to create sections with different link formats" do
     sign_in user
     visit("/latest")
 
     sidebar.click_add_section_button
-    section_modal.fill_name("My section")
+    section_modal.fill_name("Preferences section")
     section_modal.fill_link("My preferences", "/my/preferences")
     section_modal.save
 
-    expect(sidebar).to have_section("My section")
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Preferences section")
     expect(sidebar).to have_section_link("My preferences", target: "_self")
+
+    sidebar.click_add_section_button
+    section_modal.fill_name("Published page section")
+    section_modal.fill_link("Published Page", "/pub/test")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Published page section")
+    expect(sidebar).to have_section_link("Published Page", target: "_self")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("External link section")
+
+    section_modal.fill_link("Discourse Homepage", "https://discourse.org")
+    expect(section_modal).to have_enabled_save
+
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("External link section")
+    expect(sidebar).to have_section_link(
+      "Discourse Homepage",
+      href: "https://discourse.org",
+      target: "_blank",
+    )
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Anchor section")
+    section_modal.fill_link("Faq", "/faq#anchor")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Anchor section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#anchor")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Query section")
+    section_modal.fill_link("Faq", "/faq?a=b")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Query section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
+
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("Heading section")
+    section_modal.fill_link("Faq", "/faq#someheading")
+    section_modal.save
+
+    expect(section_modal).to be_closed
+    expect(sidebar).to have_section("Heading section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
   it "prioritizes exact url matches over ember routes" do
@@ -87,94 +160,6 @@ describe "Custom sidebar sections" do
 
     sidebar.click_section_link("Home")
     expect(page).to have_css("#navigation-bar .active a[href='/read']")
-  end
-
-  it "allows the user to create custom section with /pub link" do
-    sign_in user
-    visit("/latest")
-
-    sidebar.click_add_section_button
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Published Page", "/pub/test")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Published Page", target: "_self")
-  end
-
-  it "allows the user to create custom section with external link" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-
-    section_modal.fill_link("Discourse Homepage", "https://discourse.org")
-    expect(section_modal).to have_enabled_save
-
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link(
-      "Discourse Homepage",
-      href: "https://discourse.org",
-      target: "_blank",
-    )
-  end
-
-  it "allows the user to create custom section with anchor" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq#anchor")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#anchor")
-  end
-
-  it "allows the user to create custom section with query param" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq?a=b")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
-  end
-
-  it "allows the user to create custom section with anchor link" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
-    section_modal.fill_name("My section")
-    section_modal.fill_link("Faq", "/faq#someheading")
-    section_modal.save
-
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
   it "allows typing in the icon picker filter input" do
@@ -301,6 +286,192 @@ describe "Custom sidebar sections" do
     sidebar.edit_custom_section("My section")
 
     expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+  end
+
+  # TODO (ui-kit-reorderable-list-cleanup) fold these over the examples above
+  # once the change ships.
+  context "when enable_new_reordering_controls is enabled" do
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "lets the user select text in a link's fields" do
+      # The row is a drag source, and a `draggable` element turns a press-drag into
+      # a drag rather than a selection. These rows are a form: the name and URL are
+      # text inputs whose contents a user edits and copies, so only the grip may be
+      # draggable.
+      #
+      # A selection inside a form control does not appear in `window.getSelection`,
+      # so this reads the input's own selection range.
+      sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+      Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+
+      sign_in user
+      visit("/latest")
+      sidebar.edit_custom_section("My section")
+
+      url_field = ".sidebar-section-form-link input[name='link-url']"
+      # Leftwards and well past the field's edge: the press lands at its centre,
+      # which for a short value is beyond the end of the text, so a short sweep
+      # crosses no characters and would fail whether or not selection works. A
+      # drag running off the edge still selects back to the start.
+      drag_with_pointer(from: url_field, by: { x: -400 })
+
+      expect(
+        page.evaluate_script(
+          "(() => { const i = document.querySelector(\"#{url_field}\"); " \
+            "return i.selectionEnd - i.selectionStart; })()",
+        ),
+      ).to be > 0
+    end
+
+    it "lets the user reorder links in a custom section" do
+      sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+      sidebar_url_1 =
+        Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+          Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+        end
+
+      sidebar_url_2 =
+        Fabricate(
+          :sidebar_url,
+          name: "Sidebar Categories",
+          value: "/categories",
+        ).tap do |sidebar_url|
+          Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+        end
+
+      sidebar_url_3 =
+        Fabricate(:sidebar_url, name: "Sidebar Latest", value: "/latest").tap do |sidebar_url|
+          Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+        end
+
+      sign_in user
+
+      visit("/latest")
+
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
+      )
+
+      sidebar.edit_custom_section("My section")
+
+      drag_and_drop(
+        source: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Tags'])",
+        # Press the grip, not the row centre: the centre is a text input, and a
+        # text-selection drag stalls after dragstart.
+        source_position: {
+          x: 16,
+          y: 20,
+        },
+        target: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Categories'])",
+        target_position: {
+          x: 100,
+          y: 55,
+        },
+      )
+      try_until_success do
+        expect(section_modal.link_names).to eq(
+          ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+        )
+      end
+      section_modal.save
+      expect(section_modal).to be_closed
+
+      try_until_success do
+        expect(sidebar.primary_section_links("my-section")).to eq(
+          ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+        )
+      end
+    end
+
+    it "lets the user reorder links with the keyboard" do
+      sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+      ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"].each do |name|
+        Fabricate(:sidebar_url, name: name, value: "/#{name.parameterize}").tap do |sidebar_url|
+          Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+        end
+      end
+
+      sign_in user
+
+      visit("/latest")
+
+      sidebar.edit_custom_section("My section")
+
+      # Asserted before the move: without it, a run where the order already matched
+      # would pass whether or not the arrow did anything.
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
+      )
+
+      section_modal.move_link_down("Sidebar Tags")
+
+      try_until_success do
+        expect(section_modal.link_names).to eq(
+          ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+        )
+      end
+
+      # Focus is where the keyboard path lives or dies: the row moves in the DOM
+      # under the pressed control, and a lost focus makes a second press
+      # impossible.
+      expect(section_modal.focused_link_name).to eq("Sidebar Tags")
+
+      # So the second press goes through whatever holds focus, not through another
+      # lookup by name, which would pass even if focus had been dropped.
+      section_modal.press_focused_link_move_down
+
+      try_until_success do
+        expect(section_modal.link_names).to eq(
+          ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+        )
+      end
+
+      section_modal.save
+      expect(section_modal).to be_closed
+
+      try_until_success do
+        expect(sidebar.primary_section_links("my-section")).to eq(
+          ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+        )
+      end
+    end
+
+    it "offers both the drag handle and the arrows on mobile", mobile: true do
+      sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+      Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+
+      Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+
+      sign_in user
+
+      visit("/latest")
+
+      sidebar.open_on_mobile
+      sidebar.edit_custom_section("My section")
+
+      # The handle renders on every viewport now that the drag begins on the grip
+      # rather than anywhere on the row, so a press meant to scroll still scrolls.
+      expect(page).to have_css(".sidebar-section-form-link .draggable")
+
+      # Neither path substitutes for the other: the menu behind the handle is the
+      # only route without a drag, and the drag is the only route without a
+      # keyboard.
+      section_modal.move_link_down("Sidebar Tags")
+
+      try_until_success do
+        expect(section_modal.link_names).to eq(["Sidebar Categories", "Sidebar Tags"])
+      end
+    end
   end
 
   it "reorders links in the sidebar with drag and drop" do

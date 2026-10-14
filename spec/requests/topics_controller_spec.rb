@@ -7659,6 +7659,35 @@ RSpec.describe TopicsController do
   end
 
   describe "crawler" do
+    it "preloads the topic when a crawler requests the desktop layout" do
+      get topic.relative_url,
+          headers: {
+            "User-Agent" => "Googlebot",
+            "Discourse-Render" => "desktop",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        preloaded = JSON.parse(element.current_scope.text)
+        expect(JSON.parse(preloaded["topic_#{topic.id}"])["id"]).to eq(topic.id)
+      end
+    end
+
+    it "renders posts without preloaded data when a browser requests the crawler layout" do
+      post = Fabricate(:post, topic:)
+
+      get topic.relative_url,
+          headers: {
+            "User-Agent" => "Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36",
+            "Discourse-Render" => "crawler",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "crawler" })
+      expect(response.body).to include(post.cooked)
+      expect(response.body).not_to have_tag("script#data-preloaded")
+    end
+
     context "when not a crawler" do
       it "renders with the application layout" do
         get topic.relative_url
@@ -7667,6 +7696,10 @@ RSpec.describe TopicsController do
 
         expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
         expect(body).to have_tag(:meta, with: { name: "fragment" })
+        expect(body).to have_tag("script#data-preloaded") do |element|
+          preloaded = JSON.parse(element.current_scope.text)
+          expect(JSON.parse(preloaded["topic_#{topic.id}"])["id"]).to eq(topic.id)
+        end
       end
 
       it "renders the excerpt in the meta description decoded exactly once and tag-free" do
@@ -7942,6 +7975,29 @@ RSpec.describe TopicsController do
             expect(response.body).to include(category.name)
             expect(response.body).to include(subcategory.name)
             expect(response.body).to include(topic.first_post.cooked)
+          end
+
+          it "localizes forced crawler HTML while respecting translation opt-out" do
+            SiteSetting.default_locale = "pt"
+            headers = {
+              "User-Agent" => "Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36",
+              "Discourse-Render" => "crawler",
+            }
+
+            get topic.relative_url, headers: headers
+
+            document = Nokogiri.HTML5(response.body)
+            expect(document.at_css("#post_1 .post").text).to include(
+              Nokogiri::HTML5.fragment(pt_first_post.cooked).text,
+            )
+
+            cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false"
+            get topic.relative_url, headers: headers
+
+            document = Nokogiri.HTML5(response.body)
+            expect(document.at_css("#post_1 .post").text).to include(
+              Nokogiri::HTML5.fragment(topic.first_post.cooked).text,
+            )
           end
         end
 

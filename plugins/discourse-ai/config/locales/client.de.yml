@@ -719,8 +719,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtanzahl an Token (Eingabe + Ausgabe), die bei allen LLM-Aufrufen während einer einzelnen Bot-Antwort verbraucht werden. Lass das Feld leer, um die Standardeinstellung zu verwenden, die der Hälfte des Kontextfensters des Modells entspricht."
         compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_enabled: Bild-Uploads einbeziehen
@@ -1303,9 +1301,23 @@ de:
         quick_search:
           suffix: "in allen Themen und Beiträgen mit KI"
       ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          option_on: "An"
+          option_off: "Aus"
+          apply: "Anwenden"
         expand_view_label: "Ansicht erweitern"
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
+        share: "Teilen"
+        create_link: "Link erstellen"
+        copied: "Wurde in Zwischenablage kopiert"
+        copy_link: "Link kopieren"
+        copy_embed: "Einbettung kopieren"
+        new_tab: "In neuer Registerkarte anzeigen"
+        filter_all: "Alle"
+        filter_standalone: "Einzeln"
       ai_bot:
         title: "KI-Bot"
         agent: "Agent:"

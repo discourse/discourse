@@ -45,13 +45,16 @@ acceptance("Post popup menu", function (needs) {
 
     server.get("/assign/suggestions", () =>
       helper.response({
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [{ username: new_assignee_username }],
       })
     );
 
-    server.get("/u/search/users", () =>
-      helper.response({ users: [{ username: new_assignee_username }] })
+    server.get("/assign/search", () =>
+      helper.response({
+        users: [{ username: new_assignee_username }],
+        groups: [],
+      })
     );
   });
 

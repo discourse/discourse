@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 import {
   fieldVisible,
+  fixedCollectionRows,
   normalizeOptions,
   normalizeSchema,
   propertyLabel,
@@ -22,9 +23,12 @@ function isDerived(item) {
   return summarizeOutputKeyIsDerived(item || {});
 }
 
-function derivedPlaceholder(item) {
+function derivedPlaceholder(item, configuration, fieldName) {
   return summarizeOutputKeyIsDerived(item || {})
-    ? summarizeOutputKey(item || {})
+    ? summarizeOutputKey(
+        item || {},
+        fixedCollectionRows(configuration?.[fieldName])
+      )
     : "";
 }
 
@@ -186,7 +190,11 @@ export default class SummarizeAggregations extends Component {
                 'workflows-summarize-row__control--derived'
               }}"
             @name="output_field_name"
-            @placeholder={{derivedPlaceholder row.item}}
+            @placeholder={{derivedPlaceholder
+              row.item
+              @configuration
+              @fieldName
+            }}
             @showTitle={{false}}
             @title={{this.fieldTitle "output_field_name"}}
             as |field|

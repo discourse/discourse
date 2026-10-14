@@ -413,6 +413,8 @@ RSpec.describe UsersController do
       end
 
       it "sets the users timezone if the param is present" do
+        user1.user_option.update!(timezone: nil)
+
         get "/u/password-reset/#{email_token.token}"
         expect(user1.user_option.timezone).to eq(nil)
 

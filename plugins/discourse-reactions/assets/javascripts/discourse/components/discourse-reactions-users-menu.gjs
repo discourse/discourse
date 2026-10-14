@@ -14,6 +14,7 @@ import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
   @service router;
+  @service siteSettings;
 
   @tracked activeFilter = null;
 
@@ -85,7 +86,9 @@ export default class DiscourseReactionsUsersMenu extends Component {
   }
 
   get showFilters() {
-    return this.reactions.length > 1;
+    // Every reaction renders as the like icon without emoji, so per-reaction
+    // filters would be indistinguishable.
+    return this.siteSettings.enable_emoji && this.reactions.length > 1;
   }
 
   get titleText() {

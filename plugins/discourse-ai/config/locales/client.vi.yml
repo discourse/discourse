@@ -283,8 +283,6 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        max_turn_tokens: "Giới hạn Token mỗi lượt (Max turn tokens)"
-        max_turn_tokens_help: "Tổng số Token tối đa (đầu vào + đầu ra) tiêu tốn qua tất cả các lời gọi mô hình ngôn ngữ lớn (LLM) trong một lần Bot phản hồi. Để trống để mặc định dùng một nửa cửa sổ ngữ cảnh (Context window) của mô hình."
         compression_threshold: "Ngưỡng nén (Compression threshold)"
         user: Thành viên
         save: "Lưu lại"
@@ -432,6 +430,15 @@ vi:
           fake: "Tùy biến"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+      ai_artifact:
+        editor:
+          version: "Phiên bản"
+          default: "Mặc định"
+          apply: "Áp dụng"
+        share: "Chia sẻ"
+        create_link: "Tạo link"
+        copy_link: "Sao chép link"
+        filter_all: "Tất cả"
       ai_bot:
         agent: "Tác nhân:"
         llm: "Mô hình (Model):"

@@ -64,6 +64,54 @@ pl_PL:
             declined: "Ostatnie kliknięcie prawym przyciskiem: odrzucone, przeglądarka je przyjęła"
         multi_select:
           title: "Wybór wielokrotny"
+        reorderable_list:
+          title: "Lista z możliwością zmiany kolejności"
+          groups:
+            aria_label: "Przykładowe grupy list z możliwością zmiany kolejności"
+            start:
+              title: "Zacznij tutaj"
+              description: "Domyślna powłoka: jeden uchwyt na wiersz, który służy do przeciągania, otwierania menu przenoszenia i przejmowania klawiatury."
+            policies:
+              title: "Zasady dotyczące wierszy"
+              description: "Które wiersze mogą się przesuwać, a które mogą odejść: wiersze przypięte, które zachowują swoje miejsca, oraz rzędy chronione, które nie dają możliwości wyjścia."
+            content:
+              title: "Interaktywna treść wiersza"
+              description: "Wiersze zawierają własne elementy sterujące – przełączniki i wejścia. Zachowują one normalny fokus i kliknięcia; lista przejmuje jedynie uchwyt."
+            layouts:
+              title: "Układy komórek"
+              description: "Ręczne rozmieszczanie wierszy w kształcie tabeli: lista renderuje wiersze, a wstępnie podłączone elementy sterujące znajdują się tam, gdzie potrzebuje ich komórka."
+            groups:
+              title: "Wiele list"
+              description: "Listy zarejestrowane w jednej grupie akceptują wiersze pozostałych grup poprzez przeciągnięcie lub użycie menu przenoszenia."
+          description: "Interaktywne przykłady DReorderableList: przeciąganie, menu przenoszenia za każdym uchwytem, akceleratory klawiaturowe, przypinanie wierszy, grupy list krzyżowych, usuwanie i tworzenie elementów w tekście."
+          basic_example: "Lista domyślna"
+          basic_description: "Gotowa powłoka. Każdy wiersz ma jeden element sterujący, uchwyt: jest to uchwyt przeciągania, który otwiera menu miejsc docelowych ruchu. Klawisz Tab umożliwia dostęp do każdego uchwytu w kolejności dokumentu, obok elementów sterujących wierszy, a klawisze strzałek służą jako skróty klawiaturowe. Każdy rzeczywisty ruch ogłasza nową pozycję, a ruch odrzucony z dowolnego końca informuje o tym, zamiast nic nie robić."
+          basic_try_this: "Przejdź do uchwytu klawiszem Tab i naciśnij Enter, aby przejść do menu przenoszenia, lub użyj klawiszy strzałek, aby przesunąć listę. Alt ze strzałką przesuwa sam wiersz; Alt z Home lub End przesuwa go do końca."
+          policies_example: "Przypięte i wymagane wiersze"
+          policies_description: "Dwa predykaty, dwie polityki, obie subtraktywne. Wiersz, który wyklucza predykat ruchomy, nie tworzy uchwytu i zachowuje swoje dokładne miejsce, niezależnie od tego, gdzie się znajduje — ta lista przypina pierwszy i ostatni wiersz, a wiersze wokół nich przesuwają się w obrębie pozostałych miejsc. Wiersz, który wyklucza predykat usuwalny, nie tworzy kontroli usuwania, więc wiersz chroniony nie oferuje niczego, na co nie można zareagować."
+          policies_try_this: "Przesuń pierwszy ruchomy wiersz na dół z menu: żaden z przypiętych wierszy nie zostanie przesunięty. Wymagany wiersz nie ma w ogóle kontrolki usuwania."
+          policies_pinned: "Przypięta"
+          policies_required: "Wymagane"
+          toggles_example: "Wiersze z przełącznikami"
+          toggles_description: "Wzorzec panelu administracyjnego: wiersze mają własne interaktywne elementy sterujące, które zachowują swój normalny fokus i kliknięcia. Przełączone wiersze pozostają na liście, ale tracą możliwość przenoszenia — zachowują swoje miejsce i tracą uchwyt, zamiast znikać w oddzielnym bloku."
+          toggles_try_this: "Wyłącz przełącznik, a wiersz pozostanie na swoim miejscu, ale nie będzie można go już przesuwać. Zmień kolejność rzędów wokół niego i obserwuj, jak się utrzymuje."
+          editable_example: "Edytowalne wiersze"
+          editable_description: "Wzorzec listy wartości ustawień o stabilnej tożsamości: dane wejściowe dla każdego wiersza, uchwyt na początku i kontrolka usuwania listy na końcu. Wpisywanie danych pozostaje w polu wprowadzania, a klawisz Tab porusza się po kontrolkach wiersza tak samo, jak w każdym innym miejscu."
+          editable_try_this: "Edytuj wartość, a następnie usuń wiersz — usunięcie zostanie ogłoszone, a fokus znajdzie się na wierszu, który ją zastąpił."
+          table_example: "Natywne wiersze tabeli, ręczne rozmieszczenie"
+          table_description: "Ręczne rozmieszczanie układów komórek: lista renderuje treść tabeli i jej wiersze, a także udostępnia wstępnie skonfigurowane elementy sterujące, za pomocą których można umieścić wiersz — w tym przypadku uchwyt zajmuje pierwszą kolumnę."
+          table_try_this: "Przeciągnij uchwyt albo naciśnij Enter na jednym z nich: element sterujący zmianą kolejności znajduje się w pierwszej komórce, a cały wiersz się przesuwa."
+          table_field: "Pole"
+          table_type: "Typ"
+          cross_list_example: "Ruchy międzylistowe"
+          cross_list_description: "Listy zarejestrowane w jednej grupie akceptują wzajemnie swoje wiersze. Przeciąganie przenosi wiersz, a menu każdego uchwytu wyświetla listy pokrewne według nazwy, więc przesunięcie jest możliwe bez wskaźnika. Opróżniona lista nadal akceptuje upuszczenia."
+          cross_list_try_this: "Przeciągnij wiersz z listy podstawowej do drugorzędnej lub otwórz menu wiersza i wybierz inną listę według nazwy."
+          cross_list_empty: "Upuść wiersz tutaj"
+          cross_list_primary: "Podstawowy"
+          cross_list_secondary: "Drugorzędny"
+          create_example: "Stwórz możliwości"
+          create_description: "Po włączeniu opcji tworzenia lista renderuje dane wejściowe po wierszach, więc dołączanie należy do tego samego komponentu, który zmienia kolejność."
+          create_try_this: "Wpisz nazwę owocu i naciśnij Enter."
         toasts:
           title: "Komunikaty podpowiedzi"
         font_scale:

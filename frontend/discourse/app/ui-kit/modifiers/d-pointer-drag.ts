@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
@@ -400,7 +401,7 @@ export function registerPointerDrag(
     }
 
     pointerId = event.pointerId;
-    engaged = !(args.threshold > 0);
+    engaged = !((args.threshold ?? 0) > 0);
 
     // A press bubbles, so an ancestor registration starts its own gesture from
     // the same event. Capture requested during `pointerdown` is only pending
@@ -579,7 +580,10 @@ export default class DPointerDragModifier extends Modifier<DPointerDragSignature
     // installed once and reads these live.
     this.#args = named;
 
-    this.#cleanup ??= registerPointerDrag(element, () => this.#args);
+    this.#cleanup ??= registerPointerDrag(element, () => {
+      assert("dPointerDrag: args are read before `modify`", this.#args);
+      return this.#args;
+    });
 
     // Re-reflected here rather than only at registration: the declaration has to
     // be in place before a touch begins, so a consumer that changes it between

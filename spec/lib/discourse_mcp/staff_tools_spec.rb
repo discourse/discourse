@@ -889,6 +889,9 @@ describe DiscourseMcp::Tools do
       "discourse_create_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
       "discourse_update_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
       "discourse_delete_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_list_users" => [DiscourseMcp::Scopes::USERS_READ],
+      "discourse_create_user" => [DiscourseMcp::Scopes::USERS_WRITE],
+      "discourse_manage_user_activation" => [DiscourseMcp::Scopes::USERS_WRITE],
     }
 
     actual =

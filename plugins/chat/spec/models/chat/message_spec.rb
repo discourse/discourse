@@ -116,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -537,14 +541,14 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span></div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg2.id}" title="#{msg2.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
         <p>and another cool one</p></div>
