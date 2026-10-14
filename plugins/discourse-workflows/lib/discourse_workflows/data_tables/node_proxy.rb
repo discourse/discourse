@@ -23,7 +23,9 @@ module DiscourseWorkflows
       end
 
       def get_columns
-        user_columns.map.with_index { |column, index| serialize_column(column, index) }
+        @facade.data_table.user_columns.map.with_index do |column, index|
+          serialize_column(column, index)
+        end
       end
 
       def add_column(options)
@@ -115,15 +117,6 @@ module DiscourseWorkflows
 
       def reset_columns_resolver
         @columns_resolver = ColumnsResolver.new(@facade.data_table)
-      end
-
-      def user_columns
-        @facade.data_table.columns.filter_map do |column|
-          name = DiscourseWorkflows::DataTable.column_name(column)
-          next if Types.system_column?(name)
-
-          column
-        end
       end
 
       def serialize_column(column, index)

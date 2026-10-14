@@ -22,11 +22,8 @@ module DiscourseWorkflows
       def initialize(data_table)
         @column_names =
           data_table
-            .columns
-            .filter_map do |column|
-              name = DiscourseWorkflows::DataTable.column_name(column)
-              name unless Types.system_column?(name)
-            end
+            .user_columns
+            .map { |column| DiscourseWorkflows::DataTable.column_name(column) }
             .to_set
       end
 

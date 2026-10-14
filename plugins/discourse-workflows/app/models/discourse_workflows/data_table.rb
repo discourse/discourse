@@ -24,6 +24,10 @@ module DiscourseWorkflows
       DataTables::Storage.columns(id)
     end
 
+    def user_columns
+      columns.reject { |column| DataTables::Types.system_column?(column["name"]) }
+    end
+
     class << self
       def column_name(column)
         column.respond_to?(:name) ? column.name.to_s : column.fetch("name").to_s
