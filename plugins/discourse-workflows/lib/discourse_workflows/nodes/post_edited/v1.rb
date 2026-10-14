@@ -92,7 +92,7 @@ module DiscourseWorkflows
         def matches_trust_level?(trust_levels)
           trust_levels =
             Array.wrap(trust_levels).filter_map { |trust_level| trust_level.presence&.to_i }
-          trust_levels.empty? || trust_levels.include?(@post.user.trust_level)
+          trust_levels.empty? || trust_levels.include?(@post.user&.trust_level)
         end
       end
     end
