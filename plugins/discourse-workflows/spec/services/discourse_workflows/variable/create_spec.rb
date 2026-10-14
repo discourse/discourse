@@ -39,6 +39,16 @@ RSpec.describe DiscourseWorkflows::Variable::Create do
       it { is_expected.to fail_with_an_invalid_model(:variable) }
     end
 
+    context "when the key already exists on a workflow-scoped local variable" do
+      before { Fabricate(:discourse_workflows_workflow_variable, key: "API_BASE_URL") }
+
+      it { is_expected.to run_successfully }
+    end
+
+    it "has no workflow_id attribute on its contract, so a client can never scope a global create" do
+      expect(described_class::Contract.attribute_names).not_to include("workflow_id")
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

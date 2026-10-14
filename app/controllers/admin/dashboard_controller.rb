@@ -249,6 +249,9 @@ class Admin::DashboardController < Admin::StaffController
       raise Discourse::InvalidParameters.new(:items)
     end
 
+    existing_reports =
+      AdminDashboardReport.all.index_by { |report| [report.source, report.identifier] }
+
     params
       .permit(items: %i[source identifier rows cols])
       .fetch(:items, [])
@@ -257,12 +260,13 @@ class Admin::DashboardController < Admin::StaffController
         identifier = entry[:identifier]
         raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
 
-        rows = Integer(entry[:rows].presence || 1, exception: false)
+        existing_report = existing_reports[[source.to_s, identifier.to_s]]
+        rows = Integer(entry[:rows].presence || existing_report&.rows || 1, exception: false)
         if rows.nil? || rows < 1 || rows > AdminDashboardReport::MAX_ROWS
           raise Discourse::InvalidParameters.new(:items)
         end
 
-        cols = Integer(entry[:cols].presence || 1, exception: false)
+        cols = Integer(entry[:cols].presence || existing_report&.cols || 1, exception: false)
         if cols.nil? || cols < 1 || cols > AdminDashboardReport::MAX_COLS
           raise Discourse::InvalidParameters.new(:items)
         end

@@ -92,7 +92,7 @@ module DiscourseAi
         query = @artifact.key_values
 
         query =
-          if current_user&.admin?
+          if can_read_all_private_key_values?
             query
           elsif current_user
             query.where("user_id = ? OR public = true", current_user.id)
@@ -111,6 +111,10 @@ module DiscourseAi
         end
 
         query
+      end
+
+      def can_read_all_private_key_values?
+        current_user&.admin?
       end
 
       def find_artifact

@@ -4,8 +4,8 @@ import { voiceAssetAppUrl, voiceAssetUrl } from "./voice-assets";
 // Stable filenames in the discourse_voice_assets gem's stt/ directory.
 const STT_WORKER_FILE = "subtitles-worker.js";
 const VAD_BUNDLE_FILE = "vad.js";
-const ORT_WASM_JS_FILE = "ort/ort-wasm-simd-threaded.jsep.js";
-const ORT_WASM_BINARY_FILE = "ort/ort-wasm-simd-threaded.jsep.wasm";
+const ORT_WASM_JS_FILE = "ort/ort-wasm-simd-threaded.asyncify.js";
+const ORT_WASM_BINARY_FILE = "ort/ort-wasm-simd-threaded.asyncify.wasm";
 const VAD_ASSET_DIR = "vad/";
 
 // Live subtitles for room participants.
@@ -18,9 +18,10 @@ const VAD_ASSET_DIR = "vad/";
 // Web Worker (WebGPU encoder), which serializes jobs across speakers.
 //
 // The runtime bundles are served from the plugin's public dir and only
-// fetched the first time subtitles are enabled; the ~2.5GB model weights
-// come from the `voice_stt_model_base_url` source (Discourse's
-// HuggingFace model repository by default), kept in a durable Cache API store.
+// fetched the first time subtitles are enabled; the model weights
+// (~200-400MB, see stt-models.js) come from the `voice_stt_model_base_url`
+// source (Discourse's HuggingFace model repository by default), kept in a
+// durable Cache API store.
 
 const PREFERENCE_KEY = "voice:subtitles";
 
@@ -136,7 +137,19 @@ export default class SubtitlesManager {
   }
 
   setEnabled(enabled, { modelBaseUrl = null } = {}) {
+    const modelChanged = modelBaseUrl !== this.#modelBaseUrl;
     this.#modelBaseUrl = modelBaseUrl;
+    if (modelChanged && this.#worker) {
+      // The worker holds one loaded model, so a different model needs a
+      // fresh one. Existing taps keep running and feed it once it's ready.
+      this.#terminateWorker();
+      if (enabled && this.#taps.size) {
+        this.#ensureWorker(modelBaseUrl);
+      } else {
+        this.#onLoadingChange();
+      }
+    }
+
     if (this.#enabled === enabled) {
       return;
     }
@@ -306,7 +319,7 @@ export default class SubtitlesManager {
     }
 
     // Best effort, window-only API: asks the browser to exempt the origin's
-    // storage (the multi-GB cached model) from eviction. Chromium decides
+    // storage (the cached model) from eviction. Chromium decides
     // silently, but Firefox shows a permission prompt — so this must only
     // run here, when transcription is actually starting in a room, never on
     // plain page load.
@@ -340,7 +353,7 @@ export default class SubtitlesManager {
     worker.postMessage({
       type: "init",
       config: {
-        modelBaseUrl: modelBaseUrl || null,
+        modelBaseUrl,
         ortWasmJsUrl: sttUrl(ORT_WASM_JS_FILE),
         ortWasmBinaryUrl: sttUrl(ORT_WASM_BINARY_FILE),
       },

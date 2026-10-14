@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 module DiscourseAi::Completions
   class OpenAiMessageProcessor
-    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
+    attr_reader :prompt_tokens,
+                :completion_tokens,
+                :cache_read_tokens,
+                :cache_write_tokens,
+                :stop_reason,
+                :reasoning_tokens
 
     def initialize(partial_tool_calls: false)
       @tools = {}
@@ -11,6 +16,10 @@ module DiscourseAi::Completions
       @cache_read_tokens = nil
       @cache_write_tokens = nil
       @partial_tool_calls = partial_tool_calls
+    end
+
+    def output_limit_reached
+      @stop_reason == "length"
     end
 
     def process_message(json)
@@ -30,6 +39,7 @@ module DiscourseAi::Completions
         end
       end
 
+      @stop_reason = json.dig(:choices, 0, :finish_reason) || @stop_reason
       update_usage(json)
 
       result
@@ -99,6 +109,7 @@ module DiscourseAi::Completions
       result.concat(finish) if finished_tools
       # Content and tool calls may share a delta; preserve whitespace-only text.
       result.unshift(content) if !content.to_s.empty?
+      @stop_reason = json.dig(:choices, 0, :finish_reason) || @stop_reason
       update_usage(json)
 
       result.length > 1 ? result : result.first
@@ -155,6 +166,9 @@ module DiscourseAi::Completions
       usage = json.dig(:usage)
       return if !usage
 
+      @reasoning_tokens = usage.dig(:completion_tokens_details, :reasoning_tokens) if usage[
+        :completion_tokens_details
+      ]&.key?(:reasoning_tokens)
       token_details = usage[:prompt_tokens_details] || {}
       cached_tokens = (token_details[:cached_tokens] || usage[:prompt_cache_hit_tokens]).to_i
       cache_write_tokens = token_details[:cache_write_tokens].to_i

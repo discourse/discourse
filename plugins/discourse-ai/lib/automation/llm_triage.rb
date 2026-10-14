@@ -157,7 +157,7 @@ module DiscourseAi
         result = nil
 
         llm_args = {
-          max_tokens: max_output_tokens,
+          max_response_tokens: max_output_tokens,
           stop_sequences: stop_sequences,
           feature_context: {
             automation_id: automation&.id,

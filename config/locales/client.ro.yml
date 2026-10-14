@@ -319,7 +319,6 @@ ro:
       zh_CN:
         name: Chineză simplificată
     share:
-      topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
       twitter: "Partajează pe X"
@@ -367,6 +366,12 @@ ro:
     topic_admin_menu: "acțiuni subiect"
     skip_to_main_content: "Sari la conținutul principal"
     skip_user_nav: "Sari la conținutul profilului"
+    reorder:
+      remove: "Înlătură %{label}"
+      removed: "%{label} a fost eliminată"
+      move_up: "Mută sus"
+      move_down: "Mută jos"
+      position: "%{position} din %{total}"
     emails_are_disabled: "Trimiterea de e-mailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări pe e-mail de niciun fel."
     emails_are_disabled_non_staff: "Mesajele de e-mail de ieșire au fost dezactivate pentru utilizatorii care nu fac parte din echipă."
     software_update_prompt:
@@ -476,10 +481,6 @@ ro:
       one: "max din %{count}"
       few: "max din %{count}"
       other: "max din %{count}"
-    character_count:
-      one: "%{count} caracter"
-      few: "%{count} caractere"
-      other: "%{count} de caractere"
     period_chooser:
       aria_label: "Filtrează după perioadă"
     related_messages:
@@ -2343,8 +2344,7 @@ ro:
       discard: "Renunță"
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
-      title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
-      title_placeholder_redesign: "Titlu"
+      title_placeholder: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -3644,10 +3644,6 @@ ro:
       admin:
         title: "Administrator"
     badges:
-      earned_n_times:
-        one: "A primit acest ecuson o dată"
-        few: "A primit acest ecuson de %{count} ori"
-        other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat %{date}"
       title: Insigne
       multiple_grant: "Poți primi asta de mai multe ori"
@@ -4074,6 +4070,7 @@ ro:
             block: "Blochează"
             presets:
               custom: "Personalizat"
+            automatic: "Automat"
           authorizations:
             user: "Utilizator"
             last_used: "Ultima utilizare"
@@ -5053,6 +5050,7 @@ ro:
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
           discard: "Renunță"
+          leave: "Părăsește"
           installed: "Instalată"
           install_popular: "Populare"
           installing_message: "Se configurează noua ta temă…"

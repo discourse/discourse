@@ -9,3 +9,6 @@ th:
     discourse_reactions:
       users_popup:
         all: "ทั้งหมด"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "เพิ่ม"

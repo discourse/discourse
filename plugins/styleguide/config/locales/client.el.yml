@@ -29,6 +29,11 @@ el:
             delete: "Διαγραφή"
         multi_select:
           title: "Πολλαπλή επιλογή"
+        reorderable_list:
+          policies_pinned: "Καρφιτσωμένο"
+          policies_required: "Απαιτείται"
+          table_field: "Πεδίο"
+          table_type: "Τύπος"
         font_scale:
           title: "Σύστημα γραμματοσειράς"
         colors:

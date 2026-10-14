@@ -16,6 +16,7 @@ ur:
       link: "رابطہ"
   mcp:
     errors:
+      category_not_found: "زُمرہ نہیں ملا"
       topic_not_found: "موضوع نہیں ملا"
     oauth:
       deny: "انکار"

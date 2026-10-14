@@ -68,6 +68,16 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "whispers_allowed_groups" do
+    it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.update_whispers_allowed_groups_default = true
+      expect(SiteSetting.whispers_allowed_groups).to eq(Group::AUTO_GROUPS[:staff].to_s)
+      expect(Fabricate(:moderator)).to be_a_whisperer
+    end
+  end
+
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do
@@ -663,6 +673,35 @@ RSpec.describe SiteSetting do
       SiteSetting.default_locale = "en"
 
       expect(SiteSetting.content_localization_locales).to eq(["en"])
+    end
+  end
+
+  describe ".ensure_consistency!" do
+    it "resets category settings whose category no longer exists" do
+      SiteSetting.default_composer_category = "999999"
+      SiteSetting.general_category_id = 999_999
+      SiteSetting.max_topics_per_day = 999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.default_composer_category).to eq("")
+      expect(SiteSetting.general_category_id).to eq(-1)
+      expect(SiteSetting.max_topics_per_day).to eq(999)
+      expect(SiteSetting.uncategorized_category_id).not_to eq(-1)
+      expect(UserHistory.where(subject: "default_composer_category").last.details).to include(
+        "(id 999999) no longer exists",
+      )
+    end
+
+    it "disallows uncategorized topics when the uncategorized category no longer exists" do
+      SiteSetting.uncategorized_category_id = 999_999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.uncategorized_category_id).to eq(
+        SiteSetting.defaults[:uncategorized_category_id],
+      )
+      expect(SiteSetting.allow_uncategorized_topics).to eq(false)
     end
   end
 end

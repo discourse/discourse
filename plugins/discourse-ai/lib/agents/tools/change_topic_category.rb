@@ -83,6 +83,33 @@ module DiscourseAi
           { topic_id: parameters[:topic_id], category_id: parameters[:category_id] }
         end
 
+        def approval_title
+          return super if !previewable?(topic)
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(topic) || !previewable?(category)
+
+          change = {
+            label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_category_label"),
+            before:
+              topic.category&.name || I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value"),
+            after: category.name,
+            after_color: category.color,
+          }
+          change[:before_color] = topic.category.color if topic.category
+          [change]
+        end
+
+        def approval_parameters
+          []
+        end
+
         private
 
         def topic

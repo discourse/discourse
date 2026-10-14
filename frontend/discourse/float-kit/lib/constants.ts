@@ -152,10 +152,9 @@ export interface TooltipOptions {
   hoverGracePeriod: number;
 
   /**
-   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
-   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
-   * silently wins over the matched width and a trigger wider than the cap gets a narrower
-   * overlay.
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Ignored
+   * when `matchTriggerWidth` is set, since the trigger then decides the width; only the viewport
+   * bounds it.
    *
    * A number is additionally capped to the width the viewport leaves the float, so it can never
    * overflow the document; a string is applied verbatim and gets no such cap.
@@ -333,20 +332,34 @@ export interface ToastData {
   [key: string]: unknown;
 }
 
+/**
+ * The progress-bar arguments a toast component receives. The registration
+ * callback is guaranteed whenever a progress bar is shown.
+ */
+type ToastProgressBarArgs =
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar?: false;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar?: (element: HTMLElement) => void;
+    }
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar: true;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar: (element: HTMLElement) => void;
+    };
+
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
-export interface ToastComponentArgs {
+export type ToastComponentArgs = ToastProgressBarArgs & {
   /** The data to render in the toast. */
   data?: ToastData;
 
   /** Closes the toast. */
   close?: FloatCallback;
-
-  /** Whether to show a progress bar counting down to auto-close. */
-  showProgressBar?: boolean;
-
-  /** Registers the progress-bar element so the auto-close modifier can animate it. */
-  onRegisterProgressBar?: (element: HTMLElement) => void;
-}
+};
 
 /** The signature of a toast component (the default is `DDefaultToast`). */
 export type ToastComponent = ComponentLike<{

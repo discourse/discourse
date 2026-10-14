@@ -316,7 +316,7 @@ describe "Composer - ProseMirror - Pasting content" do
   end
 
   context "when pasting tables" do
-    it "fills incomplete rows" do
+    it "normalizes pasted tables and handles empty rows" do
       cdp.allow_clipboard
       open_composer
 
@@ -347,11 +347,9 @@ describe "Composer - ProseMirror - Pasting content" do
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "normalizes column counts when header has fewer columns than body rows" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>
@@ -376,11 +374,9 @@ describe "Composer - ProseMirror - Pasting content" do
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "normalizes nested table column counts" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>
@@ -421,11 +417,9 @@ describe "Composer - ProseMirror - Pasting content" do
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "handles tables with empty rows without crashing" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>

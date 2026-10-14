@@ -802,9 +802,23 @@ it:
         quick_search:
           suffix: "in tutti gli argomenti e i post con IA"
       ai_artifact:
+        editor:
+          version: "Versione"
+          default: "Predefinito"
+          option_on: "On"
+          option_off: "Off"
+          apply: "Applica"
         expand_view_label: "Espandi vista"
         collapse_view_label: "Esci dalla modalità a schermo intero (tasto ESC o Indietro)"
         click_to_run_label: "Esegui artefatto"
+        share: "Condividi"
+        create_link: "Crea link"
+        copied: "Copiato negli appunti"
+        copy_link: "Copia link"
+        copy_embed: "Copia incorporato"
+        new_tab: "Mostra in nuova scheda"
+        filter_all: "Tutte"
+        filter_standalone: "Evento autonomo"
       ai_bot:
         title: "Bot IA"
         llm: "Modello:"

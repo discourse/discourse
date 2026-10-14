@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::DiscourseMetaSearch do
   end
 
   fab!(:llm_model) { Fabricate(:llm_model, max_prompt_tokens: 8192) }
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 

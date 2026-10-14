@@ -1,0 +1,9 @@
+@use "lib/viewport";
+
+:where(.uc-enable-main-outlet-grid-layout-change) {
+  --d-sidebar-width: 15em;
+
+  @include viewport.until(lg) {
+    --d-sidebar-width: 13em;
+  }
+}

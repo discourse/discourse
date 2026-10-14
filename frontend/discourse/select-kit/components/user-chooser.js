@@ -28,6 +28,7 @@ export const CUSTOM_USER_SEARCH_OPTIONS = [];
   excludeCurrentUser: false,
   customSearchOptions: undefined,
   excludedUsernames: undefined,
+  searchUrl: undefined,
 })
 @pluginApiIdentifiers("user-chooser")
 export default class UserChooser extends MultiSelectComponent {
@@ -102,6 +103,7 @@ export default class UserChooser extends MultiSelectComponent {
       allowEmails: options.allowEmails,
       includeStagedUsers: this.includeStagedUsers,
       customUserSearchOptions,
+      url: options.searchUrl,
     }).then((result) => {
       if (typeof result === "string") {
         // do nothing promise probably got cancelled

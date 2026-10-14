@@ -18,6 +18,7 @@ hr:
       link: "Veza"
   mcp:
     errors:
+      category_not_found: "Kategorija nije pronađena"
       topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "Odbiti"

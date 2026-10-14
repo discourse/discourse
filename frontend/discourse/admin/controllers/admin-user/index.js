@@ -529,6 +529,11 @@ export default class AdminUserIndexController extends Controller {
   }
 
   @action
+  toggleEditing(field) {
+    this.toggleProperty(field);
+  }
+
+  @action
   saveUsername(newUsername) {
     const oldUsername = this.get("model.username");
     this.set("model.username", newUsername);

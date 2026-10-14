@@ -400,8 +400,11 @@ ko:
       chat_message_created:
         channel_id: "채널"
       send_chat_message:
+        targets:
+          channel: "채널"
         channel_id: "채널"
         message: "메시지 보내기"
+        actor_username: "발신자"
       chat_approval:
         message: "메시지 보내기"
         buttons: "버튼"

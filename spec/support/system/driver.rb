@@ -2,7 +2,8 @@
 
 # Playwright/Chrome driver setup for system specs: the remote-debugging endpoint,
 # the Chrome launch args, and driver registration.
-CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
+CHROME_REMOTE_DEBUGGING_PORT =
+  ((ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_i + ENV["TEST_ENV_NUMBER"].to_i).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
 module SystemDrivers

@@ -877,8 +877,12 @@ ru:
       chat_message_created:
         channel_id: "Канал"
       send_chat_message:
+        targets:
+          channel: "Канал"
         channel_id: "Канал"
+        target_usernames: "Получатели"
         message: "Сообщение"
+        actor_username: "Отправитель"
       chat_approval:
         message: "Сообщение"
         buttons: "Кнопки"

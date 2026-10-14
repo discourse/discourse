@@ -267,7 +267,6 @@ fi:
       zh_CN:
         name: Kiina (yksinkertaistettu)
     share:
-      topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "viesti %{postNumber} käyttäjältä @%{username}"
       close: "sulje"
       twitter: "Jaa X:ssä"
@@ -315,6 +314,11 @@ fi:
     topic_admin_menu: "ketjun toiminnot"
     skip_to_main_content: "Siirry pääsisältöön"
     skip_user_nav: "Siirry profiilin sisältöön"
+    reorder:
+      removed: "Poistettiin %{label}"
+      move_up: "Siirrä ylös"
+      move_down: "Siirrä alas"
+      position: "%{position}/%{total}"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     emails_are_disabled_non_staff: "Lähtevät sähköpostit on poistettu käytöstä muilta kuin henkilökunnan käyttäjiltä."
     software_update_prompt:
@@ -418,9 +422,6 @@ fi:
     max_of_count:
       one: "korkeintaan %{count}"
       other: "korkeintaan %{count}"
-    character_count:
-      one: "%{count} merkki"
-      other: "%{count} merkkiä"
     period_chooser:
       aria_label: "Suodata ajanjakson mukaan"
     related_messages:
@@ -1856,7 +1857,6 @@ fi:
         upload_title: "Lataa oma kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
         logo_small: "Sivuston pieni logo. Käytetään oletuksena."
-        use_custom: "Tai lataa mukautettu avatar:"
       change_profile_background:
         title: "Profiilin yläkuva"
         instructions: "Profiilin yläkuva keskitetään, ja sen oletusleveys on 1 110 px."
@@ -2424,7 +2424,7 @@ fi:
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
-      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan. :heart:"
+      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan."
     offline_indicator:
       no_internet: "Ei Internet-yhteyttä."
       refresh_page: "Päivitä sivu"
@@ -2838,8 +2838,7 @@ fi:
       edit_shared_draft: "Muokkaa jaettua luonnosta"
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
-      title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
-      title_placeholder_redesign: "Otsikko"
+      title_placeholder: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -4619,9 +4618,6 @@ fi:
       admin:
         title: "Ylläpitäjä"
     badges:
-      earned_n_times:
-        one: "On ansainnut tämän kunniamerkin %{count} kerran"
-        other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
       others_count:
         one: "Myönnetty muille %{count} kerran"
@@ -5311,6 +5307,7 @@ fi:
             use_preset: "Määritä"
             presets:
               custom: "Mukautettu"
+            automatic: "Automaattiset"
           authorizations:
             user: "Käyttäjä"
             last_used: "Viimeksi käytetty"
@@ -6753,8 +6750,8 @@ fi:
           upload: "Lataa"
           select_component: "Valitse komponentti…"
           unsaved_changes_alert: "Et ole tallentanut tekemiäsi muutoksia. Haluatko hylätä ne ja siirtyä muualle?"
-          unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
+          leave: "Poistu"
           stay: "Jää"
           css_html: "Mukautettu koodi"
           edit_css_html: "Muokkaa koodia"

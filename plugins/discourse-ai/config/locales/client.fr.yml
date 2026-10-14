@@ -719,8 +719,6 @@ fr:
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
         use_parent_llm: "Utiliser le modèle de langage de l'agent"
-        max_turn_tokens: "Nombre maximal de jetons par tour"
-        max_turn_tokens_help: "Nombre maximal total de jetons (entrée + sortie) consommés par l'ensemble des appels au LLM au cours d'une même réponse du bot. Laissez ce champ vide pour utiliser par défaut la moitié de la fenêtre de contexte du modèle."
         compression_threshold: "Seuil de compression"
         compression_threshold_help: "Pourcentage d'utilisation du contexte (20 à 99) à partir duquel la compression automatique se déclenche. Une valeur plus faible déclenche la compression plus tôt et conserve davantage de marge disponible."
         vision_enabled: Inclure les images téléversées
@@ -1303,9 +1301,23 @@ fr:
         quick_search:
           suffix: "dans tous les sujets et publications avec IA"
       ai_artifact:
+        editor:
+          version: "Version"
+          default: "Par défaut"
+          option_on: "Activé"
+          option_off: "Désactivé"
+          apply: "Appliquer"
         expand_view_label: "Agrandir la vue"
         collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
+        share: "Partager"
+        create_link: "Créer un lien"
+        copied: "Copié dans le presse-papiers"
+        copy_link: "Copier le lien"
+        copy_embed: "Copier l'intégration"
+        new_tab: "Afficher dans un nouvel onglet"
+        filter_all: "Tout"
+        filter_standalone: "Indépendant"
       ai_bot:
         title: "Robot IA"
         agent: "Agent :"

@@ -24,6 +24,10 @@ hu:
         remove: "Kedvelés eltávolítása"
         cant_remove: "Már nem távolíthatja el a kedvelést"
         unauthenticated: "Regisztráljon vagy jelentkezzen be, hogy kedvelni tudja ezt a bejegyzést"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Hozzáadva"
+        changes_removed: "Eltávolítva"
     notifications:
       reaction_1_user_multiple_posts:
         one: "%{count} reakciót váltott ki a bejegyzés"

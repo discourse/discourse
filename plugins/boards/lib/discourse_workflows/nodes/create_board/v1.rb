@@ -70,7 +70,7 @@ if defined?(DiscourseWorkflows)
                       exec_ctx.get_node_parameter("tag_names", item_index, default: []),
                     ),
                   "category_ids" =>
-                    DiscourseWorkflows::NodeType.normalize_category_ids(
+                    DiscourseWorkflows::NodeType.normalize_ids(
                       exec_ctx.get_node_parameter("category_ids", item_index, default: []),
                     ),
                   "acl" => exec_ctx.get_node_parameter("acl", item_index, default: []),

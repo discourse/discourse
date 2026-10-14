@@ -18,6 +18,7 @@ it:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Categoria non trovata"
       draft_too_long: "La bozza è troppo lunga"
       topic_not_found: "Argomento non trovato"
     oauth:

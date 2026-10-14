@@ -20,6 +20,7 @@ enabled_site_setting :discourse_events_enabled
 register_svg_icon "calendar-days"
 register_asset "stylesheets/common/event-calendar-prompt.scss"
 register_asset "stylesheets/common/full-calendar-ext.scss"
+register_asset "stylesheets/common/calendar-placeholder.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
 register_asset "stylesheets/common/discourse-post-event.scss"

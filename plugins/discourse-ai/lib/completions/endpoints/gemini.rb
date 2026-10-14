@@ -414,6 +414,8 @@ module DiscourseAi
           update_usage(json)
 
           candidate = json.dig(:candidates, 0)
+          @stop_reason =
+            candidate&.dig(:finishReason) || json.dig(:promptFeedback, :blockReason) || @stop_reason
           parts = candidate&.dig(:content, :parts)
           batch_token = current_batch_token_for(parts)
 
@@ -428,6 +430,9 @@ module DiscourseAi
               check_for_failure!(parsed)
               update_usage(parsed)
               candidate = parsed.dig(:candidates, 0)
+              @stop_reason =
+                candidate&.dig(:finishReason) || parsed.dig(:promptFeedback, :blockReason) ||
+                  @stop_reason
               parts = candidate&.dig(:content, :parts)
               batch_token = current_batch_token_for(parts)
               decode_parts(parts, batch_token:, streaming: true) +
@@ -596,15 +601,45 @@ module DiscourseAi
             if prompt_token_count = usage[:promptTokenCount]
               @prompt_token_count = prompt_token_count
             end
+            @thought_token_count = usage[:thoughtsTokenCount] if usage.key?(:thoughtsTokenCount)
             if candidate_token_count = usage[:candidatesTokenCount]
               @candidate_token_count = candidate_token_count
             end
           end
         end
 
+        def output_stop_reason
+          @stop_reason
+        end
+
+        def output_limit_reached?
+          @stop_reason == "MAX_TOKENS"
+        end
+
+        def reported_reasoning_tokens
+          @thought_token_count
+        end
+
+        def reset_attempt_state!
+          super
+          @prompt_token_count = nil
+          @thought_token_count = nil
+          @candidate_token_count = nil
+          @stop_reason = nil
+          @tool_index = nil
+          @thought_summary = nil
+          @current_batch_token = nil
+          @thought_signature_parts = nil
+          @emitted_thought_signature_parts_count = nil
+          @emitted_grounding_metadata_thinking = nil
+          @emitted_url_context_metadata_thinking = nil
+        end
+
         def final_log_update(log)
           log.request_tokens = @prompt_token_count if @prompt_token_count
-          log.response_tokens = @candidate_token_count if @candidate_token_count
+          log.response_tokens =
+            @candidate_token_count.to_i + @thought_token_count.to_i if @candidate_token_count ||
+            @thought_token_count
         end
 
         def streaming_decoder
