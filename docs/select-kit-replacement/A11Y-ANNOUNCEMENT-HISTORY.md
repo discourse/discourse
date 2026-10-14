@@ -132,6 +132,25 @@ findings.
 3. The inspector changes go into #42289 once this branch's a11y changes reach `main`, since #42289
    is built on `main` and needs the history to exist.
 
+## Other inspector changes for #42289
+
+Found while trying the temp merge branch. These don't depend on the history, so they can go into
+#42289 at any time.
+
+- **A collapsed combobox is exempt from `aria-controls`** (2026-10-08). Tabbing into a closed DSelect
+  raised `role.missing-attribute` ("Widget should expose the expected ARIA attribute"). DSelect sets
+  `aria-controls` only while open, because the listbox isn't rendered while it's closed and the
+  reference would dangle. ARIA 1.2 requires `aria-controls` on every combobox, but the ARIA editor's
+  draft requires only `aria-expanded`. The fix adds `collapsedComboboxControls` in
+  `instrumentation.ts`, called from `requiredAttributeFindings`. It skips `aria-controls` when
+  `aria-expanded` isn't `"true"`, and an open combobox without it is still reported. A new test in
+  `a11y-cursor-rules-test.gjs`, "a collapsed combobox does not need aria-controls", covers
+  collapsed, no `aria-expanded` (the defaulted `aria-expanded` is still noted), and expanded. It was
+  red before the fix and caught two planted defects: exempting every combobox, and exempting every
+  required attribute on a collapsed one. The comment on the `role.missing-attribute` case in
+  `a11y-catalogue-gate-test.gjs` that said there was no carve-out is updated. Staged, not committed,
+  on `tmp/select-kit-x-a11y-inspector`.
+
 ## Landing order
 
 #44401 converts `a11y.js` to `a11y.ts`. This branch already carries that
