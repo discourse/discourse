@@ -19,13 +19,15 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "can generate key pairs" do
+      it "generates 4096-bit RSA key pairs" do
         post "/admin/themes/generate_key_pair.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["private_key"]).to eq(nil)
         expect(json["public_key"]).to include("ssh-rsa ")
-        expect(Discourse.redis.get("ssh_key_#{json["public_key"]}")).not_to eq(nil)
+        private_key = Discourse.redis.get("ssh_key_#{json["public_key"]}")
+        expect(OpenSSL::PKey::RSA.new(private_key).n.num_bits).to eq(4096)
+        expect(SSHKey.new(private_key).ssh_public_key).to eq(json["public_key"])
       end
     end
 
