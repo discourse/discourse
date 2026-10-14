@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../lib/pitchfork_fork_drain"
+
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
@@ -71,6 +73,8 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
+  Scheduler::ForkDrain.reset_after_fork
+  Scheduler::Defer.resume
   if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
@@ -115,14 +119,11 @@ if oob_gc_enabled
 end
 
 before_worker_exit do |_server, _worker|
-  Discourse.resume_after_fork
   Scheduler::ThreadPool.wait_for_idle(timeout: 10)
   Scheduler::Defer.stop!(finish_work: true)
 end
 
 before_service_worker_ready do |server, service_worker|
-  Discourse.resume_after_fork
-
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"
