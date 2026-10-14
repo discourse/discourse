@@ -79,7 +79,7 @@
   - slow-mode-info
   - plugins/discourse-cakeday/emoji-images
   - plugins/discourse-subscriptions/payment-plan
-- [#43541](https://github.com/discourse/discourse/pull/43541) ✅
+- [#43541](https://github.com/discourse/discourse/pull/43541) ☑️
   - admin/admin-editable-field
   - admin/admin-form-row
   - admin/admin-nav
@@ -90,7 +90,7 @@
   - search-result-entries
   - user-profile-avatar
   - user-summary-topic
-- [#43543](https://github.com/discourse/discourse/pull/43543)
+- [#43543](https://github.com/discourse/discourse/pull/43543) ☑️
   - admin/email-styles-editor
   - categories-topic-list
   - category-unread
@@ -101,7 +101,7 @@
   - reviewable-field
   - user-summary-category-search
   - user-summary-topics-list
-- [#44570](https://github.com/discourse/discourse/pull/44570)
+- [#44570](https://github.com/discourse/discourse/pull/44570) ☑️
   - admin/site-settings/enum
   - admin/site-settings/group-list
   - admin/site-settings/host-list
@@ -111,3 +111,14 @@
   - admin/site-settings/tag-list
   - admin/site-settings/url-list
   - admin/site-settings/value-list
+- [#44592](https://github.com/discourse/discourse/pull/44592)
+  - composer-action-title
+  - login-buttons
+  - reviewable-field-editor
+  - reviewable-field-text
+  - reviewable-field-textarea
+  - reviewable-post-edits
+  - reviewable-topic-link
+  - signup-cta
+  - plugins/discourse-subscriptions/create-coupon-form
+  - plugins/styleguide/styleguide-section

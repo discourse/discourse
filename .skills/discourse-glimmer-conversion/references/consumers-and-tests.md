@@ -144,6 +144,16 @@ over a dropped default the callers relied on.
   removed. Mutation-test against the direct test.
 - One test per arg that `didReceiveAttrs`/`didUpdateAttrs` used to react to (change the
   arg, `settled()`, assert the DOM or state followed).
+- A test for a `get()` read must change *only* the untracked field. If the same change also
+  flips a tracked value the template reads around the getter (an `{{#if}}` block), the block
+  renders fresh and the test passes without the fix. `ComposerActionTitle` reads
+  `Composer#action` (plain) through `get()`; switching REPLY → EDIT also creates the reply
+  target that wraps the button, so the test switches EDIT → EDIT_SHARED_DRAFT, where the
+  target stays and only the `=== EDIT` check flips. Check the field is really untracked
+  first: `Post#can_edit` is a tracked accessor and needed no `get()`.
+- `discourseLater` runs as soon as the test settles, so a delayed side effect fires inside
+  the `await click(...)` that scheduled it. Test a teardown path (`willDestroy`) on its own,
+  starting from the state the delay would have produced.
 - One test per class-field default that callers override with an arg.
 
 ### Finding the test that actually exercises the component
