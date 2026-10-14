@@ -1,28 +1,24 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action } from "@ember/object";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class CreateCouponForm extends Component {
-  discountType = "amount";
-  discount = null;
-  promoCode = null;
-  active = false;
+  @tracked discountType = "amount";
+  @tracked discount = null;
+  @tracked promoCode = null;
+  @tracked active = false;
 
-  @computed
-  get discountTypes() {
-    return [
-      { id: "amount", name: "Amount" },
-      { id: "percent", name: "Percent" },
-    ];
-  }
+  discountTypes = [
+    { id: "amount", name: "Amount" },
+    { id: "percent", name: "Percent" },
+  ];
 
   @action
   createNewCoupon() {
@@ -33,12 +29,12 @@ export default class CreateCouponForm extends Component {
       active: this.active,
     };
 
-    this.create(createParams);
+    this.args.create(createParams);
   }
 
   @action
   cancelCreate() {
-    this.cancel();
+    this.args.cancel();
   }
 
   <template>
