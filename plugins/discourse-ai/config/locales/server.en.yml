@@ -339,6 +339,10 @@ en:
           llm_cannot_read_documents: "Upload %{upload_id} is a document and LLM '%{llm}' accepts no attachments"
           unsupported_image_format: "Upload %{upload_id} is not a supported image format (%{formats})"
           upload_skipped: "Upload %{upload_id} (%{filename}) was not sent: %{message}"
+      classify:
+        errors:
+          decision_model_not_found: "Decision model with id %{id} not found"
+          classify_failed: "Decision model '%{decision_model}' could not answer: %{error}"
 
     tools:
       custom_name: "%{name} (custom)"
@@ -1389,8 +1393,14 @@ en:
         choose_model: "Set 'ai embeddings selected model' first."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
+    decision_models:
+      secret_not_found: "The selected credential does not exist"
+      invalid_url: "must be an http:// or https:// URL, or an srv:// URL without a port"
+      test_refused: "The decision model declined to answer the test question."
+      test_image_not_read: "The decision model did not recognise the test image. Untick \"Supports image input\" if it cannot read images."
+
     secrets:
-      delete_failed_in_use: "This credential is currently in use by one or more LLMs, embeddings, or tools and cannot be deleted."
+      delete_failed_in_use: "This credential is currently in use by one or more LLMs, embeddings, decision models, or tools and cannot be deleted."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"

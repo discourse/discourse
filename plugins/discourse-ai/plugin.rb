@@ -124,6 +124,7 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -267,6 +268,7 @@ after_initialize do
 
   plugin_icons = %w[
     chart-column
+    chart-simple
     spell-check
     language
     images

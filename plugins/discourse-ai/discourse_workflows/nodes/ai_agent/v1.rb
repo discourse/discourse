@@ -312,7 +312,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def prompt_content(prompt, upload_ids, agent_record, llm_model, runner, log)
-            upload_ids = normalize_upload_ids(upload_ids)
+            upload_ids = ::DiscourseAi::Completions::UploadEncoder.normalize_upload_ids(upload_ids)
             return prompt if upload_ids.blank?
 
             uploads_by_id =
@@ -364,31 +364,6 @@ if defined?(DiscourseWorkflows)
 
           def error_text(key, **args)
             I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
-          end
-
-          def normalize_upload_ids(upload_ids)
-            case upload_ids
-            when String
-              parsed = parse_upload_ids_json(upload_ids)
-              return normalize_upload_ids(parsed) if parsed
-
-              upload_ids.split(",")
-            when Array
-              upload_ids.flatten
-            else
-              Array.wrap(upload_ids)
-            end
-              .filter_map do |upload_id|
-                id = Integer(upload_id, exception: false)
-                id if id&.positive?
-              end
-              .uniq
-          end
-
-          def parse_upload_ids_json(upload_ids)
-            JSON.parse(upload_ids)
-          rescue JSON::ParserError, TypeError
-            nil
           end
 
           def run_agent(agent, config, log, runner)

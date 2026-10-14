@@ -1778,7 +1778,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
-      .hasText("Open workflow");
+      .hasAttribute("title", "Open workflow")
+      .hasAria("label", "Open workflow");
 
     await click(".workflows-property-engine__select-with-action > .btn");
 

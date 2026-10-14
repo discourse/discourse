@@ -33,22 +33,6 @@ module DiscourseAi
           OpenSSL::SSL::SSLError,
         ]
 
-        # Read-only context handed to request header providers. Lets plugins
-        # contribute provider-agnostic, per-request HTTP headers (e.g. routing
-        # hints for a proxy) without reaching into endpoint internals.
-        RequestHeaderContext =
-          Struct.new(
-            :llm_model,
-            :feature_name,
-            :feature_context,
-            :has_images,
-            :streaming,
-            keyword_init: true,
-          )
-
-        # Mutated in place (<<, clear) but never reassigned, so the single array
-        # is shared across Base and all endpoint subclasses via constant lookup.
-        REQUEST_HEADERS_PROVIDERS = []
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -95,20 +79,10 @@ module DiscourseAi
             true
           end
 
-          # Register a block that returns a Hash of extra HTTP headers to send
-          # with each completion request. The block receives a
-          # RequestHeaderContext and must not raise (errors are swallowed and
-          # logged so a header bug can never break inference).
+          # Plugins registered header providers here before RequestHeaders also
+          # served decision models; kept so they work across versions.
           def register_request_headers_provider(&block)
-            REQUEST_HEADERS_PROVIDERS << block
-          end
-
-          def request_headers_providers
-            REQUEST_HEADERS_PROVIDERS
-          end
-
-          def reset_request_headers_providers!
-            REQUEST_HEADERS_PROVIDERS.clear
+            RequestHeaders.register(&block)
           end
         end
 
@@ -237,30 +211,17 @@ module DiscourseAi
 
         # Extra HTTP headers contributed by registered providers for this
         # request. Endpoints that want them merge the result into their request
-        # headers. Provider failures are isolated so they can never break a
-        # completion.
+        # headers.
         def extra_request_headers
-          providers = self.class.request_headers_providers
-          return {} if providers.blank?
-
-          context =
-            RequestHeaderContext.new(
-              llm_model: llm_model,
+          RequestHeaders.for(
+            RequestHeaders::Context.new(
+              model: llm_model,
               feature_name: @feature_name,
               feature_context: @feature_context,
               has_images: @request_has_images,
               streaming: @streaming_mode,
-            )
-
-          providers.each_with_object({}) do |provider, headers|
-            result = provider.call(context)
-            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
-          rescue StandardError => e
-            Discourse.warn_exception(
-              e,
-              message: "Discourse AI request header provider raised an error; skipping it",
-            )
-          end
+            ),
+          )
         end
 
         protected

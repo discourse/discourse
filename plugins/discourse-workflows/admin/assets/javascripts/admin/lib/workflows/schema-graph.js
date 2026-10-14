@@ -229,7 +229,12 @@ function ownOutputResolution(node, graph, configuration) {
   );
   if (resolved) {
     return {
-      contracts: resolved.map((schema) => [{ mode: "replace", schema }]),
+      contracts: resolved.map((schema, index) => [
+        {
+          mode: definition.output_contracts?.[index]?.mode || "replace",
+          schema,
+        },
+      ]),
       extensions: resolved.map(() => []),
     };
   }
