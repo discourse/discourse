@@ -144,5 +144,48 @@ RSpec.describe "Chat channel homepage" do
       expect(response.status).to eq(200)
       expect(response.body).to include('<meta name="discourse_current_homepage" content="chat">')
     end
+
+    it "serves the new homepage path after the channel slug changes" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+      Site.json_for(Guardian.new)
+
+      channel_1.update!(slug: "new-slug")
+
+      homepage =
+        JSON.parse(Site.json_for(Guardian.new))["homepage_options"].find { _1["id"] == "chat" }
+      expect(homepage["path"]).to eq("/chat/c/new-slug/#{channel_1.id}")
+    end
+
+    it "stops serving the homepage path after the channel is archived" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+      Site.json_for(Guardian.new)
+
+      channel_1.update!(status: :archived)
+
+      homepage =
+        JSON.parse(Site.json_for(Guardian.new))["homepage_options"].find { _1["id"] == "chat" }
+      expect(homepage["path"]).to be_nil
+    end
+
+    it "stops serving the homepage path after the channel is trashed" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+      admin = Fabricate(:admin)
+      Site.json_for(Guardian.new)
+
+      Chat::TrashChannel.call(params: { channel_id: channel_1.id }, guardian: admin.guardian)
+
+      homepage =
+        JSON.parse(Site.json_for(Guardian.new))["homepage_options"].find { _1["id"] == "chat" }
+      expect(homepage["path"]).to be_nil
+    end
+
+    it "keeps the anonymous site cache when another channel's slug changes" do
+      channel_2 = Fabricate(:category_channel)
+
+      messages =
+        MessageBus.track_publish(Site::SITE_JSON_CHANNEL) { channel_2.update!(slug: "other") }
+
+      expect(messages).to be_empty
+    end
   end
 end
