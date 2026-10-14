@@ -8,7 +8,7 @@ import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
+import { eq, gt, lt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -74,6 +74,10 @@ export default class DataTableViewer extends Component {
   @cached
   get columns() {
     return this.dataTable?.columns?.filter((c) => !c.reserved) ?? [];
+  }
+
+  get lastColumnIndex() {
+    return this.columns.length - 1;
   }
 
   get hasSelection() {
@@ -263,6 +267,20 @@ export default class DataTableViewer extends Component {
   }
 
   @action
+  async moveColumn(index, offset, closeMenu) {
+    await closeMenu();
+    try {
+      const result = await ajax(
+        `${this.apiBasePath}/columns/${this.columns[index].name}/move.json`,
+        { type: "PUT", data: { position: index + offset } }
+      );
+      this.dataTable = result.data_table;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
   async deleteColumn(column, closeMenu) {
     await closeMenu();
     this.dialog.deleteConfirm({
@@ -415,6 +433,36 @@ export default class DataTableViewer extends Component {
                                 @label="discourse_workflows.data_tables.rename_column"
                               />
                             </dropdown.item>
+                            {{#if (gt index 0)}}
+                              <dropdown.item>
+                                <DButton
+                                  class="btn-transparent"
+                                  @action={{fn
+                                    this.moveColumn
+                                    index
+                                    -1
+                                    menu.close
+                                  }}
+                                  @icon="arrow-left"
+                                  @label="discourse_workflows.data_tables.move_column_left"
+                                />
+                              </dropdown.item>
+                            {{/if}}
+                            {{#if (lt index this.lastColumnIndex)}}
+                              <dropdown.item>
+                                <DButton
+                                  class="btn-transparent"
+                                  @action={{fn
+                                    this.moveColumn
+                                    index
+                                    1
+                                    menu.close
+                                  }}
+                                  @icon="arrow-right"
+                                  @label="discourse_workflows.data_tables.move_column_right"
+                                />
+                              </dropdown.item>
+                            {{/if}}
                             <dropdown.divider />
                             <dropdown.item>
                               <DButton

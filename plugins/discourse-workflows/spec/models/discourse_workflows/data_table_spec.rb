@@ -11,6 +11,17 @@ RSpec.describe DiscourseWorkflows::DataTable do
     )
   end
 
+  describe "#columns" do
+    it "orders user columns by column_order between id and the timestamps" do
+      DiscourseWorkflows::DataTables::Facade.new(data_table).add_column!("notes", "string")
+      data_table.update!(column_order: %w[score email])
+
+      expect(data_table.columns.map { _1["name"] }).to eq(
+        %w[id score email notes created_at updated_at],
+      )
+    end
+  end
+
   describe "#user_columns" do
     it "excludes system columns" do
       expect(data_table.user_columns.map { _1["name"] }).to eq(%w[email score])

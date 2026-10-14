@@ -58,6 +58,13 @@ RSpec.describe "Discourse Workflows - Data Tables" do
       expect(data_tables_page).to have_column_names(%w[contact_email score])
     end
 
+    it "moves a column" do
+      data_tables_page.visit_show(data_table.id)
+      data_tables_page.click_column_menu_item("email", "move_column_right")
+
+      expect(data_tables_page).to have_column_names(%w[score email])
+    end
+
     it "deletes a column after confirmation" do
       data_tables_page.visit_show(data_table.id)
       data_tables_page.click_column_menu_item("email", "delete_column")
