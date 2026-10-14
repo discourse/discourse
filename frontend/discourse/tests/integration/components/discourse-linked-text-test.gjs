@@ -26,14 +26,13 @@ module("Integration | Component | DiscourseLinkedText", function (hooks) {
   });
 
   test("calls the action when the link is clicked", async function (assert) {
-    let received = "not called";
-    const linkClicked = (param) => (received = param);
+    let clicks = 0;
+    const linkClicked = () => clicks++;
 
     await render(
       <template>
         <DiscourseLinkedText
           @action={{linkClicked}}
-          @actionParam="param"
           @text="pwa.install_banner"
           @textParams={{hash title="Discourse"}}
         />
@@ -41,9 +40,9 @@ module("Integration | Component | DiscourseLinkedText", function (hooks) {
     );
 
     await click("span");
-    assert.strictEqual(received, "not called", "ignores clicks off the link");
+    assert.strictEqual(clicks, 0, "ignores clicks off the link");
 
     await click("a");
-    assert.strictEqual(received, "param", "passes the action param through");
+    assert.strictEqual(clicks, 1, "calls the action once");
   });
 });

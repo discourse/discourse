@@ -14,7 +14,7 @@ export default class DiscourseLinkedText extends Component {
   @action
   click(event) {
     if (event.target.tagName.toUpperCase() === "A") {
-      this.args.action(this.args.actionParam);
+      this.args.action();
     }
 
     event.preventDefault();
