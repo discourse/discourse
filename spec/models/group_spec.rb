@@ -145,6 +145,17 @@ RSpec.describe Group do
   describe "validation" do
     let(:group) { build(:group) }
 
+    it "allows creating and renaming groups whose names match watched words" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      group.name = "badgers"
+
+      group.save!
+      group.update!(name: "badger_team")
+
+      expect(group.reload.name).to eq("badger_team")
+      expect(Group.can_use_name?("badgers", group)).to eq(true)
+    end
+
     it "is invalid for blank" do
       group.name = ""
       expect(group.valid?).to eq false
