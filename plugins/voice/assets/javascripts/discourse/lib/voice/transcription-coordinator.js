@@ -351,6 +351,7 @@ export default class TranscriptionCoordinator {
     return {
       reply: transcriptToMarkdown(entries, {
         chatMarkup: !!this.#siteSettings.chat_enabled,
+        roomName: room?.name,
       }),
       title: i18n("voice.transcript.draft_title", {
         room: room?.name ?? "",
