@@ -115,10 +115,16 @@ Paths are relative to the repository root.
   unknown code. The console line names the plugin or theme from `api.source`; the admin notice
   stays one per id, as for every deprecation, and names the first source. The migration guide's URL
   is added with the Meta topic when the flag leaves conceptual.
-- **Third-party deprecation.** Attribution happens at import time, because the render stack has no
-  theme frame: a non-core module importing `discourse/select-kit/components/*` for a family that
-  has joined. Ids use a `discourse.select-kit-rollout.*` namespace so the existing silence rules
-  (`frontend/discourse/app/deprecation-workflow.js:311-321`) don't swallow them.
+- **Third-party notice, render-time, from wave 1.** When a legacy component of a migrated family
+  renders while `enable_new_select_controls` is on, something that hasn't migrated rendered it;
+  that is the signal. It is designed with wave 1's first family, attributed from the stack, under a
+  `discourse.select-kit-rollout.*` id that the existing silence rules
+  (`frontend/discourse/app/deprecation-workflow.js:311-321`) don't match. An import-time
+  deprecation was dropped: plugin and theme bundles do reach core through
+  `window.moduleBroker.lookup` (`frontend/asset-processor/babel-resolve-core-imports.js:32-45`), but
+  migrated bundled-plugin call sites keep importing legacy select-kit for their `{{else}}` branch
+  until cleanup, so it would fire for converted code too. Third-party code that renders select-kit
+  doesn't break, so this is a nudge, not a guard.
 - **Supported replacements for today's patches.** A patch-by-patch matrix maps each known
   customization (caret and icon, `showFullTitle`, content filtering, row titles, selection labels,
   opening behaviour, notifications `reasonText`) to a supported API. A family joins only once its
@@ -164,7 +170,7 @@ state survives a mode change, its specs pass in both modes, its SCSS is migrated
 customization ports are done.
 
 - **Wave 0, foundations.** The flag (conceptual); the `.d-select` root; the
-  modal Enter fix; the `modifyClass` and third-party deprecations; bridge contract fixtures and
+  modal Enter fix; the `modifyClass` deprecation; bridge contract fixtures and
   gaps; test infrastructure that drives either implementation (the page object, `selectKit()`,
   `form-kit-helper.js`, and callers' `.select-kit` roots), with specs pinning the flag. Plus prep
   that also works with select-kit: explicit `onChange` at the two-way sites, stable hooks in place
@@ -199,7 +205,7 @@ customization ports are done.
 - **Alpha** (staff plus a member group) after wave 1, then a soak with `Everyone` on hosted sites.
 - **Beta gates.** Beta is the production rollout, so all of these hold first: every family has
   joined; every known `modifyClass` and `modifySelectKit` caller is ported and released; the
-  third-party deprecation has been live for a defined period; group targeting can be cleared;
+  render-time third-party notice has been live for a defined period; group targeting can be cleared;
   both-mode specs for high-traffic and anonymous paths pass; and per-id deprecation counts by
   source are below a named threshold.
 - **Stable, then permanent.** At `permanent`, the `else` branches and legacy-only code in core and

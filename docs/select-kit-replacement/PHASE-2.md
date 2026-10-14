@@ -25,7 +25,8 @@ facade and codemod plan this phase used to carry is superseded.
   test that turns the flag on and patches that family then fails (QUnit raise-on-deprecation,
   system specs' `EMBER_RAISE_ON_DEPRECATION`), which is intended; add a boot test with a real plugin
   patch.
-- ☐ **Third-party deprecation** at import time, under `discourse.select-kit-rollout.*`.
+- **Third-party notice:** moved to wave 1 ([Phase 3](PHASE-3.md)) as a render-time notice; the
+  import-time design was dropped (see `ROLLOUT.md`).
 - ☐ **Bridge contract:** fixtures mirroring real `modifySelectKit` callers; add `triggerSearch`, a
   working `isLoading`, row `classNames`, per-callback suppression, per-use telemetry.
 - ☐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported

@@ -19,6 +19,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.
 - ☐ **Customer `modifyClass` ports** for category-drop, tag-drop and category-chooser.
 - ☐ SCSS for these families migrated.
+- ☐ **Third-party notice** (render-time): notify when a legacy component of a migrated family
+  renders while the flag is on, attributed from the stack. Design it against this wave's first
+  family (see `ROLLOUT.md`).
 - ☐ **Alpha:** staff plus a member group; member and anonymous coverage before exposure.
 
 ### Wave 2: entity pickers and ui-kit wrappers
