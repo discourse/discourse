@@ -13,7 +13,6 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
 import type Menu from "discourse/float-kit/services/menu";
-import booleanString from "discourse/helpers/boolean-string";
 import type A11y from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -544,10 +543,7 @@ export default class DSelect extends Component<DSelectSignature> {
       aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
       aria-disabled={{this.presenter.triggerRootDisabled}}
       aria-haspopup={{this.presenter.triggerRootHasPopup}}
-      aria-invalid={{unless
-        this.presenter.isTypeahead
-        (booleanString @invalid)
-      }}
+      aria-invalid={{unless this.presenter.isTypeahead (if @invalid "true")}}
       aria-label={{this.presenter.triggerRootLabel}}
       aria-readonly={{this.presenter.triggerRootReadonly}}
       class="d-combobox"

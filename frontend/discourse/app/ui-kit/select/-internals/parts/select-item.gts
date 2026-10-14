@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import booleanString from "discourse/helpers/boolean-string";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SelectEngine, {
@@ -59,8 +58,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
 
   <template>
     <li
-      aria-disabled={{booleanString @descriptor.flags.disabled}}
-      aria-selected={{booleanString @descriptor.flags.selected omitFalse=false}}
+      aria-disabled={{if @descriptor.flags.disabled "true"}}
+      aria-selected={{if @descriptor.flags.selected "true" "false"}}
       class={{dConcatClass
         "d-combobox__option"
         (if @active "--active")

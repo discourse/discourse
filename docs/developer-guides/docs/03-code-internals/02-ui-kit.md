@@ -142,6 +142,19 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 
 `d-icon`, `d-icon-or-image`, `d-emoji`, `d-replace-emoji`, `d-format-date`, `d-format-duration`, `d-number`, `d-age-with-tooltip`, `d-dasherize`, `d-dir-span`, `d-unique-id`, `d-base-path`, `d-loading-spinner`, `d-element` (a typed wrapper for a chosen tag, so attributes and modifiers are checked against the right element), and `d-concat-class` (join class names, dropping falsy ones).
 
+### Boolean ARIA attributes
+
+Use the built-in `if` to render boolean ARIA states as strings:
+
+```gjs
+<button aria-expanded={{if @expanded "true" "false"}} />
+<input aria-invalid={{if @invalid "true"}} />
+```
+
+The first form always emits a state, treating null and undefined as false. The second omits the attribute when false, null, or undefined. Preserve the distinction required by the attribute and its role: omission can mean something different from an explicit `"false"`.
+
+Avoid binding a boolean directly: Ember renders `true` as an empty attribute and removes `false`, which does not produce ARIA boolean strings. The legacy `discourse/helpers/boolean-string` helper is deprecated (`discourse.boolean-string-helper`) and remains available for compatibility; use `if` instead, without a helper import or an `omitFalse` option.
+
 ## Modifiers
 
 | Modifier                                                                          | Use it for                                                                                                                                                                                                                               |

@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { next as nextRunloop } from "@ember/runloop";
-import booleanString from "discourse/helpers/boolean-string";
 import { makeArray } from "discourse/lib/helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
@@ -313,7 +312,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             (if @engine.hasValue this.chipHintId)
             @describedBy
           }}
-          aria-invalid={{booleanString @invalid}}
+          aria-invalid={{if @invalid "true"}}
           id={{@id}}
           @ariaOwns={{true}}
           @disabled={{@presenter.isDisabled}}

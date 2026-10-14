@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import booleanString from "discourse/helpers/boolean-string";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 interface ComboboxQueryInputSignature {
@@ -233,7 +232,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     <input
       aria-autocomplete="list"
       aria-controls={{this.controlsId}}
-      aria-expanded={{booleanString @expanded omitFalse=false}}
+      aria-expanded={{if @expanded "true" "false"}}
       aria-haspopup="listbox"
       aria-label={{@label}}
       aria-owns={{this.ownsId}}

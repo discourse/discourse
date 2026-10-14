@@ -47,7 +47,6 @@ import DCookText from "discourse/ui-kit/d-cook-text";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import booleanString from "../helpers/boolean-string";
 
 export default <template>
   {{#unless @controller.shouldRenderNestedView}}
@@ -247,9 +246,7 @@ export default <template>
                 <h1
                   {{! Prevent duplicating the topic title heading on screen readers when the header is displaying the title
                 in the header }}
-                  aria-hidden={{booleanString
-                    @controller.titleIsVisibleOnHeader
-                  }}
+                  aria-hidden={{if @controller.titleIsVisibleOnHeader "true"}}
                   data-topic-id={{@controller.model.id}}
                 >
                   {{#unless @controller.model.is_warning}}

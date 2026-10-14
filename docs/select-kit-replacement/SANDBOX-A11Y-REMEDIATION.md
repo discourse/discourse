@@ -321,7 +321,7 @@ the race the suite is otherwise blind to.
 
    **Start with the cheap half: stop saying "not selected" on every row.** K3 has two halves, and
    only the silent one is a platform gap. The noisy one is ours — `select-item.gts` emits
-   `aria-selected` on every option in every variant (`booleanString … omitFalse=false`, which
+   `aria-selected` on every option in every variant (`if … "true" "false"`, which
    forces the attribute even when false), so arrowing a single-select narrates "not selected" row
    after row for a state that cannot be true of more than one of them. Dropping it for
    single-select variants is one argument, and it may be the whole remaining win in K3.

@@ -1,6 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { on } from "@ember/modifier";
-import booleanString from "discourse/helpers/boolean-string";
 import { and, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
@@ -195,7 +194,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             )
             @describedBy
           }}
-          aria-invalid={{booleanString @invalid}}
+          aria-invalid={{if @invalid "true"}}
           {{! Points at the sibling selection markup for exactly as long as that markup is
             what carries the value. Once focused the label moves into the input itself, so
             keeping the description would announce the selection twice. Mirrors the

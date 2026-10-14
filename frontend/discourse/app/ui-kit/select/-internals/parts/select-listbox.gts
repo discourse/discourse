@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import booleanString from "discourse/helpers/boolean-string";
 import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
@@ -135,9 +134,9 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
           <DVirtualList
             {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
           fetch itself; the frontier skeleton is the sighted counterpart. }}
-            aria-busy={{booleanString @engine.serverPending omitFalse=false}}
+            aria-busy={{if @engine.serverPending "true" "false"}}
             aria-label={{or @label (i18n "d_select.label")}}
-            aria-multiselectable={{booleanString @multiple}}
+            aria-multiselectable={{if @multiple "true"}}
             class="d-combobox__listbox"
             id={{@listboxId}}
             @as="ul"
