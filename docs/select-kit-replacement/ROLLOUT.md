@@ -10,8 +10,9 @@ Paths are relative to the repository root.
 
 ## Decisions
 
-1. **One upcoming-change flag; picker families join it as they reach parity.** Proposed name
-   `enable_new_select_controls`, with `body_class: true` so themes can scope CSS to it.
+1. **One upcoming-change flag; picker families join it as they reach parity.** The flag is
+   `enable_new_select_controls`. A family joins when its converted call sites merge; there is no
+   runtime list of families. `body_class: true` comes when the first family needs CSS scoped to it.
 2. **The new components honour `api.modifySelectKit`.**
 3. **`api.modifyClass` on select-kit gets no fallback.** Known repos are ported. A deprecation
    throws in development and notifies admins in production, for families that have joined.
@@ -68,15 +69,19 @@ Paths are relative to the repository root.
   (`config/site_settings.yml:643`), and `UpcomingChanges.enabled?` force-enables a change at that
   status on every site (`lib/upcoming_changes.rb:266-281`). **Beta is the production rollout.**
   Alpha is opt-in. Stored group targeting excludes anonymous users at any status, `permanent`
-  included (`lib/upcoming_changes.rb:330-337`).
-- **Boot snapshot.** Per-user values are preloaded (`lib/application_layout_preloader.rb:131`) and
-  overlaid on site settings before initializers run
-  (`frontend/discourse/app/services/site-settings.js:30-46`). A thin service snapshots the flag
-  eagerly at a documented boot point. Call sites, the body class and the deprecation gates all read
-  that snapshot, so a live setting push (`lib/site_setting_extension.rb:901`) never swaps an open
-  picker or splits CSS from markup. The service exposes a test helper and the list of families
-  that have joined.
-- **The switch lives at each migrated call site.** `{{#if <service>.enabled}}` renders the new
+  included (`lib/upcoming_changes.rb:330-337`). The flag starts at `conceptual`, which needs no
+  Meta topic and stays off the admin list, and moves to `experimental` with a Meta topic when wave
+  1's first family joins (every status but `conceptual` requires a `learn_more_url`,
+  `spec/integrity/upcoming_change_metadata_spec.rb:114-118`).
+- **The flag is read live.** Per-user values are preloaded (`lib/application_layout_preloader.rb:131`)
+  and overlaid on site settings before initializers run
+  (`frontend/discourse/app/services/site-settings.js:30-46`), so call sites read
+  `this.siteSettings.enable_new_select_controls` directly, as `enable_new_reordering_controls`
+  does. A boot snapshot was considered and dropped: it only guards against an admin toggling an
+  Everyone-targeted flag while a picker is open (group-targeted changes are never pushed live,
+  `lib/site_setting_extension.rb:901-914`), and it would have needed its own body class and test
+  helper to stay in step with the live value.
+- **The switch lives at each migrated call site.** `{{#if this.siteSettings.enable_new_select_controls}}` renders the new
   component on its final API, and `{{else}}` keeps the select-kit invocation untouched, so the
   flag-off path is exactly today's code. Every branch carries a
   `TODO (select-kit-replacement-cleanup)` marker. Dynamic invocations (the wizard,
@@ -99,7 +104,7 @@ Paths are relative to the repository root.
   a select-kit component. The existing hook at `plugin-api.gjs:3943` runs before resolution and
   only sees the name. Testing the class catches nested names such as
   `component:select-kit/select-kit-row` and third-party subclasses. It fires only for families
-  that have joined the flag, once per source and target, with the source taken from `api.source`
+  that have joined (that list lives with the deprecation), once per source and target, with the source taken from `api.source`
   (`plugin-api.gjs:217-228`). It throws in development (a workflow entry with
   `env: "development"`) and uses `notify-admin` in production. A family joins only after the known
   repos that patch it are ported, so the throw only stops boot for unknown code. A plugin
@@ -155,7 +160,7 @@ lands before its consumers. A family joins the flag only when its call sites are
 state survives a mode change, its specs pass in both modes, its SCSS is migrated, and its
 customization ports are done.
 
-- **Wave 0, foundations.** The flag (experimental) and boot snapshot; the `.d-select` root; the
+- **Wave 0, foundations.** The flag (conceptual); the `.d-select` root; the
   modal Enter fix; the `modifyClass` and third-party deprecations; bridge contract fixtures and
   gaps; test infrastructure that drives either implementation (the page object, `selectKit()`,
   `form-kit-helper.js`, and callers' `.select-kit` roots), with specs pinning the flag. Plus prep
