@@ -151,6 +151,8 @@ over a dropped default the callers relied on.
   target that wraps the button, so the test switches EDIT → EDIT_SHARED_DRAFT, where the
   target stays and only the `=== EDIT` check flips. Check the field is really untracked
   first: `Post#can_edit` is a tracked accessor and needed no `get()`.
+- `settled()` does not wait for an Uppy upload to complete. Hold the upload request in
+  pretender to assert the in-flight state, then `waitUntil` the finished state.
 - `discourseLater` runs as soon as the test settles, so a delayed side effect fires inside
   the `await click(...)` that scheduled it. Test a teardown path (`willDestroy`) on its own,
   starting from the state the delay would have produced.

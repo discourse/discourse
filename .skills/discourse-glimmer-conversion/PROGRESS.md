@@ -111,7 +111,7 @@
   - admin/site-settings/tag-list
   - admin/site-settings/url-list
   - admin/site-settings/value-list
-- [#44592](https://github.com/discourse/discourse/pull/44592)
+- [#44592](https://github.com/discourse/discourse/pull/44592) ✅
   - composer-action-title
   - login-buttons
   - reviewable-field-editor
@@ -122,3 +122,14 @@
   - signup-cta
   - plugins/discourse-subscriptions/create-coupon-form
   - plugins/styleguide/styleguide-section
+- [#44593](https://github.com/discourse/discourse/pull/44593)
+  - admin/admin-report-storage-stats
+  - admin/admin-report-table-cell
+  - categories-boxes
+  - create-invite-uploader
+  - featured-topic
+  - group-manage-email-settings
+  - tag-list
+  - ui-kit/d-date-time-input-range
+  - plugins/discourse-assign/remind-assigns-frequency
+  - plugins/discourse-zendesk-plugin/connectors/zendesk-topic-actions
