@@ -13,6 +13,10 @@ const Reviewable = <template>
 export default Reviewable;
 
 function reviewableId(value) {
+  if (typeof value !== "number" && typeof value !== "string") {
+    return null;
+  }
+
   const id = Number(value);
   return Number.isSafeInteger(id) && id > 0 ? id : null;
 }

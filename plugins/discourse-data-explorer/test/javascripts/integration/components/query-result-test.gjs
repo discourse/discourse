@@ -59,6 +59,44 @@ module("Integration | Component | QueryResult", function (hooks) {
     assert.dom(cell(2, 2)).hasText("20");
   });
 
+  test("links reviewable IDs and leaves invalid values as text", async function (assert) {
+    const content = {
+      colrender: { 0: "reviewable" },
+      result_count: 6,
+      columns: ["reviewable_id"],
+      rows: [[15318], ["15319"], [null], ["invalid"], [true], [0]],
+    };
+
+    await render(
+      <template><QueryResult @content={{content}} @view="table" /></template>
+    );
+
+    assert
+      .dom("table thead th")
+      .hasText("reviewable", "uses the existing ID column heading convention");
+    assert
+      .dom(`${cell(1, 1)} a`)
+      .hasAttribute("href", "/review/15318", "links a numeric reviewable ID")
+      .hasText("15318", "keeps the numeric ID as the link label");
+    assert
+      .dom(`${cell(2, 1)} a`)
+      .hasAttribute(
+        "href",
+        "/review/15319",
+        "links a reviewable ID returned as text"
+      );
+
+    for (const [row, text] of [
+      [3, "NULL"],
+      [4, "invalid"],
+      [5, "true"],
+      [6, "0"],
+    ]) {
+      assert.dom(cell(row, 1)).hasText(text, `keeps ${text} as readable text`);
+      assert.dom(`${cell(row, 1)} a`).doesNotExist(`keeps ${text} unlinked`);
+    }
+  });
+
   test("renders JSON columns as escaped text with a viewer action", async function (assert) {
     const content = {
       colrender: { 1: "json" },
