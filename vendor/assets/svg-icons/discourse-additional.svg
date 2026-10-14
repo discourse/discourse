@@ -48,8 +48,8 @@ Additional SVG icons
   </symbol>
   <!-- Rounded svg arrow for float-kit, allows to change border color -->
   <symbol id="tippy-rounded-arrow" class="tippy-rounded-arrow" viewBox="0 0 16 6">
-    <path fill="var(--float-kit-arrow-stroke-color)" class="svg-arrow" d="M0 6s1.796-.013 4.67-3.615C5.851.9 6.93.006 8 0c1.07-.006 2.148.887 3.343 2.385C14.233 6.005 16 6 16 6H0z"/>
-    <path fill="var(--float-kit-arrow-fill-color)" class="svg-content" d="m0 7s2 0 5-4c1-1 2-2 3-2 1 0 2 1 3 2 3 4 5 4 5 4h-16z"/>
+    <path fill="var(--d-comp-FloatKit-color-border)" class="svg-arrow" d="M0 6s1.796-.013 4.67-3.615C5.851.9 6.93.006 8 0c1.07-.006 2.148.887 3.343 2.385C14.233 6.005 16 6 16 6H0z"/>
+    <path fill="var(--d-comp-FloatKit-color-background)" class="svg-content" d="m0 7s2 0 5-4c1-1 2-2 3-2 1 0 2 1 3 2 3 4 5 4 5 4h-16z"/>
   </symbol>
   <symbol id='discourse-other-tab' viewBox="0 0 114 113">
     <g clip-path="url(#clip0_2925_742)">
