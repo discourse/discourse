@@ -132,6 +132,10 @@
     cursor: text;
   }
 
+  &__col-menu {
+    margin-left: var(--space-1);
+  }
+
   &__col-name-input {
     // stylelint-disable declaration-no-important
     outline: none !important;
