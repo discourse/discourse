@@ -90,10 +90,21 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
-    it "allows TL1 to chat by default and by extension higher trust levels" do
+    it "allows TL0 to chat by default and by extension higher trust levels" do
+      SiteSetting.chat_allowed_groups = SiteSetting.defaults[:chat_allowed_groups]
+      user.change_trust_level!(TrustLevel[0])
       expect(guardian.can_chat?).to eq(true)
       user.change_trust_level!(TrustLevel[3])
       expect(guardian.can_chat?).to eq(true)
+    end
+
+    it "allows anonymous visitors to preview public channels but not send messages by default" do
+      SiteSetting.chat_allowed_groups = SiteSetting.defaults[:chat_allowed_groups]
+      anonymous_guardian = Guardian.new
+
+      expect(anonymous_guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(true)
+      expect(anonymous_guardian.can_chat?).to eq(false)
+      expect(anonymous_guardian.can_create_chat_message?).to eq(false)
     end
 
     it "allows user in specific group to chat" do
