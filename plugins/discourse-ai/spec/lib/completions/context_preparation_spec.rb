@@ -58,44 +58,36 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       expect(request).to have_been_requested.once
     end
 
-    it "shares maintenance bounds across contexts forked before their first preparation" do
-      stub_const(described_class, :MAX_CALLS, 2) do
-        root =
-          DiscourseAi::Completions::ExecutionContext.new(
-            work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000, used: 200),
-          )
-        first = root.dup
-        second = root.dup
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          ["Summary retains QUARTZ-OTTER-731"] * described_class::MAX_CALLS,
-        ) do |canned|
-          llm = model.to_llm
-          described_class::MAX_CALLS.times do |index|
-            preparation = described_class.new(llm, threshold: 5)
-            expect(
-              preparation.prepare!(
-                history_prompt(repetitions: 200),
-                user: user,
-                execution_context: index.even? ? first : second,
-              ),
-            ).to eq(:compressed)
-            expect(preparation.calls).to eq(index + 1)
-          end
-          # The prompt still fits hard capacity, so maintenance exhaustion keeps it intact.
-          last = history_prompt(repetitions: 200)
-          original = last.messages.deep_dup
+    it "shares execution completion limits across forked contexts without a preparation cap" do
+      tracker = DiscourseAi::Completions::TokenUsageTracker.new
+      root =
+        DiscourseAi::Completions::ExecutionContext.new(
+          token_usage_tracker: tracker,
+          work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000, used: 200),
+        )
+      state =
+        DiscourseAi::Agents::SubagentExecutionState.new(
+          execution_context: root,
+          root_token_budget: 4000,
+        )
+      contexts = [root.dup, root.dup]
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(10, "Summary retains QUARTZ-OTTER-731"),
+      ) do |canned|
+        10.times do |index|
           expect(
-            described_class.new(llm, threshold: 5).prepare!(
-              last,
+            described_class.new(model.to_llm, threshold: 5).prepare!(
+              history_prompt(repetitions: 200),
               user: user,
-              execution_context: second,
+              execution_context: contexts[index % 2],
+              subagent_execution_state: state,
             ),
-          ).to eq(:skipped)
-          expect(last.messages).to eq(original)
-          expect(canned.completions).to eq(described_class::MAX_CALLS)
+          ).to eq(:compressed)
         end
-        expect(root.work_budget.used).to eq(200)
+        expect(canned.completions).to eq(10)
       end
+      expect(state.completion_count).to eq(10)
+      expect(root.work_budget.used).to eq(200)
     end
 
     it "compacts a small message count without summarizing the latest request" do
@@ -124,7 +116,12 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
     end
 
     it "keeps the intact prompt after a soft-threshold summarization failure" do
-      ["", RuntimeError.new("summary failed"), "inflated " * 10_000].each do |response|
+      [
+        "",
+        RuntimeError.new("summary failed"),
+        Net::ReadTimeout.new,
+        "inflated " * 10_000,
+      ].each do |response|
         prompt = history_prompt(repetitions: 600)
         original = prompt.messages.deep_dup
         DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
@@ -296,15 +293,22 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "preserves every fragment of source larger than the model window through bounded merges" do
-      prompt = history_prompt(repetitions: 5000)
-      original_result = prompt.messages[3][:content]
+    it "covers all evidence beyond eight chunks and the former estimated token allowance" do
+      prompt = history_prompt(repetitions: 20_000)
+      original_evidence = JSON.parse(model.to_llm.context_evidence(prompt.messages[1...-1]).to_json)
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        Array.new(8, "Summary with QUARTZ-OTTER-731."),
+        Array.new(30, "Summary with QUARTZ-OTTER-731."),
       ) do |canned, _, prompts|
         llm = DiscourseAi::Completions::Llm.proxy(model)
         expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
-        expect(canned.completions).to be_between(2, 8)
+        expect(canned.completions).to be > 8
+        estimated_tokens =
+          prompts.sum do |request|
+            size, capacity, output_reserve = llm.prompt_capacity(request)
+            expect(size).to be <= capacity
+            size + output_reserve
+          end
+        expect(estimated_tokens).to be > 64_000
         fragments =
           prompts.map do |request|
             request.messages.last[:content].split(
@@ -314,8 +318,9 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
           end
         evidence =
           JSON.parse(fragments.map { |fragment| JSON.parse(fragment)["evidence_fragment"] }.join)
-        expect(evidence.find { |message| message["type"] == "tool" }["content"]).to eq(
-          original_result,
+        expect(evidence).to eq(original_evidence)
+        expect(prompt.messages[1][:content]).to eq(
+          "<compressed_context>Summary with QUARTZ-OTTER-731.</compressed_context>",
         )
         expect(prompts.map(&:skip_trim)).to all(eq(true))
       end
@@ -342,22 +347,23 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
           },
         )
 
-      expect(described_class.new(model.to_llm).prepare!(prompt, user: user)).to eq(:compressed)
+      tracker = DiscourseAi::Completions::TokenUsageTracker.new
+      execution = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+      expect(
+        described_class.new(model.to_llm).prepare!(
+          prompt,
+          user: user,
+          execution_context: execution,
+        ),
+      ).to eq(:compressed)
 
       logs = AiApiAuditLog.where(feature_name: "context_compression").order(:id).to_a
-      expect(logs.size).to be_between(2, described_class::MAX_CALLS)
+      expect(logs.size).to be >= 2
       expect(logs.map { |log| [log.topic_id, log.post_id] }).to all(eq([post.topic_id, post.id]))
       expect(logs.last.prev_log_id).to eq(logs[-2].id)
-    end
-
-    it "bounds maintenance calls and drops hard-overflow history on exhaustion" do
-      prompt = history_prompt(repetitions: 5000)
-      DiscourseAi::Completions::Llm.with_prepared_responses(["summary"]) do |canned|
-        llm = DiscourseAi::Completions::Llm.proxy(model)
-        expect(described_class.new(llm, calls: 8).prepare!(prompt)).to eq(:compressed)
-        expect_history_dropped(prompt)
-        expect(canned.completions).to eq(0)
-      end
+      expect(tracker.request).to eq(logs.size * 100)
+      expect(tracker.response).to eq(logs.size * 20)
+      expect(tracker.preparation_tokens).to eq(tracker.total)
     end
 
     it "keeps parallel batches, provider data and thinking intact in the protected tail" do
@@ -425,17 +431,20 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "keeps applicable quota failures visible rather than treating them as a soft fallback" do
-      prompt = history_prompt(repetitions: 600)
-      original = prompt.messages.deep_dup
-      DiscourseAi::Completions::Llm.with_prepared_responses(
-        [LlmQuotaUsage::QuotaExceededError.new("quota exhausted")],
-      ) do
-        llm = DiscourseAi::Completions::Llm.proxy(model)
-        expect {
-          described_class.new(llm, threshold: 20).prepare!(prompt, user: user)
-        }.to raise_error(LlmQuotaUsage::QuotaExceededError)
-        expect(prompt.messages).to eq(original)
+    it "keeps quota and credit failures visible rather than treating them as a soft fallback" do
+      [
+        LlmQuotaUsage::QuotaExceededError.new("quota exhausted"),
+        LlmCreditAllocation::CreditLimitExceeded.new("credits exhausted"),
+      ].each do |error|
+        prompt = history_prompt(repetitions: 600)
+        original = prompt.messages.deep_dup
+        DiscourseAi::Completions::Llm.with_prepared_responses([error]) do
+          llm = DiscourseAi::Completions::Llm.proxy(model)
+          expect {
+            described_class.new(llm, threshold: 20).prepare!(prompt, user: user)
+          }.to raise_error(error.class)
+          expect(prompt.messages).to eq(original)
+        end
       end
     end
 
@@ -547,21 +556,39 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "leaves a late maintenance response unpublished after the preparation deadline" do
-      prompt = history_prompt(repetitions: 600)
-      original = prompt.messages.deep_dup
+    it "accepts a slow successful summary of current-turn evidence without earlier history to drop" do
+      result = "Completed action evidence " * 8000
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "System",
+          messages: [
+            { type: :user, content: "Read and explain the result" },
+            { type: :tool_call, id: "read", name: "read", content: "{}" },
+            { type: :tool, id: "read", name: "read", content: result },
+          ],
+        )
       now = 0
       allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC) { now }
-      DiscourseAi::Completions::Llm.with_prepared_responses(["Late summary."]) do |canned|
-        llm = DiscourseAi::Completions::Llm.proxy(model)
-        allow(llm).to receive(:generate).and_wrap_original do |generate, *args, **options|
-          result = generate.call(*args, **options)
-          now = 91
-          result
+      summary = "The completed read contains important evidence."
+      DiscourseAi::Completions::Llm.with_prepared_responses(Array.new(10, summary)) do |canned|
+        llm = model.to_llm
+        allow(llm).to receive(:generate).and_wrap_original do |generate, *args, **options, &block|
+          response = generate.call(*args, **options, &block)
+          now += 91
+          response
         end
-        expect(described_class.new(llm, threshold: 20).prepare!(prompt)).to eq(:skipped)
-        expect(canned.completions).to eq(1)
-        expect(prompt.messages).to eq(original)
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect(canned.completions).to be > 0
+        expect(prompt.messages.map { |message| message[:content] }).to eq(
+          [
+            "System",
+            "<compressed_context>#{summary}</compressed_context>",
+            DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
+            "Read and explain the result",
+          ],
+        )
+        size, capacity = llm.prompt_capacity(prompt)
+        expect(size).to be <= capacity
       end
     end
 
@@ -570,8 +597,9 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       original = prompt.messages.deep_dup
       cancel_manager = DiscourseAi::Completions::CancelManager.new
       llm = DiscourseAi::Completions::Llm.proxy(model)
-      allow(llm).to receive(:generate) do |_, **options|
+      allow(llm).to receive(:generate) do |_, **options, &block|
         expect(options[:cancel_manager]).to eq(cancel_manager)
+        block.call("summary")
         cancel_manager.cancel!
         "summary"
       end
@@ -579,32 +607,6 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         described_class.new(llm, threshold: 50).prepare!(prompt, cancel_manager: cancel_manager),
       ).to eq(:cancelled)
       expect(prompt.messages).to eq(original)
-    end
-
-    it "charges only maintenance time, not ordinary tool work, and shares the allowance across preparations" do
-      now = 0.0
-      allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC) { now }
-      execution = DiscourseAi::Completions::ExecutionContext.new
-      DiscourseAi::Completions::Llm.with_prepared_responses(
-        Array.new(8, "Concise evidence"),
-      ) do |canned|
-        llm = DiscourseAi::Completions::Llm.proxy(model)
-        preparation = described_class.new(llm, threshold: 20, calls: 7)
-        now = 120.0
-        expect(
-          preparation.prepare!(history_prompt(repetitions: 600), execution_context: execution),
-        ).to eq(:compressed)
-        expect(preparation.calls).to eq(8)
-        expect(preparation.elapsed_seconds).to eq(0)
-
-        child_preparation = described_class.new(llm, threshold: 20)
-        prompt = history_prompt(repetitions: 4000)
-        expect(child_preparation.prepare!(prompt, execution_context: execution)).to eq(:compressed)
-        expect(child_preparation.calls).to eq(8)
-        expect(child_preparation.spent_tokens).to eq(preparation.spent_tokens)
-        expect_history_dropped(prompt)
-        expect(canned.completions).to eq(1)
-      end
     end
 
     it "skips checkpoint-only maintenance when the protected current request is above the soft threshold" do
