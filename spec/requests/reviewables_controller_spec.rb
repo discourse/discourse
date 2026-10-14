@@ -43,6 +43,43 @@ RSpec.describe ReviewablesController do
     before { sign_in(admin) }
 
     describe "#index" do
+      it "includes DSA classification for flagged posts without loading each statement separately" do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_community_rules = [
+          { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+        ].to_json
+        first_reviewable = Fabricate(:reviewable_flagged_post)
+        second_reviewable = Fabricate(:reviewable_flagged_post)
+        first_statement = Fabricate(:dsa_statement_of_record, reviewable_id: first_reviewable.id)
+        second_statement = Fabricate(:dsa_statement_of_record, reviewable_id: second_reviewable.id)
+
+        queries = track_sql_queries { get "/review.json" }
+
+        expect(response).to have_http_status(:ok)
+        reviewables = response.parsed_body["reviewables"].index_by { |reviewable| reviewable["id"] }
+        expect(reviewables[first_reviewable.id]["dsa_classification"]).to eq(
+          "statement_ids" => [first_statement.id],
+        )
+        expect(reviewables[second_reviewable.id]["dsa_classification"]).to eq(
+          "statement_ids" => [second_statement.id],
+        )
+
+        options = response.parsed_body["extras"]["dsa_classification"]
+        expect(options["community_rules"]).to eq(
+          [
+            {
+              "id" => DsaStatementOfRecord.community_rules.first["id"],
+              "ground" => "Terms, section 3",
+            },
+          ],
+        )
+        expect(options["categories"]).to include(
+          "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
+          "name" => "Illegal or harmful speech",
+        )
+        expect(queries.count { |sql| sql.include?('FROM "dsa_statement_of_records"') }).to eq(1)
+      end
+
       it "returns empty JSON when nothing to review" do
         get "/review.json"
         expect(response.code).to eq("200")
@@ -604,6 +641,57 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#show" do
+      context "when dsa_reporting_enabled is enabled" do
+        fab!(:reviewable, :reviewable_flagged_post)
+        fab!(:statement) { Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id) }
+
+        before do
+          sign_in(Fabricate(:moderator))
+          SiteSetting.dsa_reporting_enabled = true
+          SiteSetting.dsa_community_rules = [
+            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+          ].to_json
+        end
+
+        it "includes pending statement IDs and shared classification options for a flagged post" do
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]["dsa_classification"]).to eq(
+            "statement_ids" => [statement.id],
+          )
+
+          options = response.parsed_body["extras"]["dsa_classification"]
+          expect(options["community_rules"]).to eq(
+            [
+              {
+                "id" => DsaStatementOfRecord.community_rules.first["id"],
+                "ground" => "Terms, section 3",
+              },
+            ],
+          )
+          expect(options["categories"]).to include(
+            "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
+            "name" => "Illegal or harmful speech",
+          )
+        end
+
+        it "omits classification when community rules are empty" do
+          SiteSetting.dsa_community_rules = "[]"
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]).not_to have_key("dsa_classification")
+        end
+
+        it "omits classification when dsa_reporting_enabled is disabled" do
+          SiteSetting.dsa_reporting_enabled = false
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]).not_to have_key("dsa_classification")
+        end
+      end
+
       context "with basics" do
         fab!(:reviewable)
         before { sign_in(Fabricate(:moderator)) }
