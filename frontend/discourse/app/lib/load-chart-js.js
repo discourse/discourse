@@ -13,3 +13,11 @@ export async function loadChartJSDatalabels() {
   return (await waitForPromise(import("discourse/static/chart-js-bundle")))
     .ChartDataLabels;
 }
+
+/**
+ * @returns {typeof import("chart.js/helpers").getHoverColor}
+ */
+export async function loadChartJSGetHoverColor() {
+  return (await waitForPromise(import("discourse/static/chart-js-bundle")))
+    .getHoverColor;
+}
