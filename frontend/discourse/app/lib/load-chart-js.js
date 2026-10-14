@@ -6,8 +6,7 @@ export default async function loadChartJS() {
 }
 
 /**
- *
- * @returns {import("chart.js").Plugin}
+ * @returns {Promise<import("chart.js").Plugin>}
  */
 export async function loadChartJSDatalabels() {
   return (await waitForPromise(import("discourse/static/chart-js-bundle")))
@@ -15,7 +14,7 @@ export async function loadChartJSDatalabels() {
 }
 
 /**
- * @returns {typeof import("chart.js/helpers").getHoverColor}
+ * @returns {Promise<typeof import("chart.js/helpers").getHoverColor>}
  */
 export async function loadChartJSGetHoverColor() {
   return (await waitForPromise(import("discourse/static/chart-js-bundle")))
