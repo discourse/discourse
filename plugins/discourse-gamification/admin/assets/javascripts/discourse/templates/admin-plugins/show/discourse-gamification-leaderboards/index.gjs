@@ -41,25 +41,40 @@ export default <template>
 
     <div class="leaderboards">
       {{#if @controller.model.leaderboards}}
-        <table>
-          <thead>
-            <th>{{i18n "gamification.admin.name"}}</th>
-            <th>{{i18n "gamification.admin.period"}}</th>
-            <th></th>
+        <table class="d-table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell">{{i18n
+                  "gamification.admin.name"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "gamification.admin.period"
+                }}</th>
+              <th class="d-table__header-cell"></th>
+            </tr>
           </thead>
 
-          <tbody>
+          <tbody class="d-table__body">
             {{#each @controller.model.leaderboards as |leaderboard|}}
-              <tr id={{concat "leaderboard-admin__row-" leaderboard.id}}>
-                <td>
+              <tr
+                class="d-table__row"
+                id={{concat "leaderboard-admin__row-" leaderboard.id}}
+              >
+                <td class="d-table__cell --overview">
                   <LinkTo
+                    class="d-table__overview-link"
                     @model={{leaderboard.id}}
                     @route="gamificationLeaderboard.byName"
                   >
-                    {{leaderboard.name}}
+                    <div class="d-table__overview-name">
+                      {{leaderboard.name}}
+                    </div>
                   </LinkTo>
                 </td>
-                <td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
+                    {{i18n "gamification.admin.period"}}
+                  </div>
                   {{#if leaderboard.fromDate}}
                     {{dFormatDate (@controller.parseDate leaderboard.fromDate)}}
                     -
@@ -68,8 +83,8 @@ export default <template>
                     {{leaderboard.defaultPeriod}}
                   {{/if}}
                 </td>
-                <td style="width: 120px">
-                  <div class="leaderboard-admin__listitem-action">
+                <td class="d-table__cell --controls">
+                  <div class="d-table__cell-actions">
                     <LinkTo
                       class="btn btn-default leaderboard-admin__edit btn-text btn-small"
                       @model={{leaderboard}}
