@@ -10,6 +10,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
+import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -60,6 +61,39 @@ class ChatSetupInit {
             period: i18n("about.activities.periods.last_7_days"),
           };
         }
+      });
+
+      // transcripts are post content, so they're decorated even for users who
+      // can't chat, anons included
+      api.decorateCookedElement((elem) => {
+        const currentUser = owner.lookup("service:current-user");
+        const currentUserTimezone = currentUser?.user_option?.timezone;
+        const chatTranscriptElements =
+          elem.querySelectorAll(".chat-transcript");
+
+        chatTranscriptElements.forEach((el) => {
+          const dateTimeRaw = el.dataset["datetime"];
+          const dateTimeEl = el.querySelector(
+            ".chat-transcript-datetime a, .chat-transcript-datetime span"
+          );
+
+          if (currentUserTimezone) {
+            dateTimeEl.innerText = moment
+              .tz(dateTimeRaw, currentUserTimezone)
+              .format(i18n("dates.long_no_year"));
+          } else {
+            dateTimeEl.innerText = moment(dateTimeRaw).format(
+              i18n("dates.long_no_year")
+            );
+          }
+
+          dateTimeEl.dataset.dateFormatted = true;
+        });
+
+        groupChatTranscripts(elem, {
+          site: owner.lookup("service:site"),
+          chatChannelsManager: owner.lookup("service:chat-channels-manager"),
+        });
       });
 
       if (!this.chatService.userCanChat) {
@@ -164,34 +198,6 @@ class ChatSetupInit {
           },
         });
       }
-
-      // we want to decorate the chat quote dates regardless
-      // of whether the current user has chat enabled
-      api.decorateCookedElement((elem) => {
-        const currentUser = owner.lookup("service:current-user");
-        const currentUserTimezone = currentUser?.user_option?.timezone;
-        const chatTranscriptElements =
-          elem.querySelectorAll(".chat-transcript");
-
-        chatTranscriptElements.forEach((el) => {
-          const dateTimeRaw = el.dataset["datetime"];
-          const dateTimeEl = el.querySelector(
-            ".chat-transcript-datetime a, .chat-transcript-datetime span"
-          );
-
-          if (currentUserTimezone) {
-            dateTimeEl.innerText = moment
-              .tz(dateTimeRaw, currentUserTimezone)
-              .format(i18n("dates.long_no_year"));
-          } else {
-            dateTimeEl.innerText = moment(dateTimeRaw).format(
-              i18n("dates.long_no_year")
-            );
-          }
-
-          dateTimeEl.dataset.dateFormatted = true;
-        });
-      });
 
       if (!this.chatService.userCanChat || EmbedMode.enabled) {
         return;

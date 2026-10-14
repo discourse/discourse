@@ -7,6 +7,7 @@ import { trustHTML } from "@ember/template";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
+import AiArtifactShare from "./ai-artifact-share";
 
 export default class AiArtifactComponent extends Component {
   @service siteSettings;
@@ -48,11 +49,44 @@ export default class AiArtifactComponent extends Component {
     return this.siteSettings.ai_artifact_security !== "lax";
   }
 
+  get hasShareKey() {
+    return this.args.shareKey !== null && this.args.shareKey !== undefined;
+  }
+
+  get artifactIdentity() {
+    if (this.hasShareKey) {
+      return `share:${this.args.shareKey}`;
+    }
+
+    const version = String(this.args.artifactVersion ?? "").replace(/^0+/, "");
+    return `artifact:${this.args.artifactId}:${version}`;
+  }
+
   get artifactUrl() {
+    if (this.hasShareKey) {
+      if (!/^[A-Za-z0-9_-]{1,128}$/.test(this.args.shareKey)) {
+        return;
+      }
+
+      return getURL(
+        `/discourse-ai/ai-bot/artifact-shares/${encodeURIComponent(this.args.shareKey)}/forum`
+      );
+    }
+
+    if (!/^[0-9]+$/.test(this.args.artifactId)) {
+      return;
+    }
+
     let url = getURL(`/discourse-ai/ai-bot/artifacts/${this.args.artifactId}`);
 
-    if (this.args.artifactVersion) {
-      url = `${url}/${this.args.artifactVersion}`;
+    const version = String(this.args.artifactVersion ?? "");
+    if (version && !/^[0-9]+$/.test(version)) {
+      return;
+    }
+
+    const normalizedVersion = version.replace(/^0+/, "");
+    if (normalizedVersion) {
+      url = `${url}/${encodeURIComponent(normalizedVersion)}`;
     }
     return url;
   }
@@ -100,7 +134,11 @@ export default class AiArtifactComponent extends Component {
   @action
   handlePopState(event) {
     const state = event.state;
-    this.expanded = state?.artifactId === this.args.artifactId;
+    this.expanded = state?.artifactIdentity
+      ? state.artifactIdentity === this.artifactIdentity
+      : !this.hasShareKey &&
+        this.args.artifactId != null &&
+        state?.artifactId === this.args.artifactId;
     if (!this.expanded) {
       window.removeEventListener("keydown", this.keydownHandler);
     }
@@ -115,7 +153,10 @@ export default class AiArtifactComponent extends Component {
   toggleView() {
     if (!this.expanded) {
       window.history.pushState(
-        { artifactId: this.args.artifactId },
+        {
+          artifactId: this.args.artifactId,
+          artifactIdentity: this.artifactIdentity,
+        },
         "",
         window.location.href + "#artifact-fullscreen"
       );
@@ -159,7 +200,7 @@ export default class AiArtifactComponent extends Component {
             @label="discourse_ai.ai_artifact.click_to_run_label"
           />
         </div>
-      {{else}}
+      {{else if this.artifactUrl}}
         <iframe
           frameborder="0"
           src={{this.artifactUrl}}
@@ -170,6 +211,12 @@ export default class AiArtifactComponent extends Component {
       {{/if}}
       {{#if this.showFooter}}
         <div class="ai-artifact__footer">
+          {{#unless this.hasShareKey}}
+            <AiArtifactShare
+              @artifactId={{@artifactId}}
+              @artifactVersion={{@artifactVersion}}
+            />
+          {{/unless}}
           <DButton
             class="btn-transparent btn-icon-text ai-artifact__expand-button"
             @action={{this.toggleView}}

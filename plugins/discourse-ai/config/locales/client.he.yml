@@ -866,9 +866,21 @@ he:
         quick_search:
           suffix: "בכל הנושאים והפוסטים עם בינה מלאכותית"
       ai_artifact:
+        editor:
+          version: "גרסה"
+          default: "ברירת מחדל"
+          apply: "החלה"
         expand_view_label: "הרחבת תצוגה"
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
+        share: "שיתוף"
+        create_link: "יצירת קישור"
+        copied: "הועתקה ללוח הגזירים"
+        copy_link: "העתקת קישור"
+        copy_embed: "העתקת הטמעה"
+        new_tab: "הצגה בלשונית חדשה"
+        filter_all: "הכול"
+        filter_standalone: "עצמאי"
       ai_bot:
         title: "בוט בינה מלאכותית"
         llm: "מודל:"

@@ -268,8 +268,8 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
   @tracked
   _announced: {
     now: number | undefined;
-    min: number | undefined;
-    max: number | undefined;
+    min: number | null | undefined;
+    max: number | null | undefined;
   } | null = null;
 
   constructor(owner: Owner, args: DResizeSeparatorSignature["Args"]) {

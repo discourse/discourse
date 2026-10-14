@@ -382,6 +382,25 @@ RSpec.describe Admin::UsersController do
     before { SiteSetting.must_approve_users = true }
 
     shared_examples "user approval possible" do
+      it "approves without a reviewable when signup approval is disabled" do
+        SiteSetting.must_approve_users = false
+        SiteSetting.invite_only = false
+        evil_trout.update!(active: true, approved: false)
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_nil
+
+        put "/admin/users/#{evil_trout.id}/approve.json"
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_approved
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:approve_user],
+            target_user_id: evil_trout.id,
+          ).count,
+        ).to eq(1)
+      end
+
       it "creates a reviewable if one does not exist" do
         evil_trout.update!(active: true)
         expect(ReviewableUser.find_by(target: evil_trout)).to be_blank
@@ -3311,10 +3330,16 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       it "deletes the record and logs the deletion" do
+        upload = Fabricate(:upload)
+        user_associated_accounts.update!(avatar_upload_id: upload.id)
+        user.user_avatar.update!(selected_user_associated_account_id: user_associated_accounts.id)
+
         put "/admin/users/#{user.id}/delete_associated_accounts.json"
 
         expect(response.status).to eq(200)
         expect(user.user_associated_accounts).to eq([])
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to be_nil
+        expect(UploadReference.where(target: user_associated_accounts)).not_to exist
         expect(UserHistory.last).to have_attributes(
           acting_user_id: admin.id,
           target_user_id: user.id,

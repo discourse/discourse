@@ -10,16 +10,36 @@ lt:
       ai_tool_action:
         title: DI įrankio veiksmas
         description: Vykdyti dirbtinio intelekto įrankį, kai suveikia automatizavimas
+  site_settings:
+    ai_summaries_for_crawlers: "Įtraukite AI temų santraukas į viešus HTML temų puslapius, pateikiamus paieškos sistemoms ir kitoms nuskaitymo programoms, taip pat į tų puslapių „Markdown“ versijas. Tam reikia, kad parametrai {{setting:ai_summarization_enabled}} ir {{setting:ai_summary_backfill_maximum_topics_per_hour}} būtų didesni už 0, kad santraukos būtų nuolat atnaujinamos."
+    ai_summary_backfill_maximum_topics_per_hour: "Per valandą papildomai įkeliamų temų santraukų skaičius. Kiekviena lokalizuota santrauka įskaičiuojama į šią ribą. Kad būtų įjungta funkcija „ {{setting:ai_summaries_for_crawlers}} “, šis skaičius turi būti didesnis už 0."
   reports:
     overall_sentiment:
       yaxis: "Data"
     emotion_neutral:
       title: "😐 Neutrali"
   discourse_ai:
+    ai_artifact:
+      share_version_conflict: "Ši nuoroda jau publikuoja kitą versiją. Atnaujinkite ir pasirinkite „Atnaujinti prisegtą versiją“, kad ją pakeistumėte."
+      uploads_cannot_be_shared: "Šis artefaktas nurodo įkėlimus, kurie gali būti privatūs. Prieš publikuodami atskirą nuorodą, pašalinkite įkėlimo nuorodas."
+    multiple_models: "Keli modeliai"
     tools:
       presets:
         image_generation_custom:
           name: "Išskirtinės"
+    mcp_servers:
+      errors:
+        unsupported_protocol_version: "Nepalaikoma MCP protokolo versija: %{version}"
+        no_supported_version: "Nėra paskelbta jokia palaikoma MCP protokolo versija"
+        modern_request_rejected: "Modernus MCP prašymas atmestas"
+        invalid_discovery_response: "Neteisingas MCP serverio / aptikimo atsakymas"
+        missing_protocol_version: "Inicializavimo atsakyme trūksta MCP protokolo versijos"
+        tool_unavailable: "MCP įrankio apibrėžimas nerastas: %{name}"
+        invalid_tool_schema: "Neteisinga MCP įrankio įvesties schema"
+        invalid_header_annotation: "Neteisinga x-mcp-header anotacija"
+        unsupported_schema_reference: "Nepalaikoma MCP įrankio schemos nuoroda"
+        invalid_header_value: "Neteisinga MCP antraštės reikšmė"
+        invalid_annotated_argument: "Neteisingas MCP anotuoto įrankio argumentas"
     ai_helper:
       prompts:
         proofread: Korektūruotas tekstas
@@ -40,8 +60,94 @@ lt:
           title: "Temos"
         backups:
           title: "Atsarginės kopijos"
+      errors:
+        agent_required: "Prieš siunčiant žinutę, pasirinkite AI agentą"
+        agent_recipient_mismatch: "Pasirinktas AI agentas neatitinka pokalbio adresato"
+        agent_unavailable: "Pasirinktas AI agentas nebėra prieinamas"
+        ambiguous_agent: "Pokalbio adresatas atitinka daugiau nei vieną AI agentą"
+        ambiguous_model: "Pasirinkite modelį, kad galėtumėte tęsti šį pokalbį"
+        bot_disabled: "AI botų pokalbiai yra išjungti"
+        bot_not_allowed: "Negalima naudoti AI botų pokalbių"
+        cannot_send_pm_to_model: "Kalbos modeliai negali būti asmeninių pranešimų gavėjais. Vietoj to pasirinkite AI agentą."
+        invalid_agent_modality: "Pasirinkto AI agento negalima naudoti šiame pokalbyje"
+        invalid_model_id: "Nurodytas AI modelis yra negaliojantis"
+        model_conflicts_with_agent: "Šis AI agentas yra susietas su kitu modeliu"
+        model_not_selectable: "Pasirinktas AI modelis nepasiekiamas"
+        model_recipient_api_retired: "Modeliai nebeturi vartotojų vardų. Pasirinkite AI agentą kaip pokalbio adresatą."
+        model_unavailable: "Pasirinktas AI modelis nepasiekiamas"
+        no_model_available: "Šiam AI agentui nėra sukonfigūruotas joks kalbos modelis"
+        no_user_for_agent: "Pasirinktas AI agentas neturi pokalbio vartotojo"
+        target_unavailable: "Jūs nebegalite atsakyti šiame pokalbyje"
+      context_preparation_error: "Negalėjau saugiai paruošti šio pokalbio neprarandant istorijos (%{reason}). Prašome bandyti dar kartą. Jei problema kartojasi, pradėkite naują pokalbį su reikiamu kontekstu, sutrumpinkite paskutinį užklausos tekstą arba įrankio išvestį, arba naudokite modelį su didesniu konteksto langu."
       read_post:
         unknown_post: "įrašai"
+      subagent_errors:
+        token_limit: "Pasiektas bendras arba susijusių užduočių generavimo išteklių limitas."
+      chat_tool_approval:
+        create_tag_title: "Sukurti žymą: %{name}"
+        create_tag_question: "Ar norite sukurti šią žymą?"
+        create_category_title: "Sukurti kategoriją: %{name}"
+        create_category_question: "Ar norite sukurti šią kategoriją?"
+        topic_status_label: "Keičiamas statusas:"
+        topic_visibility_label: "Keičiamas matomumas:"
+        topic_solution_label: "Keičiamas sprendimas:"
+        topic_states:
+          open: "Atidaryti"
+          closed: "Uždaryta"
+          active: "Aktyvus"
+          deleted: "Ištrinta"
+          listed: "Įtraukti į sąrašą"
+          unlisted: "Neįtrauktas į sąrašą"
+        no_solution: "Nėra sprendimo"
+        solution_post: "Įrašas #%{number}"
+        mark_solution_question: "Ar norite pažymėti %{post} kaip sprendimą?"
+        unmark_solution_question: "Ar norite pašalinti %{post} kaip sprendimą?"
+        silence_title: "Nutildyti vartotoją: @%{username}"
+        silence_question: "Ar norite nutildyti šį vartotoją?"
+        suspend_title: "Sustabdyti naudotoją: @%{username}"
+        duration_label: "Trukmė:"
+        user_duration:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
+        suspend_question: "Ar norite sustabdyti šio naudotojo paskyrą?"
+        user_message: "Pranešimas vartotojui"
+        post_states:
+          locked: "Užrakinta"
+          unlocked: "Atrakinta"
+        posts_destination_label: "Keičiamas tikslas:"
+        posts_label: "Pranešimai"
+        category_label: "Kategorija"
+        post_title: "Redaguojamas įrašas: %{post}"
+        post_reference: "%{topic} · įrašo nr.%{number}"
+        post_content_label: "Turinio keitimas:"
+        post_topic_title_label: "Keičiamas temos pavadinimas:"
+        topic_title: "Redaguojama tema: %{topic}"
+        topic_category_label: "Keičiama kategorija:"
+        topic_tags_label: "Keičiamos žymos:"
+        no_tags: "Nėra žymų"
+        tag_title: "Redaguojama žyma: %{tag}"
+        setting_title: "Keičiami svetainės nustatymai: %{setting}"
+        setting_change_label: "Keičiama reikšmė:"
+        category_title: "Redaguojama kategorija: %{category}"
+        category_change_label:
+          name: "Keičiamas vardas:"
+          description: "Keičiamas aprašymas:"
+          color: "Keičiama spalva:"
+          text_color: "Keičiama teksto spalva:"
+        category_summary: "Redaguoti kategoriją %{fields}"
+        category_fields:
+          name: "vardą"
+          description: "aprašymas"
+          color: "spalva"
+          text_color: "teksto spalva"
+        approve_label: "Taip"
+        reject_label: "Ne"
+        question: "Ar norite atlikti šį pakeitimą?"
+        category_question: "Ar norite atlikti šį pakeitimą %{category}?"
+        category_change: "Keičiamas `%{field}` iš %{before} į %{after}"
+        empty_value: "Tuščia"
       agents:
         custom_prompt:
           name: "Pasirinktinis raginimas"
@@ -73,12 +179,13 @@ lt:
       tool_description:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         flag_post: "Įrašo žymėjimas %{post_id} (flag_post: %{flag_post})"
+        edit_category: "Redaguojama %{fields} , skirtą %{category_name}"
       flag_post:
         errors:
           no_context: "Nėra įrašo konteksto, kurį būtų galima pažymėti."
           no_reason: "Norint pažymėti įrašą, reikia nurodyti priežastį."
           invalid_flag_type: "Neteisingas vėliavos tipas."
-        skipped: "Verdiktas buvo klaidingas; vėliava nebuvo sukurta."
+        skipped: "Sprendimas buvo klaidingas; vėliava nebuvo sukurta."
         already_flagged: "Įrašas jau pažymėtas peržiūrai."
         flagged: "Įrašas pažymėtas peržiūrai."
         reason: "Dirbtinio intelekto robotas pažymėjo šį įrašą.\n\nPriežastis: %{reason}"
@@ -120,12 +227,18 @@ lt:
           title: "Patvirtinti"
         reject:
           title: "Atmesti"
+    summarization:
+      published_summary_heading: "Dirbtinio intelekto sugeneruota santrauka"
+      configuration:
+        backfill_required: "Pirmiausia nustatykite reikšmę \"didžiausias per valandą papildomai generuojamų AI santraukų temų skaičius\" didesnę nei 0, kad paieškos sistemoms rodomos santraukos būtų atnaujintos."
     sentiment:
       reports:
         post_emotion:
           neutral: "Neutrali 😐"
         sentiment_analysis:
           neutral: "Neutrali"
+    llm:
+      user_association_is_legacy_only: "galima išsaugoti arba išvalyti tik esamam modeliui"
     ai_staff_action_logger:
       updated: "atnaujinta"
       removed: "pašalintas"

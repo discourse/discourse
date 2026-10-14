@@ -114,7 +114,10 @@ module DiscourseDataExplorer
           DASHBOARD_SUPPLIED_PARAMS.include?(param.identifier)
       end
     end
-    private_class_method :mountable?
+
+    def self.mounted?(query)
+      AdminDashboardReport.exists?(source: SOURCE_NAME, identifier: query.id.to_s)
+    end
 
     def self.prewarmable?(query, params)
       QueryRunner.cacheable?(query) &&

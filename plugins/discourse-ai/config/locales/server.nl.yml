@@ -373,6 +373,28 @@ nl:
       read_post:
         unknown_post: "bericht"
       chat_tool_approval:
+        topic_states:
+          open: "Openen"
+          closed: "Gesloten"
+          active: "Actief"
+          deleted: "Verwijderd"
+        solution_post: "Bericht %{number}"
+        duration_label: "Duur:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dagen"
+        post_states:
+          locked: "Vergrendeld"
+        posts_label: "Berichten"
+        category_label: "Categorie"
+        category_fields:
+          name: "naam"
+          description: "beschrijving"
+          color: "kleur"
+          text_color: "tekstkleur"
+        approve_label: "Ja"
+        reject_label: "Nee"
+        empty_value: "Leeg"
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
         cannot_delete_system_agent: "Systeemagenten kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit."

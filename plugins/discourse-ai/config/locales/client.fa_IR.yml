@@ -329,6 +329,15 @@ fa_IR:
         provider_fields:
           model_name: "نام مدل"
         semantic_search: "موضوعات (معنایی)"
+      ai_artifact:
+        editor:
+          version: "نسخه"
+          default: "پیش‌فرض"
+          apply: "اعمال کردن"
+        share: "اشتراک‌گذاری"
+        create_link: "ایجاد پیوند"
+        copy_link: "رونوشت پیوند"
+        filter_all: "همه"
       ai_bot:
         llm: "مدل:"
         cancel_streaming: "توقف پاسخ"

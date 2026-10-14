@@ -32,7 +32,6 @@ PATH
   remote: migrations/importer
   specs:
     migrations-importer (0.0.1)
-      activerecord
       activesupport
       colored2
       i18n
@@ -44,7 +43,6 @@ PATH
   remote: migrations/tooling
   specs:
     migrations-tooling (0.0.1)
-      activerecord
       activesupport
       colored2
       i18n
@@ -218,7 +216,7 @@ GEM
       faker (~> 3.5.1)
       literate_randomizer
     discourse_math_bundle (1.0.1)
-    discourse_voice_assets (0.1.0)
+    discourse_voice_assets (0.2.0)
     drb (2.2.3)
     dry-initializer (3.2.0)
     ed25519 (1.4.0)
@@ -1049,7 +1047,7 @@ CHECKSUMS
   discourse_ai-tokenizers (0.4.2) sha256=61c2f254582a3ae69255115b2b072904361003612b5b0f52aa64773817aae413
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
   discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
-  discourse_voice_assets (0.1.0) sha256=67bfbc3e9eaa1805e71ac3c5e2172d8beefdecbfa7b956ed5426e7e057c10cc2
+  discourse_voice_assets (0.2.0) sha256=dd94cca7787de0129fd3ec82c9bc8c178e5d49c7606b42f6dda167666b3e473e
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506

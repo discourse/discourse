@@ -37,6 +37,30 @@ pl_PL:
         remove: "Usuń to polubienie"
         cant_remove: "Nie możesz już usunąć polubienia"
         unauthenticated: "Zarejestruj się lub zaloguj, aby polubić ten post"
+    discourse_workflows:
+      node_unavailable:
+        requires_reactions: "Wymaga włączenia wtyczki Reakcje"
+      nodes:
+        "action:post_reaction": "Reaguj na wpis"
+        "trigger:post_reaction_changed": "Zmieniono reakcję na wpis"
+      node_descriptions:
+        "action:post_reaction": "Dodaj lub usuń reakcję na wpis"
+        "trigger:post_reaction_changed": "Aktywuje się, gdy reakcja na wpis zostanie dodana, zastąpiona lub usunięta. Użytkownikiem jest osoba, która zareagowała, a nie autor."
+      post_reaction:
+        operations:
+          add: "Dodaj reakcję"
+          remove: "Usuń reakcję"
+        reaction: "Reakcja"
+        if_exists: "Jeśli użytkownik już zareagował"
+        if_exists_description: "Użytkownicy mogą mieć tylko jedną reakcję na wpis"
+        if_exists_keep: "Zachowaj ich reakcję"
+        if_exists_replace: "Zastąp ich reakcję"
+      post_reaction_changed:
+        changes_added: "Dodano"
+        changes_replaced: "Zastąpiony"
+        changes_removed: "Usunięto"
+        reaction: "Reakcja"
+        reaction_description: "Aktywuj tylko wtedy, gdy ta reakcja zostanie dodana, zastąpiona lub usunięta. Pozostaw puste, aby dopasować do dowolnej reakcji."
     notifications:
       reaction_1_user_multiple_posts:
         one: "zareagował na %{count} Twój post"

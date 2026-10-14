@@ -14,7 +14,10 @@ import {
   inputIndexForConnection,
   outputIndexForConnection,
 } from "../../../lib/workflows/expression-paths";
-import { isExpression } from "../../../lib/workflows/property-engine";
+import {
+  isExpression,
+  wholeExpressionBody,
+} from "../../../lib/workflows/property-engine";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
@@ -75,10 +78,7 @@ function leafKey(fieldPath) {
   }
   path = String(path);
 
-  const exprMatch = path.match(/^=\{\{\s*(.*?)\s*\}\}$/);
-  if (exprMatch) {
-    path = exprMatch[1];
-  }
+  path = wholeExpressionBody(path) ?? path;
 
   const bracketSegments = [
     ...path.matchAll(/\[((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*'))\]/g),

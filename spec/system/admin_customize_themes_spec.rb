@@ -298,6 +298,123 @@ describe "Admin Customize Themes" do
         "#{theme.name}, Foundation, Horizon",
       )
     end
+
+    describe "when leaving the page" do
+      let(:unassigned_warning) { I18n.t("admin_js.admin.customize.theme.unsaved_parent_themes") }
+
+      it "warns when the component is enabled but not used by any themes" do
+        theme_page.visit(component)
+        theme_page.click_back_to_components
+        expect(dialog).to have_content(unassigned_warning)
+
+        dialog.click_no
+        expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
+        expect(page).to have_css(".parent-themes-setting .select-kit-header:focus")
+
+        theme_page.click_back_to_components
+        expect(dialog).to have_content(unassigned_warning)
+
+        dialog.click_yes
+        expect(page).to have_current_path("/admin/config/customize/components")
+      end
+
+      it "doesn't warn after the admin saves an empty theme selection" do
+        theme.add_relative_theme!(:child, component)
+
+        theme_page.visit(component)
+        theme_page.parent_themes_selector.expand
+        theme_page.parent_themes_selector.unselect_by_name(theme.name)
+        theme_page.parent_themes_selector.collapse
+        find(".parent-themes-setting .setting-controls .ok").click
+        expect(page).to have_no_css(".parent-themes-setting .setting-controls")
+        expect(component.reload.parent_themes).to be_empty
+
+        theme_page.click_back_to_components
+
+        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(dialog).to be_closed
+      end
+
+      it "doesn't warn when the component is disabled" do
+        component.update!(enabled: false)
+
+        theme_page.visit(component)
+        theme_page.click_back_to_components
+
+        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(dialog).to be_closed
+      end
+
+      it "doesn't warn when the component is used by a theme" do
+        theme.add_relative_theme!(:child, component)
+
+        theme_page.visit(component)
+        theme_page.click_back_to_components
+
+        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(dialog).to be_closed
+      end
+
+      it "doesn't warn when opening the component's code editor" do
+        theme_page.visit(component)
+        theme_page.click_edit_code
+
+        expect(page).to have_current_path(%r{/#{component.id}/common/scss/edit})
+        expect(dialog).to be_closed
+      end
+
+      context "with unsaved setting changes" do
+        let(:unsaved_warning) { I18n.t("admin_js.admin.customize.theme.unsaved_changes_alert") }
+
+        before do
+          theme.add_relative_theme!(:child, component)
+          component.set_field(target: :settings, name: "yaml", value: "greeting: hello")
+          component.save!
+        end
+
+        it "lets the admin stay on the page" do
+          theme_page.visit(component).fill_in_setting("greeting", "howdy")
+          theme_page.click_back_to_components
+          expect(dialog).to have_content(unsaved_warning)
+
+          dialog.click_no
+          expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
+          expect(theme_page).to have_setting_value("greeting", "howdy")
+        end
+
+        it "discards the changes when leaving" do
+          theme_page.visit(component).fill_in_setting("greeting", "howdy")
+          theme_page.click_back_to_components
+          expect(dialog).to have_content(unsaved_warning)
+
+          dialog.click_danger
+          expect(page).to have_current_path("/admin/config/customize/components")
+
+          page.go_back
+          expect(theme_page).to have_setting_value("greeting", "hello")
+        end
+      end
+
+      it "warns about an unsaved theme selection instead of the component being unused" do
+        theme_page.visit(component)
+        theme_page.parent_themes_selector.expand
+        theme_page.parent_themes_selector.select_row_by_index(0)
+        theme_page.parent_themes_selector.collapse
+        theme_page.click_back_to_components
+
+        expect(dialog).to have_content(
+          I18n.t("admin_js.admin.customize.theme.unsaved_changes_alert"),
+        )
+      end
+
+      it "doesn't warn after deleting the component" do
+        theme_page.visit(component)
+        theme_page.click_delete_button_and_confirm
+
+        expect(page).to have_current_path("/admin/config/customize/themes")
+        expect(dialog).to be_closed
+      end
+    end
   end
 
   describe "changing theme source" do

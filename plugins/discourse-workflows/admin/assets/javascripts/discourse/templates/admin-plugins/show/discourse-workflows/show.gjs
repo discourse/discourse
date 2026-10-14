@@ -70,6 +70,10 @@ class WorkflowShowPage extends Component {
             @route="adminPlugins.show.discourse-workflows.show.executions"
           />
           <DNavItem
+            @label="discourse_workflows.tabs.workflow_variables"
+            @route="adminPlugins.show.discourse-workflows.show.variables"
+          />
+          <DNavItem
             @label="discourse_workflows.tabs.settings"
             @route="adminPlugins.show.discourse-workflows.show.settings"
           />

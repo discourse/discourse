@@ -33,6 +33,10 @@ es:
         remove: "Deshacer me gusta"
         cant_remove: "Ya no puedes eliminar tu me gusta"
         unauthenticated: "Regístrate o inicia sesión para darle me gusta a esta publicación"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Añadida"
+        changes_removed: "Eliminado"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reaccionó a %{count} de tu publicación"

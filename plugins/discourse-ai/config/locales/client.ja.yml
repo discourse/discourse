@@ -928,9 +928,23 @@ ja:
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
+        editor:
+          version: "バージョン"
+          default: "デフォルト"
+          option_on: "オン"
+          option_off: "オフ"
+          apply: "適用"
         expand_view_label: "表示を拡大"
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
+        share: "共有"
+        create_link: "リンクを作成"
+        copied: "クリップボードにコピーしました"
+        copy_link: "リンクをコピー"
+        copy_embed: "埋め込みをコピー"
+        new_tab: "新しいタブで表示"
+        filter_all: "すべて"
+        filter_standalone: "単発"
       ai_bot:
         title: "AI ボット"
         llm: "モデル:"

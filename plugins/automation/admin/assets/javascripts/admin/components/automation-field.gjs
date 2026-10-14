@@ -60,7 +60,6 @@ export default class AutomationField extends Component {
         @field={{@field}}
         @label={{this.label}}
         @placeholders={{@automation.placeholders}}
-        @saveAutomation={{@saveAutomation}}
       />
     {{/if}}
   </template>

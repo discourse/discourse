@@ -970,9 +970,23 @@ pt_BR:
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Padrão"
+          option_on: "Ligado"
+          option_off: "Desligado"
+          apply: "Aplicar"
         expand_view_label: "Expandir visualização"
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
+        share: "Compartilhar"
+        create_link: "Criar link"
+        copied: "Copiou para área de transferência"
+        copy_link: "Copiar link"
+        copy_embed: "Copiar incorporado"
+        new_tab: "Exibir na aba nova"
+        filter_all: "Todas"
+        filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
         llm: "Modelo:"

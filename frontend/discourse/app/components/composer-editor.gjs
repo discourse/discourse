@@ -19,6 +19,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { bind, debounce } from "discourse/lib/decorators";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
@@ -408,7 +409,13 @@ export default class ComposerEditor extends Component {
     const matchingPlaceholder = this.get("composer.model.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
-    const match = matchingPlaceholder[index];
+    const match = matchingPlaceholder?.[index];
+
+    if (!match) {
+      this.resetImageControls(buttonWrapper);
+      return;
+    }
+
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
       IMAGE_MARKDOWN_REGEX,
@@ -475,6 +482,8 @@ export default class ComposerEditor extends Component {
 
   @action
   previewUpdated(preview, helper) {
+    decorateImageControls(preview);
+
     this._renderMentions(preview);
     this._renderHashtags(preview);
     this._refreshOneboxes(preview);
@@ -869,6 +878,11 @@ export default class ComposerEditor extends Component {
     const matchingPlaceholder = this.get("composer.model.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
+
+    if (!matchingPlaceholder?.[index]) {
+      return;
+    }
+
     this.appEvents.trigger(
       `${this.composerEventPrefix}:replace-text`,
       matchingPlaceholder[index],
@@ -891,6 +905,10 @@ export default class ComposerEditor extends Component {
     const matches = reply.match(IMAGE_MARKDOWN_REGEX);
     const closingIndex =
       index + parseInt(event.target.dataset.imageCount, 10) - 1;
+
+    if (!matches?.[index] || !matches[closingIndex]) {
+      return;
+    }
 
     const textArea = this.element.querySelector(".d-editor-input");
     textArea.selectionStart = reply.indexOf(matches[index]);

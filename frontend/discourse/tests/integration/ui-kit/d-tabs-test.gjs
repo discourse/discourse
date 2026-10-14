@@ -836,7 +836,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       </template>
     );
 
-    await focus("[data-panel-input]");
+    // Native only: the `focus` helper adds a synthetic focusin in an unfocused
+    // window, with no matching focusout on removal.
+    document.querySelector("[data-panel-input]").focus();
+    await settled();
     state.showInput = false;
     await settled();
     await nextFrame();

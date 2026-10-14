@@ -492,6 +492,7 @@ describe "Content Localization" do
             Fabricate(
               :post,
               topic: topic,
+              user: admin,
               locale: "ja",
               raw: "Japanese content for post #{post_number}",
               cooked: "<p>日本語コンテンツ #{post_number}</p>",
@@ -540,12 +541,19 @@ describe "Content Localization" do
         Fabricate(
           :post,
           topic: late_localization_topic,
+          user: admin,
           locale: "en",
           raw: "English post #{index + 1}",
         )
       end
       late_post =
-        Fabricate(:post, topic: late_localization_topic, locale: "ja", raw: "最初のページより後の投稿")
+        Fabricate(
+          :post,
+          topic: late_localization_topic,
+          user: admin,
+          locale: "ja",
+          raw: "最初のページより後の投稿",
+        )
       Fabricate(
         :post_localization,
         post: late_post,

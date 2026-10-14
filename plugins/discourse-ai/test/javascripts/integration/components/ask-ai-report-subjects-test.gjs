@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import ModalContainer from "discourse/components/modal-container";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 import AskAiReportSubjects from "discourse/plugins/discourse-ai/admin/components/dashboard/ask-ai-report-subjects";
 
 const endpoint = "/admin/plugins/discourse-ai/ask-ai-reports/1/subjects";
@@ -23,6 +24,24 @@ module("Integration | Component | AskAiReportSubjects", function (hooks) {
         ask_count: 5,
       })),
     };
+  });
+
+  test("keeps subjects without valid questions visible without an expand button", async function (assert) {
+    this.report.subjects = [
+      { id: 1, name: "Cats", description: "Questions about 猫", ask_count: 0 },
+    ];
+    await render(
+      <template><AskAiReportSubjects @report={{this.report}} /></template>
+    );
+    assert.dom(".ask-ai-report-subject").includesText("Cats");
+    assert
+      .dom(".ask-ai-report-subject__description")
+      .hasText("Questions about 猫");
+    assert
+      .dom(".ask-ai-report-subject__no-valid-questions")
+      .hasText(i18n("admin.dashboard.ask_ai.reports.no_valid_questions"));
+    assert.dom(".ask-ai-report-subject__toggle").doesNotExist();
+    assert.dom(".ask-ai-report-questions").doesNotExist();
   });
 
   test("shows the saved summary as plain text without requiring a PM", async function (assert) {
@@ -68,14 +87,21 @@ module("Integration | Component | AskAiReportSubjects", function (hooks) {
       .hasAttribute("href", "/t/report/123")
       .hasAttribute("target", "_blank")
       .hasAttribute("rel", "noopener noreferrer")
-      .hasAttribute("aria-label", "View full report (opens in a new tab)")
+      .hasAttribute(
+        "aria-label",
+        i18n("admin.dashboard.ask_ai.reports.view_pm_new_tab")
+      )
       .hasText(
-        "View full report",
+        i18n("admin.dashboard.ask_ai.reports.view_pm"),
         "groups the report link with the subject toggle"
       );
-    assert
-      .dom(".ask-ai-report-subjects__footer")
-      .includesText("20 of 100", "shows coverage");
+    assert.dom(".ask-ai-report-subjects__footer").includesText(
+      i18n("admin.dashboard.ask_ai.reports.coverage", {
+        count: 20,
+        total: 100,
+      }),
+      "shows coverage"
+    );
     await click(".ask-ai-report-subject__toggle");
     assert
       .dom('.ask-ai-report-subject__toggle[aria-expanded="true"]')
@@ -178,7 +204,7 @@ module("Integration | Component | AskAiReportSubjects", function (hooks) {
     await click(".ask-ai-report-questions__query");
     assert
       .dom(".ask-ai-report-answer", document)
-      .includesText("No answer text was stored for this ask.");
+      .includesText(i18n("admin.dashboard.ask_ai.reports.no_stored_answer"));
   });
 
   test("allows retry and explains when the original logs have been deleted", async function (assert) {
@@ -197,13 +223,16 @@ module("Integration | Component | AskAiReportSubjects", function (hooks) {
     await click(".ask-ai-report-subject__toggle");
     assert
       .dom('[role="alert"]')
-      .hasText("Questions could not be loaded.", "shows a request failure");
+      .hasText(
+        i18n("admin.dashboard.ask_ai.reports.questions_failed"),
+        "shows a request failure"
+      );
     fail = false;
     await click(".ask-ai-report-questions__retry");
     assert
       .dom(".ask-ai-report-questions")
       .includesText(
-        "The original asks are no longer available.",
+        i18n("admin.dashboard.ask_ai.reports.no_questions"),
         "explains missing logs"
       );
     assert.dom('[role="alert"]').doesNotExist("clears the failure after retry");

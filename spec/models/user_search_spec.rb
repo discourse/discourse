@@ -164,6 +164,13 @@ RSpec.describe UserSearch do
     ).to eq(["mixedmember"])
   end
 
+  it "allows restricting results to a set of users" do
+    expect(search_for("mrb", user_ids: User.where(id: mr_blue.id).select(:id))).to eq(
+      [mr_blue.username],
+    )
+    expect(search_for("mrb", user_ids: [])).to eq([])
+  end
+
   it "does not let membership in one group grant visibility into a co-filtered hidden group" do
     searcher = Fabricate(:user)
     visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:public])

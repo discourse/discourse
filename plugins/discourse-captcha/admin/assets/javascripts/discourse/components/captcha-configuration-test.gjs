@@ -5,12 +5,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import HCaptcha from "discourse/plugins/discourse-captcha/discourse/components/h-captcha";
 import ReCaptcha from "discourse/plugins/discourse-captcha/discourse/components/re-captcha";
+import ReCaptchaV3 from "discourse/plugins/discourse-captcha/discourse/components/re-captcha-v3";
 
 export default class CaptchaConfigurationTest extends Component {
   @service a11y;
@@ -105,17 +106,25 @@ export default class CaptchaConfigurationTest extends Component {
           </p>
         {{/if}}
         {{#if this.challengeVisible}}
-          {{#unless this.result}}
+          {{#if
+            (not (or this.result (eq @configuration.provider "recaptcha_v3")))
+          }}
             <p>{{i18n
                 "discourse_captcha.configuration_test.complete_challenge"
               }}</p>
-          {{/unless}}
+          {{/if}}
           {{#each (array this.attempt) key="@identity"}}
-            {{#if (eq @configuration.provider "recaptcha")}}
+            {{#if (eq @configuration.provider "recaptcha_v2")}}
               <ReCaptcha
                 @errorMessage={{i18n
                   "discourse_captcha.configuration_test.challenge_failed"
                 }}
+                @onError={{this.challengeFailed}}
+                @onResponse={{this.verify}}
+                @siteKey={{@configuration.site_key}}
+              />
+            {{else if (eq @configuration.provider "recaptcha_v3")}}
+              <ReCaptchaV3
                 @onError={{this.challengeFailed}}
                 @onResponse={{this.verify}}
                 @siteKey={{@configuration.site_key}}

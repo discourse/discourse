@@ -159,6 +159,8 @@ function dynamicValueKey(schema = {}, fieldName) {
         : "group_id";
     case "tags":
       return "tag_names";
+    case "topic":
+      return "topic_ids";
     case "user":
       return ui.multiple ? "usernames" : "username";
     case "user_or_group":
@@ -304,6 +306,30 @@ export function fixedCollectionRows(value, groupName = "values") {
   return [];
 }
 
+const MATERIALIZED_CONTAINER_TYPES = [
+  "collection",
+  "fixed_collection",
+  "assignment_collection",
+  "array",
+];
+
+export function applySchemaDefaults(schema = {}, config = {}) {
+  for (const [key, fieldSchema] of Object.entries(schema)) {
+    if (config[key] != null) {
+      continue;
+    }
+
+    const type = fieldType(fieldSchema);
+    if (fieldSchema.default !== undefined) {
+      config[key] = cloneValue(fieldSchema.default);
+    } else if (MATERIALIZED_CONTAINER_TYPES.includes(type)) {
+      config[key] = fallbackValueForType(type);
+    }
+  }
+
+  return config;
+}
+
 export function fieldType(schema = {}) {
   return schema.type || "string";
 }
@@ -328,6 +354,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
 const TYPE_TO_CONTROL = {
   boolean: "boolean",
   icon: "icon",
+  emoji: "emoji",
   options: "select",
   multi_options: "multi_combo_box",
   collection: "collection",
@@ -354,7 +381,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(ui.expression);
   }
 
-  return ["string", "integer", "number", "float", "icon"].includes(
+  return ["string", "integer", "number", "float", "icon", "emoji"].includes(
     fieldType(schema)
   );
 }
@@ -402,6 +429,69 @@ export function emptyFixedCollectionItem(group = {}) {
 
 export function isExpression(value) {
   return typeof value === "string" && value.startsWith("=");
+}
+
+/**
+ * Returns the body of an expression value that is exactly one `{{ ... }}`,
+ * e.g. `$json.id` for `={{ $json.id }}`, and null otherwise.
+ */
+export function wholeExpressionBody(value) {
+  if (!isExpression(value)) {
+    return null;
+  }
+
+  const template = value.slice(1).trim();
+  if (!template.startsWith("{{")) {
+    return null;
+  }
+
+  return findMatchingClose(template, 2) === template.length - 2
+    ? template.slice(2, -2).trim() || null
+    : null;
+}
+
+/**
+ * Whether the value is an expression with nothing to evaluate, e.g. `=` or
+ * `={{ }}`. Mirrors ExpressionResolver.empty_expression? on the server.
+ */
+export function isEmptyExpression(value) {
+  return isExpression(value) && /^=\s*(\{\{\s*\}\})?\s*$/.test(value);
+}
+
+/**
+ * Whether a field renders its boolean toggle inline, which only applies
+ * outside expression mode.
+ *
+ * @param {object} schema - The field schema.
+ * @param {any} value - The field's current value.
+ * @returns {boolean}
+ */
+export function usesInlineBooleanControl(schema, value) {
+  return fieldControl(schema) === "boolean" && !isExpression(value);
+}
+
+/** Mirrors ExpressionResolver.find_matching_close on the server. */
+function findMatchingClose(template, start) {
+  let depth = 1;
+  let cursor = start;
+
+  while (cursor < template.length - 1) {
+    const pair = template.slice(cursor, cursor + 2);
+
+    if (pair === "{{") {
+      depth++;
+      cursor += 2;
+    } else if (pair === "}}") {
+      if (--depth === 0) {
+        return cursor;
+      }
+      cursor += 2;
+    } else {
+      cursor++;
+    }
+  }
+
+  return null;
 }
 
 export function credentialTypesForSlot(slot = {}) {
@@ -463,6 +553,21 @@ export function fieldVisible(schema = {}, configuration = {}) {
 
 export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) === "visible";
+}
+
+export function pruneModeHiddenFields(schema = {}, configuration = {}) {
+  const pruned = { ...configuration };
+
+  for (const [name, field] of Object.entries(schema)) {
+    if (fieldUi(field).hidden) {
+      continue;
+    }
+    if (fieldDisplayState(field, configuration) === "hidden") {
+      delete pruned[name];
+    }
+  }
+
+  return pruned;
 }
 
 function rulesOutcome(rules, configuration) {

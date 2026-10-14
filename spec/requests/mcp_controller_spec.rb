@@ -78,6 +78,25 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
+  it "returns a structured internal error when a tool unexpectedly fails" do
+    failure_message = "private implementation failure"
+    primitive = DiscourseMcp.registry.find(:tool, "discourse_current_user_get")
+    primitive.implementation.stubs(:call).raises(StandardError, failure_message)
+
+    post "/mcp", params: payload.to_json, headers: headers
+
+    expect(response.status).to eq(500)
+    expect(response.parsed_body).to eq(
+      "jsonrpc" => "2.0",
+      "id" => payload[:id],
+      "error" => {
+        "code" => -32_603,
+        "message" => "Internal error",
+      },
+    )
+    expect(response.body).not_to include(failure_message)
+  end
+
   context "when login is required" do
     before { SiteSetting.login_required = true }
 
@@ -215,6 +234,43 @@ describe "MCP transport" do
       'scope="mcp:profile:write"',
     )
     expect(admin.user_profile.reload.bio_raw).not_to eq("Changed without profile access")
+  end
+
+  it "omits submitted values from prompt validation errors" do
+    McpPrimitive.create!(kind: "prompt", identifier: "discourse.draft_reply", enabled: true)
+    prompt_headers = classic_headers
+    prompt_authorization =
+      DiscourseMcp::OAuth::AuthorizationGrant.create!(
+        user: admin,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: [DiscourseMcp::INITIAL_SCOPE, DiscourseMcp::Scopes::CONTENT_READ],
+      )
+    prompt_token = McpOauthAccessToken.issue!(authorization: prompt_authorization)
+    instructions = "Confidential draft instructions"
+
+    post "/mcp",
+         params: {
+           jsonrpc: "2.0",
+           id: 1,
+           method: "prompts/get",
+           params: {
+             name: "discourse.draft_reply",
+             arguments: {
+               instructions:,
+             },
+           },
+         }.to_json,
+         headers: prompt_headers.merge("HTTP_AUTHORIZATION" => "Bearer #{prompt_token}")
+
+    expect(response.status).to eq(400)
+    expect(response.parsed_body.dig("error", "code")).to eq(-32_602)
+    expect(response.parsed_body.dig("error", "data", "errors")).to contain_exactly(
+      "type" => "required",
+      "data_pointer" => "",
+      "schema_pointer" => "",
+    )
+    expect(response.body).not_to include(instructions)
   end
 
   it "negotiates a compatible protocol through the standard initialize request" do

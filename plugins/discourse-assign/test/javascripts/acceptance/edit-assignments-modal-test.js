@@ -30,13 +30,8 @@ acceptance("Edit assignments modal", function (needs) {
     ];
     server.get("/assign/suggestions", () =>
       helper.response({
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions,
-      })
-    );
-    server.get("/u/search/users", () =>
-      helper.response({
-        users: suggestions,
       })
     );
   });

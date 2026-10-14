@@ -24,6 +24,12 @@ describe Post do
     end
   end
 
+  it "is not a post voting topic once its topic is trashed" do
+    topic.trash!
+
+    expect(Post.find(post.id).is_post_voting_topic?).to be_falsey
+  end
+
   it("ignores vote_count") { expect(Post.ignored_columns.include?("vote_count")).to eq(true) }
 
   it "returns the last vote correctly" do

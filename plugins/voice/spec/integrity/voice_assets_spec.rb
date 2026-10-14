@@ -19,8 +19,8 @@ RSpec.describe "discourse_voice_assets integrity" do
     rnnoise/rnnoise.wasm
     stt/subtitles-worker.js
     stt/vad.js
-    stt/ort/ort-wasm-simd-threaded.jsep.js
-    stt/ort/ort-wasm-simd-threaded.jsep.wasm
+    stt/ort/ort-wasm-simd-threaded.asyncify.js
+    stt/ort/ort-wasm-simd-threaded.asyncify.wasm
     stt/vad/
     livekit/livekit-client.js
     mediapipe/vision_bundle.js

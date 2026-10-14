@@ -148,16 +148,15 @@ describe "Post event" do
       expect(composer).to have_value(/end=2024-06-03/)
     end
 
-    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
-            timezone: "Australia/Brisbane" do
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer" do
       it "renders the preview badge in the event timezone, not the viewer's" do
-        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
-        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # 2025-09-07 00:30 Europe/Paris == 2025-09-06 22:30 UTC,
+        # so without showLocalTime the viewer would see "Sep 6" in the badge.
         # With showLocalTime, the preview must stay anchored to the event timezone.
         visit("/new-topic")
         composer.fill_title("Local time preview test")
         composer.fill_content <<~MD
-          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [event start='2025-09-07 00:30' timezone='Europe/Paris' showLocalTime='true' status='public']
           [/event]
         MD
 
@@ -208,7 +207,7 @@ describe "Post event" do
     end
   end
 
-  context "when showing local time", timezone: "Australia/Brisbane" do
+  context "when showing local time" do
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
@@ -216,7 +215,7 @@ describe "Post event" do
 
       title = "My FR test meetup event"
       raw = <<~MD
-        [event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']
+        [event showLocalTime='true' start='2025-09-07 00:30' timezone='Europe/Paris']
         [/event]
       MD
       post = PostCreator.create(admin, title:, raw:)

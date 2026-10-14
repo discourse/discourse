@@ -17,14 +17,18 @@ module DiscourseCaptcha
     def initialize
       @provider = SiteSetting.discourse_captcha_provider
       case @provider
-      when CaptchaProvider::RECAPTCHA
-        @site_key = SiteSetting.recaptcha_site_key
-        @secret_key = SiteSetting.recaptcha_secret_key
+      when CaptchaProvider::RECAPTCHA_V2
+        @site_key = SiteSetting.recaptcha_v2_site_key
+        @secret_key = SiteSetting.recaptcha_v2_secret_key
         @captcha_provider = RecaptchaProvider.new
       when CaptchaProvider::HCAPTCHA
         @site_key = SiteSetting.hcaptcha_site_key
         @secret_key = SiteSetting.hcaptcha_secret_key
         @captcha_provider = HcaptchaProvider.new
+      when CaptchaProvider::RECAPTCHA_V3
+        @site_key = SiteSetting.recaptcha_v3_site_key
+        @secret_key = SiteSetting.recaptcha_v3_secret_key
+        @captcha_provider = RecaptchaV3Provider.new
       end
     end
 
@@ -46,6 +50,8 @@ module DiscourseCaptcha
       return failure("invalid_response") if !result.is_a?(Hash)
 
       if result["success"] == true
+        return verify_v3(response) if @provider == CaptchaProvider::RECAPTCHA_V3
+
         { success: true, message: I18n.t("discourse_captcha.configuration_test.success") }
       else
         error = Array(result["error-codes"]).filter_map { |code| ERROR_MESSAGES[code] }.first
@@ -58,6 +64,32 @@ module DiscourseCaptcha
     end
 
     private
+
+    def verify_v3(response)
+      result =
+        @captcha_provider.validate_captcha_response(
+          response,
+          action: "configuration_test",
+          score_threshold: 0,
+        )
+      score = result["score"]
+      threshold = SiteSetting.recaptcha_v3_score_threshold
+      meets_threshold = score >= threshold
+      message_key = meets_threshold ? "v3_success" : "v3_low_score"
+      {
+        success: true,
+        score: score,
+        meets_threshold: meets_threshold,
+        message:
+          I18n.t(
+            "discourse_captcha.configuration_test.#{message_key}",
+            score: score,
+            threshold: threshold,
+          ),
+      }
+    rescue Discourse::InvalidAccess
+      failure("invalid_response")
+    end
 
     def failure(error)
       { success: false, message: I18n.t("discourse_captcha.configuration_test.errors.#{error}") }

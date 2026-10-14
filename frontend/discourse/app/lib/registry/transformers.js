@@ -150,6 +150,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "search-menu-search-context-enabled",
   "search-menu-search-shortcuts-enabled",
   "sidebar-anonymous-default-categories",
+  "sidebar-panel",
   "site-setting-allows-none",
   "small-user-attrs",
   "tag-separator",

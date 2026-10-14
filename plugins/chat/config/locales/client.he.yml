@@ -790,8 +790,12 @@ he:
       chat_message_created:
         channel_id: "ערוץ"
       send_chat_message:
+        targets:
+          channel: "ערוץ"
         channel_id: "ערוץ"
+        target_usernames: "נמענים"
         message: "הודעה"
+        actor_username: "מוען"
       chat_approval:
         message: "הודעה"
         buttons: "כפתורים"

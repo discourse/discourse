@@ -294,7 +294,6 @@ pt_BR:
       zh_CN:
         name: Chinês simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Compartilhar no X"
@@ -348,6 +347,12 @@ pt_BR:
     skip_to_last_reply: "Ir para a última resposta"
     skip_to_top: "Pular para o topo"
     skip_user_nav: "Pular para o conteúdo do perfil"
+    reorder:
+      remove: "Remover %{label}"
+      removed: "Removeu %{label}"
+      move_up: "Mover para cima"
+      move_down: "Mover para baixo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_no_smtp: "O envio de e-mails está desativado porque nenhum servidor SMTP foi configurado. Não é possível enviar nenhum tipo de e-mail."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários(as) que não são da equipe."
@@ -477,9 +482,6 @@ pt_BR:
     max_of_count:
       one: "máx de %{count}"
       other: "máx de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:
@@ -2044,7 +2046,6 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou envie um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -2627,7 +2628,7 @@ pt_BR:
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
-      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente. :heart:"
+      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente."
     offline_indicator:
       no_internet: "Sem conexão à internet."
       refresh_page: "Atualizar página"
@@ -3091,8 +3092,7 @@ pt_BR:
       cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
-      title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -5035,9 +5035,6 @@ pt_BR:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Emblema obtido %{count} vez"
-        other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
       others_count:
         one: "Concedido a outros %{count} vez"
@@ -5820,6 +5817,7 @@ pt_BR:
             use_preset: "Configurar"
             presets:
               custom: "Personalizadas"
+            automatic: "Automático"
           authorizations:
             user: "Usuário(a)"
             last_used: "Último uso"
@@ -7360,8 +7358,8 @@ pt_BR:
           upload: "Enviar"
           select_component: "Selecione um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
-          unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
+          leave: "Sair"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"
