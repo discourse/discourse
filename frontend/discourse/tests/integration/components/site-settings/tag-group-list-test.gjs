@@ -5,28 +5,24 @@ import TagGroupList from "discourse/admin/components/site-settings/tag-group-lis
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "";
-}
-
 module(
   "Integration | Component | SiteSettings | TagGroupList",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("reports changes as a pipe-joined string and follows @value", async function (assert) {
-      const state = new State();
+      const settingValue = tracked("");
       const changes = [];
       const changeValue = (value) => {
         changes.push(value);
-        state.value = value;
+        settingValue.value = value;
       };
 
       await render(
         <template>
           <TagGroupList
             @changeValueCallback={{changeValue}}
-            @value={{state.value}}
+            @value={{settingValue.value}}
           />
         </template>
       );
@@ -37,7 +33,7 @@ module(
 
       assert.deepEqual(changes, ["TagGroup1"], "reports the picked group");
 
-      state.value = "TagGroup2";
+      settingValue.value = "TagGroup2";
       await settled();
 
       assert.strictEqual(

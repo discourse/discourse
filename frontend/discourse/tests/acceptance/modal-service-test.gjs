@@ -154,15 +154,11 @@ acceptance("Modal service: component-based API", function () {
   });
 
   test("alongside declarative modals", async function (assert) {
-    class State {
-      @tracked showDeclarativeModal;
-    }
-
-    const testState = new State();
-    const closeModal = () => (testState.showDeclarativeModal = false);
+    const showDeclarativeModal = tracked(undefined);
+    const closeModal = () => (showDeclarativeModal.value = false);
 
     const MyConnector = <template>
-      {{#if testState.showDeclarativeModal}}
+      {{#if showDeclarativeModal.value}}
         <DModal
           class="declarative-modal"
           @closeModal={{closeModal}}
@@ -186,7 +182,7 @@ acceptance("Modal service: component-based API", function () {
     await settled();
     assert.dom(".d-modal.service-modal").exists("modal should appear");
 
-    testState.showDeclarativeModal = true;
+    showDeclarativeModal.value = true;
     await settled();
     assert
       .dom(".d-modal.declarative-modal")

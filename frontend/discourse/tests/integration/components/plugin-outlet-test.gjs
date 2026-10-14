@@ -1169,22 +1169,20 @@ module(
         }
       );
 
-      const testState = new (class {
-        @tracked hello = "Hello world";
-      })();
+      const hello = tracked("Hello world");
 
       await render(
         <template>
           <PluginOutlet
             @name="test-name"
-            @outletArgs={{lazyHash arg1=testState.hello}}
+            @outletArgs={{lazyHash arg1=hello.value}}
           />
         </template>
       );
       assert.dom(".glimmer-test").hasText("Hello world from glimmer");
       assert.deepEqual(events, ["constructor"], "constructor called once");
 
-      testState.hello = "changed";
+      hello.value = "changed";
       await settled();
       assert.dom(".glimmer-test").hasText("changed from glimmer");
       assert.deepEqual(events, ["constructor"], "constructor not called again");

@@ -79,20 +79,16 @@ module("Integration | Component | Chart", function (hooks) {
       data: generateData(),
     };
 
-    const testState = new (class {
-      @tracked chartConfig;
-    })();
-
-    testState.chartConfig = generateChartConfig(this.model);
+    const chartConfig = tracked(generateChartConfig(this.model));
 
     await render(
-      <template><Chart @chartConfig={{testState.chartConfig}} /></template>
+      <template><Chart @chartConfig={{chartConfig.value}} /></template>
     );
     const firstCanvasDataURL = await renderAsPNGURL(
       document.querySelector("canvas.chart-canvas")
     );
 
-    testState.chartConfig = generateChartConfig(this.model, {
+    chartConfig.value = generateChartConfig(this.model, {
       backgroundColor: "red",
     });
 

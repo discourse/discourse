@@ -4,20 +4,16 @@ import { module, test } from "qunit";
 import SiteSettingSimpleList from "discourse/admin/components/site-settings/simple-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-class State {
-  @tracked value = "a|b";
-}
-
 module("Integration | Component | SiteSettings | SimpleList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports changes as a pipe-joined string and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("a|b");
     const setting = {};
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
@@ -25,7 +21,7 @@ module("Integration | Component | SiteSettings | SimpleList", function (hooks) {
         <SiteSettingSimpleList
           @changeValueCallback={{changeValue}}
           @setting={{setting}}
-          @value={{state.value}}
+          @value={{settingValue.value}}
         />
       </template>
     );
@@ -35,7 +31,7 @@ module("Integration | Component | SiteSettings | SimpleList", function (hooks) {
 
     assert.deepEqual(changes, ["a|b|c"], "reports the new list");
 
-    state.value = "z";
+    settingValue.value = "z";
     await settled();
 
     assert

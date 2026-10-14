@@ -5,20 +5,16 @@ import HostList from "discourse/admin/components/site-settings/host-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "a.com|b.com";
-}
-
 module("Integration | Component | SiteSettings | HostList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports changes as a pipe-joined string and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("a.com|b.com");
     const setting = { setting: "blocked_onebox_domains" };
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
@@ -27,7 +23,7 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
           @allowAny={{true}}
           @changeValueCallback={{changeValue}}
           @setting={{setting}}
-          @value={{state.value}}
+          @value={{settingValue.value}}
         />
       </template>
     );
@@ -44,7 +40,7 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
 
     assert.deepEqual(changes, ["a.com|b.com|c.com"], "ignores wildcard hosts");
 
-    state.value = "z.com";
+    settingValue.value = "z.com";
     await settled();
 
     assert.strictEqual(

@@ -881,9 +881,7 @@ module(
         { id: "st-b", name: "St B" },
       ];
       const secondItems = [{ id: "st-c", name: "St C" }];
-      const state = new (class {
-        @tracked showSecond = true;
-      })();
+      const showSecond = tracked(true);
       const onMove = sinon.spy();
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
       let raised;
@@ -910,7 +908,7 @@ module(
                   <span data-test-item={{item.id}}>{{item.name}}</span>
                 </:row>
               </DReorderableList>
-              {{#if state.showSecond}}
+              {{#if showSecond.value}}
                 <DReorderableList
                   class="stale-second"
                   @group={{group}}
@@ -934,7 +932,7 @@ module(
           .dom(moveItemSelector("list"))
           .exists("the destination is offered while its list is mounted");
 
-        state.showSecond = false;
+        showSecond.value = false;
         await settled();
 
         assert
@@ -1070,18 +1068,15 @@ module(
     });
 
     test("supp42618 focus stays inside the list as removals empty it", async function (assert) {
-      const state = new (class {
-        @tracked
-        items = [
-          { id: "rm-pin", name: "Rm Pin" },
-          { id: "rm-a", name: "Rm A" },
-          { id: "rm-b", name: "Rm B" },
-        ];
-      })();
+      const items = tracked([
+        { id: "rm-pin", name: "Rm Pin" },
+        { id: "rm-a", name: "Rm A" },
+        { id: "rm-b", name: "Rm B" },
+      ]);
       const movable = (item) => item.id !== "rm-pin";
       const removable = (item) => item.id !== "rm-pin";
       const onRemove = (item) => {
-        state.items = state.items.filter((candidate) => candidate !== item);
+        items.value = items.value.filter((candidate) => candidate !== item);
       };
 
       await render(
@@ -1089,7 +1084,7 @@ module(
           <DMenus />
           <div id="remove-focus-arena">
             <DReorderableList
-              @items={{state.items}}
+              @items={{items.value}}
               @key="id"
               @label={{label}}
               @movable={{movable}}
@@ -1236,9 +1231,7 @@ module(
     });
 
     test("supp42618 replacing the items under an open menu neither throws nor commits", async function (assert) {
-      const state = new (class {
-        @tracked items = objectItems();
-      })();
+      const items = tracked(objectItems());
       const replacement = [
         { id: "rep-a", name: "Rep A" },
         { id: "rep-b", name: "Rep B" },
@@ -1255,7 +1248,7 @@ module(
           <template>
             <DMenus />
             <DReorderableList
-              @items={{state.items}}
+              @items={{items.value}}
               @key="id"
               @label={{label}}
               @onMove={{onMove}}
@@ -1272,7 +1265,7 @@ module(
           .dom(moveItemSelector("up"))
           .exists("the menu opened over the row before the swap");
 
-        state.items = replacement;
+        items.value = replacement;
         await settled();
 
         // The component may close the stale menu itself or leave it to be
