@@ -48,6 +48,7 @@ module DiscourseEvents
       after_commit :enqueue_warm_recording_onebox, on: %i[create update]
       after_commit :destroy_topic_custom_field, on: %i[destroy]
       after_commit :create_or_update_event_date, on: %i[create update]
+      after_commit :reopen_livestream_chat_channel, on: :update
       after_save do
         if saved_change_to_image_upload_id?
           UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
@@ -109,6 +110,22 @@ module DiscourseEvents
         return if post.topic.blank?
 
         DiscourseEvents::Livestream.handle_topic_chat_channel_creation(post.topic)
+      end
+
+      # The chat closes once the event ends, so an event moved back into the
+      # future, or made recurring, needs it open again.
+      def reopen_livestream_chat_channel
+        return unless livestream? && SiteSetting.chat_enabled
+        return if expired?
+
+        topic_chat_channel =
+          DiscourseEvents::Livestream::TopicChatChannel.includes(:chat_channel).find_by(
+            topic_id: post&.topic_id,
+            closed_on_event_end: true,
+          )
+        return if !topic_chat_channel&.chat_channel&.closed?
+
+        topic_chat_channel.chat_channel.open!(Discourse.system_user)
       end
 
       def has_cached_livestream_onebox?

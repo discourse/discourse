@@ -2,7 +2,8 @@
 
 # Once a livestream occurrence ends, its chat is preserved in the event topic,
 # provided everyone who can read the topic could already read the chat: in the
-# event post for a one-off event, as a dated reply per occurrence otherwise.
+# event post for a one-off event, as a dated reply per occurrence otherwise, or
+# when the event post has no room left for it.
 # The channel is closed when no further occurrences will reuse it.
 class DiscourseEvents::Livestream::PublishChatTranscript
   include Service::Base
@@ -20,12 +21,13 @@ class DiscourseEvents::Livestream::PublishChatTranscript
 
   only_if(:chat_audience_matches_topic_readers) do
     lock(:topic_chat_channel) do
+      model :event_post_transcript, :render_event_post_transcript, optional: true
       model :transcript, :render_transcript
 
       only_if(:new_chat_messages) do
         transaction do
-          only_if(:recurring_event) { step :reply_with_transcript }
-          only_if(:one_off_event) { step :append_transcript_to_event_post }
+          only_if(:appending_to_event_post) { step :append_transcript_to_event_post }
+          only_if(:replying) { step :reply_with_transcript }
           step :mark_messages_transcribed
         end
       end
@@ -64,15 +66,29 @@ class DiscourseEvents::Livestream::PublishChatTranscript
   end
 
   # Appended to the event post, it shares the length limit with what is there.
-  def render_transcript(event:, event_date:, topic_chat_channel:)
-    available_length = SiteSetting.max_post_length
-    available_length -= event.post.raw.rstrip.length + 2 if !event.recurring?
+  def render_event_post_transcript(event:, event_date:, topic_chat_channel:)
+    return if event.recurring?
 
+    transcript =
+      build_transcript(
+        event_date:,
+        topic_chat_channel:,
+        max_length: SiteSetting.max_post_length - event.post.raw.rstrip.length - 2,
+      )
+    transcript if transcript.within_length?
+  end
+
+  def render_transcript(event_post_transcript:, event_date:, topic_chat_channel:)
+    event_post_transcript ||
+      build_transcript(event_date:, topic_chat_channel:, max_length: SiteSetting.max_post_length)
+  end
+
+  def build_transcript(event_date:, topic_chat_channel:, max_length:)
     DiscourseEvents::Livestream::ChatTranscript.new(
       channel: topic_chat_channel.chat_channel,
       messages: topic_chat_channel.untranscribed_messages,
       event_date:,
-      max_length: available_length,
+      max_length:,
     )
   end
 
@@ -80,12 +96,12 @@ class DiscourseEvents::Livestream::PublishChatTranscript
     transcript.messages?
   end
 
-  def recurring_event(event:)
-    event.recurring?
+  def appending_to_event_post(event_post_transcript:)
+    event_post_transcript.present?
   end
 
-  def one_off_event(event:)
-    !event.recurring?
+  def replying(event_post_transcript:)
+    event_post_transcript.blank?
   end
 
   # A record of the stream rather than news, so neither notifies nor bumps.
@@ -124,7 +140,12 @@ class DiscourseEvents::Livestream::PublishChatTranscript
     event.expired?
   end
 
+  # Only an open channel, so a status set by moderators is kept and the event
+  # can tell its own closing apart if it resumes.
   def close_chat_channel(topic_chat_channel:)
+    return if !topic_chat_channel.chat_channel.open?
+
     topic_chat_channel.chat_channel.closed!(Discourse.system_user)
+    topic_chat_channel.update!(closed_on_event_end: true)
   end
 end

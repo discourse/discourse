@@ -217,6 +217,63 @@ RSpec.describe DiscourseEvents::Events::Event do
     end
   end
 
+  describe "#reopen_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category:) }
+    fab!(:post) { Fabricate(:post, topic:) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
+
+    let!(:event) do
+      Fabricate(
+        :event,
+        post:,
+        livestream: true,
+        location: "https://www.youtube.com/live/abc123",
+        original_starts_at: 2.days.ago,
+        original_ends_at: 2.days.ago + 1.hour,
+      )
+    end
+    let(:topic_chat_channel) { DiscourseEvents::Livestream::TopicChatChannel.find_by(topic:) }
+    let(:chat_channel) { topic_chat_channel.chat_channel }
+
+    before do
+      chat_channel.closed!(Discourse.system_user)
+      topic_chat_channel.update!(closed_on_event_end: true)
+    end
+
+    it "reopens the chat the event closed once it is moved into the future" do
+      event.update!(original_starts_at: 1.day.from_now, original_ends_at: 1.day.from_now + 1.hour)
+
+      expect(chat_channel.reload).to be_open
+      expect(topic_chat_channel.reload.closed_on_event_end).to eq(false)
+    end
+
+    it "reopens the chat once the event is made recurring" do
+      event.update!(recurrence: "every_week")
+
+      expect(chat_channel.reload).to be_open
+    end
+
+    it "keeps the chat closed while the event is still over" do
+      event.update!(name: "Renamed event")
+
+      expect(chat_channel.reload).to be_closed
+    end
+
+    it "keeps a status moderators set since the event closed the chat" do
+      chat_channel.open!(Discourse.system_user)
+      chat_channel.closed!(Discourse.system_user)
+
+      event.update!(original_starts_at: 1.day.from_now, original_ends_at: 1.day.from_now + 1.hour)
+
+      expect(chat_channel.reload).to be_closed
+    end
+  end
+
   describe "#create_livestream_chat_channel" do
     fab!(:category)
     fab!(:topic) { Fabricate(:topic, category: category) }

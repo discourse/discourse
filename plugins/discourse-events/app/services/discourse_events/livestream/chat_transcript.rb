@@ -30,7 +30,13 @@ class DiscourseEvents::Livestream::ChatTranscript
   end
 
   def raw
-    render(included_count)
+    @raw ||= render(included_count)
+  end
+
+  # Even without any messages, the heading and the pointer to the channel may
+  # not fit what is left of a post.
+  def within_length?
+    raw.length <= @max_length
   end
 
   private

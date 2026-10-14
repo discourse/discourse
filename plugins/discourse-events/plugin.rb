@@ -999,6 +999,15 @@ after_initialize do
     end
   end
 
+  # Any status set since the event closed the chat is deliberate, so a resumed
+  # event leaves it be.
+  on(:chat_channel_status_change) do |channel:, **|
+    DiscourseEvents::Livestream::TopicChatChannel.where(
+      chat_channel_id: channel.id,
+      closed_on_event_end: true,
+    ).update_all(closed_on_event_end: false)
+  end
+
   add_to_serializer(
     :topic_view,
     :event_watching_invitee_status,

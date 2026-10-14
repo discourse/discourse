@@ -23,6 +23,7 @@ end
 # Table name: livestream_topic_chat_channels
 #
 #  id                          :bigint           not null, primary key
+#  closed_on_event_end         :boolean          default(FALSE), not null
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  chat_channel_id             :bigint           not null

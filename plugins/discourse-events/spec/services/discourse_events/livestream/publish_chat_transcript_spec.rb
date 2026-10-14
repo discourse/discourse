@@ -157,6 +157,21 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
         expect(event_post.raw).to include("earlier message")
       end
 
+      context "when the event post has no room left for the transcript" do
+        before do
+          padding = "a" * (SiteSetting.max_post_length - event_post.raw.length - 10)
+          event_post.update_columns(raw: "#{event_post.raw}#{padding}")
+        end
+
+        it "replies with the transcript instead" do
+          expect { result }.to change { topic.posts.count }.by(1)
+
+          expect(topic.posts.last.raw).to include("Chat transcript", "Hello stream", "Great talk")
+          expect(event_post.reload.raw.length).to be <= SiteSetting.max_post_length
+          expect(event_post.raw).not_to include("Chat transcript")
+        end
+      end
+
       context "when the event is recurring" do
         before { event.update_columns(recurrence: "every_week") }
 
@@ -188,6 +203,22 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
         it "still closes the chat channel" do
           expect { result }.to change { chat_channel.reload.status }.to("closed")
         end
+      end
+    end
+
+    context "when the livestream is over" do
+      it "closes the chat channel and remembers having done so" do
+        result
+
+        expect(chat_channel.reload).to be_closed
+        expect(topic_chat_channel.reload.closed_on_event_end).to eq(true)
+      end
+
+      it "keeps a status moderators set" do
+        chat_channel.read_only!(Discourse.system_user)
+
+        expect { result }.not_to change { chat_channel.reload.status }
+        expect(topic_chat_channel.reload.closed_on_event_end).to eq(false)
       end
     end
 

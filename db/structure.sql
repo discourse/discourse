@@ -7418,7 +7418,8 @@ CREATE TABLE public.livestream_topic_chat_channels (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     reference_message_id bigint,
-    last_transcribed_message_id bigint
+    last_transcribed_message_id bigint,
+    closed_on_event_end boolean DEFAULT false NOT NULL
 );
 
 
@@ -25856,6 +25857,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261014231432'),
 ('20261014145458'),
 ('20261013183208'),
 ('20261013010026'),
