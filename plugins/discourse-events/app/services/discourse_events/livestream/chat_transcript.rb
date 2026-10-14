@@ -42,6 +42,7 @@ class DiscourseEvents::Livestream::ChatTranscript
         .limit([@max_length / MIN_QUOTED_MESSAGE_LENGTH, 0].max + 1)
         .to_a
         .reverse
+        .map { |message| contained(message) }
   end
 
   def total_count
@@ -86,7 +87,8 @@ class DiscourseEvents::Livestream::ChatTranscript
     "[date=#{starts_at.strftime("%Y-%m-%d")}#{time} timezone=\"#{starts_at.time_zone.tzinfo.name}\"]"
   end
 
-  # Read-only so the escaped text can never be saved back to the message.
+  # Done once per message, as escaping again would stack backslashes. Read-only
+  # so the escaped text can never be saved back to the message.
   def contained(message)
     message.message = message.message.gsub(CLOSING_TAGS) { "\\#{it}" }
     message.readonly!
@@ -111,7 +113,7 @@ class DiscourseEvents::Livestream::ChatTranscript
       Chat::TranscriptService.new(
         @channel,
         Discourse.system_user,
-        messages_or_ids: messages.map { |message| contained(message) },
+        messages_or_ids: messages,
       ).generate_markdown
 
     "[wrap=#{WRAP_NAME}]\n#{transcript}\n[/wrap]"

@@ -296,6 +296,7 @@ after_initialize do
   require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_event_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_recording_onebox"
   require_relative "jobs/regular/discourse_post_event/publish_livestream_chat_transcript"

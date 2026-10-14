@@ -66,6 +66,11 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
         expect(cooked.scan("d-wrap").size).to eq(1)
       end
 
+      it "escapes each closing tag once however many renders fitting takes" do
+        expect(transcript.raw).to include("\\[/chat]", "\\[/WRAP]")
+        expect(transcript.raw).not_to include("\\\\[/")
+      end
+
       it "leaves the stored message untouched" do
         transcript.raw
 

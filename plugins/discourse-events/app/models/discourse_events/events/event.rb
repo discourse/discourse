@@ -125,14 +125,6 @@ module DiscourseEvents
         Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
       end
 
-      # Fetches the onebox and tells clients to re-render the post with it. Only
-      # ever called from the background job, never during a request.
-      def warm_livestream_onebox!
-        return if has_cached_livestream_onebox?
-        Oneboxer.onebox(livestream_url)
-        post&.publish_change_to_clients!(:revised)
-      end
-
       # The raw allows a recording without a scheme; oneboxing needs one.
       def recording_link
         return if recording_url.blank?
@@ -149,10 +141,11 @@ module DiscourseEvents
         Jobs.enqueue(:warm_recording_onebox, event_id: id, url: recording_link)
       end
 
-      # Only ever called from the background job, never during a request.
-      def warm_recording_onebox!
-        return if has_cached_recording_onebox?
-        Oneboxer.onebox(recording_link)
+      # Fetches the onebox and tells clients to re-render the post with it. Only
+      # ever called from a background job, never during a request.
+      def warm_onebox!(url)
+        return if Oneboxer.cached_onebox(url).present?
+        Oneboxer.onebox(url)
         post&.publish_change_to_clients!(:revised)
       end
 

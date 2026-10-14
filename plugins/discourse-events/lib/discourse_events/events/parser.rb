@@ -65,6 +65,8 @@ module DiscourseEvents
                 else
                   CGI.escapeHTML(value)
                 end
+                # A custom field sharing the name would overwrite the parsed value.
+                next
               end
 
               valid_custom_fields.each do |valid_custom_field|

@@ -261,6 +261,18 @@ describe DiscourseEvents::Events::Parser do
       expect(events[0][:bar]).to eq("2")
     end
 
+    it "keeps a built-in attribute's value when a custom field shares its name" do
+      # Saved before the attribute became built-in; the setting now rejects it.
+      SiteSetting.stubs(:discourse_post_event_allowed_custom_fields).returns("recording")
+      post_event = build_post user, <<~TXT
+        [event start="2020" recording="https://example.com/watch?v=1&t=2"]
+        [/event]
+      TXT
+
+      events = parser.extract_events(post_event)
+      expect(events[0][:recording]).to eq("https://example.com/watch?v=1&t=2")
+    end
+
     it "doesn’t parse not allowed custom fields" do
       post_event = build_post user, <<~TXT
         [event start="2020" baz="1"]

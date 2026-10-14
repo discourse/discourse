@@ -38,16 +38,21 @@ export default class DiscoursePostEventMoreMenu extends Component {
     return this.currentUser && this.args.event.canActOnDiscoursePostEvent;
   }
 
-  // Mirrors the top-level conditions of the menu items, e.g. an anonymous
-  // visitor on an ended event has none of them.
+  // One entry per top-level item guard in the template, e.g. an anonymous
+  // visitor on an ended event passes none of them.
   get hasItems() {
-    return !!(
-      !this.expiredOrClosed ||
-      this.canSendPmToCreator ||
-      this.canSeeUpcomingEvents ||
-      this.shouldShowParticipants ||
-      this.canActOnEvent
-    );
+    return [
+      this.canAddToCalendar,
+      this.canSendPmToCreator,
+      this.canInvite,
+      this.canSeeUpcomingEvents,
+      this.shouldShowParticipants,
+      this.canActOnEvent,
+    ].some(Boolean);
+  }
+
+  get canAddToCalendar() {
+    return !this.expiredOrClosed;
   }
 
   get shouldShowParticipants() {
@@ -278,7 +283,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       >
         <:content>
           <DDropdownMenu as |dropdown|>
-            {{#unless this.expiredOrClosed}}
+            {{#if this.canAddToCalendar}}
               <dropdown.item class="add-to-calendar">
                 <DButton
                   @action={{this.addToCalendar}}
@@ -286,7 +291,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
                   @label="discourse_post_event.add_to_calendar"
                 />
               </dropdown.item>
-            {{/unless}}
+            {{/if}}
 
             {{#if this.canSendPmToCreator}}
               <dropdown.item class="send-pm-to-creator">
