@@ -4,9 +4,10 @@ import DiscourseURL from "discourse/lib/url";
 /**
  * Follows a permalink for `path`, if one exists, redirecting to its target.
  * Internal targets are redirected within the router so the transition is
- * tracked; external ones navigate via `DiscourseURL` after aborting the
- * current transition. Returns `{ type: "redirect" }` once handled, otherwise a
- * `{ type: "not-found", html }` result carrying the server-rendered 404 page.
+ * tracked; external ones do a full-page redirect that replaces the current
+ * history entry, after aborting the current transition. Returns
+ * `{ type: "redirect" }` once handled, otherwise a `{ type: "not-found", html }`
+ * result carrying the server-rendered 404 page.
  */
 export default async function resolvePermalink(path, transition, router) {
   const results = await ajax("/permalink-check.json", { data: { path } });
@@ -30,9 +31,10 @@ export default async function resolvePermalink(path, transition, router) {
     return { type: "redirect" };
   }
 
-  // Avoid polluting the history stack for external links
+  // Replace the history entry so the permalink URL doesn't linger after the
+  // external redirect
   transition?.abort();
-  DiscourseURL.routeTo(url);
+  DiscourseURL.redirectAbsolute(url, { replace: true });
 
   return { type: "redirect" };
 }

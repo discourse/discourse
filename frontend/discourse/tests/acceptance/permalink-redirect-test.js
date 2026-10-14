@@ -58,7 +58,9 @@ acceptance("Permalink redirect for /t/:slug_or_id", function (needs) {
     await visitWithRedirects("/t/some-slug-that-does-not-exist");
 
     assert.true(
-      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com", {
+        replace: true,
+      })
     );
   });
 });
@@ -91,7 +93,41 @@ acceptance("Permalink redirect for /t/:slug/:id", function (needs) {
       "/t/some-slug-that-does-not-exist/999999"
     );
     assert.true(
-      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com", {
+        replace: true,
+      })
+    );
+  });
+});
+
+acceptance("Permalink redirect for /t/:slug/:id (internal)", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/t/999999.json", () =>
+      helper.response(404, {
+        extras: { html: "<div class='page-not-found'>not found</div>" },
+      })
+    );
+    server.get("/permalink-check.json", () =>
+      helper.response({
+        found: true,
+        internal: true,
+        target_url: "/t/internationalization-localization/280",
+      })
+    );
+  });
+
+  test("redirects within the router when the permalink targets an internal URL", async function (assert) {
+    const redirect = sinon.stub(DiscourseURL, "redirectAbsolute");
+
+    await visit("/t/some-slug-that-does-not-exist/999999");
+
+    assert.strictEqual(
+      currentURL(),
+      "/t/internationalization-localization/280"
+    );
+    assert.false(
+      redirect.called,
+      "internal permalinks must not trigger a full-page redirect"
     );
   });
 });
@@ -132,7 +168,9 @@ acceptance("Permalink redirect for /c/:slug", function (needs) {
 
     assert.strictEqual(requestedPath, "/c/some-category-that-does-not-exist");
     assert.true(
-      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com", {
+        replace: true,
+      })
     );
   });
 });
@@ -160,7 +198,9 @@ acceptance("Permalink redirect for /c/:slug/:id", function (needs) {
       "/c/some-category-that-does-not-exist/999999"
     );
     assert.true(
-      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com", {
+        replace: true,
+      })
     );
   });
 });
