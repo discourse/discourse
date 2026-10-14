@@ -28,6 +28,12 @@ function syncInputWidth(input) {
   input.style.setProperty("--col-name-length", input.value.length || 1);
 }
 
+// Lets CSS size the scroll box to end at the bottom of the viewport.
+const measureTopOffset = modifier((element) => {
+  const top = element.getBoundingClientRect().top + window.scrollY;
+  element.style.setProperty("--top-offset", `${top}px`);
+});
+
 const indeterminate = modifier((element, [value]) => {
   element.indeterminate = value;
 });
@@ -320,8 +326,8 @@ export default class DataTableViewer extends Component {
       </div>
 
       <DConditionalLoadingSpinner @condition={{this.isLoading}}>
-        <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
-          <div class="workflows-data-table-viewer__scroll">
+        <div class="workflows-data-table-viewer__scroll" {{measureTopOffset}}>
+          <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
             <table class="workflows-data-table-viewer__table">
               <thead>
                 <tr>
@@ -412,9 +418,9 @@ export default class DataTableViewer extends Component {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </DLoadMore>
           <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
-        </DLoadMore>
+        </div>
       </DConditionalLoadingSpinner>
     </div>
   </template>
