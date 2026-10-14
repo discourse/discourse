@@ -25,6 +25,11 @@ module PageObjects
         self
       end
 
+      def run_shared_query
+        page.find(".query-run .btn-primary").click
+        self
+      end
+
       def click_edit_name
         page.find(".edit-query-name").click
         self
@@ -75,6 +80,25 @@ module PageObjects
 
       def has_result_cell?(text)
         page.has_css?(".query-results .query-result-cell", text: text)
+      end
+
+      def has_result_heading?(text)
+        page.has_css?(".query-results-table th", text: text)
+      end
+
+      def has_reviewable_link?(reviewable)
+        page.has_css?(
+          ".query-results .query-result-cell a[href='/review/#{reviewable.id}']",
+          text: reviewable.id.to_s,
+        )
+      end
+
+      def has_plain_result_cell?(text)
+        page.has_css?(".query-results .query-result-cell:not(:has(a))", text: text)
+      end
+
+      def click_reviewable_link(reviewable)
+        page.find(".query-results .query-result-cell a[href='/review/#{reviewable.id}']").click
       end
 
       def has_result_cell_at?(row_index, col_index, text:)
