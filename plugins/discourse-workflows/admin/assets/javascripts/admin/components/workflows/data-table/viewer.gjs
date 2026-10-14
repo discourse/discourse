@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -63,11 +63,9 @@ export default class DataTableViewer extends Component {
     return this.rows === null || this.dataTable === null;
   }
 
+  @cached
   get columns() {
-    const reserved = ["id", "created_at", "updated_at"];
-    return (
-      this.dataTable?.columns?.filter((c) => !reserved.includes(c.name)) ?? []
-    );
+    return this.dataTable?.columns?.filter((c) => !c.reserved) ?? [];
   }
 
   get hasSelection() {
@@ -254,20 +252,15 @@ export default class DataTableViewer extends Component {
   async renameColumn(index, event) {
     this.editingColumnIndex = null;
     const newName = event.target.value.trim();
-    const column = this.columns[index];
-    const oldName = column.name;
+    const oldName = this.columns[index].name;
     if (!newName || newName === oldName) {
       return;
     }
     try {
-      const result = await ajax(
-        `${this.apiBasePath}/columns/${column.name}/rename.json`,
-        {
-          type: "PATCH",
-          data: { name: newName },
-        }
-      );
-      this.dataTable = result.data_table;
+      await ajax(`${this.apiBasePath}/columns/${oldName}/rename.json`, {
+        type: "PATCH",
+        data: { name: newName },
+      });
       await this.loadTable();
     } catch (e) {
       popupAjaxError(e);
@@ -284,7 +277,6 @@ export default class DataTableViewer extends Component {
             data: { name: data.name, column_type: data.type },
           });
           this.dataTable = result.data_table;
-          await this.loadTable();
         },
       },
     });

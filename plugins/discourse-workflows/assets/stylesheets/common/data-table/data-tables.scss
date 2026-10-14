@@ -97,12 +97,6 @@
       min-width: 0;
       width: 1px;
     }
-
-    th.--actions,
-    td.--actions {
-      min-width: 50px;
-      width: 50px;
-    }
   }
 
   &__col-type {
@@ -143,8 +137,7 @@
 
   &__cell {
     &.--id,
-    &.--system,
-    &.--actions {
+    &.--system {
       padding: var(--space-2) var(--space-3);
     }
 
@@ -158,11 +151,6 @@
     &.--boolean {
       padding: var(--space-2) var(--space-3);
     }
-
-    &.--actions {
-      text-align: right;
-      white-space: nowrap;
-    }
   }
 
   &__cell-value {
@@ -174,16 +162,16 @@
     // stylelint-disable-next-line declaration-no-important
     outline: none !important;
     padding: var(--space-2) var(--space-3);
-
-    &.is-null {
-      color: var(--primary-low-mid);
-      font-style: italic;
-    }
     margin: 0;
     cursor: pointer;
     text-align: left;
     font: inherit;
     color: inherit;
+
+    &.is-null {
+      color: var(--primary-low-mid);
+      font-style: italic;
+    }
   }
 
   &__cell-input {
@@ -205,23 +193,7 @@
     margin: 0;
   }
 
-  &__empty {
-    text-align: center;
-    color: var(--primary-medium);
-    padding: var(--space-4);
-  }
-
   &__add-row td {
     border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__th {
-    &.--id {
-      width: 60px;
-    }
-
-    &.--actions {
-      width: 50px;
-    }
   }
 }
