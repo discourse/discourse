@@ -5,10 +5,6 @@ import TagList from "discourse/admin/components/site-settings/tag-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "";
-}
-
 module("Integration | Component | SiteSettings | TagList", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -17,16 +13,19 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
   });
 
   test("selecting a tag reports the tag name", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("");
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
       <template>
-        <TagList @changeValueCallback={{changeValue}} @value={{state.value}} />
+        <TagList
+          @changeValueCallback={{changeValue}}
+          @value={{settingValue.value}}
+        />
       </template>
     );
 
@@ -45,12 +44,13 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
   });
 
   test("follows a value set by the caller", async function (assert) {
-    const state = new State();
-    state.value = "foo";
+    const settingValue = tracked("foo");
 
-    await render(<template><TagList @value={{state.value}} /></template>);
+    await render(
+      <template><TagList @value={{settingValue.value}} /></template>
+    );
 
-    state.value = "foo|bar";
+    settingValue.value = "foo|bar";
     await settled();
 
     assert.strictEqual(this.subject.header().value(), "foo,bar");

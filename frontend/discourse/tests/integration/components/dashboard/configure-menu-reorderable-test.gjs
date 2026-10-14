@@ -399,14 +399,12 @@ module(
     test(`${REORDER_TEST_PREFIX} keeps the moved row's handle focused once it has moved`, async function (assert) {
       // A live list, unlike the sibling tests: the row has to actually move for
       // this to say anything about what happens to focus when it does.
-      const state = new (class {
-        @tracked sections = [...FOUR_SECTIONS];
-      })();
+      const sections = tracked([...FOUR_SECTIONS]);
       const onReorder = (from, to) => {
-        const next = [...state.sections];
+        const next = [...sections.value];
         const [moved] = next.splice(from, 1);
         next.splice(to, 0, moved);
-        state.sections = next;
+        sections.value = next;
       };
       const noop = () => {};
 
@@ -416,7 +414,7 @@ module(
           <ConfigureMenuReorderable
             @onReorder={{onReorder}}
             @onToggleVisibility={{noop}}
-            @sections={{state.sections}}
+            @sections={{sections.value}}
           />
         </template>
       );
@@ -424,7 +422,7 @@ module(
       await moveVia("highlights", "down");
 
       assert.deepEqual(
-        state.sections.map((section) => section.id),
+        sections.value.map((section) => section.id),
         ["reports", "highlights", "traffic", "engagement"],
         "the row moved, so focus has something to survive"
       );

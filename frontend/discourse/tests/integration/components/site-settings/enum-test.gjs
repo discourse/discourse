@@ -6,15 +6,11 @@ import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "simple";
-}
-
 module("Integration | Component | SiteSettings | Enum", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports the picked value and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("simple");
     const setting = SiteSetting.create({
       setting: "tag_style",
       type: "enum",
@@ -26,7 +22,7 @@ module("Integration | Component | SiteSettings | Enum", function (hooks) {
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
@@ -34,7 +30,7 @@ module("Integration | Component | SiteSettings | Enum", function (hooks) {
         <Enum
           @changeValueCallback={{changeValue}}
           @setting={{setting}}
-          @value={{state.value}}
+          @value={{settingValue.value}}
         />
       </template>
     );
@@ -44,7 +40,7 @@ module("Integration | Component | SiteSettings | Enum", function (hooks) {
 
     assert.deepEqual(changes, ["box"], "reports the picked value");
 
-    state.value = "simple";
+    settingValue.value = "simple";
     await settled();
 
     assert.strictEqual(

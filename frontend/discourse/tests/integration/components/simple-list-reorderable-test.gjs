@@ -144,14 +144,12 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
   });
 
   test("updates when values change", async function (assert) {
-    const state = new (class {
-      @tracked values = "vinkas|osama";
-    })();
+    const values = tracked("vinkas|osama");
 
     await render(
       <template>
         <DMenus />
-        <SimpleList @inputDelimiter="|" @values={{state.values}} />
+        <SimpleList @inputDelimiter="|" @values={{values.value}} />
       </template>
     );
 
@@ -159,7 +157,7 @@ module("Integration | Component | SimpleList | reorderable", function (hooks) {
       .dom(".values .value[data-reorderable-key='0'] .value-input")
       .hasValue("vinkas");
 
-    state.values = "kris|jeff";
+    values.value = "kris|jeff";
     await settled();
 
     assert

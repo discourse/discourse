@@ -5,23 +5,11 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import GroupSelect from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/group-select";
 
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
-}
-
 module("Integration | Component | Workflows | GroupSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   test("stores selected group names when configured as multiple", async function (assert) {
-    this.field = new TestField([]);
+    this.field = tracked([]);
     this.schema = {
       type_options: {
         load_options_method: "groups",
