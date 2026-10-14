@@ -5,11 +5,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 import AddColumnModal from "./add-column-modal";
@@ -255,6 +257,35 @@ export default class DataTableViewer extends Component {
   }
 
   @action
+  async renameColumnFromMenu(index, closeMenu) {
+    await closeMenu();
+    this.editingColumnIndex = index;
+  }
+
+  @action
+  async deleteColumn(column, closeMenu) {
+    await closeMenu();
+    this.dialog.deleteConfirm({
+      message: i18n("discourse_workflows.data_tables.delete_column_confirm", {
+        name: column.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await ajax(`${this.apiBasePath}/columns/${column.name}.json`, {
+            type: "DELETE",
+          });
+          this.dataTable = {
+            ...this.dataTable,
+            columns: this.dataTable.columns.filter((c) => c !== column),
+          };
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
+  }
+
+  @action
   async renameColumn(index, event) {
     this.editingColumnIndex = null;
     const newName = event.target.value.trim();
@@ -362,6 +393,40 @@ export default class DataTableViewer extends Component {
                           {{on "click" (fn this.startEditingColumn index)}}
                         >{{col.name}}</button>
                       {{/if}}
+                      <DMenu
+                        @icon="ellipsis-vertical"
+                        @identifier="workflows-data-table-column-menu"
+                        @title={{i18n
+                          "discourse_workflows.data_tables.column_options"
+                        }}
+                        @triggerClass="btn-transparent btn-small workflows-data-table-viewer__col-menu"
+                      >
+                        <:content as |menu|>
+                          <DDropdownMenu as |dropdown|>
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent"
+                                @action={{fn
+                                  this.renameColumnFromMenu
+                                  index
+                                  menu.close
+                                }}
+                                @icon="pencil"
+                                @label="discourse_workflows.data_tables.rename_column"
+                              />
+                            </dropdown.item>
+                            <dropdown.divider />
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent btn-danger"
+                                @action={{fn this.deleteColumn col menu.close}}
+                                @icon="trash-can"
+                                @label="discourse_workflows.data_tables.delete_column"
+                              />
+                            </dropdown.item>
+                          </DDropdownMenu>
+                        </:content>
+                      </DMenu>
                     </th>
                   {{/each}}
                   <th
