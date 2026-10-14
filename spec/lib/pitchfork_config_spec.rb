@@ -12,6 +12,7 @@ RSpec.describe Pitchfork::Configurator do
       pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
       configuration =
         Pitchfork::Configurator.new(config_file: Rails.root.join("config/pitchfork.conf.rb").to_s)
+      Discourse.before_fork
       Scheduler::Defer.later { completed << :deferred }
       pool.post do
         Scheduler::Defer.later { completed << :deferred_from_pool }
