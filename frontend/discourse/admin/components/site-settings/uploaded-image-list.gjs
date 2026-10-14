@@ -13,7 +13,7 @@ export default class UploadedImageList extends Component {
     this.modal.show(UploadedImageListModal, {
       model: {
         title: `admin.site_settings.${setting.setting}.title`,
-        changeValue: (v) => this.args.changeValueCallback(v),
+        changeValue: this.args.changeValueCallback,
         value,
       },
     });
