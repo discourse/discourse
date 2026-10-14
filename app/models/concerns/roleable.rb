@@ -28,6 +28,11 @@ module Roleable
       end
   end
 
+  def category_group_moderator?
+    SiteSetting.enable_category_group_moderation &&
+      CategoryModerationGroup.where(group_id: group_users.select(:group_id)).exists?
+  end
+
   def grant_moderation!
     return if moderator
     set_permission("moderator", true)
