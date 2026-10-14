@@ -42,6 +42,8 @@ class AiApiAuditLog < ActiveRecord::Base
     Mistral = 9
     OpenRouter = 10
     BedrockConverse = 11
+    SystemOne = 12
+    OpenAiDecisions = 13
   end
 
   def self.token_and_spending_stats(scope)

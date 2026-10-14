@@ -4101,6 +4101,42 @@ ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_ta
 
 
 --
+-- Name: decision_models; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_models (
+    id bigint NOT NULL,
+    display_name character varying(100) NOT NULL,
+    name character varying(255) NOT NULL,
+    provider character varying(50) NOT NULL,
+    url character varying(1000) NOT NULL,
+    ai_secret_id bigint,
+    vision_enabled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_models_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_models_id_seq OWNED BY public.decision_models.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14576,6 +14612,13 @@ ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: decision_models id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models ALTER COLUMN id SET DEFAULT nextval('public.decision_models_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17193,6 +17236,14 @@ ALTER TABLE ONLY public.data_explorer_query_tags
 
 ALTER TABLE ONLY public.data_explorer_tags
     ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_models decision_models_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models
+    ADD CONSTRAINT decision_models_pkey PRIMARY KEY (id);
 
 
 --
@@ -21651,6 +21702,13 @@ CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON publ
 
 
 --
+-- Name: index_decision_models_on_ai_secret_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_decision_models_on_ai_secret_id ON public.decision_models USING btree (ai_secret_id);
+
+
+--
 -- Name: index_developers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25855,6 +25913,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261014145458'),
+('20261013222431'),
 ('20261013183208'),
 ('20261013010026'),
 ('20261013010022'),

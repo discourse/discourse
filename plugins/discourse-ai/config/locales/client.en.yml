@@ -103,6 +103,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_decision_model: "Create AI decision model"
+            update_ai_decision_model: "Update AI decision model"
+            delete_ai_decision_model: "Delete AI decision model"
             create_ai_secret: "Create AI secret"
             update_ai_secret: "Update AI secret"
             delete_ai_secret: "Delete AI secret"
@@ -118,10 +121,13 @@ en:
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
+        requires_decision_model: "Requires a decision model"
       nodes:
         "action:ai_agent": "AI Agent"
+        "action:classify": "Classify"
       node_descriptions:
         "action:ai_agent": "Run an AI agent to process data or generate content"
+        "action:classify": "Ask a decision model questions about each item"
     discourse_automation:
       scriptables:
         llm_report:
@@ -339,6 +345,24 @@ en:
           upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
+        classify:
+          decision_model_id: "Decision model"
+          text: "Text"
+          text_description: "What the decision model reads for each item."
+          upload_ids: "Images"
+          upload_ids_description: "Upload IDs of images the decision model looks at, such as the post's upload_ids. Other uploads are skipped. Needs a decision model that reads images."
+          questions: "Questions"
+          questions_description: "Each answer is added to the item as classification.NAME, where NAME is the question name."
+          add_question: "Add question"
+          name: "Name"
+          type: "Type"
+          type_yes_no: "Yes/no"
+          type_choice: "Choice"
+          type_score: "Score"
+          instructions: "Question"
+          choices: "Choices"
+          levels: "Levels"
+          levels_description: "From lowest to highest. The answer has the most likely level and a weighted score from 0 (first level) upwards."
 
       bot_chats:
         tab_label: "Bot chats"
@@ -1118,7 +1142,7 @@ en:
 
       secrets:
         short_title: "Credentials"
-        description: "Manage authentication credentials shared across LLMs, embeddings, and tools."
+        description: "Manage authentication credentials shared across LLMs, embeddings, decision models, and tools."
         name: "Name"
         secret: "Value"
         select_secret: "Select a credential..."
@@ -1141,8 +1165,34 @@ en:
         tool: "Tool"
         mcp_server: "MCP server"
         mcp_server_oauth_client_secret: "MCP server OAuth client secret"
+        decision_model: "Decision model"
         modal:
           title: "Create new credential"
+
+      decision_models:
+        short_title: "Decision models"
+        description: "Models that answer typed questions about content (yes/no, choice, score) with probabilities, faster and cheaper than an LLM."
+        create_new: "New decision model"
+        no_decision_models: "No decision models yet"
+        manage: "Manage decision models"
+        back: "Back to decision models"
+        start_from: "Start from"
+        no_preset: "None"
+        display_name: "Name"
+        model: "Model"
+        provider: "Provider"
+        url: "Endpoint URL"
+        api_key: "Credential"
+        vision_enabled: "Supports image input"
+        edit: "Edit"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to delete this decision model? Workflows that use it will stop working."
+        saved: "Decision model saved"
+        test: "Run test"
+        test_success: "The decision model answered the test question (yes: %{percentage}%)."
+        providers:
+          system_one: "System One"
+          open_ai: "OpenAI Decisions"
 
       mcp_servers:
         short_title: "MCP servers"
