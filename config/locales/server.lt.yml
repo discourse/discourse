@@ -1504,6 +1504,7 @@ lt:
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
+    enable_new_reordering_controls: "Naudokite bendrus elementų perrikiavimo valdiklius sąrašo tipo nustatymuose, administravimo sąrašuose, naudotojų katalogo stulpeliuose ir šoninės juostos nuorodose, kad visur būtų taikoma tas pats vilkimo valdiklis, perkėlimo meniu ir valdymas klaviatūra."
     enable_main_outlet_grid_layout_change: "Įdėkite redagavimo skydelį pagrindiniame tinklelyje, kad temos galėtų jį išdėstyti tinklelio stulpelyje, ir naudokite siauresnę šoninę juostą."
     update_whispers_allowed_groups_default: "Atnaujiname numatytąjį „ {{setting:whispers_allowed_groups}} “ nustatymą, kad darbuotojai iš pradžių galėtų siųsti privačias žinutes. Jei anksčiau buvote pakeitę šį nustatymą, jūsų konfigūracija nesikeis, nebent nustatymą atstatytumėte į numatytąjį."
     sidebar_user_navigation: "Perkelia vartotojo puslapių navigaciją — profilį, veiklą, pranešimus, žinutes, kvietimus ir nustatymus — iš horizontalių skirtukų juostų į atskirą šoninį skydelį, kaip tai daroma administratoriaus srityje. Mobiliajame įrenginyje šis skydelis pasiekiamas per svetainės meniu kampe."

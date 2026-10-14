@@ -375,7 +375,6 @@ pl_PL:
       zh_CN:
         name: chiński uproszczony
     share:
-      topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "wpis #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na X"
@@ -601,11 +600,6 @@ pl_PL:
       few: "max z %{count}"
       many: "max z %{count}"
       other: "max z %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znaki"
-      many: "%{count} znaków"
-      other: "%{count} znaków"
     period_chooser:
       aria_label: "Filtruj według okresu"
     related_messages:

@@ -166,7 +166,6 @@ ca:
       en:
         name: Anglès
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
       twitter: "Comparteix a X"
@@ -311,9 +310,6 @@ ca:
     max_of_count:
       one: "màxim de %{count}"
       other: "màxim de %{count}"
-    character_count:
-      one: "%{count} caràcter"
-      other: "%{count} caràcters"
     period_chooser:
       aria_label: "Filtra per període"
     related_messages:

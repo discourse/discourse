@@ -159,7 +159,6 @@ hy:
     date_range_picker:
       apply: "Կիրառել"
     share:
-      topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
       close: "փակել"
       twitter: "Կիսվել X-ում"
@@ -303,9 +302,6 @@ hy:
     max_of_count:
       one: "առավելագույնը %{count}"
       other: "առավելագույնը %{count}"
-    character_count:
-      one: "%{count} սիմվոլ"
-      other: "%{count} սիմվոլ"
     period_chooser:
       aria_label: "Զտել ըստ ժամանակահատվածի"
     related_messages:

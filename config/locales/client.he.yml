@@ -327,7 +327,6 @@ he:
       zh_CN:
         name: סינית פשוטה
     share:
-      topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף ב־X"
@@ -514,10 +513,6 @@ he:
       one: "%{count} לכל היותר"
       two: "%{count} לכל היותר"
       other: "%{count} לכל היותר"
-    character_count:
-      one: "תו אחד"
-      two: "%{count} תווים"
-      other: "%{count} תווים"
     period_chooser:
       aria_label: "סינון לפי תקופה"
     related_messages:

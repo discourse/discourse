@@ -118,6 +118,9 @@ zh_CN:
           message_4: "您的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "您最喜欢的频道："
           dancing_baby_alt: "跳舞的宝宝"
+        voice_usage:
+          minutes:
+            other: "%{count} 分钟"
         invites:
           guest_book_title: 留言簿
           guest_book_subtitle: 您的社区邀请

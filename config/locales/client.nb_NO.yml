@@ -165,7 +165,6 @@ nb_NO:
       be:
         name: Hviterussisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
       facebook: "Del på Facebook"
@@ -310,9 +309,6 @@ nb_NO:
     max_of_count:
       one: "maksimum av %{count}"
       other: "maksimum av %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer etter periode"
     related_messages:

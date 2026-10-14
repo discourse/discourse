@@ -190,7 +190,6 @@ sr:
         last_3_months: "Poslednja 3 meseca"
         last_6_months: "Poslednja 6 meseca"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
       close: "затвори"
       twitter: "Podelite na X"
@@ -350,10 +349,6 @@ sr:
       one: "maksimalno od %{count}"
       few: "maksimalno od %{count}"
       other: "maksimalno od %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     period_chooser:
       aria_label: "Filtriraj po periodu"
     related_messages:

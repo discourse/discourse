@@ -35,3 +35,8 @@ zh_CN:
       此问题已在 **%{title}** 上被提及。那里可能有相关详细信息：
 
       %{post_url}
+  dashboard:
+    problem:
+      github_linkback_access_token_invalid: "GitHub 拒绝了 {{setting:github_linkback_access_token}}。请生成新的令牌并更新设置。"
+      github_badges_repo_not_found: "GitHub 仓库 <code>%{repo}</code> 在 {{setting:github_badges_repos}} 中不存在，或者 {{setting:github_linkback_access_token}} 无法访问它，因此它的贡献不计入徽章。"
+      github_badges_repo_moved: "GitHub 仓库 <code>%{repo}</code> 已迁移至 <code>%{new_name}</code>。请更新 {{setting:github_badges_repos}} 以使用新名称。"

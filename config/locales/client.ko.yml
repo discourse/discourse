@@ -137,7 +137,6 @@ ko:
         last_3_months: "지난 3개월"
         last_6_months: "지난 6개월"
     share:
-      topic_html: '글: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"
       close: "닫기"
       twitter: "X에 공유"
@@ -291,8 +290,6 @@ ko:
     every_six_months: "6개월마다"
     max_of_count:
       other: "최대 %{count}"
-    character_count:
-      other: "%{count}자"
     period_chooser:
       aria_label: "기간별 필터링"
     related_messages:

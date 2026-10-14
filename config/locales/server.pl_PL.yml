@@ -3049,6 +3049,7 @@ pl_PL:
     enable_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     enable_new_checkbox_style: "Włącz nowy styl pól wyboru dla pól wyboru FormKit."
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
+    enable_new_reordering_controls: "Użyj współdzielonych elementów sterujących kolejnością ustawień listy, list administracyjnych, kolumn katalogu użytkowników i łączy paska bocznego, zapewniając każdemu z nich ten sam uchwyt przeciągania, menu przenoszenia i obsługę klawiatury."
     enable_main_outlet_grid_layout_change: "Umieść kompozytora wewnątrz głównej siatki układu, aby motywy mogły go umieścić w kolumnie siatki, i użyj węższego paska bocznego."
     enable_composer_toolbar_customization: "Umożliw członkom wybór, które przyciski będą wyświetlane na pasku narzędzi kompozytora, w preferencjach interfejsu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."

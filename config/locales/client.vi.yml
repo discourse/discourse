@@ -244,7 +244,6 @@ vi:
       zh_CN:
         name: Tiếng Trung giản thể
     share:
-      topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "tút #%{postNumber} bởi @%{username}"
       close: "Đóng"
       twitter: "Chia sẻ trên X"
@@ -408,8 +407,6 @@ vi:
     every_six_months: "mỗi sáu tháng"
     max_of_count:
       other: "tối đa trong %{count}"
-    character_count:
-      other: "%{count} ký tự"
     period_chooser:
       aria_label: "Lọc theo khoảng thời gian"
     related_messages:

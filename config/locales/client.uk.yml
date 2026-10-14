@@ -375,7 +375,6 @@ uk:
       zh_CN:
         name: Китайська спрощена
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "допис #%{postNumber} від @%{username}"
       close: "сховати"
       twitter: "Поділитися на X"
@@ -584,11 +583,6 @@ uk:
       few: "не більше %{count}"
       many: "не більше %{count}"
       other: "не більше %{count}"
-    character_count:
-      one: "%{count} символ"
-      few: "%{count} символи"
-      many: "%{count} символів"
-      other: "%{count} символів"
     period_chooser:
       aria_label: "Фільтрувати за періодом"
     related_messages:

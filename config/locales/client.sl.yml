@@ -181,7 +181,6 @@ sl:
         last_7_days: "Zadnjih 7 dni"
         last_30_days: "Zadnjih 30 dni"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"
       facebook: "Deli na Facebooku"
       email: "Pošlji po e-pošti"
@@ -312,11 +311,6 @@ sl:
       two: "največ od %{count}"
       few: "največ od %{count}"
       other: "največ od %{count}"
-    character_count:
-      one: "%{count} znak"
-      two: "%{count} znaka"
-      few: "%{count} znaki"
-      other: "%{count} znakov"
     period_chooser:
       aria_label: "Filtriraj po obdobju"
     related_messages:

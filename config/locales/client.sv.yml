@@ -170,7 +170,6 @@ sv:
       vi:
         name: Vietnamesiska
     share:
-      topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
       close: "stäng"
       facebook: "Dela på Facebook"
@@ -313,9 +312,6 @@ sv:
     max_of_count:
       one: "max av %{count}"
       other: "max av %{count}"
-    character_count:
-      one: "%{count} tecken"
-      other: "%{count} tecken"
     period_chooser:
       aria_label: "Filtrera efter period"
     related_messages:
