@@ -440,6 +440,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.viewable_by(user, order: nil, preload: true)
     return none if user.blank?
+    return none if !user.staff? && !user.category_group_moderator?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
