@@ -1306,7 +1306,9 @@ RSpec.describe PostAlerter do
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
-      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+      let!(:original_filters) { DiscoursePluginRegistry._raw_push_notification_filters.dup }
+
+      after { DiscoursePluginRegistry._raw_push_notification_filters.replace(original_filters) }
 
       it "sends push notifications when all filters pass" do
         evil_trout.update!(last_seen_at: 10.minutes.ago)
