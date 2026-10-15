@@ -337,7 +337,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: core-system-comparison-${{ matrix.variant }}
+          name: core-system-comparison-${{ matrix.variant }}-${{ github.run_attempt }}
           if-no-files-found: error
           path: |
             tmp/core-system-comparison.json
@@ -393,7 +393,7 @@ jobs:
         uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'system'
         with:
-          name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}-${{ matrix.variant }}
+          name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}-${{ matrix.variant }}-${{ github.run_attempt }}
           if-no-files-found: ignore
           path: |
             tmp/capybara/*.png
