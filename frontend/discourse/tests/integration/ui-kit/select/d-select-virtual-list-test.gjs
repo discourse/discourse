@@ -14,6 +14,10 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
+  EngineProbe,
+  probedEngine,
+} from "discourse/tests/helpers/d-select-hosts";
+import {
   disableVirtualization,
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
@@ -172,10 +176,7 @@ module(
       let engine;
       let releaseReveal;
       let revealRequested = false;
-      const firstPage = CLIENT_ITEMS.map((item, index) => ({
-        ...item,
-        ...(index === 0 ? { onSelect: (value) => (engine = value) } : {}),
-      }));
+      const firstPage = CLIENT_ITEMS;
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
@@ -187,10 +188,10 @@ module(
       };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll("ul[role='listbox'] > [role='option']")[0]);
+      engine = probedEngine();
 
       try {
         engine.revealMore();
@@ -238,10 +239,7 @@ module(
       let engine;
       let releaseReveal;
       let revealRequested = false;
-      const firstPage = CLIENT_ITEMS.map((item, index) => ({
-        ...item,
-        ...(index === 0 ? { onSelect: (value) => (engine = value) } : {}),
-      }));
+      const firstPage = CLIENT_ITEMS;
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
@@ -254,15 +252,15 @@ module(
 
       await render(
         <template>
-          <DSelect @debounce={{false}} @load={{load}}>
+          <EngineProbe @debounce={{false}} @load={{load}}>
             <:loadingItem><span
                 class="custom-loading-row"
               ></span></:loadingItem>
-          </DSelect>
+          </EngineProbe>
         </template>
       );
       await openSelect();
-      await click(findAll("ul[role='listbox'] > [role='option']")[0]);
+      engine = probedEngine();
 
       try {
         engine.revealMore();

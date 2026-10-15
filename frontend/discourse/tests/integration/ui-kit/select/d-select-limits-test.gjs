@@ -335,6 +335,18 @@ module(
       await click(optionWithText("Run action"));
 
       assert.true(onSelect.calledOnce, "the action callback runs at the cap");
+      const [control] = onSelect.firstCall.args;
+      assert.strictEqual(
+        typeof control.revealMore,
+        "undefined",
+        "the row gets the control handle, not the engine"
+      );
+      control.select(ITEMS[2]);
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "selecting through the control is still refused at the cap"
+      );
       assert.strictEqual(
         onChange.callCount,
         0,

@@ -118,6 +118,42 @@ Two behaviours only appear once blocks are used together, and both are easy to g
 
 Worked examples of every point above live on the styleguide's select page, under Row content.
 
+## Extension points
+
+Plugins and themes customize a select through two transformers, both keyed on `@identifiers`:
+
+- `select-content` (value transformer) receives the item list and returns a new one. Its context
+  is `{identifiers, filter, value, kind, instance, control}`.
+- `select-on-change` (behavior transformer) wraps the controlled `@onChange`; call `next()` to
+  proceed. Its context is `{identifiers, value, items, kind, instance}`, where `value` and `items`
+  are the change being made.
+
+Core keys sit at the top level of the context. Data from outside core lives in two namespaces, so
+a key core adds later never collides with one a customization relies on:
+
+- `kind` comes from `@kindContext`, which a recipe sets with its own data, such as its scope.
+  `identifiers` already says which recipe a select is.
+- `instance` comes from `@instanceContext`, which a call site sets, such as the topic being
+  edited. A recipe forwards the one it was given.
+
+Both default to a frozen empty object, so `context.kind.scope` is always safe to read.
+
+`control` is the select's handle: `value`, `filter`, `close()` and `select(item)`. An action row
+receives it as `onSelect(control, item)`. It is the same frozen object for the select's whole
+life, so a transformer can key per-select state on it, for example in a `WeakMap`. Its methods do
+nothing once the select is destroyed, so an async row may call them late.
+
+`select-content` runs while the list renders, so it must be pure: it must not write tracked state
+or call `control`'s methods. Those are for event time, such as a row's `onSelect`. A transformer
+that reads tracked state runs again when that state changes, which is how a customization
+refreshes the list.
+
+### Recipes
+
+A recipe is a specialized `DSelect` for one kind of value, such as categories or tags. Recipes are
+meant to live in `ui-kit/select/recipes/`. A recipe passes `@kindContext` and forwards
+`@instanceContext`, and its `:item` block draws any action rows it offers.
+
 ## Capability parity & gaps
 
 This tracks DSelect against the behaviors it must eventually cover. It is intentionally honest
@@ -144,8 +180,8 @@ by mechanism.
 - Multi-select value-type coercion: each emitted id is normalized to its source item's native type
   (so a URL-typed `"5"` and a freshly-picked `3` never emit as a mixed `["5", 3]`); an unresolved id
   passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).
-- Per-item `disabled`; per-item action rows (`onSelect`, which run instead of selecting and keep
-  the overlay open).
+- Per-item `disabled`; per-item action rows (`onSelect(control, item)`, which run instead of
+  selecting and keep the overlay open unless the row calls `control.close()`).
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
@@ -170,7 +206,8 @@ by mechanism.
   limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
   error body), and the limit state is exposed on the engine and yielded to `:footer`.
 - Value transformers and behavior hooks keyed on `@identifiers` (`select-content` /
-  `select-on-change`), plus richer screen-reader announcements than the legacy family.
+  `select-on-change`, see [Extension points](#extension-points)), plus richer screen-reader
+  announcements than the legacy family.
 - Groups via `@groupBy` (a field name or `(item) => key`). The engine segments the filtered
   options and renders a structural boundary before each segment, and the boundary's presentation
   is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header

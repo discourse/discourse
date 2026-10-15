@@ -11,6 +11,9 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
+/** What a transformer reads as `kind` or `instance` when the select was given none. */
+const EMPTY_CONTEXT: object = Object.freeze({});
+
 /**
  * The engine's live view over its constructor options. Each reactive input is exposed as a
  * getter that reads its thunk on every access (so a runtime change to the wired `@arg`
@@ -22,6 +25,8 @@ export default class SelectOptionsView {
   #readMultiple?: SelectEngineOptions["getMultiple"];
   #multiple?: SelectEngineOptions["multiple"];
   #identifiers: string[];
+  #readKindContext?: SelectEngineOptions["getKindContext"];
+  #readInstanceContext?: SelectEngineOptions["getInstanceContext"];
   #readMinChars?: SelectEngineOptions["getMinChars"];
   #minChars?: SelectEngineOptions["minChars"];
   #readMaximum?: SelectEngineOptions["getMaximum"];
@@ -64,6 +69,8 @@ export default class SelectOptionsView {
     this.#readMultiple = opts.getMultiple;
     this.#multiple = opts.multiple;
     this.#identifiers = makeArray(opts.identifiers) as string[];
+    this.#readKindContext = opts.getKindContext;
+    this.#readInstanceContext = opts.getInstanceContext;
     this.#readMinChars = opts.getMinChars;
     this.#minChars = opts.minChars;
     this.#readMaximum = opts.getMaximum;
@@ -165,6 +172,14 @@ export default class SelectOptionsView {
 
   get identifiers(): string[] {
     return this.#identifiers;
+  }
+
+  get kindContext(): object {
+    return this.#readKindContext?.() ?? EMPTY_CONTEXT;
+  }
+
+  get instanceContext(): object {
+    return this.#readInstanceContext?.() ?? EMPTY_CONTEXT;
   }
 
   get valueField(): string {

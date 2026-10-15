@@ -49,6 +49,13 @@ interface DSelectSignature {
     multiple?: boolean;
     identifiers?: string | string[];
     identifier?: string;
+    /** A recipe's own data, passed to transformers as `context.kind`. */
+    kindContext?: object;
+    /**
+     * The call site's data, passed to transformers as `context.instance`. A recipe forwards the
+     * one it was given.
+     */
+    instanceContext?: object;
     items?: SelectEngineOptions["items"];
     load?: SelectEngineOptions["load"];
     filterBy?: SelectEngineOptions["filterBy"];
@@ -277,7 +284,7 @@ interface SelectFooterState {
  *
  * Consumers pass a data source (`@items` or `@load`) and can override the label-field
  * fallback with `:item` and `:selection` blocks. Everything else — filtering, async state,
- * keyboard, ARIA, positioning, mobile — is handled. Presets wrap this with a domain source
+ * keyboard, ARIA, positioning, mobile — is handled. Recipes wrap this with a domain source
  * and row markup.
  */
 export default class DSelect extends Component<DSelectSignature> {
@@ -298,6 +305,8 @@ export default class DSelect extends Component<DSelectSignature> {
     // args below are passed by value.
     getMultiple: () => this.args.multiple,
     identifiers: this.args.identifiers ?? this.args.identifier,
+    getKindContext: () => this.args.kindContext,
+    getInstanceContext: () => this.args.instanceContext,
     getMinChars: () => this.args.minChars,
     getMaximum: () => this.args.maximum,
     getMinimum: () => this.args.minimum,
@@ -392,6 +401,7 @@ export default class DSelect extends Component<DSelectSignature> {
       onClose: () => this.args.onClose?.(),
       isMultiple: () => this.args.multiple,
     });
+    associateDestroyableChild(this, this.engine);
     associateDestroyableChild(this, this.feedback);
     associateDestroyableChild(this, this.listbox);
     associateDestroyableChild(this, this.announcer);

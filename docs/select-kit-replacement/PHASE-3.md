@@ -26,7 +26,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 ### Wave 2: entity pickers and ui-kit wrappers
 
-- ☐ **User family:** user, email-group-user and group choosers on a shared user-search preset,
+- ☐ **User family:** user, email-group-user and group choosers on a shared user-search recipe,
   with `addUserSearchOption` and `customSearchOptions`; rewrite `DAccessControlGranteeChooser`.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.

@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { isDestroying } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
@@ -41,10 +42,10 @@ export type SelectValue = SelectItemId | readonly SelectItemId[] | null;
 export interface SelectItem {
   /**
    * Action-item hook: when present, activating the item runs this instead of selecting
-   * it. The first argument is the engine on the native path, or the legacy select-kit
-   * facade on the compat-bridge path, so it is deliberately untyped.
+   * it, and receives the select's {@link SelectControl}. A row injected through the
+   * `modifySelectKit` compat bridge gets the legacy select-kit facade instead.
    */
-  onSelect?: (engine: unknown, item: SelectItem) => void;
+  onSelect?: (control: SelectControl, item: SelectItem) => void;
 
   /** When true, the item cannot be activated (guards both pointer and keyboard). */
   disabled?: boolean;
@@ -197,11 +198,28 @@ export interface SelectLegacyContext {
 }
 
 /**
+ * The handle an action row and a `select-content` transformer get for one select. It is the
+ * same frozen object for the select's whole life, so a transformer may key per-select state
+ * on it. Its methods are for event time, such as a row's `onSelect`, never for building
+ * content, and they do nothing once the select is destroyed.
+ */
+export interface SelectControl {
+  /** The held value. */
+  readonly value: SelectValue;
+  /** The current filter text. */
+  readonly filter: string;
+  /** Closes the overlay. */
+  close(): void;
+  /** Selects an item, exactly as picking its row would. */
+  select(item: SelectItem): void;
+}
+
+/**
  * Constructor options for a {@link SelectEngine}.
  *
  * Function-valued options are invoked with an unspecified receiver — read the provided
- * arguments, never `this`. Where a callback needs the engine, it is passed explicitly
- * (see {@link SelectItem#onSelect}).
+ * arguments, never `this`. Where a callback acts on the select, it is handed a
+ * {@link SelectControl} (see {@link SelectItem#onSelect}).
  *
  * The `get*` reader options are the live counterparts of the plain option beside each: when
  * supplied they are read on every access, so a runtime change to the underlying `@arg`
@@ -245,6 +263,18 @@ export interface SelectEngineOptions {
 
   /** Keys plugin `select-content` transformers match on. */
   identifiers?: string | string[];
+
+  /**
+   * Live reader for the recipe's data, passed to transformers as `context.kind`. Identity is
+   * already in `identifiers`; this carries what the recipe knows, such as its scope.
+   */
+  getKindContext?: () => object | undefined;
+
+  /**
+   * Live reader for the call site's data, passed to transformers as `context.instance`, such
+   * as the topic being edited.
+   */
+  getInstanceContext?: () => object | undefined;
 
   /**
    * A static array (or `() => array`) of items — the client-only source. Provide this
@@ -370,7 +400,7 @@ export interface SelectEngineOptions {
 
   /**
    * `(value) => item` producing the fallback for a held id that could not be resolved,
-   * so a preset can name it (e.g. `Topic #123`) instead of showing the bare id. The
+   * so a recipe can name it (e.g. `Topic #123`) instead of showing the bare id. The
    * engine marks the result `__unresolved` regardless of what the builder returns.
    * Defaults to the id itself on `labelField`.
    */
@@ -422,6 +452,36 @@ export interface SelectEngineOptions {
   legacy?: SelectLegacyContext | null;
 }
 
+/** The {@link SelectControl} an engine hands out, frozen and guarded against a destroyed select. */
+class EngineControl implements SelectControl {
+  #engine: SelectEngine;
+
+  constructor(engine: SelectEngine) {
+    this.#engine = engine;
+    Object.freeze(this);
+  }
+
+  get value(): SelectValue {
+    return this.#engine.value;
+  }
+
+  get filter(): string {
+    return this.#engine.filter;
+  }
+
+  close(): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.requestClose();
+    }
+  }
+
+  select(item: SelectItem): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.select(item);
+    }
+  }
+}
+
 /**
  * Headless, DOM-free controller for the ui-kit select family. It is **controlled**:
  * the parent owns the value (`@value`), which the engine reads live via a `getValue`
@@ -447,6 +507,7 @@ export default class SelectEngine {
   #selectionActions: SelectionActions;
   #listComposer: ListComposer;
   #source!: SelectSource;
+  #control: SelectControl;
 
   /**
    * @param opts - The engine's configuration; every field is documented on
@@ -454,13 +515,15 @@ export default class SelectEngine {
    */
   constructor(opts: SelectEngineOptions = {}) {
     this.#options = new SelectOptionsView(opts);
+    this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
       options: this.#options,
       knownRows: () => this.#source.knownRows(),
     });
     this.#selectionActions = new SelectionActions({
       options: this.#options,
-      runActionItem: (item) => item.onSelect!(this, item),
+      runActionItem: (item) => item.onSelect!(this.#control, item),
+      getExtensionContext: () => this.#extensionContext(),
       cacheResolved: (item) => this.#valueResolver.cacheResolved(item),
       resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
       applyLegacyOnChange: (value, payload) =>
@@ -475,6 +538,10 @@ export default class SelectEngine {
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
       applyLegacyContent: (items) => applyLegacySelectKitContent(this, items),
+      getContentContext: () => ({
+        ...this.#extensionContext(),
+        control: this.#control,
+      }),
     });
     this.#source = this.#options.load
       ? new PagedSource({
@@ -594,6 +661,11 @@ export default class SelectEngine {
   /** The transformer identifiers. */
   get identifiers(): string[] {
     return this.#options.identifiers;
+  }
+
+  /** The select's handle for action rows and `select-content` transformers. */
+  get control(): SelectControl {
+    return this.#control;
   }
 
   /**
@@ -947,6 +1019,14 @@ export default class SelectEngine {
   @bind
   requestClose(): void {
     this.#options.requestClose?.();
+  }
+
+  /** The recipe and call-site data every select transformer receives. */
+  #extensionContext(): { kind: object; instance: object } {
+    return {
+      kind: this.#options.kindContext,
+      instance: this.#options.instanceContext,
+    };
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.

@@ -14,18 +14,19 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  EngineProbe,
+  probedEngine,
+} from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const OPTION_SELECTOR = "ul[role='listbox'] > [role='option']";
 
-function buildItems(count, captureEngine) {
+function buildItems(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index + 1,
     name: `Item ${index + 1}`,
-    ...(index === 0 && captureEngine
-      ? { onSelect: (engine) => captureEngine(engine) }
-      : {}),
   }));
 }
 
@@ -99,17 +100,17 @@ module(
       let engine;
       const a11y = getOwner(this).lookup("service:a11y");
       const announce = sinon.spy(a11y, "announce");
-      const allItems = buildItems(500, (value) => (engine = value));
+      const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
         items: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       for (let index = 0; index < 6; index++) {
         engine.revealMore();
@@ -146,17 +147,17 @@ module(
         getOwner(this).lookup("service:a11y"),
         "announce"
       );
-      const allItems = buildItems(500, (value) => (engine = value));
+      const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
         items: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       for (let index = 0; index < 6; index++) {
         engine.revealMore();
@@ -197,7 +198,7 @@ module(
         getOwner(this).lookup("service:a11y"),
         "announce"
       );
-      const allItems = buildItems(500, (value) => (engine = value));
+      const allItems = buildItems(500);
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       // Async even for page one, so a later re-query gives an observable pending→settled
       // transition with the previous rows retained — the only shape in which the reveal
@@ -215,10 +216,10 @@ module(
       };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       engine.revealMore();
       await waitUntil(() => revealRequested);
@@ -362,17 +363,17 @@ module(
     // DOM.
     test("a cursor source sizes its set by what has loaded until it declares completeness", async function (assert) {
       let engine;
-      const allItems = buildItems(5, (value) => (engine = value));
+      const allItems = buildItems(5);
       const load = (_filter, { offset = 0 }) =>
         offset === 0
           ? { items: allItems.slice(0, 3), hasMore: true }
           : { items: allItems.slice(3, 5), hasMore: false };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       assert
         .dom(findAll(OPTION_SELECTOR)[0])
@@ -405,14 +406,14 @@ module(
         getOwner(this).lookup("service:a11y"),
         "announce"
       );
-      const allItems = buildItems(5, (value) => (engine = value));
+      const allItems = buildItems(5);
       const load = (_filter, { offset = 0 }) =>
         offset === 0
           ? { items: allItems.slice(0, 3), hasMore: true }
           : { items: allItems.slice(3, 5), hasMore: false };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 
@@ -427,7 +428,7 @@ module(
           "the seeded row is sized by the rows loaded so far"
         );
 
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       assert.strictEqual(
         announce.withArgs(
@@ -457,7 +458,7 @@ module(
       let revealRequested = false;
       const a11y = getOwner(this).lookup("service:a11y");
       const announce = sinon.spy(a11y, "announce");
-      const allItems = buildItems(500, (value) => (engine = value));
+      const allItems = buildItems(500);
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
@@ -469,10 +470,10 @@ module(
       };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       const initialAnnouncements = announce.callCount;
       engine.revealMore();
@@ -584,10 +585,10 @@ module(
         getOwner(this).lookup("service:a11y"),
         "announce"
       );
-      const items = buildItems(60, (value) => (engine = value));
+      const items = buildItems(60);
       const trueCountMessage = i18n("d_select.results_count", { count: 60 });
 
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(<template><EngineProbe @items={{items}} /></template>);
       await openSelect();
 
       // Opening seeds a cursor, so the set size reaches the reader through the seeded row's own
@@ -603,7 +604,7 @@ module(
           "the seeded row carries the true client total"
         );
 
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
 
       assert.strictEqual(
         announce.withArgs(trueCountMessage, "polite").callCount,
@@ -625,7 +626,7 @@ module(
       let engine;
       let releaseReveal;
       let revealRequested = false;
-      const allItems = buildItems(500, (value) => (engine = value));
+      const allItems = buildItems(500);
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
@@ -636,10 +637,10 @@ module(
       };
 
       await render(
-        <template><DSelect @debounce={{false}} @load={{load}} /></template>
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
+      engine = probedEngine();
       assert
         .dom("ul[role='listbox'] .d-combobox__skeleton")
         .doesNotExist("a settled list shows no placeholder rows");
@@ -954,7 +955,7 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
     const signals = [];
     const scopes = [];
     const state = new LoaderState();
-    const allItems = buildItems(100, (value) => (engine = value));
+    const allItems = buildItems(100);
     const load = (_filter, { offset = 0, signal }) => {
       scopes.push(state.scope);
       signals.push(signal);
@@ -967,10 +968,10 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
     };
 
     await render(
-      <template><DSelect @debounce={{false}} @load={{load}} /></template>
+      <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
     );
     await openSelect();
-    await click(findAll(OPTION_SELECTOR)[0]);
+    engine = probedEngine();
 
     engine.revealMore();
     await rerender();
@@ -993,15 +994,15 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
   test("a reveal fetches without waiting for the filter debounce", async function (assert) {
     let engine;
     const offsets = [];
-    const allItems = buildItems(100, (value) => (engine = value));
+    const allItems = buildItems(100);
     const load = (_filter, { offset = 0 }) => {
       offsets.push(offset);
       return Promise.resolve(pageOf(allItems, offset));
     };
 
-    await render(<template><DSelect @load={{load}} /></template>);
+    await render(<template><EngineProbe @load={{load}} /></template>);
     await openSelect();
-    await click(findAll(OPTION_SELECTOR)[0]);
+    engine = probedEngine();
 
     engine.revealMore();
     await rerender();
@@ -1013,15 +1014,15 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
   test("a reload fetches without waiting for the filter debounce", async function (assert) {
     let engine;
     const offsets = [];
-    const allItems = buildItems(100, (value) => (engine = value));
+    const allItems = buildItems(100);
     const load = (_filter, { offset = 0 }) => {
       offsets.push(offset);
       return Promise.resolve(pageOf(allItems, offset));
     };
 
-    await render(<template><DSelect @load={{load}} /></template>);
+    await render(<template><EngineProbe @load={{load}} /></template>);
     await openSelect();
-    await click(findAll(OPTION_SELECTOR)[0]);
+    engine = probedEngine();
 
     engine.reload();
     await rerender();

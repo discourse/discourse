@@ -98,3 +98,21 @@ export function optionWithText(text) {
     option.textContent.includes(text)
   );
 }
+
+let probedSelectEngine;
+
+/**
+ * A `DSelect` that records its engine, for tests that drive engine internals (`revealMore`,
+ * `reload`) which no consumer-facing surface exposes.
+ */
+export class EngineProbe extends DSelect {
+  constructor() {
+    super(...arguments);
+    probedSelectEngine = this.engine;
+  }
+}
+
+/** The engine of the most recently constructed {@link EngineProbe}. */
+export function probedEngine() {
+  return probedSelectEngine;
+}

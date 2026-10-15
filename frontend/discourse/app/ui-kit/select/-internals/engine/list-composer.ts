@@ -17,6 +17,7 @@ export default class ListComposer {
   #isSelected: (item: SelectItem) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
+  #getContentContext: () => Record<string, unknown>;
   #applyLegacyContent: (items: SelectItem[]) => SelectItem[];
 
   constructor(opts: {
@@ -27,6 +28,7 @@ export default class ListComposer {
     isSelected: (item: SelectItem) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
+    getContentContext: () => Record<string, unknown>;
     applyLegacyContent: (items: SelectItem[]) => SelectItem[];
   }) {
     this.#options = opts.options;
@@ -36,6 +38,7 @@ export default class ListComposer {
     this.#isSelected = opts.isSelected;
     this.#getAtMaximum = opts.getAtMaximum;
     this.#getTotal = opts.getTotal;
+    this.#getContentContext = opts.getContentContext;
     this.#applyLegacyContent = opts.applyLegacyContent;
   }
 
@@ -54,6 +57,7 @@ export default class ListComposer {
       identifiers: this.#options.identifiers,
       filter: this.#getFilter(),
       value: this.#getValue(),
+      ...this.#getContentContext(),
     });
 
     // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in

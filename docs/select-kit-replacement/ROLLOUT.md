@@ -24,6 +24,8 @@ Paths are relative to the repository root.
    so third-party invocations and subclasses keep working.
 8. **Waves run least-ready first**, while `DSelect` has no production consumer and an API change
    is cheapest.
+9. **Specialized `DSelect` components are called recipes**, not presets. Earlier documents use the
+   old name.
 
 ## Blast radius
 
@@ -183,7 +185,7 @@ customization ports are done.
   validation (`frontend/discourse/app/services/composer.js:688`), so the alpha cohort includes a
   non-staff group, and member and anonymous paths are covered before exposure.
 - **Wave 2, entity pickers and ui-kit wrappers.** The user, email-group-user and group choosers (a
-  user search preset, `addUserSearchOption`, `customSearchOptions`, a rewritten
+  user search recipe, `addUserSearchOption`, `customSearchOptions`, a rewritten
   `DAccessControlGranteeChooser`), topic, form template, timezone, flair, list setting, tag group,
   color, font and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its

@@ -16,6 +16,7 @@ export default class SelectionActions {
     value: SelectValue,
     payload: SelectItem | SelectItem[] | null
   ) => void;
+  #getExtensionContext: () => Record<string, unknown>;
 
   constructor(opts: {
     options: SelectOptionsView;
@@ -26,12 +27,14 @@ export default class SelectionActions {
       value: SelectValue,
       payload: SelectItem | SelectItem[] | null
     ) => void;
+    getExtensionContext: () => Record<string, unknown>;
   }) {
     this.#options = opts.options;
     this.#runActionItem = opts.runActionItem;
     this.#cacheResolved = opts.cacheResolved;
     this.#resolveOneSync = opts.resolveOneSync;
     this.#applyLegacyOnChange = opts.applyLegacyOnChange;
+    this.#getExtensionContext = opts.getExtensionContext;
   }
 
   /**
@@ -264,6 +267,7 @@ export default class SelectionActions {
         identifiers: this.#options.identifiers,
         value: nextValue,
         items: payload,
+        ...this.#getExtensionContext(),
       }
     );
 

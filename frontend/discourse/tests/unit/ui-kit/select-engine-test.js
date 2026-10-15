@@ -1,3 +1,4 @@
+import { destroy } from "@ember/destroyable";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -145,11 +146,39 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
   test("activate runs an item's onSelect instead of selecting it", function (assert) {
     let ran = 0;
+    let received;
     const { engine, changes } = controlled();
-    engine.activate({ id: "act", onSelect: () => ran++ });
+    engine.activate({
+      id: "act",
+      onSelect: (control) => {
+        ran++;
+        received = control;
+      },
+    });
 
     assert.strictEqual(ran, 1, "the action callback runs");
     assert.strictEqual(changes.length, 0, "an action item never emits a value");
+    assert.strictEqual(
+      received,
+      engine.control,
+      "the callback gets the control handle"
+    );
+  });
+
+  test("the control does nothing once the engine is destroyed", function (assert) {
+    let closes = 0;
+    const { engine, changes } = controlled({
+      items: [{ id: 1, name: "One" }],
+      requestClose: () => closes++,
+    });
+    const control = engine.control;
+
+    destroy(engine);
+    control.select({ id: 1, name: "One" });
+    control.close();
+
+    assert.strictEqual(changes.length, 0, "a late select emits nothing");
+    assert.strictEqual(closes, 0, "a late close requests nothing");
   });
 
   // A consumer that turns `@multiple` off can leave an array in `@value`. Single mode reads it

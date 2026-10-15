@@ -207,6 +207,11 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       "function",
       "the legacy selectKit facade is passed instead"
     );
+    assert.strictEqual(
+      typeof (receivedFirstArg as { set?: unknown } | undefined)?.set,
+      "function",
+      "it is the facade, which only the legacy surface has a setter on"
+    );
   });
 
   test("the facade exposes a resolvable owner and a live element", function (assert) {

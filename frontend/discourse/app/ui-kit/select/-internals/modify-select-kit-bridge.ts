@@ -164,10 +164,13 @@ class LegacySelectKitComponent extends EmberObject {
   }
 }
 
-// Wraps the `onSelect` of any row the bridge injected so the engine's
-// `activate(item)` — which calls `item.onSelect(engine, item)` — instead invokes the
-// legacy callback with the `selectKit` facade as its first argument, matching the old
-// `item.onSelect(selectKit, item)` contract.
+/**
+ * Wraps the `onSelect` of any row the bridge injected so the engine's
+ * `activate(item)` — which calls `item.onSelect(control, item)` — instead invokes the
+ * legacy callback with the `selectKit` facade as its first argument, matching the old
+ * `item.onSelect(selectKit, item)` contract. The facade reads `select`'s first argument as
+ * an id, not an item.
+ */
 function adaptInjectedRows(
   inputItems: SelectItem[],
   resultItems: SelectItem[],
@@ -181,7 +184,7 @@ function adaptInjectedRows(
     const legacyOnSelect = row.onSelect;
     return {
       ...row,
-      onSelect: (_engine: unknown, item: SelectItem) =>
+      onSelect: (_control: unknown, item: SelectItem) =>
         legacyOnSelect(facade.selectKit, item),
     };
   });
