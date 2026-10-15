@@ -20,7 +20,14 @@ module DiscourseAi
               has_images:,
               streaming: false,
             )
-          super.merge(RequestHeaders.for(context))
+          headers = decision_model.custom_headers_for_request
+          [super, RequestHeaders.for(context)].each do |authoritative_headers|
+            authoritative_headers.each do |name, value|
+              headers.delete_if { |existing_name, _| existing_name.casecmp?(name) }
+              headers[name] = value
+            end
+          end
+          headers
         end
 
         def payload(state:, questions:, images:)
@@ -29,7 +36,28 @@ module DiscourseAi
             state:,
             questions: questions.to_h { |question| [question.name, wire_question(question)] },
           }
-          payload[:images] = images if images.present?
+          if images.present?
+            payload[:assets] = images.to_h do |image|
+              match = image.match(%r{\Adata:image/(png|jpeg|jpg);base64,(.+)\z})
+              raise InvalidRequest, "Images must be PNG or JPEG base64 data URLs" if !match
+
+              format = match[1] == "jpg" ? "jpeg" : match[1]
+              [SecureRandom.uuid, { type: "image", format:, data_base64: match[2] }]
+            end
+            # Every asset must be referenced in the state, without changing the original text or structure.
+            payload[:state] = { text: state, images: payload[:assets].keys }
+          end
+          payload
+        end
+
+        def audit_payload(payload)
+          payload = payload.deep_dup
+          payload[:assets]&.each_value do |asset|
+            asset[:data_base64] = redacted_image(
+              asset[:data_base64],
+              mime_type: "image/#{asset[:format]}",
+            )
+          end
           payload
         end
 

@@ -4113,7 +4113,8 @@ CREATE TABLE public.decision_models (
     ai_secret_id bigint,
     vision_enabled boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    custom_headers jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -25912,6 +25913,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261014224810'),
 ('20261014145458'),
 ('20261013222431'),
 ('20261013183208'),

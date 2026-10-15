@@ -1394,6 +1394,14 @@ en:
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     decision_models:
+      custom_headers:
+        invalid_format: "must be an array of header name and value pairs"
+        too_many: "cannot contain more than %{count} entries"
+        unsupported_provider: "are only supported for System One models"
+        invalid_name: "must have valid HTTP names of at most %{name_length} characters"
+        invalid_value: "must have printable ASCII values of at most %{value_length} characters"
+        reserved_name: "cannot override reserved transport or authentication headers"
+        duplicate_name: "must have unique names (case-insensitive)"
       secret_not_found: "The selected credential does not exist"
       invalid_url: "must be an http:// or https:// URL, or an srv:// URL without a port"
       test_refused: "The decision model declined to answer the test question."

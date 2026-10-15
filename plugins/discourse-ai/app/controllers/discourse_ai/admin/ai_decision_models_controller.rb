@@ -5,9 +5,9 @@ module DiscourseAi
     class AiDecisionModelsController < ::Admin::AdminController
       requires_plugin PLUGIN_NAME
 
-      # A 16x16 solid red PNG: models that claim image input must recognise it.
+      # The red square meets minimum image-size requirements; tiny placeholders may be rejected.
       TEST_IMAGE =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA1BMVEX/AAAZ4gk3AAAADElEQVQI12NgIA0AAAAwAAHHqoWOAAAAAElFTkSuQmCC"
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAEYCAMAAACwUBm+AAAAA1BMVEX/AAAZ4gk3AAAAYklEQVR42u3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwaM2cAAalku0EAAAAASUVORK5CYII="
 
       def index
         decision_models = DecisionModel.order(:display_name)
@@ -17,11 +17,13 @@ module DiscourseAi
                    ActiveModel::ArraySerializer.new(
                      decision_models,
                      each_serializer: AiDecisionModelSerializer,
+                     scope: guardian,
                      root: false,
                    ).as_json,
                  meta: {
                    providers: DecisionModel::PROVIDERS,
                    presets: DecisionModel.presets,
+                   custom_header_limits: DecisionModel::CUSTOM_HEADER_LIMITS,
                    ai_secrets: AiSecret.order(:name).select(:id, :name).as_json(only: %i[id name]),
                  },
                }
@@ -32,7 +34,7 @@ module DiscourseAi
 
       def edit
         decision_model = DecisionModel.find(params[:id])
-        render json: AiDecisionModelSerializer.new(decision_model)
+        render json: AiDecisionModelSerializer.new(decision_model, scope: guardian)
       end
 
       def create
@@ -45,7 +47,8 @@ module DiscourseAi
             logger_fields,
             { decision_model_id: decision_model.id, subject: decision_model.display_name },
           )
-          render json: AiDecisionModelSerializer.new(decision_model), status: :created
+          render json: AiDecisionModelSerializer.new(decision_model, scope: guardian),
+                 status: :created
         else
           render_json_error decision_model
         end
@@ -63,7 +66,7 @@ module DiscourseAi
             logger_fields,
             { decision_model_id: decision_model.id, subject: decision_model.display_name },
           )
-          render json: AiDecisionModelSerializer.new(decision_model)
+          render json: AiDecisionModelSerializer.new(decision_model, scope: guardian)
         else
           render_json_error decision_model
         end
@@ -78,6 +81,8 @@ module DiscourseAi
             .symbolize_keys
             .slice(*logger_fields.keys)
             .merge(decision_model_id: decision_model.id, subject: decision_model.display_name)
+
+        details[:custom_headers] = "[FILTERED]" if decision_model.custom_headers.present?
 
         if decision_model.destroy
           DiscourseAi::Utils::AiStaffActionLogger.new(current_user).log_deletion(
@@ -149,18 +154,20 @@ module DiscourseAi
       private
 
       def decision_model_params
-        params.require(:ai_decision_model).permit(
-          :display_name,
-          :name,
-          :provider,
-          :url,
-          :ai_secret_id,
-          :vision_enabled,
+        input = params.require(:ai_decision_model)
+        permitted =
+          input.permit(:display_name, :name, :provider, :url, :ai_secret_id, :vision_enabled)
+        # Preserve malformed JSON shapes so validation rejects them rather than silently dropping them.
+        permitted[:custom_headers] = input.to_unsafe_h[:custom_headers] if input.key?(
+          :custom_headers,
         )
+        permitted
       end
 
       def logger_fields
-        { display_name: {}, name: {}, provider: {}, url: {}, ai_secret_id: {}, vision_enabled: {} }
+        %i[display_name name provider url ai_secret_id vision_enabled]
+          .index_with { {} }
+          .merge(custom_headers: { type: :sensitive })
       end
     end
   end

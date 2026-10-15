@@ -305,6 +305,49 @@ RSpec.describe DiscourseAi::Decisions::Client do
       )
     end
 
+    it "redacts echoed custom-header values from provider errors, network errors and audit logs" do
+      header_value = 'private"header\\value'
+      decision_model.update!(custom_headers: [{ name: "X-Custom-Key", value: header_value }])
+      request =
+        stub_request(:post, decision_model.url)
+          .to_return(status: 401, body: { error: { message: "Rejected #{header_value}" } }.to_json)
+          .then
+          .to_raise(IOError.new("Echoed #{header_value}"))
+
+      2.times do
+        expect {
+          described_class.new(decision_model, max_attempts: 1).decide(
+            "Hello",
+            questions:,
+            feature_name: "test",
+          )
+        }.to raise_error(DiscourseAi::Decisions::RequestFailed) do |error|
+          expect(error.message).to include("[redacted]")
+          expect(error.message).not_to include(header_value)
+        end
+      end
+
+      expect(request).to have_been_requested.twice
+      log = AiApiAuditLog.find_by!(response_status: 401)
+      expect(JSON.parse(log.raw_response_payload).dig("error", "message")).to eq(
+        "Rejected [redacted]",
+      )
+    end
+
+    it "redacts short custom-header echoes in stored successful responses without changing answers" do
+      header_value = "xy"
+      decision_model.update!(custom_headers: [{ name: "X-Custom-Key", value: header_value }])
+      response_body[:answers][:urgent] = { type: "refusal", reason: header_value }
+      stub_request(:post, decision_model.url).to_return(body: response_body.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "test")
+
+      expect(result["urgent"].reason).to eq(header_value)
+      expect(AiApiAuditLog.find(result.audit_log_id).raw_response_payload).not_to include(
+        header_value,
+      )
+    end
+
     it "redacts only the stored response, never the answers" do
       key_questions = [
         { name: "team", type: "choice", instructions: "Who?", choices: %w[key-account other] },
@@ -355,6 +398,50 @@ RSpec.describe DiscourseAi::Decisions::Client do
       )
     end
 
+    it "preserves Cloudflare flags and numeric probabilities in response audits" do
+      decision_model.update!(
+        custom_headers: [
+          { name: "X-Images", value: "true" },
+          { name: "X-Other-Flag", value: "false" },
+          { name: "X-Count", value: "1" },
+        ],
+      )
+      envelope = { result: response_body, success: true, errors: [], messages: [] }
+      stub_request(:post, decision_model.url).to_return(body: envelope.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "test")
+
+      expect(result["urgent"].probability).to eq(0.95)
+      expect(JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_response_payload)).to eq(
+        JSON.parse(envelope.to_json),
+      )
+    end
+
+    it "keeps words containing flag values intact in HTTP and network diagnostics" do
+      decision_model.update!(custom_headers: [{ name: "X-Images", value: "true" }])
+      message = "image configuration is untrue"
+      request =
+        stub_request(:post, decision_model.url)
+          .to_return(status: 422, body: { error: message }.to_json)
+          .then
+          .to_raise(IOError.new(message))
+
+      [
+        "Request failed with status 422: #{message}",
+        "Request failed: #{message}",
+      ].each do |expected|
+        expect { client.decide("Hello", questions:, feature_name: "test") }.to raise_error(
+          DiscourseAi::Decisions::RequestFailed,
+          expected,
+        )
+      end
+
+      expect(request).to have_been_requested.twice
+      expect(JSON.parse(AiApiAuditLog.find_by!(response_status: 422).raw_response_payload)).to eq(
+        "error" => message,
+      )
+    end
+
     it "keeps valid answers when usage counts are unusable" do
       body =
         response_body.deep_dup.tap do |payload|
@@ -368,18 +455,102 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(AiApiAuditLog.last).to have_attributes(request_tokens: 296, response_tokens: nil)
     end
 
-    it "replaces only image inputs with placeholders in the audit payload, without truncating state" do
+    it "sends PNG and JPEG assets with stable references and redacts only their binary audit data" do
       decision_model.update!(vision_enabled: true)
       image = "data:image/png;base64,AAAA"
+      jpeg = "data:image/jpeg;base64,BBBB"
       state = image + "x" * 20_001
+      sent = nil
       request =
         stub_request(:post, decision_model.url)
-          .with { |req| JSON.parse(req.body).values_at("state", "images") == [state, [image]] }
+          .with do |req|
+            sent = JSON.parse(req.body)
+            references = sent.dig("state", "images")
+            sent.dig("state", "text") == state && references.is_a?(Array) && references.size == 2 &&
+              references.uniq.size == 2 &&
+              references.all? { |reference| reference.match?(/\A[0-9a-f-]{36}\z/) } &&
+              sent["assets"].keys == references && !sent.key?("images") &&
+              sent["assets"].values ==
+                [
+                  { "type" => "image", "format" => "png", "data_base64" => "AAAA" },
+                  { "type" => "image", "format" => "jpeg", "data_base64" => "BBBB" },
+                ]
+          end
           .to_return(body: response_body.to_json)
-      result = client.decide(state, questions:, images: [image], feature_name: "test")
+
+      result = client.decide(state, questions:, images: [image, jpeg], feature_name: "test")
+
       payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
-      expect(payload).to include("state" => state, "images" => ["[redacted image/png, 3 Bytes]"])
+      expect(payload["state"]).to eq(sent["state"])
+      expect(payload["assets"].keys).to eq(sent["assets"].keys)
+      expect(payload["assets"].values).to eq(
+        [
+          {
+            "type" => "image",
+            "format" => "png",
+            "data_base64" => "[redacted image/png, 3 Bytes]",
+          },
+          {
+            "type" => "image",
+            "format" => "jpeg",
+            "data_base64" => "[redacted image/jpeg, 3 Bytes]",
+          },
+        ],
+      )
+      expect(payload["questions"]).to eq(sent["questions"])
+      expect(payload).not_to have_key("images")
       expect(request).to have_been_requested.once
+    end
+
+    it "serializes Time values in structured state consistently on the wire and in audits" do
+      state = { posts: [{ text: "Hello", created_at: Time.utc(2026, 10, 14, 12, 34, 56) }] }
+      sent = nil
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            sent = JSON.parse(req.body)
+            sent["state"] == JSON.parse(state.to_json)
+          end
+          .to_return(body: response_body.to_json)
+
+      result = client.decide(state, questions:, feature_name: "test")
+
+      expect(sent.dig("state", "posts", 0, "created_at")).to eq("2026-10-14T12:34:56.000Z")
+      expect(JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)).to eq(sent)
+      expect(request).to have_been_requested.once
+    end
+
+    it "preserves structured state and normalizes the JPEG alias for image assets" do
+      decision_model.update!(vision_enabled: true)
+      state = { posts: [{ text: "Hello" }] }
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            payload = JSON.parse(req.body)
+            reference = payload.dig("state", "images", 0)
+            payload.dig("state", "text") == state.deep_stringify_keys &&
+              payload["assets"] ==
+                { reference => { "type" => "image", "format" => "jpeg", "data_base64" => "AAAA" } }
+          end
+          .to_return(body: response_body.to_json)
+
+      client.decide(state, questions:, images: ["data:image/jpg;base64,AAAA"], feature_name: "test")
+
+      expect(request).to have_been_requested.once
+    end
+
+    it "rejects unsupported image formats before transport" do
+      decision_model.update!(vision_enabled: true)
+
+      expect {
+        client.decide(
+          "Hello",
+          questions:,
+          images: ["data:image/webp;base64,AAAA"],
+          feature_name: "test",
+        )
+      }.to raise_error(DiscourseAi::Decisions::InvalidRequest, /PNG or JPEG/)
+      expect(AiApiAuditLog.count).to eq(0)
     end
 
     it "resolves SRV endpoints and preserves the path" do
@@ -551,6 +722,33 @@ RSpec.describe DiscourseAi::Decisions::Client do
       ).to match(%r{\A\[redacted image/\w+, [\d.]+ \w+\]\z})
     end
 
+    it "redacts only OpenAI image content and preserves matching image text in the state" do
+      image = "data:image/png;base64,AAAA"
+      state = image + "x" * 20_001
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            payload = JSON.parse(req.body)
+            payload.dig("input", 0, "content") ==
+              [
+                { "type" => "input_text", "text" => state },
+                { "type" => "input_image", "image_url" => image },
+              ] && !payload.key?("assets")
+          end
+          .to_return(body: open_ai_body.to_json)
+
+      result = client.decide(state, questions:, images: [image], feature_name: "test")
+
+      payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
+      expect(payload.dig("input", 0, "content")).to eq(
+        [
+          { "type" => "input_text", "text" => state },
+          { "type" => "input_image", "image_url" => "[redacted image/png, 3 Bytes]" },
+        ],
+      )
+      expect(request).to have_been_requested.once
+    end
+
     it "returns refusal text" do
       open_ai_body[:answers][0] = { name: "urgent", type: "refusal", refusal: "Cannot answer" }
       stub_request(:post, decision_model.url).to_return(body: open_ai_body.to_json)
@@ -587,6 +785,75 @@ RSpec.describe DiscourseAi::Decisions::Client do
   describe "request header providers" do
     after { DiscourseAi::RequestHeaders.reset! }
 
+    it "sends persisted custom headers with System One requests without including them in audit payloads" do
+      headers = [{ "name" => "X-Custom-Key", "value" => "sensitive-header-value" }]
+      decision_model.update!(custom_headers: headers)
+      decision_model.reload
+      request =
+        stub_request(:post, decision_model.url).with(
+          headers: {
+            "X-Custom-Key" => headers.first["value"],
+            "Content-Type" => "application/json",
+            "Authorization" => "Bearer #{decision_model.api_key}",
+          },
+        ).to_return(body: response_body.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(request).to have_been_requested.once
+      expect(AiApiAuditLog.find(result.audit_log_id).raw_request_payload).not_to include(
+        headers.first["value"],
+      )
+    end
+
+    it "keeps registered routing headers authoritative across case variants" do
+      decision_model.update!(
+        custom_headers: [
+          { name: "x-test-feature", value: "custom override" },
+          { name: "X-Unrelated", value: "custom value" },
+        ],
+      )
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Feature" => "registered" } }
+      request =
+        stub_request(:post, decision_model.url).with(
+          headers: {
+            "X-Test-Feature" => "registered",
+            "X-Unrelated" => "custom value",
+          },
+        ).to_return(body: response_body.to_json)
+
+      client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(request).to have_been_requested.once
+    end
+
+    it "ignores unsafe custom headers stored without validation" do
+      decision_model.update_columns(
+        custom_headers: [
+          { name: "aUtHoRiZaTiOn", value: "attacker" },
+          { name: "content-TYPE", value: "text/plain" },
+          { name: "Host", value: "attacker.example.com" },
+          { name: "X-Unsafe", value: "bad\r\nInjected: value" },
+        ],
+      )
+      request =
+        stub_request(:post, decision_model.url)
+          .with(
+            headers: {
+              "Authorization" => "Bearer #{decision_model.api_key}",
+              "Content-Type" => "application/json",
+            },
+          )
+          .with do |req|
+            !req.headers.key?("X-Unsafe") && req.headers["Host"] != "attacker.example.com"
+          end
+          .to_return(body: response_body.to_json)
+
+      client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(request).to have_been_requested.once
+    end
+
     it "sends registered routing headers with System One decisions" do
       captured = nil
       DiscourseAi::RequestHeaders.register do |context|
@@ -613,12 +880,13 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(captured).to have_attributes(model: decision_model, has_images: true, streaming: false)
     end
 
-    it "does not send them to OpenAI" do
+    it "does not send registered or validation-bypassing custom headers to OpenAI" do
       DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Feature" => "x" } }
       decision_model.update!(provider: "open_ai", url: "https://api.openai.com/v1/decisions")
+      decision_model.update_columns(custom_headers: [{ name: "X-Custom-Key", value: "secret" }])
       request =
         stub_request(:post, decision_model.url)
-          .with { |req| !req.headers.key?("X-Test-Feature") }
+          .with { |req| (req.headers.keys & %w[X-Test-Feature X-Custom-Key]).empty? }
           .to_return(status: 400, body: "{}")
 
       expect { client.decide("Hello", questions:, feature_name: "workflow") }.to raise_error(

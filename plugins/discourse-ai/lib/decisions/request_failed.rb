@@ -18,17 +18,60 @@ module DiscourseAi
         @retryable
       end
 
-      def self.redact(text, api_key)
-        text = text.to_s
-        text = text.gsub(api_key, "[redacted]") if api_key.present?
-        text.gsub(/Bearer\s+[^\s"',;]+/i, "Bearer [redacted]").gsub(
-          /\b(?:sk|key)-[A-Za-z0-9_-]+/i,
-          "[redacted]",
-        )
+      def self.redact(text, api_key, header_values: [])
+        patterns = []
+        variants =
+          [api_key, *header_values].reject(&:blank?)
+            .uniq
+            .flat_map do |value|
+              [value, value.to_json[1...-1]].uniq.map { |variant| [variant, value] }
+            end
+            .sort_by { |variant, _value| -variant.length }
+        variants.each do |variant, value|
+          pattern = Regexp.escape(variant)
+          # Short configuration values must not redact parts of ordinary words or identifiers.
+          if value != api_key && value.length < 8
+            pattern =
+              "(?<![[:alnum:]_-])(?<![[:alnum:]_]\\.)#{pattern}(?![[:alnum:]_-]|\\.[[:alnum:]_])"
+          end
+          patterns << Regexp.new(pattern)
+        end
+        patterns << /(?<bearer>Bearer\s+)[^\s"',;]+/i
+        patterns << /\b(?:sk|key)-[A-Za-z0-9_-]+/i
+
+        # One pass prevents overlapping values from redacting the replacement itself.
+        text
+          .to_s
+          .gsub(Regexp.union(patterns)) do
+            Regexp.last_match[:bearer] ? "Bearer [redacted]" : "[redacted]"
+          end
       end
 
-      def self.sanitize(message, api_key)
-        redact(message, api_key)[0, 500]
+      def self.redact_response(text, api_key, header_values: [])
+        parsed = JSON.parse(text.to_s)
+        redact_json =
+          lambda do |value|
+            case value
+            when Hash
+              value.to_h do |key, child|
+                # Header configuration values must not change response field names.
+                [redact(key, api_key), redact_json.call(child)]
+              end
+            when Array
+              value.map { |child| redact_json.call(child) }
+            when String
+              redact(value, api_key, header_values:)
+            else
+              value
+            end
+          end
+        redact_json.call(parsed).to_json
+      rescue JSON::ParserError
+        redact(text, api_key, header_values:)
+      end
+
+      def self.sanitize(message, api_key, header_values: [])
+        redact(message, api_key, header_values:)[0, 500]
       end
 
       def self.from_response(model, response)
@@ -46,7 +89,12 @@ module DiscourseAi
             detail = detail.is_a?(Hash) ? detail["message"] || detail.to_json : detail
             detail&.to_s&.gsub("AiError: ", "")
           end
-        message = sanitize(message || response.message, model.api_key)
+        message =
+          sanitize(
+            message || response.message,
+            model.api_key,
+            header_values: model.custom_headers_for_request.values,
+          )
         delay = Float(response["Retry-After"], exception: false)
         delay = nil if delay && !delay.finite?
         new(

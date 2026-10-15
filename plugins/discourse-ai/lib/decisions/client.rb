@@ -18,19 +18,15 @@ module DiscourseAi
         end
 
         uri = URI(@decision_model.endpoint_url)
-        body = @endpoint.payload(state:, questions:, images:).to_json
+        payload = @endpoint.payload(state:, questions:, images:)
+        body = payload.to_json
         log =
           AiApiAuditLog.new(
             provider_id: @endpoint.provider_id,
             user_id: user&.id,
             feature_name:,
             language_model: @decision_model.name,
-            raw_request_payload:
-              @endpoint.payload(
-                state:,
-                questions:,
-                images: images.map { |image| redacted_image(image) },
-              ).to_json,
+            raw_request_payload: @endpoint.audit_payload(payload).to_json,
           )
         started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         begin
@@ -89,14 +85,6 @@ module DiscourseAi
         end
       end
 
-      # Base64 images would bloat the audit log, so it only records what was sent.
-      def redacted_image(image)
-        header, data = image.split(",", 2)
-        mime = header.delete_prefix("data:").delete_suffix(";base64")
-        size = ActiveSupport::NumberHelper.number_to_human_size(data.length * 3 / 4)
-        "[redacted #{mime}, #{size}]"
-      end
-
       def retryable_network_error?(exception)
         return false if exception.is_a?(FinalDestination::SSRFError)
         # FinalDestination raises a bare Timeout::Error when DNS resolution is slow.
@@ -110,6 +98,8 @@ module DiscourseAi
       # @return [String] the body of the successful response; the audit log only keeps a
       #   redacted copy
       def post(uri, headers, body, log)
+        api_key = @decision_model.api_key
+        header_values = @decision_model.custom_headers_for_request.values
         attempts = []
         loop do
           begin
@@ -125,13 +115,14 @@ module DiscourseAi
                 write_timeout: @timeout,
               ) { |http| http.request(request) }
             log.response_status = response.code.to_i
-            log.raw_response_payload = RequestFailed.redact(response.body, @decision_model.api_key)
+            log.raw_response_payload =
+              RequestFailed.redact_response(response.body, api_key, header_values:)
             error = RequestFailed.from_response(@decision_model, response) if !response.is_a?(
               Net::HTTPSuccess,
             )
           rescue StandardError => exception
             log.response_status = 0
-            message = RequestFailed.sanitize(exception.message, @decision_model.api_key)
+            message = RequestFailed.sanitize(exception.message, api_key, header_values:)
             error =
               RequestFailed.new(
                 "Request failed: #{message}",

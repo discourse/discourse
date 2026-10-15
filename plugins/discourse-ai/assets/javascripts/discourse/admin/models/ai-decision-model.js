@@ -9,7 +9,8 @@ export default class AiDecisionModel extends RestModel {
       "provider",
       "url",
       "ai_secret_id",
-      "vision_enabled"
+      "vision_enabled",
+      "custom_headers"
     );
   }
 
@@ -20,7 +21,8 @@ export default class AiDecisionModel extends RestModel {
   testConfig(config) {
     return ajax("/admin/plugins/discourse-ai/ai-decision-models/test.json", {
       type: "POST",
-      data: { ai_decision_model: config },
+      contentType: "application/json",
+      data: JSON.stringify({ ai_decision_model: config }),
     });
   }
 }
