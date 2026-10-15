@@ -16,7 +16,6 @@ import sinon from "sinon";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -24,7 +23,7 @@ import {
   MultiLimitsHost,
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
-import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -794,11 +793,7 @@ module(
   "Integration | ui-kit | select | DSelect (multi limit compat bridge)",
   function (hooks) {
     setupRenderingTest(hooks);
-
-    hooks.afterEach(function () {
-      clearCallbacks();
-      resetLegacyBridge();
-    });
+    setupLegacyBridgeCallbacks(hooks);
 
     test("modifySelectKit select() cannot add a value at @maximum", async function (assert) {
       let selectKit;

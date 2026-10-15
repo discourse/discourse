@@ -14,14 +14,13 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   DefaultHost,
   ITEMS,
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
-import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
 
 class MultiHost extends Component {
@@ -291,11 +290,7 @@ module(
   "Integration | ui-kit | DSelect (multi value coercion)",
   function (hooks) {
     setupRenderingTest(hooks);
-
-    hooks.afterEach(function () {
-      clearCallbacks();
-      resetLegacyBridge();
-    });
+    setupLegacyBridgeCallbacks(hooks);
 
     test("coerces held string ids when adding a native-id item", async function (assert) {
       const onChange = sinon.spy();

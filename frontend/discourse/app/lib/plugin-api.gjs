@@ -127,7 +127,10 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
-import { consolePrefix } from "discourse/lib/source-identifier";
+import {
+  consolePrefix,
+  noticeSourceFor,
+} from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
   _registerTransformer,
@@ -1777,7 +1780,7 @@ class _PluginApi {
    * }])
    */
   modifySelectKit(pluginApiKey) {
-    return modifySelectKit(pluginApiKey);
+    return modifySelectKit(pluginApiKey, noticeSourceFor(this.#source));
   }
 
   /**

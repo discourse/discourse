@@ -311,10 +311,6 @@ const workflows = [
   { handler: "silence", matchId: "discourse.select-kit" },
   {
     handler: "silence",
-    matchId: /^discourse\.select-kit\.modify-select-kit-.+$/,
-  },
-  {
-    handler: "silence",
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
   {

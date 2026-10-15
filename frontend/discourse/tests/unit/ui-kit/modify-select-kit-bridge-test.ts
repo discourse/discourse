@@ -1,22 +1,40 @@
 import { type default as Owner, getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
-import {
-  resetLegacyBridge,
-  suppressLegacyBridge,
-} from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import SelectEngine, {
   type SelectDescriptor,
   type SelectEngineOptions,
 } from "discourse/ui-kit/select/select-engine";
 
-// One deprecation handler for the whole module, recording every fired id, so tests can
-// assert the bridge's per-instance deprecation without leaking a handler per test.
-const firedDeprecations: (string | undefined)[] = [];
+const CONTENT_ID = "discourse.select-kit.modify-select-kit-content";
+const ON_CHANGE_ID = "discourse.select-kit.modify-select-kit-on-change";
+
+/** A deprecation the bridge fired, with the plugin it was attributed to. */
+interface FiredDeprecation {
+  id?: string;
+  source?: { name?: string };
+}
+
+/**
+ * One deprecation handler for the whole module, recording every fired deprecation, so tests
+ * can assert the bridge's deprecations without leaking a handler per test.
+ */
+const firedDeprecations: FiredDeprecation[] = [];
 let handlerRegistered = false;
+
+/** Plugin api options that attribute the registrations to `name`. */
+function pluginOpts(name: string) {
+  return { [_INTERNAL_SOURCE_KEY]: Object.freeze({ type: "plugin", name }) };
+}
+
+function firedFor(id: string) {
+  return firedDeprecations.filter((fired) => fired.id === id);
+}
 
 // `buildItems` returns normalized descriptors, so the row id lives on `value`, not on the
 // raw model's `id`.
@@ -32,21 +50,17 @@ interface LegacyComponentFacade {
 
 module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   setupTest(hooks);
+  setupLegacyBridgeCallbacks(hooks);
 
   hooks.beforeEach(function () {
     firedDeprecations.length = 0;
     if (!handlerRegistered) {
       registerDeprecationHandler(
-        (_message: string, options?: { id?: string }) =>
-          firedDeprecations.push(options?.id)
+        (_message: string, options?: FiredDeprecation) =>
+          firedDeprecations.push({ id: options?.id, source: options?.source })
       );
       handlerRegistered = true;
     }
-  });
-
-  hooks.afterEach(function () {
-    clearCallbacks();
-    resetLegacyBridge();
   });
 
   // Builds an engine wired for the bridge with a resolvable owner and a live element.
@@ -287,26 +301,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     );
   });
 
-  test("suppressed identifiers are not bridged (no double-insert with a native path)", function (assert) {
-    withPluginApi((api) => {
-      api
-        .modifySelectKit("test-select")
-        .appendContent(() => ({ id: "legacy", name: "Legacy" }));
-    });
-    // Simulate the identifier having opted into a native select-content transformer.
-    suppressLegacyBridge("test-select");
-
-    const engine = engineFor(getOwner(this));
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
-
-    assert.deepEqual(
-      ids(items),
-      ["core"],
-      "the legacy callback is skipped for a suppressed identifier"
-    );
-  });
-
-  test("emits the content deprecation once per engine instance", function (assert) {
+  test("emits the content deprecation once per engine instance", async function (assert) {
     withPluginApi((api) => {
       api
         .modifySelectKit("test-select")
@@ -316,22 +311,93 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     const engine = engineFor(getOwner(this));
     engine.buildItems([]);
     engine.buildItems([]);
+    await settled();
 
-    const contentDeprecations = firedDeprecations.filter(
-      (id) => id === "discourse.select-kit.modify-select-kit-content"
-    );
     assert.strictEqual(
-      contentDeprecations.length,
+      firedFor(CONTENT_ID).length,
       1,
       "the bridge warns once, not per render"
     );
+
+    engineFor(getOwner(this)).buildItems([]);
+    await settled();
+
+    assert.strictEqual(
+      firedFor(CONTENT_ID).length,
+      2,
+      "another control warns again"
+    );
   });
 
-  test("does not warn or fire when no legacy callbacks are registered", function (assert) {
+  test("attributes each deprecation to the plugin that registered the callback", async function (assert) {
+    withPluginApi(
+      (api) => api.modifySelectKit("test-select").appendContent(() => {}),
+      pluginOpts("bridge-plugin-a")
+    );
+    withPluginApi(
+      (api) => api.modifySelectKit("test-select").prependContent(() => {}),
+      pluginOpts("bridge-plugin-b")
+    );
+
+    const engine = engineFor(getOwner(this));
+    engine.buildItems([]);
+    engine.buildItems([]);
+    await settled();
+
+    assert.deepEqual(
+      firedFor(CONTENT_ID)
+        .map((fired) => fired.source?.name)
+        .sort(),
+      ["bridge-plugin-a", "bridge-plugin-b"],
+      "one per registering plugin, even when the callbacks return nothing"
+    );
+  });
+
+  test("a chained registration keeps its plugin", async function (assert) {
+    withPluginApi(
+      (api) =>
+        api
+          .modifySelectKit("test-select")
+          .prependContent(() => {})
+          .onChange(() => {}),
+      pluginOpts("bridge-plugin-chain")
+    );
+
+    const engine = engineFor(getOwner(this), {
+      items: [{ id: 1, name: "One" }],
+    });
+    engine.select({ id: 1, name: "One" });
+    await settled();
+
+    assert.deepEqual(
+      firedFor(ON_CHANGE_ID).map((fired) => fired.source?.name),
+      ["bridge-plugin-chain"],
+      "the onChange registered further down the chain is attributed"
+    );
+  });
+
+  test("a callback registered by core is still reported, unattributed", async function (assert) {
+    withPluginApi((api) => {
+      api.modifySelectKit("test-select").appendContent(() => {});
+    });
+
+    engineFor(getOwner(this)).buildItems([]);
+    await settled();
+
+    assert.strictEqual(firedFor(CONTENT_ID).length, 1, "it is reported");
+    assert.strictEqual(
+      firedFor(CONTENT_ID)[0].source,
+      undefined,
+      "with no plugin named"
+    );
+  });
+
+  test("does not warn or fire when no legacy callbacks are registered", async function (assert) {
     const engine = engineFor(getOwner(this));
     const items = engine.buildItems([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(ids(items), ["core"], "content is untouched");
+    await settled();
     assert.strictEqual(
       firedDeprecations.length,
       0,

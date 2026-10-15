@@ -3,21 +3,16 @@ import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { Host, ITEMS } from "discourse/tests/helpers/d-select-hosts";
-import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
 
 module(
   "Integration | ui-kit | select | DSelect (modifySelectKit bridge)",
   function (hooks) {
     setupRenderingTest(hooks);
-
-    hooks.afterEach(function () {
-      clearCallbacks();
-      resetLegacyBridge();
-    });
+    setupLegacyBridgeCallbacks(hooks);
 
     test("legacy prependContent rows render in the listbox", async function (assert) {
       withPluginApi((api) => {

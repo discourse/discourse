@@ -21,14 +21,13 @@ import sinon from "sinon";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   DefaultHost,
   Host,
   ITEMS,
 } from "discourse/tests/helpers/d-select-hosts";
-import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
@@ -2778,11 +2777,7 @@ module(
   "Integration | ui-kit | select | DSelect (re-selection)",
   function (hooks) {
     setupRenderingTest(hooks);
-
-    hooks.afterEach(function () {
-      clearCallbacks();
-      resetLegacyBridge();
-    });
+    setupLegacyBridgeCallbacks(hooks);
 
     test("Enter on the restored selection closes without emitting a change", async function (assert) {
       // Restoring the cursor to the selected option makes Enter the first keystroke after

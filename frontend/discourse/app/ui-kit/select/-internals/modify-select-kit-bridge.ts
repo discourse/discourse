@@ -1,11 +1,14 @@
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
+import { schedule } from "@ember/runloop";
 import deprecated from "discourse/lib/deprecated";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
+  contentCallbackSources,
   hasContentPluginApiCallbacks,
   hasOnChangePluginApiCallbacks,
+  onChangeCallbackSources,
 } from "discourse/select-kit/lib/plugin-api";
 import SelectEngine, {
   SelectItem,
@@ -36,10 +39,10 @@ import SelectEngine, {
  * Exactly one facade is memoized per engine instance, so a callback's per-instance
  * state lookups (which key a `WeakMap` on the component) stay stable across renders.
  *
- * The bridge is deliberately not silent: the first time it fires for an engine it
- * emits a deprecation naming the replacement transformer, so the extension's author is
- * nudged to migrate and the deprecation collector gets a real per-instance usage
- * signal. It is a migration aid, not a kept API.
+ * The bridge is deliberately not silent: each control reports a deprecation per
+ * registering plugin or theme, naming the replacement transformer, so the extension's
+ * author is nudged to migrate and the deprecation collector gets a real usage signal.
+ * It is a migration aid, not a kept API.
  */
 
 const CONTENT_DEPRECATION_ID = "discourse.select-kit.modify-select-kit-content";
@@ -47,8 +50,15 @@ const ON_CHANGE_DEPRECATION_ID =
   "discourse.select-kit.modify-select-kit-on-change";
 const DEPRECATION_SINCE = "2026.7.0";
 
-/** The per-facade flags that gate the one-shot deprecation warnings. */
-type WarnFlag = "__warnedContent" | "__warnedOnChange";
+type CallbackKind = "content" | "onChange";
+
+/** The plugin or theme a deprecation is attributed to, as `deprecated()` takes it. */
+type CallbackSource = {
+  type: string;
+  name?: string;
+  id?: number;
+  path?: string;
+};
 
 /**
  * The `selectKit` surface old callbacks and injected action rows drive. It reflects
@@ -66,32 +76,8 @@ interface LegacySelectKit {
 // Facade per engine instance (requirement: stable per-instance facade).
 const FACADES = new WeakMap<SelectEngine, LegacySelectKitComponent>();
 
-// Identifiers that have opted into a native `select-content` / `select-on-change`
-// transformer path and must therefore NOT also be bridged, or their rows/side effects
-// would run twice (e.g. a picker whose plugin dual-registers both APIs during
-// migration). Populated by `suppressLegacyBridge`.
-let suppressedIdentifiers = new Set<string>();
-
-/**
- * Marks one or more identifiers as natively handled, so the legacy bridge skips them.
- * Call this from code that registers a native `select-content` / `select-on-change`
- * transformer for an identifier that also has legacy `modifySelectKit` extensions.
- */
-export function suppressLegacyBridge(...identifiers: string[]): void {
-  identifiers.forEach((identifier) => suppressedIdentifiers.add(identifier));
-}
-
-/**
- * Resets the suppression list. Test-only.
- */
-export function resetLegacyBridge(): void {
-  suppressedIdentifiers = new Set();
-}
-
-// The engine's identifiers minus any that are natively handled.
-function bridgedIdentifiers(engine: SelectEngine): string[] {
-  return engine.identifiers.filter((id) => !suppressedIdentifiers.has(id));
-}
+/** The `kind:source` pairs each facade has already reported. */
+const REPORTED = new WeakMap<LegacySelectKitComponent, Set<string>>();
 
 function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
   const existing = FACADES.get(engine);
@@ -160,11 +146,9 @@ class LegacySelectKitComponent extends EmberObject {
   declare isLoading: boolean;
   declare __getElement?: () => Element | null;
   declare __isDestroyed?: () => boolean;
-  declare __warnedContent?: boolean;
-  declare __warnedOnChange?: boolean;
 
   get pluginApiIdentifiers(): string[] {
-    return bridgedIdentifiers(this.engine);
+    return this.engine.identifiers;
   }
 
   get element(): Element | null {
@@ -203,30 +187,48 @@ function adaptInjectedRows(
   });
 }
 
-function warnOnce(
+/**
+ * Reports each registering plugin or theme once per control and callback kind. Reported
+ * after render, so a deprecation configured to raise never aborts a render midway.
+ */
+function report(
   facade: LegacySelectKitComponent,
-  flag: WarnFlag,
+  kind: CallbackKind,
   identifiers: string[],
-  deprecationId: string,
-  replacement: string
+  sources: Map<string, CallbackSource | undefined>
 ): void {
-  if (facade[flag]) {
-    return;
+  let reported = REPORTED.get(facade);
+  if (!reported) {
+    reported = new Set();
+    REPORTED.set(facade, reported);
   }
-  facade[flag] = true;
-  deprecated(
-    `\`api.modifySelectKit("${identifiers.join(
-      '"/"'
-    )}")\` extends a component now built on the ui-kit select engine. Migrate to \`${replacement}\`.`,
-    { id: deprecationId, since: DEPRECATION_SINCE }
-  );
+
+  const replacement =
+    kind === "content"
+      ? 'api.registerValueTransformer("select-content", …)'
+      : 'api.registerBehaviorTransformer("select-on-change", …)';
+  const message = `\`api.modifySelectKit("${identifiers.join(
+    '"/"'
+  )}")\` extends a component now built on the ui-kit select engine. Migrate to \`${replacement}\`.`;
+  const id =
+    kind === "content" ? CONTENT_DEPRECATION_ID : ON_CHANGE_DEPRECATION_ID;
+
+  for (const [key, source] of sources) {
+    const mark = `${kind}:${key}`;
+    if (reported.has(mark)) {
+      continue;
+    }
+    reported.add(mark);
+    schedule("afterRender", () =>
+      deprecated(message, { id, since: DEPRECATION_SINCE, source })
+    );
+  }
 }
 
 /**
  * Applies legacy content callbacks (prepend / append / replace) to the engine's item
  * list, after the native `select-content` transformer has run. Returns the list
- * unchanged when the engine has no (non-suppressed) identifiers or nothing is
- * registered for them.
+ * unchanged when nothing is registered for the engine's identifiers.
  *
  * @param items - The items after native transformers.
  * @returns The items with legacy callbacks applied.
@@ -235,26 +237,19 @@ export function applyLegacySelectKitContent(
   engine: SelectEngine,
   items: SelectItem[]
 ): SelectItem[] {
-  const identifiers = bridgedIdentifiers(engine);
+  const identifiers = engine.identifiers;
   if (!identifiers.length || !hasContentPluginApiCallbacks(identifiers)) {
     return items;
   }
 
   const facade = facadeFor(engine);
+  report(facade, "content", identifiers, contentCallbackSources(identifiers));
   const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade);
 
-  // A no-op run returns the same array reference; only warn/adapt when it actually fired.
+  // A no-op run returns the same array reference; only adapt when it actually changed.
   if (result === items) {
     return items;
   }
-
-  warnOnce(
-    facade,
-    "__warnedContent",
-    identifiers,
-    CONTENT_DEPRECATION_ID,
-    'api.registerValueTransformer("select-content", …)'
-  );
 
   return adaptInjectedRows(items, result, facade);
 }
@@ -273,19 +268,13 @@ export function applyLegacySelectKitOnChange(
   value: SelectValue,
   items: SelectItem | SelectItem[] | null
 ): void {
-  const identifiers = bridgedIdentifiers(engine);
+  const identifiers = engine.identifiers;
   if (!identifiers.length || !hasOnChangePluginApiCallbacks(identifiers)) {
     return;
   }
 
   const facade = facadeFor(engine);
-  warnOnce(
-    facade,
-    "__warnedOnChange",
-    identifiers,
-    ON_CHANGE_DEPRECATION_ID,
-    'api.registerBehaviorTransformer("select-on-change", …)'
-  );
+  report(facade, "onChange", identifiers, onChangeCallbackSources(identifiers));
 
   applyOnChangePluginApiCallbacks(value, items, facade);
 }

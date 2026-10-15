@@ -485,4 +485,34 @@ module("Unit | deprecation-workflow", function (hooks) {
       }
     });
   });
+
+  module("modifySelectKit bridge deprecations", function (nestedHooks) {
+    const IDS = [
+      "discourse.select-kit.modify-select-kit-content",
+      "discourse.select-kit.modify-select-kit-on-change",
+    ];
+
+    nestedHooks.afterEach(function () {
+      DeprecationWorkflow.setEnvironment(undefined);
+    });
+
+    test("are reported in every environment, without notifying admins", function (assert) {
+      for (const env of [
+        makeEnv(),
+        makeEnv({ production: true }),
+        makeEnv({ testing: true }),
+      ]) {
+        DeprecationWorkflow.setEnvironment(env);
+
+        for (const id of IDS) {
+          assert.false(DeprecationWorkflow.shouldSilence(id), `${id} is heard`);
+          assert.false(
+            DeprecationWorkflow.shouldNotifyAdmin(id),
+            `${id} never notifies admins, since the callback still works`
+          );
+          assert.true(DeprecationWorkflow.shouldCount(id), `${id} is counted`);
+        }
+      }
+    });
+  });
 });
