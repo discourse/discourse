@@ -21,8 +21,10 @@ describe "Content security policy" do
     plugin.enabled = true
 
     expect(SiteSetting.content_security_policy).to eq(true)
-    visit "/"
-    expect(page).to have_css("#site-logo")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#site-logo").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     get "/"
     expect(response.headers["Content-Security-Policy"]).to include("'strict-dynamic'")
@@ -41,16 +43,25 @@ describe "Content security policy" do
     get "/nonexistent"
     expect(response.headers["Content-Security-Policy"]).to include("'strict-dynamic'")
 
-    visit "/nonexistent"
-    expect(page).to have_css("#site-logo")
-    expect(page).not_to have_css("body.no-ember")
+    browser_page.goto("/nonexistent").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#site-logo").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("body.no-ember").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "can boot logster in strict_dynamic mode" do
     expect(SiteSetting.content_security_policy).to eq(true)
     sign_in Fabricate(:admin)
 
-    visit "/logs"
-    expect(page).to have_css("#log-table")
+    browser_page.goto("/logs").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("#log-table")).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#log-table")).not_to PlaywrightMatchers.have_css("display", "none")
+    expect(browser_root.locator("#log-table")).to PlaywrightMatchers.have_css(
+      "visibility",
+      "visible",
+    )
   end
 end

@@ -27,7 +27,9 @@ describe "Permanently delete" do
       confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
       confirm_modal.click_danger
 
-      expect(page).to have_no_css("#post_#{post.post_number}")
+      expect(
+        browser_root.locator("#post_#{post.post_number}").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
       expect(Post.unscoped.exists?(post.id)).to eq(false)
     end
 
@@ -53,7 +55,7 @@ describe "Permanently delete" do
       topic_page.permanently_delete_post(post)
 
       expect(dialog).to be_open
-      expect(dialog).to have_content("before permanently deleting this post")
+      expect(dialog).to have_displayed_content("before permanently deleting this post")
       dialog.click_ok
       expect(Post.with_deleted.exists?(post.id)).to eq(true)
     end
@@ -66,7 +68,7 @@ describe "Permanently delete" do
       PostDestroyer.new(other_admin, post).destroy
       PostDestroyer.new(other_admin, first_post).destroy
       sign_in(admin)
-      visit(topic.url)
+      browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
     end
 
     it "permanently deletes the topic after confirmation" do
@@ -74,7 +76,7 @@ describe "Permanently delete" do
       confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
       confirm_modal.click_danger
 
-      expect(page).to have_current_path("/")
+      expect(browser_page).to PlaywrightMatchers.have_url("/")
       expect(Topic.unscoped.exists?(topic.id)).to eq(false)
     end
   end
@@ -114,7 +116,11 @@ describe "Permanently delete" do
       confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
       confirm_modal.click_danger
 
-      expect(page).to have_no_css("#post_#{post_with_revisions.post_number} .post-info.edits")
+      expect(
+        browser_root.locator("#post_#{post_with_revisions.post_number} .post-info.edits").filter(
+          visible: true,
+        ),
+      ).to PlaywrightMatchers.have_count(0)
       expect(PostRevision.exists?(revision_id)).to eq(false)
     end
   end

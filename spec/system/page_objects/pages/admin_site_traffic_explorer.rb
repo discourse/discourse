@@ -25,26 +25,38 @@ module PageObjects
       def visit(start_date:, end_date:, traffic_type: nil)
         path = "#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}"
         path += "&traffic_type=#{traffic_type}" if traffic_type
-        page.visit(path)
+        browser_page.goto(path).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def go_back
-        page.go_back
+        browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def go_forward
-        page.go_forward
+        browser_page.go_forward.tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_page_title?
-        has_css?("h1", exact_text: "Site Traffic Explorer")
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern("Site Traffic Explorer")],
+          useInnerText: true,
+        ).matches?(browser_root.locator("h1").filter(visible: true))
       end
 
       def has_date_range?(text)
-        has_button?(text)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator("[id=#{text.to_s.to_json}], [name=#{text.to_s.to_json}]").or(
+                browser_root.get_by_role("button", name: text),
+              ),
+            )
+            .filter(visible: true),
+        )
       end
 
       def select_date_preset(label)
@@ -62,19 +74,31 @@ module PageObjects
 
       def has_metric?(label:, value:)
         selector = "[data-test-site-traffic-metric='#{METRIC_KEYS.fetch(label)}']"
-        has_css?(selector, text: label) && has_css?(selector, text: value)
+        PlaywrightMatchers.contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(value)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(selector).filter(visible: true))
       end
 
       def has_series_total?(label:, value:)
-        has_css?("[data-test-traffic-series='#{label}']", text: value, visible: :all)
+        PlaywrightMatchers.contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
+          browser_root.locator("[data-test-traffic-series='#{label}']"),
+        )
       end
 
       def has_no_series?(label:)
-        has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-traffic-series='#{label}']"),
+        )
       end
 
       def toggle_chart_legend(label:)
-        page.evaluate_async_script(<<~JAVASCRIPT, label)
+        browser_page.evaluate(
+          "function(args) { return new Promise(resolve => { args.push(resolve); (function() { #{
+            <<~JAVASCRIPT
           const label = arguments[0];
           const done = arguments[1];
 
@@ -90,106 +114,187 @@ module PageObjects
             done();
           });
         JAVASCRIPT
+          } }).apply(this, args); }); }",
+          arg: browser_arguments(label),
+        )
 
         self
       end
 
       def has_selected_legend_item?(label:)
-        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) }
+        legend_item_selected?(label:)
       end
 
       def has_deselected_legend_item?(label:)
-        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) == false }
+        legend_item_selected?(label:, selected: false)
       end
 
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
-        has_css?(selector, exact_text: reason) && has_no_css?("#{selector} button")
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(reason)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(selector).filter(visible: true)) &&
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator("#{selector} button").filter(visible: true),
+          )
       end
 
       def has_no_partial_data_warning?
-        has_no_css?("[data-test-site-traffic-partial-warning]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-site-traffic-partial-warning]").filter(visible: true),
+        )
       end
 
       def has_card_tabs?(card:, tabs:)
         tabs.all? do |tab|
-          has_css?("[data-test-site-traffic-card='#{card}'] [role='tab']", exact_text: tab)
+          PlaywrightMatchers.contain_text(
+            [browser_exact_text_pattern(tab)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator("[data-test-site-traffic-card='#{card}'] [role='tab']").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       def select_tab(card:, tab:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          find("[role='tab']", exact_text: tab).click
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          browser_root
+            .locator("[role='tab']")
+            .filter(visible: true)
+            .filter(hasText: browser_exact_text_pattern(tab))
+            .click
         end
         self
       end
 
       def has_row?(card:, label:, count:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          has_css?(
-            "[data-test-site-traffic-row]",
-            text: /#{Regexp.escape(label)}.*#{Regexp.escape(count)}/m,
-          )
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(/#{Regexp.escape(label)}.*#{Regexp.escape(count)}/m)],
+            useInnerText: true,
+          ).matches?(browser_root.locator("[data-test-site-traffic-row]").filter(visible: true))
         end
       end
 
       def has_rows?(card:, rows:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          return false unless has_css?("[data-test-site-traffic-row]", count: rows.size)
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          unless PlaywrightMatchers.have_count(rows.size).matches?(
+                   browser_root.locator("[data-test-site-traffic-row]").filter(visible: true),
+                 )
+            return false
+          end
 
           actual_rows =
-            all("[data-test-site-traffic-row]").map do |row|
-              {
-                label: row.find(".site-traffic-explorer__dimension-text").text,
-                count: row.find(".site-traffic-explorer__row-count").text,
-              }
-            end
+            browser_root
+              .locator("[data-test-site-traffic-row]")
+              .filter(visible: true)
+              .tap { |elements| elements.first.wait_for(state: "visible") }
+              .all
+              .map do |row|
+                {
+                  label:
+                    row
+                      .locator(".site-traffic-explorer__dimension-text")
+                      .filter(visible: true)
+                      .inner_text
+                      .strip,
+                  count:
+                    row
+                      .locator(".site-traffic-explorer__row-count")
+                      .filter(visible: true)
+                      .inner_text
+                      .strip,
+                }
+              end
 
           actual_rows == rows
         end
       end
 
       def has_url_link?(card:, label:, href:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          has_css?("a[href='#{href}']", exact_text: label)
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          PlaywrightMatchers.contain_text(
+            [browser_exact_text_pattern(label)],
+            useInnerText: true,
+          ).matches?(browser_root.locator("a[href='#{href}']").filter(visible: true))
         end
       end
 
       def filter_row(card:, label:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          browser_root
+            .locator("input[type='checkbox'][aria-label^='Filter by #{label},']")
+            .filter(visible: true)
+            .click
         end
-        find("[data-test-site-traffic-apply-filters]").click
+        browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true).click
         self
       end
 
       def filter_by_clicking_row(card:, label:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          within("[data-test-site-traffic-row]", text: label) do
-            find(".site-traffic-explorer__row-checkbox").click
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          within_browser(
+            browser_root
+              .locator("[data-test-site-traffic-row]")
+              .filter(visible: true)
+              .filter(hasText: browser_text_pattern(label)),
+          ) do
+            browser_root.locator(".site-traffic-explorer__row-checkbox").filter(visible: true).click
           end
         end
-        find("[data-test-site-traffic-apply-filters]").click
+        browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true).click
         self
       end
 
       def select_filter_row(card:, label:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          browser_root
+            .locator("input[type='checkbox'][aria-label^='Filter by #{label},']")
+            .filter(visible: true)
+            .click
         end
         self
       end
 
       def has_filter_row_selected?(card:, label:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:checked")
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "input[type='checkbox'][aria-label^='Filter by #{label},']:checked",
+            ).filter(visible: true),
+          )
         end
       end
 
       def has_filter_row_unselected?(card:, label:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:not(:checked)")
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "input[type='checkbox'][aria-label^='Filter by #{label},']:not(:checked)",
+            ).filter(visible: true),
+          )
         end
       end
 
@@ -198,26 +303,50 @@ module PageObjects
         remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
         expected_text = "#{FILTER_LABELS.fetch(dimension)}: #{label}".gsub(/\s+/, "")
 
-        has_css?(selector, count: 1) &&
-          find(selector).text.gsub(/\s+/, "").include?(expected_text) &&
-          has_css?("#{selector} button[aria-label='#{remove_label}']")
+        PlaywrightMatchers.have_count(1).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          browser_root
+            .locator(selector)
+            .filter(visible: true)
+            .inner_text
+            .strip
+            .gsub(/\s+/, "")
+            .include?(expected_text) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#{selector} button[aria-label='#{remove_label}']").filter(
+              visible: true,
+            ),
+          )
       end
 
       def has_no_filter_pills?
-        has_no_css?("[data-test-site-traffic-filter-pill]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-site-traffic-filter-pill]").filter(visible: true),
+        )
       end
 
       def has_grouped_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}'] .fk-d-menu__trigger"
 
-        has_css?(selector, count: 1) &&
-          find(selector).text.gsub(/\s+/, "").include?(label.gsub(/\s+/, ""))
+        PlaywrightMatchers.have_count(1).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          browser_root
+            .locator(selector)
+            .filter(visible: true)
+            .inner_text
+            .strip
+            .gsub(/\s+/, "")
+            .include?(label.gsub(/\s+/, ""))
       end
 
       def expand_filter_pill(dimension)
-        within("[data-test-site-traffic-filter-pill='#{dimension}']") do
-          find(".fk-d-menu__trigger").click
-        end
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-filter-pill='#{dimension}']").filter(
+            visible: true,
+          ),
+        ) { browser_root.locator(".fk-d-menu__trigger").filter(visible: true).click }
         self
       end
 
@@ -225,127 +354,236 @@ module PageObjects
         row_selector = "[data-test-site-traffic-filter-dropdown-value]"
         value_selector = "#{row_selector} .d-button-label"
 
-        has_css?(row_selector, count: values.length) &&
-          values.all? { |value| has_css?(value_selector, exact_text: value, count: 1) }
+        PlaywrightMatchers.have_count(values.length).matches?(
+          browser_root.locator(row_selector).filter(visible: true),
+        ) &&
+          values.all? do |value|
+            PlaywrightMatchers.have_count(1).matches?(
+              browser_root
+                .locator(value_selector)
+                .filter(visible: true)
+                .filter(hasText: browser_exact_text_pattern(value)),
+            )
+          end
       end
 
       def has_no_filter_dropdown?
-        has_no_css?("[data-test-site-traffic-filter-dropdown]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-site-traffic-filter-dropdown]").filter(visible: true),
+        )
       end
 
       def remove_filter_value(value)
-        within("[data-test-site-traffic-filter-dropdown]") { find_button("Remove #{value}").click }
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-filter-dropdown]").filter(visible: true),
+        ) do
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{"Remove #{value}".to_s.to_json}], [name=#{"Remove #{value}".to_s.to_json}]",
+              ).or(browser_root.get_by_role("button", name: "Remove #{value}")),
+            )
+            .filter(visible: true)
+            .click
+        end
         self
       end
 
       def has_apply_filters?(count:)
         selector = "[data-test-site-traffic-apply-filters]"
 
-        has_css?(selector, count: 1) &&
-          has_css?("#{selector} .d-button-label", exact_text: "Apply", count: 1) &&
-          has_css?(
-            "#{selector} .site-traffic-explorer__filter-apply-pending-count",
-            exact_text: count.to_s,
-            count: 1,
+        PlaywrightMatchers.have_count(1).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          PlaywrightMatchers.have_count(1).matches?(
+            browser_root
+              .locator("#{selector} .d-button-label")
+              .filter(visible: true)
+              .filter(hasText: browser_exact_text_pattern("Apply")),
+          ) &&
+          PlaywrightMatchers.have_count(1).matches?(
+            browser_root
+              .locator("#{selector} .site-traffic-explorer__filter-apply-pending-count")
+              .filter(visible: true)
+              .filter(hasText: browser_exact_text_pattern(count.to_s)),
           )
       end
 
       def has_no_apply_filters?
-        has_no_css?("[data-test-site-traffic-apply-filters]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true),
+        )
       end
 
       def apply_filters
-        find("[data-test-site-traffic-apply-filters]").click
+        browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true).click
         self
       end
 
       def clear_all
-        find_button("Clear all", exact: true).click
+        browser_root
+          .get_by_role("button")
+          .and(
+            browser_root.locator(
+              "[id=#{"Clear all".to_s.to_json}], [name=#{"Clear all".to_s.to_json}]",
+            ).or(browser_root.get_by_role("button", name: "Clear all")),
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       def remove_filter(name, label: nil)
         remove_label = "Remove #{FILTER_LABELS.fetch(name)} filter"
         selector = "[data-test-site-traffic-filter-pill='#{name}']"
-        if label && has_css?("#{selector} .fk-d-menu__trigger", wait: 0)
-          within(selector) { find(".fk-d-menu__trigger").click }
-          within("[data-test-site-traffic-filter-dropdown]") do
-            find_button("Remove #{label}").click
+        if label &&
+             browser_root.locator("#{selector} .fk-d-menu__trigger").filter(visible: true).count !=
+               0
+          within_browser(selector) do
+            browser_root.locator(".fk-d-menu__trigger").filter(visible: true).click
+          end
+          within_browser(
+            browser_root.locator("[data-test-site-traffic-filter-dropdown]").filter(visible: true),
+          ) do
+            browser_root
+              .get_by_role("button")
+              .and(
+                browser_root.locator(
+                  "[id=#{"Remove #{label}".to_s.to_json}], [name=#{"Remove #{label}".to_s.to_json}]",
+                ).or(browser_root.get_by_role("button", name: "Remove #{label}")),
+              )
+              .filter(visible: true)
+              .click
           end
         else
-          find("button[aria-label='#{remove_label}']").click
+          browser_root.locator("button[aria-label='#{remove_label}']").filter(visible: true).click
         end
-        if has_css?("[data-test-site-traffic-apply-filters]", wait: 0)
-          find("[data-test-site-traffic-apply-filters]").click
+        if browser_root
+             .locator("[data-test-site-traffic-apply-filters]")
+             .filter(visible: true)
+             .count != 0
+          browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true).click
         end
         self
       end
 
       def expand(card)
-        within("[data-test-site-traffic-card='#{card}']") { find_button("View more").click }
+        within_browser(
+          browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
+        ) do
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{"View more".to_s.to_json}], [name=#{"View more".to_s.to_json}]",
+              ).or(browser_root.get_by_role("button", name: "View more")),
+            )
+            .filter(visible: true)
+            .click
+        end
         self
       end
 
       def has_expanded_breakdown?(title:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        has_css?(selector, text: title) && has_css?("#{selector} [data-test-site-traffic-row]")
+        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#{selector} [data-test-site-traffic-row]").filter(visible: true),
+          )
       end
 
       def has_expanded_url_link?(label:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        has_css?("#{selector} a[href='#{label}']", exact_text: label)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(label)],
+          useInnerText: true,
+        ).matches?(browser_root.locator("#{selector} a[href='#{label}']").filter(visible: true))
       end
 
       def select_expanded_filter_row(label:)
-        within(".site-traffic-breakdown-modal[role='dialog']") do
-          within("[data-test-site-traffic-row]", text: label) do
-            find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        within_browser(
+          browser_root.locator(".site-traffic-breakdown-modal[role='dialog']").filter(
+            visible: true,
+          ),
+        ) do
+          within_browser(
+            browser_root
+              .locator("[data-test-site-traffic-row]")
+              .filter(visible: true)
+              .filter(hasText: browser_text_pattern(label)),
+          ) do
+            browser_root
+              .locator("input[type='checkbox'][aria-label^='Filter by #{label},']")
+              .filter(visible: true)
+              .click
           end
         end
         self
       end
 
       def apply_expanded_filters
-        within(".site-traffic-breakdown-modal[role='dialog']") do
-          find_button("Apply filters", exact: true).click
+        within_browser(
+          browser_root.locator(".site-traffic-breakdown-modal[role='dialog']").filter(
+            visible: true,
+          ),
+        ) do
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{"Apply filters".to_s.to_json}], [name=#{"Apply filters".to_s.to_json}]",
+              ).or(browser_root.get_by_role("button", name: "Apply filters")),
+            )
+            .filter(visible: true)
+            .click
         end
         self
       end
 
       def has_no_expanded_breakdown?
-        has_no_css?(".site-traffic-breakdown-modal[role='dialog']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".site-traffic-breakdown-modal[role='dialog']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_empty_state?
-        has_css?("[data-test-site-traffic-empty]", exact_text: "No matching pageviews")
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern("No matching pageviews")],
+          useInnerText: true,
+        ).matches?(browser_root.locator("[data-test-site-traffic-empty]").filter(visible: true))
       end
 
       private
 
-      def legend_item_selected?(label:)
-        page.evaluate_async_script(<<~JAVASCRIPT, label)
-          const label = arguments[0];
-          const done = arguments[1];
-
-          require("discourse/lib/load-chart-js").default().then((Chart) => {
-            const chart = Chart.getChart(
-              document.querySelector(".admin-report-stacked-chart canvas")
-            );
-            const legendItem = chart?.legend?.legendItems.find(
-              (item) => item.text === label
-            );
-
-            done(
-              legendItem
-                ? chart.isDatasetVisible(legendItem.datasetIndex)
-                : null
-            );
-          });
-        JAVASCRIPT
+      def legend_item_selected?(label:, selected: true)
+        browser_root.locator(".admin-report-stacked-chart canvas").wait_for(state: "visible")
+        result =
+          browser_page.wait_for_function(
+            <<~JS,
+          async ({label, selected}) => {
+            const Chart = await require("discourse/lib/load-chart-js").default();
+            const chart = Chart.getChart(document.querySelector(".admin-report-stacked-chart canvas"));
+            const item = chart?.legend?.legendItems.find(item => item.text === label);
+            return Boolean(item) && chart.isDatasetVisible(item.datasetIndex) === selected;
+          }
+        JS
+            arg: {
+              label: label,
+              selected: selected,
+            },
+            timeout: Capybara.default_max_wait_time * 1000,
+          )
+        result.dispose
+        true
       end
 
       def open_date_range
-        find(".db-date-range__trigger").click
+        browser_root.locator(".db-date-range__trigger").filter(visible: true).click
         PageObjects::Components::AdminDashboardDateRangePicker.new.tap(&:open?)
       end
     end

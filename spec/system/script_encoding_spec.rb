@@ -6,8 +6,8 @@ describe "script encoding" do
   before { stub_and_log_cdn_requests }
 
   def stub_and_log_cdn_requests
-    page.driver.with_playwright_page do |page|
-      page.route(
+    browser_page.then do |browser_page|
+      browser_page.route(
         "http://cdn.example.com/**/*",
         ->(route, request) do
           js_cdn_requests << request.url if request.url.end_with?(".js")
@@ -41,7 +41,7 @@ describe "script encoding" do
       user = Fabricate(:admin)
       sign_in user
 
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.any? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(false)
@@ -49,9 +49,14 @@ describe "script encoding" do
       js_cdn_requests.clear
 
       # Use the composer to trigger an async chunk load
-      find("#create-topic").click
-      find(".d-editor-input").fill_in(with: "This is a test")
-      expect(page).to have_css(".d-editor-preview", text: "This is a test")
+      browser_root.locator("#create-topic").filter(visible: true).click
+      browser_root.locator(".d-editor-input").filter(visible: true).fill("This is a test")
+      expect(
+        browser_root.locator(".d-editor-preview").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("This is a test")],
+        useInnerText: true,
+      )
 
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.any? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(false)
@@ -71,7 +76,7 @@ describe "script encoding" do
       user = Fabricate(:admin)
       sign_in user
 
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.all? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(true)
@@ -79,9 +84,14 @@ describe "script encoding" do
       js_cdn_requests.clear
 
       # Use the composer to trigger an async chunk load
-      find("#create-topic").click
-      find(".d-editor-input").fill_in(with: "This is a test")
-      expect(page).to have_css(".d-editor-preview", text: "This is a test")
+      browser_root.locator("#create-topic").filter(visible: true).click
+      browser_root.locator(".d-editor-input").filter(visible: true).fill("This is a test")
+      expect(
+        browser_root.locator(".d-editor-preview").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("This is a test")],
+        useInnerText: true,
+      )
 
       expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.all? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(true)

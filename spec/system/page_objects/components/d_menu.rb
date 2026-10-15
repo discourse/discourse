@@ -6,10 +6,10 @@ module PageObjects
       attr_reader :component
 
       def initialize(trigger_input, identifier = nil)
-        if trigger_input.is_a?(Capybara::Node::Element)
+        if trigger_input.is_a?(Playwright::Locator)
           @component = trigger_input
         else
-          @component = find(trigger_input)
+          @component = browser_root.locator(trigger_input).filter(visible: true)
         end
 
         @identifier = identifier
@@ -17,16 +17,20 @@ module PageObjects
 
       def expand
         raise "DMenu is already expanded" if is_expanded?
-        component.click
+        component.click.tap do
+          expect(component).to PlaywrightMatchers.have_attribute("aria-expanded", "true")
+        end
       end
 
       def collapse
         raise "DMenu is already collapsed" if is_collapsed?
-        component.click
+        component.click.tap do
+          expect(component).to PlaywrightMatchers.have_attribute("aria-expanded", "false")
+        end
       end
 
       def is_expanded?
-        component["aria-expanded"] == "true"
+        component.get_attribute("aria-expanded") == "true"
       end
 
       def is_collapsed?
@@ -42,27 +46,38 @@ module PageObjects
       end
 
       def remove_selected_option(title)
-        find(".d-multi-select-trigger__selected-item", text: title).click
+        browser_root
+          .locator(".d-multi-select-trigger__selected-item")
+          .filter(visible: true)
+          .filter(hasText: title)
+          .click
       end
 
       def option(selector, match = nil)
-        params = {}
-        params[:match] = match if match
-        within(portal_with_identifier_selector, visible: false) { find(selector, **params) }
+        result =
+          browser_root
+            .locator(portal_with_identifier_selector)
+            .locator(selector)
+            .filter(visible: true)
+        match == :first ? result.first : result
       end
 
       def has_option?(selector, text = nil)
-        params = {}
-        params[:text] = text if text
-        within(portal_with_identifier_selector) { has_css?(selector, **params) }
+        result = option(selector)
+        result = result.filter(hasText: text) if text
+        PlaywrightMatchers.have_count(0).does_not_match?(result)
       end
 
       def has_no_option?(selector)
-        within(portal_with_identifier_selector) { has_no_css?(selector) }
+        within_browser(portal_with_identifier_selector, wait_state: "attached") do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(selector).filter(visible: true),
+          )
+        end
       end
 
       def has_value?(value)
-        component.has_text?(value)
+        PlaywrightMatchers.contain_text(value, useInnerText: true).matches?(component)
       end
     end
   end

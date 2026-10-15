@@ -24,7 +24,7 @@ module PageObjects
       end
 
       def nav_item(name)
-        find("#navigation-bar .nav-item_#{name}")
+        browser_root.locator("#navigation-bar .nav-item_#{name}").filter(visible: true)
       end
     end
   end

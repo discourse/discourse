@@ -33,7 +33,10 @@ describe "Bookmarking posts and topics" do
     visit_topic_and_open_bookmark_menu(post)
 
     expect(bookmark_menu).to be_open
-    expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("js.bookmarks.bookmarked_success")),
+      useInnerText: true,
+    )
     expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
     expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
   end
@@ -42,12 +45,17 @@ describe "Bookmarking posts and topics" do
     visit_topic_and_open_bookmark_menu(post)
 
     expect(bookmark_menu).to be_open
-    expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("js.bookmarks.bookmarked_success")),
+      useInnerText: true,
+    )
 
     bookmark_menu.click_menu_option("tomorrow")
 
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
-    expect(page).to have_no_css(".bookmark-menu-content.-expanded")
+    expect(
+      browser_root.locator(".bookmark-menu-content.-expanded").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
@@ -109,7 +117,7 @@ describe "Bookmarking posts and topics" do
       bookmark_modal.select_relative_time_duration(10)
       bookmark_modal.select_relative_time_interval("days")
 
-      expect(bookmark_modal.custom_time_picker.value).to eq(
+      expect(bookmark_modal.custom_time_picker.input_value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
       )
     end
@@ -119,9 +127,9 @@ describe "Bookmarking posts and topics" do
       expect(topic_page).to have_no_topic_status_bookmark
       expect(topic_page).to have_no_bookmarks(topic)
 
-      send_keys("b")
+      browser_page.keyboard.type("b")
       expect(bookmark_modal).to be_open
-      send_keys(:enter)
+      browser_page.keyboard.press("Enter")
       expect(bookmark_modal).to be_closed
 
       expect(topic_page).to have_topic_status_bookmark
@@ -135,7 +143,7 @@ describe "Bookmarking posts and topics" do
       expect(topic_page).to have_topic_bookmarked(topic_2)
 
       # transition to another topic w/o refreshing the page
-      find("a[href='/t/#{topic.id}']").click
+      browser_root.locator("a[href='/t/#{topic.id}']").filter(visible: true).click
       expect(topic_page).to have_no_bookmarks(topic)
     end
   end
@@ -182,7 +190,9 @@ describe "Bookmarking posts and topics" do
       expect(bookmark_menu).to have_post_submenu
       bookmark_menu.click_post_submenu_option("jump")
 
-      expect(page).to have_current_path(%r{/t/.*#{topic.id}/#{post_2.post_number}})
+      expect(browser_page).to PlaywrightMatchers.have_url(
+        %r{/t/.*#{topic.id}/#{post_2.post_number}},
+      )
     end
 
     it "deletes a single post bookmark via submenu" do
@@ -226,14 +236,15 @@ describe "Bookmarking posts and topics" do
     it "prefills the name of the bookmark and the custom reminder date and time" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("edit")
-      expect(bookmark_modal.name.value).to eq("test name")
-      expect(bookmark_modal.existing_reminder_alert).to have_content(
-        bookmark_modal.existing_reminder_alert_message(bookmark),
+      expect(bookmark_modal.name.input_value).to eq("test name")
+      expect(bookmark_modal.existing_reminder_alert).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(bookmark_modal.existing_reminder_alert_message(bookmark)),
+        useInnerText: true,
       )
-      expect(bookmark_modal.custom_date_picker.value).to eq(
+      expect(bookmark_modal.custom_date_picker.input_value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%Y-%m-%d"),
       )
-      expect(bookmark_modal.custom_time_picker.value).to eq(
+      expect(bookmark_modal.custom_time_picker.input_value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
       )
       expect(bookmark_modal).to have_active_preset("custom")
@@ -250,7 +261,10 @@ describe "Bookmarking posts and topics" do
     it "can clear the bookmark reminder" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("clear-reminder")
-      expect(page).to have_content(I18n.t("js.bookmarks.reminder_clear_success"))
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.bookmarks.reminder_clear_success")),
+        useInnerText: true,
+      )
       expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
       expect(bookmark.reload.reminder_at).to be_nil
     end
@@ -268,7 +282,7 @@ describe "Bookmarking posts and topics" do
       bookmark_modal.cancel
       topic_page.click_post_action_button(post_2, :bookmark)
       bookmark_menu.click_menu_option("edit")
-      expect(bookmark_modal.name.value).to eq("something important")
+      expect(bookmark_modal.name.input_value).to eq("something important")
       expect(bookmark.reload.name).to eq("test name")
     end
   end

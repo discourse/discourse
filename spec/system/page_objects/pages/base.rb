@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class Base
-      include Capybara::DSL
+      include NativeSystemHelpers
       include RSpec::Matchers
       include SystemHelpers
     end

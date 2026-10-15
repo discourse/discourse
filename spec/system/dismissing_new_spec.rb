@@ -18,19 +18,19 @@ RSpec.describe "Dismissing New" do
     it "lets the user stop tracking replies across sessions" do
       sign_in(user)
 
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      using_session(:tab_1) do
+      using_browser_session(:tab_1) do
         sign_in(user)
 
-        visit("/t/#{topic.id}")
+        browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_view).to have_tracking_status("tracking")
       end
 
       topic_list_controls.dismiss_new_and_stop_tracking
 
-      using_session(:tab_1) do
+      using_browser_session(:tab_1) do
         try_until_success(reason: "relies on MessageBus updates") do
           expect(topic_view).to have_tracking_status("regular")
         end
@@ -50,7 +50,9 @@ RSpec.describe "Dismissing New" do
       it "lets the user dismiss replies for the category and subcategories" do
         sign_in(user)
 
-        visit("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+        browser_page
+          .goto("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_list).to have_topics(count: 2)
 
@@ -65,26 +67,26 @@ RSpec.describe "Dismissing New" do
     fab!(:topic)
 
     it "lets the user dismiss the new topic across sessions" do
-      tab_1 = open_new_window(:tab)
-      switch_to_window(tab_1)
+      tab_1 = browser_page.context.new_page
+      native_browser.switch_page(tab_1)
       sign_in(user)
-      visit("/new?subset=topics")
+      browser_page.goto("/new?subset=topics").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list_controls).to have_new(count: 1)
 
-      tab_2 = open_new_window(:tab)
-      switch_to_window(tab_2)
+      tab_2 = browser_page.context.new_page
+      native_browser.switch_page(tab_2)
       sign_in(user)
-      visit("/new?subset=topics")
+      browser_page.goto("/new?subset=topics").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list_controls).to have_new(count: 1)
 
-      switch_to_window(tab_1)
+      native_browser.switch_page(tab_1)
       topic_list_controls.dismiss_new
 
       expect(topic_list_controls).to have_new(count: 0)
 
-      switch_to_window(tab_2)
+      native_browser.switch_page(tab_2)
       expect(topic_list_controls).to have_new(count: 0)
     end
   end
@@ -95,29 +97,29 @@ RSpec.describe "Dismissing New" do
     fab!(:post2) { create_post(topic: post1.topic) }
 
     it "lets the user dismiss topics and replies across sessions" do
-      tab_1 = open_new_window(:tab)
-      switch_to_window(tab_1)
+      tab_1 = browser_page.context.new_page
+      native_browser.switch_page(tab_1)
       sign_in(user)
-      visit("/new")
+      browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list_controls).to have_new(count: 2)
 
-      tab_2 = open_new_window(:tab)
-      switch_to_window(tab_2)
+      tab_2 = browser_page.context.new_page
+      native_browser.switch_page(tab_2)
       sign_in(user)
-      visit("/new")
+      browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list_controls).to have_new(count: 2)
 
-      switch_to_window(tab_1)
+      native_browser.switch_page(tab_1)
       topic_list_controls.dismiss_new
 
       expect(topic_list_controls).to have_new(count: 0)
 
-      switch_to_window(tab_2)
+      native_browser.switch_page(tab_2)
       expect(topic_list_controls).to have_new(count: 0)
 
-      switch_to_window(tab_1)
+      native_browser.switch_page(tab_1)
       topic_list_controls.click_latest
 
       expect(topic_list_controls).to have_new(count: 0)
@@ -126,7 +128,7 @@ RSpec.describe "Dismissing New" do
     it "dismisses all topics and replies from the all subset" do
       sign_in(user)
 
-      visit("/new")
+      browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topic(new_topic)
       expect(topic_list).to have_topic(post1.topic)
@@ -139,7 +141,7 @@ RSpec.describe "Dismissing New" do
     it "dismisses only replies from the replies subset" do
       sign_in(user)
 
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topic(post1.topic)
 
@@ -147,14 +149,14 @@ RSpec.describe "Dismissing New" do
 
       expect(topic_list).to have_no_topics
 
-      visit("/new?subset=topics")
+      browser_page.goto("/new?subset=topics").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(new_topic)
     end
 
     it "dismisses only topics from the topics subset" do
       sign_in(user)
 
-      visit("/new?subset=topics")
+      browser_page.goto("/new?subset=topics").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topic(new_topic)
 
@@ -162,14 +164,14 @@ RSpec.describe "Dismissing New" do
 
       expect(topic_list).to have_no_topics
 
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(post1.topic)
     end
 
     it "can dismiss and stop tracking from the dropdown action" do
       sign_in(user)
 
-      visit("/new")
+      browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list_controls.dismiss_new_and_stop_tracking
 
@@ -184,7 +186,9 @@ RSpec.describe "Dismissing New" do
       it "works on tag routes" do
         sign_in(user)
 
-        visit("/tag/#{tag.slug}/#{tag.id}/l/new")
+        browser_page
+          .goto("/tag/#{tag.slug}/#{tag.id}/l/new")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_list).to have_topics(count: 1)
         expect(topic_list).to have_topic(tagged_first_post.topic)
@@ -193,14 +197,16 @@ RSpec.describe "Dismissing New" do
 
         expect(topic_list).to have_no_topics
 
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(topic_list).to have_topic(post1.topic)
       end
 
       it "works on regular routes after visiting tagged route" do
         sign_in(user)
 
-        visit("/tag/#{tag.slug}/#{tag.id}/l/new")
+        browser_page
+          .goto("/tag/#{tag.slug}/#{tag.id}/l/new")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_list).to have_topics(count: 1)
 

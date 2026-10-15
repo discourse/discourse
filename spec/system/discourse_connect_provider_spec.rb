@@ -23,16 +23,16 @@ describe "Discourse Connect Provider" do
     sso, sig = build_discourse_connect_payload(return_url)
     EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-    visit "/"
-    visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
-    expect(page).to have_current_path("/login")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_page
+      .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/login")
 
     login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-      url: true,
-      ignore_query: false,
     )
   end
 
@@ -42,29 +42,41 @@ describe "Discourse Connect Provider" do
     new_email = "new.person@example.com"
     sso, sig = build_discourse_connect_payload(return_url)
 
-    visit "/"
-    visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
-    expect(page).to have_current_path("/login")
-    expect(page).to have_css("#login-account-name")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_page
+      .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/login")
+    expect(
+      browser_root.locator("#login-account-name").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    find("#one-time-code-link").click
-    find(".code-login-form__email-step input[type='email']").fill_in(with: new_email)
-    find(".code-login-form__continue").click
+    browser_root.locator("#one-time-code-link").filter(visible: true).click
+    browser_root
+      .locator(".code-login-form__email-step input[type='email']")
+      .filter(visible: true)
+      .fill(new_email)
+    browser_root.locator(".code-login-form__continue").filter(visible: true).click
 
     wait_for(timeout: 10) { ActionMailer::Base.deliveries.present? }
-    find(".d-otp-input").fill_in(with: ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1])
+    browser_root
+      .locator(".d-otp-input")
+      .filter(visible: true)
+      .fill(ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1])
 
     # The handoff waits here rather than redirecting as soon as the session
     # exists, so the generated placeholder username can be replaced.
-    expect(page).to have_css(".code-login-form__signup-details-step")
-    find("#code-login-username").fill_in(with: "janedoe")
-    expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
-    find(".code-login-form__continue-to-site").click
+    expect(
+      browser_root.locator(".code-login-form__signup-details-step").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    browser_root.locator("#code-login-username").filter(visible: true).fill("janedoe")
+    expect(
+      browser_root.locator(".code-login-form__continue-to-site[disabled]").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    browser_root.locator(".code-login-form__continue-to-site").filter(visible: true).click
 
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-      url: true,
-      ignore_query: false,
     )
     expect(User.find_by_email(new_email).username).to eq("janedoe")
   end
@@ -79,21 +91,23 @@ describe "Discourse Connect Provider" do
       sso, sig = build_discourse_connect_payload(return_url)
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-      visit "/"
-      visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
-      expect(page).to have_current_path("/login")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_page
+        .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to PlaywrightMatchers.have_url("/login")
 
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_css(".second-factor")
+      expect(
+        browser_root.locator(".second-factor").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
-      find("#login-second-factor").fill_in(with: totp)
+      browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-        url: true,
-        ignore_query: false,
       )
     end
   end

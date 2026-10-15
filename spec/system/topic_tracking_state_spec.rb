@@ -26,17 +26,19 @@ describe "Topic tracking state" do
       Fabricate(:post, topic: existing_topic)
 
       sign_in(user)
-      visit("/tag/#{tag.name}")
+      browser_page.goto("/tag/#{tag.name}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topics(count: 1)
 
       new_topic = publish_new_topic([tag])
 
       try_until_success(reason: "relies on MessageBus updates") do
-        expect(page).to have_css(".show-more", text: /1.*new/)
+        expect(
+          browser_root.locator(".show-more").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text([browser_text_pattern(/1.*new/)], useInnerText: true)
       end
 
-      find(".show-more").click
+      browser_root.locator(".show-more").filter(visible: true).click
       expect(topic_list).to have_topics(count: 2)
       expect(topic_list).to have_topic(new_topic)
     end
@@ -55,16 +57,18 @@ describe "Topic tracking state" do
 
     it "filters out topics with muted tags from incoming on latest" do
       sign_in(user)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       muted_topic = publish_new_topic([muted_tag])
       normal_topic = publish_new_topic([])
 
       try_until_success(reason: "relies on MessageBus updates") do
-        expect(page).to have_css(".show-more", text: /1.*new/)
+        expect(
+          browser_root.locator(".show-more").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text([browser_text_pattern(/1.*new/)], useInnerText: true)
       end
 
-      find(".show-more").click
+      browser_root.locator(".show-more").filter(visible: true).click
       expect(topic_list).to have_topic(normal_topic)
       expect(topic_list).to have_no_topic(muted_topic)
     end

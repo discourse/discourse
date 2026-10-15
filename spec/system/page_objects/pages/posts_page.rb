@@ -6,16 +6,22 @@ module PageObjects
       POSTS_PAGE_SELECTOR = ".posts-page"
 
       def visit
-        page.visit("/posts")
+        browser_page.goto("/posts").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_page_title?
-        page.find("#{POSTS_PAGE_SELECTOR} .posts-page__title")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{POSTS_PAGE_SELECTOR} .posts-page__title").filter(visible: true),
+        )
       end
 
       def has_posts?(count)
-        page.has_css?("#{POSTS_PAGE_SELECTOR} .post-list .post-list-item", count: count)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root.locator("#{POSTS_PAGE_SELECTOR} .post-list .post-list-item").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

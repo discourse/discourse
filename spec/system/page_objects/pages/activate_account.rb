@@ -4,16 +4,21 @@ module PageObjects
   module Pages
     class ActivateAccount < PageObjects::Pages::Base
       def click_activate_account
-        find(".activate-account-button").click
+        browser_root.locator(".activate-account-button").filter(visible: true).click
       end
 
       def click_continue
-        find(".account-activated .continue-button").click
+        browser_root.locator(".account-activated .continue-button").filter(visible: true).click
       end
 
       def has_error?
-        has_css?(".alert-error")
-        has_content?(I18n.t("js.user.activate_account.already_done"))
+        expect(
+          browser_root.locator(".alert-error").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.user.activate_account.already_done")),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
     end
   end

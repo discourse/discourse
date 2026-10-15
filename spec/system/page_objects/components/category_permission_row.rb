@@ -9,28 +9,51 @@ module PageObjects
 
       def has_group_permission?(group_name, permissions = nil)
         if !permissions
-          page.has_css?(group_permission_row_selector(group_name))
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(group_permission_row_selector(group_name)).filter(visible: true),
+          )
         else
           permissions.each do |permission|
-            page.has_css?("#{group_permission_row_selector(group_name)} .#{permission}-granted")
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(
+                "#{group_permission_row_selector(group_name)} .#{permission}-granted",
+              ).filter(visible: true),
+            )
           end
         end
       end
 
       def has_no_group_permission?(group_name)
-        page.has_no_css?(group_permission_row_selector(group_name))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(group_permission_row_selector(group_name)).filter(visible: true),
+        )
       end
 
       def navigate_to_group(group_name)
-        find(group_permission_row_selector(group_name)).find(".group-name-link").click
+        browser_root
+          .locator(group_permission_row_selector(group_name))
+          .filter(visible: true)
+          .locator(".group-name-link")
+          .filter(visible: true)
+          .click
       end
 
       def remove_group_permission(group_name)
-        find(group_permission_row_selector(group_name)).find(".remove-permission").click
+        browser_root
+          .locator(group_permission_row_selector(group_name))
+          .filter(visible: true)
+          .locator(".remove-permission")
+          .filter(visible: true)
+          .click
       end
 
       def toggle_group_permission(group_name, permission)
-        find(group_permission_row_selector(group_name)).find(".#{permission}-toggle").click
+        browser_root
+          .locator(group_permission_row_selector(group_name))
+          .filter(visible: true)
+          .locator(".#{permission}-toggle")
+          .filter(visible: true)
+          .click
       end
     end
   end

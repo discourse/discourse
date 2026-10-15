@@ -5,90 +5,128 @@ module PageObjects
     module DevTools
       class Toolbar < PageObjects::Components::Base
         def enable
-          page.driver.with_playwright_page { |pw| pw.evaluate("window.enableDevTools()") }
+          browser_page.then { |pw| pw.evaluate("window.enableDevTools()") }
           has_toolbar? # Wait for toolbar to appear
           self
         end
 
         def disable
-          find(".dev-tools-toolbar .disable-dev-tools").click
+          browser_root.locator(".dev-tools-toolbar .disable-dev-tools").filter(visible: true).click
           self
         end
 
         def toggle_plugin_outlets
-          find(".dev-tools-toolbar .toggle-plugin-outlets").click
+          browser_root
+            .locator(".dev-tools-toolbar .toggle-plugin-outlets")
+            .filter(visible: true)
+            .click
           self
         end
 
         def open_upcoming_changes_menu
-          find(".dev-tools-toolbar .toggle-upcoming-changes-menu").click
+          browser_root
+            .locator(".dev-tools-toolbar .toggle-upcoming-changes-menu")
+            .filter(visible: true)
+            .click
           self
         end
 
         def close_upcoming_changes_menu
           if has_upcoming_changes_menu?
-            find(".dev-tools-toolbar .toggle-upcoming-changes-menu").click
+            browser_root
+              .locator(".dev-tools-toolbar .toggle-upcoming-changes-menu")
+              .filter(visible: true)
+              .click
           end
 
           self
         end
 
         def has_upcoming_changes_menu?
-          page.has_css?(".upcoming-changes-debug-menu")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".upcoming-changes-debug-menu").filter(visible: true),
+          )
         end
 
         def has_no_upcoming_changes_menu?
-          page.has_no_css?(".upcoming-changes-debug-menu")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".upcoming-changes-debug-menu").filter(visible: true),
+          )
         end
 
         def toggle_upcoming_changes_menu_item(item_name)
-          find(".upcoming-changes-debug-menu label", text: item_name).click
+          browser_root
+            .locator(".upcoming-changes-debug-menu label")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(item_name))
+            .click
           self
         end
 
         def upcoming_change_site_setting_value(site_setting_name)
-          page.evaluate_script(
-            "Discourse.__container__.lookup('service:site-settings').#{site_setting_name}",
+          browser_page.evaluate(
+            "function(arguments) { return #{"Discourse.__container__.lookup('service:site-settings').#{site_setting_name}"} }",
+            arg: [],
           )
         end
 
         def open_blocks_menu
-          find(".dev-tools-toolbar .toggle-blocks").click
+          browser_root.locator(".dev-tools-toolbar .toggle-blocks").filter(visible: true).click
           self
         end
 
         def close_blocks_menu
-          find(".dev-tools-toolbar .toggle-blocks").click if page.has_css?(".block-debug-menu")
+          if PlaywrightMatchers.have_count(0).does_not_match?(
+               browser_root.locator(".block-debug-menu").filter(visible: true),
+             )
+            browser_root.locator(".dev-tools-toolbar .toggle-blocks").filter(visible: true).click
+          end
           self
         end
 
         def toggle_block_visual_overlay
           open_blocks_menu
-          find(".block-debug-menu label", text: "Visual overlay").click
+          browser_root
+            .locator(".block-debug-menu label")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern("Visual overlay"))
+            .click
           close_blocks_menu
           self
         end
 
         def toggle_ghost_blocks
           open_blocks_menu
-          find(".block-debug-menu label", text: "Ghost blocks").click
+          browser_root
+            .locator(".block-debug-menu label")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern("Ghost blocks"))
+            .click
           close_blocks_menu
           self
         end
 
         def toggle_block_outlet_boundaries
           open_blocks_menu
-          find(".block-debug-menu label", text: "Outlet boundaries").click
+          browser_root
+            .locator(".block-debug-menu label")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern("Outlet boundaries"))
+            .click
           close_blocks_menu
           self
         end
 
         def has_toolbar?
-          page.has_css?(".dev-tools-toolbar")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".dev-tools-toolbar").filter(visible: true),
+          )
         end
 
         def has_no_toolbar?
-          page.has_no_css?(".dev-tools-toolbar")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".dev-tools-toolbar").filter(visible: true),
+          )
         end
       end
     end

@@ -13,13 +13,18 @@ describe "Group members" do
       group_page.visit(group).add_users.select_user_and_add(admin)
 
       expect(
-        group_page.find(".group-members .directory-table__cell--username.group-member .username"),
-      ).to have_text(admin.username)
+        browser_root.locator(
+          ".group-members .directory-table__cell--username.group-member .username",
+        ).filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(browser_text_pattern(admin.username), useInnerText: true)
 
       group_page.add_users.select_user_and_add(admin)
 
-      expect(page.find(".modal-container #modal-alert")).to have_text(
-        "'#{admin.username}' is already a member of this group",
+      expect(
+        browser_root.locator(".modal-container #modal-alert").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("'#{admin.username}' is already a member of this group"),
+        useInnerText: true,
       )
     end
   end

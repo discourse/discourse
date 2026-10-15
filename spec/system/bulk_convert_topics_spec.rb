@@ -14,7 +14,9 @@ describe "Bulk convert PMs to public topics" do
   before { sign_in(admin) }
 
   it "silently moves selected PMs into the chosen category" do
-    visit("/u/#{admin.username}/messages")
+    browser_page
+      .goto("/u/#{admin.username}/messages")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     topic_list_header.click_bulk_select_button
     topic_list.click_topic_checkbox(pm)

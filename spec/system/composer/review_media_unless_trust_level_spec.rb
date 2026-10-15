@@ -17,23 +17,33 @@ describe "Composer using review_media" do
     topic_page.visit_topic_and_open_composer(topic)
     topic_page.fill_in_composer(" this one has an emoji: :mask: ")
 
-    expect(page).to have_css(".d-editor-preview .emoji")
+    expect(
+      browser_root.locator(".d-editor-preview .emoji").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     topic_page.send_reply
 
     expect(topic_page).to have_post_number(2)
-    expect(page).not_to have_css(".post-enqueued-modal")
+    expect(
+      browser_root.locator(".post-enqueued-modal").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "flags a post with an image" do
     topic_page.visit_topic_and_open_composer(topic)
     topic_page.fill_in_composer(" this one has an upload: ")
-    attach_file("file-uploader", file_from_fixtures("logo.jpg", "images").path, make_visible: true)
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+    ).set_input_files(file_from_fixtures("logo.jpg", "images").path)
 
-    expect(page).to have_css(".d-editor-preview img")
+    expect(
+      browser_root.locator(".d-editor-preview img").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     topic_page.send_reply
 
-    expect(page).to have_css(".post-enqueued-modal")
+    expect(
+      browser_root.locator(".post-enqueued-modal").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 end

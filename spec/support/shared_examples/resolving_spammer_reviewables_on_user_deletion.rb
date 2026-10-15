@@ -35,14 +35,14 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
 
     all = [acted_reviewable, flag, queued_post, user_review, review_every_post]
 
-    using_session(:other_tab) do
+    using_browser_session(:other_tab) do
       sign_in(watching_admin)
-      visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(review_page).to have_reviewables(all)
     end
 
-    visit("/review")
+    browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(review_page).to have_reviewables(all)
 
@@ -54,7 +54,7 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
     expect(review_page).to have_reviewable_with_rejected_status(user_review)
     expect(review_page).to have_reviewable_with_rejected_status(review_every_post)
 
-    using_session(:other_tab) do
+    using_browser_session(:other_tab) do
       expect(review_page).to have_reviewable_with_status(acted_reviewable, resolved_status)
       expect(review_page).to have_reviewable_with_approved_status(flag)
       expect(review_page).to have_reviewable_with_rejected_status(queued_post)

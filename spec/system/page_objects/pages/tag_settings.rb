@@ -4,99 +4,125 @@ module PageObjects
   module Pages
     class TagSettings < PageObjects::Pages::Base
       def visit(tag)
-        page.visit "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
+        browser_page
+          .goto("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def visit_tab(tag, tab)
-        page.visit "/tag/#{tag.slug_for_url}/#{tag.id}/edit/#{tab}"
+        browser_page
+          .goto("/tag/#{tag.slug_for_url}/#{tag.id}/edit/#{tab}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_tag_settings_page?
-        has_css?(".tag-settings")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".tag-settings").filter(visible: true),
+        )
       end
 
       def has_no_tag_settings_page?
-        has_no_css?(".tag-settings")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".tag-settings").filter(visible: true),
+        )
       end
 
       def header
-        find(".d-page-header__title")
+        browser_root.locator(".d-page-header__title").filter(visible: true)
       end
 
       def back_button
-        all(".d-breadcrumbs a")[1]
+        browser_root
+          .locator(".d-breadcrumbs a")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all[
+          1
+        ]
       end
 
       def nav_tabs
-        find(".d-nav-submenu__tabs")
+        browser_root.locator(".d-nav-submenu__tabs").filter(visible: true)
       end
 
       def general_tab
-        nav_tabs.find("li", text: I18n.t("js.tagging.settings.general"))
+        nav_tabs
+          .locator("li")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.tagging.settings.general")))
       end
 
       def localizations_tab
-        nav_tabs.find("li", text: I18n.t("js.tagging.settings.localizations"))
+        nav_tabs
+          .locator("li")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.tagging.settings.localizations")))
       end
 
       def click_general_tab
-        general_tab.find("a").click
+        general_tab.locator("a").filter(visible: true).click
         self
       end
 
       def click_localizations_tab
-        localizations_tab.find("a").click
+        localizations_tab.locator("a").filter(visible: true).click
         self
       end
 
       def remove_localization
-        find(".form-kit__collection .btn-danger").click
+        browser_root.locator(".form-kit__collection .btn-danger").filter(visible: true).click
         self
       end
 
       def has_localizations?
-        has_css?(".form-kit__collection")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".form-kit__collection").filter(visible: true),
+        )
       end
 
       def has_no_localizations?
-        has_no_css?(".form-kit__collection")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".form-kit__collection").filter(visible: true),
+        )
       end
 
       def name_input
-        find("input[name='name']")
+        browser_root.locator("input[name='name']").filter(visible: true)
       end
 
       def slug_input
-        find("input[name='slug']")
+        browser_root.locator("input[name='slug']").filter(visible: true)
       end
 
       def description_textarea
-        find(".form-kit__field[data-name='description'] textarea.d-editor-input")
+        browser_root.locator(
+          ".form-kit__field[data-name='description'] textarea.d-editor-input",
+        ).filter(visible: true)
       end
 
       def fill_name(value)
-        name_input.fill_in(with: value)
+        name_input.fill(value)
         self
       end
 
       def fill_slug(value)
-        slug_input.fill_in(with: value)
+        slug_input.fill(value)
         self
       end
 
       def fill_description(value)
-        description_textarea.fill_in(with: value)
+        description_textarea.fill(value)
         self
       end
 
       def save_button
-        find(".form-kit__actions button[type='submit']")
+        browser_root.locator(".form-kit__actions button[type='submit']").filter(visible: true)
       end
 
       def delete_button
-        find(".d-page-header__actions .btn-danger")
+        browser_root.locator(".d-page-header__actions .btn-danger").filter(visible: true)
       end
 
       def click_save
@@ -115,28 +141,30 @@ module PageObjects
       end
 
       def has_name_value?(value)
-        name_input.value == value
+        name_input.input_value == value
       end
 
       def has_slug_value?(value)
-        slug_input.value == value
+        slug_input.input_value == value
       end
 
       def has_description_value?(value)
-        description_textarea.value == value
+        description_textarea.input_value == value
       end
 
       # synonyms section
       def synonyms_field
-        find(".form-kit__field[data-name='synonyms']")
+        browser_root.locator(".form-kit__field[data-name='synonyms']").filter(visible: true)
       end
 
       def has_synonyms_section?
-        has_css?(".form-kit__field[data-name='synonyms']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".form-kit__field[data-name='synonyms']").filter(visible: true),
+        )
       end
 
       def formatted_synonyms
-        synonyms_field.find(".formatted-selection").text
+        synonyms_field.locator(".formatted-selection").filter(visible: true).inner_text.strip
       end
 
       def synonym_items
@@ -148,8 +176,8 @@ module PageObjects
       end
 
       def has_no_synonyms?
-        header = synonyms_field.find(".multi-select-header")
-        header["data-name"].to_s.strip.empty?
+        header = synonyms_field.locator(".multi-select-header").filter(visible: true)
+        header.get_attribute("data-name").to_s.strip.empty?
       end
 
       def synonyms_chooser
@@ -168,7 +196,10 @@ module PageObjects
 
       def remove_synonym(name)
         synonyms_chooser.expand
-        find(".select-kit-body .selected-content button[data-name='#{name}']").click
+        browser_root
+          .locator(".select-kit-body .selected-content button[data-name='#{name}']")
+          .filter(visible: true)
+          .click
         synonyms_chooser.collapse
         self
       end

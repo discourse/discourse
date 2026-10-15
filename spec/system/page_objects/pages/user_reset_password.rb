@@ -3,75 +3,100 @@ module PageObjects
   module Pages
     class UserResetPassword < PageObjects::Pages::Base
       def has_no_toggle_button_to_second_factor_form?
-        page.has_no_css?("#security-key .toggle-second-factor-method")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#security-key .toggle-second-factor-method").filter(visible: true),
+        )
       end
 
       def has_no_toggle_button_in_second_factor_form?
-        page.has_no_css?("#second-factor .toggle-second-factor-method")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#second-factor .toggle-second-factor-method").filter(visible: true),
+        )
       end
 
       def has_totp_description?
-        page.find(".second-factor__description").has_text?(
-          I18n.t("js.login.second_factor_description"),
-        )
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.login.second_factor_description")),
+          useInnerText: true,
+        ).matches?(browser_root.locator(".second-factor__description").filter(visible: true))
       end
 
       def has_backup_codes_description?
-        page.find(".second-factor__description").has_text?(
-          I18n.t("js.login.second_factor_backup_description"),
-        )
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.login.second_factor_backup_description")),
+          useInnerText: true,
+        ).matches?(browser_root.locator(".second-factor__description").filter(visible: true))
       end
 
       def has_logged_in_user?
-        page.has_css?(".header-dropdown-toggle.current-user")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        )
       end
 
       def use_totp
-        find(".toggle-second-factor-method", text: I18n.t("js.user.second_factor.use")).click
+        browser_root
+          .locator(".toggle-second-factor-method")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.user.second_factor.use")))
+          .click
       end
 
       def use_backup_codes
-        find(".toggle-second-factor-method", text: I18n.t("js.user.second_factor_backup.use")).click
+        browser_root
+          .locator(".toggle-second-factor-method")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.user.second_factor_backup.use")))
+          .click
         self
       end
 
       def try_another_way
-        find("#security-key .toggle-second-factor-method").click
+        browser_root
+          .locator("#security-key .toggle-second-factor-method")
+          .filter(visible: true)
+          .click
         self
       end
 
       def submit_security_key
-        find("#security-key-authenticate-button").click
+        browser_root.locator("#security-key-authenticate-button").filter(visible: true).click
         self
       end
 
       def fill_in_new_password(password)
-        find("#new-account-password").fill_in(with: password)
+        browser_root.locator("#new-account-password").filter(visible: true).fill(password)
         self
       end
 
       def submit_new_password
-        find(".change-password-form .btn-primary").click
+        browser_root.locator(".change-password-form .btn-primary").filter(visible: true).click
         self
       end
 
       def fill_in_backup_code(backup_code)
-        find("#second-factor .second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+        browser_root
+          .locator("#second-factor .second-factor-token-input")
+          .filter(visible: true)
+          .fill("iAmValidBackupCode")
         self
       end
 
       def submit_backup_code
-        find(".change-password-form .btn-primary").click
+        browser_root.locator(".change-password-form .btn-primary").filter(visible: true).click
         self
       end
 
       def fill_in_totp(totp)
-        find("#second-factor .second-factor-token-input").fill_in(with: totp)
+        browser_root
+          .locator("#second-factor .second-factor-token-input")
+          .filter(visible: true)
+          .fill(totp)
         self
       end
 
       def submit_totp
-        find(".change-password-form .btn-primary").click
+        browser_root.locator(".change-password-form .btn-primary").filter(visible: true).click
         self
       end
     end

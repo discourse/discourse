@@ -4,11 +4,15 @@ module PageObjects
   module Components
     class AdminDashboardSiteTraffic < PageObjects::Components::Base
       def has_headline?(text)
-        has_css?(".db-section__subintro h3", text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".db-section__subintro h3").filter(visible: true),
+        )
       end
 
       def has_trend?(text)
-        has_css?(".db-section__subintro h3", text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".db-section__subintro h3").filter(visible: true),
+        )
       end
 
       def has_up_trend?(text)
@@ -20,36 +24,57 @@ module PageObjects
       end
 
       def has_no_trend?
-        has_no_css?(".db-section__subintro h3", text: "—")
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern("—")],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(".db-section__subintro h3").filter(visible: true))
       end
 
       def has_metric?(label, value)
-        has_css?(".db-section__metric-number", exact_text: value) &&
-          has_css?(".db-section__metric-label", exact_text: label)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(value)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".db-section__metric-number").filter(visible: true)) &&
+          PlaywrightMatchers.contain_text(
+            [browser_exact_text_pattern(label)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".db-section__metric-label").filter(visible: true))
       end
 
       def has_no_metric?(label)
-        has_no_css?(".db-section__metric", text: label)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(label)],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(".db-section__metric").filter(visible: true))
       end
 
       def has_chart?
-        has_css?(".db-section__traffic-chart canvas")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-section__traffic-chart canvas").filter(visible: true),
+        )
       end
 
       def has_see_details_link?
-        has_css?("a.db-traffic__see-details")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("a.db-traffic__see-details").filter(visible: true),
+        )
       end
 
       def has_no_see_details_link?
-        has_no_css?("a.db-traffic__see-details")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("a.db-traffic__see-details").filter(visible: true),
+        )
       end
 
       def click_see_details
-        find("a.db-traffic__see-details").click
+        browser_root.locator("a.db-traffic__see-details").filter(visible: true).click
       end
 
       def hover_comparison_tooltip
-        find("[data-trigger][data-identifier='site-traffic-comparison-tooltip']").hover
+        browser_root
+          .locator("[data-trigger][data-identifier='site-traffic-comparison-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -58,11 +83,18 @@ module PageObjects
       end
 
       def has_no_comparison_tooltip?
-        has_no_css?("[data-trigger][data-identifier='site-traffic-comparison-tooltip']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            "[data-trigger][data-identifier='site-traffic-comparison-tooltip']",
+          ).filter(visible: true),
+        )
       end
 
       def hover_logged_in_share_tooltip
-        find("[data-trigger][data-identifier='site-traffic-logged-in-share-tooltip']").hover
+        browser_root
+          .locator("[data-trigger][data-identifier='site-traffic-logged-in-share-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -71,7 +103,10 @@ module PageObjects
       end
 
       def hover_direct_traffic_tooltip
-        find("[data-trigger][data-identifier='site-traffic-direct-traffic-tooltip']").hover
+        browser_root
+          .locator("[data-trigger][data-identifier='site-traffic-direct-traffic-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -93,47 +128,86 @@ module PageObjects
 
       def has_top_country_rows?(rows)
         within_top_card("Top countries") do
-          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+          unless PlaywrightMatchers.have_count(rows.size).matches?(
+                   browser_root.locator(".db-traffic__list-row").filter(visible: true),
+                 )
+            next false
+          end
 
           rows.each_with_index.all? do |row, index|
             nth =
               ".db-traffic__list-row:nth-child(#{index + 1})[data-test-country-code='#{row[:country]}']"
-            has_css?("#{nth} .db-traffic__name[title='#{row[:name]}']") &&
-              has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator("#{nth} .db-traffic__name[title='#{row[:name]}']").filter(
+                visible: true,
+              ),
+            ) &&
+              PlaywrightMatchers.contain_text(
+                [browser_text_pattern("#{row[:percent]}%")],
+                useInnerText: true,
+              ).matches?(browser_root.locator("#{nth} .db-traffic__percent").filter(visible: true))
           end
         end
       end
 
       def has_top_referrer_rows?(rows)
         within_top_card("Top referrers") do
-          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+          unless PlaywrightMatchers.have_count(rows.size).matches?(
+                   browser_root.locator(".db-traffic__list-row").filter(visible: true),
+                 )
+            next false
+          end
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            unless has_css?(
-                     "#{nth} a.db-traffic__link[title='#{row[:referrer]}']",
-                     text: row[:referrer],
+            unless PlaywrightMatchers.contain_text(
+                     [browser_text_pattern(row[:referrer])],
+                     useInnerText: true,
+                   ).matches?(
+                     browser_root.locator(
+                       "#{nth} a.db-traffic__link[title='#{row[:referrer]}']",
+                     ).filter(visible: true),
                    )
               next false
             end
             next true unless row.key?(:percent)
 
-            has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+            PlaywrightMatchers.contain_text(
+              [browser_text_pattern("#{row[:percent]}%")],
+              useInnerText: true,
+            ).matches?(browser_root.locator("#{nth} .db-traffic__percent").filter(visible: true))
           end
         end
       end
 
       def has_top_entry_url_rows?(rows)
         within_top_card("Top entry URLs") do
-          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+          unless PlaywrightMatchers.have_count(rows.size).matches?(
+                   browser_root.locator(".db-traffic__list-row").filter(visible: true),
+                 )
+            next false
+          end
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            has_css?(
-              "#{nth} a.db-traffic__link[href='#{row[:path]}'][title='#{row[:path]}']",
-              text: row[:path],
-            ) && has_css?("#{nth} .db-traffic__percent", exact_text: "#{row[:percent]}%") &&
-              has_css?("#{nth} .db-traffic__count", exact_text: "(#{row[:count]})")
+            PlaywrightMatchers.contain_text(
+              [browser_text_pattern(row[:path])],
+              useInnerText: true,
+            ).matches?(
+              browser_root.locator(
+                "#{nth} a.db-traffic__link[href='#{row[:path]}'][title='#{row[:path]}']",
+              ).filter(visible: true),
+            ) &&
+              PlaywrightMatchers.contain_text(
+                [browser_exact_text_pattern("#{row[:percent]}%")],
+                useInnerText: true,
+              ).matches?(
+                browser_root.locator("#{nth} .db-traffic__percent").filter(visible: true),
+              ) &&
+              PlaywrightMatchers.contain_text(
+                [browser_exact_text_pattern("(#{row[:count]})")],
+                useInnerText: true,
+              ).matches?(browser_root.locator("#{nth} .db-traffic__count").filter(visible: true))
           end
         end
       end
@@ -151,27 +225,45 @@ module PageObjects
       end
 
       def click_top_referrers_drilldown
-        within_top_card("Top referrers") { find("h3.db-section__row-block-title a").click }
+        within_top_card("Top referrers") do
+          browser_root.locator("h3.db-section__row-block-title a").filter(visible: true).click
+        end
       end
 
       def click_top_countries_drilldown
-        within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
+        within_top_card("Top countries") do
+          browser_root.locator("h3.db-section__row-block-title a").filter(visible: true).click
+        end
       end
 
       def click_top_entry_urls_drilldown
-        within_top_card("Top entry URLs") { find("h3.db-section__row-block-title a").click }
+        within_top_card("Top entry URLs") do
+          browser_root.locator("h3.db-section__row-block-title a").filter(visible: true).click
+        end
       end
 
       def has_top_referrers_drilldown?
-        within_top_card("Top referrers") { has_css?("h3.db-section__row-block-title a") }
+        within_top_card("Top referrers") do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("h3.db-section__row-block-title a").filter(visible: true),
+          )
+        end
       end
 
       def has_top_countries_drilldown?
-        within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
+        within_top_card("Top countries") do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("h3.db-section__row-block-title a").filter(visible: true),
+          )
+        end
       end
 
       def has_top_entry_urls_drilldown?
-        within_top_card("Top entry URLs") { has_css?("h3.db-section__row-block-title a") }
+        within_top_card("Top entry URLs") do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("h3.db-section__row-block-title a").filter(visible: true),
+          )
+        end
       end
 
       def has_bounce_rate?(value)
@@ -191,7 +283,10 @@ module PageObjects
       end
 
       def hover_bounce_rate_tooltip
-        find("[data-test-kpi='bounce_rate'] [data-trigger]").hover
+        browser_root
+          .locator("[data-test-kpi='bounce_rate'] [data-trigger]")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -202,23 +297,46 @@ module PageObjects
       private
 
       def has_kpi_value?(key, value)
-        has_css?("[data-test-kpi='#{key}'] .db-section__metric-number", exact_text: value)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(value)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator("[data-test-kpi='#{key}'] .db-section__metric-number").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_kpi?(key)
-        has_no_css?("[data-test-kpi='#{key}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("[data-test-kpi='#{key}']").filter(visible: true),
+        )
       end
 
       def has_no_top_card?(title)
-        has_no_css?(".db-section__row-block", text: title)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(title)],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(".db-section__row-block").filter(visible: true))
       end
 
       def within_top_card(title, &block)
-        within(".db-section__row-block", text: title, &block)
+        within_browser(
+          browser_root
+            .locator(".db-section__row-block")
+            .filter(visible: true)
+            .filter(hasText: title),
+          &block
+        )
       end
 
       def has_empty_state_in?(title, message)
-        within_top_card(title) { has_css?(".db-traffic__list-empty", text: message) }
+        within_top_card(title) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(message)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".db-traffic__list-empty").filter(visible: true))
+        end
       end
     end
   end

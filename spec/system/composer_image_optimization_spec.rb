@@ -20,14 +20,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
 
   describe "jpeg images" do
     it "optimizes an uploaded jpeg image in the composer" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("huge.jpg", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -38,14 +42,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
     it "skips resizing the image if its width is < composer_media_optimization_image_resize_dimensions_threshold" do
       SiteSetting.composer_media_optimization_image_resize_dimensions_threshold = 100
 
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("logo.jpg", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -55,14 +63,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
       # Re-upload without resizing
       SiteSetting.composer_media_optimization_image_resize_dimensions_threshold = 20_000
 
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("logo.jpg", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -73,7 +85,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
 
   describe "png images" do
     it "optimizes an uploaded png image in the composer" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("large_and_unoptimized.png", "images")
@@ -87,10 +99,14 @@ describe "Composer image optimization for uploads using media-optimization-worke
         timeout: 3,
       )
 
-      attach_file("file-uploader", [converted_file_path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([converted_file_path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload =
         Upload.find_by(original_filename: File.basename(converted_file_path).gsub("png", "jpg"))
@@ -102,14 +118,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
     end
 
     it "converts a png with transparent pixels to webp in the composer" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("large_and_unoptimized.png", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path).gsub("png", "webp"))
 
@@ -121,14 +141,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
     it "keeps the original transparent png when webp is not an authorized extension" do
       SiteSetting.authorized_extensions = "jpg|jpeg|png|gif"
 
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("large_and_unoptimized.png", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -138,7 +162,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
     end
 
     it "keeps an animated png untouched in the composer" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file = file_from_fixtures("large_and_unoptimized.png", "images")
@@ -155,10 +179,14 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ihdr_end = 8 + 4 + 4 + 13 + 4 # signature + IHDR length/type/data/crc
       File.binwrite(apng_path, png[0...ihdr_end] + actl_chunk + png[ihdr_end..])
 
-      attach_file("file-uploader", [apng_path], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([apng_path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+      expect(
+        composer.preview.locator(".image-wrapper").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(apng_path))
 

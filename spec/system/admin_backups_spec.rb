@@ -44,7 +44,10 @@ describe "Admin Backups Page" do
   it "can download a backup, which sends an email" do
     backups_page.visit_page
     backups_page.download_backup("b.tar.gz")
-    expect(page).to have_content(I18n.t("admin_js.admin.backups.operations.download.alert"))
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("admin_js.admin.backups.operations.download.alert")),
+      useInnerText: true,
+    )
     expect_job_enqueued(
       job: :download_backup_email,
       args: {
@@ -64,16 +67,24 @@ describe "Admin Backups Page" do
   it "can restore a backup" do
     backups_page.visit_page
     backups_page.expand_backup_row_menu("b.tar.gz")
-    expect(backups_page).to have_css(backups_page.row_button_selector("restore"))
+    expect(
+      backups_page.locator(backups_page.row_button_selector("restore")).filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "can toggle read-only mode" do
     backups_page.visit_page
     backups_page.toggle_read_only
     dialog.click_yes
-    expect(page).to have_content(I18n.t("js.read_only_mode.enabled"))
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("js.read_only_mode.enabled")),
+      useInnerText: true,
+    )
     backups_page.toggle_read_only
-    expect(page).to have_no_content(I18n.t("js.read_only_mode.enabled"))
+    expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("js.read_only_mode.enabled")),
+      useInnerText: true,
+    )
   end
 
   it "can see backup site settings" do

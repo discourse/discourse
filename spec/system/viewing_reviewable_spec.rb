@@ -25,7 +25,9 @@ describe "Viewing reviewable item" do
     it "shows the new reviewable UI" do
       review_page.visit_reviewable(reviewable_flagged_post)
 
-      expect(page).to have_selector(".review-container")
+      expect(
+        browser_root.locator(".review-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "shows the reviewable item with badges stating the flag reason and count" do
@@ -116,7 +118,10 @@ describe "Viewing reviewable item" do
       review_note_form.add_note("This is a review note.")
       review_page.click_insights_tab
       review_page.click_timeline_tab
-      expect(page).to have_text("This is a review note.")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("This is a review note."),
+        useInnerText: true,
+      )
     end
 
     it "only shows a note on the reviewable it was added to" do
@@ -125,15 +130,24 @@ describe "Viewing reviewable item" do
       review_page.visit_reviewable(reviewable_flagged_post)
       review_note_form.add_note("This is a review note.")
 
-      expect(page).to have_text("This is a review note.")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("This is a review note."),
+        useInnerText: true,
+      )
 
       review_page.visit_reviewable_from_user_menu(other_reviewable)
 
-      expect(page).to have_no_text("This is a review note.")
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern("This is a review note."),
+        useInnerText: true,
+      )
 
       review_page.visit_reviewable_from_user_menu(reviewable_flagged_post)
 
-      expect(page).to have_text("This is a review note.")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("This is a review note."),
+        useInnerText: true,
+      )
     end
 
     it "shows confirmation dialog when navigating away with unsaved note, but not after clearing the note" do
@@ -142,30 +156,63 @@ describe "Viewing reviewable item" do
       review_page.visit_reviewable(reviewable_flagged_post)
       review_page.click_timeline_tab
 
-      review_note_form.form.fill_in("content", with: "This is a draft note")
+      browser_root
+        .locator(review_note_form.form.component)
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root
+            .locator(review_note_form.form.component)
+            .locator("[id=#{"content".to_s.to_json}], [name=#{"content".to_s.to_json}]")
+            .or(
+              browser_root.locator(review_note_form.form.component).get_by_label(
+                "content",
+                exact: true,
+              ),
+            ),
+        )
+        .filter(visible: true)
+        .fill("This is a draft note")
 
       click_logo
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.form_kit.dirty_form"))
+      expect(dialog).to have_displayed_content(I18n.t("js.form_kit.dirty_form"))
 
       dialog.click_no
 
-      expect(page).to have_current_path("/review/#{reviewable_flagged_post.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url("/review/#{reviewable_flagged_post.id}")
 
-      review_note_form.form.fill_in("content", with: "")
+      browser_root
+        .locator(review_note_form.form.component)
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root
+            .locator(review_note_form.form.component)
+            .locator("[id=#{"content".to_s.to_json}], [name=#{"content".to_s.to_json}]")
+            .or(
+              browser_root.locator(review_note_form.form.component).get_by_label(
+                "content",
+                exact: true,
+              ),
+            ),
+        )
+        .filter(visible: true)
+        .fill("")
 
       click_logo
 
       expect(dialog).to be_closed
-      expect(page).to have_current_path("/")
+      expect(browser_page).to PlaywrightMatchers.have_url("/")
     end
 
     it "displays the flagged user's email address in user activity" do
       review_page.visit_reviewable(reviewable_flagged_post)
       review_page.click_insights_tab
 
-      expect(page).to have_text("flagged@example.com")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("flagged@example.com"),
+        useInnerText: true,
+      )
     end
 
     describe "Moderation history" do
@@ -207,14 +254,19 @@ describe "Viewing reviewable item" do
         review_page.visit_reviewable(reviewable_flagged_post)
         review_page.click_insights_tab
 
-        expect(page).to have_text(
-          I18n.t("js.review.insights.moderation_history.silenced", count: 2),
+        expect(browser_content).to PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.review.insights.moderation_history.silenced", count: 2)),
+          useInnerText: true,
         )
-        expect(page).to have_text(
-          I18n.t("js.review.insights.moderation_history.suspended", count: 1),
+        expect(browser_content).to PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.review.insights.moderation_history.suspended", count: 1)),
+          useInnerText: true,
         )
-        expect(page).to have_text(
-          I18n.t("js.review.insights.moderation_history.rejected_posts", count: 2),
+        expect(browser_content).to PlaywrightMatchers.contain_text(
+          browser_text_pattern(
+            I18n.t("js.review.insights.moderation_history.rejected_posts", count: 2),
+          ),
+          useInnerText: true,
         )
       end
     end
@@ -326,13 +378,22 @@ describe "Viewing reviewable item" do
     it "allows to edit post when old moderator actions are enabled" do
       review_page.visit_reviewable(reviewable_queued_post)
 
-      expect(page).to have_text("hello world post contents.")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("hello world post contents."),
+        useInnerText: true,
+      )
       review_page.click_edit_post_button
       review_page.fill_post_content("Hello world from system spec!")
       review_page.save_post_edit
 
-      expect(page).to have_text("Hello world from system spec!")
-      expect(page).not_to have_text("hello world post contents.")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Hello world from system spec!"),
+        useInnerText: true,
+      )
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern("hello world post contents."),
+        useInnerText: true,
+      )
     end
 
     it "shows context question for rejected queued post" do
@@ -365,8 +426,25 @@ describe "Viewing reviewable item" do
 
       review_page.visit_reviewable(reviewable)
 
-      expect(page).to have_text(user.name)
-      expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(user.name),
+        useInnerText: true,
+      )
+      expect(
+        browser_root
+          .get_by_role("link")
+          .and(
+            browser_root.locator(
+              "[id=#{user.username.to_s.to_json}], [name=#{user.username.to_s.to_json}]",
+            ).or(browser_root.get_by_role("link", name: user.username)),
+          )
+          .and(
+            browser_root.locator(
+              "[href=#{"/admin/users/#{user.id}/#{user.username}".to_s.to_json}]",
+            ),
+          )
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       review_page.select_bundled_action(reviewable, "user-delete_user")
       rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
@@ -374,7 +452,10 @@ describe "Viewing reviewable item" do
 
       expect(review_page).to have_reviewable_with_rejected_status(reviewable)
 
-      expect(page).to have_text(user.name)
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(user.name),
+        useInnerText: true,
+      )
 
       expect(review_page).to have_no_context_question(
         reviewable,
@@ -383,11 +464,11 @@ describe "Viewing reviewable item" do
 
       review_page.click_scrub_user_button
 
-      expect(scrub_user_modal.scrub_button).to be_disabled
+      expect(scrub_user_modal.scrub_button).to PlaywrightMatchers.be_disabled
 
       scrubbing_reason = "a spammer who knows how to make GDPR requests"
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
-      expect(scrub_user_modal.scrub_button).not_to be_disabled
+      expect(scrub_user_modal.scrub_button).not_to PlaywrightMatchers.be_disabled
       scrub_user_modal.scrub_button.click
 
       expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
@@ -396,7 +477,10 @@ describe "Viewing reviewable item" do
         reviewable,
         reviewable.payload["scrubbed_at"],
       )
-      expect(page).not_to have_text(user.name)
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(user.name),
+        useInnerText: true,
+      )
     end
 
     it "Allows to delete and block user" do
@@ -436,12 +520,12 @@ describe "Viewing reviewable item" do
       expect(review_page).to have_created_at_history_item
 
       review_page.click_claim_reviewable
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(review_page).to have_history_items(count: 3)
       expect(review_page).to have_claimed_history_item(moderator)
 
       review_page.click_unclaim_reviewable
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(review_page).to have_history_items(count: 4)
       expect(review_page).to have_unclaimed_history_item(moderator)
 

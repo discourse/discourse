@@ -30,7 +30,7 @@ describe "Admin Color Palette Config Area Page" do
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.reload.name).to eq("Changed name 2.0")
-    expect(config_area.name_heading.text).to eq("Changed name 2.0")
+    expect(config_area.name_heading.inner_text.strip).to eq("Changed name 2.0")
   end
 
   it "allows quick-saving just the name without affecting other changes" do
@@ -38,7 +38,7 @@ describe "Admin Color Palette Config Area Page" do
 
     config_area.edit_name_button.click
     config_area.name_field.fill_in("Quick saved name")
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+    config_area.color_palette_editor.input_for_color("primary").fill("#abcdef")
 
     expect(config_area).to have_unsaved_changes_indicator
 
@@ -76,7 +76,7 @@ describe "Admin Color Palette Config Area Page" do
   it "allows changing colors" do
     config_area.visit(color_scheme.id)
 
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+    config_area.color_palette_editor.input_for_color("primary").fill("#abcdef")
 
     expect(config_area).to have_unsaved_changes_indicator
 
@@ -85,7 +85,7 @@ describe "Admin Color Palette Config Area Page" do
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
 
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
+    expect(config_area.color_palette_editor.input_for_color("primary").input_value).to eq("#abcdef")
 
     expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
   end
@@ -96,12 +96,12 @@ describe "Admin Color Palette Config Area Page" do
     config_area.color_palette_editor.input_for_hex("primary").click
     cdp.copy_paste("#888888")
 
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#888888")
+    expect(config_area.color_palette_editor.input_for_color("primary").input_value).to eq("#888888")
 
     config_area.color_palette_editor.input_for_hex("primary").click
     cdp.copy_paste("#777777")
 
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#777777")
+    expect(config_area.color_palette_editor.input_for_color("primary").input_value).to eq("#777777")
   end
 
   it "allows reverting colors to their default values" do
@@ -114,7 +114,7 @@ describe "Admin Color Palette Config Area Page" do
 
     config_area.color_palette_editor.revert_button_for_color("primary").click
 
-    expect(config_area.color_palette_editor.input_for_color("primary").value.downcase).to eq(
+    expect(config_area.color_palette_editor.input_for_color("primary").input_value.downcase).to eq(
       "#dddddd",
     ) # Dark palette's primary is dddddd
     expect(config_area).to have_unsaved_changes_indicator
@@ -136,9 +136,9 @@ describe "Admin Color Palette Config Area Page" do
 
     config_area.duplicate_button.click
 
-    expect(page).to have_current_path("/admin/config/colors/#{max_id + 1}")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/colors/#{max_id + 1}")
     expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.name_heading.text).to eq(
+    expect(config_area.name_heading.inner_text.strip).to eq(
       I18n.t("admin_js.admin.config_areas.color_palettes.copy_of", name: color_scheme.name),
     )
     expect(toasts).to have_success(
@@ -154,7 +154,7 @@ describe "Admin Color Palette Config Area Page" do
 
     dialog.click_danger
 
-    expect(page).to have_current_path("/admin/config/colors")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/colors")
 
     expect(ColorScheme.exists?(color_scheme.id)).to eq(false)
   end
@@ -163,7 +163,7 @@ describe "Admin Color Palette Config Area Page" do
     color_scheme.update!(user_selectable: true)
     admin.user_option.update!(color_scheme_id: color_scheme.id)
     config_area.visit(color_scheme.id)
-    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#aa339f")
+    config_area.color_palette_editor.input_for_color("secondary").fill("#aa339f")
 
     expect(config_area).to have_unsaved_changes_indicator
     config_area.form.submit
@@ -172,19 +172,18 @@ describe "Admin Color Palette Config Area Page" do
 
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
-    expect(page).to have_css(
-      "link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]",
-      visible: false,
-    )
+    expect(
+      browser_root.locator("link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]"),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-    )
+    expect(
+      get_rgb_color(browser_root.locator("html").filter(visible: true), "backgroundColor"),
+    ).to eq("rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})")
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do
     config_area.visit(color_scheme.id)
-    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#aa339f")
+    config_area.color_palette_editor.input_for_color("secondary").fill("#aa339f")
 
     expect(config_area).to have_unsaved_changes_indicator
     config_area.form.submit
@@ -193,7 +192,7 @@ describe "Admin Color Palette Config Area Page" do
 
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
-    expect(page).to have_no_css("link[href=\"#{href}\"]", visible: false)
+    expect(browser_root.locator("link[href=\"#{href}\"]")).to PlaywrightMatchers.have_count(0)
   end
 
   it "can be copied to clipboard" do
@@ -215,17 +214,23 @@ describe "Admin Color Palette Config Area Page" do
     Theme.find_default.update!(color_scheme: color_scheme)
 
     config_area.visit(color_scheme.id)
-    expect(page).to have_text(
-      I18n.t(
-        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
-        themeName: "Foundation",
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(
+        I18n.t(
+          "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
+          themeName: "Foundation",
+        ),
       ),
+      useInnerText: true,
     )
-    expect(page).to have_text(
-      I18n.t(
-        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
-        themeName: "Foundation",
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(
+        I18n.t(
+          "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
+          themeName: "Foundation",
+        ),
       ),
+      useInnerText: true,
     )
     config_area.default_light_on_theme_field.have_value?(true)
     config_area.default_dark_on_theme_field.have_value?(false)

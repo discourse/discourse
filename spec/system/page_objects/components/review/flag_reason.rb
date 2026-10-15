@@ -35,22 +35,41 @@ module PageObjects
                 ReviewableScore.type_title(type).to_s
               end
 
-            within(".review-item__header") do
+            within_browser(browser_root.locator(".review-item__header").filter(visible: true)) do
               flag_reason_element =
-                find(".review-item__flag-reason", text: ReviewableScore.type_title(type))
-              expect(flag_reason_element.text.gsub(/\s+/, " ")).to eq(expected_text)
+                browser_root
+                  .locator(".review-item__flag-reason")
+                  .filter(visible: true)
+                  .filter(hasText: browser_text_pattern(ReviewableScore.type_title(type)))
+              expect(flag_reason_element.inner_text.strip.gsub(/\s+/, " ")).to eq(expected_text)
 
               if count > 1
-                expect(flag_reason_element).to have_css(".review-item__flag-count")
+                expect(
+                  flag_reason_element.locator(".review-item__flag-count").filter(visible: true),
+                ).not_to PlaywrightMatchers.have_count(0)
               else
-                expect(flag_reason_element).to have_no_css(".review-item__flag-count")
+                expect(
+                  flag_reason_element
+                    .tap do |parent|
+                      parent.wait_for(
+                        state: "visible",
+                        timeout: Capybara.default_max_wait_time * 1000,
+                      )
+                    end
+                    .locator(".review-item__flag-count")
+                    .filter(visible: true),
+                ).to PlaywrightMatchers.have_count(0)
               end
             end
           end
         end
 
         def within_reviewable_item(reviewable)
-          within(".review-item[data-reviewable-id='#{reviewable.id}']") { yield }
+          within_browser(
+            browser_root.locator(".review-item[data-reviewable-id='#{reviewable.id}']").filter(
+              visible: true,
+            ),
+          ) { yield }
         end
       end
     end

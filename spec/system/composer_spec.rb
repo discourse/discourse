@@ -7,14 +7,19 @@ describe "Composer" do
   before { sign_in(user) }
 
   it "displays user cards in preview" do
-    page.visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(composer).to be_opened
 
     composer.fill_content("@#{user.username}")
-    composer.preview.find("a.mention").click
+    composer.preview.locator("a.mention").filter(visible: true).click
 
-    page.has_css?("#user-card")
+    expect(browser_root.locator("#user-card")).to PlaywrightMatchers.have_count(1)
+    expect(browser_root.locator("#user-card")).not_to PlaywrightMatchers.have_css("display", "none")
+    expect(browser_root.locator("#user-card")).to PlaywrightMatchers.have_css(
+      "visibility",
+      "visible",
+    )
   end
 
   context "in a topic, the autocomplete prioritizes" do
@@ -31,7 +36,7 @@ describe "Composer" do
     before { SiteSetting.enable_names = false }
 
     it "the topic owner if replying to topic" do
-      page.visit "/t/#{topic.id}"
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       op_post.reply
       expect(composer).to be_opened
@@ -43,7 +48,7 @@ describe "Composer" do
     end
 
     it "the recipient of the reply when replying" do
-      page.visit "/t/#{topic.id}"
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       second_reply_post.reply
       expect(composer).to be_opened
@@ -61,7 +66,7 @@ describe "Composer" do
       reply_post = PageObjects::Components::Post.new(reply_to_second_post.post_number)
 
       sign_in(admin)
-      page.visit "/t/#{topic.id}"
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       reply_post.edit
 
       expect(composer).to be_opened
@@ -76,18 +81,18 @@ describe "Composer" do
 
   it "focuses the reply button when tabbing out of both editor modes" do
     SiteSetting.enable_composer_redesign = false
-    page.visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(composer).to be_opened
     composer.focus
 
-    page.send_keys(:tab)
+    browser_page.keyboard.press("Tab")
 
     expect(composer.reply_button_focused?).to eq(true)
 
     composer.toggle_rich_editor
     composer.focus
 
-    page.send_keys(:tab)
+    browser_page.keyboard.press("Tab")
 
     expect(composer.reply_button_focused?).to eq(true)
   end
@@ -105,7 +110,7 @@ describe "Composer" do
     end
 
     it "creates a topic with tags" do
-      page.visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       composer.fill_title("Test topic with tags")
@@ -132,7 +137,7 @@ describe "Composer" do
       existing_tag = Fabricate(:tag, name: "existing-tag-name")
       numeric_name = existing_tag.id.to_s
 
-      page.visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       composer.fill_title("Test topic with numeric-name tag")
@@ -165,7 +170,7 @@ describe "Composer" do
     end
 
     it "groups subcategories immediately after their parent in the category chooser" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       category_chooser = composer.category_chooser

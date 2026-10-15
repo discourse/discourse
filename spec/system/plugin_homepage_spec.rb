@@ -43,10 +43,15 @@ RSpec.describe "Plugin homepages" do
     )
     select_homepage("public-plugin")
 
-    visit "/"
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_current_path("/")
-    expect(page).to have_css("#plugin-public-homepage", text: "Public plugin homepage")
+    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(
+      browser_root.locator("#plugin-public-homepage").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Public plugin homepage")],
+      useInnerText: true,
+    )
   end
 
   it "falls back for anonymous visitors but serves a private homepage to members" do
@@ -57,13 +62,25 @@ RSpec.describe "Plugin homepages" do
     )
     select_homepage("private-plugin")
 
-    visit "/"
-    expect(page).to have_css("#list-area")
-    expect(page).not_to have_css("#plugin-private-homepage")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_css("display", "none")
+    expect(browser_root.locator("#list-area")).to PlaywrightMatchers.have_css(
+      "visibility",
+      "visible",
+    )
+    expect(
+      browser_root.locator("#plugin-private-homepage").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     sign_in Fabricate(:user)
-    visit "/"
-    expect(page).to have_css("#plugin-private-homepage", text: "Private plugin homepage")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#plugin-private-homepage").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Private plugin homepage")],
+      useInnerText: true,
+    )
   end
 
   it "supports multiple registrations and falls back when the selected plugin is disabled" do
@@ -82,15 +99,27 @@ RSpec.describe "Plugin homepages" do
       )
     select_homepage("sample_homepage")
 
-    visit "/"
-    expect(page).to have_css("#plugin-alternate-homepage", text: "Alternate plugin homepage")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#plugin-alternate-homepage").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Alternate plugin homepage")],
+      useInnerText: true,
+    )
 
     selected_plugin.enabled = false
     Site.clear_cache
-    visit "/"
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("#list-area")
-    expect(page).not_to have_css("#plugin-alternate-homepage")
+    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_css("display", "none")
+    expect(browser_root.locator("#list-area")).to PlaywrightMatchers.have_css(
+      "visibility",
+      "visible",
+    )
+    expect(
+      browser_root.locator("#plugin-alternate-homepage").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   private

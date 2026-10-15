@@ -22,7 +22,7 @@ describe "Admin Fonts Page" do
       fonts_page.form.submit
       expect(fonts_page.form).to have_saved_successfully
 
-      expect(page.find("html")["style"]).to include(
+      expect(browser_root.locator("html").filter(visible: true).get_attribute("style")).to include(
         "font-family: Helvetica; --heading-font-family: JetBrains Mono",
       )
 
@@ -36,41 +36,53 @@ describe "Admin Fonts Page" do
     it "allows an admin to change default text size and does not update existing users preferences" do
       Jobs.run_immediately!
       fonts_page.visit
-      expect(page).to have_css("html.text-size-normal")
+      expect(
+        browser_root.locator("html.text-size-normal").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
       fonts_page.form.select_default_text_size("larger")
 
       fonts_page.form.submit
       expect(modal).to be_open
-      expect(modal.header).to have_content(
-        I18n.t("admin_js.admin.config.fonts.backfill_modal.title"),
+      expect(modal.header).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.config.fonts.backfill_modal.title")),
+        useInnerText: true,
       )
       modal.close
       expect(modal).to be_closed
       expect(fonts_page.form).to have_saved_successfully
 
-      expect(page.find("html")["class"]).to include("text-size-larger")
+      expect(browser_root.locator("html").filter(visible: true).get_attribute("class")).to include(
+        "text-size-larger",
+      )
 
-      visit "/"
-      expect(page).to have_css("html.text-size-normal")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root.locator("html.text-size-normal").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "allows an admin to change default text size and updates existing users preferences" do
       Jobs.run_immediately!
       fonts_page.visit
-      expect(page).to have_css("html.text-size-normal")
+      expect(
+        browser_root.locator("html.text-size-normal").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
       fonts_page.form.select_default_text_size("larger")
 
       fonts_page.form.submit
       expect(modal).to be_open
-      expect(modal.header).to have_content(
-        I18n.t("admin_js.admin.config.fonts.backfill_modal.title"),
+      expect(modal.header).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.config.fonts.backfill_modal.title")),
+        useInnerText: true,
       )
       modal.click_primary_button
       expect(modal).to be_closed
       expect(fonts_page.form).to have_saved_successfully
 
-      visit "/"
-      expect(page).to have_css("html.text-size-larger")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root.locator("html.text-size-larger").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

@@ -4,32 +4,40 @@ module PageObjects
   module Pages
     class Login < PageObjects::Pages::Base
       def open?
-        has_css?(".login-fullpage")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".login-fullpage").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(".login-fullpage")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".login-fullpage").filter(visible: true),
+        )
       end
 
       def open
-        visit("/login")
+        browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def open_with_redirect(redirect_path)
-        visit("/login?redirect=#{redirect_path}")
+        browser_page
+          .goto("/login?redirect=#{redirect_path}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def open_from_header
-        find(".login-button").click
+        browser_root.locator(".login-button").filter(visible: true).click
       end
 
       def click(selector)
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
+        if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
+          expect(
+            browser_root.locator(".d-modal.is-animating").filter(visible: true),
+          ).to PlaywrightMatchers.have_count(0)
         end
-        find(selector).click
+        browser_root.locator(selector).filter(visible: true).click
       end
 
       def open_signup
@@ -49,10 +57,12 @@ module PageObjects
       end
 
       def fill_input(selector, text)
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
+        if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
+          expect(
+            browser_root.locator(".d-modal.is-animating").filter(visible: true),
+          ).to PlaywrightMatchers.have_count(0)
         end
-        find(selector).fill_in(with: text)
+        browser_root.locator(selector).filter(visible: true).fill(text)
       end
 
       def fill_username(username)

@@ -6,12 +6,15 @@ module PageObjects
       MODAL_SELECTOR = ".forgot-password-modal"
 
       def request_reset
-        find("#{full_modal_selector} .forgot-password-reset").click
+        browser_root
+          .locator("#{full_modal_selector} .forgot-password-reset")
+          .filter(visible: true)
+          .click
         self
       end
 
       def submit_code(code)
-        find("#{full_modal_selector} .d-otp-input").fill_in(with: code)
+        browser_root.locator("#{full_modal_selector} .d-otp-input").filter(visible: true).fill(code)
         self
       end
     end

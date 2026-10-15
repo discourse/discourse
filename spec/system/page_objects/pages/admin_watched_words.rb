@@ -4,21 +4,25 @@ module PageObjects
   module Pages
     class AdminWatchedWords < PageObjects::Pages::Base
       def visit(action: "block")
-        page.visit "admin/customize/watched_words/action/#{action}"
+        browser_page
+          .goto("admin/customize/watched_words/action/#{action}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def add_word(word)
-        ww = page.find("#watched-words")
-        ww.find("#watched-words-header").click
-        ww.find(".filter-input").send_keys(word)
-        ww.find(".select-kit-row").click
+        ww = browser_root.locator("#watched-words").filter(visible: true)
+        ww.locator("#watched-words-header").filter(visible: true).click
+        ww.locator(".filter-input").filter(visible: true).press_sequentially(word)
+        ww.locator(".select-kit-row").filter(visible: true).click
 
-        page.find(".watched-words-detail .btn-primary").click
+        browser_root.locator(".watched-words-detail .btn-primary").filter(visible: true).click
       end
 
       def has_word?
-        has_css?(".watched-words-detail .show-words-checkbox")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".watched-words-detail .show-words-checkbox").filter(visible: true),
+        )
       end
 
       def add_word_with_tag(word, tag_name)
@@ -33,11 +37,13 @@ module PageObjects
         tag_chooser.search(tag_name)
         tag_chooser.select_row_by_name(tag_name)
 
-        page.find(".watched-words-detail .btn-primary").click
+        browser_root.locator(".watched-words-detail .btn-primary").filter(visible: true).click
       end
 
       def has_error?(error)
-        has_css?(".dialog-container .dialog-body", text: error)
+        PlaywrightMatchers.contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
+          browser_root.locator(".dialog-container .dialog-body").filter(visible: true),
+        )
       end
     end
   end

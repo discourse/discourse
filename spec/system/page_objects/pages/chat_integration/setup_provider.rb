@@ -10,13 +10,18 @@ module PageObjects
       end
 
       def add_provider_menu
-        PageObjects::Components::DMenu.new(find(".chat-integration-add-provider-trigger"))
+        PageObjects::Components::DMenu.new(
+          browser_root.locator(".chat-integration-add-provider-trigger").filter(visible: true),
+        )
       end
 
       def setup_popular_provider(provider_name)
-        find(".chat-integration-providers-list").find(
-          ".chat-integration-popular-provider-setup.--#{provider_name}",
-        ).click
+        browser_root
+          .locator(".chat-integration-providers-list")
+          .filter(visible: true)
+          .locator(".chat-integration-popular-provider-setup.--#{provider_name}")
+          .filter(visible: true)
+          .click
         self
       end
 
@@ -41,7 +46,13 @@ module PageObjects
       end
 
       def has_field_error?(field_name)
-        within(FORM_SCOPE) { has_css?(".form-kit__field[data-name='#{field_name}'].has-error") }
+        within_browser(FORM_SCOPE) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".form-kit__field[data-name='#{field_name}'].has-error").filter(
+              visible: true,
+            ),
+          )
+        end
       end
     end
   end

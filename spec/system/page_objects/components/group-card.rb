@@ -8,23 +8,31 @@ module PageObjects
       LEAVE_BUTTON_SELECTOR = ".group-details-button .group-index-leave"
 
       def click_join_button
-        find(JOIN_BUTTON_SELECTOR).click
+        browser_root.locator(JOIN_BUTTON_SELECTOR).filter(visible: true).click
       end
 
       def click_leave_button
-        find(LEAVE_BUTTON_SELECTOR).click
+        browser_root.locator(LEAVE_BUTTON_SELECTOR).filter(visible: true).click
       end
 
       def has_highlighted_member_count_of?(expected_count)
-        all(".card-content .members.metadata a.card-tiny-avatar", count: expected_count)
+        browser_root
+          .locator(".card-content .members.metadata a.card-tiny-avatar")
+          .filter(visible: true)
+          .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(expected_count) }
+          .all
       end
 
       def has_join_button?
-        has_css?(JOIN_BUTTON_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(JOIN_BUTTON_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_leave_button?
-        has_css?(LEAVE_BUTTON_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(LEAVE_BUTTON_SELECTOR).filter(visible: true),
+        )
       end
     end
   end

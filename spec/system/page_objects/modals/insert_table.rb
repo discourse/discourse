@@ -7,37 +7,51 @@ module PageObjects
       SPREADSHEET_TABLE_SELECTOR = "#{MODAL_SELECTOR} .jss_worksheet"
 
       def click_insert_table
-        find("#{MODAL_SELECTOR} .btn-insert-table").click
+        browser_root.locator("#{MODAL_SELECTOR} .btn-insert-table").filter(visible: true).click
       end
 
       def cancel
-        click_button(I18n.t("js.cancel"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("js.cancel").to_s.to_json}], [name=#{I18n.t("js.cancel").to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("button", name: I18n.t("js.cancel")))
+          .filter(visible: true)
+          .click
       end
 
       def click_edit_reason
-        find("#{MODAL_SELECTOR} .btn-edit-reason").click
+        browser_root.locator("#{MODAL_SELECTOR} .btn-edit-reason").filter(visible: true).click
       end
 
       def type_edit_reason(text)
-        find("#{MODAL_SELECTOR} .edit-reason input").send_keys(text)
+        browser_root
+          .locator("#{MODAL_SELECTOR} .edit-reason input")
+          .filter(visible: true)
+          .press_sequentially(text)
       end
 
       def find_cell(row, col)
-        find("#{SPREADSHEET_TABLE_SELECTOR} tbody tr[data-y='#{row}'] td[data-x='#{col}']")
+        browser_root.locator(
+          "#{SPREADSHEET_TABLE_SELECTOR} tbody tr[data-y='#{row}'] td[data-x='#{col}']",
+        ).filter(visible: true)
       end
 
       def select_cell(row, col)
-        find_cell(row, col).double_click
+        find_cell(row, col).dblclick()
       end
 
       def type_in_cell(row, col, text)
         select_cell(row, col)
-        cell = find_cell(row, col).find("textarea")
-        cell.send_keys(text, :return)
+        cell = find_cell(row, col).locator("textarea").filter(visible: true)
+        begin
+          cell.press_sequentially(text)
+          cell.press("Enter")
+        end
       end
 
       def has_content_in_cell?(row, col, content)
-        find_cell(row, col).text == content
+        find_cell(row, col).inner_text.strip == content
       end
     end
   end

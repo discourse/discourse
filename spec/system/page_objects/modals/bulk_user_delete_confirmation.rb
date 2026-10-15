@@ -10,20 +10,31 @@ module PageObjects
       end
 
       def confirm_button
-        within(modal) { find(".btn.confirm-delete") }
+        within_browser(modal) { browser_root.locator(".btn.confirm-delete").filter(visible: true) }
       end
 
       def block_ip_and_email_checkbox
-        within(modal) { find("input.block-ip-and-email") }
+        within_browser(modal) do
+          browser_root.locator("input.block-ip-and-email").filter(visible: true)
+        end
       end
 
       def has_confirm_button_disabled?
-        within(modal) { has_css?(".btn.confirm-delete[disabled]") }
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".btn.confirm-delete[disabled]").filter(visible: true),
+          )
+        end
       end
 
       def has_confirm_button_enabled?
-        within(modal) do
-          has_no_css?(".btn.confirm-delete[disabled]") && has_css?(".btn.confirm-delete")
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".btn.confirm-delete[disabled]").filter(visible: true),
+          ) &&
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(".btn.confirm-delete").filter(visible: true),
+            )
         end
       end
 
@@ -34,38 +45,60 @@ module PageObjects
             count: user_count,
           )
         phrase = phrase.upcase if upcase
-        within(modal) { find("input.confirmation-phrase").fill_in(with: phrase) }
+        within_browser(modal) do
+          browser_root.locator("input.confirmation-phrase").filter(visible: true).fill(phrase)
+        end
       end
 
       def has_successful_log_entry_for_user?(user:, position:, total:)
-        within(modal) do
-          has_css?(
-            ".bulk-user-delete-confirmation__progress-line.-success",
-            text:
-              I18n.t(
-                "admin_js.admin.users.bulk_actions.delete.confirmation_modal.user_delete_succeeded",
-                position:,
-                total:,
-                username: user.username,
+        within_browser(modal) do
+          PlaywrightMatchers.contain_text(
+            [
+              browser_text_pattern(
+                I18n.t(
+                  "admin_js.admin.users.bulk_actions.delete.confirmation_modal.user_delete_succeeded",
+                  position:,
+                  total:,
+                  username: user.username,
+                ),
               ),
+            ],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".bulk-user-delete-confirmation__progress-line.-success").filter(
+              visible: true,
+            ),
           )
         end
       end
 
       def has_no_error_log_entries?
-        within(modal) { has_no_css?(".bulk-user-delete-confirmation__progress-line.-error") }
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".bulk-user-delete-confirmation__progress-line.-error").filter(
+              visible: true,
+            ),
+          )
+        end
       end
 
       def has_error_log_entry?(message)
-        within(modal) do
-          has_css?(".bulk-user-delete-confirmation__progress-line.-error", text: message)
+        within_browser(modal) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(message)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".bulk-user-delete-confirmation__progress-line.-error").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       private
 
       def modal
-        find(MODAL_SELECTOR)
+        browser_root.locator(MODAL_SELECTOR).filter(visible: true)
       end
     end
   end

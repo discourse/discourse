@@ -4,12 +4,22 @@ module PageObjects
   module Pages
     class UserPreferencesAccount < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/preferences/account")
+        browser_page
+          .goto("/u/#{user.username}/preferences/account")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def click_edit_avatar_button
-        page.find_button("edit-avatar").click
+        browser_root
+          .get_by_role("button")
+          .and(
+            browser_root.locator(
+              "[id=#{"edit-avatar".to_s.to_json}], [name=#{"edit-avatar".to_s.to_json}]",
+            ).or(browser_root.get_by_role("button", name: "edit-avatar")),
+          )
+          .filter(visible: true)
+          .click
       end
 
       def open_avatar_selector_modal(user)
@@ -17,18 +27,33 @@ module PageObjects
       end
 
       def has_no_avatar_editor?
-        has_no_css?("#edit-avatar")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#edit-avatar").filter(visible: true),
+        )
       end
 
       def has_custom_uploaded_avatar_image?(upload_id)
-        has_css?(".pref-avatar img.avatar[src*='/#{upload_id}_']") do |avatar|
-          avatar.evaluate_script("this.complete && this.naturalWidth") ==
-            avatar[:src].split("/")[-2].to_i
-        end
+        result =
+          browser_page.wait_for_function(
+            <<~JS,
+          selector => {
+            const avatar = document.querySelector(selector);
+            return avatar && avatar.complete && avatar.naturalWidth === (parseInt(avatar.src.split("/").at(-2), 10) || 0);
+          }
+        JS
+            arg: ".pref-avatar img.avatar[src*='/#{upload_id}_']",
+            timeout: Capybara.default_max_wait_time * 1000,
+          )
+        result.dispose
+        true
       end
 
       def has_system_avatar_image?
-        has_css?(".pref-avatar img.avatar[src*='letter_avatar']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".pref-avatar img.avatar[src*='letter_avatar']").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

@@ -6,15 +6,17 @@ module PageObjects
       MODAL_SELECTOR = ".permanently-delete-confirm-modal"
 
       def fill_in_confirmation_phrase(phrase)
-        body.find("input.confirmation-phrase").fill_in(with: phrase)
+        body.locator("input.confirmation-phrase").filter(visible: true).fill(phrase)
       end
 
       def click_danger
-        footer.find(".btn-danger").click
+        footer.locator(".btn-danger").filter(visible: true).click
       end
 
       def has_confirm_button_disabled?
-        has_css?("#{footer_selector} .btn-danger[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{footer_selector} .btn-danger[disabled]").filter(visible: true),
+        )
       end
     end
   end

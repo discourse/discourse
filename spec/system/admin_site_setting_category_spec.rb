@@ -16,7 +16,7 @@ describe "Admin site setting category" do
     chooser.select_row_by_value(category.id)
 
     settings_page.save_setting("shared_drafts_category")
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(SiteSetting.shared_drafts_category).to eq(category.id.to_s)
     expect(settings_page.category_setting("shared_drafts_category")).to have_selected_name(

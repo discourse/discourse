@@ -6,71 +6,97 @@ module PageObjects
       MODAL_SELECTOR = ".history-modal"
 
       def click_previous_revision
-        footer.find("button.previous-revision").click
+        footer.locator("button.previous-revision").filter(visible: true).click
         self
       end
 
       def previous_locale
-        body.find(".revision__locale .revision-content.--previous")
+        body.locator(".revision__locale .revision-content.--previous").filter(visible: true)
       end
 
       def current_locale
-        body.find(".revision__locale .revision-content.--current")
+        body.locator(".revision__locale .revision-content.--current").filter(visible: true)
       end
 
       def current_revision
-        revision_numbers.find("strong:nth-child(3)")
+        revision_numbers.locator("strong:nth-child(3)").filter(visible: true)
       end
 
       def hide_revision
-        footer.find("button.hide-revision").click
+        footer.locator("button.hide-revision").filter(visible: true).click
         self
       end
 
       def destroy_revisions
-        footer.find("button.destroy-revision").click
+        footer.locator("button.destroy-revision").filter(visible: true).click
       end
 
       def has_destroy_revisions_button?
-        footer.has_css?("button.destroy-revision")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          footer.locator("button.destroy-revision").filter(visible: true),
+        )
       end
 
       def has_tag_changes?
-        body.has_css?(".-tag-revisions")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          body.locator(".-tag-revisions").filter(visible: true),
+        )
       end
 
       def has_hidden_diff_notice?
-        body.has_css?(".revision__hidden-notice", text: I18n.t("js.post.revisions.diff_hidden"))
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("js.post.revisions.diff_hidden"))],
+          useInnerText: true,
+        ).matches?(body.locator(".revision__hidden-notice").filter(visible: true))
       end
 
       def has_no_hidden_diff_notice?
-        body.has_no_css?(".revision__hidden-notice")
+        PlaywrightMatchers.have_count(0).matches?(
+          body
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".revision__hidden-notice")
+            .filter(visible: true),
+        )
       end
 
       def has_body_diff?(text)
-        body.has_css?(".body-diff", text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          body.locator(".body-diff").filter(visible: true),
+        )
       end
 
       def previous_tags
-        body.find(".-tag-revisions .tag-revision__wrapper:first-child")
+        body.locator(".-tag-revisions .tag-revision__wrapper:first-child").filter(visible: true)
       end
 
       def current_tags
-        body.find(".-tag-revisions .tag-revision__wrapper:last-child")
+        body.locator(".-tag-revisions .tag-revision__wrapper:last-child").filter(visible: true)
       end
 
       def deleted_tags
-        body.all(".-tag-revisions .discourse-tag.diff-del").map(&:text)
+        body
+          .locator(".-tag-revisions .discourse-tag.diff-del")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip }
       end
 
       def inserted_tags
-        body.all(".-tag-revisions .discourse-tag.diff-ins").map(&:text)
+        body
+          .locator(".-tag-revisions .discourse-tag.diff-ins")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip }
       end
 
       private
 
       def revision_numbers
-        footer.find("#revision-numbers")
+        footer.locator("#revision-numbers").filter(visible: true)
       end
     end
   end

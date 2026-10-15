@@ -15,7 +15,7 @@ describe "Composer redesign" do
     before { SiteSetting.enable_composer_redesign = true }
 
     it "lets the user create a topic with the redesigned composer" do
-      visit("/new-topic")
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       expect(composer).to have_footer_toolbar
@@ -46,7 +46,7 @@ describe "Composer redesign" do
     end
 
     it "shows the recipient selector in the top row when the user composes a personal message" do
-      visit("/new-message")
+      browser_page.goto("/new-message").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       expect(composer).to have_pm_recipients_in_category_row
@@ -58,7 +58,7 @@ describe "Composer redesign" do
     before { SiteSetting.enable_composer_redesign = false }
 
     it "shows the user the legacy composer layout" do
-      visit("/new-topic")
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       expect(composer).to have_inline_toolbar
@@ -67,7 +67,7 @@ describe "Composer redesign" do
     end
 
     it "lets the user hide and show the toolbar on mobile", mobile: true do
-      visit("/new-topic")
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       expect(composer).to have_visible_toolbar

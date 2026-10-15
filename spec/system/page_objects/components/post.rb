@@ -8,88 +8,142 @@ module PageObjects
       end
 
       def post
-        find(post_id)
+        browser_root.locator(post_id).filter(visible: true)
       end
 
       def reply
-        post.find(".reply.create").click
+        post.locator(".reply.create").filter(visible: true).click
       end
 
       def edit
-        post.find(".show-more-actions").click
-        post.find("button.edit").click
+        post.locator(".show-more-actions").filter(visible: true).click
+        post.locator("button.edit").filter(visible: true).click
       end
 
       def show_replies
-        post.find(".show-replies").click
+        post.locator(".show-replies").filter(visible: true).click
       end
 
       def jump_to_reply(reply)
-        find(
-          "#embedded-posts__bottom--#{@post_number} .reply[data-post-id='#{reply.id}'] a.post-info.arrow",
-        ).click
+        browser_root
+          .locator(
+            "#embedded-posts__bottom--#{@post_number} .reply[data-post-id='#{reply.id}'] a.post-info.arrow",
+          )
+          .filter(visible: true)
+          .click
       end
 
       def load_more_replies
-        find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
+        browser_root
+          .locator("#embedded-posts__bottom--#{@post_number} .load-more-replies")
+          .filter(visible: true)
+          .click
       end
 
       def cooked_content
-        post.find(".contents > .cooked")
+        post.locator(".contents > .cooked").filter(visible: true)
       end
 
       def click_category_hashtag(category)
-        post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").click
+        post
+          .locator("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']")
+          .filter(visible: true)
+          .click
       end
 
       def has_cooked_content?(value)
-        cooked_content.has_content?(value)
+        PlaywrightMatchers.contain_text(browser_text_pattern(value), useInnerText: true).matches?(
+          cooked_content,
+        )
       end
 
       def has_replies?(count: nil)
-        find("#embedded-posts__bottom--#{@post_number}").has_css?(".reply", count:)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root
+            .locator("#embedded-posts__bottom--#{@post_number}")
+            .filter(visible: true)
+            .locator(".reply")
+            .filter(visible: true),
+        )
       end
 
       def has_more_replies?
-        find("#embedded-posts__bottom--#{@post_number}").has_css?(".load-more-replies")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator("#embedded-posts__bottom--#{@post_number}")
+            .filter(visible: true)
+            .locator(".load-more-replies")
+            .filter(visible: true),
+        )
       end
 
       def has_loaded_all_replies?
-        find("#embedded-posts__bottom--#{@post_number}").has_no_css?(".load-more-replies")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root
+            .locator("#embedded-posts__bottom--#{@post_number}")
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".load-more-replies")
+            .filter(visible: true),
+        )
       end
 
       def visible?
-        has_css?(post_id)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(post_id).filter(visible: true),
+        )
       end
 
       def show_parent_posts
-        post.find(".reply-to-tab").click
+        post.locator(".reply-to-tab").filter(visible: true).click
       end
 
       def has_parent_posts?(count: nil)
-        find("#embedded-posts__top--#{@post_number}").has_css?(".reply", count:)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root
+            .locator("#embedded-posts__top--#{@post_number}")
+            .filter(visible: true)
+            .locator(".reply")
+            .filter(visible: true),
+        )
       end
 
       def has_no_parent_post_content?(content)
-        find("#embedded-posts__top--#{@post_number}").has_no_content?(content)
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(content),
+          useInnerText: true,
+        ).does_not_match?(
+          browser_root
+            .locator("#embedded-posts__top--#{@post_number}")
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end,
+        )
       end
 
       def post_language
-        post.find(".post-info.post-language").hover
-        find(".post-language-content")
+        post.locator(".post-info.post-language").filter(visible: true).hover
+        browser_root.locator(".post-language-content").filter(visible: true)
       end
 
       def toggle_localized_content
-        post.find(".post-info.post-language .fk-d-tooltip__trigger").click
+        post.locator(".post-info.post-language .fk-d-tooltip__trigger").filter(visible: true).click
         self
       end
 
       def open_post_history
-        post.find(".post-info.edits").click
+        post.locator(".post-info.edits").filter(visible: true).click
       end
 
       def mentions_of(user)
-        post.all("a.mention[href='/u/#{user.username}']")
+        post
+          .locator("a.mention[href='/u/#{user.username}']")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
       end
 
       private

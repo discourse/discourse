@@ -9,7 +9,7 @@ module PageObjects
       COLUMN_SELECTOR = "#{MODAL_SELECTOR} .edit-directory-column"
 
       def open
-        find(".open-edit-columns-btn").click
+        browser_root.locator(".open-edit-columns-btn").filter(visible: true).click
         self
       end
 
@@ -24,10 +24,14 @@ module PageObjects
       end
 
       def has_columns_in_order?(columns)
-        has_css?(COLUMN_SELECTOR, count: columns.size) &&
+        PlaywrightMatchers.have_count(columns.size).matches?(
+          browser_root.locator(COLUMN_SELECTOR).filter(visible: true),
+        ) &&
           columns.each_with_index.all? do |column, index|
-            has_css?(
-              "#{COLUMN_SELECTOR}:nth-child(#{index + 1})[data-reorderable-key='#{column.id}']",
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(
+                "#{COLUMN_SELECTOR}:nth-child(#{index + 1})[data-reorderable-key='#{column.id}']",
+              ).filter(visible: true),
             )
           end
       end

@@ -18,7 +18,7 @@ describe "Closing a topic" do
     TopicStatusUpdater.new(topic, admin).update!("closed", true)
 
     # The close action is a small action, which no longer marks a topic unread.
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(topic_list).to have_no_unread_badge(topics.third)
   end
 end

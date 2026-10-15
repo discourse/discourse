@@ -10,86 +10,117 @@ module PageObjects
       end
 
       def component
-        if @context.is_a?(Capybara::Node::Element)
+        if @context.is_a?(Playwright::Locator)
           @context
         else
-          find(@context)
+          browser_root.locator(@context).filter(visible: true)
         end
       end
 
       def visible?
-        has_css?(@context, visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(component)
       end
 
       def hidden?
-        has_no_css?(@context)
+        PlaywrightMatchers.have_count(0).matches?(component)
       end
 
       def expanded_component(skip_collapsed_check: false)
         # Skip collapsed check to avoid infinite loop when called from .expand
         expand if is_collapsed? && !skip_collapsed_check
-        locator("#{@context}.is-expanded")
+        component
+          .and(browser_page.locator(".is-expanded"))
+          .tap { |element| element.wait_for(state: "visible") }
       end
 
       def collapsed_component
-        find(@context + ":not(.is-expanded)")
+        component.and(browser_page.locator(":not(.is-expanded)"))
       end
 
       def expanded?
-        component.has_css?(".select-kit-body", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".select-kit-body").filter(visible: true),
+        )
       end
 
       def is_collapsed?
-        has_css?(context) && has_css?("#{context}:not(.is-expanded)", wait: 0)
+        PlaywrightMatchers.have_count(0).does_not_match?(component) &&
+          component.and(browser_page.locator(":not(.is-expanded)")).count != 0
       end
 
       def is_not_disabled?
-        has_css?(@context + ":not(.disabled)", wait: 0)
+        component.and(browser_page.locator(":not(.disabled)")).count != 0
       end
 
       def value
-        component.find(".select-kit-header")["data-value"]
+        component.locator(".select-kit-header").filter(visible: true).get_attribute("data-value")
       end
 
       def has_selected_value?(value)
-        component.find(".select-kit-header[data-value='#{value}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".select-kit-header[data-value='#{value}']").filter(visible: true),
+        )
       end
 
       def has_selected_name?(name)
-        component.find(".select-kit-header[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".select-kit-header[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_no_selection?
-        component.has_no_css?(".selected-choice")
+        PlaywrightMatchers.have_count(0).matches?(
+          component.locator(".selected-choice").filter(visible: true),
+        )
       end
 
       def has_selected_choice_name?(name)
-        component.find(".selected-choice[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".selected-choice[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_selected_names?(*names)
-        selected = component.find(".formatted-selection").text.split(", ")
+        selected =
+          component
+            .locator(".formatted-selection")
+            .filter(visible: true)
+            .inner_text
+            .strip
+            .split(", ")
         names.map(&:to_s).sort == selected.sort
       end
 
       def has_option_name?(name)
-        component.find(".select-kit-collection li[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".select-kit-collection li[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_no_option_name?(name)
-        component.has_no_css?(".select-kit-collection li[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          component.locator(".select-kit-collection li[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_option_value?(value)
-        component.find(".select-kit-collection li[data-value='#{value}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator(".select-kit-collection li[data-value='#{value}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_option_value?(value)
-        component.has_no_css?(".select-kit-collection li[data-value='#{value}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          component.locator(".select-kit-collection li[data-value='#{value}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def expand
-        collapsed_component.find(".select-kit-header", visible: :all).click
+        collapsed_component.locator(".select-kit-header").click
         expanded_component(skip_collapsed_check: true)
       end
 
@@ -105,12 +136,22 @@ module PageObjects
 
       def has_filter?
         expanded_component # auto-expands if collapsed
-        has_css?("#{@context}.is-expanded .select-kit-filter .filter-input", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-filter .filter-input")
+            .filter(visible: true),
+        )
       end
 
       def has_no_filter?
         expanded_component
-        has_no_css?("#{@context}.is-expanded .select-kit-filter .filter-input")
+        PlaywrightMatchers.have_count(0).matches?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-filter .filter-input")
+            .filter(visible: true),
+        )
       end
 
       def press_enter_in_filter
@@ -123,7 +164,9 @@ module PageObjects
       end
 
       def wait_for_loaded
-        has_no_css?("#{@context}.is-loading")
+        PlaywrightMatchers.have_count(0).matches?(
+          component.and(browser_page.locator(".is-loading")),
+        )
       end
 
       def select_row_by_value(value)
@@ -149,36 +192,64 @@ module PageObjects
 
       def has_selected_row_name?(name)
         expanded_component
-        has_css?("#{@context}.is-expanded .select-kit-row.is-selected[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row.is-selected[data-name='#{name}']")
+            .filter(visible: true),
+        )
       end
 
       def has_disabled_row_name?(name)
         expanded_component
-        has_css?("#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row.disabled[data-name='#{name}']")
+            .filter(visible: true),
+        )
       end
 
       def has_no_disabled_row_name?(name)
         expanded_component
-        has_no_css?("#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row.disabled[data-name='#{name}']")
+            .filter(visible: true),
+        )
       end
 
       def has_row_synonym_hint?(name, hint_text)
         expanded_component
-        has_css?(
-          "#{@context}.is-expanded .select-kit-row[data-name='#{name}'] .synonym-hint",
-          text: hint_text,
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(hint_text)],
+          useInnerText: true,
+        ).matches?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row[data-name='#{name}'] .synonym-hint")
+            .filter(visible: true),
         )
       end
 
       def has_no_selected_row?
         expanded_component
-        has_no_css?("#{@context}.is-expanded .select-kit-row.is-selected")
+        PlaywrightMatchers.have_count(0).matches?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row.is-selected")
+            .filter(visible: true),
+        )
       end
 
       def has_disabled_row_reason?(name)
         expanded_component
-        has_css?(
-          "#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}'] .disabled-reason",
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component
+            .and(browser_page.locator(".is-expanded"))
+            .locator(".select-kit-row.disabled[data-name='#{name}'] .disabled-reason")
+            .filter(visible: true),
         )
       end
 

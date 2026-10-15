@@ -13,57 +13,75 @@ describe "Tags intersection" do
   fab!(:the_topic) { Fabricate(:topic, category:, tags: [tag, tag2, tag3]) }
 
   it "filters by category" do
-    visit("/tags/intersection/sour/tangy?category=fruits")
+    browser_page
+      .goto("/tags/intersection/sour/tangy?category=fruits")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_current_path("/tags/intersection/sour/tangy?category=fruits")
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      "/tags/intersection/sour/tangy?category=fruits",
+    )
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     # Confirm that frontend transitions work as well,
     # even though UI doesn't support that
-    page.execute_script <<~JS
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       require("discourse/lib/url").default.routeTo("/tags/intersection/sour/tangy?category=fruits")
     JS
 
-    expect(page).to have_current_path("/tags/intersection/sour/tangy?category=fruits")
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      "/tags/intersection/sour/tangy?category=fruits",
+    )
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
   end
 
   it "shortens and redirects URLs" do
-    visit("/tags/intersection/sour/tangy/sour")
-    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+    browser_page
+      .goto("/tags/intersection/sour/tangy/sour")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
 
-    visit("/tags/intersection/sour/tangy/sour/sour")
-    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+    browser_page
+      .goto("/tags/intersection/sour/tangy/sour/sour")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
 
-    visit("/tags/intersection/sour/sour")
-    expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}")
+    browser_page
+      .goto("/tags/intersection/sour/sour")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{tag.slug}/#{tag.id}")
   end
 
   it "removes duplicates from the additional tags list" do
-    visit("/tags/intersection/sour/tangy/tangy")
-    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+    browser_page
+      .goto("/tags/intersection/sour/tangy/tangy")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
 
-    visit("/tags/intersection/sour/tangy/tangy/tangy")
-    expect(page).to have_current_path("/tags/intersection/sour/tangy")
+    browser_page
+      .goto("/tags/intersection/sour/tangy/tangy/tangy")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
   end
 
   it "navigates correctly when adding and removing tags from the intersection chooser" do
-    visit("/tags/intersection/sour/tangy")
+    browser_page
+      .goto("/tags/intersection/sour/tangy")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
     chooser.expand
     chooser.select_row_by_name("sweet")
 
-    expect(page).to have_current_path("/tags/intersection/sour/tangy/sweet")
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy/sweet")
     expect(discovery.topic_list).to have_topics(count: 2)
 
     chooser.unselect_by_name("tangy")
 
-    expect(page).to have_current_path("/tags/intersection/sour/sweet")
+    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/sweet")
   end
 
   context "with capitalized tag names" do
@@ -75,7 +93,9 @@ describe "Tags intersection" do
     fab!(:cap_the_topic) { Fabricate(:topic, category:, tags: [cap_tag, cap_tag2, cap_tag3]) }
 
     it "displays tag names in the chooser and shows correct topics when adding and removing tags" do
-      visit("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+      browser_page
+        .goto("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
       expect(chooser).to have_selected_names("Spicy", "Bitter")
@@ -86,7 +106,7 @@ describe "Tags intersection" do
       chooser.expand
       chooser.select_row_by_name("Savory")
 
-      expect(page).to have_current_path("/tags/intersection/Spicy/Bitter/Savory")
+      expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/Spicy/Bitter/Savory")
       expect(chooser).to have_selected_names("Spicy", "Bitter", "Savory")
       expect(discovery.topic_list).to have_topics(count: 2)
       expect(discovery.topic_list).to have_topic(cap_tagged_topic)
@@ -94,18 +114,20 @@ describe "Tags intersection" do
 
       chooser.unselect_by_name("Bitter")
 
-      expect(page).to have_current_path("/tags/intersection/Spicy/Savory")
+      expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/Spicy/Savory")
       expect(chooser).to have_selected_names("Spicy", "Savory")
       expect(discovery.topic_list).to have_topics(count: 2)
     end
 
     it "navigates to canonical tag URL when removing tags down to one" do
-      visit("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+      browser_page
+        .goto("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
       chooser.unselect_by_name("Bitter")
 
-      expect(page).to have_current_path("/tag/#{cap_tag.slug}/#{cap_tag.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{cap_tag.slug}/#{cap_tag.id}")
       expect(discovery.topic_list).to have_topic(cap_tagged_topic)
       expect(discovery.topic_list).to have_topic(cap_the_topic)
     end

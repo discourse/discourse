@@ -4,13 +4,15 @@ module PageObjects
   module Pages
     class AdminAboutConfigArea < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/config/about")
+        browser_page
+          .goto("/admin/config/about")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def select_locale(locale)
-        find(
-          ".admin-config-area-about__locale-selector-dropdown option[value='#{locale}']",
-        ).select_option
+        browser_root.locator(".admin-config-area-about__locale-selector-dropdown").select_option(
+          value: locale,
+        )
       end
 
       def general_settings_section
@@ -30,29 +32,51 @@ module PageObjects
       end
 
       def has_no_group_listing_section?
-        has_no_css?(".admin-config-area-about__extra-groups-section")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".admin-config-area-about__extra-groups-section").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_contact_information_section?
-        has_no_css?(".admin-config-area-about__contact-information-section")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".admin-config-area-about__contact-information-section").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_your_organization_section?
-        has_no_css?(".admin-config-area-about__your-organization-section")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".admin-config-area-about__your-organization-section").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_language_toolbar?
-        has_css?(".admin-config-area__primary-content > .admin-config-area-about__language-toolbar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            ".admin-config-area__primary-content > .admin-config-area-about__language-toolbar",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_language_toolbar?
-        has_no_css?(".admin-config-area-about__language-toolbar")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".admin-config-area-about__language-toolbar").filter(visible: true),
+        )
       end
 
       def has_locale_description?
-        has_css?(
-          ".admin-config-area-about__locale-selector .form-kit__container-help-text",
-          text: "Only translatable About page fields are shown.",
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern("Only translatable About page fields are shown.")],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            ".admin-config-area-about__locale-selector .form-kit__container-help-text",
+          ).filter(visible: true),
         )
       end
     end

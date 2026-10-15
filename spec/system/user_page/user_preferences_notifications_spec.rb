@@ -18,7 +18,7 @@ describe "User preferences | Notifications" do
 
       expect(user.user_option.reload.notify_on_linked_posts).to eq(false)
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(user_preferences_notifications_page).to have_notify_on_linked_posts_disabled
 
@@ -27,7 +27,7 @@ describe "User preferences | Notifications" do
 
       expect(user.user_option.reload.notify_on_linked_posts).to eq(true)
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(user_preferences_notifications_page).to have_notify_on_linked_posts_enabled
     end

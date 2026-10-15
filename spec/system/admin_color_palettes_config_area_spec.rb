@@ -80,7 +80,7 @@ describe "Admin Color Palettes Config Area Page" do
     create_color_palette_modal.base_dropdown.select_row_by_name("Grey Amber")
     create_color_palette_modal.create_button.click
 
-    expect(page).to have_current_path(%r{/admin/config/colors/\d+})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/config/colors/\d+})
   end
 
   it "can create new color palette from custom palette" do
@@ -88,29 +88,44 @@ describe "Admin Color Palettes Config Area Page" do
 
     config_area.create_button.click
     create_color_palette_modal.base_dropdown.expand
-    expect(page).to have_css(".color-palette-picker-row")
+    expect(
+      browser_root.locator(".color-palette-picker-row").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     create_color_palette_modal.base_dropdown.select_row_by_name("A Test Palette")
 
     create_color_palette_modal.create_button.click
 
-    expect(page).to have_current_path(%r{/admin/config/colors/\d+})
-    expect(page).to have_no_css(".revert")
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/config/colors/\d+})
+    expect(browser_root.locator(".revert").filter(visible: true)).to PlaywrightMatchers.have_count(
+      0,
+    )
   end
 
   describe "filtering" do
     it "shows filters when there are more than 8 color schemes" do
       config_area.visit
 
-      expect(page).to have_css(".d-filter-controls__input")
+      expect(
+        browser_root.locator(".d-filter-controls__input").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "can filter by text search" do
       config_area.visit
 
-      find(".d-filter-controls__input").fill_in(with: user_selectable_palette.name)
+      browser_root
+        .locator(".d-filter-controls__input")
+        .filter(visible: true)
+        .fill(user_selectable_palette.name)
 
-      expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
-      expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
+      expect(
+        browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "can filter by type" do
@@ -119,18 +134,33 @@ describe "Admin Color Palettes Config Area Page" do
       select_kit = PageObjects::Components::DNativeSelect.new(".d-native-select")
       select_kit.select("user_selectable")
 
-      expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
-      expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
-      expect(page).to have_no_css(".color-palette:not([data-palette-id])")
+      expect(
+        browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator(".color-palette:not([data-palette-id])").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "shows no results state" do
       config_area.visit
 
-      find(".d-filter-controls__input").fill_in(with: "bananas")
+      browser_root.locator(".d-filter-controls__input").filter(visible: true).fill("bananas")
 
-      expect(page).to have_css(".d-filter-controls__no-results")
-      expect(page).to have_css("button", text: I18n.t("js.filter_controls.reset"))
+      expect(
+        browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("button").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.filter_controls.reset"))],
+        useInnerText: true,
+      )
     end
   end
 
@@ -138,74 +168,192 @@ describe "Admin Color Palettes Config Area Page" do
     it "shows palette details" do
       config_area.visit
 
-      expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
-      expect(page).to have_css("[data-palette-id='#{theme_palette.id}']")
-      expect(page).to have_css("[data-palette-id='#{regular_palette.id}']")
+      expect(
+        browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-palette-id='#{theme_palette.id}']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "shows user selectable badge" do
       config_area.visit
 
-      within("[data-palette-id='#{user_selectable_palette.id}']") do
-        expect(page).to have_css(".theme-card__badge.--selectable")
+      within_browser(
+        browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
+          visible: true,
+        ),
+      ) do
+        expect(
+          browser_root.locator(".theme-card__badge.--selectable").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
 
     it "shows theme link for theme palettes" do
       config_area.visit
 
-      within("[data-palette-id='#{theme_palette.id}']") { expect(page).to have_link(theme.name) }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{theme_palette.id}']").filter(visible: true),
+      ) do
+        expect(
+          browser_root
+            .get_by_role("link")
+            .and(
+              browser_root.locator(
+                "[id=#{theme.name.to_s.to_json}], [name=#{theme.name.to_s.to_json}]",
+              ).or(browser_root.get_by_role("link", name: theme.name)),
+            )
+            .filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
+      end
     end
 
     it "can toggle user selectable status" do
       config_area.visit
 
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(page).to have_css(".dropdown-menu")
-      click_button(I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"))
+      expect(
+        browser_root.locator(".dropdown-menu").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root
+        .locator(
+          "[id=#{I18n.t("admin_js.admin.customize.theme.user_selectable_button_label").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.user_selectable_button_label").to_s.to_json}]",
+        )
+        .or(
+          browser_root.get_by_role(
+            "button",
+            name: I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"),
+          ),
+        )
+        .filter(visible: true)
+        .click
 
-      within("[data-palette-id='#{regular_palette.id}']") do
-        expect(page).to have_css(".theme-card__badge.--selectable")
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) do
+        expect(
+          browser_root.locator(".theme-card__badge.--selectable").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
 
     it "can set as light and dark default for theme" do
       config_area.visit
 
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(page).to have_css(".dropdown-menu")
+      expect(
+        browser_root.locator(".dropdown-menu").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      browser_root
+        .locator(
+          "[id=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }], [name=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }]",
+        )
+        .or(
+          browser_root.get_by_role(
+            "button",
+            name:
+              I18n.t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              ),
+          ),
+        )
+        .filter(visible: true)
+        .click
 
-      within("[data-palette-id='#{regular_palette.id}']") do
-        expect(page).to have_css(
-          ".theme-card__badge.--default",
-          text: I18n.t("admin_js.admin.customize.colors.default_light_badge.text"),
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) do
+        expect(
+          browser_root.locator(".theme-card__badge.--default").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t("admin_js.admin.customize.colors.default_light_badge.text"),
+            ),
+          ],
+          useInnerText: true,
         )
       end
 
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(page).to have_css(".dropdown-menu")
+      expect(
+        browser_root.locator(".dropdown-menu").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_dark",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      browser_root
+        .locator(
+          "[id=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_dark",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }], [name=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_dark",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }]",
+        )
+        .or(
+          browser_root.get_by_role(
+            "button",
+            name:
+              I18n.t(
+                "admin_js.admin.customize.colors.set_default_dark",
+                { theme: Theme.find_default.name },
+              ),
+          ),
+        )
+        .filter(visible: true)
+        .click
 
-      within("[data-palette-id='#{regular_palette.id}']") do
-        expect(page).to have_css(
-          ".theme-card__badge.--default",
-          text: I18n.t("admin_js.admin.customize.colors.default_dark_badge.text"),
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) do
+        expect(
+          browser_root.locator(".theme-card__badge.--default").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("admin_js.admin.customize.colors.default_dark_badge.text"))],
+          useInnerText: true,
         )
       end
     end
@@ -215,11 +363,14 @@ describe "Admin Color Palettes Config Area Page" do
     it "generates CSS variables for color schemes" do
       config_area.visit
 
-      palette_item = find("[data-palette-id='#{regular_palette.id}'] .color-palette__preview")
+      palette_item =
+        browser_root.locator(
+          "[data-palette-id='#{regular_palette.id}'] .color-palette__preview",
+        ).filter(visible: true)
 
-      expect(palette_item[:style]).to include("--primary--preview:")
-      expect(palette_item[:style]).to include("--secondary--preview:")
-      expect(palette_item[:style]).to include("--tertiary--preview:")
+      expect(palette_item.get_attribute("style")).to include("--primary--preview:")
+      expect(palette_item.get_attribute("style")).to include("--secondary--preview:")
+      expect(palette_item.get_attribute("style")).to include("--tertiary--preview:")
     end
   end
 
@@ -233,18 +384,50 @@ describe "Admin Color Palettes Config Area Page" do
 
       config_area.visit
 
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(page).to have_css(".dropdown-menu")
+      expect(
+        browser_root.locator(".dropdown-menu").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      browser_root
+        .locator(
+          "[id=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }], [name=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }]",
+        )
+        .or(
+          browser_root.get_by_role(
+            "button",
+            name:
+              I18n.t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              ),
+          ),
+        )
+        .filter(visible: true)
+        .click
 
-      expect(page).to have_no_css(".fk-d-default-toast.-success")
+      expect(
+        browser_root.locator(".fk-d-default-toast.-success").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "shows toast when admin cannot see live preview" do
@@ -256,16 +439,46 @@ describe "Admin Color Palettes Config Area Page" do
 
       config_area.visit
 
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+      within_browser(
+        browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
+      ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(page).to have_css(".dropdown-menu")
+      expect(
+        browser_root.locator(".dropdown-menu").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      browser_root
+        .locator(
+          "[id=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }], [name=#{
+            I18n
+              .t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              )
+              .to_s
+              .to_json
+          }]",
+        )
+        .or(
+          browser_root.get_by_role(
+            "button",
+            name:
+              I18n.t(
+                "admin_js.admin.customize.colors.set_default_light",
+                { theme: Theme.find_default.name },
+              ),
+          ),
+        )
+        .filter(visible: true)
+        .click
 
       expected_message =
         I18n.t(
@@ -303,7 +516,13 @@ describe "Admin Color Palettes Config Area Page" do
     it "sorts schemes in order: selectable, custom, current default theme, alphabetical for horizon theme" do
       SiteSetting.default_theme_id = Theme.horizon_theme.id
       config_area.visit
-      color_schemes = page.all(".color-palette__details h3").map(&:text)
+      color_schemes =
+        browser_root
+          .locator(".color-palette__details h3")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip }
       expect(color_schemes).to eq(
         [
           "Default light",
@@ -328,7 +547,13 @@ describe "Admin Color Palettes Config Area Page" do
     it "sorts schemes in order: selectable, custom, current default theme, alphabetical for foundation theme" do
       SiteSetting.default_theme_id = Theme.foundation_theme.id
       config_area.visit
-      color_schemes = page.all(".color-palette__details h3").map(&:text)
+      color_schemes =
+        browser_root
+          .locator(".color-palette__details h3")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip }
       expect(color_schemes).to eq(
         [
           I18n.t("admin_js.admin.customize.theme.default_light_scheme"),

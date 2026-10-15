@@ -55,12 +55,19 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    browser_page
+      .goto(
+        File.join(
+          GlobalSetting.relative_url_root || "",
+          "/session/#{user.encoded_username}/become.json?redirect=false",
+        ),
+      )
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      "Signed in to #{user.encoded_username} successfully",
+      useInnerText: true,
+    )
   end
 
   def setup_system_test
@@ -131,8 +138,10 @@ module SystemHelpers
     old_element_y = nil
 
     try_until_success(timeout: timeout) do
-      current_element_x = element.rect[:x]
-      current_element_y = element.rect[:y]
+      position = element.bounding_box
+      raise Capybara::ExpectationNotMet if position.nil?
+      current_element_x = position["x"]
+      current_element_y = position["y"]
 
       stopped_moving = current_element_x == old_element_x && current_element_y == old_element_y
 
@@ -144,19 +153,19 @@ module SystemHelpers
   end
 
   def resize_window(width: nil, height: nil)
-    original_size = Capybara.current_session.current_window.size
-    Capybara.current_session.current_window.resize_to(
-      width || original_size[0],
-      height || original_size[1],
+    original_size = browser_page.viewport_size
+    browser_page.set_viewport_size(
+      width: width || original_size[:width],
+      height: height || original_size[:height],
     )
     yield
   ensure
-    Capybara.current_session.current_window.resize_to(original_size[0], original_size[1])
+    browser_page.set_viewport_size(original_size)
   end
 
   def using_browser_timezone(timezone, &example)
-    using_session(timezone) do
-      page.driver.with_playwright_page do |pw_page|
+    using_browser_session(timezone) do
+      browser_page.then do |pw_page|
         cdp_session = pw_page.context.new_cdp_session(pw_page)
         cdp_session.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
         freeze_time(&example)
@@ -174,11 +183,13 @@ module SystemHelpers
       selection.addRange(range);
     JS
 
-    page.execute_script(js, selector)
+    browser_page.evaluate("function(arguments) { #{js} }", arg: browser_arguments(selector))
   end
 
   def select_text_range(selector, start = 0, offset = 5)
-    expect(page).to have_selector(selector)
+    expect(
+      browser_root.locator(selector).filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];
@@ -191,19 +202,27 @@ module SystemHelpers
       selection.addRange(range);
     JS
 
-    page.execute_script(js, selector, start, offset)
+    browser_page.evaluate(
+      "function(arguments) { #{js} }",
+      arg: browser_arguments(selector, start, offset),
+    )
   end
 
   def current_active_element
     {
-      classes: page.evaluate_script("document.activeElement.className"),
-      id: page.evaluate_script("document.activeElement.id"),
+      classes:
+        browser_page.evaluate(
+          "function(arguments) { return document.activeElement.className }",
+          arg: [],
+        ),
+      id:
+        browser_page.evaluate("function(arguments) { return document.activeElement.id }", arg: []),
     }
   end
 
   def fake_scroll_down_long(selector_to_make_tall = "#main-outlet")
-    find(selector_to_make_tall)
-    execute_script(<<~JS)
+    browser_root.locator(selector_to_make_tall).filter(visible: true)
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       (function() {
         const el = document.querySelector("#{selector_to_make_tall}");
         if (!el) {
@@ -218,8 +237,11 @@ module SystemHelpers
         document.body.appendChild(sentinel);
       })();
     JS
-    find("#scroll-sentinel")
-    execute_script('document.getElementById("scroll-sentinel").scrollIntoView()')
+    browser_root.locator("#scroll-sentinel").filter(visible: true)
+    browser_page.evaluate(
+      "function(arguments) { document.getElementById(\"scroll-sentinel\").scrollIntoView() }",
+      arg: [],
+    )
   end
 
   def setup_or_skip_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
@@ -274,7 +296,7 @@ module SystemHelpers
 
   def with_logs
     playwright_logger = nil
-    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+    browser_page.then { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
 
     yield(playwright_logger)
   end
@@ -326,7 +348,7 @@ module SystemHelpers
   end
 
   def with_virtual_authenticator(options = {})
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       cdp_client = pw_page.context.new_cdp_session(pw_page)
       cdp_client.send_message("WebAuthn.enable")
 
@@ -364,7 +386,7 @@ module SystemHelpers
   end
 
   def add_cookie(options = {})
-    page.driver.with_playwright_page do |playwright_page|
+    browser_page.then do |playwright_page|
       playwright_page.context.add_cookies(
         [{ domain: Discourse.current_hostname, path: "/" }.merge(options)],
       )
@@ -374,21 +396,26 @@ module SystemHelpers
   def expect_no_alert
     opened_dialog = false
 
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.on("dialog", ->(dialog) { opened_dialog = true })
-
-      yield
-
-      expect(opened_dialog).to eq(false)
+    listener = ->(dialog) do
+      opened_dialog = true
+      dialog.dismiss
     end
+    browser_page.on("dialog", listener)
+    yield
+    expect(opened_dialog).to eq(false)
+  ensure
+    browser_page.off("dialog", listener)
   end
 
   def get_rgb_color(element, property = "backgroundColor")
     css_property = property.underscore.dasherize
 
     try_until_success do
-      style_hash = element.style(css_property)
-      color = style_hash[css_property]
+      color =
+        element.evaluate(
+          "(element, property) => getComputedStyle(element).getPropertyValue(property)",
+          arg: css_property,
+        )
       raise Capybara::ExpectationNotMet if color.blank?
       color
     end
@@ -397,15 +424,11 @@ module SystemHelpers
   # should be used only on very rare occasion when you need to wait for something
   # that is not visually changing on the page
   def wait_for_timeout(ms = 100)
-    page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
+    browser_page.then { |pw_page| pw_page.wait_for_timeout(ms) }
   end
 
   def wait_until_hidden(element)
-    element.with_playwright_element_handle do |playwright_element|
-      playwright_element.wait_for_element_state("hidden")
-    rescue Playwright::Error => e
-      raise if !detached_element_error?(e)
-    end
+    element.wait_for(state: "hidden")
   end
 
   # Retries the block on "Element is not attached to the DOM" error.
@@ -425,15 +448,11 @@ module SystemHelpers
   end
 
   def locator(selector, locator = nil)
-    if locator
-      locator.locator(selector)
-    else
-      page.driver.with_playwright_page { |pw_page| pw_page.locator(selector) }
-    end
+    (locator || browser_root).locator(selector)
   end
 
   def tap_screen_at(x, y)
-    page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
+    browser_page.then { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
   # Drives a real native drag through Playwright's CDP drag interception.
@@ -456,7 +475,7 @@ module SystemHelpers
   # patched node methods, and driving Playwright directly bypasses it. Assert
   # through a retrying matcher, not a value read once.
   def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       options = {}
       options[:sourcePosition] = source_position if source_position
       options[:targetPosition] = target_position if target_position
@@ -480,7 +499,7 @@ module SystemHelpers
   # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
   # through a retrying matcher rather than a value read once.
   def drag_and_hold(from:, over:, to:, steps: 10)
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       session = pw_page.context.new_cdp_session(pw_page)
       session.send_message("Input.setInterceptDrags", params: { "enabled" => true })
 
@@ -497,14 +516,14 @@ module SystemHelpers
     begin
       # Outside the driver block, so Capybara's own matchers work normally in it.
       yield if block_given?
-      page.driver.with_playwright_page do |pw_page|
+      browser_page.then do |pw_page|
         drop_x, drop_y = viewport_centre_of(pw_page, to)
         pw_page.mouse.move(drop_x, drop_y, steps: steps)
       end
     ensure
       # Released even when an in-drag assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      browser_page.then { |pw_page| pw_page.mouse.up }
     end
   end
 
@@ -550,7 +569,7 @@ module SystemHelpers
   def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
     raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
 
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       # Waited for rather than queried once: `query_selector` returns nil without
       # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
       # nil, naming neither the selector nor the timing.
@@ -583,7 +602,7 @@ module SystemHelpers
     ensure
       # Released even when an in-gesture assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      browser_page.then { |pw_page| pw_page.mouse.up }
     end
   end
 

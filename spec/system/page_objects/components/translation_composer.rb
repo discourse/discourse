@@ -4,7 +4,12 @@ module PageObjects
   module Components
     class TranslationComposer < PageObjects::Components::Composer
       def has_translation_title?(value)
-        expect(find("#reply-control input#translated-topic-title").value).to eq(value)
+        expect(
+          browser_root
+            .locator("#reply-control input#translated-topic-title")
+            .filter(visible: true)
+            .input_value,
+        ).to eq(value)
       end
 
       def select_locale(locale)
@@ -15,7 +20,7 @@ module PageObjects
       end
 
       def fill_content(content)
-        find(".d-editor-input").set(content)
+        browser_root.locator(".d-editor-input").filter(visible: true).fill(content)
       end
     end
   end

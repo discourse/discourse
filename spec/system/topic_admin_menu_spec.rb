@@ -17,7 +17,9 @@ describe "Topic Admin Menu" do
 
       topic_page.visit_topic(pm)
       topic_page.move_to_public_category(category)
-      expect(topic_page.move_to_public_modal).to have_css("#modal-alert")
+      expect(
+        topic_page.move_to_public_modal.locator("#modal-alert").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

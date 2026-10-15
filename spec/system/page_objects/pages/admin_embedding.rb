@@ -4,22 +4,24 @@ module PageObjects
   module Pages
     class AdminEmbedding < AdminBase
       def visit
-        page.visit("/admin/customize/embedding")
+        browser_page
+          .goto("/admin/customize/embedding")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def click_add_host
-        find(".admin-embedding__header-add-host").click
+        browser_root.locator(".admin-embedding__header-add-host").filter(visible: true).click
         self
       end
 
       def click_edit_host
-        find(".admin-embeddable-host-item__edit").click
+        browser_root.locator(".admin-embeddable-host-item__edit").filter(visible: true).click
         self
       end
 
       def open_embedding_host_menu
-        find(".embedding-host-menu-trigger").click
+        browser_root.locator(".embedding-host-menu-trigger").filter(visible: true).click
         self
       end
 
@@ -43,27 +45,39 @@ module PageObjects
       end
 
       def expand_snippet
-        find(".admin-embedding-index__code .admin-config-area-card__toggle-button").click
+        browser_root
+          .locator(".admin-embedding-index__code .admin-config-area-card__toggle-button")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_snippet_containing?(text)
-        page.has_css?(".admin-embedding-index__code code", text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".admin-embedding-index__code code").filter(visible: true),
+        )
       end
 
       def has_no_snippet_containing?(text)
-        page.has_no_css?(".admin-embedding-index__code code", text: text)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(text)],
+          useInnerText: true,
+        ).does_not_match?(
+          browser_root.locator(".admin-embedding-index__code code").filter(visible: true),
+        )
       end
 
       def click_delete
         open_embedding_host_menu
-        find(".admin-embeddable-host-item__delete").click
+        browser_root.locator(".admin-embeddable-host-item__delete").filter(visible: true).click
         self
       end
 
       def confirm_delete
-        find(".dialog-footer .btn-primary").click
-        expect(page).to have_no_css(".dialog-body", wait: Capybara.default_max_wait_time * 3)
+        browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
+        expect(
+          browser_root.locator(".dialog-body").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000)
         self
       end
     end

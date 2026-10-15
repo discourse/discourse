@@ -15,60 +15,86 @@ module PageObjects
       end
 
       def rich_editor
-        find(RICH_EDITOR)
+        browser_root.locator(RICH_EDITOR).filter(visible: true)
       end
 
       def has_rich_editor?
-        page.has_css?(RICH_EDITOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(RICH_EDITOR).filter(visible: true),
+        )
       end
 
       def has_no_rich_editor?
-        page.has_no_css?(RICH_EDITOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(RICH_EDITOR).filter(visible: true),
+        )
       end
 
       def has_no_animated_images?
-        page.has_no_css?("#{RICH_EDITOR} .composer-image-node img") do |image|
-          image.evaluate_script("getComputedStyle(this).animationName") != "none"
-        end
+        result =
+          browser_page.wait_for_function(
+            <<~JS,
+          selector => Array.from(document.querySelectorAll(selector))
+            .filter(image => image.getClientRects().length && getComputedStyle(image).visibility !== "hidden")
+            .every(image => getComputedStyle(image).animationName === "none")
+        JS
+            arg: "#{RICH_EDITOR} .composer-image-node img",
+            timeout: Capybara.default_max_wait_time * 1000,
+          )
+        result.dispose
+        true
       end
 
       def opened?
-        page.has_css?("#{@composer_id}.open")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id}.open").filter(visible: true),
+        )
       end
 
       def closed?
-        page.has_css?("#{@composer_id}.closed", visible: :all)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id}.closed"),
+        )
       end
 
       def minimized?
-        page.has_css?("#{@composer_id}.draft")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id}.draft").filter(visible: true),
+        )
       end
 
       def open_composer_actions
-        find(".composer-actions-trigger").click
+        browser_root.locator(".composer-actions-trigger").filter(visible: true).click
         self
       end
 
       def click_toolbar_button(button_class)
-        find(".d-editor-button-bar button.#{button_class}").click
+        browser_root
+          .locator(".d-editor-button-bar button.#{button_class}")
+          .filter(visible: true)
+          .click
         self
       end
 
       def heading_menu
-        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
+        PageObjects::Components::DMenu.new(
+          browser_root.locator(".d-editor-button-bar button.heading").filter(visible: true),
+        )
       end
 
       def list_menu
-        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.list"))
+        PageObjects::Components::DMenu.new(
+          browser_root.locator(".d-editor-button-bar button.list").filter(visible: true),
+        )
       end
 
       def focus
-        find(composer_input_selector).click
+        browser_root.locator(composer_input_selector).filter(visible: true).click
         self
       end
 
       def height
-        find(@composer_id).native.bounding_box["height"].round
+        browser_root.locator(@composer_id).filter(visible: true).bounding_box["height"].round
       end
 
       def drag_resize_by(pixels)
@@ -80,86 +106,145 @@ module PageObjects
       # resize is observed. Named for what it reads rather than for the height, which
       # would suggest measuring the box.
       def has_applied_height?(height)
-        has_css?("html[style*='--composer-height: #{height}px']", visible: :all)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("html[style*='--composer-height: #{height}px']"),
+        )
       end
 
       def fill_title(title)
-        find("#{@composer_id} #reply-title").fill_in(with: title)
+        browser_root.locator("#{@composer_id} #reply-title").filter(visible: true).fill(title)
         self
       end
 
       def has_input_title?(value)
-        has_field?("reply-title", with: value)
+        PlaywrightMatchers.have_value(
+          (
+            if value.is_a?(Regexp)
+              Regexp.new(value.source.gsub('\A', "^").gsub('\z', "$"), value.options)
+            else
+              value
+            end
+          ),
+        ).matches?(
+          browser_root
+            .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+            .and(
+              browser_root.locator(
+                "[id=#{"reply-title".to_s.to_json}], [name=#{"reply-title".to_s.to_json}]",
+              ).or(browser_root.get_by_label("reply-title", exact: true)),
+            )
+            .filter(visible: true),
+        )
       end
 
       # Methods for when the enable_composer_redesign upcoming change is enabled.
 
       def has_footer_toolbar?
-        page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{@composer_id} .composer-footer__toolbar .d-editor-button-bar",
+          ).filter(visible: true),
+        )
       end
 
       def has_title_below_category_row?
-        page.has_css?("#{@composer_id} .title-and-category ~ .title-input")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .title-and-category ~ .title-input").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_pm_recipients_in_category_row?
-        page.has_css?("#{@composer_id} .title-and-category .user-selector")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .title-and-category .user-selector").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_toggle_toolbar_button?
-        page.has_css?("#{@composer_id} .toggle-toolbar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .toggle-toolbar").filter(visible: true),
+        )
       end
 
       # Methods for when the enable_composer_redesign upcoming change is disabled.
 
       def has_no_footer_toolbar?
-        page.has_no_css?("#{@composer_id} .composer-footer")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@composer_id} .composer-footer").filter(visible: true),
+        )
       end
 
       def has_inline_toolbar?
-        page.has_css?("#{@composer_id} .d-editor-textarea-wrapper .d-editor-button-bar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{@composer_id} .d-editor-textarea-wrapper .d-editor-button-bar",
+          ).filter(visible: true),
+        )
       end
 
       def has_title_in_category_row?
-        page.has_css?("#{@composer_id} .title-and-category .title-input")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .title-and-category .title-input").filter(
+            visible: true,
+          ),
+        )
       end
 
       def toggle_toolbar
-        find("#{@composer_id} .toggle-toolbar").click
+        browser_root.locator("#{@composer_id} .toggle-toolbar").filter(visible: true).click
         self
       end
 
       def has_visible_toolbar?
-        page.has_css?("#{@composer_id} .d-editor-button-bar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .d-editor-button-bar").filter(visible: true),
+        )
       end
 
       def has_no_visible_toolbar?
-        page.has_no_css?("#{@composer_id} .d-editor-button-bar")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@composer_id} .d-editor-button-bar").filter(visible: true),
+        )
       end
 
       def fill_content(content)
-        find("#{@composer_id} .d-editor .d-editor-input").fill_in(with: content)
+        browser_root
+          .locator("#{@composer_id} .d-editor .d-editor-input")
+          .filter(visible: true)
+          .fill(content)
         self
       end
 
       def minimize
-        find("#{@composer_id} .toggle-minimize").click
+        browser_root.locator("#{@composer_id} .toggle-minimize").filter(visible: true).click
         self
       end
 
       def append_content(content)
-        current_content = composer_input.value
-        composer_input.set(current_content + content)
+        current_content = composer_input.input_value
+        composer_input.fill(current_content + content)
         self
       end
 
       def fill_form_template_field(field, content)
-        form_template_field(field).fill_in(with: content)
+        form_template_field(field)
+          .locator("input:not([aria-hidden=true]), textarea:not([aria-hidden=true])")
+          .filter(visible: true)
+          .fill(content.to_s)
         self
       end
 
       def type_content(content)
-        composer_input.send_keys(content)
+        if content.is_a?(Symbol)
+          composer_input.press(browser_key_chord([content]))
+        elsif content.is_a?(Array)
+          composer_input.press(browser_key_chord(content))
+        else
+          composer_input.press_sequentially(content)
+        end
         self
       end
 
@@ -167,22 +252,42 @@ module PageObjects
         fill_content("")
       end
 
-      def has_content?(content)
-        composer_input.value == content
+      def has_displayed_content?(content)
+        composer_input.input_value == content
       end
 
       def has_value?(value)
-        within(@composer_id) do
+        within_browser(@composer_id) do
           if value.nil?
-            has_no_field?(class: "d-editor-input")
+            PlaywrightMatchers.have_count(0).matches?(
+              browser_root
+                .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+                .and(browser_root.locator(".#{"d-editor-input".to_s.split.join(".")}"))
+                .filter(visible: true),
+            )
           else
-            has_field?(class: "d-editor-input", with: value)
+            PlaywrightMatchers.have_value(
+              (
+                if value.is_a?(Regexp)
+                  Regexp.new(value.source.gsub('\A', "^").gsub('\z', "$"), value.options)
+                else
+                  value
+                end
+              ),
+            ).matches?(
+              browser_root
+                .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+                .and(browser_root.locator(".#{"d-editor-input".to_s.split.join(".")}"))
+                .filter(visible: true),
+            )
           end
         end
       end
 
       def has_popup_content?(content)
-        composer_popup.has_content?(content)
+        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+          composer_popup,
+        )
       end
 
       def has_no_action?(action)
@@ -190,25 +295,34 @@ module PageObjects
       end
 
       def has_no_action_id?(action_id)
-        has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".composer-actions-dropdown [data-action-id='#{action_id}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def select_action(action)
-        find(action(action)).click
+        browser_root.locator(action(action)).filter(visible: true).click
         self
       end
 
       def select_action_by_id(action_id)
-        find(".composer-actions-dropdown [data-action-id='#{action_id}']").click
+        browser_root
+          .locator(".composer-actions-dropdown [data-action-id='#{action_id}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def reply_button_focused?
-        page.has_css?("#{@composer_id} .btn-primary:focus")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .btn-primary:focus").filter(visible: true),
+        )
       end
 
       def create
-        find("#{@composer_id} .btn-primary").click
+        browser_root.locator("#{@composer_id} .btn-primary").filter(visible: true).click
       end
 
       def action(action_title)
@@ -216,19 +330,29 @@ module PageObjects
       end
 
       def actions
-        all(".composer-action-title .select-kit-collection li").map { |el| el[:title] }
+        browser_root
+          .locator(".composer-action-title .select-kit-collection li")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map do |el|
+            el.evaluate(
+              "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+              arg: "title",
+            )
+          end
       end
 
       def button_label
-        find("#{@composer_id} .btn-primary .d-button-label")
+        browser_root.locator("#{@composer_id} .btn-primary .d-button-label").filter(visible: true)
       end
 
       def emoji_picker
-        find("#{@composer_id} .emoji-picker")
+        browser_root.locator("#{@composer_id} .emoji-picker").filter(visible: true)
       end
 
       def emoji_autocomplete
-        find(AUTOCOMPLETE_MENU)
+        browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true)
       end
 
       def category_chooser
@@ -236,12 +360,20 @@ module PageObjects
       end
 
       def locale
-        find("#{@composer_id} .d-editor-button-bar #{POST_LANGUAGE_SELECTOR}")
+        browser_root.locator(
+          "#{@composer_id} .d-editor-button-bar #{POST_LANGUAGE_SELECTOR}",
+        ).filter(visible: true)
       end
 
       def set_locale(locale)
         click_toolbar_button("post-language-selector-trigger")
-        within("#d-menu-portals", visible: false) { find("button", text: locale).click }
+        within_browser(browser_root.locator("#d-menu-portals"), wait_state: "attached") do
+          browser_root
+            .locator("button")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(locale))
+            .click
+        end
       end
 
       def switch_category(category_name)
@@ -250,53 +382,83 @@ module PageObjects
       end
 
       def preview
-        find("#{@composer_id} .d-editor-preview-wrapper")
+        browser_root.locator("#{@composer_id} .d-editor-preview-wrapper").filter(visible: true)
       end
 
       def has_discard_draft_modal?
-        page.has_css?(".discard-draft-modal")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".discard-draft-modal").filter(visible: true),
+        )
       end
 
       def has_hashtag_autocomplete?
-        has_css?(HASHTAG_MENU)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(HASHTAG_MENU).filter(visible: true),
+        )
       end
 
       def has_mention_autocomplete?
-        has_css?(MENTION_MENU)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MENTION_MENU).filter(visible: true),
+        )
       end
 
       def mention_menu_autocomplete_username_list
-        find(MENTION_MENU).all("a").map { |a| a.text }
+        browser_root
+          .locator(MENTION_MENU)
+          .filter(visible: true)
+          .locator("a")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |a| a.inner_text.strip }
       end
 
       def has_emoji_autocomplete?
-        has_css?(AUTOCOMPLETE_MENU)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true),
+        )
       end
 
       def has_no_emoji_autocomplete?
-        has_no_css?(AUTOCOMPLETE_MENU)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true),
+        )
       end
 
       def has_emoji_autocomplete_selected?(index)
-        has_css?("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected").filter(
+            visible: true,
+          ),
+        )
       end
 
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
 
       def has_emoji_suggestion?(emoji)
-        has_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
+        PlaywrightMatchers.contain_text([browser_text_pattern(emoji)], useInnerText: true).matches?(
+          browser_root.locator(EMOJI_SUGGESTION_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_emoji_suggestion?(emoji)
-        has_no_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(emoji)],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(EMOJI_SUGGESTION_SELECTOR).filter(visible: true))
       end
 
       def has_emoji_preview?(emoji)
-        page.has_css?(emoji_preview_selector(emoji))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(emoji_preview_selector(emoji)).filter(visible: true),
+        )
       end
 
       def has_no_emoji_preview?(emoji)
-        page.has_no_css?(emoji_preview_selector(emoji))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(emoji_preview_selector(emoji)).filter(visible: true),
+        )
       end
 
       def composer_input_selector
@@ -304,91 +466,127 @@ module PageObjects
       end
 
       def has_no_composer_input?
-        page.has_no_css?(composer_input_selector)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(composer_input_selector).filter(visible: true),
+        )
       end
 
       def has_composer_input?
-        page.has_css?(composer_input_selector)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(composer_input_selector).filter(visible: true),
+        )
       end
 
       def has_composer_preview?
-        page.has_css?("#{@composer_id} .d-editor-preview-wrapper")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .d-editor-preview-wrapper").filter(visible: true),
+        )
       end
 
       def has_no_composer_preview?
-        page.has_no_css?("#{@composer_id} .d-editor-preview-wrapper")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@composer_id} .d-editor-preview-wrapper").filter(visible: true),
+        )
       end
 
       def has_composer_preview_toggle?
-        page.has_css?("#{@composer_id} .toggle-preview")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .toggle-preview").filter(visible: true),
+        )
       end
 
       def has_no_composer_preview_toggle?
-        page.has_no_css?("#{@composer_id} .toggle-preview")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@composer_id} .toggle-preview").filter(visible: true),
+        )
       end
 
       def has_form_template?
-        page.has_css?(".form-template-form__wrapper")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".form-template-form__wrapper").filter(visible: true),
+        )
       end
 
       def has_form_template_field?(field)
-        page.has_css?(".form-template-field[data-field-type='#{field}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".form-template-field[data-field-type='#{field}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_form_template_field_required_indicator?(field)
-        page.has_css?(
-          ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
+          ).filter(visible: true),
         )
       end
 
       FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
 
       def has_no_form_template_chooser?
-        page.has_no_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(FORM_TEMPLATE_CHOOSER_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_form_template_chooser?
-        page.has_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(FORM_TEMPLATE_CHOOSER_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_form_template_field_error?(error)
-        page.has_css?(".form-template-field__error", text: error, visible: :all)
+        PlaywrightMatchers.contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
+          browser_root.locator(".form-template-field__error"),
+        )
       end
 
       def has_no_form_template_field_error?(error)
-        page.has_no_css?(".form-template-field__error", text: error, visible: :all)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(error)],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(".form-template-field__error"))
       end
 
       def has_form_template_field_label?(label)
-        page.has_css?(".form-template-field__label", text: label)
+        PlaywrightMatchers.contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+          browser_root.locator(".form-template-field__label").filter(visible: true),
+        )
       end
 
       def has_form_template_field_description?(description)
-        page.has_css?(".form-template-field__description", text: description)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(description)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".form-template-field__description").filter(visible: true))
       end
 
       def has_post_error?(error)
-        page.has_css?(".popup-tip", text: error, visible: all)
+        PlaywrightMatchers.contain_text([error]).matches?(browser_page.locator(".popup-tip"))
       end
 
       def has_no_post_error?(error)
-        page.has_no_css?(".popup-tip", text: error, visible: all)
+        PlaywrightMatchers.contain_text([error]).does_not_match?(browser_page.locator(".popup-tip"))
       end
 
       def composer_input
-        find("#{@composer_id} .d-editor-input")
+        browser_root.locator("#{@composer_id} .d-editor-input").filter(visible: true)
       end
 
       def composer_popup
-        find("#{@composer_id} .composer-popup")
+        browser_root.locator("#{@composer_id} .composer-popup").filter(visible: true)
       end
 
       def form_template_field(field)
-        find(".form-template-field[data-field-type='#{field}']")
+        browser_root.locator(".form-template-field[data-field-type='#{field}']").filter(
+          visible: true,
+        )
       end
 
       def move_cursor_after(text)
-        execute_script(<<~JS, text)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: browser_arguments(text))
           const text = arguments[0];
           const composer = document.querySelector("#{@composer_id} .d-editor-input");
           const index = composer.value.indexOf(text);
@@ -400,11 +598,16 @@ module PageObjects
       end
 
       def select_all
-        find(composer_input_selector).send_keys([PLATFORM_KEY_MODIFIER, "a"])
+        browser_root
+          .locator(composer_input_selector)
+          .filter(visible: true)
+          .press(
+            [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "a"].join("+"),
+          )
       end
 
       def select_range(start_index, length)
-        execute_script(<<~JS, text)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: browser_arguments(text))
           const composer = document.querySelector("#{@composer_id} .d-editor-input");
           composer.focus();
           composer.setSelectionRange(#{start_index}, #{length});
@@ -421,31 +624,52 @@ module PageObjects
       end
 
       def has_nested_list_item?(text)
-        has_css?("#{RICH_EDITOR} li > ul > li", text:, exact_text: true)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(text)],
+          useInnerText: true,
+        ).matches?(browser_root.locator("#{RICH_EDITOR} li > ul > li").filter(visible: true))
       end
 
       def has_top_level_list_item?(text)
-        has_css?("#{RICH_EDITOR} > ul > li", text:, exact_text: true)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(text)],
+          useInnerText: true,
+        ).matches?(browser_root.locator("#{RICH_EDITOR} > ul > li").filter(visible: true))
       end
 
       def submit
-        find("#{@composer_id} .save-or-cancel .create").click
+        browser_root.locator("#{@composer_id} .save-or-cancel .create").filter(visible: true).click
       end
 
       def discard
-        find("#{@composer_id} .discard-button").click
+        browser_root.locator("#{@composer_id} .discard-button").filter(visible: true).click
       end
 
       def close
-        find("#{@composer_id} .toggle-save-and-close").click
+        browser_root.locator("#{@composer_id} .toggle-save-and-close").filter(visible: true).click
       end
 
       def has_no_in_progress_uploads?
-        find("#{@composer_id}").has_no_css?("#file-uploading")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root
+            .locator("#{@composer_id}")
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator("#file-uploading")
+            .filter(visible: true),
+        )
       end
 
       def has_in_progress_uploads?
-        find("#{@composer_id}").has_css?("#file-uploading")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator("#{@composer_id}")
+            .filter(visible: true)
+            .locator("#file-uploading")
+            .filter(visible: true),
+        )
       end
 
       def select_pm_user(username)
@@ -457,11 +681,23 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        find("#{@composer_id}").has_css?(".d-editor-container.--rich-editor-enabled")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator("#{@composer_id}")
+            .filter(visible: true)
+            .locator(".d-editor-container.--rich-editor-enabled")
+            .filter(visible: true),
+        )
       end
 
       def has_no_rich_editor_active?
-        find("#{@composer_id}").has_css?(".d-editor-container.--markdown-editor-enabled")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator("#{@composer_id}")
+            .filter(visible: true)
+            .locator(".d-editor-container.--markdown-editor-enabled")
+            .filter(visible: true),
+        )
       end
 
       def has_markdown_editor_active?
@@ -469,7 +705,11 @@ module PageObjects
       end
 
       def toggle_rich_editor
-        rich = page.find(".composer-toggle-switch")["data-rich-editor"]
+        rich =
+          browser_root
+            .locator(".composer-toggle-switch")
+            .filter(visible: true)
+            .get_attribute("data-rich-editor")
 
         editor_toggle_switch.click
 
@@ -483,15 +723,19 @@ module PageObjects
       end
 
       def has_toggle_switch?
-        page.has_css?("#{@composer_id} .composer-toggle-switch")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@composer_id} .composer-toggle-switch").filter(visible: true),
+        )
       end
 
       def has_no_toggle_switch?
-        page.has_no_css?("#{@composer_id} .composer-toggle-switch")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@composer_id} .composer-toggle-switch").filter(visible: true),
+        )
       end
 
       def editor_toggle_switch
-        find("#{@composer_id} .composer-toggle-switch")
+        browser_root.locator("#{@composer_id} .composer-toggle-switch").filter(visible: true)
       end
 
       def image_grid

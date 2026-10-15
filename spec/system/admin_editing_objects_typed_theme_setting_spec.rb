@@ -57,7 +57,9 @@ RSpec.describe "Admin editing objects type" do
     end
 
     it "allows admins to edit an objects theme setting" do
-      visit("/admin/customize/themes/#{theme.id}")
+      browser_page
+        .goto("/admin/customize/themes/#{theme.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(admin_customize_themes_page).to have_no_overriden_setting("objects_setting")
 
@@ -69,13 +71,13 @@ RSpec.describe "Admin editing objects type" do
       admin_objects_theme_setting_editor =
         admin_customize_themes_page.click_edit_objects_setting_button("objects_setting")
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         "/admin/customize/themes/#{theme.id}/schema/objects_setting",
       )
 
       admin_objects_theme_setting_editor.fill_in_field("name", "some new name").save
 
-      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
 
       expect(admin_customize_themes_page).to have_overridden_setting("objects_setting")
 
@@ -104,8 +106,13 @@ RSpec.describe "Admin editing objects type" do
         .fill_in_field("name", "")
         .save
 
-      expect(find(".schema-setting-editor__errors")).to have_text(
-        "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
+      expect(
+        browser_root.locator(".schema-setting-editor__errors").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(
+          "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
+        ),
+        useInnerText: true,
       )
     end
 
@@ -128,12 +135,14 @@ RSpec.describe "Admin editing objects type" do
         .type_in_field("ratio", "7.5")
         .save
 
-      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
       expect(theme.reload.settings[:ratios].value).to eq([{ "ratio" => 7.5 }])
     end
 
     it "allows an admin to edit a theme setting of objects type via the settings editor" do
-      visit "/admin/customize/themes/#{theme.id}"
+      browser_page
+        .goto("/admin/customize/themes/#{theme.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       theme_settings_editor = admin_customize_themes_page.click_theme_settings_editor_button
 
@@ -184,7 +193,7 @@ RSpec.describe "Admin editing objects type" do
       admin_objects_setting_editor_page.visit_setting("objects_setting")
       admin_objects_setting_editor_page.add_object_in_root.fill_in_field("name", "new section").save
 
-      expect(page).to have_current_path("/admin/site_settings/category/required")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/site_settings/category/required")
       expect(JSON.parse(SiteSetting.objects_setting)).to eq(
         [{ "links" => [], "name" => "new section" }],
       )

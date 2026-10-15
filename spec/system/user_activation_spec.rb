@@ -7,17 +7,17 @@ describe "Account activation" do
   it "can resend activation email and activate account" do
     Jobs.run_immediately!
 
-    visit "/"
-    find(".login-button").click
-    find("#login-account-name").fill_in with: user.email
-    find("#login-account-password").fill_in with: password
-    find("#login-button").click
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator(".login-button").filter(visible: true).click
+    browser_root.locator("#login-account-name").filter(visible: true).fill(user.email)
+    browser_root.locator("#login-account-password").filter(visible: true).fill(password)
+    browser_root.locator("#login-button").filter(visible: true).click
 
-    not_activated_modal = find(".not-activated-modal")
+    not_activated_modal = browser_root.locator(".not-activated-modal").filter(visible: true)
 
     expect(ActionMailer::Base.deliveries.count).to eq(0)
 
-    not_activated_modal.find("button.resend").click
+    not_activated_modal.locator("button.resend").filter(visible: true).click
 
     wait_for(timeout: 5) { ActionMailer::Base.deliveries.count === 1 }
 
@@ -26,11 +26,11 @@ describe "Account activation" do
 
     activate_link = mail.body.to_s[%r{/u/activate-account/\S+}, 0]
 
-    visit activate_link
+    browser_page.goto(activate_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(user.reload.active).to eq(false)
 
-    find(".activate-account-button").click
+    browser_root.locator(".activate-account-button").filter(visible: true).click
 
     wait_for(timeout: 5) { user.reload.active }
   end

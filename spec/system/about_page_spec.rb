@@ -116,7 +116,7 @@ describe "About page" do
           about_page.visit
 
           expect(about_page.site_activities).to have_activity_item("visitors")
-          expect(about_page.site_activities.visitors).to have_text(
+          expect(about_page.site_activities.visitors).to have_displayed_text(
             "0 visitors, about 0 from the EU",
           )
           expect(about_page).to have_traffic_info_footer
@@ -214,8 +214,10 @@ describe "About page" do
       displayed_admins = about_page.admins_list.users
       expect(displayed_admins.size).to eq(6)
 
-      about_page.admins_list.users.first[:node].click
-      expect(about_page).to have_css("#user-card")
+      about_page.admins_list.users.first[:node].locator("a[data-user-card]").first.click
+      expect(
+        about_page.locator("#user-card").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 admins" do
@@ -298,7 +300,9 @@ describe "About page" do
       expect(displayed_mods.size).to eq(6)
 
       about_page.moderators_list.users.last[:node].click
-      expect(about_page).to have_css("#user-card")
+      expect(
+        about_page.locator("#user-card").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 moderators" do
@@ -371,7 +375,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__apples + .about__bananas + .about__oranges")
+          expect(
+            about_page.locator(".about__apples + .about__bananas + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to PlaywrightMatchers.have_count(0)
         end
       end
 
@@ -383,7 +391,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+          expect(
+            about_page.locator(".about__bananas + .about__apples + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to PlaywrightMatchers.have_count(0)
         end
       end
 
@@ -395,7 +407,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+          expect(
+            about_page.locator(".about__bananas + .about__apples + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to PlaywrightMatchers.have_count(0)
         end
       end
     end
@@ -423,7 +439,7 @@ describe "About page" do
 
       about_page.edit_link.click
 
-      expect(page).to have_current_path("/admin/config/about")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do

@@ -11,22 +11,37 @@ module PageObjects
             I18n.t("js.filters.new.title_with_count", count: count)
           end
 
-        has_css?(".nav-item_new", exact_text: text)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(text)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".nav-item_new").filter(visible: true))
       end
 
       def dismiss_new
-        click_button("dismiss-new-top")
+        browser_root
+          .locator(
+            "[id=#{"dismiss-new-top".to_s.to_json}], [name=#{"dismiss-new-top".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("button", name: "dismiss-new-top"))
+          .filter(visible: true)
+          .click
         self
       end
 
       def dismiss_new_and_stop_tracking
-        click_button("dismiss-new-menu-top")
-        find(".dismiss-new-stop-tracking").click
+        browser_root
+          .locator(
+            "[id=#{"dismiss-new-menu-top".to_s.to_json}], [name=#{"dismiss-new-menu-top".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("button", name: "dismiss-new-menu-top"))
+          .filter(visible: true)
+          .click
+        browser_root.locator(".dismiss-new-stop-tracking").filter(visible: true).click
         self
       end
 
       def click_latest
-        find(".nav-item_latest").click
+        browser_root.locator(".nav-item_latest").filter(visible: true).click
         self
       end
     end

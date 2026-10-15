@@ -148,7 +148,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     traffic.click_see_details
 
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
   end
@@ -159,7 +159,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
     dashboard.site_traffic.click_see_details
 
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       "/admin/reports/consolidated_page_views?end_date=2026-05-12&start_date=2026-05-01",
     )
   end
@@ -170,7 +170,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
     dashboard.site_traffic.click_see_details
 
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
     )
   end
@@ -279,7 +279,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
 
       traffic.click_top_entry_urls_drilldown
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         "/admin/reports/top_entry_urls?end_date=2026-05-12&start_date=2026-05-12",
       )
     end
@@ -313,7 +313,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
       dashboard.site_traffic.click_top_referrers_drilldown
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         "/admin/reports/top_referrers_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
       )
     end
@@ -329,7 +329,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
       dashboard.site_traffic.click_top_countries_drilldown
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         "/admin/reports/top_countries_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
       )
     end

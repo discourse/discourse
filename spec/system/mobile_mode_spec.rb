@@ -2,14 +2,22 @@
 
 RSpec.describe "Viewport-based mobile mode" do
   it "updates classes at runtime" do
-    visit "/"
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("html.desktop-view")
-    expect(page).not_to have_css("html.mobile-view")
+    expect(
+      browser_root.locator("html.desktop-view").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("html.mobile-view").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     resize_window(width: 400) do
-      expect(page).to have_css("html.mobile-view")
-      expect(page).not_to have_css("html.desktop-view")
+      expect(
+        browser_root.locator("html.mobile-view").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("html.desktop-view").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -19,22 +27,36 @@ RSpec.describe "Viewport-based mobile mode" do
 
     it "handles navigation after resize from mobile to desktop" do
       resize_window(width: 400) do
-        visit "/t/#{topic.slug}/#{topic.id}"
-        expect(page).to have_css("html.mobile-view")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator("html.mobile-view").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       click_logo
-      expect(page).to have_css(".topic-list")
+      expect(
+        browser_root.locator(".topic-list").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "handles navigation after resize from desktop to mobile" do
-      visit "/t/#{topic.slug}/#{topic.id}"
-      expect(page).to have_css("html.desktop-view")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root.locator("html.desktop-view").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       resize_window(width: 400) do
-        expect(page).to have_css("html.mobile-view")
+        expect(
+          browser_root.locator("html.mobile-view").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
         click_logo
-        expect(page).to have_css(".topic-list")
+        expect(
+          browser_root.locator(".topic-list").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
   end

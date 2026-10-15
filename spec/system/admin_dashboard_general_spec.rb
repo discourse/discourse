@@ -13,11 +13,17 @@ describe "Admin Dashboard General Tab" do
   end
 
   it "displays correct visit counters combining desktop and mobile visits" do
-    visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    within ".admin-report.visits .admin-report-counters" do
-      expect(page).to have_css(".today-count", text: "2")
-      expect(page).to have_css(".yesterday-count", text: "1")
+    within_browser(
+      browser_root.locator(".admin-report.visits .admin-report-counters").filter(visible: true),
+    ) do
+      expect(
+        browser_root.locator(".today-count").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text([browser_text_pattern("2")], useInnerText: true)
+      expect(
+        browser_root.locator(".yesterday-count").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text([browser_text_pattern("1")], useInnerText: true)
     end
   end
 end

@@ -27,7 +27,7 @@ RSpec.describe "Stage a private theme" do
   end
 
   it "keeps installation unavailable when deploy key generation fails" do
-    page.driver.with_playwright_page do |playwright_page|
+    browser_page.then do |playwright_page|
       pattern = %r{/admin/themes/generate_key_pair}
       playwright_page.route(
         pattern,
@@ -56,6 +56,6 @@ RSpec.describe "Stage a private theme" do
     theme_page.visit(private_theme)
     theme_page.finish_install
 
-    expect(dialog).to have_content(I18n.t("themes.import_error.git_authentication"))
+    expect(dialog).to have_displayed_content(I18n.t("themes.import_error.git_authentication"))
   end
 end

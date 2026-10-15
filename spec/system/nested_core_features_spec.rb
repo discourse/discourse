@@ -17,14 +17,18 @@ RSpec.describe "Core features" do
     admin = Fabricate(:admin)
     sign_in(admin)
 
-    visit "/admin/api/keys/new"
+    browser_page.goto("/admin/api/keys/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     dialog = PageObjects::Components::Dialog.new
 
     expect(dialog).to be_closed # if it failed to load the page, the dialog will be open with an error message
 
-    expect(page).to have_selector(".admin-api-keys")
-    expect(page).to have_selector(".admin-config-area-card")
+    expect(
+      browser_root.locator(".admin-api-keys").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".admin-config-area-card").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it_behaves_like "having working core features"

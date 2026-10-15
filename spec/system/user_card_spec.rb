@@ -44,7 +44,7 @@ describe "User Card" do
 
     it "does not show the private email body on the user card" do
       topic_page.visit_topic(topic)
-      mention_post.find("a.mention").click
+      mention_post.locator("a.mention").filter(visible: true).click
 
       expect(user_card).to be_visible
       expect(user_card.silence_reason_description).to eq("public reason")

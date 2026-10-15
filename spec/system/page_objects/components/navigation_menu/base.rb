@@ -7,11 +7,15 @@ module PageObjects
         SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
 
         def visible?
-          has_css?("#d-sidebar.sidebar-container")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#d-sidebar.sidebar-container").filter(visible: true),
+          )
         end
 
         def hidden?
-          has_no_css?("#d-sidebar.sidebar-container")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator("#d-sidebar.sidebar-container").filter(visible: true),
+          )
         end
 
         def community_section
@@ -19,32 +23,47 @@ module PageObjects
         end
 
         def find_section(name)
-          find(sidebar_section_selector(name))
+          browser_root.locator(sidebar_section_selector(name)).filter(visible: true)
         end
 
         def click_section_header(name)
-          find("#{sidebar_section_selector(name)} .sidebar-section-header").click
+          browser_root
+            .locator("#{sidebar_section_selector(name)} .sidebar-section-header")
+            .filter(visible: true)
+            .click
         end
 
         def click_section_link(name)
-          find(".#{SIDEBAR_SECTION_LINK_SELECTOR}", text: name).click
+          browser_root
+            .locator(".#{SIDEBAR_SECTION_LINK_SELECTOR}")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(name))
+            .click
         end
 
         def click_link_in_section(section_name, link_name)
-          find_section(section_name.parameterize).find(
-            ".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name=\"#{link_name.parameterize}\"]",
-          ).click
+          find_section(section_name.parameterize)
+            .locator(
+              ".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name=\"#{link_name.parameterize}\"]",
+            )
+            .filter(visible: true)
+            .click
         end
 
         def has_community_section_link?(text, href: nil)
           selector = ".#{SIDEBAR_SECTION_LINK_SELECTOR}"
           selector += "[href='#{href}']" if href.present?
 
-          community_section.has_css?(selector, text:)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(community_section.locator(selector).filter(visible: true))
         end
 
         def has_one_active_section_link?
-          has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
+          PlaywrightMatchers.have_count(1).matches?(
+            browser_root.locator(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active").filter(visible: true),
+          )
         end
 
         def has_section_link?(name, href: nil, active: false, target: nil, count: 1)
@@ -68,43 +87,77 @@ module PageObjects
         end
 
         def has_section?(name)
-          has_css?(sidebar_section_selector(name))
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(sidebar_section_selector(name)).filter(visible: true),
+          )
         end
 
         def has_no_section?(name)
-          has_no_css?(sidebar_section_selector(name))
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(sidebar_section_selector(name)).filter(visible: true),
+          )
         end
 
         def has_section_expanded?(name)
-          has_css?("#{sidebar_section_selector(name)}.sidebar-section--expanded")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "#{sidebar_section_selector(name)}.sidebar-section--expanded",
+            ).filter(visible: true),
+          )
         end
 
         def has_section_collapsed?(name)
-          has_css?("#{sidebar_section_selector(name)}.sidebar-section--collapsed")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "#{sidebar_section_selector(name)}.sidebar-section--collapsed",
+            ).filter(visible: true),
+          )
         end
 
         def switch_to_chat
-          find(".sidebar__panel-switch-button[data-key='chat']").click
-          has_no_css?(".sidebar__panel-switch-button[data-key='chat']")
+          browser_root
+            .locator(".sidebar__panel-switch-button[data-key='chat']")
+            .filter(visible: true)
+            .click
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".sidebar__panel-switch-button[data-key='chat']").filter(
+              visible: true,
+            ),
+          )
         end
 
         def switch_to_main
-          find(".sidebar__panel-switch-button[data-key='main']").click
+          browser_root
+            .locator(".sidebar__panel-switch-button[data-key='main']")
+            .filter(visible: true)
+            .click
         end
 
         def has_switch_button?(key = nil)
           if key
-            page.has_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(
+                ".sidebar__panel-switch-button[data-key='#{key.parameterize}']",
+              ).filter(visible: true),
+            )
           else
-            page.has_css?(".sidebar__panel-switch-button")
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(".sidebar__panel-switch-button").filter(visible: true),
+            )
           end
         end
 
         def has_no_switch_button?(key = nil)
           if key
-            page.has_no_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+            PlaywrightMatchers.have_count(0).matches?(
+              browser_root.locator(
+                ".sidebar__panel-switch-button[data-key='#{key.parameterize}']",
+              ).filter(visible: true),
+            )
           else
-            page.has_no_css?(".sidebar__panel-switch-button")
+            PlaywrightMatchers.have_count(0).matches?(
+              browser_root.locator(".sidebar__panel-switch-button").filter(visible: true),
+            )
           end
         end
 
@@ -128,65 +181,131 @@ module PageObjects
           tag_names = tags.map(&:name)
 
           tag_section_links =
-            all(
-              ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]",
-              count: tag_names.length,
-            )
+            browser_root
+              .locator(
+                ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]",
+              )
+              .filter(visible: true)
+              .tap do |elements|
+                expect(elements).to PlaywrightMatchers.have_count(tag_names.length)
+              end
+              .all
 
-          expect(tag_section_links.map(&:text)).to eq(tag_names)
+          expect(tag_section_links.map { |element| element.inner_text.strip }).to eq(tag_names)
         end
 
         def find_section_link(name)
-          find(".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name='#{name}']")
+          browser_root.locator(
+            ".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name='#{name}']",
+          ).filter(visible: true)
         end
 
         def primary_section_links(slug)
-          all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper").map(&:text)
+          browser_root
+            .locator("[data-section-name='#{slug}'] .sidebar-section-link-wrapper")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip }
         end
 
         def primary_section_icons(slug)
-          all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper use").map do |icon|
-            icon[:href].delete_prefix("#")
-          end
+          browser_root
+            .locator("[data-section-name='#{slug}'] .sidebar-section-link-wrapper use")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map do |icon|
+              icon.evaluate(
+                "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+                arg: "href",
+              ).delete_prefix("#")
+            end
         end
 
         def has_category_section_link?(category)
-          page.has_link?(category.name, class: "sidebar-section-link")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root
+              .get_by_role("link")
+              .and(
+                browser_root.locator(
+                  "[id=#{category.name.to_s.to_json}], [name=#{category.name.to_s.to_json}]",
+                ).or(browser_root.get_by_role("link", name: category.name)),
+              )
+              .and(browser_root.locator(".#{"sidebar-section-link".to_s.split.join(".")}"))
+              .filter(visible: true),
+          )
         end
 
         def click_add_section_button
-          click_button(add_section_button_text)
+          browser_root
+            .locator(
+              "[id=#{add_section_button_text.to_s.to_json}], [name=#{add_section_button_text.to_s.to_json}]",
+            )
+            .or(browser_root.get_by_role("button", name: add_section_button_text))
+            .filter(visible: true)
+            .click
         end
 
         def click_add_link_button
-          click_button(add_link_button_text)
+          browser_root
+            .locator(
+              "[id=#{add_link_button_text.to_s.to_json}], [name=#{add_link_button_text.to_s.to_json}]",
+            )
+            .or(browser_root.get_by_role("button", name: add_link_button_text))
+            .filter(visible: true)
+            .click
         end
 
         def has_no_add_section_button?
-          has_no_css?(add_section_button_css)
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(add_section_button_css).filter(visible: true),
+          )
         end
 
         def has_add_section_button?
-          has_css?(add_section_button_css)
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(add_section_button_css).filter(visible: true),
+          )
         end
 
         def click_edit_categories_button
-          within(".sidebar-section[data-section-name='categories']") do
-            click_button(class: "sidebar-section-header-button", visible: false)
+          within_browser(
+            browser_root.locator(".sidebar-section[data-section-name='categories']").filter(
+              visible: true,
+            ),
+          ) do
+            browser_root
+              .get_by_role("button")
+              .and(browser_root.locator(".#{"sidebar-section-header-button".to_s.split.join(".")}"))
+              .click
           end
 
-          expect(page).to have_css(".d-modal:not(.is-animating)")
+          expect(
+            browser_root.locator(".d-modal:not(.is-animating)").filter(visible: true),
+          ).not_to PlaywrightMatchers.have_count(0)
 
           PageObjects::Modals::SidebarEditCategories.new
         end
 
         def click_edit_tags_button
-          within(".sidebar-section[data-section-name='tags']") do
-            click_button(class: "sidebar-section-header-button", visible: false)
+          within_browser(
+            browser_root.locator(".sidebar-section[data-section-name='tags']").filter(
+              visible: true,
+            ),
+          ) do
+            browser_root
+              .get_by_role("button")
+              .and(browser_root.locator(".#{"sidebar-section-header-button".to_s.split.join(".")}"))
+              .click
           end
 
-          expect(page).to have_css(".d-modal:not(.is-animating)")
-          expect(page).to have_css(".d-modal .sidebar-tags-form")
+          expect(
+            browser_root.locator(".d-modal:not(.is-animating)").filter(visible: true),
+          ).not_to PlaywrightMatchers.have_count(0)
+          expect(
+            browser_root.locator(".d-modal .sidebar-tags-form").filter(visible: true),
+          ).not_to PlaywrightMatchers.have_count(0)
 
           PageObjects::Modals::SidebarEditTags.new
         end
@@ -194,31 +313,35 @@ module PageObjects
         def edit_custom_section(name)
           name = name.parameterize
 
-          if page.has_css?("html.mobile-view", wait: 0)
-            find(
+          if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
+            browser_root.locator(
               ".sidebar-section[data-section-name='#{name}'] button.sidebar-section-header-button",
-              visible: false,
             ).click
           else
             section_selector =
               ".sidebar-section[data-section-name='#{name}'] .sidebar-section-header-wrapper"
 
-            page.driver.with_playwright_page { |pw_page| pw_page.locator(section_selector).hover }
-            expect(page).to have_css("button.sidebar-section-header-button", visible: true)
-            find("#{section_selector} button.sidebar-section-header-button").click
+            browser_page.then { |pw_page| pw_page.locator(section_selector).hover }
+            expect(
+              browser_root.locator("button.sidebar-section-header-button").filter(visible: true),
+            ).not_to PlaywrightMatchers.have_count(0)
+            browser_root
+              .locator("#{section_selector} button.sidebar-section-header-button")
+              .filter(visible: true)
+              .click
           end
         end
 
         private
 
         def section_link_present?(name, href: nil, active: false, target: nil, count: 1, present:)
-          attributes = { exact_text: name }
-          attributes[:href] = href if href
-          attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
-          attributes[:class] += "--active" if active
-          attributes[:target] = target if target
-          attributes[:count] = count
-          page.public_send(present ? :has_link? : :has_no_link?, **attributes)
+          css_class = SIDEBAR_SECTION_LINK_SELECTOR + (active ? "--active" : "")
+          links = browser_root.get_by_role("link").and(browser_root.locator(".#{css_class}"))
+          links = links.and(browser_root.locator("[href=#{href.to_json}]")) if href
+          links = links.and(browser_root.locator("[target=#{target.to_json}]")) if target
+          links = links.filter(visible: true).filter(hasText: /^\s*#{Regexp.escape(name)}\s*$/)
+          matcher = PlaywrightMatchers.have_count(count)
+          present ? matcher.matches?(links) : matcher.does_not_match?(links)
         end
 
         def add_section_button_text

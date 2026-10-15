@@ -9,7 +9,11 @@ module PageObjects
       end
 
       def set_relative_time_duration(duration)
-        fill_in(class: "relative-time-duration", with: duration)
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(browser_root.locator(".#{"relative-time-duration".to_s.split.join(".")}"))
+          .filter(visible: true)
+          .fill(duration)
       end
 
       INTERVAL_MAP = { "minutes" => "mins" }
@@ -22,7 +26,11 @@ module PageObjects
       end
 
       def click_save
-        click_button("Set Timer")
+        browser_root
+          .locator("[id=#{"Set Timer".to_s.to_json}], [name=#{"Set Timer".to_s.to_json}]")
+          .or(browser_root.get_by_role("button", name: "Set Timer"))
+          .filter(visible: true)
+          .click
       end
     end
   end

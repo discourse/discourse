@@ -10,15 +10,24 @@ module PageObjects
       end
 
       def active?
-        has_css?("#{@selector}.active")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{@selector}.active").filter(visible: true),
+        )
       end
 
       def inactive?
-        has_no_css?("#{@selector}.active") && has_css?(@selector)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{@selector}.active").filter(visible: true),
+        ) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(@selector).filter(visible: true),
+          )
       end
 
       def visible?
-        has_css?(@selector)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(@selector).filter(visible: true),
+        )
       end
 
       def has_count?(count)
@@ -31,11 +40,14 @@ module PageObjects
             end
           )
 
-        has_selector?(@selector, text: expected_label)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(expected_label)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(@selector).filter(visible: true))
       end
 
       def click
-        find(@selector).click
+        browser_root.locator(@selector).filter(visible: true).click
       end
     end
   end

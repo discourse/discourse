@@ -19,11 +19,16 @@ describe "PM user removal" do
 
     topic_page.visit_topic(pm)
 
-    find(".user[data-id='#{other_user.id}'] .remove-invited").click
+    browser_root
+      .locator(".user[data-id='#{other_user.id}'] .remove-invited")
+      .filter(visible: true)
+      .click
 
-    expect(page).to have_selector(
-      ".small-action-contents",
-      text: "Removed @#{other_user.username} just now",
+    expect(
+      browser_root.locator(".small-action-contents").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Removed @#{other_user.username} just now")],
+      useInnerText: true,
     )
   end
 
@@ -35,10 +40,13 @@ describe "PM user removal" do
         archetype: Archetype.private_message,
       ).topic
     topic_page.visit_topic(pm)
-    find(".user[data-id='#{current_user.id}'] .remove-invited").click
+    browser_root
+      .locator(".user[data-id='#{current_user.id}'] .remove-invited")
+      .filter(visible: true)
+      .click
     dialog.click_yes
 
-    expect(page).to have_current_path("/u/#{current_user.username}/messages")
+    expect(browser_page).to PlaywrightMatchers.have_url("/u/#{current_user.username}/messages")
   end
 
   it "removes a group from the PM list" do
@@ -56,8 +64,16 @@ describe "PM user removal" do
 
     topic_page.visit_topic(pm)
 
-    find(".group[data-id='#{group.id}'] .remove-invited").click
+    browser_root
+      .locator(".group[data-id='#{group.id}'] .remove-invited")
+      .filter(visible: true)
+      .click
 
-    expect(page).to have_selector(".small-action-contents", text: "Removed @#{group.name} just now")
+    expect(
+      browser_root.locator(".small-action-contents").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Removed @#{group.name} just now")],
+      useInnerText: true,
+    )
   end
 end

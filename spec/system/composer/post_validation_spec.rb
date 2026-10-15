@@ -13,8 +13,8 @@ describe "Composer Post Validations" do
   shared_examples "post length validation" do
     context "when creating a topic" do
       it "shows an error when post length is insufficient" do
-        visit("/latest")
-        page.find("#create-topic").click
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator("#create-topic").filter(visible: true).click
         composer.fill_content("abc")
         composer.create
         composer.have_post_error(I18n.t("js.composer.error.post_length"))
@@ -50,8 +50,8 @@ describe "Composer Post Validations" do
 
     context "when creating a topic" do
       it "shows an error when post length is insufficient" do
-        visit("/latest")
-        page.find("#create-topic").click
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator("#create-topic").filter(visible: true).click
         composer.fill_content("abc")
         composer.create
         composer.have_post_error(I18n.t("js.composer.error.post_length"))

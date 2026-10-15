@@ -6,51 +6,82 @@ module PageObjects
       MENU_SELECTOR = ".topic-drafts-menu"
 
       def visible?
-        has_css?(MENU_SELECTOR + "-trigger")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MENU_SELECTOR + "-trigger").filter(visible: true),
+        )
       end
 
       def hidden?
-        has_no_css?(MENU_SELECTOR + "-trigger")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MENU_SELECTOR + "-trigger").filter(visible: true),
+        )
       end
 
       def enabled?
-        has_no_css?(MENU_SELECTOR + "-trigger[disabled]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MENU_SELECTOR + "-trigger[disabled]").filter(visible: true),
+        )
       end
 
       def disabled?
-        has_css?(MENU_SELECTOR + "-trigger[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MENU_SELECTOR + "-trigger[disabled]").filter(visible: true),
+        )
       end
 
       def open?
-        has_css?(MENU_SELECTOR + "-content")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MENU_SELECTOR + "-content").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(MENU_SELECTOR + "-content")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MENU_SELECTOR + "-content").filter(visible: true),
+        )
       end
 
       def has_view_all_link?
-        has_css?(MENU_SELECTOR + "-content .view-all-drafts")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MENU_SELECTOR + "-content .view-all-drafts").filter(visible: true),
+        )
       end
 
       def has_no_view_all_link?
-        has_no_css?(MENU_SELECTOR + "-content .view-all-drafts")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MENU_SELECTOR + "-content .view-all-drafts").filter(visible: true),
+        )
       end
 
       def open
-        find(MENU_SELECTOR + "-trigger").click
+        browser_root.locator(MENU_SELECTOR + "-trigger").filter(visible: true).click
       end
 
       def resume_draft(index = 0)
-        all(MENU_SELECTOR + "-content .topic-drafts-item button")[index].click
+        browser_root
+          .locator(MENU_SELECTOR + "-content .topic-drafts-item button")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all[
+          index
+        ].click
       end
 
       def draft_item_count
-        all(MENU_SELECTOR + "-content .topic-drafts-item").size
+        browser_root
+          .locator(MENU_SELECTOR + "-content .topic-drafts-item")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .size
       end
 
       def other_drafts_count
-        find(MENU_SELECTOR + "-content .view-all-drafts span:first-child")["data-other-drafts"].to_i
+        browser_root
+          .locator(MENU_SELECTOR + "-content .view-all-drafts span:first-child")
+          .filter(visible: true)
+          .get_attribute("data-other-drafts")
+          .to_i
       end
     end
   end

@@ -27,21 +27,21 @@ describe "Search" do
       sign_in(post.user)
       TopicUser.update_last_read(post.user, post.topic.id, 1, 1, 0)
 
-      visit("/search?q=test%20r")
+      browser_page.goto("/search?q=test%20r").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(search_page.search_input.value).to eq("test")
+      expect(search_page.search_input.input_value).to eq("test")
       # read sort order is set to 5
       expect(search_page.sort_order.value).to eq("5")
 
-      visit("/search?q=test%20l")
+      browser_page.goto("/search?q=test%20l").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(search_page.search_input.value).to eq("test")
+      expect(search_page.search_input.input_value).to eq("test")
       # latest sort order is set to 1
       expect(search_page.sort_order.value).to eq("1")
     end
 
     it "works and clears search page state", mobile: true do
-      visit("/search")
+      browser_page.goto("/search").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       search_page.type_in_search("test")
       search_page.click_search_button
@@ -50,15 +50,15 @@ describe "Search" do
       expect(search_page).to have_result_count
 
       click_logo
-      expect(page).to have_current_path("/")
+      expect(browser_page).to PlaywrightMatchers.have_url("/")
       expect(search_page).to be_not_active
 
-      page.go_back
+      browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       # ensure results are still there when using browser's history
       expect(search_page).to have_search_result
 
       click_logo
-      expect(page).to have_current_path("/")
+      expect(browser_page).to PlaywrightMatchers.have_url("/")
 
       search_page.click_search_icon
 
@@ -67,23 +67,28 @@ describe "Search" do
     end
 
     it "navigates search results using J/K keys" do
-      visit("/search")
+      browser_page.goto("/search").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       search_page.type_in_search("test")
       search_page.click_search_button
 
       expect(search_page).to have_search_result
 
-      results = all(".fps-result")
+      results =
+        browser_root
+          .locator(".fps-result")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
 
-      page.send_keys("j")
-      expect(results.first["class"]).to include("selected")
+      browser_page.keyboard.type("j")
+      expect(results.first.get_attribute("class")).to include("selected")
 
-      page.send_keys("j")
-      expect(results.last["class"]).to include("selected")
+      browser_page.keyboard.type("j")
+      expect(results.last.get_attribute("class")).to include("selected")
 
-      page.send_keys("k")
-      expect(results.first["class"]).to include("selected")
+      browser_page.keyboard.type("k")
+      expect(results.first.get_attribute("class")).to include("selected")
     end
   end
 
@@ -99,11 +104,15 @@ describe "Search" do
     after { SearchIndexer.disable }
 
     it "rate limits searches for anonymous users" do
-      visit("/search?expanded=true")
+      browser_page
+        .goto("/search?expanded=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       search_page.type_in_search("first")
       search_page.click_search_button
-      expect(search_page).to have_no_css(".search-container .spinner")
+      expect(
+        search_page.locator(".search-container .spinner").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       search_page.clear_search_input
       search_page.type_in_search("second")
@@ -124,7 +133,7 @@ describe "Search" do
     after { SearchIndexer.disable }
 
     it "still displays last topic search results after navigating away, then back" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       search_page.click_search_icon
       search_page.type_in_search_menu("test")
 
@@ -138,13 +147,17 @@ describe "Search" do
     it "tracks search result clicks" do
       expect(SearchLog.count).to eq(0)
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       search_page.click_search_icon
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
 
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
-      find(".search-menu-container .search-result-topic", text: topic.title).click
+      browser_root
+        .locator(".search-menu-container .search-result-topic")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern(topic.title))
+        .click
 
       expect(SearchLog.count).to eq(1)
       expect(SearchLog.last.search_result_id).not_to eq(nil)
@@ -161,7 +174,7 @@ describe "Search" do
       end
 
       it "displays the correct search mode" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_search_icon
         expect(search_page).to have_no_search_field
       end
@@ -177,39 +190,41 @@ describe "Search" do
       end
 
       it "displays the correct search mode" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_search_field
         expect(search_page).to have_no_search_icon
       end
 
       it "switches to search icon when header is minimized" do
         5.times { Fabricate(:post, topic: topic) }
-        visit("/t/#{topic.id}")
+        browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(search_page).to have_no_search_icon
 
-        find(".timeline-date-wrapper:last-child a").click
+        browser_root.locator(".timeline-date-wrapper:last-child a").filter(visible: true).click
         expect(search_page).to have_search_icon
 
-        find(".timeline-date-wrapper:first-child a").click
+        browser_root.locator(".timeline-date-wrapper:first-child a").filter(visible: true).click
         expect(search_page).to have_no_search_icon
       end
 
       it "does not display on login, search, signup or activate account pages" do
-        visit("/login")
+        browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/search")
+        browser_page.goto("/search").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/signup")
+        browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
         email_token = Fabricate(:email_token, user: Fabricate(:user, active: false))
-        visit("/u/activate-account/#{email_token.token}")
+        browser_page
+          .goto("/u/activate-account/#{email_token.token}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
       end
@@ -218,7 +233,9 @@ describe "Search" do
         fab!(:invite)
 
         it "does not display search field" do
-          visit("/invites/#{invite.invite_key}")
+          browser_page
+            .goto("/invites/#{invite.invite_key}")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(search_page).to have_no_search_icon
           expect(search_page).to have_no_search_field
         end
@@ -229,7 +246,7 @@ describe "Search" do
 
         it "displays search icon regardless of Search experience setting" do
           sign_in(admin)
-          visit("/admin")
+          browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(search_page).to have_no_search_field
           expect(search_page).to have_search_icon
         end
@@ -253,8 +270,11 @@ describe "Search" do
     after { SearchIndexer.disable }
 
     it "allows the user to perform bulk actions on the topic search results" do
-      visit("/search?q=test")
-      expect(page).to have_content(topic.title)
+      browser_page.goto("/search?q=test").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(topic.title),
+        useInnerText: true,
+      )
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("manage-tags")
@@ -262,31 +282,49 @@ describe "Search" do
       manage_tags_modal.add_tags(tag1.name)
       manage_tags_modal.click_confirm
       expect(
-        find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
-      ).to have_content(tag1.name)
+        browser_root.locator(
+          ".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags",
+        ).filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(browser_text_pattern(tag1.name), useInnerText: true)
     end
 
     it "allows the user to delete posts in bulk" do
-      visit("/search?q=This%20is%20a%20test%20post")
-      expect(page).to have_content(post.raw)
+      browser_page
+        .goto("/search?q=This%20is%20a%20test%20post")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.raw),
+        useInnerText: true,
+      )
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("delete-posts")
       dialog.click_ok
 
-      expect(page).to have_no_content(post.raw)
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.raw),
+        useInnerText: true,
+      )
       expect(Post.with_deleted.find_by(id: post.id).deleted_at).to be_present
     end
 
     it "lets the user bulk delete the whole topic from a reply search result" do
-      visit("/search?q=This%20is%20a%20test%20post")
-      expect(page).to have_content(post.raw)
+      browser_page
+        .goto("/search?q=This%20is%20a%20test%20post")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.raw),
+        useInnerText: true,
+      )
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("delete-topics")
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
-      expect(page).to have_no_content(post.raw)
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.raw),
+        useInnerText: true,
+      )
       expect(topic.reload).to be_trashed
     end
   end
@@ -323,9 +361,17 @@ describe "Search" do
       pm_filters = %w[in:messages in:personal in:personal-direct in:all-pms]
 
       pm_filters.each do |filter|
-        visit("/search?q=searchable%20#{filter}")
-        if page.has_css?(".fps-result", minimum: 1)
-          expect(page).to have_css(".fps-result .topic-status .d-icon-envelope", count: 0),
+        browser_page
+          .goto("/search?q=searchable%20#{filter}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        if PlaywrightMatchers.be_attached.matches?(
+             browser_root.locator(".fps-result").filter(visible: true).nth(1 - 1),
+           )
+          expect(
+            browser_root.locator(".fps-result .topic-status .d-icon-envelope").filter(
+              visible: true,
+            ),
+          ).to PlaywrightMatchers.have_count(0),
           "Expected no PM icons for filter: #{filter}"
         end
       end
@@ -333,15 +379,34 @@ describe "Search" do
 
     it "shows PM envelope icon in mixed search results with in:all filter" do
       # Search with in:all filter to get mixed results (both PM and public topics)
-      visit("/search?q=searchable%20in:all")
+      browser_page
+        .goto("/search?q=searchable%20in:all")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # The PM envelope icon should be on the PM topic specifically
-      pm_result = page.find(".fps-result", text: "PM about searchable things")
-      expect(pm_result).to have_css(".topic-status .d-icon-envelope")
+      pm_result =
+        browser_root
+          .locator(".fps-result")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("PM about searchable things"))
+      expect(
+        pm_result.locator(".topic-status .d-icon-envelope").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # The regular topic should NOT have the PM envelope icon
-      regular_result = page.find(".fps-result", text: "Regular topic about searchable things")
-      expect(regular_result).to have_no_css(".topic-status .d-icon-envelope")
+      regular_result =
+        browser_root
+          .locator(".fps-result")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("Regular topic about searchable things"))
+      expect(
+        regular_result
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".topic-status .d-icon-envelope")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 end

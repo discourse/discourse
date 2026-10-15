@@ -7,35 +7,55 @@ describe "Discovery list" do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   def nth_topic_id(n)
-    discovery.topic_list.find(".topic-list-item:nth-of-type(#{n})")["data-topic-id"]
+    discovery
+      .topic_list
+      .locator(".topic-list-item:nth-of-type(#{n})")
+      .filter(visible: true)
+      .get_attribute("data-topic-id")
   end
 
   it "can sort a topic list by activity" do
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 10)
     newest_topic_id = nth_topic_id(1)
 
-    find("th[data-sort-order='activity']").click
+    browser_root.locator("th[data-sort-order='activity']").filter(visible: true).click
 
-    expect(page).to have_css("th[data-sort-order='activity'][aria-sort=ascending]")
+    expect(
+      browser_root.locator("th[data-sort-order='activity'][aria-sort=ascending]").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(nth_topic_id(10)).to eq(newest_topic_id)
 
-    find("th[data-sort-order='activity']").click
-    expect(page).to have_css("th[data-sort-order='activity'][aria-sort=descending]")
+    browser_root.locator("th[data-sort-order='activity']").filter(visible: true).click
+    expect(
+      browser_root.locator("th[data-sort-order='activity'][aria-sort=descending]").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(nth_topic_id(1)).to eq(newest_topic_id)
   end
 
   it "can sort a topic list by replies" do
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 10)
 
-    find("th[data-sort-order='posts']").click
+    browser_root.locator("th[data-sort-order='posts']").filter(visible: true).click
 
-    expect(page).to have_css("th[data-sort-order='posts'][aria-sort=descending]")
+    expect(
+      browser_root.locator("th[data-sort-order='posts'][aria-sort=descending]").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(nth_topic_id(1)).to eq(reply.topic_id.to_s)
 
-    find("th[data-sort-order='posts']").click
-    expect(page).to have_css("th[data-sort-order='posts'][aria-sort=ascending]")
+    browser_root.locator("th[data-sort-order='posts']").filter(visible: true).click
+    expect(
+      browser_root.locator("th[data-sort-order='posts'][aria-sort=ascending]").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(nth_topic_id(10)).to eq(reply.topic_id.to_s)
   end
 
@@ -47,18 +67,24 @@ describe "Discovery list" do
 
     it "shows and hides the bulk-select toggle for regular users" do
       sign_in(user)
-      visit("/unread")
+      browser_page.goto("/unread").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # The bulk select toggle should be visible, the user has an unread post
-      find("button.bulk-select").click
-      expect(page).to have_css(".topic-list-body .bulk-select")
+      browser_root.locator("button.bulk-select").filter(visible: true).click
+      expect(
+        browser_root.locator(".topic-list-body .bulk-select").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      find("#navigation-bar .latest > a").click
+      browser_root.locator("#navigation-bar .latest > a").filter(visible: true).click
 
       # No bulk select toggle or checkboxes
       # this action is not available for this user in /latest
-      expect(page).to have_no_css(".topic-list-body .bulk-select")
-      expect(page).to have_no_css("button.bulk-select")
+      expect(
+        browser_root.locator(".topic-list-body .bulk-select").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("button.bulk-select").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -67,10 +93,10 @@ describe "Discovery list" do
     topics.each { |t| t.update(category_id: category.id) }
     topics.last.update(closed: true)
 
-    visit "/latest?status=closed"
+    browser_page.goto("/latest?status=closed").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 1)
     discovery.category_drop.select_row_by_value(category.id)
     expect(discovery.topic_list).to have_topics(count: 10)
-    expect(page).to have_current_path("/c/#{category.slug}/#{category.id}")
+    expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category.slug}/#{category.id}")
   end
 end

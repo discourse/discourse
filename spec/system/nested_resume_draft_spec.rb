@@ -23,11 +23,11 @@ RSpec.describe "Nested view resuming a draft from the user activity page" do
 
   it "opens the composer with the draft body when resuming a nested topic draft" do
     drafts_page.visit(user)
-    page.find(".resume-draft").click
+    browser_root.locator(".resume-draft").filter(visible: true).click
 
-    expect(page).to have_current_path(%r{/t/})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
     expect(nested_view).to have_nested_view
     expect(composer).to be_opened
-    expect(composer).to have_content("Resumed nested draft body")
+    expect(composer).to have_displayed_content("Resumed nested draft body")
   end
 end

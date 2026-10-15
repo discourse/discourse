@@ -25,7 +25,9 @@ RSpec.describe "User preferences tracking page" do
     TagUser.create!(user:, tag: tag3, notification_level: TagUser.notification_levels[:muted])
     TagUser.create!(user:, tag: tag4, notification_level: TagUser.notification_levels[:muted])
 
-    visit "/u/#{user.username}/preferences/tracking"
+    browser_page
+      .goto("/u/#{user.username}/preferences/tracking")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(watched_tags).to have_selected_names("javascript", "ruby")
     expect(muted_tags).to have_selected_names("python", "golang")

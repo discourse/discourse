@@ -29,9 +29,11 @@ describe "discourse login client auth" do
       before { SiteSetting.auth_skip_create_confirm = false }
 
       it "skips the signup form and creates the account directly" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         signup_form.open.click_social_button("discourse_id")
-        expect(page).to have_css(".login-welcome-header")
+        expect(
+          browser_root.locator(".login-welcome-header").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -39,19 +41,23 @@ describe "discourse login client auth" do
       before { SiteSetting.auth_skip_create_confirm = true }
 
       it "skips the signup form and creates the account directly" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         signup_form.open.click_social_button("discourse_id")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       context "when full_name_requirement is required_at_signup" do
         before { SiteSetting.full_name_requirement = "required_at_signup" }
 
         it "shows the signup form when name is not provided by the provider" do
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           signup_form.open.click_social_button("discourse_id")
           expect(signup_form).to be_open
-          expect(page).to have_css("#new-account-name")
+          expect(
+            browser_root.locator("#new-account-name").filter(visible: true),
+          ).not_to PlaywrightMatchers.have_count(0)
         end
 
         context "when name is provided by the provider" do
@@ -69,9 +75,11 @@ describe "discourse login client auth" do
           end
 
           it "skips the signup form and creates the account directly" do
-            visit("/")
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
             signup_form.open.click_social_button("discourse_id")
-            expect(page).to have_css(".header-dropdown-toggle.current-user")
+            expect(
+              browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+            ).not_to PlaywrightMatchers.have_count(0)
           end
         end
       end
@@ -84,9 +92,11 @@ describe "discourse login client auth" do
     end
 
     it "logs in user" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       signup_form.open.click_social_button("discourse_id")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

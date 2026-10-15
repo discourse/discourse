@@ -57,6 +57,8 @@ RSpec.describe "Admin category management" do
     expect(category_management_page).to have_no_category(restricted_category)
 
     category_management_page.open_settings(public_category)
-    expect(page).to have_current_path("#{public_category.slug_url_without_id}/edit/general")
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      "#{public_category.slug_url_without_id}/edit/general",
+    )
   end
 end

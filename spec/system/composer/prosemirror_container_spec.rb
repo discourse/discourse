@@ -4,7 +4,7 @@ describe "Composer - ProseMirror - Container" do
   include_context "with prosemirror editor"
 
   it "hides the Composer container's preview button" do
-    page.visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(composer).to be_opened
     expect(composer).to have_no_composer_preview_toggle
@@ -26,15 +26,17 @@ describe "Composer - ProseMirror - Container" do
       )
     end
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     open_composer
     expect(composer).to have_markdown_editor_active
   end
 
   it "remembers the user's rich editor preference when starting a new PM" do
     current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
-    page.visit("/u/#{current_user.username}/messages")
-    find(".new-private-message").click
+    browser_page
+      .goto("/u/#{current_user.username}/messages")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator(".new-private-message").filter(visible: true).click
     expect(composer).to be_opened
     expect(composer).to have_rich_editor_active
   end
@@ -44,12 +46,16 @@ describe "Composer - ProseMirror - Container" do
 
     file_path = file_from_fixtures("logo.png", "images").path
     cdp.with_slow_upload do
-      attach_file("file-uploader", file_path, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path)
       expect(composer).to have_in_progress_uploads
-      expect(composer.editor_toggle_switch).to be_disabled
+      expect(composer.editor_toggle_switch).to PlaywrightMatchers.be_disabled
     end
 
     expect(composer).to have_no_in_progress_uploads
-    expect(rich).to have_css("img:not(.ProseMirror-separator)", count: 1)
+    expect(
+      rich.locator("img:not(.ProseMirror-separator)").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
   end
 end

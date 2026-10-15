@@ -13,14 +13,14 @@ module PageObjects
       end
 
       def click_save
-        page.find(".group-form-save").click
+        browser_root.locator(".group-form-save").filter(visible: true).click
         self
       end
 
       private
 
       def automatic_email_domain_multi_select
-        page.find(".group-form-automatic-membership-automatic")
+        browser_root.locator(".group-form-automatic-membership-automatic").filter(visible: true)
       end
     end
   end

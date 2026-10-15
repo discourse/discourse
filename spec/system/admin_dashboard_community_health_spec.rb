@@ -13,10 +13,12 @@ describe "Admin Dashboard Community Health" do
       before { SiteSetting.use_legacy_pageviews = true }
 
       it "shows the 'Consolidated Pageviews' report" do
-        visit("/admin")
-        expect(page).to have_css(
-          ".admin-report.consolidated-page-views",
-          text: I18n.t("reports.consolidated_page_views.title"),
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".admin-report.consolidated-page-views").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("reports.consolidated_page_views.title"))],
+          useInnerText: true,
         )
       end
     end
@@ -25,10 +27,12 @@ describe "Admin Dashboard Community Health" do
       before { SiteSetting.use_legacy_pageviews = false }
 
       it "shows the 'Site Traffic' report" do
-        visit("/admin")
-        expect(page).to have_css(
-          ".admin-report.site-traffic",
-          text: I18n.t("reports.site_traffic.title"),
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".admin-report.site-traffic").filter(visible: true),
+        ).to PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("reports.site_traffic.title"))],
+          useInnerText: true,
         )
       end
     end

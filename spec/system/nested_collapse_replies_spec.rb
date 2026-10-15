@@ -36,7 +36,9 @@ RSpec.describe "Nested view collapse_replies URL param" do
     end
 
     it "hides the root post's replies entirely when collapse_replies=true" do
-      page.visit("/t/#{topic.slug}/#{topic.id}?collapse_replies=true")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}?collapse_replies=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Roots are the focal level — visible.
       expect(nested_view).to have_post(root_post)
@@ -50,7 +52,9 @@ RSpec.describe "Nested view collapse_replies URL param" do
 
   context "in the context view" do
     it "renders direct replies but hides grandchildren when collapse_replies=true" do
-      page.visit("/t/#{topic.slug}/#{topic.id}/#{root_post.post_number}?collapse_replies=true")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/#{root_post.post_number}?collapse_replies=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(nested_view).to have_context_view
 
@@ -71,7 +75,9 @@ RSpec.describe "Nested view collapse_replies URL param" do
     # collapseFromDepth getter in nested.gjs ignores
     # collapse_replies in that case.
     it "ignores collapse_replies and shows the target when the chain has ancestors" do
-      page.visit("/t/#{topic.slug}/#{topic.id}/#{reply_to_reply.post_number}?collapse_replies=true")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/#{reply_to_reply.post_number}?collapse_replies=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(nested_view).to have_context_view
 

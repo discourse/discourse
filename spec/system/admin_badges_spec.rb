@@ -30,11 +30,11 @@ describe "Admin Badges Page" do
       expect(form.field("show_posts")).to be_unchecked
       expect(form.field("icon")).to be_enabled
       expect(form.field("icon")).to have_value("user-pen")
-      expect(form.container("name")).to have_content(badge.name.strip)
-      expect(form.container("description")).to have_content(
+      expect(form.container("name")).to have_displayed_content(badge.name.strip)
+      expect(form.container("description")).to have_displayed_content(
         Nokogiri::HTML5.fragment(badge.description).text.strip,
       )
-      expect(form.container("long_description")).to have_content(
+      expect(form.container("long_description")).to have_displayed_content(
         Nokogiri::HTML5.fragment(badge.long_description).text.strip,
       )
     end
@@ -147,7 +147,7 @@ describe "Admin Badges Page" do
       badges_page.delete_badge
       dialog.click_danger
 
-      expect(page).to have_current_path("/admin/badges")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/badges")
     end
   end
 
@@ -159,18 +159,46 @@ describe "Admin Badges Page" do
     it "draws edit and remove only on the groupings that accept them" do
       badges_page.visit_page(Badge::Autobiographer).edit_groupings
 
-      expect(page).to have_css(".badge-grouping-item", minimum: 6)
+      expect(
+        browser_root.locator(".badge-grouping-item").filter(visible: true).nth(6 - 1),
+      ).to PlaywrightMatchers.be_attached
 
-      system_row = find(".badge-grouping-item", text: "Getting Started")
-      custom_row = find(".badge-grouping-item", text: "Custom grouping")
+      system_row =
+        browser_root
+          .locator(".badge-grouping-item")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("Getting Started"))
+      custom_row =
+        browser_root
+          .locator(".badge-grouping-item")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("Custom grouping"))
 
       # A system grouping can be neither renamed nor removed, so it draws neither
       # control rather than drawing them disabled.
-      expect(system_row).to have_no_css(".btn .d-icon-pencil")
-      expect(system_row).to have_no_css(".d-reorderable-list__remove")
+      expect(
+        system_row
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".btn .d-icon-pencil")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        system_row
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".d-reorderable-list__remove")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
-      expect(custom_row).to have_css(".btn .d-icon-pencil")
-      expect(custom_row).to have_css(".d-reorderable-list__remove")
+      expect(
+        custom_row.locator(".btn .d-icon-pencil").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        custom_row.locator(".d-reorderable-list__remove").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

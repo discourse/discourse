@@ -119,10 +119,30 @@ describe "Admin upcoming changes" do
       expect(change_item).to have_depends_on_notice(
         "This change requires Allow user locale to be enabled.",
       )
-      expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
-        "Allow user locale",
-        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
-      )
+      expect(
+        change_item
+          .find_item(:set_locale_from_cookie)
+          .get_by_role("link")
+          .and(
+            change_item
+              .find_item(:set_locale_from_cookie)
+              .locator(
+                "[id=#{"Allow user locale".to_s.to_json}], [name=#{"Allow user locale".to_s.to_json}]",
+              )
+              .or(
+                change_item.find_item(:set_locale_from_cookie).get_by_role(
+                  "link",
+                  name: "Allow user locale",
+                ),
+              ),
+          )
+          .and(
+            change_item.find_item(:set_locale_from_cookie).locator(
+              "[href=#{"/admin/site_settings/category/all_results?filter=allow_user_locale".to_s.to_json}]",
+            ),
+          )
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
       expect(
         upcoming_changes_page.change_item(:enable_upload_debug_mode),
       ).to have_no_depends_on_notice
@@ -415,7 +435,7 @@ describe "Admin upcoming changes" do
       }.to_json,
     )
 
-    visit "/"
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     user_menu.open.click_notification_with_href("enable_upload_debug_mode")
 
@@ -438,18 +458,27 @@ describe "Admin upcoming changes" do
       upcoming_change_name: "enable_upload_debug_mode",
     )
 
-    visit "/admin"
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     sidebar.find_section_link("admin_upcoming_changes").click
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "does not display a notification dot when there are no new added events" do
@@ -458,12 +487,18 @@ describe "Admin upcoming changes" do
     current_user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
     current_user.save_custom_fields
 
-    visit "/admin"
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   context "when the staff group name has been localized" do
@@ -572,7 +607,9 @@ describe "Admin upcoming changes" do
         old_default: false,
         new_default: true,
       )
-      expect(settings_page.bool_setting_checkbox(:limit_suggested_to_category)).to be_checked
+      expect(
+        settings_page.bool_setting_checkbox(:limit_suggested_to_category),
+      ).to PlaywrightMatchers.be_checked
 
       settings_page.toggle_bool_setting(:limit_suggested_to_category)
 
@@ -590,14 +627,16 @@ describe "Admin upcoming changes" do
       # to mirror what happens on the next request in a real deployment.
       SiteSetting.refresh!
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(settings_page).to have_upcoming_change_default_warning(
         :limit_suggested_to_category,
         old_default: false,
         new_default: true,
       )
-      expect(settings_page.bool_setting_checkbox(:limit_suggested_to_category)).not_to be_checked
+      expect(
+        settings_page.bool_setting_checkbox(:limit_suggested_to_category),
+      ).not_to PlaywrightMatchers.be_checked
     end
   end
 end

@@ -5,12 +5,18 @@ module PageObjects
     module NavigationMenu
       class Sidebar < Base
         def open_on_mobile
-          click_button("toggle-hamburger-menu")
-          wait_for_animation(find("div.menu-panel"))
+          browser_root
+            .locator(
+              "[id=#{"toggle-hamburger-menu".to_s.to_json}], [name=#{"toggle-hamburger-menu".to_s.to_json}]",
+            )
+            .or(browser_root.get_by_role("button", name: "toggle-hamburger-menu"))
+            .filter(visible: true)
+            .click
+          wait_for_animation(browser_root.locator("div.menu-panel").filter(visible: true))
         end
 
         def click_header_toggle
-          find(header_toggle_css).click
+          browser_root.locator(header_toggle_css).filter(visible: true).click
         end
 
         def header_toggle_css
@@ -18,64 +24,108 @@ module PageObjects
         end
 
         def visible?
-          page.has_css?("#d-sidebar")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#d-sidebar").filter(visible: true),
+          )
         end
 
         def not_visible?
-          page.has_no_css?("#d-sidebar")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator("#d-sidebar").filter(visible: true),
+          )
         end
 
         def has_no_customize_community_section_button?
-          community_section.has_no_button?('[data-list-item-name="customize"]')
+          PlaywrightMatchers.have_count(0).matches?(
+            community_section
+              .get_by_role("button")
+              .and(
+                community_section.locator(
+                  "[id=#{'[data-list-item-name="customize"]'.to_s.to_json}], [name=#{'[data-list-item-name="customize"]'.to_s.to_json}]",
+                ).or(
+                  community_section.get_by_role(
+                    "button",
+                    name: '[data-list-item-name="customize"]',
+                  ),
+                ),
+              )
+              .filter(visible: true),
+          )
         end
 
         def click_topics_button
-          page.find("[data-list-item-name='everything']").click
+          browser_root.locator("[data-list-item-name='everything']").filter(visible: true).click
         end
 
         def click_customize_community_section_button
-          community_section.click_button(
-            I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
-          )
+          community_section
+            .locator(
+              "[id=#{I18n.t("js.sidebar.sections.community.edit_section.sidebar").to_s.to_json}], [name=#{I18n.t("js.sidebar.sections.community.edit_section.sidebar").to_s.to_json}]",
+            )
+            .or(
+              community_section.get_by_role(
+                "button",
+                name: I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
+              ),
+            )
+            .filter(visible: true)
+            .click
 
-          expect(community_section).to have_no_css(".sidebar-more-section-content")
+          expect(
+            community_section.locator(".sidebar-more-section-content").filter(visible: true),
+          ).to PlaywrightMatchers.have_count(0)
 
           PageObjects::Modals::SidebarSectionForm.new
         end
 
         def click_community_section_more_button
-          community_section.click_button(class: "sidebar-more-section-trigger")
-          expect(community_section).to have_css(".sidebar-more-section-content")
+          community_section
+            .get_by_role("button")
+            .and(
+              community_section.locator(".#{"sidebar-more-section-trigger".to_s.split.join(".")}"),
+            )
+            .filter(visible: true)
+            .click
+          expect(
+            community_section.locator(".sidebar-more-section-content").filter(visible: true),
+          ).not_to PlaywrightMatchers.have_count(0)
           self
         end
 
         def custom_section_modal_title
-          find("#discourse-modal-title")
+          browser_root.locator("#discourse-modal-title").filter(visible: true)
         end
 
         def has_panel_header?
-          page.has_css?(".sidebar-panel-header")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".sidebar-panel-header").filter(visible: true),
+          )
         end
 
         def has_no_panel_header?
-          page.has_no_css?(".sidebar-panel-header")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".sidebar-panel-header").filter(visible: true),
+          )
         end
 
         def toggle_all_sections
-          find(".sidebar-toggle-all-sections").click
+          browser_root.locator(".sidebar-toggle-all-sections").filter(visible: true).click
         end
 
         def toggle_section(name)
-          find("[data-section-name='admin-#{name.to_s.downcase}']").click
+          browser_root
+            .locator("[data-section-name='admin-#{name.to_s.downcase}']")
+            .filter(visible: true)
+            .click
         end
 
         def click_back_to_forum
-          page.find(".sidebar-sections__back-to-forum").click
+          browser_root.locator(".sidebar-sections__back-to-forum").filter(visible: true).click
           self
         end
 
         def click_search_input
-          page.find(".sidebar-search__input").click
+          browser_root.locator(".sidebar-search__input").filter(visible: true).click
         end
 
         def my_messages
@@ -87,39 +137,71 @@ module PageObjects
         end
 
         def has_my_messages_link?(text = my_messages)
-          page.has_css?(my_messages_link_css, text:)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(my_messages_link_css).filter(visible: true))
         end
 
         def has_no_my_messages_link?(text = my_messages)
-          page.has_no_css?(my_messages_link_css, text:)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).does_not_match?(browser_root.locator(my_messages_link_css).filter(visible: true))
         end
 
         def has_my_messages_link_with_unread_icon?
-          page.has_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread",
+            ).filter(visible: true),
+          )
         end
 
         def has_my_messages_link_without_unread_icon?
-          page.has_no_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(
+              "#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread",
+            ).filter(visible: true),
+          )
         end
 
         def has_my_messages_link_with_unread_count?
-          page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              "#{my_messages_link_css} .sidebar-section-link-content-badge",
+            ).filter(visible: true),
+          )
         end
 
         def has_active_link?(name)
-          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].active")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".sidebar-section-link[data-link-name='#{name}'].active").filter(
+              visible: true,
+            ),
+          )
         end
 
         def has_no_active_links?
-          page.has_no_css?(".sidebar-section-link.active")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".sidebar-section-link.active").filter(visible: true),
+          )
         end
 
         def has_exact_url_match_link?(name)
-          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(
+              ".sidebar-section-link[data-link-name='#{name}'].exact-url-match",
+            ).filter(visible: true),
+          )
         end
 
         def has_no_exact_url_match_link?(name)
-          page.has_no_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(
+              ".sidebar-section-link[data-link-name='#{name}'].exact-url-match",
+            ).filter(visible: true),
+          )
         end
       end
     end

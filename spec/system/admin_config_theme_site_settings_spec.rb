@@ -26,13 +26,17 @@ describe "Admin Theme Site Settings" do
   before { sign_in(current_user) }
 
   it "shows the themeable site settings and their name, description, and default value" do
-    visit "/admin/config/customize/theme-site-settings"
+    browser_page
+      .goto("/admin/config/customize/theme-site-settings")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(theme_site_settings_page).to have_setting_with_default("enable_welcome_banner")
     expect(theme_site_settings_page).to have_setting_with_default("search_experience")
   end
 
   it "shows links to each theme that overrides the default and overridden values" do
-    visit "/admin/config/customize/theme-site-settings"
+    browser_page
+      .goto("/admin/config/customize/theme-site-settings")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(theme_site_settings_page).to have_theme_overriding(
       "enable_welcome_banner",
       theme_1,

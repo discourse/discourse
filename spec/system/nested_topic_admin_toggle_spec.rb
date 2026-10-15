@@ -22,9 +22,9 @@ RSpec.describe "Nested replies topic admin toggle" do
     topic_page.visit_topic(topic)
 
     topic_page.click_admin_menu_button
-    find(".topic-admin-nested-replies").click
+    browser_root.locator(".topic-admin-nested-replies").filter(visible: true).click
 
-    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
     expect(nested_view).to have_nested_view
 
     topic.reload
@@ -36,9 +36,9 @@ RSpec.describe "Nested replies topic admin toggle" do
 
     nested_view.visit_nested(topic)
     nested_view.open_admin_menu
-    find(".topic-admin-nested-replies").click
+    browser_root.locator(".topic-admin-nested-replies").filter(visible: true).click
 
-    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
     expect(nested_view).to have_no_nested_view
 
     topic.reload

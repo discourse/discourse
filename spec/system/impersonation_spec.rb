@@ -9,57 +9,69 @@ describe "Impersonation" do
   before { sign_in(admin) }
 
   it "allows you to start and stop impersonating with the click of a button" do
-    visit("/admin/users/#{user.id}/#{user.username}")
+    browser_page
+      .goto("/admin/users/#{user.id}/#{user.username}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    page.find(".btn-impersonate").click
+    browser_root.locator(".btn-impersonate").filter(visible: true).click
 
-    expect(page).to have_current_path("/")
-    expect(page).to have_css(
-      ".impersonation-notice",
-      text: I18n.t("js.impersonation.notice", username: user.username),
+    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(
+      browser_root.locator(".impersonation-notice").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("js.impersonation.notice", username: user.username))],
+      useInnerText: true,
     )
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    page.find(".impersonation-notice .btn-danger").click
+    browser_root.locator(".impersonation-notice .btn-danger").filter(visible: true).click
 
-    expect(page).to have_current_path("/")
-    expect(page).to have_no_css(".impersonation-notice")
+    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(
+      browser_root.locator(".impersonation-notice").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "shows a helpful error when the user is not found" do
     Admin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::NotFound)
 
-    visit("/admin/users/#{user.id}/#{user.username}")
+    browser_page
+      .goto("/admin/users/#{user.id}/#{user.username}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    page.find(".btn-impersonate").click
+    browser_root.locator(".btn-impersonate").filter(visible: true).click
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(I18n.t("admin_js.admin.impersonate.not_found"))
+    expect(dialog).to have_displayed_content(I18n.t("admin_js.admin.impersonate.not_found"))
   end
 
   it "shows a helpful error when impersonation of that user is not allowed" do
     Admin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::InvalidAccess)
 
-    visit("/admin/users/#{user.id}/#{user.username}")
+    browser_page
+      .goto("/admin/users/#{user.id}/#{user.username}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    page.find(".btn-impersonate").click
+    browser_root.locator(".btn-impersonate").filter(visible: true).click
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(I18n.t("admin_js.admin.impersonate.invalid"))
+    expect(dialog).to have_displayed_content(I18n.t("admin_js.admin.impersonate.invalid"))
   end
 
   it "shows a helpful error when there's an unexpected server error" do
     Admin::ImpersonateController.any_instance.stubs(:create).raises(StandardError)
 
-    visit("/admin/users/#{user.id}/#{user.username}")
+    browser_page
+      .goto("/admin/users/#{user.id}/#{user.username}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     # Suppress the expected error from the intentionally raised StandardError
     silence_stdout do
-      page.find(".btn-impersonate").click
+      browser_root.locator(".btn-impersonate").filter(visible: true).click
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("admin_js.admin.impersonate.error"))
+      expect(dialog).to have_displayed_content(I18n.t("admin_js.admin.impersonate.error"))
     end
   end
 end

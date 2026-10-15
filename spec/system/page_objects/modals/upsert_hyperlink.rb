@@ -8,31 +8,35 @@ module PageObjects
       LINK_URL_SELECTOR = ".d-modal__body input.link-url"
 
       def fill_in_link_text(text)
-        find(LINK_TEXT_SELECTOR).fill_in(with: text)
+        browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true).fill(text)
       end
 
       def send_enter_link_text
-        find(LINK_TEXT_SELECTOR).send_keys(:enter)
+        browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true).press("Enter")
       end
 
       def fill_in_link_url(url)
-        find(LINK_URL_SELECTOR).fill_in(with: url)
+        browser_root.locator(LINK_URL_SELECTOR).filter(visible: true).fill(url)
       end
 
       def link_text_value
-        find(LINK_TEXT_SELECTOR).value
+        browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true).input_value
       end
 
       def link_url_value
-        find(LINK_URL_SELECTOR).value
+        browser_root.locator(LINK_URL_SELECTOR).filter(visible: true).input_value
       end
 
       def has_link_text_field?
-        has_css?(LINK_TEXT_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_link_text_field?
-        has_no_css?(LINK_TEXT_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true),
+        )
       end
     end
   end

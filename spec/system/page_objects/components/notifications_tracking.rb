@@ -15,33 +15,43 @@ module PageObjects
       end
 
       def select_level_id(id)
-        content.find("[data-level-id='#{id}']").click
+        content.locator("[data-level-id='#{id}']").filter(visible: true).click
         self
       end
 
       def select_level_name(name)
-        content.find("[data-level-name='#{name}']").click
+        content.locator("[data-level-name='#{name}']").filter(visible: true).click
         self
       end
 
       def has_selected_level_name?(name)
-        find("[data-trigger][data-identifier='#{identifier}'][data-level-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-trigger][data-identifier='#{identifier}'][data-level-name='#{name}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_selected_level_id?(id)
-        find("[data-trigger][data-identifier='#{identifier}'][data-level-id='#{id}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-trigger][data-identifier='#{identifier}'][data-level-id='#{id}']",
+          ).filter(visible: true),
+        )
       end
 
       def trigger
-        if @context.is_a?(Capybara::Node::Element)
+        if @context.is_a?(Playwright::Locator)
           @context
         else
-          find(@context)
+          browser_root.locator(@context).filter(visible: true)
         end
       end
 
       def content
-        find("[data-content][data-identifier='#{identifier}']")
+        browser_root.locator("[data-content][data-identifier='#{identifier}']").filter(
+          visible: true,
+        )
       end
 
       def identifier

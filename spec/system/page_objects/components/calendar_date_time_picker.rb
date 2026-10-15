@@ -11,11 +11,11 @@ module PageObjects
       end
 
       def component
-        find(@context)
+        browser_root.locator(@context).filter(visible: true)
       end
 
       def fill_time(time)
-        component.find(".time-picker").fill_in(with: time)
+        component.locator(".time-picker").filter(visible: true).fill(time)
       end
     end
   end

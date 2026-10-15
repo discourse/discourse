@@ -6,15 +6,17 @@ module PageObjects
       attr_reader :component
 
       def initialize(input)
-        if input.is_a?(Capybara::Node::Element)
+        if input.is_a?(Playwright::Locator)
           @component = input
         else
-          @component = find(input)
+          @component = browser_root.locator(input).filter(visible: true)
         end
       end
 
-      def has_content?(content)
-        component.has_content?(content)
+      def has_displayed_content?(content)
+        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+          component,
+        )
       end
     end
 
@@ -22,19 +24,19 @@ module PageObjects
       attr_reader :component
 
       def initialize(input)
-        if input.is_a?(Capybara::Node::Element)
+        if input.is_a?(Playwright::Locator)
           @component = input
         else
-          @component = find(input)
+          @component = browser_root.locator(input).filter(visible: true)
         end
       end
 
       def value
         case control_type
         when "input", /input-/, "password"
-          component.find("input").value
+          component.locator("input").filter(visible: true).input_value
         when "color"
-          component.find("input[type='text']").value
+          component.locator("input[type='text']").filter(visible: true).input_value
         when "icon"
           PageObjects::Components::DIconGridPicker.new(component).value
         when "multi-select"
@@ -44,21 +46,30 @@ module PageObjects
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
-          component.find("input[type='checkbox']", visible: :all).checked?
+          component.locator("input[type='checkbox']").checked?
         when "menu"
-          component.find(".fk-d-menu__trigger")["data-value"]
+          component.locator(".fk-d-menu__trigger").filter(visible: true).get_attribute("data-value")
         when "select"
-          PageObjects::Components::DNativeSelect.new(component.find("select")).value
+          PageObjects::Components::DNativeSelect.new(
+            component.locator("select").filter(visible: true),
+          ).value
         when "radio-group"
-          component.find("input[type='radio']:checked", visible: :all).value
+          component.locator("input[type='radio']:checked").input_value
         when "composer", "textarea"
-          component.find("textarea").value
+          component.locator("textarea").filter(visible: true).input_value
         when "image"
-          url = component.find(".file-uploader__preview a.lightbox", wait: 10)[:href]
+          url =
+            component
+              .locator(".file-uploader__preview a.lightbox")
+              .filter(visible: true)
+              .evaluate(
+                "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+                arg: "href",
+              )
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
         when "toggle"
-          component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
+          component.locator("button[role=\"switch\"]").get_attribute("aria-checked") == "true"
         end
       end
 
@@ -66,7 +77,7 @@ module PageObjects
         if control_type == "checkbox"
           return unless value
 
-          component.find(".form-kit__control-checkbox-checkmark").click
+          component.locator(".form-kit__control-checkbox-checkmark").filter(visible: true).click
         end
       end
 
@@ -74,7 +85,7 @@ module PageObjects
         if control_type == "checkbox"
           return if value
 
-          component.find(".form-kit__control-checkbox-checkmark").click
+          component.locator(".form-kit__control-checkbox-checkmark").filter(visible: true).click
         end
       end
 
@@ -99,23 +110,36 @@ module PageObjects
       end
 
       def has_errors?(*messages)
-        within component do
-          messages.all? { |m| find(".form-kit__errors", text: m) }
+        within_browser(component) do
+          messages.all? do |m|
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root
+                .locator(".form-kit__errors")
+                .filter(visible: true)
+                .filter(hasText: browser_text_pattern(m)),
+            )
+          end
         end
       end
 
       def has_no_errors?
-        has_no_css?(".form-kit__errors")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".form-kit__errors").filter(visible: true),
+        )
       end
 
       def control_type
-        type = component["data-control-type"]
+        type = component.get_attribute("data-control-type")
 
         return type if type != "custom"
 
-        if component.has_css?(".multi-select")
+        if PlaywrightMatchers.have_count(0).does_not_match?(
+             component.locator(".multi-select").filter(visible: true),
+           )
           "multi-select"
-        elsif component.has_css?("textarea")
+        elsif PlaywrightMatchers.have_count(0).does_not_match?(
+              component.locator("textarea").filter(visible: true),
+            )
           "textarea"
         else
           raise "Unknown custom control"
@@ -125,11 +149,16 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          component.find(".form-kit__control-checkbox-checkmark").click
+          component.locator(".form-kit__control-checkbox-checkmark").filter(visible: true).click
         when "password"
-          component.find(".form-kit__control-password-toggle").click
+          component.locator(".form-kit__control-password-toggle").filter(visible: true).click
         when "toggle"
-          component.find("button[role=\"switch\"]", visible: :all).ancestor("label").click
+          component
+            .locator("button[role=\"switch\"]")
+            .locator("xpath=ancestor::*")
+            .and(browser_page.locator("label"))
+            .last
+            .click
         else
           raise "'toggle' is not supported for control type: #{control_type}"
         end
@@ -138,13 +167,13 @@ module PageObjects
       def fill_in(value)
         case control_type
         when "input", /input-/, "password"
-          component.find("input").fill_in(with: value)
+          component.locator("input").filter(visible: true).fill(value)
         when "color"
-          component.find("input[type='text']").fill_in(with: value)
+          component.locator("input[type='text']").filter(visible: true).fill(value)
         when "textarea", "composer"
-          component.find("textarea").fill_in(with: value, visible: :all)
+          component.locator("textarea").filter(visible: true).fill(value)
         when "code"
-          component.find(".ace_text-input", visible: :all).fill_in(with: value)
+          component.locator(".ace_text-input").fill(value)
         else
           raise "Unsupported control type: #{control_type}"
         end
@@ -157,7 +186,14 @@ module PageObjects
           picker.expand
           picker.select_icon(value)
         when "multi-select"
-          selector = component.find(".form-kit__control-custom > .multi-select")["id"]
+          selector =
+            component
+              .locator(".form-kit__control-custom > .multi-select")
+              .filter(visible: true)
+              .evaluate(
+                "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+                arg: "id",
+              )
           picker = PageObjects::Components::SelectKit.new("#" + selector)
           picker.expand
           picker.search(value)
@@ -171,16 +207,25 @@ module PageObjects
           picker.collapse
         when "select"
           PageObjects::Components::DNativeSelect.new(
-            component.find(".form-kit__control-select"),
+            component.locator(".form-kit__control-select").filter(visible: true),
           ).select(value)
         when "menu"
-          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
+          trigger =
+            component.locator(".fk-d-menu__trigger.form-kit__control-menu-trigger").filter(
+              visible: true,
+            )
           trigger.click
-          menu = find("[aria-labelledby='#{trigger["id"]}']")
-          item = menu.find(".form-kit__control-menu-item[data-value='#{value}'] .btn")
+          menu =
+            browser_root.locator(
+              "[aria-labelledby='#{trigger.evaluate("(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }", arg: "id")}']",
+            ).filter(visible: true)
+          item =
+            menu.locator(".form-kit__control-menu-item[data-value='#{value}'] .btn").filter(
+              visible: true,
+            )
           item.click
         when "radio-group"
-          radio = component.find("input[type='radio'][value='#{value}']")
+          radio = component.locator("input[type='radio'][value='#{value}']").filter(visible: true)
           radio.click
         when "question"
           value == true ? accept : refuse
@@ -196,7 +241,7 @@ module PageObjects
       def has_no_value?
         if control_type == "select"
           PageObjects::Components::DNativeSelect.new(
-            component.find(".form-kit__control-select"),
+            component.locator(".form-kit__control-select").filter(visible: true),
           ).has_no_value?
         else
           raise "'has_no_value?' is not supported for control type: #{control_type}"
@@ -205,7 +250,7 @@ module PageObjects
 
       def accept
         if control_type == "question"
-          component.find(".form-kit__control-radio[value='true']").click
+          component.locator(".form-kit__control-radio[value='true']").filter(visible: true).click
         else
           raise "'accept' is not supported for control type: #{control_type}"
         end
@@ -213,7 +258,7 @@ module PageObjects
 
       def refuse
         if control_type == "question"
-          component.find(".form-kit__control-radio[value='false']").click
+          component.locator(".form-kit__control-radio[value='false']").filter(visible: true).click
         else
           raise "'refuse' is not supported for control type: #{control_type}"
         end
@@ -221,9 +266,14 @@ module PageObjects
 
       def upload_image(image_path)
         if control_type == "image"
-          attach_file(image_path) do
-            component.find(".file-uploader__controls .btn.btn-default").click
-          end
+          browser_page
+            .expect_file_chooser do
+              component
+                .locator(".file-uploader__controls .btn.btn-default")
+                .filter(visible: true)
+                .click
+            end
+            .set_files(image_path)
         else
           raise "'upload_image' is not supported for control type: #{control_type}"
         end
@@ -238,7 +288,7 @@ module PageObjects
       end
 
       def disabled?
-        component["data-disabled"] == ""
+        component.get_attribute("data-disabled") == ""
       end
 
       def enabled?
@@ -248,7 +298,7 @@ module PageObjects
       private
 
       def tag_chooser_selector
-        "[data-name='#{component["data-name"]}'] .form-kit__control-tag-chooser"
+        "[data-name='#{component.get_attribute("data-name")}'] .form-kit__control-tag-chooser"
       end
     end
 
@@ -260,59 +310,79 @@ module PageObjects
       end
 
       def submit
-        find("#{component} button[type='submit']").click
+        browser_root.locator("#{component} button[type='submit']").filter(visible: true).click
       end
 
       def reset
-        page.execute_script(
-          "var form = arguments[0]; form.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true }));",
-          find(component),
+        browser_page.evaluate(
+          "function(arguments) { var form = arguments[0]; form.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true })); }",
+          arg: browser_arguments(browser_root.locator(component).filter(visible: true)),
         )
       end
 
       def has_an_alert?(message)
-        within component do
-          find(".form-kit__alert-message", text: message)
+        within_browser(component) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root
+              .locator(".form-kit__alert-message")
+              .filter(visible: true)
+              .filter(hasText: browser_text_pattern(message)),
+          )
         end
       end
 
       def collection_field(collection_name, collection_index, field_name)
         FormKitField.new(
-          find(
+          browser_root.locator(
             ".form-kit__field[data-name='#{collection_name}.#{collection_index}.#{field_name}']",
-          ),
+          ).filter(visible: true),
         )
       end
 
       def field(name)
-        within component do
-          FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
+        within_browser(component) do
+          FormKitField.new(
+            browser_root.locator(".form-kit__field[data-name='#{name}']").filter(visible: true),
+          )
         end
       end
 
       def has_field_with_name?(name)
-        has_css?(".form-kit__field[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".form-kit__field[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_no_field_with_name?(name)
-        has_no_css?(".form-kit__field[data-name='#{name}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".form-kit__field[data-name='#{name}']").filter(visible: true),
+        )
       end
 
       def has_no_enabled_field_with_name?(name)
-        has_no_css?(".form-kit__field[data-name='#{name}']:not([data-disabled])")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".form-kit__field[data-name='#{name}']:not([data-disabled])").filter(
+            visible: true,
+          ),
+        )
       end
 
       def container(name)
-        within component do
-          FormKitContainer.new(find(".form-kit__container[data-name='#{name}']"))
+        within_browser(component) do
+          FormKitContainer.new(
+            browser_root.locator(".form-kit__container[data-name='#{name}']").filter(visible: true),
+          )
         end
       end
 
       def choose_conditional(name)
-        within component do
-          find("input.form-kit__control-radio[value='#{name}']", visible: :all).ancestor(
-            "label",
-          ).click
+        within_browser(component) do
+          browser_root
+            .locator("input.form-kit__control-radio[value='#{name}']")
+            .locator("xpath=ancestor::*")
+            .and(browser_page.locator("label"))
+            .last
+            .click
         end
       end
     end

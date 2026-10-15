@@ -4,7 +4,9 @@ module PageObjects
   module Components
     class AdminThemeSettingsEditor < Base
       def opened?
-        page.has_css?(".ace_editor")
+        expect(
+          browser_root.locator(".ace_editor").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
         self
       end
 
@@ -14,14 +16,25 @@ module PageObjects
       end
 
       def save
-        click_button(I18n.t("admin_js.admin.customize.theme.save"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("admin_js.admin.customize.theme.save").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.save").to_s.to_json}]",
+          )
+          .or(
+            browser_root.get_by_role("button", name: I18n.t("admin_js.admin.customize.theme.save")),
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       private
 
       def editor
-        @editor ||= within(".settings-editor") { AceEditor.new }
+        @editor ||=
+          within_browser(browser_root.locator(".settings-editor").filter(visible: true)) do
+            AceEditor.new
+          end
       end
     end
   end

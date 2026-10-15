@@ -27,10 +27,14 @@ describe "Admin Watched Words" do
 
   it "shows the 'outputs HTML' option when action=replace" do
     ww_page.visit
-    expect(ww_page).not_to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
+    expect(ww_page).to have_no_displayed_text(
+      I18n.t("admin_js.admin.watched_words.form.html_description"),
+    )
 
     ww_page.visit(action: "replace")
-    expect(ww_page).to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
+    expect(ww_page).to have_displayed_text(
+      I18n.t("admin_js.admin.watched_words.form.html_description"),
+    )
   end
 
   it "creates a watched word with the tag action type" do

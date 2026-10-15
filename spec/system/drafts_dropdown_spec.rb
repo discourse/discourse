@@ -11,12 +11,12 @@ describe "Drafts dropdown" do
 
   describe "with no drafts" do
     it "does not display drafts dropdown" do
-      page.visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(drafts_dropdown).to be_hidden
     end
 
     it "adds a draft dropdown menu when a draft is available" do
-      page.visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       composer.fill_content("This is a draft")
 
       expect(drafts_dropdown).to be_visible
@@ -42,7 +42,7 @@ describe "Drafts dropdown" do
     end
 
     it "displays the correct draft count" do
-      page.visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       drafts_dropdown.open
 
       expect(drafts_dropdown).to be_open
@@ -50,7 +50,7 @@ describe "Drafts dropdown" do
       expect(drafts_dropdown.draft_item_count).to eq(4)
       expect(drafts_dropdown.other_drafts_count).to eq(2)
 
-      drafts_dropdown.find(".topic-drafts-item:first-child").click
+      drafts_dropdown.locator(".topic-drafts-item:first-child").filter(visible: true).click
 
       expect(drafts_dropdown).to be_closed
 
@@ -59,7 +59,7 @@ describe "Drafts dropdown" do
 
       wait_for { Draft.count == 5 }
 
-      page.visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       drafts_dropdown.open
 
       expect(drafts_dropdown.draft_item_count).to eq(4)
@@ -67,7 +67,7 @@ describe "Drafts dropdown" do
     end
 
     it "shows the view all drafts when there are other drafts to display" do
-      page.visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       drafts_dropdown.open
 
       expect(drafts_dropdown).to be_open
@@ -77,7 +77,7 @@ describe "Drafts dropdown" do
     it "does not show the view all drafts link when all drafts are displayed" do
       Draft.where(user_id: user.id).order("created_at DESC").limit(2).destroy_all
 
-      page.visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       drafts_dropdown.open
 
       expect(drafts_dropdown).to be_open
@@ -114,7 +114,17 @@ describe "Drafts dropdown" do
     it "is still enabled" do
       category_page.visit(category)
 
-      expect(category_page).to have_button("New Topic", disabled: false)
+      expect(
+        browser_root
+          .get_by_role("button")
+          .and(
+            browser_root.locator(
+              "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+            ).or(browser_root.get_by_role("button", name: "New Topic")),
+          )
+          .and(browser_root.locator(":not(:disabled)"))
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
       expect(drafts_dropdown).to be_enabled
     end
   end

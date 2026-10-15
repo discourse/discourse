@@ -34,8 +34,10 @@ describe "Post history with tag changes" do
     sign_in(admin)
     topic_page.visit_topic(topic)
 
-    expect(page).to have_css(".post-info.edits")
-    find(".post-info.edits").click
+    expect(
+      browser_root.locator(".post-info.edits").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    browser_root.locator(".post-info.edits").filter(visible: true).click
     expect(post_history_modal).to have_tag_changes
     expect(post_history_modal.deleted_tags).to contain_exactly(tag1.name)
     expect(post_history_modal.inserted_tags).to contain_exactly(tag2.name, tag3.name)
@@ -50,8 +52,10 @@ describe "Post history with tag changes" do
     topic_page.click_topic_title_submit_edit
 
     expect(topic_page.topic_tags).to contain_exactly(tag3.name, tag4.name)
-    expect(page).to have_css(".post-info.edits")
-    find(".post-info.edits").click
+    expect(
+      browser_root.locator(".post-info.edits").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    browser_root.locator(".post-info.edits").filter(visible: true).click
 
     # verify new revision shows correctly (beta, gamma -> gamma, delta)
     expect(post_history_modal).to have_tag_changes
@@ -87,7 +91,7 @@ describe "Post history with a hidden revision" do
 
   it "tells anonymous users why a diff can't be displayed instead of showing a blank space" do
     topic_page.visit_topic(topic)
-    find(".post-info.edits").click
+    browser_root.locator(".post-info.edits").filter(visible: true).click
 
     expect(post_history_modal).to have_hidden_diff_notice
     screenshot_marker(label: "post-history-hidden-edit", only: :desktop)
@@ -100,7 +104,7 @@ describe "Post history with a hidden revision" do
   it "still shows the diffs around the hidden revision to staff" do
     sign_in(admin)
     topic_page.visit_topic(topic)
-    find(".post-info.edits").click
+    browser_root.locator(".post-info.edits").filter(visible: true).click
 
     expect(post_history_modal).to have_no_hidden_diff_notice
     expect(post_history_modal).to have_body_diff("Latest public version")

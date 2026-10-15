@@ -7,7 +7,9 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("[wrap]")
 
-    expect(rich).to have_css(".composer-wrap-node")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     composer.toggle_rich_editor
 
@@ -18,7 +20,9 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("[wrap=example]")
 
-    expect(rich).to have_css(".composer-wrap-node")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     composer.toggle_rich_editor
 
@@ -29,7 +33,9 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("[wrap class=highlight]")
 
-    expect(rich).to have_css(".composer-wrap-node")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     composer.toggle_rich_editor
 
@@ -40,9 +46,17 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("Text before [wrap=inline]")
 
-    expect(rich).to have_css(".composer-wrap-node")
-    expect(rich).to have_content("Text before")
-    expect(rich).to have_content("Wrap content")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(rich).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("Text before"),
+      useInnerText: true,
+    )
+    expect(rich).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("Wrap content"),
+      useInnerText: true,
+    )
 
     composer.toggle_rich_editor
 
@@ -53,25 +67,72 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("[wrap=outer]")
 
-    expect(rich).to have_css(".composer-wrap-node")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    rich.find(".d-wrap-indicator").click
+    rich.locator(".d-wrap-indicator").filter(visible: true).click
 
-    expect(page).to have_css(".wrap-attributes-modal")
-    expect(page).to have_field("name", with: "outer") # Should show existing wrap name
+    expect(
+      browser_root.locator(".wrap-attributes-modal").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+            browser_root.get_by_label("name", exact: true),
+          ),
+        )
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_value("outer") # Should show existing wrap name
 
-    page.fill_in("name", with: "updated")
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+          browser_root.get_by_label("name", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .fill("updated")
 
-    page.find("button", text: "Add attribute").click
+    browser_root
+      .locator("button")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Add attribute"))
+      .click
 
-    within(".wrap-modal__attribute-row") do
-      page.fill_in("Key", with: "class")
-      page.fill_in("Value", with: "highlight")
+    within_browser(browser_root.locator(".wrap-modal__attribute-row").filter(visible: true)) do
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"Key".to_s.to_json}], [name=#{"Key".to_s.to_json}]").or(
+            browser_root.get_by_label("Key", exact: true),
+          ),
+        )
+        .filter(visible: true)
+        .fill("class")
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"Value".to_s.to_json}], [name=#{"Value".to_s.to_json}]").or(
+            browser_root.get_by_label("Value", exact: true),
+          ),
+        )
+        .filter(visible: true)
+        .fill("highlight")
     end
 
-    page.find("button", text: "Apply").click
+    browser_root
+      .locator("button")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Apply"))
+      .click
 
-    expect(rich).to have_css(".composer-wrap-node", count: 1)
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
 
     composer.toggle_rich_editor
 
@@ -82,24 +143,80 @@ describe "Composer - ProseMirror - Inline and Block Wrap" do
     open_composer
     composer.type_content("[wrap=example class=test]")
 
-    expect(rich).to have_css(".composer-wrap-node")
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    rich.find(".composer-wrap-node").click
+    rich.locator(".composer-wrap-node").filter(visible: true).click
 
-    find("#reply-control .d-editor-button-bar .toolbar__button.options").click
+    browser_root
+      .locator("#reply-control .d-editor-button-bar .toolbar__button.options")
+      .filter(visible: true)
+      .click
 
-    find("[data-name='toggle-wrap']").click
+    browser_root.locator("[data-name='toggle-wrap']").filter(visible: true).click
 
-    expect(page).to have_css(".wrap-attributes-modal")
-    expect(page).to have_field("name", with: "example") # Should show existing wrap name
-    expect(page).to have_field("Key", with: "class") # Should show existing class attribute
-    expect(page).to have_field("Value", with: "test")
+    expect(
+      browser_root.locator(".wrap-attributes-modal").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+            browser_root.get_by_label("name", exact: true),
+          ),
+        )
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_value("example") # Should show existing wrap name
+    expect(
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"Key".to_s.to_json}], [name=#{"Key".to_s.to_json}]").or(
+            browser_root.get_by_label("Key", exact: true),
+          ),
+        )
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_value("class") # Should show existing class attribute
+    expect(
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"Value".to_s.to_json}], [name=#{"Value".to_s.to_json}]").or(
+            browser_root.get_by_label("Value", exact: true),
+          ),
+        )
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_value("test")
 
-    page.fill_in("name", with: "updated")
-    page.fill_in("Value", with: "highlight")
-    page.find("button", text: "Apply").click
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+          browser_root.get_by_label("name", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .fill("updated")
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"Value".to_s.to_json}], [name=#{"Value".to_s.to_json}]").or(
+          browser_root.get_by_label("Value", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .fill("highlight")
+    browser_root
+      .locator("button")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Apply"))
+      .click
 
-    expect(rich).to have_css(".composer-wrap-node", count: 1)
+    expect(
+      rich.locator(".composer-wrap-node").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
 
     composer.toggle_rich_editor
 

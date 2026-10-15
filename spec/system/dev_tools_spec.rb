@@ -7,7 +7,7 @@ describe "Discourse dev tools" do
 
   describe "toolbar" do
     it "can be enabled and disabled" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(toolbar).to have_no_toolbar
 
       toolbar.enable
@@ -33,7 +33,7 @@ describe "Discourse dev tools" do
     end
 
     it "shows upcoming changes and allows you to toggle them on and off, impacting the client-side siteSettings service" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       toolbar.enable
       toolbar.open_upcoming_changes_menu
       expect(toolbar).to have_upcoming_changes_menu
@@ -49,7 +49,7 @@ describe "Discourse dev tools" do
 
   describe "plugin outlet debugging" do
     it "shows plugin outlet overlays with tooltips" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       toolbar.enable
       toolbar.toggle_plugin_outlets
 
@@ -66,7 +66,7 @@ describe "Discourse dev tools" do
     end
 
     it "shows wrapper outlet indicator" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       toolbar.enable
       toolbar.toggle_plugin_outlets
 
@@ -76,7 +76,7 @@ describe "Discourse dev tools" do
 
   describe "block debugging" do
     it "shows block outlet boundaries with tooltip" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       toolbar.enable
       toolbar.toggle_block_outlet_boundaries
 
@@ -97,7 +97,7 @@ describe "Discourse dev tools" do
       after { Theme.clear_cache! }
 
       it "shows block visual overlay with tooltip" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
@@ -110,7 +110,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows correct block count in outlet boundary tooltip" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         toolbar.enable
         toolbar.toggle_block_outlet_boundaries
 
@@ -120,7 +120,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows ghost blocks for failed conditions" do
-        visit("/latest") # Anonymous user, admin condition fails
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) } # Anonymous user, admin condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
@@ -131,7 +131,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows conditions as failed with condition type" do
-        visit("/latest") # Anonymous user, admin condition fails
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) } # Anonymous user, admin condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
@@ -141,7 +141,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows multiple condition types for combined conditions" do
-        visit("/latest") # Anonymous user, admin + TL2 condition fails
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) } # Anonymous user, admin + TL2 condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
@@ -152,7 +152,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows block args values in tooltip" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
@@ -165,7 +165,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows ghost blocks with combined conditions" do
-        visit("/latest") # Anonymous user, admin + TL2 condition fails
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) } # Anonymous user, admin + TL2 condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
@@ -176,7 +176,7 @@ describe "Discourse dev tools" do
       end
 
       it "shows nested ghost blocks for groups with all children hidden (4 levels deep)" do
-        visit("/latest") # Anonymous user, all nested children fail admin condition
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) } # Anonymous user, all nested children fail admin condition
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
@@ -184,14 +184,19 @@ describe "Discourse dev tools" do
         expect(block_debug).to have_ghost_block("group")
 
         # Verify all 4 levels of nested groups appear as ghosts
-        expect(page).to have_css(".block-debug-ghost[data-block-name='group']", minimum: 4)
+        expect(
+          browser_root
+            .locator(".block-debug-ghost[data-block-name='group']")
+            .filter(visible: true)
+            .nth(4 - 1),
+        ).to PlaywrightMatchers.be_attached
 
         # The leaf block should also appear as a ghost
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:nested-ghost-leaf-block")
       end
 
       it "reactively shows and hides overlays when toggling without page refresh" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         toolbar.enable
 
         # Initially no overlays

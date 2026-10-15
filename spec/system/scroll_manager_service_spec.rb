@@ -12,12 +12,14 @@ describe "Ember route-scroll-manager service" do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   def current_scroll_y
-    page.evaluate_script("window.scrollY")
+    browser_page.evaluate("function(arguments) { return window.scrollY }", arg: [])
   end
 
   it "scrolls to top when navigating to new routes, and remembers scroll position when going back" do
-    visit("/")
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("body.navigation-topics").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(discovery.topic_list).to have_topics
 
     discovery.topic_list.scroll_to_topic_at_index(10)
@@ -25,33 +27,53 @@ describe "Ember route-scroll-manager service" do
     topic_list_scroll_y = current_scroll_y
     expect(topic_list_scroll_y).to be > 0
 
-    find(".sidebar-section-link[data-link-name='all-categories']").send_keys(:enter)
+    browser_root
+      .locator(".sidebar-section-link[data-link-name='all-categories']")
+      .filter(visible: true)
+      .press("Enter")
 
-    expect(page).to have_css("body.navigation-categories")
+    expect(
+      browser_root.locator("body.navigation-categories").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    browser_page.wait_for_function("expected => window.scrollY === expected", arg: 0)
     expect(current_scroll_y).to eq(0)
 
-    page.go_back
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("body.navigation-topics")
+    expect(
+      browser_root.locator("body.navigation-topics").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(discovery.topic_list).to have_topics
+    browser_page.wait_for_function(
+      "expected => window.scrollY === expected",
+      arg: topic_list_scroll_y,
+    )
     expect(current_scroll_y).to eq(topic_list_scroll_y)
 
     # Clicking site logo triggers refresh and scrolls to top
     click_logo
+    browser_page.wait_for_function("expected => window.scrollY === expected", arg: 0)
     expect(current_scroll_y).to eq(0)
   end
 
   it "scrolls to the top when navigating from a topic to the homepage" do
-    visit("/t/#{topic.slug}/#{topic.id}")
-    expect(page).to have_css("#post_20")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#post_20").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    page.scroll_to(:bottom)
+    browser_page.evaluate("() => window.scrollTo(0, document.scrollingElement.scrollHeight)")
     expect(current_scroll_y).to be > 0
 
     click_logo
 
-    expect(page).to have_css("body.navigation-topics")
+    expect(
+      browser_root.locator("body.navigation-topics").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(discovery.topic_list).to have_topics
+    browser_page.wait_for_function("expected => window.scrollY === expected", arg: 0)
     expect(current_scroll_y).to eq(0)
   end
 end

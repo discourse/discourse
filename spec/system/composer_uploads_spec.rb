@@ -11,29 +11,43 @@ describe "Uploading files in the composer" do
   before { sign_in(current_user) }
 
   it "uploads multiple files at once" do
-    visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(composer).to be_opened
 
     file_path_1 = file_from_fixtures("logo.png", "images").path
     file_path_2 = file_from_fixtures("logo.jpg", "images").path
-    attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+    ).set_input_files([file_path_1, file_path_2])
 
     expect(composer).to have_no_in_progress_uploads
-    expect(composer.preview).to have_css(".image-wrapper", count: 2)
+    expect(
+      composer.preview.locator(".image-wrapper").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(2)
   end
 
   it "allows cancelling uploads" do
-    visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(composer).to be_opened
 
     file_path_1 = file_from_fixtures("huge.jpg", "images").path
     cdp.with_slow_upload do
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
       expect(composer).to have_in_progress_uploads
-      find("#cancel-file-upload").click
+      browser_root.locator("#cancel-file-upload").filter(visible: true).click
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_no_css(".image-wrapper")
+      expect(
+        composer
+          .preview
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".image-wrapper")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -44,86 +58,126 @@ describe "Uploading files in the composer" do
     end
 
     it "generates a topic preview thumbnail from the video" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container")
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       composer.submit
 
-      expect(find("#topic-title")).to have_content("Video upload test")
+      expect(
+        browser_root.locator("#topic-title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Video upload test"),
+        useInnerText: true,
+      )
       expect(Topic.last.image_upload_id).to eq(Upload.last.id)
     end
 
     it "generates a thumbnail from the video" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container")
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      expect(page).to have_css(
-        '.onebox-placeholder-container[style*="background-image"]',
-        wait: Capybara.default_max_wait_time,
-      )
+      expect(
+        browser_root.locator('.onebox-placeholder-container[style*="background-image"]').filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0, timeout: Capybara.default_max_wait_time * 1000)
 
       composer.submit
 
-      expect(find("#topic-title")).to have_content("Video upload test")
+      expect(
+        browser_root.locator("#topic-title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Video upload test"),
+        useInnerText: true,
+      )
 
       selector = topic.post_by_number_selector(1)
 
-      expect(page).to have_css(selector)
-      within(selector) do
-        expect(page).to have_css(".video-placeholder-container[data-thumbnail-src]")
+      expect(
+        browser_root.locator(selector).filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      within_browser(selector) do
+        expect(
+          browser_root.locator(".video-placeholder-container[data-thumbnail-src]").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
 
     it "handles a video where dimensions can't be read gracefully" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Zero Width Video Test")
 
       # Inject JavaScript to mock video dimensions
-      page.execute_script <<-JS
+      browser_page.evaluate("function(arguments) { #{<<-JS} }", arg: [])
         HTMLVideoElement.prototype.__defineGetter__('videoWidth', function() { return 0; });
         HTMLVideoElement.prototype.__defineGetter__('videoHeight', function() { return 0; });
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container")
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       composer.submit
 
-      expect(find("#topic-title")).to have_content("Zero Width Video Test")
+      expect(
+        browser_root.locator("#topic-title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Zero Width Video Test"),
+        useInnerText: true,
+      )
 
       selector = topic.post_by_number_selector(1)
 
-      expect(page).to have_css(selector)
-      within(selector) do
-        expect(page).to have_no_css(".video-placeholder-container[data-thumbnail-src]")
+      expect(
+        browser_root.locator(selector).filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      within_browser(selector) do
+        expect(
+          browser_root.locator(".video-placeholder-container[data-thumbnail-src]").filter(
+            visible: true,
+          ),
+        ).to PlaywrightMatchers.have_count(0)
       end
     end
 
     it "handles a video load error gracefully" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video Load Error Test")
 
       # Inject JavaScript to simulate an invalid video file that triggers onerror
-      page.execute_script <<-JS
+      browser_page.evaluate("function(arguments) { #{<<-JS} }", arg: [])
         const originalCreateObjectURL = URL.createObjectURL;
         URL.createObjectURL = function(blob) {
           // Simulate an invalid video source by returning a fake object URL
@@ -132,32 +186,40 @@ describe "Uploading files in the composer" do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container")
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "handles multiple video uploads" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
       file_path_2 = file_from_fixtures("small.mp4", "media").path
-      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container", count: 2)
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(2)
     end
 
     it "handles thumbnail upload errors gracefully without blocking video upload" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
       topic.fill_in_composer_title("Thumbnail Error Test")
 
       # Mock canvas.toBlob to fail, simulating a thumbnail generation error
-      page.execute_script <<-JS
+      browser_page.evaluate("function(arguments) { #{<<-JS} }", arg: [])
         HTMLCanvasElement.prototype.toBlob = function(callback, type, quality) {
           // Simulate a failure in blob creation
           setTimeout(() => callback(null), 0);
@@ -165,15 +227,24 @@ describe "Uploading files in the composer" do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file("file-uploader", file_path_1, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path_1)
 
       # Video upload should complete successfully even if thumbnail generation fails
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".onebox-placeholder-container")
+      expect(
+        composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Video should still be uploadable/submittable
       composer.submit
-      expect(find("#topic-title")).to have_content("Thumbnail Error Test")
+      expect(
+        browser_root.locator("#topic-title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Thumbnail Error Test"),
+        useInnerText: true,
+      )
     end
   end
 
@@ -185,16 +256,18 @@ describe "Uploading files in the composer" do
 
       context "when the locale is #{locale}" do
         it "automatically wraps images in [grid] tags on 3 or more images" do
-          visit "/new-topic"
+          browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(composer).to be_opened
 
           file_path_1 = file_from_fixtures("logo.png", "images").path
           file_path_2 = file_from_fixtures("logo.jpg", "images").path
           file_path_3 = file_from_fixtures("downsized.png", "images").path
-          attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+          browser_root.locator(
+            "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+          ).set_input_files([file_path_1, file_path_2, file_path_3])
 
           expect(composer).to have_no_in_progress_uploads
-          expect(composer.composer_input.value).to match(
+          expect(composer.composer_input.input_value).to match(
             %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
           )
         end
@@ -202,21 +275,23 @@ describe "Uploading files in the composer" do
     end
 
     it "does not wrap [grid] tags on less than 3 images" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{!\[.*?\]\(upload://.*?\).*?!\[.*?\]\(upload://.*?\)}m,
       )
     end
 
     it "automatically wraps images in [grid] tags even after clearing previous uploads" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
@@ -226,20 +301,24 @@ describe "Uploading files in the composer" do
       file_path_5 = file_from_fixtures("large_icon_correct.png", "images").path
       file_path_6 = file_from_fixtures("large_icon_incorrect.png", "images").path
 
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
 
       expect(composer).to have_no_in_progress_uploads
 
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
       )
 
       composer.clear_content
 
-      attach_file("file-uploader", [file_path_4, file_path_5, file_path_6], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_4, file_path_5, file_path_6])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
       )
     end
@@ -247,22 +326,24 @@ describe "Uploading files in the composer" do
     it "does not automatically wrap images in [grid] tags when setting is disabled" do
       SiteSetting.enable_auto_grid_images = false
 
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\)}m,
       )
     end
 
     it "does not automatically wrap images in [grid] tags when uploading inside an existing [grid]" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       composer.fill_content("[grid]\n\n[/grid]")
@@ -271,9 +352,11 @@ describe "Uploading files in the composer" do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
       )
     end
@@ -281,16 +364,18 @@ describe "Uploading files in the composer" do
     it "automatically wraps images in [grid] when site language is different" do
       SiteSetting.default_locale = "es"
 
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
+      expect(composer.composer_input.input_value).to match(
         %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
       )
     end

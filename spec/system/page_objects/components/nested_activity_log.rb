@@ -6,58 +6,92 @@ module PageObjects
       MODAL_SELECTOR = ".nested-activity-log-modal"
 
       def open?
-        has_css?(MODAL_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(MODAL_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_item?(post)
-        has_css?(item_selector(post))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(item_selector(post)).filter(visible: true),
+        )
       end
 
       def has_item_text?(post, text)
-        has_css?(item_selector(post), text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(item_selector(post)).filter(visible: true),
+        )
       end
 
       def has_item_count?(count)
-        has_css?("#{MODAL_SELECTOR} .nested-activity-log-modal__item", count: count)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root.locator("#{MODAL_SELECTOR} .nested-activity-log-modal__item").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_edit_button?(post)
-        has_css?("#{item_selector(post)} .small-action-edit")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{item_selector(post)} .small-action-edit").filter(visible: true),
+        )
       end
 
       def has_no_edit_button?(post)
-        has_no_css?("#{item_selector(post)} .small-action-edit")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{item_selector(post)} .small-action-edit").filter(visible: true),
+        )
       end
 
       def has_delete_button?(post)
-        has_css?("#{item_selector(post)} .small-action-delete")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{item_selector(post)} .small-action-delete").filter(visible: true),
+        )
       end
 
       def has_recover_button?(post)
-        has_css?("#{item_selector(post)} .small-action-recover")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{item_selector(post)} .small-action-recover").filter(
+            visible: true,
+          ),
+        )
       end
 
       def click_edit(post)
-        find("#{item_selector(post)} .small-action-edit").click
+        browser_root
+          .locator("#{item_selector(post)} .small-action-edit")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_delete(post)
-        find("#{item_selector(post)} .small-action-delete").click
+        browser_root
+          .locator("#{item_selector(post)} .small-action-delete")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_recover(post)
-        find("#{item_selector(post)} .small-action-recover").click
+        browser_root
+          .locator("#{item_selector(post)} .small-action-recover")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_load_more
-        find("#{MODAL_SELECTOR} .nested-activity-log-modal__load-more button").click
+        browser_root
+          .locator("#{MODAL_SELECTOR} .nested-activity-log-modal__load-more button")
+          .filter(visible: true)
+          .click
         self
       end
 

@@ -16,26 +16,43 @@ RSpec.shared_context "with prosemirror editor" do
   before { sign_in(current_user) }
 
   def open_composer
-    page.visit "/new-topic"
+    browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(composer).to be_opened
     composer.focus
   end
 
   def paste_and_click_image
     # This helper can only be used reliably to paste a single image when no other images are present.
-    expect(rich).to have_no_css(".composer-image-node img")
+    rich.wait_for(state: "visible")
+    expect(
+      rich.locator(".composer-image-node img").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
 
     expect(composer).to have_no_in_progress_uploads
-    expect(rich).to have_css(".composer-image-node img", count: 1)
-    expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
-    expect(rich).to have_no_css("img[data-placeholder='true']")
+    image = rich.locator(".composer-image-node img").filter(visible: true)
+    expect(image).to PlaywrightMatchers.have_count(1)
+    expect(
+      rich.locator(".composer-image-node img[src='/images/transparent.png']"),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(image).not_to PlaywrightMatchers.have_attribute("data-placeholder")
 
-    rich.find(".composer-image-node img").click
+    image.click
+    expect(rich.locator(".composer-image-node .fk-d-menu")).to PlaywrightMatchers.have_count(2)
+  end
+end
 
-    expect(rich).to have_css(".composer-image-node .fk-d-menu", count: 2)
+RSpec.shared_context "with native prosemirror editor" do
+  include_context "with prosemirror editor"
+
+  let(:composer) { PageObjects::Native::Composer.new(browser_page) }
+
+  def open_composer
+    composer.visit
+    expect(composer.opened_composer).to PlaywrightMatchers.be_visible
+    composer.editor.click
   end
 end

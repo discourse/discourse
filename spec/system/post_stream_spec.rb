@@ -61,19 +61,41 @@ describe "Post stream" do
 
     it "hides and shows content above the post stream based on loaded posts" do
       topic_page.visit_topic(topic, post_number: 30)
-      expect(page).to have_css("[data-post-number='30']")
-      expect(page).to have_no_css("#main-container")
+      expect(
+        browser_root.locator("[data-post-number='30']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_count(0)
 
       topic_page.visit_topic(topic, post_number: 1)
-      expect(page).to have_css("[data-post-number='1']")
-      expect(page).to have_css("#main-container")
+      expect(
+        browser_root.locator("[data-post-number='1']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_css(
+        "display",
+        "none",
+      )
+      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_css(
+        "visibility",
+        "visible",
+      )
 
       topic_page.visit_topic(topic, post_number: 30)
-      expect(page).to have_css("[data-post-number='30']")
-      expect(page).to have_no_css("#main-container")
+      expect(
+        browser_root.locator("[data-post-number='30']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_count(0)
 
-      visit "/"
-      expect(page).to have_css("#main-container")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_css(
+        "display",
+        "none",
+      )
+      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_css(
+        "visibility",
+        "visible",
+      )
     end
   end
 
@@ -85,36 +107,58 @@ describe "Post stream" do
 
     it "cloaks posts that are far from the viewport" do
       # Visit the topic page
-      visit "/t/#{topic.slug}/#{topic.id}/1"
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/1")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Ensure there are visible posts
-      expect(page).to have_css(".topic-post")
+      expect(
+        browser_root.locator(".topic-post").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      post_stream = find(".post-stream")
+      post_stream = browser_root.locator(".post-stream").filter(visible: true)
 
       # Ensure the first post is uncloaked
-      expect(post_stream).to have_css("> [data-post-number='1']")
-      expect(post_stream).to have_no_css("> [data-post-number='1'].post-stream--cloaked")
+      expect(
+        post_stream.locator("> [data-post-number='1']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        post_stream
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("> [data-post-number='1'].post-stream--cloaked")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       # Check that some posts are cloaked (not all posts should be fully rendered at once)
       # The posts that are far from the viewport should have the "post-stream--cloaked" class
-      expect(post_stream).to have_css(".post-stream--cloaked")
+      expect(
+        post_stream.locator(".post-stream--cloaked").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Get the number of the last post
       last_post_number = topic.highest_post_number
 
       # Scroll to the bottom of the page to load more posts
       # We use the :end key to scroll to the bottom
-      send_keys(:end)
+      browser_page.keyboard.press("End")
 
       # Verify that the last post is not cloaked
-      expect(post_stream).to have_no_css(
-        "> [data-post-number='#{last_post_number}'].post-stream--cloaked",
-      )
+      expect(
+        post_stream
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("> [data-post-number='#{last_post_number}'].post-stream--cloaked")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       # Verify that some posts at the top are now cloaked
       # we can check the first post to see if it's cloaked
-      expect(post_stream).to have_css("> [data-post-number='1'].post-stream--cloaked")
+      expect(
+        post_stream.locator("> [data-post-number='1'].post-stream--cloaked").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "keeps the state of quoted posts after uncloaking them" do
@@ -127,53 +171,114 @@ describe "Post stream" do
       second_post.rebake!
 
       # Visit the topic page
-      visit "/t/#{topic.slug}/#{topic.id}/1"
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/1")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       post2_selector = "[data-post-number='2']"
 
       # Find the post-stream container
-      post_stream = find(".post-stream")
+      post_stream = browser_root.locator(".post-stream").filter(visible: true)
 
       # Verify the second post is initially visible (uncloaked)
-      expect(post_stream).to have_css(post2_selector)
-      expect(post_stream).to have_no_css("#{post2_selector}.post-stream--cloaked")
+      expect(
+        post_stream.locator(post2_selector).filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        post_stream
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("#{post2_selector}.post-stream--cloaked")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       # Verify the quote starts collapsed
-      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='false']")
+      expect(
+        post_stream.locator("#{post2_selector} aside.quote[data-expanded='false']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Find the blockquote and verify the initial state
-      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
-      expect(blockquote).to have_content("Hello")
-      expect(blockquote).to have_no_content(first_post.raw)
+      blockquote =
+        post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
+      expect(blockquote).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Hello"),
+        useInnerText: true,
+      )
+      expect(
+        blockquote.tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end,
+      ).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(first_post.raw),
+        useInnerText: true,
+      )
 
       # Expand the quote by clicking the toggle button
-      post_stream.find(
-        "#{post2_selector} aside.quote[data-expanded='false'] button.quote-toggle",
-      ).click
-      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='true']")
+      post_stream
+        .locator("#{post2_selector} aside.quote[data-expanded='false'] button.quote-toggle")
+        .filter(visible: true)
+        .click
+      expect(
+        post_stream.locator("#{post2_selector} aside.quote[data-expanded='true']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Verify the expanded quote shows full content
-      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
-      expect(blockquote).to have_content(first_post.raw)
+      blockquote =
+        post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
+      expect(blockquote).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(first_post.raw),
+        useInnerText: true,
+      )
 
       # Scroll to bottom to trigger post cloaking
-      send_keys(:end)
+      browser_page.keyboard.press("End")
 
       # Verify that the second post gets cloaked and the quote is removed
-      expect(post_stream).to have_css("#{post2_selector}.post-stream--cloaked")
-      expect(post_stream).to have_no_css("#{post2_selector} aside.quote")
+      expect(
+        post_stream.locator("#{post2_selector}.post-stream--cloaked").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        post_stream
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("#{post2_selector} aside.quote")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       # Scroll back to top
-      send_keys(:home)
+      browser_page.keyboard.press("Home")
 
       # Verify that the second post becomes visible again
-      expect(post_stream).to have_css(post2_selector)
-      expect(post_stream).to have_no_css("#{post2_selector}.post-stream--cloaked")
+      expect(
+        post_stream.locator(post2_selector).filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        post_stream
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("#{post2_selector}.post-stream--cloaked")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       # Verify that the quote maintains an expanded state after uncloaking
-      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='true']")
-      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
-      expect(blockquote).to have_content(first_post.raw)
+      expect(
+        post_stream.locator("#{post2_selector} aside.quote[data-expanded='true']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      blockquote =
+        post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
+      expect(blockquote).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(first_post.raw),
+        useInnerText: true,
+      )
     end
   end
 end

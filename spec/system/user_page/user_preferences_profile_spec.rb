@@ -19,7 +19,10 @@ describe "User preferences | Profile" do
       user_preferences_profile_page.fill_bio(with: "I am a human.")
       user_preferences_profile_page.save
 
-      expect(user_preferences_profile_page.cooked_bio).to have_text("I am a human.")
+      expect(user_preferences_profile_page.cooked_bio).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("I am a human."),
+        useInnerText: true,
+      )
     end
   end
 
@@ -30,7 +33,7 @@ describe "User preferences | Profile" do
       user_preferences_profile_page.visit(user)
       user_preferences_profile_page.hide_profile
       user_preferences_profile_page.save
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(user_preferences_profile_page).to have_hidden_profile
     end
@@ -56,28 +59,32 @@ describe "User preferences | Profile" do
     end
 
     it "server-side redirects to the profile page to fill up required fields" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
 
-      expect(page).to have_selector(
-        ".alert-error",
-        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
+      expect(
+        browser_root.locator(".alert-error").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
+        useInnerText: true,
       )
     end
 
     it "client-side redirects to the profile page to fill up required fields" do
-      visit("/faq")
+      browser_page.goto("/faq").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path("/guidelines")
+      expect(browser_page).to PlaywrightMatchers.have_url("/guidelines")
 
       click_logo
 
-      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
 
-      expect(page).to have_selector(
-        ".alert-error",
-        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
+      expect(
+        browser_root.locator(".alert-error").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
+        useInnerText: true,
       )
     end
 
@@ -86,61 +93,73 @@ describe "User preferences | Profile" do
 
       click_logo
 
-      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
     end
 
     it "allows user to fill up required fields" do
       user_preferences_profile_page.visit(user)
 
-      find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
-      find(".user-field-updated-terms input").check
-      find(".save-button .btn-primary").click
+      browser_root
+        .locator(".user-field-favourite-pokemon input")
+        .filter(visible: true)
+        .fill("Mudkip")
+      browser_root.locator(".user-field-updated-terms input").filter(visible: true).check
+      browser_root.locator(".save-button .btn-primary").filter(visible: true).click
 
-      expect(page).to have_selector(".pref-bio")
+      expect(
+        browser_root.locator(".pref-bio").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path("/")
+      expect(browser_page).to PlaywrightMatchers.have_url("/")
     end
 
     it "does not allow submitting blank values for required fields" do
       user_preferences_profile_page.visit(user)
 
-      find(".user-field-updated-terms input").check
-      find(".save-button .btn-primary").click
+      browser_root.locator(".user-field-updated-terms input").filter(visible: true).check
+      browser_root.locator(".save-button .btn-primary").filter(visible: true).click
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("login.missing_user_field"))
+      expect(dialog).to have_displayed_content(I18n.t("login.missing_user_field"))
 
       dialog.click_yes
 
-      expect(page).to have_selector(
-        ".alert-error",
-        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
+      expect(
+        browser_root.locator(".alert-error").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
+        useInnerText: true,
       )
     end
 
     it "allows enabling safe-mode" do
-      visit("/safe-mode")
+      browser_page.goto("/safe-mode").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path("/safe-mode")
+      expect(browser_page).to PlaywrightMatchers.have_url("/safe-mode")
 
-      page.find("#btn-enter-safe-mode").click
+      browser_root.locator("#btn-enter-safe-mode").filter(visible: true).click
 
-      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
     end
 
     it "redirects back to the original destination after filling required fields" do
       category = Fabricate(:category)
-      visit("/new-topic?category_id=#{category.id}")
+      browser_page
+        .goto("/new-topic?category_id=#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
 
-      find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
-      find(".user-field-updated-terms input").check
-      find(".save-button .btn-primary").click
+      browser_root
+        .locator(".user-field-favourite-pokemon input")
+        .filter(visible: true)
+        .fill("Mudkip")
+      browser_root.locator(".user-field-updated-terms input").filter(visible: true).check
+      browser_root.locator(".save-button .btn-primary").filter(visible: true).click
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url("/new-topic?category_id=#{category.id}")
     end
   end
 end

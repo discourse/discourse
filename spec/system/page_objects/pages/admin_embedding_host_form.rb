@@ -42,7 +42,9 @@ module PageObjects
 
       def click_save
         form.submit
-        expect(page).to have_css(".d-table")
+        expect(
+          browser_root.locator(".d-table").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       def form

@@ -3,7 +3,8 @@
 module PageObjects
   module Modals
     class Base
-      include Capybara::DSL
+      include SystemHelpers
+      include NativeSystemHelpers
       include RSpec::Matchers
 
       BODY_SELECTOR = ""
@@ -31,51 +32,64 @@ module PageObjects
       end
 
       def header
-        find(".d-modal__header")
+        browser_root.locator(".d-modal__header").filter(visible: true)
       end
 
       def body
-        find(full_body_selector)
+        browser_root.locator(full_body_selector).filter(visible: true)
       end
 
       def footer
-        find(footer_selector)
+        browser_root.locator(footer_selector).filter(visible: true)
       end
 
       def has_footer?
-        has_css?(footer_selector)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(footer_selector).filter(visible: true),
+        )
       end
 
       def has_no_footer?
-        has_no_css?(footer_selector)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(footer_selector).filter(visible: true),
+        )
       end
 
       def close
-        find("#{full_modal_selector} .modal-close").click
+        browser_root.locator("#{full_modal_selector} .modal-close").filter(visible: true).click
       end
 
       def cancel
-        find("#{full_modal_selector} .d-modal-cancel").click
+        browser_root.locator("#{full_modal_selector} .d-modal-cancel").filter(visible: true).click
       end
 
       def click_outside
-        find("#{full_modal_selector}").click(x: 0, y: 0)
+        browser_root
+          .locator("#{full_modal_selector}")
+          .filter(visible: true)
+          .click(position: { x: 0, y: 0 })
       end
 
       def click_primary_button
-        footer.find(".btn-primary").click
+        footer.locator(".btn-primary").filter(visible: true).click
       end
 
-      def has_content?(content)
-        body.has_content?(content)
+      def has_displayed_content?(content)
+        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+          body,
+        )
       end
 
       def open?
-        has_css?(full_modal_selector)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(full_modal_selector).filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(full_modal_selector)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(full_modal_selector).filter(visible: true),
+        )
       end
     end
   end

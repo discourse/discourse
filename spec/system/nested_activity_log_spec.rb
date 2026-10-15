@@ -28,7 +28,9 @@ RSpec.describe "Nested activity log" do
   it "hides the activity log link on a topic with no small actions" do
     nested_view.visit_nested(topic)
 
-    expect(page).to have_css(".nested-view__controls")
+    expect(
+      browser_root.locator(".nested-view__controls").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     expect(nested_view).to have_no_activity_log_link
   end
 

@@ -6,15 +6,23 @@ module PageObjects
       MODAL_SELECTOR = ".predefined-topic-options-modal"
 
       def open?
-        has_css?("#{MODAL_SELECTOR}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{MODAL_SELECTOR}").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?("#{MODAL_SELECTOR}")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{MODAL_SELECTOR}").filter(visible: true),
+        )
       end
 
       def topic_cards
-        all(".predefined-topic-options-modal__card")
+        browser_root
+          .locator(".predefined-topic-options-modal__card")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
       end
 
       def topic_card_count
@@ -26,11 +34,18 @@ module PageObjects
       end
 
       def select_option(option)
-        find("#{MODAL_SELECTOR} [data-topic-option='#{option}']").click
+        browser_root
+          .locator("#{MODAL_SELECTOR} [data-topic-option='#{option}']")
+          .filter(visible: true)
+          .click
       end
 
       def has_disabled_option?(option)
-        has_css?("#{MODAL_SELECTOR} [data-topic-option='#{option}'][disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{MODAL_SELECTOR} [data-topic-option='#{option}'][disabled]",
+          ).filter(visible: true),
+        )
       end
 
       def cancel

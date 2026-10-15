@@ -28,7 +28,7 @@ describe "User preferences | Account" do
       expect(avatar_selector_modal).to have_custom_picture_selected
       file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
       avatar_selector_modal.upload_image(file_path)
-      expect(avatar_selector_modal).not_to have_content(
+      expect(avatar_selector_modal).to have_no_displayed_content(
         I18n.t("js.user.change_avatar.image_is_not_a_square"),
       )
       upload_id = avatar_selector_modal.uploaded_avatar_id
@@ -108,14 +108,30 @@ describe "User preferences | Account" do
 
     it "shows the provider's overridden name and icon" do
       user_account_preferences_page.visit(user)
-      name = find(".pref-associated-accounts table tr.test-auth .associated-account__name")
-      expect(name).not_to have_text("old pretty name")
-      expect(name).to have_text("new pretty name")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.test-auth .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name.tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end,
+      ).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern("old pretty name"),
+        useInnerText: true,
+      )
+      expect(name).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("new pretty name"),
+        useInnerText: true,
+      )
 
       icon_classes =
-        find(".pref-associated-accounts table tr.test-auth .associated-account__icon svg")[:class]
-      expect(icon_classes).not_to have_content("d-icon-flash")
-      expect(icon_classes).to have_content("d-icon-bullseye")
+        browser_root
+          .locator(".pref-associated-accounts table tr.test-auth .associated-account__icon svg")
+          .filter(visible: true)
+          .get_attribute("class")
+      expect(icon_classes).not_to include("d-icon-flash")
+      expect(icon_classes).to include("d-icon-bullseye")
     end
   end
 
@@ -138,17 +154,69 @@ describe "User preferences | Account" do
 
       user_account_preferences_page.visit(user)
 
-      name = find(".pref-associated-accounts table tr.discord .associated-account__name")
-      expect(name).to have_link("Discord", href: "https://discord.com")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.discord .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name
+          .get_by_role("link")
+          .and(
+            name.locator("[id=#{"Discord".to_s.to_json}], [name=#{"Discord".to_s.to_json}]").or(
+              name.get_by_role("link", name: "Discord"),
+            ),
+          )
+          .and(name.locator("[href=#{"https://discord.com".to_s.to_json}]"))
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      name = find(".pref-associated-accounts table tr.facebook .associated-account__name")
-      expect(name).to have_link("Facebook", href: "https://www.facebook.com")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.facebook .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name
+          .get_by_role("link")
+          .and(
+            name.locator("[id=#{"Facebook".to_s.to_json}], [name=#{"Facebook".to_s.to_json}]").or(
+              name.get_by_role("link", name: "Facebook"),
+            ),
+          )
+          .and(name.locator("[href=#{"https://www.facebook.com".to_s.to_json}]"))
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      name = find(".pref-associated-accounts table tr.github .associated-account__name")
-      expect(name).to have_link("GitHub", href: "https://github.com")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.github .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name
+          .get_by_role("link")
+          .and(
+            name.locator("[id=#{"GitHub".to_s.to_json}], [name=#{"GitHub".to_s.to_json}]").or(
+              name.get_by_role("link", name: "GitHub"),
+            ),
+          )
+          .and(name.locator("[href=#{"https://github.com".to_s.to_json}]"))
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      name = find(".pref-associated-accounts table tr.google-oauth2 .associated-account__name")
-      expect(name).to have_link("Google", href: "https://accounts.google.com")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.google-oauth2 .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name
+          .get_by_role("link")
+          .and(
+            name.locator("[id=#{"Google".to_s.to_json}], [name=#{"Google".to_s.to_json}]").or(
+              name.get_by_role("link", name: "Google"),
+            ),
+          )
+          .and(name.locator("[href=#{"https://accounts.google.com".to_s.to_json}]"))
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "shows provider names without links when provider_url is not implemented" do
@@ -170,8 +238,18 @@ describe "User preferences | Account" do
 
       user_account_preferences_page.visit(user)
 
-      name = find(".pref-associated-accounts table tr.test-no-url .associated-account__name")
-      expect(name).not_to have_css("a")
+      name =
+        browser_root.locator(
+          ".pref-associated-accounts table tr.test-no-url .associated-account__name",
+        ).filter(visible: true)
+      expect(
+        name
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     ensure
       DiscoursePluginRegistry.reset!
     end

@@ -7,7 +7,7 @@ module PageObjects
       MODAL_SELECTOR = ".flag-modal"
 
       def choose_type(type)
-        body.find("#radio_#{type}").click
+        body.locator("#radio_#{type}").filter(visible: true).click
       end
 
       def confirm_flag
@@ -22,15 +22,30 @@ module PageObjects
       end
 
       def fill_message(message)
-        body.fill_in("message", with: message)
+        body
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            body.locator("[id=#{"message".to_s.to_json}], [name=#{"message".to_s.to_json}]").or(
+              body.get_by_label("message", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .fill(message)
       end
 
       def check_confirmation
-        body.check("confirmation")
+        body.locator("#confirmation, input[name=confirmation]").check
       end
 
       def has_choices?(*choices)
-        expect(body.all(".flag-action-type-details strong").map(&:text)).to eq(choices)
+        expect(
+          body
+            .locator(".flag-action-type-details strong")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip },
+        ).to eq(choices)
       end
     end
   end

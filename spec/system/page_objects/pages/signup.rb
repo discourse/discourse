@@ -4,27 +4,33 @@ module PageObjects
   module Pages
     class Signup < PageObjects::Pages::Base
       def open?
-        has_css?(".signup-fullpage")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".signup-fullpage").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(".signup-fullpage")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".signup-fullpage").filter(visible: true),
+        )
       end
 
       def open
-        visit("/signup")
+        browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def open_from_header
-        find(".sign-up-button").click
+        browser_root.locator(".sign-up-button").filter(visible: true).click
       end
 
       def click(selector)
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
+        if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
+          expect(
+            browser_root.locator(".d-modal.is-animating").filter(visible: true),
+          ).to PlaywrightMatchers.have_count(0)
         end
-        find(selector).click
+        browser_root.locator(selector).filter(visible: true).click
       end
 
       def open_login
@@ -36,38 +42,54 @@ module PageObjects
       end
 
       def has_password_input?
-        has_css?("#new-account-password")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#new-account-password").filter(visible: true),
+        )
       end
 
       def has_no_password_input?
-        has_no_css?("#new-account-password")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#new-account-password").filter(visible: true),
+        )
       end
 
       def has_name_input?
-        has_css?("#new-account-name")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#new-account-name").filter(visible: true),
+        )
       end
 
       def has_no_name_input?
-        has_no_css?("#new-account-name")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#new-account-name").filter(visible: true),
+        )
       end
 
       def has_editable_name_input?
-        has_css?("#new-account-name:not([disabled])")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#new-account-name:not([disabled])").filter(visible: true),
+        )
       end
 
       def has_disabled_name_input?
-        has_css?("#new-account-name[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#new-account-name[disabled]").filter(visible: true),
+        )
       end
 
       def has_no_right_side_column?
-        has_no_css?(".login-right-side")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".login-right-side").filter(visible: true),
+        )
       end
 
       def fill_input(selector, text)
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
+        if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
+          expect(
+            browser_root.locator(".d-modal.is-animating").filter(visible: true),
+          ).to PlaywrightMatchers.have_count(0)
         end
-        find(selector).fill_in(with: text)
+        browser_root.locator(selector).filter(visible: true).fill(text)
       end
 
       def fill_email(email)
@@ -96,20 +118,38 @@ module PageObjects
       end
 
       def fill_custom_field(name, value)
-        find(".user-field-#{name.downcase} input").fill_in(with: value)
+        browser_root.locator(".user-field-#{name.downcase} input").filter(visible: true).fill(value)
         self
       end
 
       def has_valid_email?
-        find(".create-account-email").has_css?("#account-email-validation.good")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account-email")
+            .filter(visible: true)
+            .locator("#account-email-validation.good")
+            .filter(visible: true),
+        )
       end
 
       def has_valid_username?
-        find(".create-account__username").has_css?("#username-validation.good")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account__username")
+            .filter(visible: true)
+            .locator("#username-validation.good")
+            .filter(visible: true),
+        )
       end
 
       def has_valid_password?
-        find(".create-account__password").has_css?("#password-validation.good")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account__password")
+            .filter(visible: true)
+            .locator("#password-validation.good")
+            .filter(visible: true),
+        )
       end
 
       def has_valid_fields?
@@ -119,15 +159,33 @@ module PageObjects
       end
 
       def has_disabled_email?
-        find(".create-account-email").has_css?("input[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account-email")
+            .filter(visible: true)
+            .locator("input[disabled]")
+            .filter(visible: true),
+        )
       end
 
       def has_disabled_name?
-        find(".create-account__fullname").has_css?("input[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account__fullname")
+            .filter(visible: true)
+            .locator("input[disabled]")
+            .filter(visible: true),
+        )
       end
 
       def has_disabled_username?
-        find(".create-account__username").has_css?("input[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .locator(".create-account__username")
+            .filter(visible: true)
+            .locator("input[disabled]")
+            .filter(visible: true),
+        )
       end
 
       def click_social_button(provider)
@@ -135,7 +193,9 @@ module PageObjects
       end
 
       def has_flash_message?(text)
-        has_css?(".alert", text: text)
+        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".alert").filter(visible: true),
+        )
       end
     end
   end

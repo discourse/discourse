@@ -6,37 +6,57 @@ module PageObjects
       WIZARD_SELECTOR = ".design-wizard"
 
       def visible?
-        has_css?(WIZARD_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(WIZARD_SELECTOR).filter(visible: true),
+        )
       end
 
       def hidden?
-        has_no_css?(WIZARD_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(WIZARD_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_site_sidebar?
-        has_css?(".sidebar-sections")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".sidebar-sections").filter(visible: true),
+        )
       end
 
       def select_theme(theme_id)
-        find("#{WIZARD_SELECTOR}__theme-card[data-theme-id='#{theme_id}']").click
+        browser_root
+          .locator("#{WIZARD_SELECTOR}__theme-card[data-theme-id='#{theme_id}']")
+          .filter(visible: true)
+          .click
       end
 
       def has_selected_theme?(theme)
-        has_css?(
-          "#{WIZARD_SELECTOR}__theme-card[data-theme-id='#{theme.id}'] input[type='radio']:checked",
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{WIZARD_SELECTOR}__theme-card[data-theme-id='#{theme.id}'] input[type='radio']:checked",
+          ).filter(visible: true),
         )
       end
 
       def has_no_selected_theme?
-        has_no_css?("#{WIZARD_SELECTOR}__theme-card input[type='radio']:checked")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{WIZARD_SELECTOR}__theme-card input[type='radio']:checked").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_disabled_next?
-        has_css?("#{WIZARD_SELECTOR}__next[disabled]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{WIZARD_SELECTOR}__next[disabled]").filter(visible: true),
+        )
       end
 
       def select_palette(pair_key)
-        find("#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']").click
+        browser_root
+          .locator("#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']")
+          .filter(visible: true)
+          .click
       end
 
       def toggle_user_selectable_palettes
@@ -52,7 +72,10 @@ module PageObjects
       end
 
       def select_homepage(key)
-        find("#{WIZARD_SELECTOR}__homepage-card[data-homepage='#{key}']").click
+        browser_root
+          .locator("#{WIZARD_SELECTOR}__homepage-card[data-homepage='#{key}']")
+          .filter(visible: true)
+          .click
       end
 
       def toggle_welcome_banner
@@ -68,57 +91,86 @@ module PageObjects
       end
 
       def select_welcome_banner_location(key)
-        find("#{WIZARD_SELECTOR}__option-row[data-welcome-banner-location='#{key}']").click
+        browser_root
+          .locator("#{WIZARD_SELECTOR}__option-row[data-welcome-banner-location='#{key}']")
+          .filter(visible: true)
+          .click
       end
 
       def select_search_experience(key)
-        find("#{WIZARD_SELECTOR}__option-row[data-search-experience='#{key}']").click
+        browser_root
+          .locator("#{WIZARD_SELECTOR}__option-row[data-search-experience='#{key}']")
+          .filter(visible: true)
+          .click
       end
 
       def select_body_font(font_key)
-        groups = all("#{WIZARD_SELECTOR}__font-group")
-        groups[0].find("#{WIZARD_SELECTOR}__font-select").click
-        find(
-          "[data-identifier='design-wizard-base-font'] .btn.body-font-#{font_key.tr("_", "-")}",
-        ).click
+        groups =
+          browser_root
+            .locator("#{WIZARD_SELECTOR}__font-group")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+        groups[0].locator("#{WIZARD_SELECTOR}__font-select").filter(visible: true).click
+        browser_root
+          .locator(
+            "[data-identifier='design-wizard-base-font'] .btn.body-font-#{font_key.tr("_", "-")}",
+          )
+          .filter(visible: true)
+          .click
       end
 
       def has_palette_preview?
-        has_css?("link[data-scheme-id]", visible: :all)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("link[data-scheme-id]"),
+        )
       end
 
       def has_no_palette_preview?
-        has_no_css?("link[data-scheme-id]", visible: :all)
+        PlaywrightMatchers.have_count(0).matches?(browser_root.locator("link[data-scheme-id]"))
       end
 
       def layout_dimensions
-        rect = find(WIZARD_SELECTOR).evaluate_script(<<~JS)
+        rect =
+          browser_root
+            .locator(WIZARD_SELECTOR)
+            .filter(visible: true)
+            .evaluate(
+              "(element, args) => (function() { return #{<<~JS} }).apply(element, args)",
           (() => {
             const { width, top, bottom } = this.getBoundingClientRect();
             return { width, top, bottom };
           })()
         JS
+              arg: [],
+            )
 
         {
           panel_width: rect["width"],
           panel_top: rect["top"],
           panel_bottom: rect["bottom"],
-          viewport_width: page.evaluate_script("window.innerWidth"),
-          viewport_height: page.evaluate_script("window.innerHeight"),
-          document_scroll_width: page.evaluate_script("document.documentElement.scrollWidth"),
+          viewport_width:
+            browser_page.evaluate("function(arguments) { return window.innerWidth }", arg: []),
+          viewport_height:
+            browser_page.evaluate("function(arguments) { return window.innerHeight }", arg: []),
+          document_scroll_width:
+            browser_page.evaluate(
+              "function(arguments) { return document.documentElement.scrollWidth }",
+              arg: [],
+            ),
         }
       end
 
       def next_step
-        find("#{WIZARD_SELECTOR}__next").click
+        browser_root.locator("#{WIZARD_SELECTOR}__next").filter(visible: true).click
       end
 
       def save
-        find("#{WIZARD_SELECTOR}__save").click
+        browser_root.locator("#{WIZARD_SELECTOR}__save").filter(visible: true).click
       end
 
       def close
-        find("#{WIZARD_SELECTOR}__close").click
+        browser_root.locator("#{WIZARD_SELECTOR}__close").filter(visible: true).click
       end
 
       private

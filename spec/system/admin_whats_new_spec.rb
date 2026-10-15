@@ -19,7 +19,7 @@ describe "Admin What's New Page" do
   it "shows an error message when the backend returns an empty list" do
     set_new_features_response_json(nil)
     whats_new_page.visit
-    expect(whats_new_page).to have_content(
+    expect(whats_new_page).to have_displayed_content(
       html_translation_to_text(
         I18n.t("admin_js.admin.dashboard.new_features.no_new_features_found"),
       ),
@@ -46,15 +46,24 @@ describe "Admin What's New Page" do
         },
       ],
     )
-    visit "/admin"
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
-    expect(sidebar.find_section_link("admin_whats_new")).to have_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_whats_new")
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
     sidebar.find_section_link("admin_whats_new").click
-    expect(sidebar.find_section_link("admin_whats_new")).to have_no_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_whats_new")
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "displays new features with screenshot taking precedence over emoji" do

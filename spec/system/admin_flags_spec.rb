@@ -61,7 +61,7 @@ describe "Admin Flags Page" do
     admin_flags_page.click_add_flag
     expect(d_page_header).to be_hidden
 
-    expect(admin_flag_form_page).to have_text(
+    expect(admin_flag_form_page).to have_displayed_text(
       I18n.t("admin_js.admin.config_areas.flags.form.create_warning"),
     )
 
@@ -92,7 +92,7 @@ describe "Admin Flags Page" do
 
     expect(d_page_header).to be_hidden
 
-    expect(admin_flag_form_page).to have_text(
+    expect(admin_flag_form_page).to have_displayed_text(
       I18n.t("admin_js.admin.config_areas.flags.form.edit_warning"),
     )
 
@@ -123,7 +123,15 @@ describe "Admin Flags Page" do
     )
 
     admin_flags_page.click_tab("settings")
-    expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
+    expect(
+      browser_root
+        .locator(".setting-label h3")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+        .map { |element| element.inner_text.strip }
+        .map(&:downcase),
+    ).to eq(
       [
         "flag post allowed groups",
         "allow all users to flag illegal content",
@@ -213,7 +221,7 @@ describe "Admin Flags Page" do
       admin_flags_page.move_to_top_via_list("notify_moderators")
       expect(admin_flags_page).to have_saved_flag("notify_moderators")
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(admin_flags_page).to have_flags_in_order(
         "Send @%{username} a message",
@@ -239,7 +247,7 @@ describe "Admin Flags Page" do
       )
       expect(admin_flags_page).to have_saved_flag("off_topic")
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(admin_flags_page).to have_flags_in_order(
         "Send @%{username} a message",

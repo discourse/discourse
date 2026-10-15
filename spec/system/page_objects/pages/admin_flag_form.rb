@@ -23,8 +23,12 @@ module PageObjects
 
       def click_save
         form.submit
-        expect(page).to have_no_css(".admin-config.flags.new")
-        expect(page).to have_css(".admin-flag-item__name")
+        expect(
+          browser_root.locator(".admin-config.flags.new").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
+        expect(
+          browser_root.locator(".admin-flag-item__name").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       def form

@@ -59,10 +59,11 @@ describe "Post menu" do
         end
 
         # check if the buttons are in the correct order
-        node_elements = topic_page.find_post_action_buttons(post).all("*")
         button_node_positions =
           expected_buttons.map do |button|
-            node_elements.find_index(topic_page.find_post_action_button(post, button.to_sym))
+            topic_page.find_post_action_button(post, button.to_sym).evaluate(
+              "element => Array.from(element.closest('.post-controls .actions').querySelectorAll('*')).indexOf(element)",
+            )
           end
 
         expect(button_node_positions).to eq(button_node_positions.compact.sort)
@@ -173,7 +174,7 @@ describe "Post menu" do
       expect(topic_page).to have_post_action_button(post, :bookmark)
 
       bookmark_button = topic_page.find_post_action_button(post, :bookmark)
-      expect(bookmark_button[:class].split("\s")).not_to include("bookmarked")
+      expect(bookmark_button.get_attribute("class").split("\s")).not_to include("bookmarked")
 
       topic_page.click_post_action_button(post, :bookmark)
       expect(topic_page).to have_post_bookmarked(post)
@@ -316,7 +317,9 @@ describe "Post menu" do
 
       expect(topic_page).to have_no_deleted_post(other_p1)
       expect(modal).to be_open
-      expect(modal).to have_content(I18n.t("js.post.controls.delete_topic_disallowed_modal"))
+      expect(modal).to have_displayed_content(
+        I18n.t("js.post.controls.delete_topic_disallowed_modal"),
+      )
     end
 
     it "recovers a topic" do
@@ -419,7 +422,7 @@ describe "Post menu" do
       topic_page.click_post_action_button(post2, :edit)
 
       expect(composer).to be_opened
-      expect(composer).to have_content(post2.raw)
+      expect(composer).to have_displayed_content(post2.raw)
     end
   end
 
@@ -447,7 +450,7 @@ describe "Post menu" do
 
       expect(topic_page).to have_post_action_button(unliked_post, :like)
       like_button = topic_page.find_post_action_button(unliked_post, :like)
-      expect(like_button[:class].split("\s")).to include("like")
+      expect(like_button.get_attribute("class").split("\s")).to include("like")
 
       expect(topic_page).to have_no_post_action_button(unliked_post, :like_count)
 
@@ -457,11 +460,14 @@ describe "Post menu" do
       # we need this because the find_post_action_button will target the like button on or off
       try_until_success(reason: "Relies on Ember debounce") do
         like_button = topic_page.find_post_action_button(unliked_post, :like)
-        expect(like_button[:class].split("\s")).to include("has-like")
+        expect(like_button.get_attribute("class").split("\s")).to include("has-like")
       end
 
       like_count_button = topic_page.find_post_action_button(unliked_post, :like_count)
-      expect(like_count_button).to have_content(1)
+      expect(like_count_button).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(1),
+        useInnerText: true,
+      )
 
       # toggle the like off
       topic_page.click_post_action_button(unliked_post, :like)
@@ -469,7 +475,7 @@ describe "Post menu" do
       # we need this because the find_post_action_button will target the like button on or off
       try_until_success(reason: "Relies on Ember debounce") do
         like_button = topic_page.find_post_action_button(unliked_post, :like)
-        expect(like_button[:class].split("\s")).to include("like")
+        expect(like_button.get_attribute("class").split("\s")).to include("like")
       end
 
       expect(topic_page).to have_no_post_action_button(unliked_post, :like_count)
@@ -480,7 +486,12 @@ describe "Post menu" do
 
       expect(topic_page).to have_post_action_button(post2, :like)
       like_button = topic_page.find_post_action_button(post2, :like)
-      expect(like_button[:title]).to eq(I18n.t("js.post.controls.like"))
+      expect(
+        like_button.evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "title",
+        ),
+      ).to eq(I18n.t("js.post.controls.like"))
 
       expect(topic_page).to have_no_post_action_button(post2, :like_count)
 
@@ -495,7 +506,10 @@ describe "Post menu" do
 
       # renders the like count when the it's not zero
       like_count_button = topic_page.find_post_action_button(post, :like_count)
-      expect(like_count_button).to have_content(post.like_count)
+      expect(like_count_button).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.like_count),
+        useInnerText: true,
+      )
 
       # does not render the like count when it's zero
       expect(topic_page).to have_no_post_action_button(post2, :like_count)
@@ -542,7 +556,10 @@ describe "Post menu" do
       # when the post has reads > 0
       expect(topic_page).to have_post_action_button(pm_post1, :read)
       read_button = topic_page.find_post_action_button(pm_post1, :read)
-      expect(read_button).to have_content(1)
+      expect(read_button).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(1),
+        useInnerText: true,
+      )
       # don't show when the post has reads = 0
       expect(topic_page).to have_no_post_action_button(pm_post2, :read)
 
@@ -606,7 +623,12 @@ describe "Post menu" do
       expect(topic_page).to have_post_action_button(post, :replies)
 
       replies_button = topic_page.find_post_action_button(post, :replies)
-      expect(replies_button[:disabled]).to eq(true)
+      expect(
+        replies_button.evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "disabled",
+        ),
+      ).to eq(true)
     end
 
     it "displays the replies when clicked" do
@@ -617,8 +639,18 @@ describe "Post menu" do
       expect(topic_page).to have_replies_expanded(post)
 
       replies_button = topic_page.find_post_action_button(post, :replies)
-      expect(replies_button[:ariaExpanded]).to eq("true")
-      expect(replies_button[:ariaPressed]).to eq("true")
+      expect(
+        replies_button.evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "ariaExpanded",
+        ),
+      ).to eq("true")
+      expect(
+        replies_button.evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "ariaPressed",
+        ),
+      ).to eq("true")
     end
 
     it "is displayed correctly when the reply is directly below" do
@@ -690,13 +722,23 @@ describe "Post menu" do
       # display the reply button less prominently for the wiki post, i.e. it's not a create button
       # and the label is not displayed
       wiki_post_reply_button = topic_page.find_post_action_button(wiki_post, :reply)
-      expect(wiki_post_reply_button[:class].split("\s")).not_to include("create")
-      expect(wiki_post_reply_button).to have_no_content(I18n.t("js.topic.reply.title"))
+      expect(wiki_post_reply_button.get_attribute("class").split("\s")).not_to include("create")
+      expect(
+        wiki_post_reply_button.tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end,
+      ).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.topic.reply.title")),
+        useInnerText: true,
+      )
 
       # display the reply as a create button for the non-wiki post and the label should be displayed
       non_wiki_post_reply_button = topic_page.find_post_action_button(non_wiki_post, :reply)
-      expect(non_wiki_post_reply_button[:class].split("\s")).to include("create")
-      expect(non_wiki_post_reply_button).to have_content(I18n.t("js.topic.reply.title"))
+      expect(non_wiki_post_reply_button.get_attribute("class").split("\s")).to include("create")
+      expect(non_wiki_post_reply_button).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.topic.reply.title")),
+        useInnerText: true,
+      )
     end
 
     it "works as expected" do
@@ -708,7 +750,7 @@ describe "Post menu" do
       topic_page.click_post_action_button(post, :reply)
 
       expect(composer).to be_opened
-      expect(composer).to have_content("")
+      expect(composer).to have_displayed_content("")
     end
   end
 
@@ -719,7 +761,9 @@ describe "Post menu" do
       expect(topic_page).to have_post_action_button(post, :share)
       topic_page.click_post_action_button(post, :share)
 
-      expect(page).to have_css(".d-modal.share-topic-modal")
+      expect(
+        browser_root.locator(".d-modal.share-topic-modal").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 

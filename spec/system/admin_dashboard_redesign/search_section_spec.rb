@@ -154,8 +154,10 @@ describe "Admin Dashboard Redesign | Search section" do
 
     search.click_trending_term("ruby")
 
-    expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
-    expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      %r{^https?://[^/]+#{Regexp.escape("/admin/logs/search_logs/term")}(?:\?.*)?$},
+    )
+    expect(Rack::Utils.parse_query(URI.parse(browser_page.url).query)).to eq(
       "searchType" => "human_only",
       "period" => "weekly",
       "term" => "ruby",
@@ -172,7 +174,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     dashboard.search.click_content_gap_term("discobot")
 
-    expect(page).to have_current_path("/search?q=discobot")
+    expect(browser_page).to PlaywrightMatchers.have_url("/search?q=discobot")
   end
 
   it "alerts staff when the no-result rate crosses the threshold",
@@ -226,7 +228,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     search.click_trending_term("ruby")
 
-    expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
+    expect(Rack::Utils.parse_query(URI.parse(browser_page.url).query)).to eq(
       "searchType" => "non_staff_only",
       "period" => "monthly",
       "term" => "ruby",
@@ -294,8 +296,10 @@ describe "Admin Dashboard Redesign | Search section" do
 
     search.click_trending_term("ruby")
 
-    expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
-    expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      %r{^https?://[^/]+#{Regexp.escape("/admin/logs/search_logs/term")}(?:\?.*)?$},
+    )
+    expect(Rack::Utils.parse_query(URI.parse(browser_page.url).query)).to eq(
       "searchType" => "human_only",
       "period" => "all",
       "term" => "ruby",

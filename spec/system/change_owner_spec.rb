@@ -22,9 +22,17 @@ describe "Change Owner Modal" do
     visit_topic_and_open_change_owner_modal(post)
     change_owner_modal.select_new_owner(other_user)
     change_owner_modal.confirm_new_owner
-    expect(page).not_to have_css ".change-ownership-modal"
+    expect(
+      browser_root.locator(".change-ownership-modal").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
-    displayed_username = topic_page.post_by_number(post).find(".first.username").text
+    displayed_username =
+      topic_page
+        .post_by_number(post)
+        .locator(".first.username")
+        .filter(visible: true)
+        .inner_text
+        .strip
     expect(displayed_username).to eq other_user.username
   end
 end

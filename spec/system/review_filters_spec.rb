@@ -19,18 +19,30 @@ describe "Review filters" do
       it "shows only reviewables claimed by the selected user via URL parameter" do
         ReviewableClaimedTopic.create!(user: moderator, topic: flagged_post_1.topic)
 
-        visit("/review?claimed_by=#{moderator.username}")
+        browser_page
+          .goto("/review?claimed_by=#{moderator.username}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_css(".review-item", count: 1)
-        expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
+        expect(
+          browser_root.locator(".review-item").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(1)
+        expect(
+          browser_root.locator(".review-item[data-reviewable-id='#{flagged_post_1.id}']").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       it "shows no reviewables when filtering by a user who has not claimed any" do
         ReviewableClaimedTopic.create!(user_id: moderator.id, topic_id: flagged_post_1.topic_id)
 
-        visit("/review?claimed_by=#{admin.username}")
+        browser_page
+          .goto("/review?claimed_by=#{admin.username}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_no_css(".reviewable-item")
+        expect(
+          browser_root.locator(".reviewable-item").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -38,9 +50,12 @@ describe "Review filters" do
       before { SiteSetting.reviewable_claiming = "disabled" }
 
       it "does not show the claimed by filter" do
-        visit("/review")
+        browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         review_index_page.expand_filters
-        expect(page).to have_no_text("Flag claimed by")
+        expect(browser_content).not_to PlaywrightMatchers.contain_text(
+          browser_text_pattern("Flag claimed by"),
+          useInnerText: true,
+        )
       end
     end
   end
@@ -59,8 +74,10 @@ describe "Review filters" do
     end
 
     it "allows to filter review claimed by category group moderators" do
-      visit("/review")
-      expect(page).to have_css(".review-item", count: 3)
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root.locator(".review-item").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(3)
 
       review_index_page.expand_filters
 
@@ -70,8 +87,14 @@ describe "Review filters" do
 
       review_index_page.submit_filters
 
-      expect(page).to have_css(".review-item", count: 1)
-      expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
+      expect(
+        browser_root.locator(".review-item").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(1)
+      expect(
+        browser_root.locator(".review-item[data-reviewable-id='#{flagged_post_1.id}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

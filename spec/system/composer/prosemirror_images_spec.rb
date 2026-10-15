@@ -7,42 +7,82 @@ describe "Composer - ProseMirror - Images" do
     it "allows scaling image down and up via toolbar" do
       open_composer
       paste_and_click_image
-      find(".composer-image-toolbar__zoom-out").click
-      expect(rich).to have_selector(".composer-image-node img[data-scale='75']")
-      find(".composer-image-toolbar__zoom-out").click
-      expect(rich).to have_selector(".composer-image-node img[data-scale='50']")
-      find(".composer-image-toolbar__zoom-in").click
-      expect(rich).to have_selector(".composer-image-node img[data-scale='75']")
-      find(".composer-image-toolbar__zoom-in").click
-      expect(rich).to have_selector(".composer-image-node img[data-scale='100']")
+      browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img[data-scale='75']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img[data-scale='50']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root.locator(".composer-image-toolbar__zoom-in").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img[data-scale='75']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root.locator(".composer-image-toolbar__zoom-in").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img[data-scale='100']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "allows removing image via toolbar" do
       open_composer
       composer.type_content("Before")
       paste_and_click_image
-      find(".composer-image-toolbar__trash").click
-      expect(rich).to have_no_css(".composer-image-node img")
-      expect(rich).to have_content("Before")
+      browser_root.locator(".composer-image-toolbar__trash").filter(visible: true).click
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".composer-image-node img")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(rich).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Before"),
+        useInnerText: true,
+      )
     end
 
     it "hides toolbar when clicking outside image" do
       open_composer
       paste_and_click_image
-      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
-      rich.find("p").click
-      expect(page).to have_no_css("[data-identifier='composer-image-toolbar']")
+      expect(
+        browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("p").filter(visible: true).click
+      expect(
+        browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "sets width and height attributes when scaling external images" do
       open_composer
       image = Fabricate(:image_upload)
       composer.type_content("![alt text](#{image.url})")
-      expect(rich).to have_no_css(".composer-image-node img[width]")
-      expect(rich).to have_no_css(".composer-image-node img[height]")
-      find(".composer-image-toolbar__zoom-out").click
-      expect(rich).to have_css(".composer-image-node img[width]")
-      expect(rich).to have_css(".composer-image-node img[height]")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".composer-image-node img[width]")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".composer-image-node img[height]")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img[width]").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator(".composer-image-node img[height]").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -54,7 +94,7 @@ describe "Composer - ProseMirror - Images" do
       upload2 = Fabricate(:upload)
       short_url1 = "upload://#{Upload.base62_sha1(upload1.sha1)}"
       short_url2 = "upload://#{Upload.base62_sha1(upload2.sha1)}"
-      page.execute_script(<<~JS)
+      browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
         window.urlLookupRequests = 0;
         const originalXHROpen = window.XMLHttpRequest.prototype.open;
         window.XMLHttpRequest.prototype.open = function(method, url) {
@@ -66,17 +106,35 @@ describe "Composer - ProseMirror - Images" do
       JS
       markdown = "![image 1](#{short_url1})\n\n![image 2](#{short_url2})"
       cdp.copy_paste(markdown)
-      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
-      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+      expect(
+        browser_root.locator("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
       # loaded in a single api call
-      initial_request_count = page.evaluate_script("window.urlLookupRequests")
+      initial_request_count =
+        browser_page.evaluate("function(arguments) { return window.urlLookupRequests }", arg: [])
       expect(initial_request_count).to eq(1)
       composer.toggle_rich_editor
       composer.toggle_rich_editor
-      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
-      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+      expect(
+        browser_root.locator("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']").filter(
+          visible: true,
+        ),
+      ).not_to PlaywrightMatchers.have_count(0)
       # loaded from cache, no new request
-      final_request_count = page.evaluate_script("window.urlLookupRequests")
+      final_request_count =
+        browser_page.evaluate("function(arguments) { return window.urlLookupRequests }", arg: [])
       expect(final_request_count).to eq(initial_request_count)
     end
   end
@@ -85,40 +143,62 @@ describe "Composer - ProseMirror - Images" do
     it "shows alt text input when image is selected" do
       open_composer
       paste_and_click_image
-      expect(page).to have_css("[data-identifier='composer-image-alt-text']")
-      expect(page).to have_css(".image-alt-text-input__display")
+      expect(
+        browser_root.locator("[data-identifier='composer-image-alt-text']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator(".image-alt-text-input__display").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "allows editing alt text by clicking on display" do
       open_composer
       paste_and_click_image
-      find(".image-alt-text-input__display").click
-      expect(page).to have_css(".image-alt-text-input.--expanded")
-      expect(page).to have_css(".image-alt-text-input__field")
-      find(".image-alt-text-input__field").fill_in(with: "updated alt text")
-      find(".image-alt-text-input__field").send_keys(:enter)
-      expect(rich.find(".composer-image-node img")["alt"]).to eq("updated alt text")
+      browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
+      expect(
+        browser_root.locator(".image-alt-text-input.--expanded").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator(".image-alt-text-input__field").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root
+        .locator(".image-alt-text-input__field")
+        .filter(visible: true)
+        .fill("updated alt text")
+      browser_root.locator(".image-alt-text-input__field").filter(visible: true).press("Enter")
+      expect(
+        rich.locator(".composer-image-node img").filter(visible: true).get_attribute("alt"),
+      ).to eq("updated alt text")
     end
 
     it "saves alt text when leaving the input field" do
       open_composer
       paste_and_click_image
-      find(".image-alt-text-input__display").click
-      find(".image-alt-text-input__field").fill_in(with: "new alt text")
-      rich.find("p").click
-      expect(rich.find(".composer-image-node img")["alt"]).to eq("new alt text")
+      browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
+      browser_root
+        .locator(".image-alt-text-input__field")
+        .filter(visible: true)
+        .fill("new alt text")
+      rich.locator("p").filter(visible: true).click
+      expect(
+        rich.locator(".composer-image-node img").filter(visible: true).get_attribute("alt"),
+      ).to eq("new alt text")
     end
 
     it "displays the placeholder if alt text is empty" do
       open_composer
       paste_and_click_image
-      expect(page).to have_css(".image-alt-text-input__display", text: "image")
-      find(".image-alt-text-input__display").click
-      find(".image-alt-text-input__field").fill_in(with: "")
-      find(".image-alt-text-input__field").send_keys(:enter)
-      expect(page).to have_css(
-        ".image-alt-text-input__display",
-        text: I18n.t("js.composer.image_alt_text.title"),
+      expect(
+        browser_root.locator(".image-alt-text-input__display").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text([browser_text_pattern("image")], useInnerText: true)
+      browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
+      browser_root.locator(".image-alt-text-input__field").filter(visible: true).fill("")
+      browser_root.locator(".image-alt-text-input__field").filter(visible: true).press("Enter")
+      expect(
+        browser_root.locator(".image-alt-text-input__display").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.composer.image_alt_text.title"))],
+        useInnerText: true,
       )
     end
   end
@@ -174,7 +254,9 @@ describe "Composer - ProseMirror - Images" do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
       expect(composer).to have_no_in_progress_uploads
       # Should automatically create a grid with 3 images
       expect(composer.image_grid).to have_grid_images(3)
@@ -187,7 +269,9 @@ describe "Composer - ProseMirror - Images" do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files([file_path_1, file_path_2, file_path_3])
       expect(composer).to have_no_in_progress_uploads
       expect(composer.image_grid).to have_single_grid_with_images(5)
     end
@@ -197,7 +281,7 @@ describe "Composer - ProseMirror - Images" do
     let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
 
     def click_selected_image
-      page.execute_script(<<~JS)
+      browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
         document.querySelector('.composer-image-node img.ProseMirror-selectednode')?.click();
       JS
     end
@@ -216,44 +300,69 @@ describe "Composer - ProseMirror - Images" do
       lightbox.close_button.click
       expect(lightbox).to be_hidden
 
-      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
-      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+      expect(
+        rich.locator(".composer-image-node img.ProseMirror-selectednode").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "opens lightbox with gallery when multiple images are present" do
       open_composer
       composer.type_content("![image1](upload://test1.png)\n\n![image2](upload://test2.png)")
 
-      first_image = rich.all(".composer-image-node img").first
+      first_image =
+        rich
+          .locator(".composer-image-node img")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .first
       first_image.click
-      expect(first_image[:class]).to include("ProseMirror-selectednode")
+      expect(first_image.get_attribute("class")).to include("ProseMirror-selectednode")
 
       click_selected_image
 
       expect(lightbox).to be_visible
-      expect(lightbox).to have_css(".pswp__counter", text: "1 / 2")
+      expect(
+        lightbox.locator(".pswp__counter").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text([browser_text_pattern("1 / 2")], useInnerText: true)
       expect(lightbox).to have_next_button
       expect(lightbox).to have_prev_button
 
       lightbox.close_button.click
       expect(lightbox).to be_hidden
 
-      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
-      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+      expect(
+        rich.locator(".composer-image-node img.ProseMirror-selectednode").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "lets the user dismiss the alt text input by clicking the image without opening the lightbox" do
       open_composer
       paste_and_click_image
 
-      find(".image-alt-text-input__display").click
-      find(".image-alt-text-input__field").fill_in(with: "described image")
+      browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
+      browser_root
+        .locator(".image-alt-text-input__field")
+        .filter(visible: true)
+        .fill("described image")
 
       click_selected_image
 
-      expect(page).to have_no_css(".image-alt-text-input.--expanded")
-      expect(rich.find(".composer-image-node img")["alt"]).to eq("described image")
-      expect(page).to have_no_css(".pswp")
+      expect(
+        browser_root.locator(".image-alt-text-input.--expanded").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator(".composer-image-node img").filter(visible: true).get_attribute("alt"),
+      ).to eq("described image")
+      expect(browser_root.locator(".pswp").filter(visible: true)).to PlaywrightMatchers.have_count(
+        0,
+      )
 
       click_selected_image
       expect(lightbox).to be_visible
@@ -263,7 +372,9 @@ describe "Composer - ProseMirror - Images" do
       open_composer
       composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
 
-      rich.find(".composer-image-node img[alt='first']").click
+      first_image = rich.locator(".composer-image-node img[alt='first']").filter(visible: true)
+      first_image.click
+      expect(first_image).to PlaywrightMatchers.have_class(/ProseMirror-selectednode/)
       click_selected_image
 
       expect(lightbox).to be_visible

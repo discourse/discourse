@@ -16,7 +16,10 @@ RSpec::Matchers.define :have_computed_style do |expected|
   end
 
   def computed_style(element, property)
-    element.evaluate_script("getComputedStyle(this)['#{property}']")
+    element.evaluate(
+      "(element, property) => getComputedStyle(element)[property]",
+      arg: property.to_s,
+    )
   end
 
   def normalize(value)

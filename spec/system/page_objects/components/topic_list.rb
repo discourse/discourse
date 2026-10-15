@@ -12,90 +12,153 @@ module PageObjects
 
       def has_topics?(count: nil)
         if count.nil?
-          page.has_css?(TOPIC_LIST_ITEM_SELECTOR)
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
+          )
         else
-          page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+          PlaywrightMatchers.have_count(count).matches?(
+            browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
+          )
         end
       end
 
       def has_no_topics?
-        page.has_no_css?(TOPIC_LIST_ITEM_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_topic?(topic)
-        page.has_css?(topic_list_item_class(topic))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(topic_list_item_class(topic)).filter(visible: true),
+        )
       end
 
       def has_no_topic?(topic)
-        page.has_no_css?(topic_list_item_class(topic))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(topic_list_item_class(topic)).filter(visible: true),
+        )
       end
 
       def has_highlighted_topic?(topic)
-        page.has_css?("#{topic_list_item_class(topic)}[data-test-was-highlighted]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{topic_list_item_class(topic)}[data-test-was-highlighted]").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_topic_checkbox?(topic)
-        page.has_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_topic_checkbox?(topic)
-        page.has_no_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}",
+          ).filter(visible: true),
+        )
       end
 
       def has_bulk_select_enabled?
-        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_closed_status?(topic)
-        page.has_css?("#{topic_list_item_closed(topic)}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{topic_list_item_closed(topic)}").filter(visible: true),
+        )
       end
 
       def has_unread_badge?(topic)
-        page.has_css?("#{topic_list_item_unread_badge(topic)}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{topic_list_item_unread_badge(topic)}").filter(visible: true),
+        )
       end
 
       def has_no_unread_badge?(topic)
-        page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{topic_list_item_unread_badge(topic)}").filter(visible: true),
+        )
       end
 
       def has_new_replies_dot?(topic)
-        page.has_css?("#{topic_list_item_new_replies_dot(topic)}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{topic_list_item_new_replies_dot(topic)}").filter(visible: true),
+        )
       end
 
       def has_no_new_replies_dot?(topic)
-        page.has_no_css?("#{topic_list_item_new_replies_dot(topic)}")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#{topic_list_item_new_replies_dot(topic)}").filter(visible: true),
+        )
       end
 
       def has_checkbox_selected_on_row?(n)
-        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_checkbox_selected_on_row?(n)
-        page.has_no_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            "#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked",
+          ).filter(visible: true),
+        )
       end
 
       def click_topic_checkbox(topic)
-        find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
+        browser_root
+          .locator("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+          .filter(visible: true)
+          .click
       end
 
       def click_topic_title(topic)
-        find("#{topic_list_item_class(topic)} .raw-topic-link").click
+        browser_root
+          .locator("#{topic_list_item_class(topic)} .raw-topic-link")
+          .filter(visible: true)
+          .click
       end
 
       def visit_topic_with_title(title)
-        find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
+        browser_root
+          .locator("#{TOPIC_LIST_BODY_SELECTOR} a")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(title))
+          .click
       end
 
       def visit_topic(topic)
-        find("#{topic_list_item_class(topic)} a.raw-topic-link").click
+        browser_root
+          .locator("#{topic_list_item_class(topic)} a.raw-topic-link")
+          .filter(visible: true)
+          .click
       end
 
       def scroll_to_topic_at_index(index)
-        page.scroll_to(all(TOPIC_LIST_ITEM_SELECTOR)[index], align: :top)
+        browser_root
+          .locator(TOPIC_LIST_ITEM_SELECTOR)
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all[
+          index
+        ].evaluate("element => element.scrollIntoView({block: 'start'})")
       end
 
       def scroll_page_down(amount: 50)
-        page.execute_script(<<~JS, amount)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: browser_arguments(amount))
           const listArea = document.querySelector("#list-area");
           if (!listArea) {
             throw new Error("Topic list area not found");
@@ -107,19 +170,28 @@ module PageObjects
       end
 
       def scrolled_down?
-        page.evaluate_script("window.scrollY").positive?
+        browser_page.evaluate("function(arguments) { return window.scrollY }", arg: []).positive?
       end
 
       def visit_topic_last_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.post-activity").send_keys(:return)
+        browser_root
+          .locator("#{topic_list_item_class(topic)} a.post-activity")
+          .filter(visible: true)
+          .press("Enter")
       end
 
       def visit_topic_first_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.badge-posts").send_keys(:return)
+        browser_root
+          .locator("#{topic_list_item_class(topic)} a.badge-posts")
+          .filter(visible: true)
+          .press("Enter")
       end
 
       def send_keys_to_topic(topic, *keys)
-        find("#{topic_list_item_class(topic)} a.raw-topic-link").send_keys(*keys)
+        browser_root
+          .locator("#{topic_list_item_class(topic)} a.raw-topic-link")
+          .filter(visible: true)
+          .press(browser_key_chord(keys))
       end
 
       def topic_list_item_class(topic)
@@ -127,53 +199,80 @@ module PageObjects
       end
 
       def topic(topic)
-        find(topic_list_item_class(topic))
+        browser_root.locator(topic_list_item_class(topic)).filter(visible: true)
       end
 
       def has_topic_tag?(topic, tag_name)
-        page.has_css?(
-          "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
-          text: tag_name,
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(tag_name)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+          ).filter(visible: true),
         )
       end
 
       def has_no_topic_tag?(topic, tag_name)
-        page.has_no_css?(
-          "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
-          text: tag_name,
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(tag_name)],
+          useInnerText: true,
+        ).does_not_match?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+          ).filter(visible: true),
         )
       end
 
       def has_topic_tags?(topic, tags:)
         tags.all? { |tag| has_topic_tag?(topic, tag.name) } &&
-          page.has_css?(
-            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
-            count: tags.size,
+          PlaywrightMatchers.have_count(tags.size).matches?(
+            browser_root.locator(
+              "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+            ).filter(visible: true),
           )
       end
 
       def has_no_topic_tags?(topic)
-        page.has_no_css?("#{topic_list_item_class(topic)} .discourse-tags .discourse-tag")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+          ).filter(visible: true),
+        )
       end
 
       def click_topic_tag(topic, tag_name)
-        find("#{topic_list_item_class(topic)} .discourse-tags .discourse-tag", text: tag_name).click
+        browser_root
+          .locator("#{topic_list_item_class(topic)} .discourse-tags .discourse-tag")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(tag_name))
+          .click
       end
 
       def had_new_topics_alert?
-        page.has_css?(".show-more.has-topics")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".show-more.has-topics").filter(visible: true),
+        )
       end
 
       def click_new_topics_alert
-        find(".show-more.has-topics").click
+        browser_root.locator(".show-more.has-topics").filter(visible: true).click
       end
 
       def has_pinned_status?(topic)
-        page.has_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_pinned_status?(topic)
-        page.has_no_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            "#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned",
+          ).filter(visible: true),
+        )
       end
 
       private

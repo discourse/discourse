@@ -4,75 +4,129 @@ module PageObjects
   module Pages
     class UserApiKeyShow < PageObjects::Pages::Base
       def visit_authorization(public_key:)
-        page.visit(
-          "/user-api-key/new?#{
-            URI.encode_www_form(
-              scopes: "read",
-              client_id: "x" * 32,
-              application_name: "Test Application",
-              public_key: public_key,
-              nonce: SecureRandom.hex,
-            )
-          }",
-        )
+        browser_page
+          .goto(
+            "/user-api-key/new?#{
+              URI.encode_www_form(
+                scopes: "read",
+                client_id: "x" * 32,
+                application_name: "Test Application",
+                public_key: public_key,
+                nonce: SecureRandom.hex,
+              )
+            }",
+          )
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         self
       end
 
       def visit_otp(public_key:)
-        page.visit(
-          "/user-api-key/otp?#{
-            URI.encode_www_form(
-              application_name: "Test Application",
-              public_key: public_key,
-              auth_redirect: "discourse://auth_redirect",
-            )
-          }",
-        )
+        browser_page
+          .goto(
+            "/user-api-key/otp?#{
+              URI.encode_www_form(
+                application_name: "Test Application",
+                public_key: public_key,
+                auth_redirect: "discourse://auth_redirect",
+              )
+            }",
+          )
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         self
       end
 
       def click_authorize
-        click_button(I18n.t("user_api_key.authorize"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("user_api_key.authorize").to_s.to_json}], [name=#{I18n.t("user_api_key.authorize").to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("button", name: I18n.t("user_api_key.authorize")))
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_copy_key
-        find("#copy-api-key-btn").click
+        browser_root.locator("#copy-api-key-btn").filter(visible: true).click
         self
       end
 
       def payload
-        find("#user-api-key-payload").text
+        browser_root.locator("#user-api-key-payload").filter(visible: true).inner_text.strip
       end
 
       def has_authorization_form?
-        has_css?(".authorize-api-key h1", text: "Test Application") &&
-          has_button?(I18n.t("user_api_key.authorize"))
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern("Test Application")],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root
+              .get_by_role("button")
+              .and(
+                browser_root.locator(
+                  "[id=#{I18n.t("user_api_key.authorize").to_s.to_json}], [name=#{I18n.t("user_api_key.authorize").to_s.to_json}]",
+                ).or(browser_root.get_by_role("button", name: I18n.t("user_api_key.authorize"))),
+              )
+              .filter(visible: true),
+          )
       end
 
       def has_payload?
-        has_css?("#user-api-key-payload") && has_css?("#copy-api-key-btn")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#user-api-key-payload").filter(visible: true),
+        ) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#copy-api-key-btn").filter(visible: true),
+          )
       end
 
       def has_copied_button?
-        has_button?(I18n.t("user_api_key.copied"))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("user_api_key.copied").to_s.to_json}], [name=#{I18n.t("user_api_key.copied").to_s.to_json}]",
+              ).or(browser_root.get_by_role("button", name: I18n.t("user_api_key.copied"))),
+            )
+            .filter(visible: true),
+        )
       end
 
       def has_otp_form?
-        has_css?(
-          ".authorize-api-key h1",
-          text: I18n.t("user_api_key.otp_description", application_name: "Test Application"),
-        ) && has_button?(I18n.t("user_api_key.authorize"))
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t("user_api_key.otp_description", application_name: "Test Application"),
+            ),
+          ],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root
+              .get_by_role("button")
+              .and(
+                browser_root.locator(
+                  "[id=#{I18n.t("user_api_key.authorize").to_s.to_json}], [name=#{I18n.t("user_api_key.authorize").to_s.to_json}]",
+                ).or(browser_root.get_by_role("button", name: I18n.t("user_api_key.authorize"))),
+              )
+              .filter(visible: true),
+          )
       end
 
       def has_no_sidebar?
-        has_no_css?("#d-sidebar")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#d-sidebar").filter(visible: true),
+        )
       end
 
       def has_no_powered_by_discourse?
-        has_no_css?(".powered-by-discourse")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".powered-by-discourse").filter(visible: true),
+        )
       end
     end
   end

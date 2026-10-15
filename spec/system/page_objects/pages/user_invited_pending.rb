@@ -4,6 +4,7 @@ module PageObjects
   module Pages
     class UserInvitedPending < PageObjects::Pages::Base
       class Invite
+        include NativeSystemHelpers
         attr_reader :tr_element
 
         def initialize(tr_element)
@@ -12,41 +13,62 @@ module PageObjects
 
         def link_type?(key: nil, redemption_count: nil, max_redemption_count: nil)
           if key && redemption_count && max_redemption_count
-            invite_type_col.has_text?(
-              I18n.t(
-                "js.user.invited.invited_via_link",
-                key: "#{key[0...4]}...",
-                count: redemption_count,
-                max: max_redemption_count,
+            PlaywrightMatchers.contain_text(
+              browser_text_pattern(
+                I18n.t(
+                  "js.user.invited.invited_via_link",
+                  key: "#{key[0...4]}...",
+                  count: redemption_count,
+                  max: max_redemption_count,
+                ),
               ),
-            )
+              useInnerText: true,
+            ).matches?(invite_type_col)
           else
-            invite_type_col.has_css?(".d-icon-link")
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              invite_type_col.locator(".d-icon-link").filter(visible: true),
+            )
           end
         end
 
         def has_description?(text)
-          invite_type_col.has_css?(".invite-description", text:)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(invite_type_col.locator(".invite-description").filter(visible: true))
         end
 
         def email_type?(email)
-          invite_type_col.has_text?(email) && invite_type_col.has_css?(".d-icon-envelope")
+          PlaywrightMatchers.contain_text(browser_text_pattern(email), useInnerText: true).matches?(
+            invite_type_col,
+          ) &&
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              invite_type_col.locator(".d-icon-envelope").filter(visible: true),
+            )
         end
 
         def has_group?(group)
-          invite_type_col.has_css?(".invite-extra", text: group.name)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(group.name)],
+            useInnerText: true,
+          ).matches?(invite_type_col.locator(".invite-extra").filter(visible: true))
         end
 
         def has_topic?(topic)
-          invite_type_col.has_css?(".invite-extra", text: topic.title)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(topic.title)],
+            useInnerText: true,
+          ).matches?(invite_type_col.locator(".invite-extra").filter(visible: true))
         end
 
         def edit_button
-          tr_element.find(".invite-actions .edit-invite")
+          tr_element.locator(".invite-actions .edit-invite").filter(visible: true)
         end
 
         def expiry_date
-          Time.parse(tr_element.find(".invite-expires-at").text).utc
+          Time.parse(
+            tr_element.locator(".invite-expires-at").filter(visible: true).inner_text.strip,
+          ).utc
         end
 
         def copy_link
@@ -61,13 +83,15 @@ module PageObjects
         private
 
         def invite_type_col
-          tr_element.find(".invite-type")
+          tr_element.locator(".invite-type").filter(visible: true)
         end
 
         def actions_menu
           @actions_menu ||=
             PageObjects::Components::DMenu.new(
-              tr_element.find(".invite-actions [data-trigger][data-identifier='invites-menu']"),
+              tr_element.locator(
+                ".invite-actions [data-trigger][data-identifier='invites-menu']",
+              ).filter(visible: true),
               "invites-menu",
             )
         end
@@ -75,28 +99,46 @@ module PageObjects
 
       def visit(user)
         url = "/u/#{user.username_lower}/invited/pending"
-        page.visit(url)
-        has_css?(".user-content.--loaded")
+        browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".user-content.--loaded").filter(visible: true),
+        )
       end
 
       def invite_button
-        find(".user-content .invite-button")
+        browser_root.locator(".user-content .invite-button").filter(visible: true)
       end
 
       def has_invite_count?(count)
-        has_css?(".user-content .user-invite-list tbody tr", count: count)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root.locator(".user-content .user-invite-list tbody tr").filter(visible: true),
+        )
       end
 
       def invites_list
-        all(".user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
+        browser_root
+          .locator(".user-content .user-invite-list tbody tr")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |row| Invite.new(row) }
       end
 
       def latest_invite
-        Invite.new(find(".user-content .user-invite-list tbody tr:first-of-type"))
+        Invite.new(
+          browser_root.locator(".user-content .user-invite-list tbody tr:first-of-type").filter(
+            visible: true,
+          ),
+        )
       end
 
       def invite_row(invite)
-        Invite.new(find(".user-content .user-invite-list tbody tr", text: invite.email))
+        Invite.new(
+          browser_root
+            .locator(".user-content .user-invite-list tbody tr")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(invite.email)),
+        )
       end
     end
   end

@@ -4,22 +4,34 @@ module PageObjects
   module Pages
     class UserPreferencesNavigationMenu < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/preferences/navigation-menu")
+        browser_page
+          .goto("/u/#{user.username}/preferences/navigation-menu")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_navigation_menu_categories_preference?(*categories)
-        category_selector_header = page.find(".category-selector .select-kit-header-wrapper")
-        category_selector_header.has_content?(categories.map(&:name).join(", "))
+        category_selector_header =
+          browser_root.locator(".category-selector .select-kit-header-wrapper").filter(
+            visible: true,
+          )
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(categories.map(&:name).join(", ")),
+          useInnerText: true,
+        ).matches?(category_selector_header)
       end
 
       def has_navigation_menu_tags_preference?(*tags)
-        tag_selector_header = page.find(".tag-chooser .select-kit-header-wrapper")
-        tag_selector_header.has_content?(tags.map(&:name).join(", "))
+        tag_selector_header =
+          browser_root.locator(".tag-chooser .select-kit-header-wrapper").filter(visible: true)
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(tags.map(&:name).join(", ")),
+          useInnerText: true,
+        ).matches?(tag_selector_header)
       end
 
       def has_navigation_menu_preference_checked?(preference)
-        page.find(".#{preference} input").checked?
+        browser_root.locator(".#{preference} input").filter(visible: true).checked?
       end
     end
   end

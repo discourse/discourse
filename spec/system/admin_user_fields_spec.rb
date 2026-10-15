@@ -15,7 +15,7 @@ describe "Admin User Fields" do
 
     expect(user_fields_page).to have_user_field("Occupation")
 
-    user_fields_page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(user_fields_page).to have_user_field("Occupation")
   end
@@ -34,16 +34,31 @@ describe "Admin User Fields" do
 
     expect(page_header).to be_hidden
 
-    form = page.find(".user-field")
+    form = browser_root.locator(".user-field").filter(visible: true)
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
 
     user_fields_page.choose_requirement("for_all_users")
 
-    expect(form).to have_field(editable_label, checked: true, disabled: true, visible: :all)
+    expect(
+      form
+        .locator("input, textarea, select")
+        .and(
+          form.locator(
+            "[id=#{editable_label.to_s.to_json}], [name=#{editable_label.to_s.to_json}]",
+          ).or(form.get_by_label(editable_label, exact: true)),
+        )
+        .and(form.locator(":disabled")),
+    ).to PlaywrightMatchers.be_checked(checked: true)
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(editable_label, checked: true, disabled: false, visible: :all)
+    expect(
+      form.locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)").and(
+        form.locator(
+          "[id=#{editable_label.to_s.to_json}], [name=#{editable_label.to_s.to_json}]",
+        ).or(form.get_by_label(editable_label, exact: true)),
+      ),
+    ).to PlaywrightMatchers.be_checked(checked: true)
   end
 
   it "makes sure fields are available on signup when they have to" do
@@ -52,24 +67,57 @@ describe "Admin User Fields" do
 
     expect(page_header).to be_hidden
 
-    form = page.find(".user-field")
+    form = browser_root.locator(".user-field").filter(visible: true)
     show_on_signup_label = I18n.t("admin_js.admin.user_fields.show_on_signup.title")
 
     user_fields_page.choose_requirement("for_all_users")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    expect(
+      form
+        .locator("input, textarea, select")
+        .and(
+          form.locator(
+            "[id=#{show_on_signup_label.to_s.to_json}], [name=#{show_on_signup_label.to_s.to_json}]",
+          ).or(form.get_by_label(show_on_signup_label, exact: true)),
+        )
+        .and(form.locator(":disabled")),
+    ).to PlaywrightMatchers.be_checked(checked: true)
 
     user_fields_page.choose_requirement("on_signup")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    expect(
+      form
+        .locator("input, textarea, select")
+        .and(
+          form.locator(
+            "[id=#{show_on_signup_label.to_s.to_json}], [name=#{show_on_signup_label.to_s.to_json}]",
+          ).or(form.get_by_label(show_on_signup_label, exact: true)),
+        )
+        .and(form.locator(":disabled")),
+    ).to PlaywrightMatchers.be_checked(checked: true)
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: false, visible: :all)
+    expect(
+      form.locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)").and(
+        form.locator(
+          "[id=#{show_on_signup_label.to_s.to_json}], [name=#{show_on_signup_label.to_s.to_json}]",
+        ).or(form.get_by_label(show_on_signup_label, exact: true)),
+      ),
+    ).to PlaywrightMatchers.be_checked(checked: true)
 
     user_fields_page.unselect_preference("editable")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    expect(
+      form
+        .locator("input, textarea, select")
+        .and(
+          form.locator(
+            "[id=#{show_on_signup_label.to_s.to_json}], [name=#{show_on_signup_label.to_s.to_json}]",
+          ).or(form.get_by_label(show_on_signup_label, exact: true)),
+        )
+        .and(form.locator(":disabled")),
+    ).to PlaywrightMatchers.be_checked(checked: true)
   end
 
   it "requires confirmation when applying required fields retroactively" do
@@ -82,7 +130,10 @@ describe "Admin User Fields" do
     user_fields_page.choose_requirement("for_all_users")
     user_fields_page.form.submit
 
-    expect(page).to have_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("admin_js.admin.user_fields.requirement.confirmation")),
+      useInnerText: true,
+    )
   end
 
   context "when editing an existing user field" do
@@ -92,15 +143,18 @@ describe "Admin User Fields" do
       user_fields_page.visit
       user_fields_page.click_edit
 
-      form = page.find(".user-field")
+      form = browser_root.locator(".user-field").filter(visible: true)
 
-      form.find(".user-field-name").fill_in(with: "Favourite Transformer")
+      form.locator(".user-field-name").filter(visible: true).fill("Favourite Transformer")
 
       expect(page_header).to be_hidden
 
-      form.find(".btn-primary").click
+      form.locator(".btn-primary").filter(visible: true).click
 
-      expect(page).to have_no_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
+      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.user_fields.requirement.confirmation")),
+        useInnerText: true,
+      )
     end
   end
 
@@ -113,9 +167,11 @@ describe "Admin User Fields" do
     it "keeps each row's controls anchored to its own row on mobile", mobile: true do
       user_fields_page.visit
 
-      expect(page).to have_css(".admin-user_field-item", count: 2)
+      expect(
+        browser_root.locator(".admin-user_field-item").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(2)
 
-      escaped = page.evaluate_script(<<~JS)
+      escaped = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           Array.from(document.querySelectorAll(".d-table__cell.--controls")).filter(
             (cell) => cell.offsetParent !== cell.closest("tr")
           ).length
@@ -127,9 +183,11 @@ describe "Admin User Fields" do
     it "sizes the drag handle column to the handle" do
       user_fields_page.visit
 
-      expect(page).to have_css(".admin-user_field-item", count: 2)
+      expect(
+        browser_root.locator(".admin-user_field-item").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(2)
 
-      width = page.evaluate_script(<<~JS)
+      width = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           Math.round(
             document
               .querySelector(".d-reorderable-list__handle")

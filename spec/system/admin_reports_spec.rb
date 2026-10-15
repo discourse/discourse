@@ -11,8 +11,10 @@ describe "Admin Reports" do
     before { SiteSetting.use_legacy_pageviews = true }
 
     it "redirects from site_traffic to consolidated_page_views" do
-      visit "/admin/reports/site_traffic"
-      expect(page).to have_current_path("/admin/reports/consolidated_page_views")
+      browser_page
+        .goto("/admin/reports/site_traffic")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/reports/consolidated_page_views")
     end
   end
 
@@ -20,32 +22,51 @@ describe "Admin Reports" do
     before { SiteSetting.use_legacy_pageviews = false }
 
     it "does not redirect site_traffic to consolidated_page_views" do
-      visit "/admin/reports/site_traffic"
-      expect(page).to have_current_path("/admin/reports/site_traffic")
+      browser_page
+        .goto("/admin/reports/site_traffic")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/reports/site_traffic")
     end
   end
 
   it "groups reports under headings, hides legacy reports from the index, and warns on direct access" do
-    visit "/admin/reports"
+    browser_page.goto("/admin/reports").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    within(".admin-reports-group", text: "Engagement") do
-      expect(page).to have_css(
-        ".admin-section-landing-item__title",
-        text: I18n.t("reports.signups.title"),
+    within_browser(
+      browser_root
+        .locator(".admin-reports-group")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern("Engagement")),
+    ) do
+      expect(
+        browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("reports.signups.title"))],
+        useInnerText: true,
       )
     end
-    expect(page).to have_css(".admin-reports-group__title", text: "Traffic")
-    expect(page).to have_no_css(
-      ".admin-section-landing-item__title",
-      text: I18n.t("reports.bookmarks.title"),
+    expect(
+      browser_root.locator(".admin-reports-group__title").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Traffic")], useInnerText: true)
+    expect(
+      browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
+    ).not_to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("reports.bookmarks.title"))],
+      useInnerText: true,
     )
 
-    visit "/admin/reports/bookmarks"
+    browser_page
+      .goto("/admin/reports/bookmarks")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".admin-report")
-    expect(page).to have_css(
-      ".alert.alert-info",
-      text: I18n.t("admin_js.admin.reports.legacy_warning"),
+    expect(
+      browser_root.locator(".admin-report").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".alert.alert-info").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("admin_js.admin.reports.legacy_warning"))],
+      useInnerText: true,
     )
   end
 

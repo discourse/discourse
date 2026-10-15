@@ -65,7 +65,7 @@ describe "Admin API Keys Page" do
     api_keys_page.click_revoke
     api_keys_page.click_delete
 
-    expect(api_keys_page).to have_current_path("/admin/api/keys")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/api/keys")
     expect(api_keys_page).to have_no_api_key_listed("Integration")
   end
 

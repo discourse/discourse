@@ -6,71 +6,101 @@ module PageObjects
       class BlockDebug < PageObjects::Components::Base
         # Outlet boundary methods
         def has_outlet_boundary?
-          page.has_css?(".block-outlet-debug")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-outlet-debug").filter(visible: true),
+          )
         end
 
         def has_no_outlet_boundary?
-          page.has_no_css?(".block-outlet-debug")
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".block-outlet-debug").filter(visible: true),
+          )
         end
 
         def hover_outlet_badge(name = nil)
           selector =
             name ? ".block-outlet-debug[data-outlet-name='#{name}']" : ".block-outlet-debug"
           # Use JavaScript click to bypass any overlapping tooltip elements
-          page.execute_script(
-            "document.querySelector(\"#{selector} .block-outlet-debug__badge\").click()",
+          browser_page.evaluate(
+            "function(arguments) { #{"document.querySelector(\"#{selector} .block-outlet-debug__badge\").click()"} }",
+            arg: [],
           )
           self
         end
 
         def has_outlet_tooltip?
-          page.has_css?(".outlet-info__wrapper")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".outlet-info__wrapper").filter(visible: true),
+          )
         end
 
         def has_outlet_github_link?
-          page.has_css?(".outlet-info__heading .github-link")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".outlet-info__heading .github-link").filter(visible: true),
+          )
         end
 
         def has_outlet_block_count?(count)
           text = count == 1 ? "1 block" : "#{count} blocks"
-          page.has_css?(".outlet-info__stat", text: text)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".outlet-info__stat").filter(visible: true))
         end
 
         # Block visual overlay methods
         def has_block_info?(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
-          page.has_css?(selector)
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(selector).filter(visible: true),
+          )
         end
 
         def has_no_block_info?(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
-          page.has_no_css?(selector)
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(selector).filter(visible: true),
+          )
         end
 
         def hover_block_badge(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
           # Use JavaScript click to bypass any overlapping tooltip elements
-          page.execute_script("document.querySelector(\"#{selector} .block-debug-badge\").click()")
+          browser_page.evaluate(
+            "function(arguments) { #{"document.querySelector(\"#{selector} .block-debug-badge\").click()"} }",
+            arg: [],
+          )
           self
         end
 
         def has_block_tooltip?
-          page.has_css?(".block-debug-tooltip")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-debug-tooltip").filter(visible: true),
+          )
         end
 
         def has_block_title?(name)
-          page.has_css?(".block-debug-tooltip__title", text: name)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(name)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".block-debug-tooltip__title").filter(visible: true))
         end
 
         def has_block_location?(location)
-          page.has_css?(".block-debug-tooltip__location", text: location)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(location)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".block-debug-tooltip__location").filter(visible: true))
         end
 
         def has_block_arg?(key:)
-          page.has_css?(".outlet-args-table__key", text: "@#{key}")
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern("@#{key}")],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".outlet-args-table__key").filter(visible: true))
         end
 
         # Ghost block methods
@@ -83,7 +113,9 @@ module PageObjects
                 ".block-debug-ghost"
               end
             )
-          page.has_css?(selector)
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(selector).filter(visible: true),
+          )
         end
 
         def has_no_ghost_block?(block_name = nil)
@@ -95,7 +127,9 @@ module PageObjects
                 ".block-debug-ghost"
               end
             )
-          page.has_no_css?(selector)
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(selector).filter(visible: true),
+          )
         end
 
         def hover_ghost_badge(block_name = nil)
@@ -108,34 +142,51 @@ module PageObjects
               end
             )
           # Use JavaScript click to bypass any overlapping tooltip elements
-          page.execute_script(
-            "document.querySelector(\"#{selector} .block-debug-ghost__badge\").click()",
+          browser_page.evaluate(
+            "function(arguments) { #{"document.querySelector(\"#{selector} .block-debug-ghost__badge\").click()"} }",
+            arg: [],
           )
           self
         end
 
         def has_ghost_tooltip?
-          page.has_css?(".block-debug-tooltip.--ghost")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-debug-tooltip.--ghost").filter(visible: true),
+          )
         end
 
         def has_conditions?
-          page.has_css?(".block-debug-conditions")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-debug-conditions").filter(visible: true),
+          )
         end
 
         def has_failed_conditions?
-          page.has_css?(".block-debug-conditions.--failed")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-debug-conditions.--failed").filter(visible: true),
+          )
         end
 
         def has_passed_conditions?
-          page.has_css?(".block-debug-conditions.--passed")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".block-debug-conditions.--passed").filter(visible: true),
+          )
         end
 
         def has_condition_type?(type)
-          page.has_css?(".block-debug-condition__type", text: type)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(type)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".block-debug-condition__type").filter(visible: true))
         end
 
         def condition_types
-          page.all(".block-debug-condition__type").map(&:text)
+          browser_root
+            .locator(".block-debug-condition__type")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip }
         end
       end
     end

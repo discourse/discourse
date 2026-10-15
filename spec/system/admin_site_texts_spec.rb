@@ -54,7 +54,9 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_overridden
-    expect(page).to have_css(".site-text", count: 0)
+    expect(
+      browser_root.locator(".site-text").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     TranslationOverride.create!(
       locale: "en",
@@ -67,7 +69,9 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_overridden
-    expect(page).to have_css(".site-text", count: 1)
+    expect(
+      browser_root.locator(".site-text").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
   end
 
@@ -75,7 +79,9 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_outdated
-    expect(page).to have_css(".site-text", count: 0)
+    expect(
+      browser_root.locator(".site-text").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     TranslationOverride.create!(
       locale: "en",
@@ -89,7 +95,9 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_outdated
-    expect(page).to have_css(".site-text", count: 1)
+    expect(
+      browser_root.locator(".site-text").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
   end
 
@@ -122,7 +130,14 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.click_replace_text_button
 
-    expect(page.all(".d-modal label span").map(&:text)).to eq(["Uncategorized"])
+    expect(
+      browser_root
+        .locator(".d-modal label span")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+        .map { |element| element.inner_text.strip },
+    ).to eq(["Uncategorized"])
   end
 
   it "can filter, edit, and revert a component translation in the selected language" do
@@ -146,26 +161,26 @@ describe "Admin Site Texts Page" do
     site_texts_page.open_theme_filter
     expect(site_texts_page).to have_theme_option(theme, disabled: true)
     expect(site_texts_page).to have_theme_option(duplicate)
-    page.send_keys(:escape)
+    browser_page.keyboard.press("Escape")
     site_texts_page.select_theme(theme)
     site_texts_page.select_locale("it")
     site_texts_page.search("resource_intro")
     expect(site_texts_page).to have_translation_value("Esplora le risorse")
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
     )
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(site_texts_page).to have_translation_key(key)
     expect(site_texts_page).to have_selected_theme(theme)
 
     site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
     site_texts_page.override_translation("Le nostre risorse")
     site_texts_page.back_to_results
-    expect(page).to have_current_path(
+    expect(browser_page).to PlaywrightMatchers.have_url(
       "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
     )
     expect(site_texts_page).to have_translation_value("Le nostre risorse")
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(site_texts_page).to have_translation_value("Le nostre risorse")
 
     site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
@@ -174,18 +189,33 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_value("Esplora le risorse")
     site_texts_page.reset_filters
     expect(site_texts_page).to have_all_site_texts_selected
-    expect(page).to have_current_path("/admin/customize/site_texts?locale=it&q=resource_intro")
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      "/admin/customize/site_texts?locale=it&q=resource_intro",
+    )
   end
 
   it "can load more results" do
     site_texts_page.visit
     site_texts_page.search("e")
 
-    expect(page).to have_css(".site-text", minimum: 50)
-    initial_count = page.all(".site-text").count
+    expect(
+      browser_root.locator(".site-text").filter(visible: true).nth(50 - 1),
+    ).to PlaywrightMatchers.be_attached
+    initial_count =
+      browser_root
+        .locator(".site-text")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+        .count
 
-    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    browser_page.evaluate(
+      "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+      arg: [],
+    )
 
-    expect(page).to have_css(".site-text", minimum: initial_count + 1)
+    expect(
+      browser_root.locator(".site-text").filter(visible: true).nth((initial_count + 1) - 1),
+    ).to PlaywrightMatchers.be_attached
   end
 end

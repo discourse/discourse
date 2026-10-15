@@ -22,7 +22,10 @@ describe "Admin Customize Themes Config Area Page" do
     screenshot_marker(label: "admin-themes", only: "desktop")
 
     install_modal = config_area.click_install_button
-    expect(install_modal.popular_options.first).to have_text("Graceful")
+    expect(install_modal.popular_options.first).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("Graceful"),
+      useInnerText: true,
+    )
   end
 
   it "opens an install modal when coming from the install theme button on Meta" do
@@ -31,11 +34,11 @@ describe "Admin Customize Themes Config Area Page" do
     )
 
     expect(install_modal).to be_open
-    expect(install_modal).to have_content("github.com/discourse/graceful")
+    expect(install_modal).to have_displayed_content("github.com/discourse/graceful")
 
     install_modal.close
 
-    expect(page).to have_current_path("/admin/config/customize/themes")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
   end
 
   it "allows to delete not system and not default theme" do
@@ -78,27 +81,32 @@ describe "Admin Customize Themes Config Area Page" do
       I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new theme"),
     )
 
-    expect(page).to have_current_path(%r{/admin/customize/themes/\d+})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/themes/\d+})
   end
 
   it "allows to edit and delete theme" do
     config_area.visit
     config_area.click_edit(theme)
-    expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
 
     admin_customize_themes_page.click_delete
     admin_customize_themes_page.confirm_delete
-    expect(page).to have_current_path("/admin/config/customize/themes")
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
   end
 
   it "has new look when edit theme is visited directly and can go back to themes" do
-    visit("/admin/customize/themes/#{theme.id}")
+    browser_page
+      .goto("/admin/customize/themes/#{theme.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     admin_customize_themes_page.click_back_to_themes
 
-    expect(page).to have_current_path("/admin/config/customize/themes")
-    expect(page).to have_content(
-      I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
+    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
+    expect(browser_content).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(
+        I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
+      ),
+      useInnerText: true,
     )
   end
 
@@ -131,21 +139,40 @@ describe "Admin Customize Themes Config Area Page" do
     it "allows toggling between light and dark screenshots" do
       config_area.visit
 
-      light_src = config_area.screenshot_image(theme_with_screenshots)[:src]
+      light_src =
+        config_area.screenshot_image(theme_with_screenshots).evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "src",
+        )
       expect(light_src).to include(light_upload.url)
 
       expect(config_area).to have_screenshot_with_icon(theme_with_screenshots, "moon")
 
       config_area.click_screenshot_toggle(theme_with_screenshots)
 
-      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(dark_upload.url)
-      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).not_to eq(light_src)
+      expect(
+        config_area.screenshot_image(theme_with_screenshots).evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "src",
+        ),
+      ).to include(dark_upload.url)
+      expect(
+        config_area.screenshot_image(theme_with_screenshots).evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "src",
+        ),
+      ).not_to eq(light_src)
 
       expect(config_area).to have_screenshot_with_icon(theme_with_screenshots, "sun")
 
       config_area.click_screenshot_toggle(theme_with_screenshots)
 
-      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(light_src)
+      expect(
+        config_area.screenshot_image(theme_with_screenshots).evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "src",
+        ),
+      ).to include(light_src)
 
       config_area.visit
 

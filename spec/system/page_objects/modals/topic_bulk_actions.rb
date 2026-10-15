@@ -9,23 +9,26 @@ module PageObjects
       end
 
       def click_bulk_topics_confirm
-        find("#bulk-topics-confirm").click
+        browser_root.locator("#bulk-topics-confirm").filter(visible: true).click
       end
 
       def click_dismiss_confirm
-        find("#dismiss-read-confirm").click
+        browser_root.locator("#dismiss-read-confirm").filter(visible: true).click
       end
 
       def fill_in_close_note(message)
-        find("#bulk-close-note").set(message)
+        browser_root.locator("#bulk-close-note").filter(visible: true).fill(message)
       end
 
       def select_notification_level(level)
-        find(".bulk-notification-list input[name='notification_level'][value='#{level}']").click
+        browser_root
+          .locator(".bulk-notification-list input[name='notification_level'][value='#{level}']")
+          .filter(visible: true)
+          .click
       end
 
       def has_category_badge?(category)
-        within(MODAL_SELECTOR) do
+        within_browser(MODAL_SELECTOR) do
           PageObjects::Components::CategoryBadge.new.find_for_category(category)
         end
       end
@@ -37,7 +40,10 @@ module PageObjects
       end
 
       def click_pin_in_category
-        find("#{MODAL_SELECTOR} .feature-section:first-of-type .btn-primary").click
+        browser_root
+          .locator("#{MODAL_SELECTOR} .feature-section:first-of-type .btn-primary")
+          .filter(visible: true)
+          .click
       end
 
       def pin_globally_date_selector
@@ -47,24 +53,38 @@ module PageObjects
       end
 
       def click_pin_globally
-        find("#{MODAL_SELECTOR} .feature-section:last-of-type .btn-primary").click
+        browser_root
+          .locator("#{MODAL_SELECTOR} .feature-section:last-of-type .btn-primary")
+          .filter(visible: true)
+          .click
       end
 
       def has_pin_stats_text?(text)
-        page.has_css?("#{MODAL_SELECTOR} .feature-section", text: text, normalize_ws: true)
+        PlaywrightMatchers.contain_text([text], useInnerText: true).matches?(
+          browser_page.locator("#{MODAL_SELECTOR} .feature-section").filter(visible: true),
+        )
       end
 
       def has_no_category_badge?(category)
-        within(MODAL_SELECTOR) do
-          has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))
+        within_browser(MODAL_SELECTOR) do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(
+              PageObjects::Components::CategoryBadge.new.category_selector(category),
+            ).filter(visible: true),
+          )
         end
       end
 
       def has_errors?(text = nil)
         if text
-          has_css?("#{MODAL_SELECTOR}__errors", text: text)
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(browser_root.locator("#{MODAL_SELECTOR}__errors").filter(visible: true))
         else
-          has_css?("#{MODAL_SELECTOR}__errors")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("#{MODAL_SELECTOR}__errors").filter(visible: true),
+          )
         end
       end
     end

@@ -6,13 +6,19 @@ module PageObjects
       CARD_CONTENT_SELECTOR = ".category-card .card-content"
 
       def closed?
-        has_no_css?(CARD_CONTENT_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(CARD_CONTENT_SELECTOR).filter(visible: true),
+        )
       end
 
       def showing_category?(category)
-        has_css?(
-          "#{CARD_CONTENT_SELECTOR} .names__primary a[href='#{category.url}']",
-          text: category.name,
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(category.name)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            "#{CARD_CONTENT_SELECTOR} .names__primary a[href='#{category.url}']",
+          ).filter(visible: true),
         )
       end
     end

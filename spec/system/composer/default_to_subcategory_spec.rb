@@ -35,7 +35,17 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
           describe "Category has subcategory" do
             it "enables New Topic and selects the default subcategory" do
               category_page.visit(category)
-              expect(category_page).to have_button("New Topic", disabled: false)
+              expect(
+                browser_root
+                  .get_by_role("button")
+                  .and(
+                    browser_root.locator(
+                      "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+                    ).or(browser_root.get_by_role("button", name: "New Topic")),
+                  )
+                  .and(browser_root.locator(":not(:disabled)"))
+                  .filter(visible: true),
+              ).not_to PlaywrightMatchers.have_count(0)
               category_page.new_topic_button.click
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
@@ -46,7 +56,17 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
           describe "Category does not have subcategory" do
             it "enables New Topic without selecting a category" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: false)
+              expect(
+                browser_root
+                  .get_by_role("button")
+                  .and(
+                    browser_root.locator(
+                      "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+                    ).or(browser_root.get_by_role("button", name: "New Topic")),
+                  )
+                  .and(browser_root.locator(":not(:disabled)"))
+                  .filter(visible: true),
+              ).not_to PlaywrightMatchers.have_count(0)
 
               category_page.new_topic_button.click
               select_kit =
@@ -59,9 +79,19 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
         describe "Can post on home page" do
           it "selects the default category in the composer" do
-            page.visit("latest")
-            expect(page).to have_button("New Topic", disabled: false)
-            page.find("#create-topic").click
+            browser_page.goto("latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+            expect(
+              browser_root
+                .get_by_role("button")
+                .and(
+                  browser_root.locator(
+                    "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+                  ).or(browser_root.get_by_role("button", name: "New Topic")),
+                )
+                .and(browser_root.locator(":not(:disabled)"))
+                .filter(visible: true),
+            ).not_to PlaywrightMatchers.have_count(0)
+            browser_root.locator("#create-topic").filter(visible: true).click
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
             expect(select_kit).to have_selected_value(default_latest_category.id)
@@ -79,7 +109,17 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
           describe "Category does not have subcategory" do
             it "opens composer with no category selected" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: false)
+              expect(
+                browser_root
+                  .get_by_role("button")
+                  .and(
+                    browser_root.locator(
+                      "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+                    ).or(browser_root.get_by_role("button", name: "New Topic")),
+                  )
+                  .and(browser_root.locator(":not(:disabled)"))
+                  .filter(visible: true),
+              ).not_to PlaywrightMatchers.have_count(0)
 
               category_page.new_topic_button.click
               select_kit =
@@ -91,9 +131,19 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
         describe "Can post on home page" do
           it "composer should open" do
-            page.visit("latest")
-            expect(page).to have_button("New Topic", disabled: false)
-            page.find("#create-topic").click
+            browser_page.goto("latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+            expect(
+              browser_root
+                .get_by_role("button")
+                .and(
+                  browser_root.locator(
+                    "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+                  ).or(browser_root.get_by_role("button", name: "New Topic")),
+                )
+                .and(browser_root.locator(":not(:disabled)"))
+                .filter(visible: true),
+            ).not_to PlaywrightMatchers.have_count(0)
+            browser_root.locator("#create-topic").filter(visible: true).click
 
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
@@ -111,9 +161,19 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
       it "opens composer with no category selected" do
         category_page.visit(category)
-        expect(category_page).to have_button("New Topic", disabled: false)
+        expect(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{"New Topic".to_s.to_json}], [name=#{"New Topic".to_s.to_json}]",
+              ).or(browser_root.get_by_role("button", name: "New Topic")),
+            )
+            .and(browser_root.locator(":not(:disabled)"))
+            .filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
 
-        page.find("#create-topic").click
+        browser_root.locator("#create-topic").filter(visible: true).click
         select_kit = PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
         expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
       end

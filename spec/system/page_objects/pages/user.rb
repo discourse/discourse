@@ -4,80 +4,100 @@ module PageObjects
   module Pages
     class User < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}")
+        browser_page
+          .goto("/u/#{user.username}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def find(selector)
-        page.find(".new-user-wrapper #{selector}")
+        browser_root.locator(".new-user-wrapper #{selector}").filter(visible: true)
       end
 
       def active_user_primary_navigation
-        find(".user-navigation-primary li a.active")
+        browser_root.locator(".user-navigation-primary li a.active").filter(visible: true)
       end
 
       def active_user_secondary_navigation
-        find(".user-navigation-secondary li a.active")
+        browser_root.locator(".user-navigation-secondary li a.active").filter(visible: true)
       end
 
       def has_warning_messages_path?(user)
-        page.has_current_path?("/u/#{user.username}/messages/warnings")
+        PlaywrightMatchers.have_url("/u/#{user.username}/messages/warnings").matches?(browser_page)
       end
 
       def has_primary_navigation_item?(name)
-        page.has_css?(primary_navigation_selector(name))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(primary_navigation_selector(name)).filter(visible: true),
+        )
       end
 
       def has_no_primary_navigation_item?(name)
-        page.has_no_css?(primary_navigation_selector(name))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(primary_navigation_selector(name)).filter(visible: true),
+        )
       end
 
       def has_secondary_navigation_item?(name)
-        page.has_css?(secondary_navigation_selector(name))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(secondary_navigation_selector(name)).filter(visible: true),
+        )
       end
 
       def has_no_secondary_navigation_item?(name)
-        page.has_no_css?(secondary_navigation_selector(name))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(secondary_navigation_selector(name)).filter(visible: true),
+        )
       end
 
       def click_staff_info_warnings_link(user, warnings_count: 0)
-        staff_counters = page.find(".staff-counters")
-        staff_counters.find("a[href='/u/#{user.username}/messages/warnings']").click
+        staff_counters = browser_root.locator(".staff-counters").filter(visible: true)
+        staff_counters
+          .locator("a[href='/u/#{user.username}/messages/warnings']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_staff_info_silencings_link
-        staff_counters = page.find(".staff-counters")
-        staff_counters.find("a:has(.silencings)").click
+        staff_counters = browser_root.locator(".staff-counters").filter(visible: true)
+        staff_counters.locator("a:has(.silencings)").filter(visible: true).click
         self
       end
 
       def click_staff_info_flags_link
-        page.find(".staff-counters .flags").click
+        browser_root.locator(".staff-counters .flags").filter(visible: true).click
         self
       end
 
       def has_staff_counter_flags?(count:)
-        page.has_css?(".staff-counters .flags", text: count.to_s)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(count.to_s)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".staff-counters .flags").filter(visible: true))
       end
 
       def click_staff_info_flags_given_link
-        page.find(".staff-counters .helpful-flags").click
+        browser_root.locator(".staff-counters .helpful-flags").filter(visible: true).click
         self
       end
 
       def has_staff_counter_flags_given?(count:)
-        page.has_css?(".staff-counters .helpful-flags", text: count.to_s)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(count.to_s)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".staff-counters .helpful-flags").filter(visible: true))
       end
 
       def expand_info_panel
-        button = page.find("button[aria-controls='collapsed-info-panel']")
-        button.click if button["aria-expanded"] == "false"
+        button =
+          browser_root.locator("button[aria-controls='collapsed-info-panel']").filter(visible: true)
+        button.click if button.get_attribute("aria-expanded") == "false"
         self
       end
 
       def click_primary_navigation_item(name)
-        page.find(primary_navigation_selector(name)).click
+        browser_root.locator(primary_navigation_selector(name)).filter(visible: true).click
       end
 
       private

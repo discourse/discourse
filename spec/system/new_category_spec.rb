@@ -12,7 +12,7 @@ describe "New Category" do
     SiteSetting.enable_powered_by_discourse = true
 
     category_page.visit_new_category
-    if page.current_path == "/new-category/setup"
+    if URI.parse(browser_page.url).path == "/new-category/setup"
       category_type_card.find_type_card("discussion").click
     end
     form.field("name").fill_in("New Category")
@@ -25,13 +25,14 @@ describe "New Category" do
   it "defaults minimum_required_tags to zero when creating a category" do
     category_page.visit_new_category
 
-    category_page.find(".edit-category-tab-general input.category-name").fill_in(
-      with: "New Category",
-    )
+    browser_root
+      .locator(".edit-category-tab-general input.category-name")
+      .filter(visible: true)
+      .fill("New Category")
 
     category_page.save_settings
 
-    expect(page).to have_current_path("/c/new-category/edit/general")
+    expect(browser_page).to PlaywrightMatchers.have_url("/c/new-category/edit/general")
 
     category = Category.find_by(name: "New Category")
 

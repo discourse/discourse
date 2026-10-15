@@ -85,7 +85,7 @@ describe "Tag Groups" do
 
       expect(tag_groups_page).to have_tag_group_in_sidebar("New Test Group")
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(tag_groups_page).to have_tag_group_in_sidebar("New Test Group")
 
@@ -94,7 +94,9 @@ describe "Tag Groups" do
       expect(tag_groups_page).to have_tag_in_group("cats")
       expect(tag_groups_page).to have_tag_in_group("new-tag-one")
       expect(tag_groups_page).to have_tag_in_group("new-tag-two")
-      expect(page).to have_css(".parent-tag-section .tag-chooser", text: "parent-tag")
+      expect(
+        browser_root.locator(".parent-tag-section .tag-chooser").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text([browser_text_pattern("parent-tag")], useInnerText: true)
       expect(tag_groups_page).to have_visible_permission_checked
     end
   end
@@ -123,7 +125,7 @@ describe "Tag Groups" do
       tag_groups_page.select_visible_permission
       tag_groups_page.save
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       tag_groups_page.click_tag_group("Animals")
 
       expect(tag_groups_page).to have_tag_in_group("cats")
@@ -161,7 +163,7 @@ describe "Tag Groups" do
 
       tag_groups_page.save
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       tag_groups_page.click_tag_group("Private Group")
 
       expect(tag_groups_page).to have_tag_in_group("rats")
@@ -185,7 +187,7 @@ describe "Tag Groups" do
 
       tag_groups_page.save
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       tag_groups_page.click_tag_group("Private Group")
 
       expect(tag_groups_page).to have_tag_in_group("rats")
@@ -204,10 +206,10 @@ describe "Tag Groups" do
       tag_groups_page.save
 
       dialog = PageObjects::Components::Dialog.new
-      expect(dialog).to have_content(I18n.t("js.tagging.groups.cannot_save.no_groups"))
+      expect(dialog).to have_displayed_content(I18n.t("js.tagging.groups.cannot_save.no_groups"))
       dialog.click_yes
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       tag_groups_page.click_tag_group("Private Group")
 
       expect(tag_groups_page).to have_private_permission_checked

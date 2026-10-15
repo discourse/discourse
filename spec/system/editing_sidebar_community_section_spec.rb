@@ -10,7 +10,7 @@ RSpec.describe "Editing Sidebar Community Section" do
   it "hides the edit-section button from non-administrators" do
     sign_in(user)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_community_section_more_button
 
@@ -20,7 +20,7 @@ RSpec.describe "Editing Sidebar Community Section" do
   it "allows admin to edit community section and reset to default" do
     sign_in(admin)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar.primary_section_icons("community")).to eq(
       %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
@@ -28,11 +28,11 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
     modal.fill_link("Topics", "/latest", "paper-plane")
-    modal.topics_link.drag_to(modal.review_link, delay: 0.4)
+    drag_browser_element(source: modal.topics_link, target: modal.review_link, delay_seconds: 0.4)
     modal.save
     modal.confirm_update
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar.primary_section_links("community")).to eq(
       ["My posts", "My messages", "Topics", "Review", "Admin", "Invite", "More"],
@@ -64,7 +64,7 @@ RSpec.describe "Editing Sidebar Community Section" do
     it "lets an admin reorder and reset the Community section" do
       sign_in(admin)
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar.primary_section_icons("community")).to eq(
         %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
@@ -94,7 +94,7 @@ RSpec.describe "Editing Sidebar Community Section" do
       modal.save
       modal.confirm_update
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       try_until_success do
         expect(sidebar.primary_section_links("community")).to eq(
@@ -134,7 +134,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     sign_in(admin)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
     modal.add_link
@@ -150,7 +150,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     sign_in(user)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_community_section_link("ソリューションリーダーボード", href: "/solutions-leaderboard")
     expect(sidebar).to have_community_section_link("Untranslated Link", href: "/untranslated-link")
@@ -166,7 +166,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     sign_in(admin)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     modal = sidebar.click_customize_community_section_button
 
@@ -178,7 +178,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     sign_in(admin)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar_header_dropdown.open
     expect(sidebar_header_dropdown).to have_dropdown_visible

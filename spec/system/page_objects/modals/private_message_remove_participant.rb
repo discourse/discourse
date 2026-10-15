@@ -4,23 +4,33 @@ module PageObjects
   module Modals
     class PrivateMessageRemoveParticipant < PageObjects::Components::Base
       def open?
-        has_css?("#dialog-holder .dialog-content")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#dialog-holder .dialog-content").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?("#dialog-holder .dialog-content")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("#dialog-holder .dialog-content").filter(visible: true),
+        )
       end
 
       def body
-        find("#dialog-holder .dialog-content .dialog-body")
+        browser_root.locator("#dialog-holder .dialog-content .dialog-body").filter(visible: true)
       end
 
       def confirm_removal
-        find("#dialog-holder .dialog-content .dialog-footer .btn-danger").click
+        browser_root
+          .locator("#dialog-holder .dialog-content .dialog-footer .btn-danger")
+          .filter(visible: true)
+          .click
       end
 
       def cancel
-        find("#dialog-holder .dialog-content .dialog-footer .btn-default").click
+        browser_root
+          .locator("#dialog-holder .dialog-content .dialog-footer .btn-default")
+          .filter(visible: true)
+          .click
       end
     end
   end

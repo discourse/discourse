@@ -36,8 +36,13 @@ describe "Theme TypeScript support" do
     theme.save!
     SiteSetting.default_theme_id = theme.id
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".ts-theme-proof", text: "rgb(0, 128, 0)")
+    expect(
+      browser_root.locator(".ts-theme-proof").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("rgb(0, 128, 0)")],
+      useInnerText: true,
+    )
   end
 end

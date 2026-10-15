@@ -6,15 +6,19 @@ module PageObjects
       MODAL_SELECTOR = ".create-invite-with-roles-modal"
 
       def modal
-        find(MODAL_SELECTOR)
+        browser_root.locator(MODAL_SELECTOR).filter(visible: true)
       end
 
       def open?
-        has_css?(MODAL_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(MODAL_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
+        )
       end
 
       def form
@@ -22,63 +26,104 @@ module PageObjects
       end
 
       def has_role_toggle?
-        within(modal) { has_css?(".d-segmented-control") }
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".d-segmented-control").filter(visible: true),
+          )
+        end
       end
 
       def has_no_role_toggle?
-        within(modal) { has_no_css?(".d-segmented-control") }
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".d-segmented-control").filter(visible: true),
+          )
+        end
       end
 
       def selected_role
-        within(modal) { find(".d-segmented-control input:checked", visible: false)[:value] }
+        within_browser(modal) do
+          browser_root.locator(".d-segmented-control input:checked").evaluate(
+            "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+            arg: "value",
+          )
+        end
       end
 
       def select_role(role)
-        within(modal) do
-          find(".d-segmented-control input[value='#{role}']", visible: false).ancestor(
-            "label",
-          ).click
+        within_browser(modal) do
+          browser_root
+            .locator(".d-segmented-control input[value='#{role}']")
+            .locator("xpath=ancestor::*")
+            .and(browser_page.locator("label"))
+            .last
+            .click
         end
       end
 
       def select_delivery(delivery)
-        within(modal) do
-          find(".form-kit__inline-radio input[value='#{delivery}']", visible: false).ancestor(
-            "label",
-          ).click
+        within_browser(modal) do
+          browser_root
+            .locator(".form-kit__inline-radio input[value='#{delivery}']")
+            .locator("xpath=ancestor::*")
+            .and(browser_page.locator("label"))
+            .last
+            .click
         end
       end
 
       def save_button
-        within(modal) { find(".save-invite") }
+        within_browser(modal) { browser_root.locator(".save-invite").filter(visible: true) }
       end
 
       def toggle_advanced_options
-        within(modal) { find(".advanced-mode-btn").click }
+        within_browser(modal) do
+          browser_root.locator(".advanced-mode-btn").filter(visible: true).click
+        end
       end
 
       def edit_button
-        within(modal) { find(".edit-invite") }
+        within_browser(modal) { browser_root.locator(".edit-invite").filter(visible: true) }
       end
 
       def cancel_button
-        within(modal) { find(".cancel-button") }
+        within_browser(modal) { browser_root.locator(".cancel-button").filter(visible: true) }
       end
 
       def invite_link_input
-        within(modal) { find("input.invite-link") }
+        within_browser(modal) { browser_root.locator("input.invite-link").filter(visible: true) }
       end
 
       def has_summary?
-        within(modal) { has_css?(".create-invite-with-roles-modal__summary") }
+        within_browser(modal) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".create-invite-with-roles-modal__summary").filter(visible: true),
+          )
+        end
       end
 
       def has_sent_to_message?(email)
-        within(modal) { has_css?(".create-invite-with-roles-modal__sent-to", text: email) }
+        within_browser(modal) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(email)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".create-invite-with-roles-modal__sent-to").filter(visible: true),
+          )
+        end
       end
 
       def has_email_sent_confirmation?(email)
-        within(modal) { has_css?(".create-invite-with-roles-modal__email-sent", text: email) }
+        within_browser(modal) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(email)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".create-invite-with-roles-modal__email-sent").filter(
+              visible: true,
+            ),
+          )
+        end
       end
     end
   end

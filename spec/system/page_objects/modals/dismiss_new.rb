@@ -4,32 +4,53 @@ module PageObjects
   module Modals
     class DismissNew < PageObjects::Modals::Base
       def has_dismiss_topics_checked?
-        find(".dismiss-topics label").has_checked_field?
+        browser_root
+          .locator(".dismiss-topics label")
+          .filter(visible: true)
+          .locator("input")
+          .checked?
       end
 
       def has_dismiss_posts_checked?
-        find(".dismiss-posts label").has_checked_field?
+        browser_root.locator(".dismiss-posts label").filter(visible: true).locator("input").checked?
       end
 
       def has_dismiss_topics_unchecked?
-        find(".dismiss-topics label").has_no_checked_field?
+        browser_root
+          .locator(".dismiss-topics label")
+          .filter(visible: true)
+          .locator("input")
+          .checked? == false
       end
 
       def has_dismiss_posts_unchecked?
-        find(".dismiss-posts label").has_no_checked_field?
+        browser_root
+          .locator(".dismiss-posts label")
+          .filter(visible: true)
+          .locator("input")
+          .checked? == false
       end
 
       def has_untrack_unchecked?
-        find(".untrack label").has_no_checked_field?
+        browser_root.locator(".untrack label").filter(visible: true).locator("input").checked? ==
+          false
       end
 
       def click_dismiss
-        click_button("dismiss-read-confirm")
+        browser_root
+          .locator(
+            "[id=#{"dismiss-read-confirm".to_s.to_json}], [name=#{"dismiss-read-confirm".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("button", name: "dismiss-read-confirm"))
+          .filter(visible: true)
+          .click
         self
       end
 
       def closed?
-        page.has_no_css?(".d-modal")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".d-modal").filter(visible: true),
+        )
       end
     end
   end

@@ -8,27 +8,28 @@ module PageObjects
       attr_reader :select_element
 
       def initialize(input)
-        if input.is_a?(Capybara::Node::Element)
+        if input.is_a?(Playwright::Locator)
           @select_element = input
         else
-          @select_element = find(input)
+          @select_element = browser_root.locator(input).filter(visible: true)
         end
       end
 
       def value
-        @select_element.value
+        @select_element.input_value
       end
 
       def select(value)
-        @select_element.find("option[value='#{value}']").select_option
-        @select_element.execute_script(<<~JS, @select_element)
-          var selector = arguments[0];
-          selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
-        JS
+        @select_element.select_option(value: value.to_s)
+        @select_element.evaluate(
+          "element => element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))",
+        )
       end
 
       def has_no_value?
-        @select_element.has_css?("option[value='#{NO_VALUE_OPTION}']:checked", visible: :all)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          @select_element.locator("option[value='#{NO_VALUE_OPTION}']:checked"),
+        )
       end
     end
   end

@@ -4,14 +4,24 @@ module PageObjects
   module Pages
     class AdminDashboard < PageObjects::Pages::Base
       def visit
-        page.visit("/admin")
-        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".db-main [data-section-id], .db-main__empty, .nav-pills").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
         self
       end
 
       def visit_with_query(params)
-        page.visit("/admin?#{params.to_query}")
-        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        browser_page
+          .goto("/admin?#{params.to_query}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".db-main [data-section-id], .db-main__empty, .nav-pills").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
         self
       end
 
@@ -20,89 +30,166 @@ module PageObjects
       end
 
       def has_custom_range?(from:, to:)
-        page.has_current_path?("/admin?#{custom_range_params(from: from, to: to).to_query}")
+        PlaywrightMatchers.have_url(
+          "/admin?#{custom_range_params(from: from, to: to).to_query}",
+        ).matches?(browser_page)
       end
 
       def has_admin_notice?(message)
-        has_css?(".dashboard-problem", text: message)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(message)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".dashboard-problem").filter(visible: true))
       end
 
       def has_no_admin_notice?(message)
-        has_no_css?(".dashboard-problem", text: message)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(message)],
+          useInnerText: true,
+        ).does_not_match?(browser_root.locator(".dashboard-problem").filter(visible: true))
       end
 
       def dismiss_notice(message)
-        find(".dashboard-problem", text: message).find(".btn").click
+        browser_root
+          .locator(".dashboard-problem")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(message))
+          .locator(".btn")
+          .filter(visible: true)
+          .click
       end
 
       def has_site_advice?
-        has_css?(".db-site-advice")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-site-advice").filter(visible: true),
+        )
       end
 
       def has_site_advice_at_top?
-        has_css?(".db-main > .db-site-advice:first-child")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-main > .db-site-advice:first-child").filter(visible: true),
+        )
       end
 
       def has_no_site_advice?
-        has_no_css?(".db-site-advice")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".db-site-advice").filter(visible: true),
+        )
       end
 
       def has_site_advice_title?(text)
-        has_css?(".db-site-advice__header h3", exact_text: text)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(text)],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".db-site-advice__header h3").filter(visible: true))
       end
 
       def has_site_advice_problem?(message)
-        has_css?(".db-site-advice [data-test-site-advice-problem]", text: message)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(message)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".db-site-advice [data-test-site-advice-problem]").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_site_advice_problem?(message)
-        has_no_css?(".db-site-advice [data-test-site-advice-problem]", text: message)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(message)],
+          useInnerText: true,
+        ).does_not_match?(
+          browser_root.locator(".db-site-advice [data-test-site-advice-problem]").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_first_site_advice_problem?(message)
-        has_css?(".db-site-advice [data-test-site-advice-problem]:first-child", text: message)
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(message)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            ".db-site-advice [data-test-site-advice-problem]:first-child",
+          ).filter(visible: true),
+        )
       end
 
       def has_ignore_button_for?(message)
-        within(".db-site-advice [data-test-site-advice-problem]", text: message) do
-          has_css?("[data-test-site-advice-ignore]")
+        within_browser(
+          browser_root
+            .locator(".db-site-advice [data-test-site-advice-problem]")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(message)),
+        ) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator("[data-test-site-advice-ignore]").filter(visible: true),
+          )
         end
       end
 
       def has_no_ignore_buttons?
-        has_no_css?(".db-site-advice [data-test-site-advice-ignore]")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".db-site-advice [data-test-site-advice-ignore]").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_site_advice_refresh_button?
-        has_css?(".db-site-advice [data-test-site-advice-refresh]")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-site-advice [data-test-site-advice-refresh]").filter(
+            visible: true,
+          ),
+        )
       end
 
       def ignore_site_advice_problem(message)
-        within(".db-site-advice [data-test-site-advice-problem]", text: message) do
-          find("[data-test-site-advice-ignore]").click
-        end
+        within_browser(
+          browser_root
+            .locator(".db-site-advice [data-test-site-advice-problem]")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(message)),
+        ) { browser_root.locator("[data-test-site-advice-ignore]").filter(visible: true).click }
         self
       end
 
       def refresh_site_advice
-        find(".db-site-advice [data-test-site-advice-refresh]").click
+        browser_root
+          .locator(".db-site-advice [data-test-site-advice-refresh]")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_redesigned_toolbar?
-        has_css?(".db-toolbar")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-toolbar").filter(visible: true),
+        )
       end
 
       def has_active_period?(period)
         if period == "custom"
-          page.current_url.include?("range=custom")
+          browser_page.url.include?("range=custom")
         else
-          has_css?(".db-date-range__trigger .d-button-label", text: preset_label(period))
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(preset_label(period))],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".db-date-range__trigger .d-button-label").filter(visible: true),
+          )
         end
       end
 
       def has_custom_label?(text)
-        has_css?(".db-date-range__trigger .d-button-label", exact_text: text)
+        PlaywrightMatchers.contain_text(
+          [browser_exact_text_pattern(text)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".db-date-range__trigger .d-button-label").filter(visible: true),
+        )
       end
 
       def date_range_picker
@@ -110,7 +197,7 @@ module PageObjects
       end
 
       def open_custom_date_range
-        find(".db-date-range__trigger").click
+        browser_root.locator(".db-date-range__trigger").filter(visible: true).click
         date_range_picker.tap(&:open?)
       end
 
@@ -120,45 +207,64 @@ module PageObjects
       end
 
       def has_configure_button?
-        has_css?(".btn[data-identifier='db-configure']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true),
+        )
       end
 
       def has_no_configure_button?
-        has_no_css?(".btn[data-identifier='db-configure']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true),
+        )
       end
 
       def open_configure_menu
         ensure_redesigned_dashboard
 
-        if has_css?(".d-page-header-mobile-actions-trigger", wait: 0)
-          find(".d-page-header-mobile-actions-trigger").click
+        if browser_root
+             .locator(".d-page-header-mobile-actions-trigger")
+             .filter(visible: true)
+             .count != 0
+          browser_root.locator(".d-page-header-mobile-actions-trigger").filter(visible: true).click
         end
 
-        find(".btn[data-identifier='db-configure']").click
-        has_css?(".db-configure")
+        browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true).click
+        expect(
+          browser_root.locator(".db-configure").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
         self
       end
 
       def close_configure_menu
-        if page.has_css?(".d-modal__backdrop", wait: 0)
-          page.send_keys :escape
+        if browser_root.locator(".d-modal__backdrop").filter(visible: true).count != 0
+          browser_page.keyboard.press("Escape")
         else
-          find(".btn[data-identifier='db-configure']").click
+          browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true).click
         end
-        has_no_css?(".db-configure")
+        expect(
+          browser_root.locator(".db-configure").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
         self
       end
 
       def has_section?(id)
-        has_css?(".db-main [data-section-id='#{id}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-main [data-section-id='#{id}']").filter(visible: true),
+        )
       end
 
       def has_no_section?(id)
-        has_no_css?(".db-main [data-section-id='#{id}']")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".db-main [data-section-id='#{id}']").filter(visible: true),
+        )
       end
 
       def has_first_section?(id)
-        has_css?(".db-main > :first-child[data-section-id='#{id}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-main > :first-child[data-section-id='#{id}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def site_traffic
@@ -174,25 +280,32 @@ module PageObjects
       end
 
       def section_ids_in_order
-        all(".db-main [data-section-id]").map { |el| el["data-section-id"] }
+        browser_root
+          .locator(".db-main [data-section-id]")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |el| el.get_attribute("data-section-id") }
       end
 
       def has_empty_state?
-        has_css?(".db-main__empty")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".db-main__empty").filter(visible: true),
+        )
       end
 
       def toggle_section(id)
-        within(
+        within_browser(
           ".db-configure__row[data-section-id='#{id}'], " \
             ".db-configure__row[data-reorderable-key='#{id}']",
-        ) { find(".d-toggle-switch__label").click }
+        ) { browser_root.locator(".d-toggle-switch__label").filter(visible: true).click }
         self
       end
 
       def move_section_down(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".db-configure__arrow:last-child").click
-        end
+        within_browser(
+          browser_root.locator(".db-configure__row[data-section-id='#{id}']").filter(visible: true),
+        ) { browser_root.locator(".db-configure__arrow:last-child").filter(visible: true).click }
         self
       end
 
@@ -239,9 +352,9 @@ module PageObjects
       end
 
       def move_section_up(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".db-configure__arrow:first-child").click
-        end
+        within_browser(
+          browser_root.locator(".db-configure__row[data-section-id='#{id}']").filter(visible: true),
+        ) { browser_root.locator(".db-configure__arrow:first-child").filter(visible: true).click }
         self
       end
 
@@ -252,8 +365,12 @@ module PageObjects
       end
 
       def ensure_redesigned_dashboard
-        page.refresh unless has_css?(".db-main", wait: 0)
-        has_css?(".db-main [data-section-id], .db-main__empty")
+        if browser_root.locator(".db-main").filter(visible: true).count == 0
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        end
+        expect(
+          browser_root.locator(".db-main [data-section-id], .db-main__empty").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
         self
       end
 

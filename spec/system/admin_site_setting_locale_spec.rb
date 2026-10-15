@@ -31,20 +31,29 @@ describe "Admin Site Setting Locales" do
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "Japonés (日本語)",
+      expect(
+        settings_page.find_setting("content_localization_supported_locales"),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Japonés (日本語)"),
+        useInnerText: true,
       )
 
       settings_page.select_list_values("content_localization_supported_locales", %w[en])
       settings_page.save_setting("content_localization_supported_locales")
-      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "Japonés (日本語), Inglés",
+      expect(
+        settings_page.find_setting("content_localization_supported_locales"),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Japonés (日本語), Inglés"),
+        useInnerText: true,
       )
 
       # confirm persist on reload
       settings_page.visit("content_localization_supported_locales")
-      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "Japonés (日本語), Inglés",
+      expect(
+        settings_page.find_setting("content_localization_supported_locales"),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("Japonés (日本語), Inglés"),
+        useInnerText: true,
       )
     end
   end

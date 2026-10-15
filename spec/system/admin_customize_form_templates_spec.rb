@@ -49,16 +49,18 @@ describe "Admin Customize Form Templates" do
       it "opens the edit page from the edit button" do
         form_template_page.visit
         form_template_page.click_view_form_template
-        form_template_page.find(".d-modal__footer .btn-primary").click
-        expect(page).to have_current_path("/admin/customize/form-templates/#{form_template.id}")
+        form_template_page.locator(".d-modal__footer .btn-primary").filter(visible: true).click
+        expect(browser_page).to PlaywrightMatchers.have_url(
+          "/admin/customize/form-templates/#{form_template.id}",
+        )
       end
 
       it "deletes the form template from the delete button" do
         form_template_page.visit
         original_template_name = form_template.name
         form_template_page.click_view_form_template
-        form_template_page.find(".d-modal__footer .btn-danger").click
-        form_template_page.find(".dialog-footer .btn-primary").click
+        form_template_page.locator(".d-modal__footer .btn-danger").filter(visible: true).click
+        form_template_page.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
         expect(form_template_page).to have_no_form_template(original_template_name)
       end
@@ -67,9 +69,11 @@ describe "Admin Customize Form Templates" do
 
   describe "when visiting the page to edit a form template" do
     it "prefills the form data" do
-      visit("/admin/customize/form-templates/#{form_template.id}")
+      browser_page
+        .goto("/admin/customize/form-templates/#{form_template.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(form_template_page).to have_name_value(form_template.name)
-      expect(ace_editor).to have_content(form_template.template)
+      expect(ace_editor).to have_displayed_content(form_template.template)
     end
   end
 
@@ -77,7 +81,7 @@ describe "Admin Customize Form Templates" do
     form_template_page.visit_new
     form_template_page.type_in_template_name("New Template")
     form_template_page.click_quick_insert(field_type)
-    expect(ace_editor).to have_text(content)
+    expect(ace_editor).to have_displayed_text(content)
   end
 
   describe "when visiting the page to create a new form template" do
@@ -129,7 +133,7 @@ describe "Admin Customize Form Templates" do
       form_template_page.click_preview_button
       expect(form_template_page).to have_preview_modal
 
-      find(".modal-close").click
+      browser_root.locator(".modal-close").filter(visible: true).click
       expect(form_template_page).to have_no_preview_modal
 
       form_template_page.click_save_button

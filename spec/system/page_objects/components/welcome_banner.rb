@@ -4,96 +4,151 @@ module PageObjects
   module Components
     class WelcomeBanner < PageObjects::Components::Base
       def visible?
-        has_css?(".welcome-banner")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".welcome-banner").filter(visible: true),
+        )
       end
 
       def hidden?
-        has_no_css?(".welcome-banner")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".welcome-banner").filter(visible: true),
+        )
       end
 
       def invisible?
-        has_css?(".welcome-banner", visible: false)
+        PlaywrightMatchers.have_count(0).does_not_match?(browser_root.locator(".welcome-banner"))
       end
 
       def open_search_menu
-        find(".welcome-banner #welcome-banner-search-input").click
+        browser_root
+          .locator(".welcome-banner #welcome-banner-search-input")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_search_menu?
-        has_css?(".welcome-banner .search-menu-panel", visible: false)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".welcome-banner .search-menu-panel"),
+        )
       end
 
       def has_no_search_menu?
-        has_no_css?(".welcome-banner .search-menu-panel", visible: false)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".welcome-banner .search-menu-panel"),
+        )
       end
 
       def has_anonymous_title?
-        has_css?(
-          ".welcome-banner .welcome-banner__title",
-          text: I18n.t("js.welcome_banner.header.anonymous_members", site_name: SiteSetting.title),
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t("js.welcome_banner.header.anonymous_members", site_name: SiteSetting.title),
+            ),
+          ],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__title").filter(visible: true),
         )
       end
 
       def has_logged_in_title?(username)
-        has_css?(
-          ".welcome-banner .welcome-banner__title",
-          text:
-            I18n.t("js.welcome_banner.header.logged_in_members", preferred_display_name: username),
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t(
+                "js.welcome_banner.header.logged_in_members",
+                preferred_display_name: username,
+              ),
+            ),
+          ],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__title").filter(visible: true),
         )
       end
 
       def has_new_user_title?(username)
-        has_css?(
-          ".welcome-banner .welcome-banner__title",
-          text: I18n.t("js.welcome_banner.header.new_members", preferred_display_name: username),
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t("js.welcome_banner.header.new_members", preferred_display_name: username),
+            ),
+          ],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__title").filter(visible: true),
         )
       end
 
       def has_no_subheader?
-        has_no_css?(".welcome-banner .welcome-banner__subheader")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__subheader").filter(visible: true),
+        )
       end
 
       def has_anonymous_subheader?
-        has_css?(
-          ".welcome-banner .welcome-banner__subheader",
-          text: I18n.t("js.welcome_banner.subheader.anonymous_members"),
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("js.welcome_banner.subheader.anonymous_members"))],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__subheader").filter(visible: true),
         )
       end
 
       def has_logged_in_subheader?
-        has_css?(
-          ".welcome-banner .welcome-banner__subheader",
-          text: I18n.t("js.welcome_banner.subheader.logged_in_members"),
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(I18n.t("js.welcome_banner.subheader.logged_in_members"))],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(".welcome-banner .welcome-banner__subheader").filter(visible: true),
         )
       end
 
       def has_no_bg_img?
-        has_no_css?(".welcome-banner.--with-bg-img")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".welcome-banner.--with-bg-img").filter(visible: true),
+        )
       end
 
       def has_bg_img?(url)
-        has_css?(
-          ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap",
-          style: "background-image:url(#{url});",
-          visible: true,
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap[style=#{"background-image:url(#{url});".to_json}]",
+          ).filter(visible: true),
         )
       end
 
       def has_custom_text_color?(color)
-        has_css?(".welcome-banner .welcome-banner__title", style: "color:#{color};", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(
+            ".welcome-banner .welcome-banner__title[style=#{"color:#{color};".to_json}]",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_custom_text_color?(color)
-        has_no_css?(".welcome-banner .welcome-banner__title", style: "color:#{color};")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(
+            ".welcome-banner .welcome-banner__title[style=#{"color:#{color};".to_json}]",
+          ).filter(visible: true),
+        )
       end
 
       def above_topic_content?
-        has_css?("#main-outlet > .--location-above-topic-content", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#main-outlet > .--location-above-topic-content").filter(
+            visible: true,
+          ),
+        )
       end
 
       def below_site_header?
-        has_css?(".discourse-root > .--location-below-site-header", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".discourse-root > .--location-below-site-header").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

@@ -4,31 +4,48 @@ module PageObjects
   module Components
     class DPageHeader < PageObjects::Pages::Base
       def has_tabs?(names)
-        expect(page.all("#{tabs_container_selector} a").map(&:text)).to eq(names)
+        expect(
+          browser_root
+            .locator("#{tabs_container_selector} a")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip },
+        ).to eq(names)
       end
 
       def has_tab?(tab_name)
-        has_css?(tab_selector(tab_name))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(tab_selector(tab_name)).filter(visible: true),
+        )
       end
 
       def has_no_tab?(tab_name)
-        has_no_css?(tab_selector(tab_name))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(tab_selector(tab_name)).filter(visible: true),
+        )
       end
 
       def has_active_tab?(tab_name)
-        has_css?("#{tab_selector(tab_name)} .active")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{tab_selector(tab_name)} .active").filter(visible: true),
+        )
       end
 
       def tab(tab_name)
-        find(tab_selector(tab_name))
+        browser_root.locator(tab_selector(tab_name)).filter(visible: true)
       end
 
       def visible?
-        has_css?(".d-page-header")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".d-page-header").filter(visible: true),
+        )
       end
 
       def hidden?
-        has_no_css?(".d-page-header")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".d-page-header").filter(visible: true),
+        )
       end
 
       private

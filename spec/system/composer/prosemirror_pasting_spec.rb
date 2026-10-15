@@ -8,9 +8,21 @@ describe "Composer - ProseMirror - Pasting content" do
     open_composer
     html = %(<a href="/u/#{current_user.username}" class="mention">@#{current_user.username}</a>)
     cdp.copy_paste(html, html: true)
-    expect(rich).to have_css("a.mention", text: current_user.username)
-    expect(rich).to have_css("a.mention[data-name='#{current_user.username}']")
-    expect(rich).to have_no_css("a.mention[href]")
+    expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(current_user.username)],
+      useInnerText: true,
+    )
+    expect(
+      rich.locator("a.mention[data-name='#{current_user.username}']").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("a.mention[href]")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
     composer.toggle_rich_editor
     expect(composer).to have_value("@#{current_user.username}")
   end
@@ -28,8 +40,10 @@ describe "Composer - ProseMirror - Pasting content" do
       expect(logger.logs.map { |log| log[:message] }).not_to include(
         "Maximum call stack size exceeded",
       )
-      expect(rich).to have_css("pre code")
-      expect(rich).to have_css("select.code-language-select")
+      expect(rich.locator("pre code").filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator("select.code-language-select").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -37,20 +51,31 @@ describe "Composer - ProseMirror - Pasting content" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste('<img src="image.png" alt="alt text" data-base62-sha1="1234567890">', html: true)
-    expect(rich).to have_css(
-      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
-    )
+    expect(
+      rich.locator(
+        "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
+      ).filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "respects existing marks when pasting a url over a selection" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
-    rich.find("strong").double_click
+    rich.locator("strong").filter(visible: true).dblclick()
     cdp.copy_paste("www.example.com")
-    expect(rich).to have_css("code", text: "code")
-    expect(rich).to have_css("strong", text: "bold")
-    expect(rich).to have_css("em", text: "italic")
+    expect(rich.locator("code").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("code")],
+      useInnerText: true,
+    )
+    expect(rich.locator("strong").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("bold")],
+      useInnerText: true,
+    )
+    expect(rich.locator("em").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("italic")],
+      useInnerText: true,
+    )
     composer.toggle_rich_editor
     expect(composer).to have_value(
       "not selected [`code`**bold**not*italic*](www.example.com) not selected",
@@ -61,7 +86,7 @@ describe "Composer - ProseMirror - Pasting content" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("not selected **bold** not selected")
-    rich.find("strong").double_click
+    rich.locator("strong").filter(visible: true).dblclick()
     cdp.copy_paste("<p>www.example.com</p>", html: true)
     composer.toggle_rich_editor
     expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
@@ -98,10 +123,20 @@ describe "Composer - ProseMirror - Pasting content" do
       with new
       lines">
     HTML
-    img = rich.find(".composer-image-node img")
-    expect(img["src"]).to eq("https://example.com/image.png")
-    expect(img["alt"]).to eq("alt with new lines")
-    expect(img["title"]).to eq("title with new lines")
+    img = rich.locator(".composer-image-node img").filter(visible: true)
+    expect(
+      img.evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "src",
+      ),
+    ).to eq("https://example.com/image.png")
+    expect(img.get_attribute("alt")).to eq("alt with new lines")
+    expect(
+      img.evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "title",
+      ),
+    ).to eq("title with new lines")
     composer.toggle_rich_editor
     expect(composer).to have_value(
       '![alt with new lines](https://example.com/image.png "title with new lines")',
@@ -112,7 +147,14 @@ describe "Composer - ProseMirror - Pasting content" do
     open_composer
     paste_and_click_image
     expect(composer).to have_no_animated_images
-    expect(rich).to have_no_css("img[src^='data:']")
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("img[src^='data:']")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor
     expect(composer).to have_value(%r{\A!\[image\|244x66\]\(upload://\w+\.png\)\z})
@@ -135,17 +177,50 @@ describe "Composer - ProseMirror - Pasting content" do
         after 2
       HTML
     cdp.copy_paste(html, html: true)
-    expect(rich).to have_css("img[alt='img1'][width='100'][height='100'][data-orig-src]")
-    expect(rich).to have_css("img[alt='img2'][data-orig-src]")
-    expect(rich).to have_css("img[alt='image'][data-orig-src]")
-    expect(rich).to have_css("p", text: "before 1")
-    expect(rich).to have_css("p", text: "between")
-    expect(rich).to have_css("p", text: "after 2")
-    expect(rich).to have_no_css("img[src^='data:']")
+    expect(
+      rich.locator("img[alt='img1'][width='100'][height='100'][data-orig-src]").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      rich.locator("img[alt='img2'][data-orig-src]").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      rich.locator("img[alt='image'][data-orig-src]").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("before 1")],
+      useInnerText: true,
+    )
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("between")],
+      useInnerText: true,
+    )
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("after 2")],
+      useInnerText: true,
+    )
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("img[src^='data:']")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
     # pasting a second time to make sure there's no cache pollution
     cdp.copy_paste("<img src='#{valid_png_data_uri}' alt='img1'>", html: true)
-    expect(rich).to have_no_css("img[src^='data:']")
-    expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("img[src^='data:']")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(
+      rich.locator("img[alt='img1'][data-orig-src]").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(2)
   end
 
   context "when unauthorized to upload" do
@@ -155,7 +230,10 @@ describe "Composer - ProseMirror - Pasting content" do
       cdp.allow_clipboard
       open_composer
       cdp.copy_paste("Just some text")
-      expect(rich).to have_css("p", text: "Just some text")
+      expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("Just some text")],
+        useInnerText: true,
+      )
       composer.toggle_rich_editor
       expect(composer).to have_value("Just some text")
     end
@@ -165,7 +243,14 @@ describe "Composer - ProseMirror - Pasting content" do
       cdp.allow_clipboard
       cdp.copy_test_image
       cdp.paste
-      expect(rich).to have_no_css("img")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("img")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
       composer.toggle_rich_editor
       expect(composer).to have_value("")
     end
@@ -179,8 +264,18 @@ describe "Composer - ProseMirror - Pasting content" do
         <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
       HTML
       cdp.copy_paste(html, html: true)
-      expect(rich).to have_no_css("img")
-      expect(rich).to have_text("image")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("img")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(rich).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("image"),
+        useInnerText: true,
+      )
       composer.toggle_rich_editor
       expect(composer).to have_value("image")
     end
@@ -198,10 +293,26 @@ describe "Composer - ProseMirror - Pasting content" do
         <p>after</p>
       HTML
       cdp.copy_paste(html, html: true)
-      expect(rich).to have_no_css("img")
-      expect(rich).to have_text("before")
-      expect(rich).to have_text("middle")
-      expect(rich).to have_text("after")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("img")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(rich).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("before"),
+        useInnerText: true,
+      )
+      expect(rich).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("middle"),
+        useInnerText: true,
+      )
+      expect(rich).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("after"),
+        useInnerText: true,
+      )
       composer.toggle_rich_editor
       expect(composer).to have_value("before\n\nimage\n\nmiddle\n\nimage\n\nafter")
     end
@@ -211,11 +322,17 @@ describe "Composer - ProseMirror - Pasting content" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("This is a [link](https://example.com)")
-    expect(rich).to have_css("a", text: "link")
+    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("link")],
+      useInnerText: true,
+    )
     composer.type_content(:space)
     composer.type_content(:left)
     composer.type_content(:backspace)
-    expect(rich).to have_css("a", text: "lin")
+    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("lin")],
+      useInnerText: true,
+    )
   end
 
   it "continues a bullet list when pasting multi-line text into an empty list item" do
@@ -225,10 +342,19 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.type_content("* ")
     cdp.copy_paste("apple\nbanana\ncoconut")
 
-    expect(rich).to have_css("ul li", count: 3)
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
-    expect(rich).to have_css("ul li", text: "coconut")
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.have_count(3)
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("apple")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("banana")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("coconut")],
+      useInnerText: true,
+    )
   end
 
   it "continues an ordered list when pasting multi-line text into an empty list item" do
@@ -238,10 +364,19 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.type_content("1. ")
     cdp.copy_paste("apple\nbanana\ncoconut")
 
-    expect(rich).to have_css("ol li", count: 3)
-    expect(rich).to have_css("ol li", text: "apple")
-    expect(rich).to have_css("ol li", text: "banana")
-    expect(rich).to have_css("ol li", text: "coconut")
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.have_count(3)
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("apple")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("banana")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("coconut")],
+      useInnerText: true,
+    )
   end
 
   it "skips blank lines when continuing a list from pasted multi-line text" do
@@ -251,9 +386,15 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.type_content("* ")
     cdp.copy_paste("apple\n\nbanana")
 
-    expect(rich).to have_css("ul li", count: 2)
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.have_count(2)
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("apple")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("banana")],
+      useInnerText: true,
+    )
   end
 
   it "keeps default paste behavior in a non-empty list item" do
@@ -263,28 +404,62 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.type_content("* existing")
     cdp.copy_paste("\napple\nbanana")
 
-    expect(rich).to have_css("ul li", count: 1)
-    expect(rich).to have_css("ul li", text: "existing")
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.have_count(1)
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("existing")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("apple")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("banana")],
+      useInnerText: true,
+    )
   end
 
   it "clears closed marks from stored marks when using markInputRule" do
     open_composer
     composer.type_content("[`something`](link) word")
-    expect(rich).to have_css("a", text: "something")
-    expect(rich).to have_css("a code", text: "something")
-    expect(rich).to have_content("word")
-    expect(rich).to have_no_css("code", text: "word")
+    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("something")],
+      useInnerText: true,
+    )
+    expect(rich.locator("a code").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("something")],
+      useInnerText: true,
+    )
+    expect(rich).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("word"),
+      useInnerText: true,
+    )
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("code")
+        .filter(visible: true),
+    ).not_to PlaywrightMatchers.contain_text([browser_text_pattern("word")], useInnerText: true)
   end
 
   it "parses html inline tags from pasted HTML" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>", html: true)
-    expect(rich).to have_css("mark", text: "mark")
-    expect(rich).to have_css("ins", text: "words")
-    expect(rich).to have_css("kbd", text: "ctrl")
+    expect(rich.locator("mark").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("mark")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ins").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("words")],
+      useInnerText: true,
+    )
+    expect(rich.locator("kbd").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("ctrl")],
+      useInnerText: true,
+    )
     composer.toggle_rich_editor
     expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
   end
@@ -297,8 +472,18 @@ describe "Composer - ProseMirror - Pasting content" do
       %(<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>),
       html: true,
     )
-    expect(rich).to have_css("p", text: "So I have heard. At one time.")
-    expect(rich).to have_no_css("span[lang]")
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("So I have heard. At one time.")],
+      useInnerText: true,
+    )
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("span[lang]")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
     composer.toggle_rich_editor
     expect(composer).to have_value("So I have heard. At one time.")
   end
@@ -307,10 +492,19 @@ describe "Composer - ProseMirror - Pasting content" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("<span style='white-space: pre;'>line1\nline2\nline3</pre>", html: true)
-    expect(rich).to have_css("p", text: "line1")
-    expect(rich).to have_css("p", text: "line2")
-    expect(rich).to have_css("p", text: "line3")
-    expect(rich).to have_css("br", count: 2)
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("line1")],
+      useInnerText: true,
+    )
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("line2")],
+      useInnerText: true,
+    )
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("line3")],
+      useInnerText: true,
+    )
+    expect(rich.locator("br")).to PlaywrightMatchers.have_count(2)
     composer.toggle_rich_editor
     expect(composer).to have_value("line1\nline2\nline3")
   end

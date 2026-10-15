@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def select_emoji(emoji_name)
-        find(emoji_button_selector(emoji_name)).click
+        browser_root.locator(emoji_button_selector(emoji_name)).filter(visible: true).click
       end
 
       def search_emoji(emoji_name)
@@ -18,11 +18,15 @@ module PageObjects
       end
 
       def has_emoji?(emoji_name)
-        page.has_css?(emoji_button_selector(emoji_name))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(emoji_button_selector(emoji_name)).filter(visible: true),
+        )
       end
 
       def has_no_emoji?(emoji_name)
-        page.has_no_css?(emoji_button_selector(emoji_name))
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(emoji_button_selector(emoji_name)).filter(visible: true),
+        )
       end
     end
   end

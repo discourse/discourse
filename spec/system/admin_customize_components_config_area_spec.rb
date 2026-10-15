@@ -101,7 +101,7 @@ describe "Admin Customize Themes Config Area Page" do
     it "can filter components by name" do
       config_area.visit
 
-      config_area.name_filter_input.fill_in(with: "glo")
+      config_area.name_filter_input.fill("glo")
 
       expect(config_area).to have_exact_components(enabled_component.id, disabled_component.id)
     end
@@ -109,7 +109,7 @@ describe "Admin Customize Themes Config Area Page" do
     it "keeps the filters shown when there are no components matching the filters" do
       config_area.visit
 
-      config_area.name_filter_input.fill_in(with: "stringthatshouldnotmatchanything")
+      config_area.name_filter_input.fill("stringthatshouldnotmatchanything")
       expect(config_area).to have_no_components_found_text
       expect(config_area).to have_no_components
       expect(config_area).to have_name_filter_input
@@ -120,7 +120,9 @@ describe "Admin Customize Themes Config Area Page" do
       config_area.visit
 
       config_area.component(enabled_component.id).edit_button.click
-      expect(page).to have_current_path("/admin/customize/themes/#{enabled_component.id}")
+      expect(browser_page).to PlaywrightMatchers.have_url(
+        "/admin/customize/themes/#{enabled_component.id}",
+      )
     end
 
     it "displays various metadata for components" do
@@ -331,7 +333,10 @@ describe "Admin Customize Themes Config Area Page" do
 
           expect(config_area).to have_exactly_n_components(4)
 
-          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+          browser_page.evaluate(
+            "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+            arg: [],
+          )
 
           expect(config_area).to have_component(enabled_component.id)
 
@@ -360,7 +365,7 @@ describe "Admin Customize Themes Config Area Page" do
       I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new component"),
     )
 
-    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/components/\d+})
   end
 
   it "warns when leaving a newly created component that isn't assigned to any themes" do
@@ -370,9 +375,11 @@ describe "Admin Customize Themes Config Area Page" do
       name: "some new component",
       component: true,
     )
-    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
+    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/components/\d+})
 
     theme_page.click_back_to_components
-    expect(dialog).to have_content(I18n.t("admin_js.admin.customize.theme.unsaved_parent_themes"))
+    expect(dialog).to have_displayed_content(
+      I18n.t("admin_js.admin.customize.theme.unsaved_parent_themes"),
+    )
   end
 end

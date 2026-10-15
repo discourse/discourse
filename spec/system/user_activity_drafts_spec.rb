@@ -140,7 +140,7 @@ describe "User activity drafts" do
       drafts_page.click_bulk_delete
 
       # Confirm deletion in modal
-      page.find(".dialog-footer .btn-danger").click
+      browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
 
       # Should have only one draft left and no bulk controls
       expect(drafts_page).to have_drafts(count: 1)
@@ -160,7 +160,7 @@ describe "User activity drafts" do
       drafts_page.click_bulk_delete
 
       # Confirm deletion
-      page.find(".dialog-footer .btn-danger").click
+      browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
 
       # Should have no drafts and no controls
       expect(drafts_page).to have_no_drafts

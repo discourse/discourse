@@ -13,7 +13,7 @@ describe "Composer - Drafts" do
 
   context "when clicking X (save and close)" do
     it "saves the draft and shows a toast" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       composer.fill_title("this is a test topic")
@@ -29,7 +29,7 @@ describe "Composer - Drafts" do
       fab!(:category_2, :category)
 
       it "saves the draft and shows a toast" do
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(composer).to be_opened
         composer.fill_title("this is a test topic")
@@ -43,7 +43,7 @@ describe "Composer - Drafts" do
 
     context "when only title is specified and it is less than min_topic_title_length" do
       it "does saves the draft and shows a toast" do
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(composer).to be_opened
         composer.fill_title("x")
@@ -57,7 +57,7 @@ describe "Composer - Drafts" do
 
     context "when only body is specified and it is less than min_post_length" do
       it "does saves the draft and shows a toast" do
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(composer).to be_opened
         composer.fill_content("x")
@@ -76,7 +76,7 @@ describe "Composer - Drafts" do
     before { Jobs.run_immediately! }
 
     it "does not show confirmation if there is no user input in the composer" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
       composer.discard
@@ -86,7 +86,7 @@ describe "Composer - Drafts" do
     end
 
     it "destroys draft after discard confirmation" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       composer.fill_title("this is a test topic")
       composer.fill_content("a b c d e f g")
@@ -110,7 +110,7 @@ describe "Composer - Drafts" do
       fab!(:category_2, :category)
 
       it "shows Discard draft confirmation modal and hides it on Cancel button click" do
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(composer).to be_opened
         composer.fill_title("this is a test topic")
@@ -162,13 +162,17 @@ describe "Composer - Drafts" do
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(page).to have_css(
-        ".discard-draft-modal",
-        text: I18n.t("js.post.cancel_composer.confirm_edit"),
+      expect(
+        browser_root.locator(".discard-draft-modal").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm_edit"))],
+        useInnerText: true,
       )
-      expect(page).to have_css(
-        ".discard-draft-modal__discard-btn",
-        text: I18n.t("js.post.cancel_composer.discard_edit"),
+      expect(
+        browser_root.locator(".discard-draft-modal__discard-btn").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.post.cancel_composer.discard_edit"))],
+        useInnerText: true,
       )
     end
 
@@ -182,9 +186,11 @@ describe "Composer - Drafts" do
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(page).to have_css(
-        ".discard-draft-modal",
-        text: I18n.t("js.post.cancel_composer.confirm_edit"),
+      expect(
+        browser_root.locator(".discard-draft-modal").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm_edit"))],
+        useInnerText: true,
       )
     end
 
@@ -193,7 +199,12 @@ describe "Composer - Drafts" do
       topic_page.click_post_action_button(post_1, :edit)
 
       expect(composer).to be_opened
-      expect(page).to have_css(".discard-button", text: I18n.t("js.composer.cancel_edit"))
+      expect(
+        browser_root.locator(".discard-button").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.composer.cancel_edit"))],
+        useInnerText: true,
+      )
     end
   end
 
@@ -201,28 +212,37 @@ describe "Composer - Drafts" do
     before { Jobs.run_immediately! }
 
     it "shows the discard modal with post-specific text when there are changes" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       composer.fill_title("this is a test topic")
       composer.fill_content("a b c d e f g")
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(page).to have_css(
-        ".discard-draft-modal",
-        text: I18n.t("js.post.cancel_composer.confirm"),
+      expect(
+        browser_root.locator(".discard-draft-modal").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm"))],
+        useInnerText: true,
       )
-      expect(page).to have_css(
-        ".discard-draft-modal__discard-btn",
-        text: I18n.t("js.post.cancel_composer.discard"),
+      expect(
+        browser_root.locator(".discard-draft-modal__discard-btn").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.post.cancel_composer.discard"))],
+        useInnerText: true,
       )
     end
 
     it "shows the discard button" do
-      visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
-      expect(page).to have_css(".discard-button", text: I18n.t("js.composer.discard"))
+      expect(
+        browser_root.locator(".discard-button").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.composer.discard"))],
+        useInnerText: true,
+      )
     end
   end
 
@@ -266,7 +286,7 @@ describe "Composer - Drafts" do
 
       expect(discard_draft_modal).to be_closed
       expect(composer).to be_opened
-      expect(composer).to have_content("a b c d e f g")
+      expect(composer).to have_displayed_content("a b c d e f g")
 
       composer.minimize
       expect(composer).to be_minimized
@@ -305,8 +325,11 @@ describe "Composer - Drafts" do
     it "lets the user finish their edit after clicking reply" do
       topic_page.click_reply_button
 
-      expect(composer).to have_content("edited post content")
-      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+      expect(composer).to have_displayed_content("edited post content")
+      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.composer.save_edit")),
+        useInnerText: true,
+      )
 
       composer.create
 
@@ -320,14 +343,17 @@ describe "Composer - Drafts" do
     it "shows the user their saved edit when they edit the same post again" do
       topic_page.click_post_action_button(post_1, :edit)
 
-      expect(composer).to have_content("edited post content")
-      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+      expect(composer).to have_displayed_content("edited post content")
+      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.composer.save_edit")),
+        useInnerText: true,
+      )
     end
 
     it "shows the user the original content when they edit a different post" do
       topic_page.click_post_action_button(post_2, :edit)
 
-      expect(composer).to have_content("another post content")
+      expect(composer).to have_displayed_content("another post content")
     end
   end
 
@@ -361,7 +387,7 @@ describe "Composer - Drafts" do
       topic_page.click_reply_button
 
       expect(composer).to be_opened
-      expect(composer).to have_content("a b c d e f g")
+      expect(composer).to have_displayed_content("a b c d e f g")
     end
 
     context "when clicking the original topic in the topic reply choice dialog" do

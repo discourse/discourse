@@ -1,37 +1,42 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Uploads" do
-  include_context "with prosemirror editor"
+describe "Composer - ProseMirror - Uploads", native_playwright: true do
+  include_context "with native prosemirror editor"
+
+  let(:uploads) do
+    PageObjects::Native::ComposerUploads.new(page: browser_page, editor: composer.rich_editor)
+  end
+  let(:slow_upload) { PageObjects::Native::SlowUpload.new(browser_page) }
 
   describe "image uploads" do
     it "shows the completed image without flashing or continuing to pulse" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      uploads.attach(file_path)
 
-      expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css(".composer-image-node img")
-      expect(rich).to have_no_css("img[src*='transparent.png']")
-      expect(composer).to have_no_animated_images
+      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+      expect(composer.image_nodes.first).to PlaywrightMatchers.be_visible
+      expect(uploads.transparent_images).to PlaywrightMatchers.have_count(0)
+      composer.wait_for_images_to_stop_animating
 
       composer.type_content(" text after the image")
-      expect(composer).to have_no_animated_images
+      composer.wait_for_images_to_stop_animating
     end
 
     it "produces correct markdown after upload completes" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      uploads.attach(file_path)
 
-      expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css(".composer-image-node img")
+      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+      expect(composer.image_nodes.first).to PlaywrightMatchers.be_visible
 
       composer.toggle_rich_editor
-      expect(composer.composer_input.value).not_to include("blob:")
-      expect(composer.composer_input.value).not_to include("Uploading:")
-      expect(composer.composer_input.value).to match(%r{!\[.*\]\(upload://})
+      expect(composer.markdown_editor).not_to PlaywrightMatchers.have_value(/blob:/)
+      expect(composer.markdown_editor).not_to PlaywrightMatchers.have_value(/Uploading:/)
+      expect(composer.markdown_editor).to PlaywrightMatchers.have_value(%r{!\[.*\]\(upload://})
     end
 
     it "uploads multiple images at once" do
@@ -39,11 +44,11 @@ describe "Composer - ProseMirror - Uploads" do
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+      uploads.attach([file_path_1, file_path_2])
 
-      expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css(".composer-image-node img", count: 2)
-      expect(composer).to have_no_animated_images
+      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+      expect(composer.image_nodes).to PlaywrightMatchers.have_count(2)
+      composer.wait_for_images_to_stop_animating
     end
   end
 
@@ -54,11 +59,11 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("small.pdf", "pdf").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      uploads.attach(file_path)
 
-      expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_no_css(".upload-placeholder.--file")
-      expect(rich).to have_css("a[href]")
+      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+      expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
+      expect(uploads.file_links.first).to PlaywrightMatchers.be_visible
     end
 
     it "uploads mixed image and non-image files" do
@@ -66,11 +71,11 @@ describe "Composer - ProseMirror - Uploads" do
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("small.pdf", "pdf").path
-      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+      uploads.attach([file_path_1, file_path_2])
 
-      expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css(".composer-image-node img", count: 1)
-      expect(rich).to have_css("a[href]")
+      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+      expect(composer.image_nodes).to PlaywrightMatchers.have_count(1)
+      expect(uploads.file_links.first).to PlaywrightMatchers.be_visible
     end
 
     it "shows both placeholders simultaneously during mixed upload" do
@@ -78,11 +83,11 @@ describe "Composer - ProseMirror - Uploads" do
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
-        expect(composer).to have_in_progress_uploads
-        expect(rich).to have_css(".upload-placeholder.--image")
-        expect(rich).to have_css(".upload-placeholder.--file")
+      slow_upload.during do
+        uploads.attach([file_path_1, file_path_2])
+        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
+        expect(uploads.image_placeholders.first).to PlaywrightMatchers.be_visible
+        expect(uploads.file_placeholders.first).to PlaywrightMatchers.be_visible
       end
     end
   end
@@ -92,13 +97,13 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(composer).to have_in_progress_uploads
-        find("#cancel-file-upload").click
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
+        uploads.cancel_all.click
 
-        expect(composer).to have_no_in_progress_uploads
-        expect(rich).to have_no_css(".upload-placeholder.--image")
+        expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+        expect(uploads.image_placeholders).to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -107,13 +112,13 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(composer).to have_in_progress_uploads
-        find("#cancel-file-upload").click
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
+        uploads.cancel_all.click
 
-        expect(composer).to have_no_in_progress_uploads
-        expect(rich).to have_no_css(".upload-placeholder.--file")
+        expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
+        expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -122,13 +127,13 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder.--file")
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(uploads.file_placeholders.first).to PlaywrightMatchers.be_visible
 
-        find(".upload-placeholder__cancel").click
+        uploads.cancel_file.click
 
-        expect(rich).to have_no_css(".upload-placeholder.--file")
+        expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -136,13 +141,13 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder__overlay")
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(uploads.image_overlay.first).to PlaywrightMatchers.be_visible
 
-        find(".upload-placeholder__overlay .upload-placeholder__cancel").click
+        uploads.cancel_image.click
 
-        expect(rich).to have_no_css(".upload-placeholder.--image")
+        expect(uploads.image_placeholders).to PlaywrightMatchers.have_count(0)
       end
     end
   end
@@ -152,9 +157,9 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder__overlay .upload-placeholder__progress")
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(uploads.image_progress.first).to PlaywrightMatchers.be_visible
       end
     end
 
@@ -163,9 +168,9 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
-        attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder.--file .upload-placeholder__progress")
+      slow_upload.during do
+        uploads.attach(file_path)
+        expect(uploads.file_progress.first).to PlaywrightMatchers.be_visible
       end
     end
   end

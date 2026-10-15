@@ -25,7 +25,7 @@ RSpec.describe "Editing sidebar categories navigation" do
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
     it "allows a user to edit the sidebar categories navigation", mobile: mobile do
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.open_on_mobile if mobile
 
@@ -59,7 +59,7 @@ RSpec.describe "Editing sidebar categories navigation" do
       expect(sidebar).to have_section_link(category_subcategory2.name)
       expect(sidebar).to have_section_link(category2.name)
 
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.open_on_mobile if mobile
 
@@ -93,7 +93,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     Fabricate(:category_sidebar_section_link, linkable: category, user: user)
     Fabricate(:category_sidebar_section_link, linkable: category_subcategory2, user: user)
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_categories_section
 
@@ -113,7 +113,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     SiteSetting.default_navigation_menu_categories =
       "#{category_subcategory2.id}|#{category2_subcategory.id}"
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_categories_section
     expect(sidebar).to have_section_link(category.name)
@@ -131,7 +131,7 @@ RSpec.describe "Editing sidebar categories navigation" do
   end
 
   it "allows a user to filter the categories in the modal by the category's name" do
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_categories_section
 
@@ -158,7 +158,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     Fabricate(:category_sidebar_section_link, linkable: category_subcategory, user: user)
     Fabricate(:category_sidebar_section_link, linkable: category2, user: user)
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_categories_section
 
@@ -199,7 +199,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     end
 
     it "decorates hashtags for tags, icons and emojis in the description" do
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_categories_section
 
@@ -241,7 +241,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     end
 
     it "allows a user to edit sub-subcategories to be included in the sidebar categories section" do
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_categories_section
 
@@ -263,7 +263,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     end
 
     it "allows a user to filter the categories in the modal by the category's name" do
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_categories_section
 
@@ -287,7 +287,7 @@ RSpec.describe "Editing sidebar categories navigation" do
     it "loads categories in multiple pages correctly" do
       resize_window(height: 500) do
         stub_const(CategoriesController, "MAX_CATEGORIES_LIMIT", 5) do
-          visit "/latest"
+          browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           modal = sidebar.click_edit_categories_button
 

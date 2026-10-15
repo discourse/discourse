@@ -10,16 +10,23 @@ module PageObjects
       end
 
       def visible?
-        page.has_css?(SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(SELECTOR).filter(visible: true),
+        )
       end
 
       def not_visible?
-        page.has_no_css?(SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(SELECTOR).filter(visible: true),
+        )
       end
 
       def select_language(locale)
         @menu.expand
-        @menu.option("[data-menu-option-id='#{locale}']").click
+        browser_page.expect_navigation(waitUntil: "load") do
+          @menu.option("[data-menu-option-id='#{locale}']").click
+        end
+        SystemBrowserBootstrap.wait_for(browser_page)
       end
     end
   end

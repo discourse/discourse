@@ -12,27 +12,36 @@ module PageObjects
       end
 
       def go_to_step(step_id)
-        visit("/wizard/steps/#{step_id}")
+        browser_page
+          .goto("/wizard/steps/#{step_id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def on_step?(step_id)
-        has_css?(".wizard-container__step.#{step_id}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".wizard-container__step.#{step_id}").filter(visible: true),
+        )
       end
 
       def click_jump_in
-        find(".wizard-container__button.jump-in").click
+        browser_root.locator(".wizard-container__button.jump-in").filter(visible: true).click
       end
 
       def go_to_next_step
-        find(".wizard-container__button.next").click
+        browser_root.locator(".wizard-container__button.next").filter(visible: true).click
       end
 
       def find_field(field_type, field_id)
-        find(".wizard-container__field.#{field_type}-field.#{field_type}-#{field_id}")
+        browser_root.locator(
+          ".wizard-container__field.#{field_type}-field.#{field_type}-#{field_id}",
+        ).filter(visible: true)
       end
 
       def fill_field(field_type, field_id, value)
-        find_field(field_type, field_id).fill_in(with: value)
+        find_field(field_type, field_id)
+          .locator("input, textarea")
+          .filter(visible: true)
+          .fill(value.to_s)
       end
 
       def select_dropdown_option(field_id, option_value)
@@ -46,7 +55,7 @@ module PageObjects
       end
 
       def has_field_with_value?(field_type, field_id, value)
-        find_field(field_type, field_id).find("input").value == value
+        find_field(field_type, field_id).locator("input").filter(visible: true).input_value == value
       end
     end
   end
@@ -69,11 +78,20 @@ class PageObjects::Pages::Wizard::PrivacyStep < PageObjects::Pages::Wizard::Step
   end
 
   def select_access_option(section, choice_id)
-    wizard.find_field("radio", section).find(choice_selector(choice_id)).click
+    wizard
+      .find_field("radio", section)
+      .locator(choice_selector(choice_id))
+      .filter(visible: true)
+      .click
   end
 
   def has_selected_choice?(section, choice_id)
-    wizard.find_field("radio", section).has_css?(choice_selector(choice_id) + ".--selected")
+    PlaywrightMatchers.have_count(0).does_not_match?(
+      wizard
+        .find_field("radio", section)
+        .locator(choice_selector(choice_id) + ".--selected")
+        .filter(visible: true),
+    )
   end
 end
 

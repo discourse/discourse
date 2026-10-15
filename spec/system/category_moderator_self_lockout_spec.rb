@@ -34,7 +34,7 @@ describe "Category moderator self-lockout warning" do
       category_page.save_settings
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.category.errors.self_lockout"))
+      expect(dialog).to have_displayed_content(I18n.t("js.category.errors.self_lockout"))
     end
 
     it "saves and redirects home when confirmed" do
@@ -42,7 +42,7 @@ describe "Category moderator self-lockout warning" do
       category_page.save_settings
       dialog.click_yes
 
-      expect(page).to have_current_path("/latest")
+      expect(browser_page).to PlaywrightMatchers.have_url("/latest")
       expect(category.reload.category_groups.map(&:group_id)).to contain_exactly(
         restricted_group.id,
       )

@@ -25,9 +25,11 @@ RSpec.describe "Keyboard shortcuts" do
     t.save!
     SiteSetting.default_theme_id = t.id
 
-    visit "/"
-    page.send_keys("?")
-    expect(page).to have_no_css(".keyboard-shortcuts-modal")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_page.keyboard.type("?")
+    expect(
+      browser_root.locator(".keyboard-shortcuts-modal").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   describe "<d>" do
@@ -43,7 +45,7 @@ RSpec.describe "Keyboard shortcuts" do
       it "doesn’t show the confirmation modal" do
         topic_page.visit_topic(post.topic)
 
-        send_keys("j d")
+        browser_page.keyboard.type("j d")
 
         expect(dialog).to be_closed
       end
@@ -62,8 +64,10 @@ RSpec.describe "Keyboard shortcuts" do
       context "when the message is not archived" do
         it "archives the message" do
           topic_page.visit_topic(topic)
-          send_keys("a")
-          expect(page).to have_current_path("/u/#{current_user.username}/messages")
+          browser_page.keyboard.type("a")
+          expect(browser_page).to PlaywrightMatchers.have_url(
+            "/u/#{current_user.username}/messages",
+          )
           expect(UserArchivedMessage.exists?(topic: topic)).to be true
         end
       end
@@ -73,8 +77,10 @@ RSpec.describe "Keyboard shortcuts" do
 
         it "moves back the message to inbox" do
           topic_page.visit_topic(topic)
-          send_keys("a")
-          expect(page).to have_current_path("/u/#{current_user.username}/messages")
+          browser_page.keyboard.type("a")
+          expect(browser_page).to PlaywrightMatchers.have_url(
+            "/u/#{current_user.username}/messages",
+          )
           expect(UserArchivedMessage.exists?(topic: topic)).to be false
         end
       end
@@ -85,8 +91,8 @@ RSpec.describe "Keyboard shortcuts" do
 
       it "doesn't archive the topic" do
         topic_page.visit_topic(topic)
-        send_keys("a")
-        expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
+        browser_page.keyboard.type("a")
+        expect(browser_page).to PlaywrightMatchers.have_url("/t/#{topic.slug}/#{topic.id}")
         expect(UserArchivedMessage.exists?(topic: topic)).to be false
       end
     end

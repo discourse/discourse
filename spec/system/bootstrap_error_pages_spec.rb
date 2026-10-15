@@ -4,16 +4,28 @@ describe "bootstrap_error_pages" do
   before { SiteSetting.bootstrap_error_pages = true }
 
   it "boots ember for non-existent route" do
-    visit "/foobar"
-    expect(page).to have_css("#site-logo")
-    expect(page).to have_css("div.page-not-found")
-    expect(page).not_to have_css("body.no-ember")
+    browser_page.goto("/foobar").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#site-logo").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("div.page-not-found").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("body.no-ember").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "boots ember for non-existent topic" do
-    visit "/t/999999999999"
-    expect(page).to have_css("#site-logo")
-    expect(page).to have_css("div.page-not-found")
-    expect(page).not_to have_css("body.no-ember")
+    browser_page.goto("/t/999999999999").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator("#site-logo").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("div.page-not-found").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("body.no-ember").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 end

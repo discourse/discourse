@@ -7,39 +7,62 @@ module PageObjects
       FILTER_BUTTON_SELECTOR = "#{USER_CARD_SELECTOR} .usercard-controls .d-icon-filter"
 
       def visible?
-        has_css?(USER_CARD_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(USER_CARD_SELECTOR).filter(visible: true),
+        )
       end
 
       def showing_user?(username)
-        has_css?("#{USER_CARD_SELECTOR}.user-card-#{username}")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{USER_CARD_SELECTOR}.user-card-#{username}").filter(visible: true),
+        )
       end
 
       def has_filter_button?
-        has_css?(FILTER_BUTTON_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(FILTER_BUTTON_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_filter_button?
-        has_no_css?(FILTER_BUTTON_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(FILTER_BUTTON_SELECTOR).filter(visible: true),
+        )
       end
 
       def filter_button_text
-        find("#{FILTER_BUTTON_SELECTOR} + .d-button-label").text
+        browser_root
+          .locator("#{FILTER_BUTTON_SELECTOR} + .d-button-label")
+          .filter(visible: true)
+          .inner_text
+          .strip
       end
 
       def click_filter_button
-        find("#{FILTER_BUTTON_SELECTOR} + .d-button-label").click
+        browser_root
+          .locator("#{FILTER_BUTTON_SELECTOR} + .d-button-label")
+          .filter(visible: true)
+          .click
       end
 
       def has_profile_hidden?
-        has_css?("#{USER_CARD_SELECTOR} .profile-hidden", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{USER_CARD_SELECTOR} .profile-hidden").filter(visible: true),
+        )
       end
 
       def has_inactive_user?
-        has_css?("#{USER_CARD_SELECTOR} .inactive-user", visible: true)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{USER_CARD_SELECTOR} .inactive-user").filter(visible: true),
+        )
       end
 
       def silence_reason_description
-        find("#{USER_CARD_SELECTOR} .silence-reason .silence-reason-description").text
+        browser_root
+          .locator("#{USER_CARD_SELECTOR} .silence-reason .silence-reason-description")
+          .filter(visible: true)
+          .inner_text
+          .strip
       end
     end
   end

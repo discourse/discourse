@@ -40,7 +40,10 @@ describe "Post selection | Copy quote" do
       selection.addRange(range);
     JS
 
-    page.execute_script(js, post_selector, start_li_index, end_li_index)
+    browser_page.evaluate(
+      "function(arguments) { #{js} }",
+      arg: browser_arguments(post_selector, start_li_index, end_li_index),
+    )
   end
 
   context "when logged in" do
@@ -66,14 +69,18 @@ describe "Post selection | Copy quote" do
       topic_page.visit_topic(topic)
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
-      expect(page).not_to have_css(topic_page.copy_quote_button_selector)
+      expect(
+        browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "resets the quote state when the toolbar is hidden" do
       topic_page.visit_topic(topic)
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
 
-      expect(page).to have_css(topic_page.copy_quote_button_selector)
+      expect(
+        browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       select_text_range(".topic-map__stat-label", 0, 1) # select non cooked content
       topic_page.click_reply_button
@@ -86,7 +93,7 @@ describe "Post selection | Copy quote" do
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
 
-      find(".quote-button .insert-quote").click
+      browser_root.locator(".quote-button .insert-quote").filter(visible: true).click
       expect(composer).to have_value(
         %([quote="#{post.user.username}, post:1, topic:#{topic.id}"]\nHello worl\n[/quote]\n\n),
       )
@@ -100,8 +107,8 @@ describe "Post selection | Copy quote" do
         "#{topic_page.post_by_number_selector(formatted_post.post_number)} .cooked",
       )
 
-      find(".quote-button .insert-quote").click
-      composer_value = find(".d-editor-input", visible: :all).value
+      browser_root.locator(".quote-button .insert-quote").filter(visible: true).click
+      composer_value = browser_root.locator(".d-editor-input").input_value
       expect(composer_value).to include("full:true")
       expect(composer_value).to include("**bold**")
       expect(composer_value).to include("*italic*")
@@ -166,7 +173,9 @@ describe "Post selection | Copy quote" do
       topic_page.visit_topic(topic)
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
-      expect(page).not_to have_css(topic_page.copy_quote_button_selector)
+      expect(
+        browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 end

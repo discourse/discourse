@@ -24,7 +24,7 @@ describe "Filtering topics" do
 
     sign_in(user)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_section_link("filter tags")
 
@@ -50,19 +50,19 @@ describe "Filtering topics" do
     it "displays matching topics for a status query-string filter" do
       sign_in(user)
 
-      visit("/filter")
+      browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topic(topic)
       expect(topic_list).to have_topic(closed_topic)
 
       topic_list.visit_topic(closed_topic)
-      expect(page).to have_current_path(closed_topic.url)
+      expect(browser_page).to PlaywrightMatchers.have_url(closed_topic.url)
 
-      send_keys("gj")
+      browser_page.keyboard.type("gj")
 
-      expect(page).to have_current_path(topic.url)
+      expect(browser_page).to PlaywrightMatchers.have_url(topic.url)
 
-      visit("/filter")
+      browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_query_filter.fill_in("status:open")
 
       expect(topic_list).to have_topic(topic)
@@ -85,7 +85,7 @@ describe "Filtering topics" do
     it "displays matching topics for a tag query-string filter" do
       sign_in(user)
 
-      visit("/filter")
+      browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topics(count: 3)
       expect(topic_list).to have_topic(topic_with_tag)
@@ -116,7 +116,7 @@ describe "Filtering topics" do
 
     it "filters by tag group name with spaces using quoted syntax" do
       sign_in(user)
-      visit("/filter")
+      browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_list).to have_topic(topic_with_tag)
       expect(topic_list).to have_topic(topic_without_tag)
@@ -134,28 +134,36 @@ describe "Filtering topics" do
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
       sign_in(user)
-      visit("/filter")
+      browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find("button.bulk-select").click
+      browser_root.locator("button.bulk-select").filter(visible: true).click
       expect(topic_list).to have_topic_checkbox(topics.first)
-      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+      expect(
+        browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
       topic_list.click_topic_checkbox(topics.first)
-      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      expect(
+        browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     context "when on mobile", mobile: true do
       it "shows the buttons and checkboxes" do
         topics = Fabricate.times(2, :topic)
         sign_in(user)
-        visit("/filter")
+        browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        find("button.bulk-select").click
+        browser_root.locator("button.bulk-select").filter(visible: true).click
         expect(topic_list).to have_topic_checkbox(topics.first)
-        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+        expect(
+          browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
 
         topic_list.click_topic_checkbox(topics.first)
-        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+        expect(
+          browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
   end

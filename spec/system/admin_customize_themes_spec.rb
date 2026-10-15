@@ -23,45 +23,151 @@ describe "Admin Customize Themes" do
     it "allows admins to update the theme's light color scheme" do
       theme_page.visit(theme)
 
-      color_scheme_settings = find(".theme-settings__light-color-scheme")
+      color_scheme_settings =
+        browser_root.locator(".theme-settings__light-color-scheme").filter(visible: true)
 
-      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
-      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".submit-light-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".cancel-light-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
-      color_scheme_settings.find(".color-palette-picker").click
-      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
-      color_scheme_settings.find(".submit-light-edit").click
+      color_scheme_settings.locator(".color-palette-picker").filter(visible: true).click
+      color_scheme_settings
+        .locator(".color-palette-picker-row[data-value='#{color_scheme.id}']")
+        .filter(visible: true)
+        .click
+      color_scheme_settings.locator(".submit-light-edit").filter(visible: true).click
 
-      expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
-      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
-      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
-
-      expect(page).to have_link(
-        I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/config/colors/#{color_scheme.id}",
+      expect(
+        color_scheme_settings.locator(".setting-value").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(color_scheme.name),
+        useInnerText: true,
       )
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".submit-light-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".cancel-light-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+
+      expect(
+        browser_root
+          .get_by_role("link")
+          .and(
+            browser_root.locator(
+              "[id=#{I18n.t("admin_js.admin.customize.theme.edit_colors").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.edit_colors").to_s.to_json}]",
+            ).or(
+              browser_root.get_by_role(
+                "link",
+                name: I18n.t("admin_js.admin.customize.theme.edit_colors"),
+              ),
+            ),
+          )
+          .and(
+            browser_root.locator(
+              "[href=#{"/admin/config/colors/#{color_scheme.id}".to_s.to_json}]",
+            ),
+          )
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "allows admins to update the theme's dark color scheme" do
       theme_page.visit(theme)
 
-      color_scheme_settings = find(".theme-settings__dark-color-scheme")
+      color_scheme_settings =
+        browser_root.locator(".theme-settings__dark-color-scheme").filter(visible: true)
 
-      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".submit-dark-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".cancel-dark-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
 
-      color_scheme_settings.find(".color-palette-picker").click
-      color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
-      color_scheme_settings.find(".submit-dark-edit").click
+      color_scheme_settings.locator(".color-palette-picker").filter(visible: true).click
+      color_scheme_settings
+        .locator(".color-palette-picker-row[data-value='#{color_scheme.id}']")
+        .filter(visible: true)
+        .click
+      color_scheme_settings.locator(".submit-dark-edit").filter(visible: true).click
 
-      expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
-      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
-
-      expect(page).to have_link(
-        I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/config/colors/#{color_scheme.id}",
+      expect(
+        color_scheme_settings.locator(".setting-value").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(color_scheme.name),
+        useInnerText: true,
       )
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".submit-dark-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        color_scheme_settings
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".cancel-dark-edit")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+
+      expect(
+        browser_root
+          .get_by_role("link")
+          .and(
+            browser_root.locator(
+              "[id=#{I18n.t("admin_js.admin.customize.theme.edit_colors").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.edit_colors").to_s.to_json}]",
+            ).or(
+              browser_root.get_by_role(
+                "link",
+                name: I18n.t("admin_js.admin.customize.theme.edit_colors"),
+              ),
+            ),
+          )
+          .and(
+            browser_root.locator(
+              "[href=#{"/admin/config/colors/#{color_scheme.id}".to_s.to_json}]",
+            ),
+          )
+          .filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "allows a theme to be deleted" do
@@ -71,7 +177,7 @@ describe "Admin Customize Themes" do
         I18n.t("admin_js.admin.customize.theme.delete_success", theme: theme.name),
       )
 
-      expect(page).to have_current_path("/admin/config/customize/themes")
+      expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
       expect(themes_page).to have_no_theme(theme.name)
     end
   end
@@ -81,17 +187,31 @@ describe "Admin Customize Themes" do
       theme.set_field(target: "common", name: "head_tag", value: "console.log('test')", type_id: 0)
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
+      browser_page
+        .goto("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(find(".ace_content")).to have_content("console.log('test')")
+      expect(
+        browser_root.locator(".ace_content").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("console.log('test')"),
+        useInnerText: true,
+      )
     end
 
     it "can edit the js field" do
-      visit("/admin/customize/themes/#{theme.id}/common/js/edit")
+      browser_page
+        .goto("/admin/customize/themes/#{theme.id}/common/js/edit")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(find(".ace_content")).to have_content("// Your code here")
-      find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
-      find(".save-theme").click
+      expect(
+        browser_root.locator(".ace_content").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("// Your code here"),
+        useInnerText: true,
+      )
+      browser_root.locator(".ace_text-input").fill("console.log('test')\n")
+      browser_root.locator(".save-theme").filter(visible: true).click
 
       expect(theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value).to start_with(
         "console.log('test')\n",
@@ -102,9 +222,16 @@ describe "Admin Customize Themes" do
         .theme_fields
         .find_by(target_id: Theme.targets[:extra_js])
         .update!(value: "console.log('second test')")
-      visit("/admin/customize/themes/#{theme.id}/common/js/edit")
+      browser_page
+        .goto("/admin/customize/themes/#{theme.id}/common/js/edit")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(find(".ace_content")).to have_content("console.log('second test')")
+      expect(
+        browser_root.locator(".ace_content").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        browser_text_pattern("console.log('second test')"),
+        useInnerText: true,
+      )
     end
 
     it "shows the description of the field the admin switches to" do
@@ -121,12 +248,24 @@ describe "Admin Customize Themes" do
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
     theme_page.visit(theme)
-    expect(page).to have_css(".system-theme-info")
-    expect(page).to have_css(".title button")
-    expect(page).to have_no_css(".title button svg")
-    expect(page).to have_no_css(".edit-code")
-    expect(page).to have_no_css("button.upload")
-    expect(page).to have_no_css(".delete")
+    expect(
+      browser_root.locator(".system-theme-info").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".title button").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".title button svg").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".edit-code").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator("button.upload").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".delete").filter(visible: true)).to PlaywrightMatchers.have_count(
+      0,
+    )
   end
 
   it "hides unnecessary sections and buttons for system themes" do
@@ -144,11 +283,21 @@ describe "Admin Customize Themes" do
     theme.save!
 
     theme_page.visit(theme)
-    expect(page).to have_css(".created-by")
-    expect(page).to have_css(".export")
-    expect(page).to have_css(".extra-files")
-    expect(page).to have_css(".theme-settings")
-    expect(page).to have_no_css(".system-theme-info")
+    expect(
+      browser_root.locator(".created-by").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".export").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".extra-files").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".theme-settings").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".system-theme-info").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
 
     # Since we're only testing the one theme, we can stub the system? method
     # for every theme to return true.
@@ -156,11 +305,21 @@ describe "Admin Customize Themes" do
     allow_any_instance_of(Theme).to receive(:system?).and_return(true)
 
     theme_page.visit(theme)
-    expect(page).to have_css(".system-theme-info")
-    expect(page).to have_no_css(".created-by")
-    expect(page).to have_no_css(".export")
-    expect(page).to have_no_css(".extra-files")
-    expect(page).to have_css(".theme-settings")
+    expect(
+      browser_root.locator(".system-theme-info").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".created-by").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".export").filter(visible: true)).to PlaywrightMatchers.have_count(
+      0,
+    )
+    expect(
+      browser_root.locator(".extra-files").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
+    expect(
+      browser_root.locator(".theme-settings").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "shows both JS and SCSS extra files with canonical paths" do
@@ -174,11 +333,17 @@ describe "Admin Customize Themes" do
 
     theme_page.visit(theme)
 
-    extra_files = find(".extra-files")
-    extra_files.find("summary").click
+    extra_files = browser_root.locator(".extra-files").filter(visible: true)
+    extra_files.locator("summary").filter(visible: true).click
 
-    expect(extra_files).to have_content("javascripts/discourse/api-initializers/canvas.js")
-    expect(extra_files).to have_content("stylesheets/properties.scss")
+    expect(extra_files).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("javascripts/discourse/api-initializers/canvas.js"),
+      useInnerText: true,
+    )
+    expect(extra_files).to PlaywrightMatchers.contain_text(
+      browser_text_pattern("stylesheets/properties.scss"),
+      useInnerText: true,
+    )
   end
 
   describe "when editing theme translations" do
@@ -201,7 +366,7 @@ describe "Admin Customize Themes" do
 
       theme_page.visit(theme)
 
-      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
+      expect(theme_translations_settings_editor.get_input_value).to include("Hello World")
     end
 
     it "allows admins to edit and save theme translations in other languages" do
@@ -221,14 +386,16 @@ describe "Admin Customize Themes" do
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
-      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+      expect(theme_translations_settings_editor.get_input_value).to include("Hello there!")
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
       theme_translations_picker.select_row_by_value("fr")
 
-      expect(page).to have_css(".translations")
+      expect(
+        browser_root.locator(".translations").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
-      expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
+      expect(theme_translations_settings_editor.get_input_value).to include("Bonjour!")
 
       theme_translations_settings_editor.fill_in("Hello World in French")
       theme_translations_settings_editor.save
@@ -256,11 +423,11 @@ describe "Admin Customize Themes" do
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
 
-      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+      expect(theme_translations_settings_editor.get_input_value).to include("Hello there!")
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
 
-      expect(theme_translations_picker.component).to have_content("English")
+      expect(theme_translations_picker.component).to PlaywrightMatchers.contain_text("English")
     end
   end
 
@@ -284,19 +451,31 @@ describe "Admin Customize Themes" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
     it "has a link to the components page" do
-      visit("/admin/customize/themes/#{component.id}")
+      browser_page
+        .goto("/admin/customize/themes/#{component.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(theme_page).to have_back_button_to_components_page
     end
 
     it "allows to add component to all themes" do
-      visit("/admin/customize/themes/#{component.id}")
-      expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
-        I18n.t("js.select_kit.default_header_text"),
-      )
+      browser_page
+        .goto("/admin/customize/themes/#{component.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root
+          .locator(".relative-theme-selector .formatted-selection")
+          .filter(visible: true)
+          .inner_text
+          .strip,
+      ).to eq(I18n.t("js.select_kit.default_header_text"))
       theme_page.click_add_all_themes_button
-      expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
-        "#{theme.name}, Foundation, Horizon",
-      )
+      expect(
+        browser_root
+          .locator(".relative-theme-selector .formatted-selection")
+          .filter(visible: true)
+          .inner_text
+          .strip,
+      ).to eq("#{theme.name}, Foundation, Horizon")
     end
 
     describe "when leaving the page" do
@@ -305,17 +484,23 @@ describe "Admin Customize Themes" do
       it "warns when the component is enabled but not used by any themes" do
         theme_page.visit(component)
         theme_page.click_back_to_components
-        expect(dialog).to have_content(unassigned_warning)
+        expect(dialog).to have_displayed_content(unassigned_warning)
 
         dialog.click_no
-        expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
-        expect(page).to have_css(".parent-themes-setting .select-kit-header:focus")
+        expect(browser_page).to PlaywrightMatchers.have_url(
+          "/admin/customize/themes/#{component.id}",
+        )
+        expect(
+          browser_root.locator(".parent-themes-setting .select-kit-header:focus").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
 
         theme_page.click_back_to_components
-        expect(dialog).to have_content(unassigned_warning)
+        expect(dialog).to have_displayed_content(unassigned_warning)
 
         dialog.click_yes
-        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
       end
 
       it "doesn't warn after the admin saves an empty theme selection" do
@@ -325,13 +510,18 @@ describe "Admin Customize Themes" do
         theme_page.parent_themes_selector.expand
         theme_page.parent_themes_selector.unselect_by_name(theme.name)
         theme_page.parent_themes_selector.collapse
-        find(".parent-themes-setting .setting-controls .ok").click
-        expect(page).to have_no_css(".parent-themes-setting .setting-controls")
+        browser_root
+          .locator(".parent-themes-setting .setting-controls .ok")
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator(".parent-themes-setting .setting-controls").filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
         expect(component.reload.parent_themes).to be_empty
 
         theme_page.click_back_to_components
 
-        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -341,7 +531,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_back_to_components
 
-        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -351,7 +541,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_back_to_components
 
-        expect(page).to have_current_path("/admin/config/customize/components")
+        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -359,7 +549,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_edit_code
 
-        expect(page).to have_current_path(%r{/#{component.id}/common/scss/edit})
+        expect(browser_page).to PlaywrightMatchers.have_url(%r{/#{component.id}/common/scss/edit})
         expect(dialog).to be_closed
       end
 
@@ -375,22 +565,24 @@ describe "Admin Customize Themes" do
         it "lets the admin stay on the page" do
           theme_page.visit(component).fill_in_setting("greeting", "howdy")
           theme_page.click_back_to_components
-          expect(dialog).to have_content(unsaved_warning)
+          expect(dialog).to have_displayed_content(unsaved_warning)
 
           dialog.click_no
-          expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
+          expect(browser_page).to PlaywrightMatchers.have_url(
+            "/admin/customize/themes/#{component.id}",
+          )
           expect(theme_page).to have_setting_value("greeting", "howdy")
         end
 
         it "discards the changes when leaving" do
           theme_page.visit(component).fill_in_setting("greeting", "howdy")
           theme_page.click_back_to_components
-          expect(dialog).to have_content(unsaved_warning)
+          expect(dialog).to have_displayed_content(unsaved_warning)
 
           dialog.click_danger
-          expect(page).to have_current_path("/admin/config/customize/components")
+          expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
 
-          page.go_back
+          browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(theme_page).to have_setting_value("greeting", "hello")
         end
       end
@@ -402,7 +594,7 @@ describe "Admin Customize Themes" do
         theme_page.parent_themes_selector.collapse
         theme_page.click_back_to_components
 
-        expect(dialog).to have_content(
+        expect(dialog).to have_displayed_content(
           I18n.t("admin_js.admin.customize.theme.unsaved_changes_alert"),
         )
       end
@@ -411,7 +603,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_delete_button_and_confirm
 
-        expect(page).to have_current_path("/admin/config/customize/themes")
+        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
         expect(dialog).to be_closed
       end
     end
@@ -441,24 +633,63 @@ describe "Admin Customize Themes" do
       new_url = "https://github.com/discourse/some-other-theme.git"
 
       theme_page.visit(git_theme)
-      find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
+      browser_root
+        .locator("button")
+        .filter(visible: true)
+        .filter(
+          hasText:
+            browser_text_pattern(I18n.t("admin_js.admin.customize.theme.change_source.button")),
+        )
+        .click
 
-      expect(page).to have_css(".admin-change-theme-source-modal")
-      expect(find(".admin-change-theme-source-modal input.repo-url").value).to eq(
-        "https://github.com/discourse/example-theme.git",
-      )
-      expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
+      expect(
+        browser_root.locator(".admin-change-theme-source-modal").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root
+          .locator(".admin-change-theme-source-modal input.repo-url")
+          .filter(visible: true)
+          .input_value,
+      ).to eq("https://github.com/discourse/example-theme.git")
+      expect(
+        browser_root
+          .locator(".admin-change-theme-source-modal input.branch")
+          .filter(visible: true)
+          .input_value,
+      ).to eq("main")
 
-      find(".admin-change-theme-source-modal input.repo-url").fill_in(with: new_url)
-      find(".admin-change-theme-source-modal button.btn-primary").click
+      browser_root
+        .locator(".admin-change-theme-source-modal input.repo-url")
+        .filter(visible: true)
+        .fill(new_url)
+      browser_root
+        .locator(".admin-change-theme-source-modal button.btn-primary")
+        .filter(visible: true)
+        .click
 
-      expect(page).to have_no_css(".admin-change-theme-source-modal")
+      expect(
+        browser_root.locator(".admin-change-theme-source-modal").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
       expect(git_theme.reload.remote_theme.remote_url).to eq(new_url)
     end
 
     it "does not show the change source button for local themes" do
       theme_page.visit(theme)
-      expect(page).to have_no_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+      expect(
+        browser_root
+          .get_by_role("button")
+          .and(
+            browser_root.locator(
+              "[id=#{I18n.t("admin_js.admin.customize.theme.change_source.button").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.change_source.button").to_s.to_json}]",
+            ).or(
+              browser_root.get_by_role(
+                "button",
+                name: I18n.t("admin_js.admin.customize.theme.change_source.button"),
+              ),
+            ),
+          )
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -487,9 +718,16 @@ describe "Admin Customize Themes" do
       icon_picker.filter("gamepad")
       icon_picker.select_icon("gamepad")
 
-      find(".setting[data-setting='icon_setting'] .setting-controls__ok").click
+      browser_root
+        .locator(".setting[data-setting='icon_setting'] .setting-controls__ok")
+        .filter(visible: true)
+        .click
 
-      expect(page).to have_no_css(".setting[data-setting='icon_setting'] .setting-controls__ok")
+      expect(
+        browser_root.locator(".setting[data-setting='icon_setting'] .setting-controls__ok").filter(
+          visible: true,
+        ),
+      ).to PlaywrightMatchers.have_count(0)
       expect(theme.reload.settings[:icon_setting].value).to eq("gamepad")
     end
   end
@@ -502,8 +740,9 @@ describe "Admin Customize Themes" do
       end
       theme_page.toggle_theme_site_setting("enable_welcome_banner")
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
-      expect(page).to have_content(
-        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved")),
+        useInnerText: true,
       )
       expect(
         ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
@@ -520,8 +759,9 @@ describe "Admin Customize Themes" do
       theme_page.visit(theme.id)
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
       theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")
-      expect(page).to have_content(
-        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved")),
+        useInnerText: true,
       )
       expect(
         ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
@@ -551,25 +791,25 @@ describe "Admin Customize Themes" do
       Theme.clear_cache!
 
       sign_in(other_user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner).to be_visible
 
       # A sanity check.
-      expect(page).to have_css(
-        "meta[name=discourse_theme_id][content='#{theme.id}']",
-        visible: false,
-      )
+      expect(
+        browser_root.locator("meta[name=discourse_theme_id][content='#{theme.id}']"),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Wait for the `/client_settings` subscription's first poll to finish.
       try_until_success do
         expect(
-          page.evaluate_script(
-            "window.MessageBus.callbacks.find((c) => c.channel === '/client_settings')?.last_id ?? -1",
+          browser_page.evaluate(
+            "function(arguments) { return window.MessageBus.callbacks.find((c) => c.channel === '/client_settings')?.last_id ?? -1 }",
+            arg: [],
           ),
         ).to be >= 0
       end
 
-      using_session(:admin) do
+      using_browser_session(:admin) do
         sign_in(admin)
         theme_page.visit(theme.id)
         theme_page.toggle_theme_site_setting("enable_welcome_banner")

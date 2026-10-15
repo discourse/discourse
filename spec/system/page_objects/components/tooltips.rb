@@ -11,20 +11,40 @@ module PageObjects
         @identifier = identifier
       end
 
-      def element(**kwargs)
-        page.find("#{SELECTOR}[data-identifier='#{identifier}']", **kwargs)
+      def element(visible: true)
+        browser_root.locator("#{SELECTOR}[data-identifier='#{identifier}']").filter(
+          visible: visible,
+        )
       end
 
-      def find(selector, **kwargs)
-        page.find("#{SELECTOR}[data-identifier='#{identifier}'] #{selector}", **kwargs)
+      def find(selector, visible: true)
+        element(visible: visible).locator(selector).filter(visible: visible)
       end
 
-      def present?(**kwargs)
-        page.has_selector?("#{SELECTOR}[data-identifier='#{identifier}']", **kwargs)
+      def present?(text: nil, visible: true, wait: Capybara.default_max_wait_time)
+        target = element(visible: visible)
+        if text
+          PlaywrightMatchers.contain_text(
+            [text],
+            useInnerText: true,
+            timeout: wait * 1000,
+          ).matches?(target)
+        else
+          PlaywrightMatchers.have_count(0, timeout: wait * 1000).does_not_match?(target)
+        end
       end
 
-      def not_present?(**kwargs)
-        page.has_no_selector?("#{SELECTOR}[data-identifier='#{identifier}']", **kwargs)
+      def not_present?(text: nil, visible: true, wait: Capybara.default_max_wait_time)
+        target = element(visible: visible)
+        if text
+          PlaywrightMatchers.contain_text(
+            [text],
+            useInnerText: true,
+            timeout: wait * 1000,
+          ).does_not_match?(target)
+        else
+          PlaywrightMatchers.have_count(0, timeout: wait * 1000).matches?(target)
+        end
       end
     end
   end

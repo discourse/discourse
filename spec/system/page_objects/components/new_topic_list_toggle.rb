@@ -10,11 +10,15 @@ module PageObjects
       TOPICS_SELECTOR = "#{COMMON_SELECTOR}.--topics"
 
       def not_rendered?
-        has_no_css?(COMMON_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(COMMON_SELECTOR).filter(visible: true),
+        )
       end
 
       def rendered?
-        has_css?(COMMON_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(COMMON_SELECTOR).filter(visible: true),
+        )
       end
 
       def all_tab

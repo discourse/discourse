@@ -8,13 +8,13 @@ describe "Viewing sidebar mobile", mobile: true do
   before { sign_in(user) }
 
   it "does not display the sidebar by default" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar_dropdown).to be_hidden
   end
 
   it "does not display the keyboard shortcuts button" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar_dropdown.click
 
@@ -23,7 +23,7 @@ describe "Viewing sidebar mobile", mobile: true do
   end
 
   it "collapses the sidebar when clicking outside of it" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar_dropdown.click
 
@@ -35,7 +35,7 @@ describe "Viewing sidebar mobile", mobile: true do
   end
 
   it "collapses the sidebar when clicking on a link in the sidebar" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar_dropdown.click
 
@@ -47,7 +47,7 @@ describe "Viewing sidebar mobile", mobile: true do
   end
 
   it "collapses the sidebar when clicking on a button in the sidebar" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar_dropdown.click
 

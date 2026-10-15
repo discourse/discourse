@@ -16,7 +16,7 @@ describe "Tag search: disabled hints" do
 
   def open_topic_for_edit(topic, post)
     sign_in(admin)
-    visit topic.url
+    browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
     topic_page.click_post_action_button(post, :edit)
     expect(composer).to be_opened
   end
@@ -66,7 +66,7 @@ describe "Tag search: disabled hints" do
 
       it "marks the child tag as disabled" do
         sign_in(admin)
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(composer).to be_opened
 
         composer_tag_chooser.expand
@@ -82,7 +82,7 @@ describe "Tag search: disabled hints" do
 
       it "shows the synonym as selectable with a hint pointing to the target tag" do
         sign_in(admin)
-        visit "/new-topic"
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(composer).to be_opened
 
         composer_tag_chooser.expand
@@ -109,7 +109,7 @@ describe "Tag search: disabled hints" do
 
     it "shows disabled rows with a visible reason" do
       sign_in(admin)
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topic)
       topic_list_header.click_bulk_select_topics_dropdown

@@ -11,12 +11,12 @@ describe "Navigation menu states" do
     before { SiteSetting.navigation_menu = "header dropdown" }
 
     it "does not show the sidebar" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(sidebar_navigation).to be_not_visible
     end
 
     it "opens and closes the hamburger menu from the toggle" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(header_dropdown).to be_visible
       header_dropdown.open
       expect(header_dropdown).to have_dropdown_visible
@@ -30,17 +30,23 @@ describe "Navigation menu states" do
       fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
 
       it "shows the sidebar and allows toggling it" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar_navigation).to be_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_not_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_visible
-        expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-discourse-sidebar")
+        expect(
+          browser_root
+            .locator(sidebar_navigation.header_toggle_css)
+            .filter(visible: true)
+            .locator(".d-icon-discourse-sidebar")
+            .filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL only" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(header_dropdown).to be_visible
         header_dropdown.open
         expect(header_dropdown).to have_dropdown_visible
@@ -51,11 +57,13 @@ describe "Navigation menu states" do
       end
 
       it "shows the sidebar on other admin pages" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar_navigation).to be_visible
-        visit "/admin/site_settings/category/all_results"
+        browser_page
+          .goto("/admin/site_settings/category/all_results")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar_navigation).to be_visible
-        visit "/admin/reports"
+        browser_page.goto("/admin/reports").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar_navigation).to be_visible
       end
     end
@@ -65,17 +73,17 @@ describe "Navigation menu states" do
     before { SiteSetting.navigation_menu = "sidebar" }
 
     it "shows the sidebar" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(sidebar_navigation).to be_visible
     end
 
     it "does not show the hamburger menu" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(header_dropdown).to be_not_visible
     end
 
     it "opens and closes the sidebar from the toggle" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar_navigation.click_header_toggle
       expect(sidebar_navigation).to be_not_visible
       sidebar_navigation.click_header_toggle
@@ -86,17 +94,23 @@ describe "Navigation menu states" do
       fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
 
       it "shows the sidebar and allows toggling it" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar_navigation).to be_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_not_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_visible
-        expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-bars")
+        expect(
+          browser_root
+            .locator(sidebar_navigation.header_toggle_css)
+            .filter(visible: true)
+            .locator(".d-icon-bars")
+            .filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
 
       it "does not show the hamburger menu" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(header_dropdown).to be_not_visible
       end
     end

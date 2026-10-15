@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Nested view real-time updates" do
+RSpec.describe "Nested view real-time updates", native_playwright: true do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
@@ -10,8 +10,8 @@ RSpec.describe "Nested view real-time updates" do
     Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Existing root reply")
   end
 
-  let(:nested_view) { PageObjects::Pages::NestedView.new }
-  let(:activity_log) { PageObjects::Components::NestedActivityLog.new }
+  let(:nested_view) { browser_page.locator(".nested-view:visible") }
+  let(:activity_log) { browser_page.locator(".nested-activity-log-modal") }
 
   before do
     SiteSetting.nested_replies_enabled = true
@@ -19,11 +19,23 @@ RSpec.describe "Nested view real-time updates" do
     sign_in(user)
   end
 
+  private
+
+  def visit_nested
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+  end
+
   describe "new root post by another user" do
     it "shows new replies notification banner and loads posts on click" do
-      nested_view.visit_nested(topic)
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_root_post(root_reply)
+      visit_nested
+      expect(nested_view).to PlaywrightMatchers.be_visible
+      expect(
+        browser_page.locator(
+          ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
+        ),
+      ).to PlaywrightMatchers.have_count(1)
 
       # Create a root post via PostCreator which triggers MessageBus
       PostCreator.create!(
@@ -32,20 +44,31 @@ RSpec.describe "Nested view real-time updates" do
         raw: "A brand new root reply from another user",
       )
 
-      expect(page).to have_css(".nested-view__new-replies-btn", wait: 10)
+      expect(
+        browser_page.locator(".nested-view__new-replies-btn:visible"),
+      ).to PlaywrightMatchers.have_count(1, timeout: 10_000)
 
-      find(".nested-view__new-replies-btn").click
+      browser_page.locator(".nested-view__new-replies-btn:visible").click
 
-      expect(page).to have_no_css(".nested-view__new-replies-btn")
-      expect(page).to have_content("A brand new root reply from another user")
+      expect(
+        browser_page.locator(".nested-view__new-replies-btn:visible"),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_page.locator("body")).to PlaywrightMatchers.contain_text(
+        "A brand new root reply from another user",
+        useInnerText: true,
+      )
     end
   end
 
   describe "new child reply by another user" do
     it "shows the new child in the tree" do
-      nested_view.visit_nested(topic)
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_root_post(root_reply)
+      visit_nested
+      expect(nested_view).to PlaywrightMatchers.be_visible
+      expect(
+        browser_page.locator(
+          ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
+        ),
+      ).to PlaywrightMatchers.have_count(1)
 
       new_child =
         PostCreator.create!(
@@ -55,10 +78,12 @@ RSpec.describe "Nested view real-time updates" do
           raw: "A child reply via message bus",
         )
 
-      expect(page).to have_css(
-        "[data-post-number='#{new_child.post_number}']",
-        text: "A child reply via message bus",
-        wait: 10,
+      expect(
+        browser_page.locator("[data-post-number='#{new_child.post_number}']:visible"),
+      ).to PlaywrightMatchers.contain_text(
+        "A child reply via message bus",
+        useInnerText: true,
+        timeout: 10_000,
       )
     end
   end
@@ -94,11 +119,15 @@ RSpec.describe "Nested view real-time updates" do
     before { Fabricate(:nested_topic, topic: other_topic) }
 
     it "ignores stale created events for posts from a different topic" do
-      nested_view.visit_nested(topic)
-      expect(nested_view).to have_nested_view
-      expect(page).to have_content("Legitimate child reply")
+      visit_nested
+      expect(nested_view).to PlaywrightMatchers.be_visible
+      expect(browser_page.locator("body")).to PlaywrightMatchers.contain_text(
+        "Legitimate child reply",
+        useInnerText: true,
+      )
 
-      page.execute_script(<<~JS)
+      browser_page.evaluate(<<~JS)
+        () => {
         window.__stalePostLookupFinished = false;
         jQuery(document).one("ajaxComplete", (_event, _xhr, settings) => {
           if (settings.url.includes("/posts/#{wrong_topic_reply.id}.json")) {
@@ -110,34 +139,53 @@ RSpec.describe "Nested view real-time updates" do
           id: #{wrong_topic_reply.id},
           user_id: #{other_user.id}
         });
+        }
       JS
 
-      try_until_success(reason: "stale post lookup finishes") do
-        expect(page.evaluate_script("window.__stalePostLookupFinished")).to eq(true)
-      end
+      browser_page.wait_for_function(
+        "() => window.__stalePostLookupFinished === true",
+        timeout: Capybara.default_max_wait_time * 1000,
+      )
 
-      expect(page).to have_no_content("Wrong topic leaked reply")
+      expect(browser_page.locator("body")).not_to PlaywrightMatchers.contain_text(
+        "Wrong topic leaked reply",
+        useInnerText: true,
+      )
     end
   end
 
   describe "small_action posts" do
     it "adds the activity link and updates the modal without inserting the action into the tree" do
-      nested_view.visit_nested(topic)
-      expect(nested_view).to have_root_post(root_reply)
-      expect(nested_view).to have_no_activity_log_link
+      visit_nested
+      expect(
+        browser_page.locator(
+          ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
+        ),
+      ).to PlaywrightMatchers.have_count(1)
+      expect(
+        browser_page.locator(".nested-view__activity-link:visible"),
+      ).to PlaywrightMatchers.have_count(0)
 
       small_action = topic.add_small_action(admin, "closed.enabled")
 
-      expect(nested_view).to have_activity_log_link
-      expect(page).to have_no_css("[data-post-number='#{small_action.post_number}']")
+      expect(
+        browser_page.locator(".nested-view__activity-link:visible"),
+      ).to PlaywrightMatchers.have_count(1, timeout: 10_000)
+      expect(
+        browser_page.locator("[data-post-number='#{small_action.post_number}']:visible"),
+      ).to PlaywrightMatchers.have_count(0)
 
-      nested_view.open_activity_log
-      expect(activity_log).to have_item(small_action)
+      browser_page.locator(".nested-view__activity-link:visible").click
+      expect(
+        activity_log.locator("[data-post-id='#{small_action.id}']:visible"),
+      ).to PlaywrightMatchers.have_count(1)
 
       revised = PostRevisor.new(small_action)
       revised.revise!(admin, raw: "Updated through the message bus")
 
-      expect(activity_log).to have_item_text(small_action, "Updated through the message bus")
+      expect(
+        activity_log.locator("[data-post-id='#{small_action.id}']:visible"),
+      ).to PlaywrightMatchers.contain_text("Updated through the message bus", useInnerText: true)
     end
   end
 end

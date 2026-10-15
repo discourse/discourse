@@ -6,30 +6,44 @@ module PageObjects
       TOOLBAR_SELECTOR = "[data-identifier='composer-preview-toolbar']"
 
       def has_toolbar?
-        page.has_css?(TOOLBAR_SELECTOR)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_toolbar?
-        page.has_no_css?(TOOLBAR_SELECTOR)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
+        )
       end
 
       def click_show_source
-        page.find("#{TOOLBAR_SELECTOR} button.composer-preview-toolbar__show-source").click
+        browser_root
+          .locator("#{TOOLBAR_SELECTOR} button.composer-preview-toolbar__show-source")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_show_preview
-        page.find("#{TOOLBAR_SELECTOR} button.composer-preview-toolbar__show-preview").click
+        browser_root
+          .locator("#{TOOLBAR_SELECTOR} button.composer-preview-toolbar__show-preview")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_control(class_name)
-        page.find("#{TOOLBAR_SELECTOR} button.#{class_name}").click
+        browser_root.locator("#{TOOLBAR_SELECTOR} button.#{class_name}").filter(visible: true).click
         self
       end
 
       def has_focused_control?(class_name)
-        page.has_css?("#{TOOLBAR_SELECTOR} button.#{class_name}:focus")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#{TOOLBAR_SELECTOR} button.#{class_name}:focus").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

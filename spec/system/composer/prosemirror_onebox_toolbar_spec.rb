@@ -34,10 +34,12 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.allow_clipboard
       open_composer
       cdp.copy_paste("https://example.com")
-      page.send_keys(:enter)
+      browser_page.keyboard.press("Enter")
 
-      expect(rich).to have_css("div.onebox-wrapper")
-      rich.find("div.onebox-wrapper").click
+      expect(
+        rich.locator("div.onebox-wrapper").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("div.onebox-wrapper").filter(visible: true).click
 
       expect(onebox_toolbar).to have_toolbar
       expect(onebox_toolbar).to have_copy_button
@@ -49,14 +51,28 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.allow_clipboard
       open_composer
       cdp.copy_paste("https://example.com")
-      page.send_keys(:enter)
+      browser_page.keyboard.press("Enter")
 
-      expect(rich).to have_css("div.onebox-wrapper")
-      rich.find("div.onebox-wrapper").click
+      expect(
+        rich.locator("div.onebox-wrapper").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
-      expect(rich).to have_no_css("div.onebox-wrapper")
-      expect(rich).to have_css("a[href='https://example.com']", text: "https://example.com")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("div.onebox-wrapper")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator("a[href='https://example.com']").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("https://example.com")],
+        useInnerText: true,
+      )
 
       composer.toggle_rich_editor
       expect(composer).to have_value("<https://example.com>")
@@ -66,19 +82,37 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.allow_clipboard
       open_composer
       cdp.copy_paste("https://example.com")
-      page.send_keys(:enter)
+      browser_page.keyboard.press("Enter")
 
-      expect(rich).to have_css("div.onebox-wrapper")
-      rich.find("div.onebox-wrapper").click
+      expect(
+        rich.locator("div.onebox-wrapper").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
-      expect(rich).to have_no_css("div.onebox-wrapper")
-      expect(rich).to have_css("a[href='https://example.com']")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("div.onebox-wrapper")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator("a[href='https://example.com']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
 
       # Move cursor away and back — should not re-onebox
       composer.type_content(:enter)
       composer.type_content("some more text")
-      expect(rich).to have_no_css("div.onebox-wrapper")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("div.onebox-wrapper")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -90,8 +124,10 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(rich).to have_css("a.inline-onebox")
-      rich.find("a.inline-onebox").click
+      expect(
+        rich.locator("a.inline-onebox").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("a.inline-onebox").filter(visible: true).click
 
       expect(onebox_toolbar).to have_toolbar
       expect(onebox_toolbar).to have_copy_button
@@ -105,12 +141,29 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(rich).to have_css("a.inline-onebox", text: "Example Site")
-      rich.find("a.inline-onebox").click
+      expect(
+        rich.locator("a.inline-onebox").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("Example Site")],
+        useInnerText: true,
+      )
+      rich.locator("a.inline-onebox").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
-      expect(rich).to have_no_css("a.inline-onebox")
-      expect(rich).to have_css("a[href='https://example.com/x']", text: "https://example.com/x")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.inline-onebox")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        rich.locator("a[href='https://example.com/x']").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("https://example.com/x")],
+        useInnerText: true,
+      )
     end
   end
 
@@ -119,18 +172,31 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.allow_clipboard
       open_composer
       cdp.copy_paste("https://example.com")
-      page.send_keys(:enter)
+      browser_page.keyboard.press("Enter")
 
-      expect(rich).to have_css("div.onebox-wrapper")
-      rich.find("div.onebox-wrapper").click
+      expect(
+        rich.locator("div.onebox-wrapper").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
-      expect(rich).to have_no_css("div.onebox-wrapper")
-      rich.find("a[href='https://example.com']").click
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("div.onebox-wrapper")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      rich.locator("a[href='https://example.com']").filter(visible: true).click
 
-      expect(page).to have_css("button.composer-link-toolbar__show-preview")
-      find("button.composer-link-toolbar__show-preview").click
-      expect(rich).to have_css("div.onebox-wrapper")
+      expect(
+        browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true).click
+      expect(
+        rich.locator("div.onebox-wrapper").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "re-oneboxes an inline onebox when clicking show preview" do
@@ -140,16 +206,29 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(rich).to have_css("a.inline-onebox")
-      rich.find("a.inline-onebox").click
+      expect(
+        rich.locator("a.inline-onebox").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      rich.locator("a.inline-onebox").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
-      expect(rich).to have_no_css("a.inline-onebox")
-      rich.find("a[href='https://example.com/x']").click
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.inline-onebox")
+          .filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      rich.locator("a[href='https://example.com/x']").filter(visible: true).click
 
-      expect(page).to have_css("button.composer-link-toolbar__show-preview")
-      find("button.composer-link-toolbar__show-preview").click
-      expect(rich).to have_css("a.inline-onebox")
+      expect(
+        browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true).click
+      expect(
+        rich.locator("a.inline-onebox").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

@@ -6,9 +6,19 @@ describe "hide_user_profiles_from_public" do
   before { SiteSetting.hide_user_profiles_from_public = true }
 
   it "displays an error when navigating straight to a profile" do
-    visit("/u/#{user.username}")
-    expect(page).to have_css(".error-page .reason", text: I18n.t("js.errors.reasons.forbidden"))
-    expect(page).to have_css(".error-page .desc", text: I18n.t("js.user.login_to_view_profile"))
+    browser_page.goto("/u/#{user.username}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator(".error-page .reason").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("js.errors.reasons.forbidden"))],
+      useInnerText: true,
+    )
+    expect(
+      browser_root.locator(".error-page .desc").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("js.user.login_to_view_profile"))],
+      useInnerText: true,
+    )
   end
 
   it "displays an error when navigating from an internal link" do
@@ -18,14 +28,32 @@ describe "hide_user_profiles_from_public" do
         user: user,
         raw: "Check out my profile at [#{user.username}](/u/#{user.username})",
       )
-    visit(post.url)
-    find(".cooked a[href='/u/#{user.username}']").click
+    browser_page.goto(post.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator(".cooked a[href='/u/#{user.username}']").filter(visible: true).click
 
-    expect(page).to have_css(".error-page .reason", text: I18n.t("js.errors.reasons.forbidden"))
-    expect(page).to have_css(".error-page .desc", text: I18n.t("js.user.login_to_view_profile"))
-    expect(page).to have_current_path("/u/#{user.username}")
+    expect(
+      browser_root.locator(".error-page .reason").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("js.errors.reasons.forbidden"))],
+      useInnerText: true,
+    )
+    expect(
+      browser_root.locator(".error-page .desc").filter(visible: true),
+    ).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern(I18n.t("js.user.login_to_view_profile"))],
+      useInnerText: true,
+    )
+    expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}")
 
-    find(".error-page .buttons .btn-primary", text: "Back").click
-    expect(page).to have_current_path(post.url).or have_current_path(post.topic.relative_url)
+    browser_root
+      .locator(".error-page .buttons .btn-primary")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Back"))
+      .click
+    expect(browser_page).to PlaywrightMatchers.have_url(
+      Regexp.new(
+        "^(?:#{Regexp.escape(post.url)}|https?://[^/]+#{Regexp.escape(post.topic.relative_url)})$",
+      ),
+    )
   end
 end

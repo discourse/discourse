@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminWelcomeBannerConfig < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/config/welcome-banner")
+        browser_page
+          .goto("/admin/config/welcome-banner")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def form
@@ -12,12 +14,17 @@ module PageObjects
       end
 
       def has_locale_selector?
-        has_css?(".translation-selector")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".translation-selector").filter(visible: true),
+        )
       end
 
       def select_locale(locale_value)
-        find(".translation-selector").click
-        find(".select-kit-row[data-value='#{locale_value}']").click
+        browser_root.locator(".translation-selector").filter(visible: true).click
+        browser_root
+          .locator(".select-kit-row[data-value='#{locale_value}']")
+          .filter(visible: true)
+          .click
       end
 
       def header_new_members_value
@@ -37,7 +44,10 @@ module PageObjects
       end
 
       def has_saved_message?
-        page.has_content?(I18n.t("admin_js.admin.config.welcome_banner.saved"))
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("admin_js.admin.config.welcome_banner.saved")),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
     end
   end

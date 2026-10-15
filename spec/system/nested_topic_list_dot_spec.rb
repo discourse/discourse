@@ -27,13 +27,15 @@ RSpec.describe "Nested topic-list new-replies dot" do
   end
 
   it "shows the dot on the topic list and clears it after visiting the topic" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(topic_list).to have_new_replies_dot(topic)
 
     topic_list.click_topic_title(topic)
-    expect(page).to have_css(".nested-view")
+    expect(
+      browser_root.locator(".nested-view").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(topic_list).to have_no_new_replies_dot(topic)
   end
 end

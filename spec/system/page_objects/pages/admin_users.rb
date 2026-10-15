@@ -11,102 +11,159 @@ module PageObjects
         end
 
         def bulk_select_checkbox
-          element.find(".directory-table__cell-bulk-select")
+          element.locator(".directory-table__cell-bulk-select").filter(visible: true)
         end
 
         def has_bulk_select_checkbox?
-          element.has_css?(".directory-table__cell-bulk-select")
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            element.locator(".directory-table__cell-bulk-select").filter(visible: true),
+          )
         end
 
         def has_no_bulk_select_checkbox?
-          element.has_no_css?(".directory-table__cell-bulk-select")
+          PlaywrightMatchers.have_count(0).matches?(
+            element
+              .tap do |parent|
+                parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+              end
+              .locator(".directory-table__cell-bulk-select")
+              .filter(visible: true),
+          )
         end
 
         def username
-          element.find("a[href^='/admin/users']")
+          element.locator("a[href^='/admin/users']").filter(visible: true)
         end
       end
 
       def visit
-        page.visit("/admin/users/list/active")
+        browser_page
+          .goto("/admin/users/list/active")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def bulk_select_button
-        find(".btn.bulk-select")
+        browser_root.locator(".btn.bulk-select").filter(visible: true)
       end
 
       def bulk_select_all_button
-        find(".btn.bulk-select-all")
+        browser_root.locator(".btn.bulk-select-all").filter(visible: true)
       end
 
       def bulk_clear_all_button
-        find(".btn.bulk-clear-all")
+        browser_root.locator(".btn.bulk-clear-all").filter(visible: true)
       end
 
       def search_input
-        find(".d-filter-controls__input")
+        browser_root.locator(".d-filter-controls__input").filter(visible: true)
       end
 
       def user_row(id)
-        UserRow.new(find(".directory-table__row[data-user-id=\"#{id}\"]"))
-      end
-
-      def users_count
-        all(".directory-table__row").size
-      end
-
-      def has_correct_breadcrumbs?
-        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
-          [I18n.t("js.admin_title"), I18n.t("admin_js.admin.users.title")],
+        UserRow.new(
+          browser_root.locator(".directory-table__row[data-user-id=\"#{id}\"]").filter(
+            visible: true,
+          ),
         )
       end
 
+      def users_count
+        browser_root
+          .locator(".directory-table__row")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .size
+      end
+
+      def has_correct_breadcrumbs?
+        expect(
+          browser_root
+            .locator(".d-breadcrumbs__item")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip },
+        ).to eq([I18n.t("js.admin_title"), I18n.t("admin_js.admin.users.title")])
+      end
+
       def has_users?(user_ids)
-        user_ids.all? { |id| has_css?(".directory-table__row[data-user-id=\"#{id}\"]") }
+        user_ids.all? do |id|
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".directory-table__row[data-user-id=\"#{id}\"]").filter(
+              visible: true,
+            ),
+          )
+        end
       end
 
       def has_no_users?(user_ids)
-        user_ids.all? { |id| has_no_css?(".directory-table__row[data-user-id=\"#{id}\"]") }
+        user_ids.all? do |id|
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".directory-table__row[data-user-id=\"#{id}\"]").filter(
+              visible: true,
+            ),
+          )
+        end
       end
 
       def bulk_actions_dropdown
-        PageObjects::Components::DMenu.new(find(".bulk-select-admin-users-dropdown-trigger"))
+        PageObjects::Components::DMenu.new(
+          browser_root.locator(".bulk-select-admin-users-dropdown-trigger").filter(visible: true),
+        )
       end
 
       def has_bulk_actions_dropdown?
-        has_css?(".bulk-select-admin-users-dropdown-trigger")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".bulk-select-admin-users-dropdown-trigger").filter(visible: true),
+        )
       end
 
       def has_no_bulk_actions_dropdown?
-        has_no_css?(".bulk-select-admin-users-dropdown-trigger")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".bulk-select-admin-users-dropdown-trigger").filter(visible: true),
+        )
       end
 
       def has_usernames?(usernames)
-        expect(all(".directory-table__cell.username").map(&:text)).to eq(usernames)
+        expect(
+          browser_root
+            .locator(".directory-table__cell.username")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip },
+        ).to eq(usernames)
       end
 
       def has_none_users?
-        has_content?(I18n.t("js.search.no_results"))
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(I18n.t("js.search.no_results")),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def has_no_emails?
-        has_no_css?(".directory-table__column-header--email")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".directory-table__column-header--email").filter(visible: true),
+        )
       end
 
       def has_emails?
-        has_css?(".directory-table__column-header--email")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".directory-table__column-header--email").filter(visible: true),
+        )
       end
 
       def click_show_emails
-        find(".admin-users__subheader-show-emails").click
+        browser_root.locator(".admin-users__subheader-show-emails").filter(visible: true).click
       end
 
       def click_send_invites
-        find(".admin-users__header-send-invites").click
+        browser_root.locator(".admin-users__header-send-invites").filter(visible: true).click
       end
 
       def click_export
-        find(".admin-users__header-export-users").click
+        browser_root.locator(".admin-users__header-export-users").filter(visible: true).click
       end
     end
   end

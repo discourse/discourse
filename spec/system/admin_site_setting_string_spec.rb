@@ -19,7 +19,7 @@ describe "Admin site setting string" do
 
     expect(settings_page).to have_overridden_setting("company_name", value: "Acme")
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(settings_page).to have_overridden_setting("company_name", value: "Acme")
   end
@@ -28,10 +28,20 @@ describe "Admin site setting string" do
     settings_page.visit("github_client_secret")
     settings_page.fill_setting("github_client_secret", "s3cr3t")
 
-    expect(settings_page.secret_setting_input("github_client_secret")[:type]).to eq("password")
+    expect(
+      settings_page.secret_setting_input("github_client_secret").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "type",
+      ),
+    ).to eq("password")
 
     settings_page.reveal_secret_setting("github_client_secret")
 
-    expect(settings_page.secret_setting_input("github_client_secret")[:type]).to eq("text")
+    expect(
+      settings_page.secret_setting_input("github_client_secret").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "type",
+      ),
+    ).to eq("text")
   end
 end

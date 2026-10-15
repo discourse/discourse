@@ -52,7 +52,12 @@ RSpec.describe "Nested view" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_op_post
-      expect(page).to have_css(".nested-view__op", text: "This is the original post content")
+      expect(
+        browser_root.locator(".nested-view__op").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("This is the original post content")],
+        useInnerText: true,
+      )
     end
   end
 
@@ -67,40 +72,43 @@ RSpec.describe "Nested view" do
     end
 
     it "lets the user reopen a nested topic after going back to the list" do
-      page.visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(topic)
 
       topic_list.visit_topic(topic)
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
 
-      page.go_back
+      browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(topic)
 
       topic_list.visit_topic(topic)
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
     end
 
     it "returns the user to their previous position with browser forward" do
-      page.visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(topic)
 
       topic_list.visit_topic(topic)
       expect(nested_view).to have_nested_view
 
       nested_view.scroll_post_near_top(root_reply)
-      previous_scroll_y = page.evaluate_script("window.scrollY")
+      previous_scroll_y =
+        browser_page.evaluate("function(arguments) { return window.scrollY }", arg: [])
 
-      page.go_back
+      browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topic(topic)
 
-      page.go_forward
+      browser_page.go_forward.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(nested_view).to have_nested_view
       try_until_success(reason: "nested topic cache restores after browser forward") do
-        expect(page.evaluate_script("window.scrollY")).to be_within(250).of(previous_scroll_y)
+        expect(
+          browser_page.evaluate("function(arguments) { return window.scrollY }", arg: []),
+        ).to be_within(250).of(previous_scroll_y)
       end
     end
   end
@@ -168,7 +176,12 @@ RSpec.describe "Nested view" do
       nested_view.click_save_edit_topic
 
       expect(nested_view).to have_no_topic_title_editor
-      expect(page).to have_css(".nested-view__title", text: "Updated Topic Title")
+      expect(
+        browser_root.locator(".nested-view__title").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("Updated Topic Title")],
+        useInnerText: true,
+      )
     end
   end
 
@@ -198,7 +211,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_post_edit_button(root_reply)
       expect(composer).to be_opened
-      expect(composer).to have_content("My editable reply")
+      expect(composer).to have_displayed_content("My editable reply")
     end
 
     it "opens the composer when editing the OP" do
@@ -209,7 +222,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_post_edit_button(op)
       expect(composer).to be_opened
-      expect(composer).to have_content("Original post content that is long enough")
+      expect(composer).to have_displayed_content("Original post content that is long enough")
     end
   end
 
@@ -218,7 +231,12 @@ RSpec.describe "Nested view" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_nested_view
-      expect(page).to have_css(".nested-view__empty", text: "No replies yet.")
+      expect(
+        browser_root.locator(".nested-view__empty").filter(visible: true),
+      ).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("No replies yet.")],
+        useInnerText: true,
+      )
     end
   end
 
@@ -249,25 +267,30 @@ RSpec.describe "Nested view" do
 
       nested_view.click_sort("new")
       expect(nested_view).to have_sort_active("new")
-      expect(page).to have_current_path(/sort=new/)
+      expect(browser_page).to PlaywrightMatchers.have_url(/sort=new/)
 
       nested_view.click_sort("old")
       expect(nested_view).to have_sort_active("old")
-      expect(page).to have_current_path(/sort=old/)
+      expect(browser_page).to PlaywrightMatchers.have_url(/sort=old/)
     end
 
     it "shows hot sorting only while its rollout gate is enabled" do
       nested_view.visit_nested(topic)
-      find(".nested-sort-selector__trigger").click
+      browser_root.locator(".nested-sort-selector__trigger").filter(visible: true).click
 
-      expect(page).to have_no_css(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.hot"))
+      expect(
+        browser_root.locator(".dropdown-menu .btn").filter(visible: true),
+      ).not_to PlaywrightMatchers.contain_text(
+        [browser_text_pattern(I18n.t("js.nested_replies.sort.hot"))],
+        useInnerText: true,
+      )
 
       SiteSetting.nested_replies_hot_sort_enabled = true
       nested_view.visit_nested(topic)
       nested_view.click_sort("hot")
 
       expect(nested_view).to have_sort_active("hot")
-      expect(page).to have_current_path(/sort=hot/)
+      expect(browser_page).to PlaywrightMatchers.have_url(/sort=hot/)
     end
   end
 
@@ -386,7 +409,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_replies_toggle(great_grandchild_reply)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         %r{/t/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
@@ -399,7 +422,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_focus_back
 
-      expect(page).to have_current_path(nested_path)
+      expect(browser_page).to PlaywrightMatchers.have_url(nested_path)
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
@@ -409,29 +432,31 @@ RSpec.describe "Nested view" do
       child_reply.update!(raw: "A child post\n\n#{("Scrollable child content.\n\n" * 30).strip}")
       child_reply.rebake!
 
-      page.visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       nested_view.visit_nested(topic)
       nested_view.scroll_post_near_top(great_grandchild_reply)
 
       previous_scroll_y = nested_view.trigger_replies_toggle(great_grandchild_reply)
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         %r{/t/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
 
-      page.go_back
+      browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}$})
+      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}$})
       expect(nested_view).to have_no_mobile_focus
       try_until_success(reason: "scroll anchor restores after focused view closes") do
-        expect(page.evaluate_script("window.scrollY")).to be_within(250).of(previous_scroll_y)
+        expect(
+          browser_page.evaluate("function(arguments) { return window.scrollY }", arg: []),
+        ).to be_within(250).of(previous_scroll_y)
       end
     end
 
     it "uses the focused branch UI for direct post URLs", mobile: true do
       nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to PlaywrightMatchers.have_url(
         %r{/t/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
@@ -441,7 +466,9 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_ancestor(child_reply)
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(browser_page).to PlaywrightMatchers.have_url(
+        %r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}},
+      )
       expect(nested_view).to have_mobile_ancestor(root_reply)
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
     end
@@ -453,7 +480,9 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_focus_back
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}(?:\?.*)?$})
+      expect(browser_page).to PlaywrightMatchers.have_url(
+        %r{/t/#{topic.slug}/#{topic.id}(?:\?.*)?$},
+      )
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(root_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
@@ -467,9 +496,13 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_ancestor_avatar(child_reply)
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(browser_page).to PlaywrightMatchers.have_url(
+        %r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}},
+      )
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
-      expect(page).to have_no_css(".user-card.show")
+      expect(
+        browser_root.locator(".user-card.show").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
 
     it "brings the parent branch control into view after opening hidden replies", mobile: true do
@@ -537,7 +570,7 @@ RSpec.describe "Nested view" do
 
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
     end
 
     it "direct URL with post_number loads context view" do
@@ -555,7 +588,7 @@ RSpec.describe "Nested view" do
       Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Public reply")
     end
 
-    before { Capybara.reset_sessions! }
+    before { reset_browser_sessions }
 
     it "allows anonymous users to view the nested view" do
       nested_view.visit_nested(topic)
@@ -577,7 +610,9 @@ RSpec.describe "Nested view" do
       nested_view.visit_nested(topic)
       nested_view.click_like_on_post(root_reply)
 
-      expect(page).to have_css(".login-fullpage")
+      expect(
+        browser_root.locator(".login-fullpage").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -600,7 +635,9 @@ RSpec.describe "Nested view" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_no_nested_view
-      expect(page).to have_css("#post_1")
+      expect(
+        browser_root.locator("#post_1").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 end

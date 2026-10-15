@@ -20,7 +20,7 @@ describe "Post replies" do
 
     it "supports pagination" do
       sign_in(user)
-      visit(topic.url)
+      browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       first_post.show_replies
 
@@ -50,7 +50,7 @@ describe "Post replies" do
 
     it "does not duplicate replies" do
       sign_in(user)
-      visit(topic.url)
+      browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       third_chained_reply.show_parent_posts
       expect(third_chained_reply).to have_parent_posts(count: 2)
@@ -74,14 +74,16 @@ describe "Post replies" do
 
     it "saves a no-op edit without errors" do
       sign_in(admin)
-      visit(topic.url)
+      browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       first_post.show_replies
       first_post.jump_to_reply(reply_1)
       reply_1_post.edit
       composer.submit
 
-      expect(page).to have_no_css(".dialog-body")
+      expect(
+        browser_root.locator(".dialog-body").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 end

@@ -19,10 +19,15 @@ describe "Staff writes only mode" do
     it "can login and post during staff writes only mode" do
       login_form.open.fill(username: moderator.username, password:).click_login
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-      expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled"))
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.staff_writes_only_mode.enabled")),
+        useInnerText: true,
+      )
 
-      page.visit "/new-topic"
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
 
@@ -34,8 +39,14 @@ describe "Staff writes only mode" do
 
       composer.create
 
-      expect(page).to have_content(title)
-      expect(page).to have_content(body)
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(title),
+        useInnerText: true,
+      )
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(body),
+        useInnerText: true,
+      )
     end
   end
 
@@ -45,18 +56,35 @@ describe "Staff writes only mode" do
     it "cannot login during staff writes only mode" do
       login_form.open.fill(username: user.username, password:).click_login
 
-      expect(page).not_to have_css(".header-dropdown-toggle.current-user")
-      expect(page).to have_css("input#login-account-name")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator("input#login-account-name").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
 
     it "can view topics but sees staff only mode message when not logged in" do
-      page.visit topic.url
+      browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_content(topic.title)
-      expect(page).to have_content(post.raw)
-      expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled_anonymous"))
-      expect(page).to have_css(".login-button")
-      expect(page).to have_no_css(".sign-up-button")
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(topic.title),
+        useInnerText: true,
+      )
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(post.raw),
+        useInnerText: true,
+      )
+      expect(browser_content).to PlaywrightMatchers.contain_text(
+        browser_text_pattern(I18n.t("js.staff_writes_only_mode.enabled_anonymous")),
+        useInnerText: true,
+      )
+      expect(
+        browser_root.locator(".login-button").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      expect(
+        browser_root.locator(".sign-up-button").filter(visible: true),
+      ).to PlaywrightMatchers.have_count(0)
     end
   end
 end

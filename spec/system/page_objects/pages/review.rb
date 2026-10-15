@@ -6,7 +6,9 @@ module PageObjects
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
 
       def visit_reviewable(reviewable)
-        page.visit("/review/#{reviewable.id}")
+        browser_page
+          .goto("/review/#{reviewable.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -22,7 +24,7 @@ module PageObjects
       end
 
       def select_bundled_action(reviewable, value, bundle_index: nil)
-        within(reviewable_by_id(reviewable.id)) do
+        within_browser(reviewable_by_id(reviewable.id)) do
           dropdown =
             if bundle_index
               PageObjects::Components::SelectKit.new(
@@ -36,8 +38,8 @@ module PageObjects
       end
 
       def select_action(reviewable, value)
-        within(reviewable_by_id(reviewable.id)) do
-          find(".reviewable-action.#{value.dasherize}").click
+        within_browser(reviewable_by_id(reviewable.id)) do
+          browser_root.locator(".reviewable-action.#{value.dasherize}").filter(visible: true).click
         end
       end
 
@@ -49,110 +51,170 @@ module PageObjects
       end
 
       def has_reviewable_action_dropdown?
-        page.has_css?(REVIEWABLE_ACTION_DROPDOWN)
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(REVIEWABLE_ACTION_DROPDOWN).filter(visible: true),
+        )
       end
 
       def has_no_reviewable_action_dropdown?
-        page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(REVIEWABLE_ACTION_DROPDOWN).filter(visible: true),
+        )
       end
 
       def has_no_reviewable_actions?(reviewable)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).matches?(
+            browser_root.locator(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       def has_reviewable_items?(count:)
-        page.has_css?(".review-item", count: count)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root.locator(".review-item").filter(visible: true),
+        )
       end
 
       def has_reviewable_with_rejection_reason?(reviewable, rejection_reason)
-        reviewable_by_id(reviewable.id).has_css?(
-          ".reviewable-user-details.reject-reason .value",
-          text: rejection_reason,
+        PlaywrightMatchers.contain_text(
+          [browser_text_pattern(rejection_reason)],
+          useInnerText: true,
+        ).matches?(
+          reviewable_by_id(reviewable.id).locator(
+            ".reviewable-user-details.reject-reason .value",
+          ).filter(visible: true),
         )
       end
 
       def has_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".user-scrub").filter(visible: true),
+          )
+        end
       end
 
       def click_scrub_user_button
-        find(".user-scrub").click
+        browser_root.locator(".user-scrub").filter(visible: true).click
       end
 
       def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".reviewable-user-details.scrubbed-by .value", text: scrubbed_by)
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(scrubbed_by)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".reviewable-user-details.scrubbed-by .value").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       def has_reviewable_with_scrubbed_reason?(reviewable, scrubbed_reason)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".reviewable-user-details.scrubbed-reason .value", text: scrubbed_reason)
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(scrubbed_reason)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".reviewable-user-details.scrubbed-reason .value").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       def has_reviewable_with_scrubbed_at?(reviewable, scrubbed_at)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".reviewable-user-details.scrubbed-at .value", text: scrubbed_at)
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(scrubbed_at)],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".reviewable-user-details.scrubbed-at .value").filter(
+              visible: true,
+            ),
+          )
         end
       end
 
       def has_no_error_dialog_visible?
-        page.has_no_css?("dialog-container .dialog-content")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator("dialog-container .dialog-content").filter(visible: true),
+        )
       end
 
       def click_ignore_all_unknown_reviewables
-        find(".unknown-reviewables__options button").click
-        find(".dialog-footer .btn-danger").click
+        browser_root.locator(".unknown-reviewables__options button").filter(visible: true).click
+        browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
       end
 
       def has_information_about_unknown_reviewables_visible?
-        page.has_css?(".unknown-reviewables")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".unknown-reviewables").filter(visible: true),
+        )
       end
 
       def has_no_information_about_unknown_reviewables_visible?
-        page.has_no_css?(".unknown-reviewables")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".unknown-reviewables").filter(visible: true),
+        )
       end
 
       def has_listing_for_unknown_reviewables_plugin?(reviewable_type, plugin_name)
-        page.has_css?(
-          ".unknown-reviewables ul li",
-          text:
-            I18n.t(
-              "js.review.unknown.reviewable_known_source",
-              reviewableType: reviewable_type,
-              pluginName: plugin_name,
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t(
+                "js.review.unknown.reviewable_known_source",
+                reviewableType: reviewable_type,
+                pluginName: plugin_name,
+              ),
             ),
-        )
+          ],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".unknown-reviewables ul li").filter(visible: true))
       end
 
       def has_listing_for_unknown_reviewables_unknown_source?(reviewable_type)
-        page.has_css?(
-          ".unknown-reviewables ul li",
-          text:
-            I18n.t("js.review.unknown.reviewable_unknown_source", reviewableType: reviewable_type),
-        )
+        PlaywrightMatchers.contain_text(
+          [
+            browser_text_pattern(
+              I18n.t(
+                "js.review.unknown.reviewable_unknown_source",
+                reviewableType: reviewable_type,
+              ),
+            ),
+          ],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".unknown-reviewables ul li").filter(visible: true))
       end
 
       def click_claim_reviewable
-        find(".reviewable-claimed-topic .claim").click
+        browser_root.locator(".reviewable-claimed-topic .claim").filter(visible: true).click
       end
 
       def click_unclaim_reviewable
-        find(".reviewable-claimed-topic .unclaim").click
+        browser_root.locator(".reviewable-claimed-topic .unclaim").filter(visible: true).click
       end
 
       def has_context_question?(reviewable, text)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".review-item__aside-title", text: text)
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).matches?(browser_root.locator(".review-item__aside-title").filter(visible: true))
         end
       end
 
       def has_no_context_question?(reviewable, text)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_no_css?(".review-item__aside-title", text: text)
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            [browser_text_pattern(text)],
+            useInnerText: true,
+          ).does_not_match?(browser_root.locator(".review-item__aside-title").filter(visible: true))
         end
       end
 
@@ -165,118 +227,206 @@ module PageObjects
       end
 
       def has_history_items?(count:)
-        page.has_css?(".timeline-event", count: count)
+        PlaywrightMatchers.have_count(count).matches?(
+          browser_root.locator(".timeline-event").filter(visible: true),
+        )
       end
 
       def has_claimed_history_item?(user)
-        page.has_css?(".timeline-event__icon .d-icon-user-plus") && page.has_text?("Claimed by")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".timeline-event__icon .d-icon-user-plus").filter(visible: true),
+        ) &&
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern("Claimed by"),
+            useInnerText: true,
+          ).matches?(browser_content)
       end
 
       def has_unclaimed_history_item?(user)
-        page.has_css?(".timeline-event__icon .d-icon-user-xmark") && page.has_text?("Unclaimed by")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".timeline-event__icon .d-icon-user-xmark").filter(visible: true),
+        ) &&
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern("Unclaimed by"),
+            useInnerText: true,
+          ).matches?(browser_content)
       end
 
       def has_created_at_history_item?
-        page.has_css?(".timeline-event__icon .d-icon-pen-to-square") &&
-          page.has_text?("Post created by")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".timeline-event__icon .d-icon-pen-to-square").filter(visible: true),
+        ) &&
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern("Post created by"),
+            useInnerText: true,
+          ).matches?(browser_content)
       end
 
       def click_timeline_tab
-        find(".action-list li.timeline").click
+        browser_root.locator(".action-list li.timeline").filter(visible: true).click
       end
 
       def click_insights_tab
-        find(".action-list li.insights").click
+        browser_root.locator(".action-list li.insights").filter(visible: true).click
       end
 
       def has_reviewable_with_status?(reviewable, status)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".review-item__status.--#{status}")
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".review-item__status.--#{status}").filter(visible: true),
+          )
         end
       end
 
       def has_reviewable_with_approved_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".review-item__status.--approved").filter(visible: true),
+          )
+        end
       end
 
       def has_reviewable_with_rejected_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".review-item__status.--rejected").filter(visible: true),
+          )
+        end
       end
 
       def has_rejected_item_in_timeline?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern("Rejected by"),
+            useInnerText: true,
+          ).matches?(browser_content)
+        end
       end
 
       def has_reviewable_with_pending_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".review-item__status.--pending").filter(visible: true),
+          )
+        end
       end
 
       def has_reviewable_with_ignored_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.have_count(0).does_not_match?(
+            browser_root.locator(".review-item__status.--ignored").filter(visible: true),
+          )
+        end
       end
 
       def has_approved_item_in_timeline?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
+        within_browser(reviewable_by_id(reviewable.id)) do
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern("Approved by"),
+            useInnerText: true,
+          ).matches?(browser_content)
+        end
       end
 
       def has_reviewables?(reviewables)
         reviewable_ids = reviewables.map(&:id)
-        page.has_css?(".review-item", count: reviewables.size) &&
-          reviewable_ids.all? { |id| page.has_css?(".review-item[data-reviewable-id='#{id}']") }
+        PlaywrightMatchers.have_count(reviewables.size).matches?(
+          browser_root.locator(".review-item").filter(visible: true),
+        ) &&
+          reviewable_ids.all? do |id|
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator(".review-item[data-reviewable-id='#{id}']").filter(
+                visible: true,
+              ),
+            )
+          end
       end
 
       def click_approve_user_button
-        find(".user-approve-user").click
+        browser_root.locator(".user-approve-user").filter(visible: true).click
       end
 
       def fill_post_content(content)
-        find(".d-editor-input").fill_in(with: content)
+        browser_root.locator(".d-editor-input").filter(visible: true).fill(content)
       end
 
       def save_post_edit
-        find(".reviewable-action.save-edit").click
+        browser_root.locator(".reviewable-action.save-edit").filter(visible: true).click
       end
 
       def has_ip_lookup_info?
-        page.has_css?(".reviewable-ip-lookup")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".reviewable-ip-lookup").filter(visible: true),
+        )
       end
 
       def has_no_ip_lookup_info?
-        page.has_no_css?(".reviewable-ip-lookup")
+        PlaywrightMatchers.have_count(0).matches?(
+          browser_root.locator(".reviewable-ip-lookup").filter(visible: true),
+        )
       end
 
       def has_ip_location?(location)
-        page.has_text?(location)
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(location),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def has_ip_hostname?(hostname)
-        page.has_text?(hostname)
+        PlaywrightMatchers.contain_text(
+          browser_text_pattern(hostname),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def has_ip_lookup_modal?
-        page.has_css?(".ip-lookup-other-accounts-modal")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator(".ip-lookup-other-accounts-modal").filter(visible: true),
+        )
       end
 
       def has_account_in_modal?(username)
-        within(".ip-lookup-other-accounts-modal") { page.has_text?(username) }
+        within_browser(
+          browser_root.locator(".ip-lookup-other-accounts-modal").filter(visible: true),
+        ) do
+          PlaywrightMatchers.contain_text(
+            browser_text_pattern(username),
+            useInnerText: true,
+          ).matches?(browser_content)
+        end
       end
 
       def has_other_accounts_link?(count:)
-        page.has_button?(I18n.t("js.ip_lookup.other_accounts_with_ip", count: count))
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("js.ip_lookup.other_accounts_with_ip", count: count).to_s.to_json}], [name=#{I18n.t("js.ip_lookup.other_accounts_with_ip", count: count).to_s.to_json}]",
+              ).or(
+                browser_root.get_by_role(
+                  "button",
+                  name: I18n.t("js.ip_lookup.other_accounts_with_ip", count: count),
+                ),
+              ),
+            )
+            .filter(visible: true),
+        )
       end
 
       def click_other_accounts_link
-        find(".ip-lookup-other-accounts-link").click
+        browser_root.locator(".ip-lookup-other-accounts-link").filter(visible: true).click
       end
 
       def click_edit_post_button
-        find(".reviewable-action.edit").click
+        browser_root.locator(".reviewable-action.edit").filter(visible: true).click
       end
 
       private
 
       def reviewable_by_id(id)
-        find(".review-item[data-reviewable-id=\"#{id}\"]")
+        browser_root.locator(".review-item[data-reviewable-id=\"#{id}\"]").filter(visible: true)
       end
 
       def reviewable_action_dropdown

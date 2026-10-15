@@ -29,9 +29,11 @@ describe "User activity scroll restoration" do
     position = activity_stream.scroll_position
 
     activity_stream.open_item(36)
-    expect(page).to have_css("#topic-title")
+    expect(
+      browser_root.locator("#topic-title").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    page.go_back
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(activity_stream).to have_items(count: 40)
 
     try_until_success(reason: "scroll position is restored") do

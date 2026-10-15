@@ -11,20 +11,30 @@ describe "Discourse Connect" do
 
   shared_examples "redirects to SSO" do
     it "redirects to SSO" do
-      wait_for { has_css?("#current-user") }
-      expect(page).to have_css("a[data-topic-id='#{private_topic.id}']")
+      wait_for do
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          browser_root.locator("#current-user").filter(visible: true),
+        )
+      end
+      expect(
+        browser_root.locator("a[data-topic-id='#{private_topic.id}']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
   shared_examples "shows the homepage" do
     it "shows the homepage" do
-      expect(page).to have_css("a[data-topic-id='#{topic.id}']")
+      expect(
+        browser_root.locator("a[data-topic-id='#{topic.id}']").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
   shared_examples "shows the login splash" do
     it "shows the login splash" do
-      expect(page).to have_css(".login-page")
+      expect(
+        browser_root.locator(".login-page").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
     end
   end
 
@@ -45,22 +55,24 @@ describe "Discourse Connect" do
         before { SiteSetting.auth_immediately = false }
 
         context "when visiting /" do
-          before { visit "/" }
+          before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it_behaves_like "shows the homepage"
         end
 
         context "when visiting / and clicking the login button" do
           before do
-            visit "/"
-            find(".login-button").click
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+            browser_root.locator(".login-button").filter(visible: true).click
           end
 
           it_behaves_like "redirects to SSO"
         end
 
         context "when visiting /login" do
-          before { visit "/login" }
+          before do
+            browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          end
 
           it_behaves_like "redirects to SSO"
         end
@@ -70,34 +82,40 @@ describe "Discourse Connect" do
         before { SiteSetting.auth_immediately = true }
 
         context "when visiting /" do
-          before { visit "/" }
+          before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it_behaves_like "shows the homepage"
         end
 
         context "when visiting / and clicking the login button" do
           before do
-            visit "/"
-            find(".login-button").click
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+            browser_root.locator(".login-button").filter(visible: true).click
           end
 
           it_behaves_like "redirects to SSO"
         end
 
         context "when visiting /login" do
-          before { visit "/login" }
+          before do
+            browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          end
 
           it_behaves_like "redirects to SSO"
         end
 
         it "redirects the user back to the landing URL" do
-          visit private_topic.url
+          browser_page.goto(private_topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-          find(".login-button").click
+          browser_root.locator(".login-button").filter(visible: true).click
 
-          wait_for { has_css?("#current-user") }
+          wait_for do
+            PlaywrightMatchers.have_count(0).does_not_match?(
+              browser_root.locator("#current-user").filter(visible: true),
+            )
+          end
 
-          expect(page).to have_current_path(private_topic.relative_url)
+          expect(browser_page).to PlaywrightMatchers.have_url(private_topic.relative_url)
         end
       end
     end
@@ -109,22 +127,24 @@ describe "Discourse Connect" do
         before { SiteSetting.auth_immediately = false }
 
         context "when visiting /" do
-          before { visit "/" }
+          before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it_behaves_like "shows the login splash"
         end
 
         context "when visiting / and clicking the login button" do
           before do
-            visit "/"
-            find(".login-button").click
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+            browser_root.locator(".login-button").filter(visible: true).click
           end
 
           it_behaves_like "redirects to SSO"
         end
 
         context "when visiting /login" do
-          before { visit "/login" }
+          before do
+            browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          end
 
           it_behaves_like "redirects to SSO"
         end
@@ -134,13 +154,15 @@ describe "Discourse Connect" do
         before { SiteSetting.auth_immediately = true }
 
         context "when visiting /" do
-          before { visit "/" }
+          before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it_behaves_like "redirects to SSO"
         end
 
         context "when visiting /login" do
-          before { visit "/login" }
+          before do
+            browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          end
 
           it_behaves_like "redirects to SSO"
         end

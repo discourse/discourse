@@ -11,19 +11,30 @@ module PageObjects
       end
 
       def permission
-        component.find("[data-permission]")["data-permission"]
+        component
+          .locator("[data-permission]")
+          .filter(visible: true)
+          .get_attribute("data-permission")
       end
 
       def has_permission?(permission)
-        component.has_css?("[data-permission='#{permission}']")
+        PlaywrightMatchers.have_count(0).does_not_match?(
+          component.locator("[data-permission='#{permission}']").filter(visible: true),
+        )
       end
 
       def has_available_permissions?(*permissions)
         menu = open_permission_menu
 
-        within(menu.portal_with_identifier_selector) do
-          has_css?(PERMISSION_OPTION_SELECTOR, count: permissions.length) &&
-            permissions.all? { |permission| has_css?(permission_option_selector(permission)) }
+        within_browser(menu.portal_with_identifier_selector) do
+          PlaywrightMatchers.have_count(permissions.length).matches?(
+            browser_root.locator(PERMISSION_OPTION_SELECTOR).filter(visible: true),
+          ) &&
+            permissions.all? do |permission|
+              PlaywrightMatchers.have_count(0).does_not_match?(
+                browser_root.locator(permission_option_selector(permission)).filter(visible: true),
+              )
+            end
         end
       end
 
@@ -42,12 +53,12 @@ module PageObjects
       private
 
       def component
-        find(@selector)
+        browser_root.locator(@selector).filter(visible: true)
       end
 
       def permission_menu
         PageObjects::Components::DMenu.new(
-          component.find(".d-access-control__permission"),
+          component.locator(".d-access-control__permission").filter(visible: true),
           PERMISSION_MENU_IDENTIFIER,
         )
       end

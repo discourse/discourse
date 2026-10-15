@@ -33,7 +33,9 @@ describe "Admin upcoming changes sidebar interaction" do
     upcoming_changes_page.visit
     sidebar.toggle_all_sections
 
-    expect(page).to have_css(form_templates_link_css)
+    expect(
+      browser_root.locator(form_templates_link_css).filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "removes the form templates sidebar link when the upcoming change is disabled" do
@@ -46,6 +48,8 @@ describe "Admin upcoming changes sidebar interaction" do
     upcoming_changes_page.visit
     sidebar.toggle_all_sections
 
-    expect(page).to have_no_css(form_templates_link_css)
+    expect(
+      browser_root.locator(form_templates_link_css).filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 end

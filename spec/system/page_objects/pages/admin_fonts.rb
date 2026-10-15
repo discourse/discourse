@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminFonts < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/config/fonts")
+        browser_page
+          .goto("/admin/config/fonts")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def form

@@ -14,10 +14,14 @@ describe "Viewing sidebar" do
       before { SiteSetting.navigation_menu = "header dropdown" }
 
       it "shows the sidebar while preserving the header dropdown" do
-        visit("/latest?navigation_menu=sidebar")
+        browser_page
+          .goto("/latest?navigation_menu=sidebar")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_visible
-        expect(page).to have_css(".hamburger-dropdown")
+        expect(
+          browser_root.locator(".hamburger-dropdown").filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -25,7 +29,9 @@ describe "Viewing sidebar" do
       before { SiteSetting.navigation_menu = "sidebar" }
 
       it "shows the header dropdown selected by the query parameter" do
-        visit("/latest?navigation_menu=header_dropdown")
+        browser_page
+          .goto("/latest?navigation_menu=header_dropdown")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_not_visible
 
@@ -55,9 +61,14 @@ describe "Viewing sidebar" do
 
       it "has correct translations" do
         sign_in user
-        visit("/latest")
-        links = page.all("#sidebar-section-content-community .sidebar-section-link-wrapper a")
-        expect(links.map(&:text)[0]).to eq("Tematy")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        links =
+          browser_root
+            .locator("#sidebar-section-content-community .sidebar-section-link-wrapper a")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+        expect(links.map { |element| element.inner_text.strip }[0]).to eq("Tematy")
         expect(links.map { |link| link[:title] }[0]).to eq("Wszystkie tematy")
       end
     end
@@ -71,25 +82,39 @@ describe "Viewing sidebar" do
       end
 
       it "toggles the more menu and handles click outside to close it" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        find(more_trigger_selector).click
+        browser_root.locator(more_trigger_selector).filter(visible: true).click
 
-        expect(page).to have_selector(more_links_selector, visible: true)
+        expect(
+          browser_root.locator(more_links_selector).filter(visible: true),
+        ).not_to PlaywrightMatchers.have_count(0)
 
-        expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='true']")
+        expect(
+          browser_root.locator("#{more_trigger_selector}[aria-expanded='true']").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
 
-        find(more_trigger_selector).click
+        browser_root.locator(more_trigger_selector).filter(visible: true).click
 
-        expect(page).not_to have_selector(more_links_selector)
+        expect(
+          browser_root.locator(more_links_selector).filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
 
-        expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='false']")
+        expect(
+          browser_root.locator("#{more_trigger_selector}[aria-expanded='false']").filter(
+            visible: true,
+          ),
+        ).not_to PlaywrightMatchers.have_count(0)
 
-        find(more_trigger_selector).click
+        browser_root.locator(more_trigger_selector).filter(visible: true).click
 
-        find(".d-header-wrap").click
+        browser_root.locator(".d-header-wrap").filter(visible: true).click
 
-        expect(page).not_to have_selector(more_links_selector)
+        expect(
+          browser_root.locator(more_links_selector).filter(visible: true),
+        ).to PlaywrightMatchers.have_count(0)
       end
     end
 
@@ -125,7 +150,7 @@ describe "Viewing sidebar" do
       it "hides the tags section when tagging is disabled" do
         SiteSetting.tagging_enabled = false
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_visible
         expect(sidebar).to have_no_tags_section
@@ -134,14 +159,14 @@ describe "Viewing sidebar" do
       it "hides the tags section when no tags are visible" do
         Tag.delete_all
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_visible
         expect(sidebar).to have_no_tags_section
       end
 
       it "shows top tags when the user has not configured tags" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_visible
         expect(sidebar).to have_tags_section
@@ -154,7 +179,7 @@ describe "Viewing sidebar" do
         Fabricate(:sidebar_section_link, linkable: tag1, user: user)
         Fabricate(:sidebar_section_link, linkable: tag2, user: user)
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to be_visible
         expect(sidebar).to have_tags_section
@@ -166,14 +191,14 @@ describe "Viewing sidebar" do
     describe "when My messages sidebar link" do
       it "shows for a user who can send private messages" do
         sign_in(admin)
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar).to have_my_messages_link
       end
 
       it "hides from a user who cannot send private messages" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:admins]
         sign_in(user)
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar).to have_no_my_messages_link
       end
 
@@ -188,7 +213,7 @@ describe "Viewing sidebar" do
 
         it "is translated" do
           sign_in(admin)
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(sidebar).to have_my_messages_link("Overrided")
         end
       end
@@ -201,14 +226,14 @@ describe "Viewing sidebar" do
 
         it "shows the new-messages indicator" do
           sign_in(admin)
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(sidebar).to have_my_messages_link_with_unread_icon
         end
 
         it "shows the new-item count" do
           admin.user_option.update!(sidebar_show_count_of_new_items: true)
           sign_in(admin)
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(sidebar).to have_my_messages_link_with_unread_count
         end
 
@@ -226,7 +251,7 @@ describe "Viewing sidebar" do
     end
 
     it "hides the panel header in the main sidebar" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(sidebar).to be_visible
       expect(sidebar).to have_no_panel_header
     end
@@ -235,7 +260,7 @@ describe "Viewing sidebar" do
   context "as anonymous user" do
     describe "My messages sidebar link" do
       it "hides from anonymous users" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar).to have_no_my_messages_link
       end
     end

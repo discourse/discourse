@@ -12,7 +12,10 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
     composer.type_content("This is bold")
 
-    expect(rich).to have_css("strong", text: "This is bold")
+    expect(rich.locator("strong").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is bold")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + I to create an italic text" do
@@ -20,95 +23,166 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "i"])
     composer.type_content("This is italic")
 
-    expect(rich).to have_css("em", text: "This is italic")
+    expect(rich.locator("em").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is italic")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + K to create a link" do
     hyperlink_modal = PageObjects::Modals::Base.new
     open_composer
-    page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "k"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "k"].join("+"),
+    )
     expect(hyperlink_modal).to be_open
-    expect(hyperlink_modal.header).to have_content(I18n.t("js.composer.link_dialog_title"))
-    page.send_keys("https://www.example.com")
-    page.send_keys(:tab)
-    page.send_keys("This is a link")
-    page.send_keys(:enter)
+    expect(hyperlink_modal.header).to PlaywrightMatchers.contain_text(
+      browser_text_pattern(I18n.t("js.composer.link_dialog_title")),
+      useInnerText: true,
+    )
+    browser_page.keyboard.type("https://www.example.com")
+    browser_page.keyboard.press("Tab")
+    browser_page.keyboard.type("This is a link")
+    browser_page.keyboard.press("Enter")
 
-    expect(rich).to have_css("a", text: "This is a link")
+    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a link")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + Shift + 7 to create an ordered list" do
     open_composer
     composer.type_content("Item 1")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "7"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "7"].join(
+        "+",
+      ),
+    )
 
-    expect(rich).to have_css("ol li", text: "Item 1")
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Item 1")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + Shift + 8 to create a bullet list" do
     open_composer
     composer.type_content("Item 1")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "8"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "8"].join(
+        "+",
+      ),
+    )
 
-    expect(rich).to have_css("ul li", text: "Item 1")
+    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Item 1")],
+      useInnerText: true,
+    )
   end
 
   it "lets the user nest and lift list items with Tab" do
     open_composer
     composer.type_content("* First\nSecond")
 
-    composer.send_keys(:tab)
+    browser_page.keyboard.press("Tab")
     expect(composer).to have_nested_list_item("Second")
 
-    composer.send_keys(%i[shift tab])
+    browser_page.keyboard.press(%w[Shift Tab].join("+"))
     expect(composer).to have_top_level_list_item("Second")
   end
 
   it "supports Ctrl + Shift + 9 to create a blockquote" do
     open_composer
     composer.type_content("This is a blockquote")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "9"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "9"].join(
+        "+",
+      ),
+    )
 
-    expect(rich).to have_css("blockquote", text: "This is a blockquote")
+    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a blockquote")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + Shift + 1-4 for headings, 0 for reset" do
     open_composer
     (1..4).each do |i|
       composer.type_content("\nHeading #{i}")
-      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, i.to_s])
+      browser_page.keyboard.press(
+        [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Alt", i.to_s].join(
+          "+",
+        ),
+      )
 
-      expect(rich).to have_css("h#{i}", text: "Heading #{i}")
+      expect(rich.locator("h#{i}").filter(visible: true)).to PlaywrightMatchers.contain_text(
+        [browser_text_pattern("Heading #{i}")],
+        useInnerText: true,
+      )
     end
 
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "0"])
-    expect(rich).not_to have_css("h4")
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Alt", "0"].join("+"),
+    )
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("h4")
+        .filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0)
   end
 
   it "supports Ctrl + Z and Ctrl + Shift + Z to undo and redo" do
     open_composer
     cdp.copy_paste("This is a test")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "z"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "z"].join("+"),
+    )
 
-    expect(rich).not_to have_css("p", text: "This is a test")
+    expect(
+      rich
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator("p")
+        .filter(visible: true),
+    ).not_to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a test")],
+      useInnerText: true,
+    )
 
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "z"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "z"].join(
+        "+",
+      ),
+    )
 
-    expect(rich).to have_css("p", text: "This is a test")
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a test")],
+      useInnerText: true,
+    )
   end
 
   it "supports Ctrl + Shift + _ to create a horizontal rule" do
     open_composer
     composer.type_content("This is a test")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "_"])
+    browser_page.keyboard.press(
+      [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "_"].join(
+        "+",
+      ),
+    )
 
-    expect(rich).to have_css("hr")
+    expect(rich.locator("hr").filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "creates hard break when pressing Enter after double space at end of line" do
     open_composer
     composer.type_content("Line with double space  ")
-    composer.send_keys(:enter)
+    browser_page.keyboard.press("Enter")
     composer.type_content("Next line")
 
     composer.toggle_rich_editor
@@ -119,62 +193,85 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     open_composer
     composer.type_content("# With text")
 
-    expect(rich).to have_css("h1", text: "With text")
+    expect(rich.locator("h1").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("With text")],
+      useInnerText: true,
+    )
 
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
+    browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     wait_for_timeout
-    composer.send_keys(:backspace)
+    browser_page.keyboard.press("Backspace")
 
-    expect(rich).to have_css("p", text: "With text")
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("With text")],
+      useInnerText: true,
+    )
   end
 
   it "supports Backspace to reset a code_block" do
     open_composer
     composer.type_content("```code block")
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
+    browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     wait_for_timeout
-    composer.send_keys(:backspace)
+    browser_page.keyboard.press("Backspace")
 
-    expect(rich).to have_css("p", text: "code block")
+    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("code block")],
+      useInnerText: true,
+    )
   end
 
   it "doesn't add a new list item when backspacing from below a list" do
     open_composer
     composer.type_content("1. Item 1\nItem 2")
-    composer.send_keys(:down)
+    browser_page.keyboard.press("ArrowDown")
     composer.type_content("Item 3")
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    composer.send_keys(:backspace)
+    browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
+    browser_page.keyboard.press("Backspace")
 
-    expect(rich).to have_css("ol li", text: "Item 1")
-    expect(rich).to have_css("ol li", text: "Item 2Item 3")
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Item 1")],
+      useInnerText: true,
+    )
+    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("Item 2Item 3")],
+      useInnerText: true,
+    )
   end
 
   it "supports hashtag decoration when pressing return" do
     open_composer
 
     composer.type_content("##{category_with_emoji.slug}")
-    composer.send_keys(:space)
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
+    browser_page.keyboard.press("Space")
+    browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     wait_for_timeout
-    composer.send_keys(:enter)
+    browser_page.keyboard.press("Enter")
 
-    expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    expect(
+      rich.locator("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "supports hashtag decoration when backspacing to combine paragraphs" do
     open_composer
 
     composer.type_content("some text ")
-    composer.send_keys(:enter)
+    browser_page.keyboard.press("Enter")
 
     composer.type_content("##{category_with_emoji.slug}")
-    composer.send_keys(:space)
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
+    browser_page.keyboard.press("Space")
+    browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     wait_for_timeout
-    composer.send_keys(:backspace)
+    browser_page.keyboard.press("Backspace")
 
-    expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    expect(
+      rich.locator("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']").filter(
+        visible: true,
+      ),
+    ).not_to PlaywrightMatchers.have_count(0)
   end
 
   it "supports Ctrl + M to toggle between rich and markdown editors" do
@@ -183,23 +280,32 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content("> This is a test")
 
     expect(composer).to have_value(nil)
-    expect(rich).to have_css("blockquote", text: "This is a test")
+    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a test")],
+      useInnerText: true,
+    )
 
-    composer.send_keys([:control, "m"])
+    browser_page.keyboard.press(%w[Control m].join("+"))
 
     expect(composer).to have_value("> This is a test")
     expect(composer).to have_no_rich_editor
 
-    composer.send_keys([:control, "m"])
+    browser_page.keyboard.press(%w[Control m].join("+"))
 
     expect(composer).to have_value(nil)
-    expect(rich).to have_css("blockquote", text: "This is a test")
+    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      [browser_text_pattern("This is a test")],
+      useInnerText: true,
+    )
   end
 
   it "adds a new paragraph when ENTER is pressed after an image" do
     open_composer
     composer.type_content("![image](https://example.com/image.png)")
-    composer.send_keys(:right, :enter)
+    begin
+      browser_page.keyboard.press("ArrowRight")
+      browser_page.keyboard.press("Enter")
+    end
     composer.type_content("This is a test")
 
     composer.toggle_rich_editor

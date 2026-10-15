@@ -21,24 +21,37 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     topic_page.visit_topic_and_open_composer(topic)
     expect(topic_page).to have_expanded_composer
     topic_page.type_in_composer(initiation_text)
-    expect(page).to have_css(
-      ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
-      count: expected_count,
-    )
+    expect(
+      browser_root.locator(
+        ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
+      ).filter(visible: true),
+    ).to PlaywrightMatchers.have_count(expected_count)
   end
 
   it "searches for categories and tags with # and prioritises categories in the results" do
     visit_topic_and_initiate_autocomplete
-    hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
-    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
-      ["Cool Category", "cooltag (x325)"],
-    )
+    hashtag_results =
+      browser_root
+        .locator(".hashtag-autocomplete__link")
+        .filter(visible: true)
+        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .all
+    expect(
+      hashtag_results.map { |element| element.inner_text.strip }.map { |r| r.gsub("\n", " ") },
+    ).to eq(["Cool Category", "cooltag (x325)"])
   end
 
   it "begins showing results as soon as # is pressed based on categories and tags topic_count" do
     visit_topic_and_initiate_autocomplete(initiation_text: "#", expected_count: 5)
-    hashtag_results = page.all(".hashtag-autocomplete__link")
-    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+    hashtag_results =
+      browser_root
+        .locator(".hashtag-autocomplete__link")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+    expect(
+      hashtag_results.map { |element| element.inner_text.strip }.map { |r| r.gsub("\n", " ") },
+    ).to eq(
       [
         "Cool Category",
         "Other Category",
@@ -51,12 +64,24 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
   it "cooks the selected category hashtag clientside in the composer preview with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
-    hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
+    hashtag_results =
+      browser_root
+        .locator(".hashtag-autocomplete__link")
+        .filter(visible: true)
+        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .all
     hashtag_results[0].click
-    expect(page).to have_css(".hashtag-cooked")
-    cooked_hashtag = page.find(".hashtag-cooked")
+    expect(
+      browser_root.locator(".hashtag-cooked").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    cooked_hashtag = browser_root.locator(".hashtag-cooked").filter(visible: true)
 
-    expect(cooked_hashtag["outerHTML"]).to have_tag(
+    expect(
+      cooked_hashtag.evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "outerHTML",
+      ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -77,12 +102,24 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
   it "cooks the selected tag hashtag clientside in the composer preview with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
-    hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
+    hashtag_results =
+      browser_root
+        .locator(".hashtag-autocomplete__link")
+        .filter(visible: true)
+        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .all
     hashtag_results[1].click
-    expect(page).to have_css(".hashtag-cooked")
-    cooked_hashtag = page.find(".hashtag-cooked")
+    expect(
+      browser_root.locator(".hashtag-cooked").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
+    cooked_hashtag = browser_root.locator(".hashtag-cooked").filter(visible: true)
 
-    expect(cooked_hashtag["outerHTML"]).to have_tag(
+    expect(
+      cooked_hashtag.evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "outerHTML",
+      ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -110,9 +147,19 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     expect(topic_page).to have_post_number(2)
 
-    cooked_hashtags = page.all(".hashtag-cooked", count: 2)
+    cooked_hashtags =
+      browser_root
+        .locator(".hashtag-cooked")
+        .filter(visible: true)
+        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .all
 
-    expect(cooked_hashtags[0]["outerHTML"]).to have_tag(
+    expect(
+      cooked_hashtags[0].evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "outerHTML",
+      ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -131,7 +178,12 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       )
     end
 
-    expect(cooked_hashtags[1]["outerHTML"]).to have_tag(
+    expect(
+      cooked_hashtags[1].evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "outerHTML",
+      ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -156,7 +208,15 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       Fabricate(:small_action, raw: "this is a #cool-cat category and a #cooltag tag", topic: topic)
     topic_page.visit_topic(topic)
     expect(topic_page).to have_post_number(post.post_number)
-    expect(find(".small-action-custom-message")["innerHTML"]).to have_tag(
+    expect(
+      browser_root
+        .locator(".small-action-custom-message")
+        .filter(visible: true)
+        .evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "innerHTML",
+        ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -174,7 +234,15 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
         },
       ) { with_tag("use", with: { href: "#tag" }) }
     end
-    expect(find(".small-action-custom-message")["innerHTML"]).to have_tag(
+    expect(
+      browser_root
+        .locator(".small-action-custom-message")
+        .filter(visible: true)
+        .evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "innerHTML",
+        ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -205,8 +273,18 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     UserActionManager.enable
     UserActionManager.post_created(post)
 
-    visit("/u/#{current_user.username}/activity")
-    expect(find(".user-stream-item [data-post-id=\"#{post.id}\"]")["innerHTML"]).to have_tag(
+    browser_page
+      .goto("/u/#{current_user.username}/activity")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root
+        .locator(".user-stream-item [data-post-id=\"#{post.id}\"]")
+        .filter(visible: true)
+        .evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "innerHTML",
+        ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -224,7 +302,15 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
         },
       )
     end
-    expect(find(".user-stream-item [data-post-id=\"#{post.id}\"]")["innerHTML"]).to have_tag(
+    expect(
+      browser_root
+        .locator(".user-stream-item [data-post-id=\"#{post.id}\"]")
+        .filter(visible: true)
+        .evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "innerHTML",
+        ),
+    ).to have_tag(
       "a",
       with: {
         class: "hashtag-cooked",
@@ -250,12 +336,16 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     # normal autocomplete works
     topic_page.type_in_composer("#co")
-    expect(page).to have_css(".hashtag-autocomplete")
+    expect(
+      browser_root.locator(".hashtag-autocomplete").filter(visible: true),
+    ).not_to PlaywrightMatchers.have_count(0)
 
     # autocomplete does not trigger within a URL
     topic_page.clear_composer
     topic_page.type_in_composer("discourse.org/#co")
-    expect(page).to have_no_css(".hashtag-autocomplete", wait: 2)
+    expect(
+      browser_root.locator(".hashtag-autocomplete").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(0, timeout: 2 * 1000)
   end
 
   context "when a user cannot access the category for a hashtag cooked in another post" do
@@ -271,8 +361,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     it "shows a default color and css class for the category icon square" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
-      expect(page).to have_css(".hashtag-cooked .hashtag-category-square")
-      generated_css = find("#hashtag-css-generator", visible: false).text(:all)
+      expect(
+        browser_root.locator(".hashtag-cooked .hashtag-category-square").filter(visible: true),
+      ).not_to PlaywrightMatchers.have_count(0)
+      generated_css = browser_root.locator("#hashtag-css-generator").text_content
       expect(generated_css).to include(".hashtag-category-square")
       expect(generated_css).not_to include(".hashtag-color--category--#{private_category.id}")
     end

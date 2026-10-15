@@ -50,7 +50,7 @@ describe "Interface color selector" do
   it "is not available when there's no default dark scheme" do
     Theme.find_default.update!(dark_color_scheme_id: nil)
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(selector_in_sidebar).to be_not_available
   end
@@ -58,7 +58,7 @@ describe "Interface color selector" do
   it "is not available when the default theme's scheme is the same as the site's default dark scheme" do
     Theme.find_default.update!(color_scheme_id: dark_scheme.id)
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(selector_in_sidebar).to be_not_available
   end
@@ -68,13 +68,13 @@ describe "Interface color selector" do
     user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: light_scheme.id)
     sign_in(user)
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(selector_in_sidebar).to be_not_available
   end
 
   it "can switch between light, dark and auto modes without requiring a full page refresh" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     selector_in_sidebar.expand
     selector_in_sidebar.light_option.click
@@ -96,16 +96,22 @@ describe "Interface color selector" do
   end
 
   it "uses the right category logos when switching color modes" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     selector_in_sidebar.expand
     selector_in_sidebar.dark_option.click
 
     sidebar.click_section_link(category.name)
 
-    expect(page).to have_css('.category-logo picture source[media="all"]', visible: false)
+    expect(
+      browser_root.locator('.category-logo picture source[media="all"]'),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    styles = find("#d-styles", visible: false)["innerHTML"]
+    styles =
+      browser_root.locator("#d-styles").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "innerHTML",
+      )
     expect(styles).to include(
       "body.category-#{category.slug} { background-image: url(#{dark_mode_image.url}); }",
     )
@@ -113,9 +119,15 @@ describe "Interface color selector" do
     selector_in_sidebar.expand
     selector_in_sidebar.light_option.click
 
-    expect(page).to have_css('.category-logo picture source[media="none"]', visible: false)
+    expect(
+      browser_root.locator('.category-logo picture source[media="none"]'),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    styles = find("#d-styles", visible: false)["innerHTML"]
+    styles =
+      browser_root.locator("#d-styles").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "innerHTML",
+      )
     expect(styles).to include(
       "body.category-#{category.slug} { background-image: url(#{light_mode_image.url}); }",
     )
@@ -123,12 +135,15 @@ describe "Interface color selector" do
     selector_in_sidebar.expand
     selector_in_sidebar.auto_option.click
 
-    expect(page).to have_css(
-      '.category-logo picture source[media="(prefers-color-scheme: dark)"]',
-      visible: false,
-    )
+    expect(
+      browser_root.locator('.category-logo picture source[media="(prefers-color-scheme: dark)"]'),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    styles = find("#d-styles", visible: false)["innerHTML"]
+    styles =
+      browser_root.locator("#d-styles").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "innerHTML",
+      )
     expect(styles).to include(
       "body.category-#{category.slug} { background-image: url(#{light_mode_image.url}); }",
     )
@@ -140,20 +155,26 @@ describe "Interface color selector" do
   end
 
   it "maintains the user's preference across page refreshes" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     selector_in_sidebar.expand
     selector_in_sidebar.dark_option.click
 
     expect(interface_color_mode).to have_dark_mode_forced
 
-    visit(category.url)
+    browser_page.goto(category.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(interface_color_mode).to have_dark_mode_forced
 
-    expect(page).to have_css('.category-logo picture source[media="all"]', visible: false)
+    expect(
+      browser_root.locator('.category-logo picture source[media="all"]'),
+    ).not_to PlaywrightMatchers.have_count(0)
 
-    styles = find("#d-styles", visible: false)["innerHTML"]
+    styles =
+      browser_root.locator("#d-styles").evaluate(
+        "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+        arg: "innerHTML",
+      )
     expect(styles).to include(
       "body.category-#{category.slug} { background-image: url(#{dark_mode_image.url}); }",
     )
@@ -162,7 +183,7 @@ describe "Interface color selector" do
   it "can be configured to appear in the header instead of the sidebar footer" do
     SiteSetting.interface_color_selector = "header"
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(selector_in_sidebar).to be_not_available
     expect(selector_in_header).to be_available

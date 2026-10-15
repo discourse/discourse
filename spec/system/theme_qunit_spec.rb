@@ -19,21 +19,45 @@ describe "Theme qunit testing" do
   end
 
   it "lists themes and can run tests by id, name and url" do
-    visit "/theme-qunit"
+    browser_page.goto("/theme-qunit").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("a[href^='/theme-qunit?id=']", count: 1)
+    expect(
+      browser_root.locator("a[href^='/theme-qunit?id=']").filter(visible: true),
+    ).to PlaywrightMatchers.have_count(1)
 
-    find("a[href=\"/theme-qunit?id=#{theme_with_test.id}\"]").click
+    browser_root
+      .locator("a[href=\"/theme-qunit?id=#{theme_with_test.id}\"]")
+      .filter(visible: true)
+      .click
 
-    success_count = find("#qunit-testresult-display .passed").text
+    success_count =
+      browser_root
+        .locator("#qunit-testresult-display .passed")
+        .filter(visible: true)
+        .inner_text
+        .strip
     expect(success_count).to eq("1")
 
-    visit "/theme-qunit?name=#{theme_with_test.name}"
-    success_count = find("#qunit-testresult-display .passed").text
+    browser_page
+      .goto("/theme-qunit?name=#{theme_with_test.name}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    success_count =
+      browser_root
+        .locator("#qunit-testresult-display .passed")
+        .filter(visible: true)
+        .inner_text
+        .strip
     expect(success_count).to eq("1")
 
-    visit "/theme-qunit?url=#{theme_with_test.remote_theme.remote_url}"
-    success_count = find("#qunit-testresult-display .passed").text
+    browser_page
+      .goto("/theme-qunit?url=#{theme_with_test.remote_theme.remote_url}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    success_count =
+      browser_root
+        .locator("#qunit-testresult-display .passed")
+        .filter(visible: true)
+        .inner_text
+        .strip
     expect(success_count).to eq("1")
   end
 end

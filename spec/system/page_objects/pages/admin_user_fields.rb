@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminUserFields < PageObjects::Pages::Base
       def visit
-        page.visit "admin/config/user-fields"
+        browser_page
+          .goto("admin/config/user-fields")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -21,11 +23,11 @@ module PageObjects
       end
 
       def click_add_field
-        page.find(".d-page-header__actions .btn-primary").click
+        browser_root.locator(".d-page-header__actions .btn-primary").filter(visible: true).click
       end
 
       def click_edit
-        page.find(".admin-user_field-item__edit").click
+        browser_root.locator(".admin-user_field-item__edit").filter(visible: true).click
       end
 
       def add_field(name: nil, description: nil, requirement: nil, preferences: [], save: true)
@@ -37,7 +39,9 @@ module PageObjects
       end
 
       def has_user_field?(name)
-        page.has_text?(name)
+        PlaywrightMatchers.contain_text(browser_text_pattern(name), useInnerText: true).matches?(
+          browser_content,
+        )
       end
     end
   end

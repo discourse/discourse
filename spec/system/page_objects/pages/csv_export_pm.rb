@@ -9,19 +9,22 @@ module PageObjects
       end
 
       def download_and_extract
-        original_save_path = Capybara.save_path
-        Capybara.save_path = Downloads::FOLDER.join("_unused")
-
         zip_path =
-          page.driver.with_playwright_page do |pw_page|
-            pw_page.expect_download { click_link ".zip" }.path
+          browser_page.then do |pw_page|
+            pw_page
+              .expect_download do
+                browser_root
+                  .locator("[id=#{".zip".to_s.to_json}], [name=#{".zip".to_s.to_json}]")
+                  .or(browser_root.get_by_role("link", name: ".zip"))
+                  .filter(visible: true)
+                  .click
+              end
+              .path
           end
 
         csv_path = unzip(zip_path).first
         @downloaded_files << csv_path
         CSV.read(csv_path)
-      ensure
-        Capybara.save_path = original_save_path
       end
 
       def clear_downloads
@@ -30,7 +33,7 @@ module PageObjects
       end
 
       def has_download_link?
-        find(:link, ".zip").present?
+        PlaywrightMatchers.be_visible.matches?(browser_root.get_by_role("link", name: ".zip"))
       end
 
       private
