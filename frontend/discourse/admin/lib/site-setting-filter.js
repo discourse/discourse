@@ -57,7 +57,8 @@ export default class SiteSettingFilter {
       all = {
         nameKey: "all_results",
         name: i18n("admin.site_settings.categories.all_results"),
-        siteSettings: [],
+        siteSettings:
+          /** @type {import("discourse/admin/models/site-setting").default[]} */ ([]),
       };
 
       matchesGroupedByCategory.push(all);

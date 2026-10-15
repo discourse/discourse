@@ -333,7 +333,7 @@ class Field {
    * Triggers any event on the input element of the field.
    *
    * @param {string} eventName - The name of the event to trigger.
-   * @param {Object} [options={}] - Additional options for the event.
+   * @param {Record<string, unknown>} [options={}] - Additional options for the event.
    */
   async triggerEvent(eventName, options = {}) {
     await triggerEvent(this.inputElement, eventName, options);
