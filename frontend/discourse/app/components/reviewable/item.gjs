@@ -310,7 +310,10 @@ export default class ReviewableItem extends Component {
   @action
   openClassification() {
     this.modal.show(DsaClassificationModal, {
-      model: { reviewable: this.args.reviewable },
+      model: {
+        classificationOptions: this.args.classificationOptions,
+        reviewable: this.args.reviewable,
+      },
     });
   }
 
@@ -973,7 +976,10 @@ export default class ReviewableItem extends Component {
             )
           }}
             {{#each (array @reviewable) as |reviewable|}}
-              <DsaStatementClassification @reviewable={{reviewable}} />
+              <DsaStatementClassification
+                @classificationOptions={{@classificationOptions}}
+                @reviewable={{reviewable}}
+              />
             {{/each}}
           {{else if (and @showHelp (not @reviewable.dsa_classification))}}
             <ReviewableHelpResources />

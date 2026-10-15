@@ -40,6 +40,7 @@ export default class DsaClassificationModal extends Component {
       </:headerBelowTitle>
       <:body>
         <DsaStatementClassification
+          @classificationOptions={{@model.classificationOptions}}
           @hideHeading={{true}}
           @onCancel={{@closeModal}}
           @onSavingChange={{this.savingChanged}}

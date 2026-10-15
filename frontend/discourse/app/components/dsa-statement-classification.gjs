@@ -21,10 +21,6 @@ export default class DsaStatementClassification extends Component {
     return this.args.reviewable.dsa_classification;
   }
 
-  get classificationOptions() {
-    return this.args.reviewable.extras.dsa_classification;
-  }
-
   @action
   cancel() {
     this.args.onCancel?.();
@@ -40,10 +36,10 @@ export default class DsaStatementClassification extends Component {
     const reviewable = this.args.reviewable;
 
     const statementIds = [...this.classification.statement_ids];
-    const rule = this.classificationOptions.community_rules.find(
+    const rule = this.args.classificationOptions.community_rules.find(
       (entry) => entry.id === data.community_rule
     );
-    const category = this.classificationOptions.categories.find(
+    const category = this.args.classificationOptions.categories.find(
       (entry) => entry.id === data.category
     );
     const confirmed = await this.dialog.confirm({
@@ -119,7 +115,7 @@ export default class DsaStatementClassification extends Component {
               @nonePlaceholder={{i18n "dsa_statements.rule_prompt"}}
               as |select|
             >
-              {{#each this.classificationOptions.community_rules as |rule|}}
+              {{#each @classificationOptions.community_rules as |rule|}}
                 <select.Option
                   @value={{rule.id}}
                 >{{rule.ground}}</select.Option>
@@ -140,7 +136,7 @@ export default class DsaStatementClassification extends Component {
               @nonePlaceholder={{i18n "dsa_statements.category_prompt"}}
               as |select|
             >
-              {{#each this.classificationOptions.categories as |category|}}
+              {{#each @classificationOptions.categories as |category|}}
                 <select.Option
                   @value={{category.id}}
                 >{{category.name}}</select.Option>
