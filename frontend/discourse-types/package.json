@@ -86,7 +86,7 @@
   "devDependencies": {
     "@types/node": "^26.4.0",
     "compare-versions": "^6.1.1",
-    "typescript": "7.1.0-dev.20260901.1"
+    "typescript": "7.1.0-dev.20260930.4"
   },
   "engines": {
     "node": ">= 20",

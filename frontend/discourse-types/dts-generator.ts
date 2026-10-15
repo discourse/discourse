@@ -103,9 +103,11 @@ export default function generate(options: Options): void {
 
   const api = new API({ cwd: baseDir });
   try {
-    const { fileNames, options: compilerOptions } =
-      api.parseJsonConfigFileContent({}, { configDirectory: baseDir });
-    const program = api.createProgram(fileNames, { compilerOptions });
+    const { fileNames } = api.parseJsonConfigFileContent(
+      {},
+      { configDirectory: baseDir }
+    );
+    const program = api.createProgram(fileNames, {});
 
     for (const fileName of program.getSourceFileNames()) {
       // Default libraries and other packages' files stay out of the bundle
