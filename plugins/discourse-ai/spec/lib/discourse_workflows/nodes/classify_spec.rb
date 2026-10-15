@@ -202,6 +202,37 @@ RSpec.describe DiscourseWorkflows::Nodes::Classify::V1 do
       expect(item).to match_node_output_schema(described_class, configuration: config)
     end
 
+    it "fails instead of answering when an image can't be sent" do
+      decision_model.update!(vision_enabled: true)
+      upload = Fabricate(:image_upload, original_filename: "cube.png")
+      missing_id = upload.id + 1000
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:fetch_path).and_return(nil)
+      request = stub_request(:post, decision_model.url)
+
+      expect {
+        execute_node(
+          configuration:
+            configuration(
+              { "name" => "solved", "type" => "yes_no", "instructions" => "Is the cube solved?" },
+              upload_ids: "={{ $json.post.upload_ids }}",
+            ),
+          item: {
+            "json" => {
+              "post" => {
+                "raw" => "Done!",
+                "upload_ids" => [upload.id, missing_id],
+              },
+            },
+          },
+        )
+      }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        "Decision model 'Workflow decisions' could not answer: Upload #{missing_id} was not found. " \
+          "Upload #{upload.id} (cube.png) was not sent: file is not available in the store [item 0]",
+      )
+      expect(request).not_to have_been_requested
+    end
+
     it "fails when the decision model no longer exists" do
       expect {
         execute_node(
