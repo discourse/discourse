@@ -820,6 +820,10 @@ de:
       title:
         search: "Suche nach einer Nachricht"
         placeholder: "gib hier den Titel, die URL oder die ID der Nachricht ein"
+    dsa_statements:
+      category: "Kategorie"
+      category_prompt: "Kategorie auswählen"
+      saving: "Wird gespeichert …"
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"

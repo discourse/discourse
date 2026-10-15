@@ -41,6 +41,13 @@ sq:
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Imazhet"
+          name: "Emri"
+          type: "Lloji"
+          type_score: "Vlerësimi"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -184,6 +191,11 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      decision_models:
+        no_preset: "Asnjë"
+        display_name: "Emri"
+        edit: "Redaktoni"
+        delete: "Fshij"
       mcp_servers:
         name: "Emri"
         description: "Përshkrimi"

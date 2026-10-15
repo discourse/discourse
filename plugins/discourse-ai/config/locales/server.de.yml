@@ -1052,8 +1052,8 @@ de:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
         model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
-    secrets:
-      delete_failed_in_use: "Diese Anmeldedaten werden derzeit von einem oder mehreren LLM, Einbettungen oder Tools verwendet und können nicht gelöscht werden."
+    decision_models:
+      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
       invalid_provider_param: "%{param} hat ein ungültiges Format"

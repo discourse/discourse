@@ -412,6 +412,8 @@ bs_BA:
       title:
         search: "Traži poruku"
         placeholder: "ovdje ukucajte naslov poruke, url ili id"
+    dsa_statements:
+      category: "Kategorija"
     review:
       order_by: "Pordeak po"
       in_reply_to: "odgovori na"

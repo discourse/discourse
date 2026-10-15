@@ -820,6 +820,10 @@ fr:
       title:
         search: "Rechercher un message"
         placeholder: "saisissez ici l'intitulé du sujet, son URL ou son ID"
+    dsa_statements:
+      category: "Catégorie"
+      category_prompt: "Choisir une catégorie"
+      saving: "Enregistrement…"
     review:
       show_more: "Afficher plus"
       show_less: "Afficher moins"

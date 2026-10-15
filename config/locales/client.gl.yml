@@ -404,6 +404,8 @@ gl:
       title:
         search: "Buscar unha mensaxe"
         placeholder: "escriba o título da mensaxe, url ou id aquí"
+    dsa_statements:
+      category: "Categoría"
     review:
       order_by: "Ordenar por"
       in_reply_to: "en resposta a"

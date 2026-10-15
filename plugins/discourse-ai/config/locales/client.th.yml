@@ -42,6 +42,13 @@ th:
       ai_decoded_transcript:
         type: "ชนิด"
         error: "ผิดพลาด"
+      discourse_workflows:
+        classify:
+          text: "ข้อความ"
+          upload_ids: "รูปภาพ"
+          name: "ชื่อ"
+          type: "ชนิด"
+          type_score: "คะแนน"
       ai_tool_approval:
         loading: "กำลังโหลด..."
         user: "ผู้ใช้"
@@ -166,6 +173,11 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      decision_models:
+        no_preset: "ไม่มี"
+        display_name: "ชื่อ"
+        edit: "แก้ไข"
+        delete: "ลบ"
       mcp_servers:
         name: "ชื่อ"
         description: "รายละเอียด"

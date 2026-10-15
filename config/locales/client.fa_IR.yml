@@ -606,6 +606,9 @@ fa_IR:
       title:
         search: "جستجو برای یک پیام"
         placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
+    dsa_statements:
+      category: "دسته‌بندی"
+      saving: "در‌حال ذخیره‌سازی..."
     review:
       show_more: "نمایش بیشتر"
       show_less: "نمایش کمتر"

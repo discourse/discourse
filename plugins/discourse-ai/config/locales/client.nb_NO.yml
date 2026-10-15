@@ -43,6 +43,13 @@ nb_NO:
         type: "Type"
         error: "Feil"
         response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Bilder"
+          name: "Navn"
+          type: "Type"
+          type_score: "Poeng"
       ai_tool_approval:
         loading: "Laster…"
         tool: "Handling"
@@ -196,6 +203,12 @@ nb_NO:
         edit: "Rediger"
         delete: "Slett"
         embedding: "Innbygging"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Navn"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        delete: "Slett"
       mcp_servers:
         name: "Navn"
         description: "Beskrivelse"

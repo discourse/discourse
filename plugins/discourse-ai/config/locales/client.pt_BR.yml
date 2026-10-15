@@ -224,6 +224,12 @@ pt_BR:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Nota"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -694,7 +700,6 @@ pt_BR:
           result: "Resultado do teste"
       secrets:
         short_title: "Credenciais"
-        description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
         select_secret: "Selecionar uma credencial..."
@@ -716,6 +721,15 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      decision_models:
+        no_preset: "Nenhum"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Excluir"
+        test: "Executar teste"
       mcp_servers:
         name: "Nome"
         description: "Descrição"

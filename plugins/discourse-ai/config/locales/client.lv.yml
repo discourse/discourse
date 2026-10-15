@@ -43,6 +43,13 @@ lv:
         type: "Tips"
         error: "Kļūda..."
         response: "Atbilde"
+      discourse_workflows:
+        classify:
+          text: "Teksts"
+          upload_ids: "Attēli"
+          name: "Vārds"
+          type: "Tips"
+          type_score: "Rezultāts"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"
@@ -188,6 +195,11 @@ lv:
         edit: "Labot"
         delete: "Dzēst"
         embedding: "Ieguldīšana"
+      decision_models:
+        no_preset: "Nav"
+        display_name: "Vārds"
+        edit: "Labot"
+        delete: "Dzēst"
       mcp_servers:
         name: "Vārds"
         description: "Apraksts"

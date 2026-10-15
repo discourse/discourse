@@ -43,6 +43,13 @@ hy:
         type: "Տիպ"
         error: "Սխալ"
         response: "Արձագանք"
+      discourse_workflows:
+        classify:
+          text: "Տեքստ"
+          upload_ids: "Նկարներ"
+          name: "Անուն"
+          type: "Տիպ"
+          type_score: "Քանակ"
       ai_tool_approval:
         loading: "Բեռնվում է..."
         tool: "Գործողություն"
@@ -188,6 +195,12 @@ hy:
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      decision_models:
+        no_preset: "Ոչ մի"
+        display_name: "Անուն"
+        provider: "Մատակարար"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
       mcp_servers:
         name: "Անուն"
         description: "Նկարագրություն"

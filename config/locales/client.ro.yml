@@ -695,6 +695,8 @@ ro:
       title:
         search: "Caută mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
+    dsa_statements:
+      category: "Categorie"
     review:
       show_more: "Arată mai multe"
       show_less: "Arată mai puține"

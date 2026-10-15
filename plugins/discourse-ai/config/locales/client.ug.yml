@@ -61,6 +61,12 @@ ug:
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
+        classify:
+          text: "تېكىست"
+          upload_ids: "سۈرەت"
+          name: "ئىسمى"
+          type: "تىپى"
+          type_score: "نومۇر"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -231,6 +237,12 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      decision_models:
+        no_preset: "يوق"
+        display_name: "ئىسمى"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        test: "سىناقنى ئىجرا قىل"
       mcp_servers:
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
