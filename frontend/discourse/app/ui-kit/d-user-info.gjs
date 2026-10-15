@@ -33,9 +33,14 @@ export default class DUserInfo extends Component {
     return userPath(this.user?.username);
   }
 
-  @computed("user.name")
+  @computed("siteSettings.enable_names", "user.name")
+  get showName() {
+    return this.siteSettings.enable_names && this.user?.name?.trim().length > 0;
+  }
+
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.user?.name);
+    return this.showName && prioritizeNameInUx(this.user.name);
   }
 
   didInsertElement() {
@@ -95,7 +100,7 @@ export default class DUserInfo extends Component {
               />
             {{/if}}
           </span>
-          {{#if @user.name}}
+          {{#if this.showName}}
             <span class="name-wrapper">
               {{#if this.includeLink}}
                 <a data-user-card={{@user.username}} href={{this.userPath}}>
