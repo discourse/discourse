@@ -37,8 +37,14 @@ module PageObjects
           browser_page.wait_for_function(
             <<~JS,
           selector => {
-            const avatar = document.querySelector(selector);
-            return avatar && avatar.complete && avatar.naturalWidth === (parseInt(avatar.src.split("/").at(-2), 10) || 0);
+            return Array.from(document.querySelectorAll(selector)).some(avatar => {
+              const bounds = avatar.getBoundingClientRect();
+              return avatar.checkVisibility() &&
+                getComputedStyle(avatar).visibility === "visible" &&
+                bounds.width > 0 && bounds.height > 0 &&
+                avatar.complete &&
+                avatar.naturalWidth === (parseInt(avatar.src.split("/").at(-2), 10) || 0);
+            });
           }
         JS
             arg: ".pref-avatar img.avatar[src*='/#{upload_id}_']",

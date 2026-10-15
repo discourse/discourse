@@ -42,9 +42,12 @@ module PageObjects
         browser_root.locator(
           "input[type='file']:not(:disabled)[id=#{"custom-profile-upload".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"custom-profile-upload".to_s.to_json}]",
         ).set_input_files(file_path)
-        expect(
-          body.locator(AVATAR_UPLOAD_BUTTON_SELECTOR).filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        selector =
+          "#{AVATAR_UPLOAD_BUTTON_SELECTOR}:not([data-avatar-upload-id=#{previous_id.to_s.to_json}])"
+        expect(body.locator(selector).filter(visible: true)).to PlaywrightMatchers.have_attribute(
+          "data-avatar-upload-id",
+          /\S+/,
+        )
         self
       end
 
