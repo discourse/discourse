@@ -27,7 +27,7 @@ RSpec.describe DiscourseVips::Client do
       FileUtils.remove_entry(directory)
     end
 
-    def serve(response:)
+    def serve(response:, delay_seconds: 0)
       server = UNIXServer.new(socket_path)
       servers << server
       server_threads << Thread.new do
@@ -35,6 +35,7 @@ RSpec.describe DiscourseVips::Client do
           connection = server.accept
           begin
             requests << MessagePack.unpack(connection.read)
+            sleep delay_seconds if delay_seconds.positive?
             connection.write(response) if response
           ensure
             connection.close
@@ -43,15 +44,22 @@ RSpec.describe DiscourseVips::Client do
       end
     end
 
-    def restore_socket_after_failure(connection_error:)
+    def restore_socket_after_failure(
+      connection_error:,
+      outage_seconds: 0,
+      response_delay_seconds: 0
+    )
       address = Addrinfo.unix(socket_path)
       allow(Addrinfo).to receive(:unix).with(socket_path).and_return(address)
       allow(address).to receive(:connect).and_wrap_original do |connect, **options|
         connect.call(**options)
       rescue connection_error
-        sleep 1.1
+        sleep outage_seconds if outage_seconds.positive?
         File.unlink(socket_path) if File.exist?(socket_path)
-        serve(response: MessagePack.pack({ "status" => "ok", "value" => "8.15.0" }))
+        serve(
+          response: MessagePack.pack({ "status" => "ok", "value" => "8.15.0" }),
+          delay_seconds: response_delay_seconds,
+        )
         raise
       end
     end
@@ -99,13 +107,43 @@ RSpec.describe DiscourseVips::Client do
       expect(requests.pop.fetch("timeout")).to eq(1)
     end
 
+    it "charges shared connection recovery against the operation timeout" do
+      restore_socket_after_failure(
+        connection_error: Errno::ENOENT,
+        outage_seconds: 0.6,
+        response_delay_seconds: 0.6,
+      )
+
+      stub_const(described_class, :WORKER_GRACE_SECONDS, 0) do
+        Timeout.timeout(5) do
+          expect {
+            described_class.call(
+              ["version"],
+              operation: :vips_version,
+              timeout: 1,
+              read: [],
+              write: [],
+            )
+          }.to raise_error(DiscourseVips::WorkerUnavailable, "libvips worker did not respond")
+        end
+      end
+
+      expect(requests.size).to eq(1)
+    end
+
     it "bounds the wait when the shared worker remains unavailable" do
       started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-      stub_const(described_class, :SHARED_WORKER_RETRY_SECONDS, 0.2) do
+      stub_const(described_class, :WORKER_GRACE_SECONDS, 0) do
         Timeout.timeout(5) do
           expect {
-            described_class.call(["version"], operation: :vips_version, read: [], write: [])
+            described_class.call(
+              ["version"],
+              operation: :vips_version,
+              timeout: 0.2,
+              read: [],
+              write: [],
+            )
           }.to raise_error(DiscourseVips::WorkerUnavailable)
         end
       end
