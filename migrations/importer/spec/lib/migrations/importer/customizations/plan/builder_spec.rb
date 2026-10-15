@@ -418,10 +418,11 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
   end
 
-  it "skips all hidden settings" do
-    %w[about_banner_image extended_site_description email_custom_css_compiled].each do |name|
+  it "skips hidden settings except the email style" do
+    %w[about_banner_image extended_site_description].each do |name|
       expect(settings[name]).to include("target" => "skip", "note" => "hidden")
     end
+    expect(settings["email_custom_css_compiled"]).to include("target" => "template")
     expect(settings).not_to have_key("email_custom_css")
     expect(settings).not_to have_key("extended_site_description_cooked")
   end
