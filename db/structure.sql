@@ -21754,6 +21754,13 @@ CREATE UNIQUE INDEX index_topic_users_on_user_id_and_topic_id ON public.topic_us
 
 
 --
+-- Name: index_topic_users_on_user_id_and_topic_id_tracked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_users_on_user_id_and_topic_id_tracked ON public.topic_users USING btree (user_id, topic_id) WHERE (notification_level >= 2);
+
+
+--
 -- Name: index_topic_view_stats_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23050,6 +23057,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261014065735'),
 ('20261007082151'),
 ('20260929043240'),
 ('20260810154331'),
