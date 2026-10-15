@@ -129,12 +129,11 @@ On the `migrated` target, an item that matches nothing is skipped. On the
 - Site settings: unknown, themeable and hidden settings are skipped, and so
   are hosting-managed ones (outgoing/incoming email addresses, POP3 polling,
   S3 and backup storage, `force_https`; see `HOSTING_MANAGED_SETTINGS`).
-  Settings overridden by a global setting (`DISCOURSE_<NAME>` environment
-  variables or `discourse.conf`) are skipped by `plan`, refused by `export`,
-  and skipped by `apply` when the destination overrides them.
-  The email style (Customize > Email style) goes to `template` although it's
-  hidden. Other hidden settings changed through admin pages (about page,
-  robots.txt, embedding) are skipped; add them to the plan by hand if needed. Login
+  Hidden settings that admins edit on their own pages (email style, about
+  page, robots.txt, embedding; see `ADMIN_PAGE_HIDDEN_SETTINGS`) are not
+  skipped. Settings overridden by a global setting (`DISCOURSE_<NAME>`
+  environment variables or `discourse.conf`) are skipped by `plan`, refused by
+  `export`, and skipped by `apply` when the destination overrides them. Login
   and SSO settings, secrets, and settings that reference categories, topics,
   users or non-automatic groups go to `migrated`. The rest goes to `template`.
 - Automatic and site-created groups go to `template`, imported ones to `migrated`.
