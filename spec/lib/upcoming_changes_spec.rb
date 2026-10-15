@@ -1051,7 +1051,23 @@ RSpec.describe UpcomingChanges do
       result = described_class.current_statuses
 
       expect(result["timeline_status_setting"]).to eq(
-        { status: "stable", changed_at: latest_event.created_at },
+        { status: "stable", changed_at: latest_event.created_at, displayed: nil },
+      )
+    end
+
+    it "includes the display state recorded on the latest status_changed event" do
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_status_setting",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+          "displayed" => false,
+        },
+      )
+
+      expect(described_class.current_statuses.dig("timeline_status_setting", :displayed)).to eq(
+        false,
       )
     end
 
