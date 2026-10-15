@@ -69,6 +69,14 @@ module Migrations
           ].freeze
           HOSTING_MANAGED_PREFIXES = %w[pop3_polling_ s3_ backup_].freeze
 
+          # Hidden, but edited under Customize > Email style. The compiled CSS is
+          # derived from `email_custom_css` and has to travel with it.
+          EMAIL_STYLE_SETTINGS = %w[
+            email_custom_template
+            email_custom_css
+            email_custom_css_compiled
+          ].freeze
+
           IMPORT_SETTING_TYPES = %i[category category_list topic username].freeze
           GROUP_SETTING_TYPES = %i[group group_list].freeze
 
@@ -155,7 +163,7 @@ module Migrations
                 return skip("themeable: transferred with the theme's site settings")
               end
               return skip("hosting-managed") if hosting_managed?(name)
-              return skip("hidden") if info[:hidden]
+              return skip("hidden") if info[:hidden] && EMAIL_STYLE_SETTINGS.exclude?(name)
               return skip("overridden by a global setting") if info[:global]
 
               secret = info[:secret] || Secrets.secret_name?(name)
