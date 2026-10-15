@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module CookedProcessorMixin
-  GIF_SOURCES_REGEXP = %r{(giphy|tenor)\.com/}
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   MIN_LIGHTBOX_WIDTH = 100
   MIN_LIGHTBOX_HEIGHT = 100
@@ -190,6 +189,10 @@ module CookedProcessorMixin
 
   def get_size(url)
     image_info(url)&.first
+  end
+
+  def animated_image?(url)
+    !!image_info(url)&.last
   end
 
   # [[width, height], animated]
@@ -445,9 +448,7 @@ module CookedProcessorMixin
       end
     end
 
-    if (upload.present? && upload.animated?) || src.match?(GIF_SOURCES_REGEXP)
-      img.add_class("animated")
-    end
+    img.add_class("animated") if upload.present? ? upload.animated? : animated_image?(src)
 
     generate_thumbnail =
       original_width > SiteSetting.max_image_width || original_height > SiteSetting.max_image_height
