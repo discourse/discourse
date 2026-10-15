@@ -266,6 +266,14 @@ RSpec.describe DiscourseEvents::Events::Event do
       expect(chat_channel.reload).to be_open
     end
 
+    it "keeps the chat closed when the series cutoff falls after its last occurrence" do
+      event.update_columns(recurrence: "every_week", recurrence_until: 2.days.from_now)
+
+      event.update!(name: "Renamed event")
+
+      expect(chat_channel.reload).to be_closed
+    end
+
     it "keeps the chat closed while the event is still over" do
       event.update!(name: "Renamed event")
 

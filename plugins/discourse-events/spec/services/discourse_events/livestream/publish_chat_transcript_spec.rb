@@ -222,6 +222,14 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
       end
     end
 
+    context "when a recurring livestream's cutoff falls after its last occurrence" do
+      before { event.update_columns(recurrence: "every_week", recurrence_until: 2.days.from_now) }
+
+      it "closes the chat channel" do
+        expect { result }.to change { chat_channel.reload.status }.to("closed")
+      end
+    end
+
     context "when a recurring livestream has more occurrences" do
       before { event.update_columns(recurrence: "every_week") }
 

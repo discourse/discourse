@@ -136,8 +136,9 @@ class DiscourseEvents::Livestream::PublishChatTranscript
     topic_chat_channel.update!(last_transcribed_message_id: transcript.last_message_id)
   end
 
-  def livestream_finished(event:)
-    event.expired?
+  # Asked of the occurrence that ended rather than of now, as the job may run late.
+  def livestream_finished(event:, event_date:)
+    !event.occurrences_remaining?(after: event_date.starts_at + 1.second)
   end
 
   # Only an open channel, so a status set by moderators is kept and the event

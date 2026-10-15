@@ -116,7 +116,7 @@ module DiscourseEvents
       # future, or made recurring, needs it open again.
       def reopen_livestream_chat_channel
         return unless livestream? && SiteSetting.chat_enabled
-        return if expired?
+        return if !occurrences_remaining?
 
         topic_chat_channel =
           DiscourseEvents::Livestream::TopicChatChannel.includes(:chat_channel).find_by(
@@ -459,6 +459,14 @@ module DiscourseEvents
 
       def recurring?
         recurrence.present?
+      end
+
+      # Unlike `expired?`, also false for a series whose cutoff falls after its
+      # last occurrence.
+      def occurrences_remaining?(after: Time.current)
+        return false if expired?
+        return true if !recurring?
+        calculate_next_occurrence_from(after).present?
       end
 
       def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
