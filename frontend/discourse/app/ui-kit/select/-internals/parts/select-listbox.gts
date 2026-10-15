@@ -104,7 +104,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
   <DAsyncContent
     @asyncData={{@loadListContent}}
     @context={{@engine.loadContext}}
-    @debounce={{@presenter.debounce}}
+    @debounce={{@presenter.debounceFor}}
     @retainWhileReloading={{@feedback.retainRowsWhileReloading}}
   >
     <:loading>

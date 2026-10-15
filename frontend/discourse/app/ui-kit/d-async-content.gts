@@ -36,6 +36,12 @@ type AsyncDataFn<T> = (
   }
 ) => T | Promise<T>;
 
+/**
+ * Decides the debounce for one re-evaluation from the `@context` it moves from and to. Returns
+ * what the static form of `@debounce` accepts.
+ */
+type DebounceFn = (previous: unknown, next: unknown) => boolean | number;
+
 interface DAsyncContentSignature<T> {
   Args: {
     /**
@@ -71,8 +77,13 @@ interface DAsyncContentSignature<T> {
      * and changing it will not reload. Only an un-debounced evaluation tracks
      * such reads, so a source that is ever debounced must never rely on
      * autotracking: pass every reactive dependency it has through `@context`.
+     *
+     * A function decides per evaluation: it receives the previous and the next
+     * `@context` and returns what the static form accepts. It runs inside the
+     * tracked computation, so it must be pure, and it should be a stable (bound)
+     * reference, since a new function on each render re-evaluates the data.
      */
-    debounce?: boolean | number;
+    debounce?: boolean | number | DebounceFn;
 
     /**
      * Keep rendering the previously resolved value while a subsequent load is
@@ -132,6 +143,12 @@ export default class DAsyncContent<T> extends Component<
   // first evaluation can skip debouncing: there is no rapid input to coalesce yet, and a
   // delay there would only postpone the initial paint.
   #hasEvaluated = false;
+
+  /**
+   * The `@context` the function form last evaluated with, handed to a function `@debounce` as
+   * the context the next evaluation moves from.
+   */
+  #lastContext: unknown = undefined;
 
   // The value from the most recent resolution, kept so we can keep rendering it
   // while a *subsequent* load is pending (opt-in via `@retainWhileReloading`).
@@ -218,6 +235,8 @@ export default class DAsyncContent<T> extends Component<
       // An externally-managed instance produces nothing for a superseded promise to
       // adopt, so the scheduled call is simply dropped and its promise settled.
       this.#cancelPendingDebounce();
+      /* eslint-disable-next-line ember/no-side-effects */
+      this.#lastContext = undefined;
       return asyncData;
     }
 
@@ -237,8 +256,10 @@ export default class DAsyncContent<T> extends Component<
 
     if (this.#isPromise(asyncData)) {
       value = asyncData;
+      /* eslint-disable-next-line ember/no-side-effects */
+      this.#lastContext = undefined;
     } else if (typeof asyncData === "function") {
-      const debounceDelay = this.#debounceDelay;
+      const debounceDelay = this.#debounceDelayFor(context);
 
       value = debounceDelay
         ? this.#scheduleDebounced(asyncData, context, signal, debounceDelay)
@@ -246,8 +267,10 @@ export default class DAsyncContent<T> extends Component<
 
       // Untracked, like the retained-value fields above: it only gates the *next*
       // evaluation, so it never needs to drive its own invalidation.
-      /* eslint-disable-next-line ember/no-side-effects */
+      /* eslint-disable ember/no-side-effects */
       this.#hasEvaluated = true;
+      this.#lastContext = context;
+      /* eslint-enable ember/no-side-effects */
     }
 
     superseded?.(value as T | Promise<T>);
@@ -268,18 +291,6 @@ export default class DAsyncContent<T> extends Component<
     return this.args.errorMode ?? DEFAULT_ERROR_MODE;
   }
 
-  // Resolved at evaluation time rather than recorded as a side effect of the previous
-  // resolve, so a changed `@debounce` reaches the very next evaluation instead of the
-  // one after it.
-  get #debounceDelay(): number | undefined {
-    if (!this.#hasEvaluated) {
-      return undefined;
-    }
-
-    const { debounce } = this.args;
-    return debounce === true ? INPUT_DELAY : debounce || undefined;
-  }
-
   @bind
   verifyParameters({ hasErrorBlock }: { hasErrorBlock: boolean }) {
     if (hasErrorBlock && this.args.errorMode) {
@@ -289,6 +300,22 @@ export default class DAsyncContent<T> extends Component<
     if (this.errorMode && !ERROR_MODES.includes(this.errorMode)) {
       throw `@errorMode must be one of \`${ERROR_MODES.join("`, `")}\``;
     }
+  }
+
+  /**
+   * Resolved at evaluation time rather than recorded as a side effect of the previous
+   * resolve, so a changed `@debounce` reaches the very next evaluation instead of the
+   * one after it.
+   */
+  #debounceDelayFor(context: unknown): number | undefined {
+    if (!this.#hasEvaluated) {
+      return undefined;
+    }
+
+    const { debounce: arg } = this.args;
+    const debounce =
+      typeof arg === "function" ? arg(this.#lastContext, context) : arg;
+    return debounce === true ? INPUT_DELAY : debounce || undefined;
   }
 
   #isPromise(value: unknown): value is Promise<T> {

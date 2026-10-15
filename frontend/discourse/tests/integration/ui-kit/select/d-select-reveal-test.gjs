@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import {
   click,
@@ -5,6 +6,7 @@ import {
   find,
   findAll,
   render,
+  rerender,
   settled,
   triggerKeyEvent,
   waitUntil,
@@ -910,3 +912,157 @@ module(
     });
   }
 );
+
+class LoaderState {
+  @tracked calls = 0;
+  @tracked scope = "a";
+}
+
+function pageOf(items, offset) {
+  return { items: items.slice(offset, offset + 50), total: items.length };
+}
+
+module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("a loader may read and write tracked state", async function (assert) {
+    const state = new LoaderState();
+    const load = () => {
+      state.calls++;
+      return [{ id: 1, name: "One" }];
+    };
+
+    await render(
+      <template>
+        <span class="loader-calls">{{state.calls}}</span>
+        <DSelect @load={{load}} />
+      </template>
+    );
+    await openSelect();
+
+    assert
+      .dom(OPTION_SELECTOR)
+      .exists({ count: 1 }, "the rows the loader returned render");
+    assert
+      .dom(".loader-calls")
+      .hasText("1", "the loader's own write reaches the page");
+  });
+
+  test("state a loader reads does not restart its request", async function (assert) {
+    let engine;
+    const releases = [];
+    const signals = [];
+    const scopes = [];
+    const state = new LoaderState();
+    const allItems = buildItems(100, (value) => (engine = value));
+    const load = (_filter, { offset = 0, signal }) => {
+      scopes.push(state.scope);
+      signals.push(signal);
+      if (offset === 0) {
+        return pageOf(allItems, offset);
+      }
+      return new Promise((resolve) => {
+        releases.push(() => resolve(pageOf(allItems, offset)));
+      });
+    };
+
+    await render(
+      <template><DSelect @debounce={{false}} @load={{load}} /></template>
+    );
+    await openSelect();
+    await click(findAll(OPTION_SELECTOR)[0]);
+
+    engine.revealMore();
+    await rerender();
+    assert.strictEqual(signals.length, 2, "the reveal asks for the next page");
+
+    state.scope = "b";
+    await rerender();
+
+    assert.strictEqual(
+      signals.length,
+      2,
+      "changing what the loader read does not ask again"
+    );
+    assert.false(signals[1].aborted, "the reveal request keeps running");
+
+    releases.forEach((release) => release());
+    await settled();
+  });
+
+  test("a reveal fetches without waiting for the filter debounce", async function (assert) {
+    let engine;
+    const offsets = [];
+    const allItems = buildItems(100, (value) => (engine = value));
+    const load = (_filter, { offset = 0 }) => {
+      offsets.push(offset);
+      return Promise.resolve(pageOf(allItems, offset));
+    };
+
+    await render(<template><DSelect @load={{load}} /></template>);
+    await openSelect();
+    await click(findAll(OPTION_SELECTOR)[0]);
+
+    engine.revealMore();
+    await rerender();
+
+    assert.deepEqual(offsets, [0, 50], "the next page is requested at once");
+    await settled();
+  });
+
+  test("a reload fetches without waiting for the filter debounce", async function (assert) {
+    let engine;
+    const offsets = [];
+    const allItems = buildItems(100, (value) => (engine = value));
+    const load = (_filter, { offset = 0 }) => {
+      offsets.push(offset);
+      return Promise.resolve(pageOf(allItems, offset));
+    };
+
+    await render(<template><DSelect @load={{load}} /></template>);
+    await openSelect();
+    await click(findAll(OPTION_SELECTOR)[0]);
+
+    engine.reload();
+    await rerender();
+
+    assert.deepEqual(
+      offsets,
+      [0, 0],
+      "the first page is requested again at once"
+    );
+    await settled();
+  });
+
+  test("a filter change still waits for the debounce", async function (assert) {
+    const filters = [];
+    const load = (filter) => {
+      filters.push(filter);
+      return Promise.resolve([{ id: 1, name: "One" }]);
+    };
+
+    await render(
+      <template><DSelect @load={{load}} @variant="button" /></template>
+    );
+    await click(".d-combobox__trigger");
+
+    // Dispatched raw: `fillIn` awaits `settled()`, which would wait out the debounce.
+    const input = find(".d-combobox__filter");
+    input.value = "on";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await rerender();
+
+    assert.false(
+      filters.includes("on"),
+      "the new query is not sent while the reader may still be typing"
+    );
+
+    await settled();
+
+    assert.strictEqual(
+      filters.at(-1),
+      "on",
+      "it is sent once the debounce ends"
+    );
+  });
+});

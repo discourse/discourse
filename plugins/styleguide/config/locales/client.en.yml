@@ -197,7 +197,7 @@ en:
           multi_try_this: "Add three items, then press Left arrow from the empty input to walk back through the chips."
           min_chars_description: "`@minChars` suppresses the request entirely below the threshold — no network call and no loading placeholder, only a hint."
           min_chars_try_this: "Type `en` and watch nothing load — no request, no placeholder. The third character (`eng`) triggers the first one."
-          debounce_description: "`@debounce` collapses a burst of keystrokes into a single query, so a source is asked once for what the reader meant rather than once per character. Async sources debounce by default; a number overrides the delay."
+          debounce_description: "`@debounce` collapses a burst of keystrokes into a single query, so a source is asked once for what the reader meant rather than once per character. Async sources debounce while filtering by default; a number overrides the delay."
           debounce_try_this: "Type `english` quickly, then pause. The tally below counts every keystroke against the queries actually sent."
           debounce_result: "%{keystrokes} keystrokes typed, %{requests} queries dispatched. Everything else was collapsed before it reached the source."
           paged_description: "A source that reports {items, total} knows its own size, so every row can carry an honest position and the list stops fetching once the total is reached."

@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
@@ -27,7 +26,7 @@ export interface SkeletonRow {
 
 interface LoadFeedbackTrackerOptions {
   engine: SelectEngine;
-  getDebounce: () => boolean | number;
+  getFilterDebounceDelay: () => number;
   getSkeletonCountArg: () => number | undefined;
 }
 
@@ -37,7 +36,7 @@ export default class LoadFeedbackTracker {
     { length: FRONTIER_SKELETON_COUNT },
     (_, i) => ({ key: `__skeleton:${i}`, isSkeleton: true })
   );
-  #getDebounce: () => boolean | number;
+  #getFilterDebounceDelay: () => number;
   #getSkeletonCountArg: () => number | undefined;
   #loadFeedbackTimer?: ReturnType<typeof discourseLater>;
 
@@ -57,11 +56,11 @@ export default class LoadFeedbackTracker {
 
   constructor({
     engine,
-    getDebounce,
+    getFilterDebounceDelay,
     getSkeletonCountArg,
   }: LoadFeedbackTrackerOptions) {
     this.#engine = engine;
-    this.#getDebounce = getDebounce;
+    this.#getFilterDebounceDelay = getFilterDebounceDelay;
     this.#getSkeletonCountArg = getSkeletonCountArg;
     registerDestructor(this, () => cancel(this.#loadFeedbackTimer));
   }
@@ -103,16 +102,16 @@ export default class LoadFeedbackTracker {
   /**
    * How long a load may run before it earns visible feedback.
    *
-   * The wait being measured is the source's, but pending starts at the keystroke and the
-   * request does not start until the debounce elapses. Counting from the keystroke charges the
-   * source for the debounce, and since the default debounce already exceeds the threshold, every
-   * re-query would trip it — retention would never apply and no source could be "fast".
+   * The wait being measured is the source's, but a re-query's pending starts at the keystroke and
+   * its request does not start until the debounce elapses. Counting from the keystroke charges
+   * the source for the debounce, and since the default debounce already exceeds the threshold,
+   * every re-query would trip it — retention would never apply and no source could be "fast". A
+   * reveal or a reload starts at once, so it is not charged.
    */
-  get #loadFeedbackDelay(): number {
-    const debounce = this.#getDebounce();
-    const debounceDelay =
-      debounce === true ? INPUT_DELAY : debounce === false ? 0 : debounce;
-    return LOADING_FEEDBACK_DELAY + debounceDelay;
+  get _loadFeedbackDelay(): number {
+    return this.#engine.serverQueryPending
+      ? LOADING_FEEDBACK_DELAY + this.#getFilterDebounceDelay()
+      : LOADING_FEEDBACK_DELAY;
   }
 
   /**
@@ -161,9 +160,15 @@ export default class LoadFeedbackTracker {
    * exists at all ({@link retainRowsWhileReloading}). Armed from the listbox, raising it would
    * unmount the element carrying the timer, whose teardown lowers the flag again and remounts
    * it — a strobe rather than a load state. The panel spans both.
+   *
+   * The second positional is whether the load is a re-query. It re-arms the timer when typing
+   * turns an in-flight reveal or reload into one, which earns the longer threshold.
    */
   @action
-  trackLoadFeedback(_element: HTMLElement, [pending]: [boolean]): void {
+  trackLoadFeedback(
+    _element: HTMLElement,
+    [pending]: [boolean, boolean]
+  ): void {
     cancel(this.#loadFeedbackTimer);
     if (!pending) {
       this._loadFeedbackDue = false;
@@ -172,7 +177,7 @@ export default class LoadFeedbackTracker {
     this.#loadFeedbackTimer = discourseLater(
       this,
       () => (this._loadFeedbackDue = true),
-      this.#loadFeedbackDelay
+      this._loadFeedbackDelay
     );
   }
 

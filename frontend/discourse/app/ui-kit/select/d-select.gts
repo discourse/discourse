@@ -141,7 +141,8 @@ interface DSelectSignature {
     /**
      * Debounce the list source between re-filters: `true` uses the shared input delay, a number
      * sets the milliseconds, `false` is instant. Defaults to whether the source is server-backed,
-     * so a client source never flashes a loading skeleton while an async one is throttled.
+     * so a client source never flashes a loading skeleton while an async one is throttled. Only a
+     * filter change waits; a reveal or a reload fetches at once.
      */
     debounce?: boolean | number;
     /**
@@ -356,7 +357,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
   feedback = new LoadFeedbackTracker({
     engine: this.engine,
-    getDebounce: () => this.presenter.debounce,
+    getFilterDebounceDelay: () => this.presenter.filterDebounceDelay,
     getSkeletonCountArg: () => this.args.skeletonCount,
   });
 
@@ -704,10 +705,12 @@ export default class DSelect extends Component<DSelectSignature> {
           {{didInsert
             this.feedback.trackLoadFeedback
             this.engine.serverPending
+            this.engine.serverQueryPending
           }}
           {{didUpdate
             this.feedback.trackLoadFeedback
             this.engine.serverPending
+            this.engine.serverQueryPending
           }}
           {{willDestroy this.feedback.releaseLoadFeedback}}
         >

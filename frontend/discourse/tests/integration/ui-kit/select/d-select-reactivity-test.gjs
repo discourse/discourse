@@ -84,10 +84,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     );
   });
 
-  test("two successive @items replacements each restart a debounced list", async function (assert) {
-    // The first replacement can restart via DAsyncContent's accidentally-synchronous first
-    // computation; the SECOND must restart too, which requires loadContext to synchronously
-    // depend on the effective items rather than relying on that one-time autotrack.
+  test("@items replacements after a debounced re-filter each restart the list", async function (assert) {
+    // A re-filter runs the source from the debounce timer, outside autotracking, so only
+    // loadContext's own dependency on the effective items can restart the list afterwards.
     const state = new TestState();
 
     await render(
@@ -96,11 +95,12 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       </template>
     );
     await click(".d-combobox__trigger");
+    await fillIn(".d-combobox__filter", "e");
 
     assert.deepEqual(
       optionLabels(),
-      ["Apple", "Banana", "Cherry"],
-      "the debounced list resolves the initial items"
+      ["Apple", "Cherry"],
+      "the debounced re-filter resolves"
     );
 
     state.items = [{ id: 5, name: "Elderberry" }];
@@ -108,15 +108,16 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     assert.deepEqual(
       optionLabels(),
       ["Elderberry"],
-      "the first replacement restarts the debounced list"
+      "the first replacement restarts the list"
     );
 
-    state.items = [{ id: 6, name: "Fig" }];
+    await fillIn(".d-combobox__filter", "el");
+    state.items = [{ id: 6, name: "Fennel" }];
     await settled();
     assert.deepEqual(
       optionLabels(),
-      ["Fig"],
-      "a second replacement also restarts the debounced list"
+      ["Fennel"],
+      "a replacement after another re-filter also restarts the list"
     );
   });
 

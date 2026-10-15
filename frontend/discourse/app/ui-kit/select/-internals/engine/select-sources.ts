@@ -122,6 +122,7 @@ export interface SelectSource {
   atCapWithMore(): boolean;
   pending(): boolean;
   revealPending(): boolean;
+  queryPending(): boolean;
   revealMore(): boolean;
   knownRows(): SelectItem[];
   reset(): void;
@@ -162,6 +163,10 @@ export class LocalSource implements SelectSource {
   }
 
   revealPending(): boolean {
+    return false;
+  }
+
+  queryPending(): boolean {
     return false;
   }
 
@@ -258,6 +263,15 @@ export class PagedSource implements SelectSource {
     return filter === this.#state.filter && nonce === this.#state.nonce;
   }
 
+  queryPending(): boolean {
+    const completed = this.#state.serverCompletedKey;
+    if (!this.pending() || completed == null) {
+      return false;
+    }
+    const [filter] = JSON.parse(completed) as [string, number, number];
+    return filter !== this.#state.filter;
+  }
+
   revealMore(): boolean {
     // `#serverRequest` is the authoritative in-flight check and is read directly because
     // this runs from an action, never during render. `canRevealMore` is its reactive
@@ -321,12 +335,15 @@ export class PagedSource implements SelectSource {
 
     const generation = this.#serverGeneration;
     const key = this.#loadKey;
-    const request = Promise.resolve(
-      this.#load(filter, {
-        ...opts,
-        offset: this.#serverOffset,
-        limit: this.#serverPageSize,
-      })
+    const offset = this.#serverOffset;
+    const limit = this.#serverPageSize;
+    // Started after the current task rather than inside it: this runs during render, where a
+    // loader writing tracked state would fail the render and its tracked reads would turn into
+    // reload triggers. A request abandoned or reset before it starts is never sent.
+    const request = Promise.resolve().then(() =>
+      opts.signal?.aborted || generation !== this.#serverGeneration
+        ? []
+        : this.#load(filter, { ...opts, offset, limit })
     );
     this.#serverRequest = request;
     // An abandoned request must not keep answering for the one that replaces it. The consumer

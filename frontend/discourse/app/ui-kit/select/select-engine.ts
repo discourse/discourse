@@ -260,6 +260,9 @@ export interface SelectEngineOptions {
    * A response that declares neither `total` nor `hasMore` — including a bare array — is
    * taken as the complete set, so a paginating source **must** declare one of them or only
    * its first page is ever shown.
+   *
+   * Called after the current render, never inside it, so it may write tracked state. State it
+   * reads is not tracked: a change to it never re-asks the source; call `reload()` for that.
    */
   load?: (
     filter: string,
@@ -698,6 +701,14 @@ export default class SelectEngine {
    */
   get serverRevealPending(): boolean {
     return this.#source.revealPending();
+  }
+
+  /**
+   * Whether the in-flight load answers a new filter, the only load that waits for the
+   * debounce. A reveal or a reload keeps the filter and starts at once.
+   */
+  get serverQueryPending(): boolean {
+    return this.#source.queryPending();
   }
 
   /**

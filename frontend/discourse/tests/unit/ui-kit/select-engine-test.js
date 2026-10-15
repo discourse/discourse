@@ -1,5 +1,11 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
+import {
+  PagedSource,
+  SelectState,
+} from "discourse/ui-kit/select/-internals/engine/select-sources";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
 // Builds a controlled engine whose value is owned by a local variable that `onChange`
@@ -330,7 +336,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.false(engine.isAsync, "a client source is not async");
     });
 
-    test("loadItems delegates to load for a server source, forwarding the signal", function (assert) {
+    test("loadItems delegates to load for a server source, forwarding the signal", async function (assert) {
       const calls = [];
       const engine = new SelectEngine({
         load: (filter, opts) => {
@@ -342,6 +348,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const controller = new AbortController();
       engine.loadItems(engine.loadContext, { signal: controller.signal });
+      await Promise.resolve();
 
       assert.strictEqual(calls[0][0], "q", "load receives the live filter");
       assert.strictEqual(
@@ -368,6 +375,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       const first = engine.loadItems(engine.loadContext, {
         signal: closing.signal,
       });
+      await Promise.resolve();
       assert.strictEqual(
         releases.length,
         1,
@@ -385,6 +393,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       const second = engine.loadItems(engine.loadContext, {
         signal: reopened.signal,
       });
+      await Promise.resolve();
 
       assert.strictEqual(
         releases.length,
@@ -1037,6 +1046,169 @@ module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
       filters,
       ["1", "12", "123", "12", "1"],
       "every deletion re-fetched instead of reusing a settled key"
+    );
+  });
+});
+
+module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
+  setupTest(hooks);
+
+  function pagedSource(load) {
+    const state = new SelectState();
+    const source = new PagedSource({
+      load,
+      state,
+      keyOf: (item) => String(item.id),
+    });
+    return { source, state };
+  }
+
+  test("a new request calls the loader after the current task, not during it", async function (assert) {
+    let calls = 0;
+    const { source } = pagedSource(() => {
+      calls++;
+      return [{ id: 1, name: "One" }];
+    });
+
+    const rows = source.rows({ signal: new AbortController().signal });
+    assert.strictEqual(calls, 0, "the loader is not called synchronously");
+
+    await Promise.resolve();
+    assert.strictEqual(calls, 1, "the loader runs once the task yields");
+    assert.deepEqual(
+      (await rows).map((item) => item.id),
+      [1],
+      "the deferred request still answers"
+    );
+  });
+
+  test("a request aborted before it starts never calls the loader", async function (assert) {
+    let calls = 0;
+    const { source, state } = pagedSource(() => {
+      calls++;
+      return [{ id: 1, name: "One" }];
+    });
+
+    const controller = new AbortController();
+    const rows = source.rows({ signal: controller.signal });
+    controller.abort();
+    await rows;
+
+    assert.strictEqual(calls, 0, "an abandoned request is never sent");
+    assert.notStrictEqual(
+      state.serverCompletedKey,
+      null,
+      "the request still reads as over, so nothing stays busy"
+    );
+    assert.strictEqual(
+      state.serverSettledKey,
+      null,
+      "an unsent request never authorizes reusing the empty accumulator"
+    );
+  });
+
+  test("a request reset before it starts never calls the loader", async function (assert) {
+    let calls = 0;
+    const { source, state } = pagedSource(() => {
+      calls++;
+      return [{ id: 1, name: "One" }];
+    });
+
+    const rows = source.rows({ signal: new AbortController().signal });
+    source.reset();
+    await rows;
+
+    assert.strictEqual(calls, 0, "a superseded request is never sent");
+    assert.strictEqual(
+      state.serverCompletedKey,
+      null,
+      "a superseded request stamps no completion"
+    );
+    assert.strictEqual(
+      state.serverSettledKey,
+      null,
+      "a superseded request stamps no success"
+    );
+  });
+
+  test("a loader that throws synchronously settles as a failed load", async function (assert) {
+    let calls = 0;
+    const engine = new SelectEngine({
+      load: () => {
+        calls++;
+        throw new Error("boom");
+      },
+    });
+
+    let result;
+    let threw = false;
+    try {
+      result = engine.loadItems(engine.loadContext);
+    } catch {
+      threw = true;
+    }
+
+    assert.false(threw, "the throw becomes a rejection");
+    await assert.rejects(result, /boom/, "the rejection carries the error");
+    assert.false(engine.serverPending, "the failed load reads as finished");
+
+    await engine.loadItems(engine.loadContext).catch(() => {});
+    assert.strictEqual(
+      calls,
+      2,
+      "the next load asks again instead of reusing the empty accumulator"
+    );
+  });
+
+  test("serverQueryPending is true only while a new query is in flight", async function (assert) {
+    const engine = new SelectEngine({
+      load: (filter, { offset = 0 }) => ({
+        items: [{ id: `${filter}-${offset}`, name: "Row" }],
+        hasMore: true,
+      }),
+    });
+
+    await engine.loadItems(engine.loadContext);
+    assert.false(
+      engine.serverQueryPending,
+      "a settled list has no query in flight"
+    );
+
+    engine.setFilter("q");
+    assert.true(engine.serverQueryPending, "a new filter is a query in flight");
+
+    await engine.loadItems(engine.loadContext);
+    assert.false(engine.serverQueryPending, "the query settled");
+
+    engine.revealMore();
+    assert.true(engine.serverPending, "the reveal is in flight");
+    assert.false(engine.serverQueryPending, "a reveal is not a new query");
+
+    await engine.loadItems(engine.loadContext);
+    engine.reload();
+    assert.true(engine.serverPending, "the reload is in flight");
+    assert.false(engine.serverQueryPending, "a reload is not a new query");
+  });
+
+  test("load feedback waits out the filter debounce only for a new query", function (assert) {
+    const engine = { serverQueryPending: false };
+    const feedback = new LoadFeedbackTracker({
+      engine,
+      getFilterDebounceDelay: () => INPUT_DELAY,
+      getSkeletonCountArg: () => undefined,
+    });
+
+    assert.strictEqual(
+      feedback._loadFeedbackDelay,
+      250,
+      "a reveal or reload starts at once, so it is not charged the debounce"
+    );
+
+    engine.serverQueryPending = true;
+    assert.strictEqual(
+      feedback._loadFeedbackDelay,
+      250 + INPUT_DELAY,
+      "a new query is charged the debounce it waited for"
     );
   });
 });

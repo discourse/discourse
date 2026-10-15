@@ -131,7 +131,8 @@ by mechanism.
   value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
   filtered out under an active query so a non-matching search still reaches the empty state.
 - Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and a render
-  cap; `@filterBy` field or predicate; `@minChars` gate; `@debounce`.
+  cap; `@filterBy` field or predicate; `@minChars` gate; `@debounce` (filter changes only; reveals
+  and reloads fetch at once).
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
   named unresolved fallback (`@createUnresolvedItem`). A resolver may answer synchronously, so a

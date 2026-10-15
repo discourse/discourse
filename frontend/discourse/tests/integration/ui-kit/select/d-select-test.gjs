@@ -1828,7 +1828,7 @@ module(
       );
     });
 
-    test("@debounce={{false}} keeps a function source synchronous", async function (assert) {
+    test("@debounce={{false}} never enters a loading state", async function (assert) {
       const filters = [];
       const load = (filter) => {
         filters.push(filter);

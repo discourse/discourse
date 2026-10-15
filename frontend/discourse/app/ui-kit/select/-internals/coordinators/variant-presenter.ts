@@ -1,5 +1,7 @@
 import { assert } from "@ember/debug";
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
+import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
 import SelectEngine, {
   type SelectValue,
@@ -273,12 +275,14 @@ export default class VariantPresenter {
   }
 
   /**
-   * The list debounce forwarded to `DAsyncContent`. Defaults to whether the source is
-   * server-backed (`engine.isAsync`) so a client source never flashes a skeleton, while a
-   * consumer can force a delay with `true`/a number or disable it with `false`.
+   * How long a filter change waits before the list asks the source, in milliseconds. Defaults to
+   * the input delay for a server-backed source (`engine.isAsync`), so a client source never
+   * flashes a skeleton; a consumer can force a delay with `true`/a number or disable it with
+   * `false`.
    */
-  get debounce(): boolean | number {
-    return this.#getArgs().debounce ?? this.#engine.isAsync;
+  get filterDebounceDelay(): number {
+    const debounce = this.#getArgs().debounce ?? this.#engine.isAsync;
+    return debounce === true ? INPUT_DELAY : debounce || 0;
   }
 
   /**
@@ -430,5 +434,17 @@ export default class VariantPresenter {
   /** The combobox/listbox accessible name (the consumer's `@label` or a default). */
   get ariaLabelText(): string {
     return this.#getArgs().label ?? i18n("d_select.label");
+  }
+
+  /**
+   * The list debounce forwarded to `DAsyncContent`. Only a filter change waits: a reveal or a
+   * reload keeps the query the reader is looking at, so it fetches at once.
+   */
+  @bind
+  debounceFor(
+    previous: { filter: string } | undefined,
+    next: { filter: string }
+  ): number {
+    return previous?.filter !== next.filter ? this.filterDebounceDelay : 0;
   }
 }
