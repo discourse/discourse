@@ -263,11 +263,16 @@ export default class CategoryDrop extends ComboBoxComponent {
         this.editingCategoryTab
       );
     } else {
-      route = getCategoryAndTagUrl(
-        category,
-        categoryId !== NO_CATEGORIES_ID,
-        this.tag
-      );
+      // Only the explicit shortcuts override the target category's default
+      // list filter; picking a category by id lets its default apply.
+      let subcategories;
+      if (categoryId === NO_CATEGORIES_ID) {
+        subcategories = false;
+      } else if (categoryId === ALL_CATEGORIES_ID) {
+        subcategories = true;
+      }
+
+      route = getCategoryAndTagUrl(category, subcategories, this.tag);
     }
 
     DiscourseURL.routeToUrl(route);

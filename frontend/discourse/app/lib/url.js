@@ -605,14 +605,22 @@ export function isHttpUrl(value) {
   }
 }
 
+/**
+ * `subcategories` is tri-state: `false` forces `/none`, `true` appends `/all`
+ * when the category's default list filter is "none" (to escape that default),
+ * and `undefined` leaves the URL bare so the category's default applies.
+ */
 export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
   if (category) {
     url = category.path;
-    if (!subcategories) {
+    if (subcategories === false) {
       url += "/none";
-    } else if (category.default_list_filter === "none") {
+    } else if (
+      subcategories === true &&
+      category.default_list_filter === "none"
+    ) {
       url += "/all";
     }
   }
