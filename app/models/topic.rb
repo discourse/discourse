@@ -495,6 +495,37 @@ class Topic < ActiveRecord::Base
     )
   end
 
+  def self.recalculate_like_counts!(topic_ids)
+    counts = DB.query(<<~SQL, topic_ids:, whisper: Post.types[:whisper])
+      WITH previous AS (SELECT id, like_count FROM topics WHERE id IN (:topic_ids))
+      UPDATE topics
+      SET like_count = (
+        SELECT COALESCE(SUM(posts.like_count), 0)
+        FROM posts
+        WHERE posts.topic_id = topics.id
+          AND posts.post_type <> :whisper
+          AND posts.deleted_at IS NULL
+      )
+      FROM previous
+      WHERE topics.id = previous.id
+      RETURNING topics.id, previous.like_count AS previous_count, topics.like_count AS current_count
+    SQL
+
+    crossed =
+      counts.select do |count|
+        og_image_counter_regeneration_needed?(count.previous_count, count.current_count)
+      end
+    topics = where(id: crossed.map(&:id)).index_by(&:id)
+    crossed.each do |count|
+      topics[count.id]&.enqueue_og_image_regeneration_after_counter_change(
+        previous_count: count.previous_count,
+        current_count: count.current_count,
+      )
+    end
+
+    counts
+  end
+
   def self.og_image_counter_regeneration_needed?(previous_count, current_count)
     previous_count = previous_count.to_i
     current_count = current_count.to_i
@@ -1459,15 +1490,9 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    old_like_count = like_count
-    new_like_count =
-      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count)
-
-    update_column(:like_count, new_like_count)
-    enqueue_og_image_regeneration_after_counter_change(
-      previous_count: old_like_count,
-      current_count: new_like_count,
-    )
+    count = Topic.recalculate_like_counts!([id]).first
+    self.like_count = count.current_count
+    clear_attribute_changes(%i[like_count])
   end
 
   def posters_summary(options = {}) # avatar lookup in options
