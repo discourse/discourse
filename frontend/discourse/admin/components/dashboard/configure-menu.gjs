@@ -157,6 +157,7 @@ class ConfigureRow extends Component {
 }
 
 export default class ConfigureMenu extends Component {
+  /** @type {number | null} */
   draggedIndex = null;
 
   get lastIndex() {
