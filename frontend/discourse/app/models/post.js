@@ -153,6 +153,8 @@ export default class Post extends RestModel {
   @tracked cooked;
   @tracked cooked_hidden;
   @tracked created_at;
+
+  /** @type {string | null} */
   @tracked customShare = null;
   @tracked deleted_at;
   @tracked deleted_by;
