@@ -25,7 +25,6 @@ class CookedPostProcessor
     cooked = post.cook(post.raw, @cooking_options)
     @doc = Loofah.html5_fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
-    @size_cache = {}
 
     @disable_dominant_color = !!opts[:disable_dominant_color]
     @omit_nofollow = post.omit_nofollow?
