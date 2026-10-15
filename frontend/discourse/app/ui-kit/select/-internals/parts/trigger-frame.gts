@@ -4,6 +4,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 interface TriggerFrameSignature {
   Args: {
+    /** Whether asynchronous selection work is pending. */
+    pending: boolean;
     /** The leading (decorative) trigger icon, or `undefined` for none. */
     icon?: string;
     /** The already-resolved caret icon (open/closed is decided by the parent). */
@@ -83,7 +85,9 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
       {{dIcon "xmark"}}
     </button>
   {{/if}}
-  {{#if @showCaret}}
+  {{#if @pending}}
+    {{dIcon "spinner" class="d-combobox__pending-icon"}}
+  {{else if @showCaret}}
     {{dIcon @caret class="d-combobox__caret"}}
   {{/if}}
 </template>;

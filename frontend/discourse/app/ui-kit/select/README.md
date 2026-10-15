@@ -138,15 +138,60 @@ a key core adds later never collides with one a customization relies on:
 
 Both default to a frozen empty object, so `context.kind.scope` is always safe to read.
 
-`control` is the select's handle: `value`, `filter`, `close()` and `select(item)`. An action row
-receives it as `onSelect(control, item)`. It is the same frozen object for the select's whole
-life, so a transformer can key per-select state on it, for example in a `WeakMap`. Its methods do
-nothing once the select is destroyed, so an async row may call them late.
+`control` is the select's handle. Action rows receive it as `onSelect(control, item)`. It is the
+same frozen object for the select's whole life, so a transformer can key per-select state on it,
+for example in a `WeakMap`. It exposes:
+
+- `value`, `filter`, and tracked `pending` (whether async update work is in flight).
+- `close()` to close the overlay.
+- `select(item)` to set a single value or add a multi value.
+- `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
+- `clear()` to clear a nonempty selection.
+- `update(work)` to run synchronous or asynchronous work with a selection update scope.
+
+The scope has a pure `current` reader and `select(item)`, `deselect(item)`, and `clear()` verbs.
+It has no `close()` or `update()`. Inside `work`, call the scope's selection verbs. Calling
+`control.select()`, `control.deselect()`, or `control.clear()` expresses external selection intent
+and supersedes your own update. Scope writes use the normal selection rules, including caps,
+transformers, resolved-item caching, `@onChange`, and close-on-select;
+they do nothing while locked or after the scope loses authority.
+
+```js
+onSelect: (control) => {
+  const filter = control.filter;
+  control.update(async (scope) => {
+    control.close();
+    const item = await suggest(filter);
+    if (item) scope.select(item);
+    else if (scope.current) noSuggestionsToast();
+  }).catch(popupAjaxError);
+},
+```
+
+Read `control.filter` before the first `await`, so later typing does not change the request's
+input. Check `scope.current` before reporting a no-change outcome, such as a toast. If closing
+after an `await`, use `if (scope.current) control.close()` so stale work cannot dismiss a newer
+interaction. `update()` rejects when work throws or rejects, so catch the returned promise.
+
+A newer update, any external selection intent (including a re-pick, removal, or clear), opening
+a closed panel, a parent value change, or destruction supersedes the scope. Closing and filter
+resets do not. A parent value change is checked when reading `scope.current` or writing through
+the scope; a reordered multi value counts as a change. An A-to-B-to-A round trip between checks
+cannot be detected. Once work ends, its scope is no longer current. A deferred transformer
+commit may still finish after a normal end, but cannot commit after supersession.
+
+While async work is pending, the trigger shows selection loading feedback and a spinner.
+Synchronous work has no loading flash. Programmatic single sets and re-picks are announced;
+multi adds and removals keep their item announcements, and clear announces "Selection cleared".
+No-change and superseded work announce no outcome, so extensions should announce their own
+no-change result alongside a toast.
 
 `select-content` runs while the list renders, so it must be pure: it must not write tracked state
-or call `control`'s methods. Those are for event time, such as a row's `onSelect`. A transformer
-that reads tracked state runs again when that state changes, which is how a customization
-refreshes the list.
+or call `update()` or any control or scope verbs. Those are for event time, such as a row's
+`onSelect`. A transformer that reads tracked state runs again when that state changes. Read
+`control.pending` there to return a reactive loading row, for example with
+`name: control.pending ? i18n("suggesting") : i18n("suggest")` and
+`disabled: control.pending`. Control methods do nothing once the select is destroyed.
 
 ### Recipes
 

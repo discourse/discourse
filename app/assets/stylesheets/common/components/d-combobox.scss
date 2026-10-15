@@ -124,9 +124,16 @@
   min-width: 0;
 }
 
-.d-combobox__caret {
+.d-combobox__caret,
+.d-combobox__pending-icon {
   color: var(--primary-medium);
   flex-shrink: 0;
+}
+
+.d-combobox__pending-icon {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: rotate-forever 1s infinite linear;
+  }
 }
 
 // Floor every dropdown's width so it is never uselessly narrow. `matchTriggerWidth` pins the

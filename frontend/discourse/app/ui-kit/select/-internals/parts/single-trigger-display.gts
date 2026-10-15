@@ -16,6 +16,8 @@ import { i18n } from "discourse-i18n";
 
 interface SingleTriggerDisplaySignature {
   Args: {
+    /** Whether asynchronous selection work is pending. */
+    pending: boolean;
     /** The current bound selection. */
     value?: SelectValue;
     /** The headless selection engine. */
@@ -102,7 +104,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
       {{#unless @editing}}
         {{#if @presenter.isMobileTypeahead}}
           <span class="d-combobox__presentation">
-            {{#if @engine.hasValue}}
+            {{#if (or @pending @engine.hasValue)}}
               <DAsyncContent
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
@@ -139,7 +141,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             {{/if}}
           </span>
         {{else if @hasSelectionBlock}}
-          {{#if (and @engine.hasValue (not @triggerFocused))}}
+          {{#if (or @pending (and @engine.hasValue (not @triggerFocused)))}}
             <span class="d-combobox__presentation" id={{@selectionId}}>
               <DAsyncContent
                 @asyncData={{@resolveSelection}}
@@ -170,7 +172,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               </DAsyncContent>
             </span>
           {{/if}}
-        {{else if @engine.hasValue}}
+        {{else if (or @pending @engine.hasValue)}}
           <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
             <:loading>
               <span class="d-combobox__presentation">
@@ -187,6 +189,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
       {{/unless}}
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
+          aria-busy={{if @pending "true"}}
           aria-describedby={{@composeDescribedBy
             (if
               (and @hasSelectionBlock @engine.hasValue (not @triggerFocused))
@@ -195,15 +198,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             @describedBy
           }}
           aria-invalid={{if @invalid "true"}}
-          {{! Points at the sibling selection markup for exactly as long as that markup is
-            what carries the value. Once focused the label moves into the input itself, so
-            keeping the description would announce the selection twice. Mirrors the
-            condition that renders the presentation span. }}
+          {{! Only the resting held value needs a description. Pending feedback can also
+            render while focused, when the input must not describe that sibling. }}
           id={{@id}}
           @ariaOwns={{true}}
           @disabled={{@presenter.isDisabled}}
           @displayValue={{if
-            (and @hasSelectionBlock (not @triggerFocused))
+            (or @pending (and @hasSelectionBlock (not @triggerFocused)))
             ""
             @presenter.fallbackSelectionLabel
           }}
@@ -219,8 +220,8 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{! No placeholder once a value is chosen: the value is shown either in this input
             (default) or in the sibling selection presentation (with a :selection block),
             so a placeholder would otherwise sit next to it. }}
-          @placeholder={{unless
-            @engine.hasValue
+          @placeholder={{if
+            (not (or @pending @engine.hasValue))
             (or @placeholder (i18n "d_select.placeholder"))
           }}
           @readonly={{@presenter.isReadonly}}

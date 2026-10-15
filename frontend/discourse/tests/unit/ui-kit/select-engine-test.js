@@ -1,7 +1,9 @@
 import { destroy } from "@ember/destroyable";
+import { isSettled, settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import {
   PagedSource,
@@ -21,9 +23,22 @@ function controlled(opts = {}) {
     onChange: (nextValue, selected) => {
       value = nextValue;
       changes.push([nextValue, selected]);
+      opts.afterChange?.(nextValue);
     },
   });
-  return { engine, changes };
+  // Stands in for the parent writing `@value` without going through the engine.
+  const setValue = (next) => (value = next);
+  return { engine, changes, setValue };
+}
+
+/** A promise with its resolve and reject exposed, so a test controls when work settles. */
+function deferred() {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
 }
 
 module("Unit | ui-kit | SelectEngine", function (hooks) {
@@ -1239,5 +1254,498 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
       250 + INPUT_DELAY,
       "a new query is charged the debounce it waited for"
     );
+  });
+});
+
+module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
+  setupTest(hooks);
+
+  const A = { id: 1, name: "A" };
+  const B = { id: 2, name: "B" };
+  const C = { id: 3, name: "C" };
+
+  test("an update is pending until its work settles, and a scope write emits once", async function (assert) {
+    const { engine, changes } = controlled({ items: [A, B] });
+    const gate = deferred();
+
+    const done = engine.control.update(async (scope) => {
+      await gate.promise;
+      scope.select(B);
+    });
+
+    assert.true(engine.control.pending, "pending while the work runs");
+    assert.strictEqual(
+      changes.length,
+      0,
+      "nothing is emitted before the work writes"
+    );
+
+    gate.resolve();
+    await done;
+
+    assert.false(
+      engine.control.pending,
+      "no longer pending once the work settles"
+    );
+    assert.deepEqual(changes, [[2, B]], "the scope write emitted exactly once");
+  });
+
+  test("a synchronous work applies its writes without ever becoming pending", function (assert) {
+    const { engine, changes } = controlled({ items: [A] });
+    let pendingInside;
+
+    engine.control.update((scope) => {
+      pendingInside = engine.control.pending;
+      scope.select(A);
+    });
+
+    assert.false(pendingInside, "never pending, even while the work runs");
+    assert.false(engine.control.pending, "not pending afterwards");
+    assert.deepEqual(changes, [[1, A]], "the synchronous write still applied");
+  });
+
+  test("an update can clear, do nothing, or apply several writes", async function (assert) {
+    const single = controlled({ items: [A], value: 1 });
+    await single.engine.control.update(async (scope) => scope.clear());
+    assert.deepEqual(
+      single.changes,
+      [[null, null]],
+      "a single clear emits null"
+    );
+
+    const multi = controlled({ items: [A, B, C], multiple: true, value: [1] });
+    await multi.engine.control.update(async (scope) => scope.clear());
+    assert.deepEqual(multi.changes.at(-1)[0], [], "a multi clear emits []");
+
+    const idle = controlled({ items: [A], value: 1 });
+    await idle.engine.control.update(async () => {});
+    assert.strictEqual(idle.changes.length, 0, "an empty work emits nothing");
+
+    const both = controlled({ items: [A, B, C], multiple: true, value: [1] });
+    await both.engine.control.update(async (scope) => {
+      scope.select(B);
+      scope.deselect(A);
+    });
+    assert.deepEqual(
+      both.changes.map(([value]) => value),
+      [[1, 2], [2]],
+      "two writes in one update apply in order"
+    );
+  });
+
+  test("two writes still apply when a select-on-change transformer defers or vetoes", async function (assert) {
+    const queued = [];
+    let mode = "defer";
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer("select-on-change", ({ next }) => {
+        if (mode === "defer") {
+          queued.push(next);
+        }
+      });
+    });
+
+    const deferring = controlled({ items: [A, B, C], multiple: true });
+    let writes = 0;
+    await deferring.engine.control.update(async (scope) => {
+      scope.select(A);
+      writes++;
+      scope.select(B);
+      writes++;
+    });
+    assert.strictEqual(writes, 2, "the work ran to the end");
+    assert.strictEqual(queued.length, 2, "both writes reached the transformer");
+
+    mode = "veto";
+    let vetoedScope;
+    const vetoing = controlled({ items: [A, B], value: null });
+    await vetoing.engine.control.update(async (scope) => {
+      vetoedScope = scope;
+      scope.select(A);
+      assert.true(
+        scope.current,
+        "a vetoed own write does not read as a parent change"
+      );
+      scope.select(B);
+    });
+    assert.strictEqual(vetoing.changes.length, 0, "vetoed writes emit nothing");
+    assert.false(vetoedScope.current, "the scope ends with its update");
+  });
+
+  test("a rejecting or throwing work ends the update and rejects update() with its reason", async function (assert) {
+    const { engine } = controlled({ items: [A], value: 1 });
+    const failure = new Error("boom");
+    const gate = deferred();
+
+    const rejecting = engine.control.update(async () => {
+      await gate.promise;
+      throw failure;
+    });
+    const barrier = engine.resolveSelection(engine.value);
+    gate.resolve();
+
+    await assert.rejects(rejecting, /boom/, "update() rejects with the reason");
+    assert.false(engine.control.pending, "a rejection ends the update");
+    assert.strictEqual(
+      await barrier,
+      undefined,
+      "the display barrier fulfils rather than rejecting"
+    );
+
+    await assert.rejects(
+      engine.control.update(() => {
+        throw failure;
+      }),
+      /boom/,
+      "a synchronous throw rejects update() too"
+    );
+    assert.false(
+      engine.control.pending,
+      "a synchronous throw leaves nothing pending"
+    );
+  });
+
+  test("a newer update supersedes the older one", async function (assert) {
+    const { engine, changes } = controlled({ items: [A, B] });
+    const first = deferred();
+    const second = deferred();
+    let firstScope;
+
+    const firstDone = engine.control.update(async (scope) => {
+      firstScope = scope;
+      await first.promise;
+      scope.select(A);
+    });
+    const secondDone = engine.control.update(async (scope) => {
+      await second.promise;
+      scope.select(B);
+    });
+
+    assert.false(firstScope.current, "the older scope is no longer current");
+
+    first.resolve();
+    await firstDone;
+    assert.true(
+      engine.control.pending,
+      "the older work finishing leaves the newer update pending"
+    );
+    assert.strictEqual(
+      changes.length,
+      0,
+      "the superseded write emitted nothing"
+    );
+
+    second.resolve();
+    await secondDone;
+    assert.deepEqual(changes, [[2, B]], "only the newer update wrote");
+  });
+
+  test("every selection intent made outside the update supersedes it at once", async function (assert) {
+    const intents = {
+      "a pick": (engine) => engine.select(B),
+      "a re-pick of the held value": (engine) => engine.select(A),
+      "a deselect": (engine) => engine.deselect(A),
+      "a clear": (engine) => engine.clear(),
+      "a control clear": (engine) => engine.control.clear(),
+    };
+
+    for (const [name, act] of Object.entries(intents)) {
+      const { engine } = controlled({ items: [A, B], value: 1 });
+      const gate = deferred();
+      let seen;
+      const done = engine.control.update(async (scope) => {
+        seen = scope;
+        await gate.promise;
+      });
+
+      act(engine);
+
+      assert.false(seen.current, `${name} supersedes the update`);
+      assert.false(engine.control.pending, `${name} ends the pending state`);
+      gate.resolve();
+      await done;
+    }
+
+    const multi = controlled({ items: [A, B], multiple: true, value: [1, 2] });
+    const gate = deferred();
+    let multiScope;
+    const done = multi.engine.control.update(async (scope) => {
+      multiScope = scope;
+      await gate.promise;
+    });
+    multi.engine.deselectLast();
+    assert.false(
+      multiScope.current,
+      "removing the last chip supersedes the update"
+    );
+    assert.false(
+      multi.engine.control.pending,
+      "removing the last chip ends the pending state at once"
+    );
+    gate.resolve();
+    await done;
+
+    const empty = controlled({ items: [A] });
+    const emptyGate = deferred();
+    let emptyScope;
+    const emptyDone = empty.engine.control.update(async (scope) => {
+      emptyScope = scope;
+      await emptyGate.promise;
+    });
+    empty.engine.control.clear();
+    assert.false(
+      emptyScope.current,
+      "a control clear of an empty select still supersedes"
+    );
+    assert.strictEqual(empty.changes.length, 0, "and still emits nothing");
+    emptyGate.resolve();
+    await emptyDone;
+  });
+
+  test("a control call made while the update's own change is applied supersedes it", async function (assert) {
+    let reentered = false;
+    let engineRef;
+    const { engine, changes } = controlled({
+      items: [A, B, C],
+      afterChange: (value) => {
+        if (value === 1 && !reentered) {
+          reentered = true;
+          engineRef.control.select(C);
+        }
+      },
+    });
+    engineRef = engine;
+    let seen;
+
+    await engine.control.update(async (scope) => {
+      seen = scope;
+      scope.select(A);
+      scope.select(B);
+    });
+
+    assert.false(
+      seen.current,
+      "the reentrant control call superseded the update"
+    );
+    assert.deepEqual(
+      changes.map(([value]) => value),
+      [1, 3],
+      "the update's later write was refused"
+    );
+  });
+
+  test("a parent change makes the scope stale, even before any write", async function (assert) {
+    const { engine, changes, setValue } = controlled({
+      items: [A, B],
+      value: 1,
+    });
+    const gate = deferred();
+    let currentAfterParent;
+
+    const done = engine.control.update(async (scope) => {
+      await gate.promise;
+      currentAfterParent = scope.current;
+      scope.select(B);
+    });
+    setValue(2);
+    gate.resolve();
+    await done;
+
+    assert.false(currentAfterParent, "the no-write branch can see it is stale");
+    assert.strictEqual(changes.length, 0, "a stale scope write emits nothing");
+
+    const multi = controlled({
+      items: [A],
+      multiple: true,
+      value: ["a,b", "c"],
+    });
+    const multiGate = deferred();
+    let multiScope;
+    const multiDone = multi.engine.control.update(async (scope) => {
+      multiScope = scope;
+      await multiGate.promise;
+    });
+    multi.setValue(["a", "b,c"]);
+    assert.false(
+      multiScope.current,
+      "ids are compared one by one, not as one joined string"
+    );
+    multiGate.resolve();
+    await multiDone;
+  });
+
+  test("an update's own deferred change neither supersedes it nor survives a later supersession", async function (assert) {
+    const queued = [];
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer("select-on-change", ({ next }) => {
+        queued.push(next);
+      });
+    });
+
+    const own = controlled({ items: [A, B] });
+    const gate = deferred();
+    let ownScope;
+    const ownDone = own.engine.control.update(async (scope) => {
+      ownScope = scope;
+      scope.select(A);
+      await gate.promise;
+    });
+    assert.true(ownScope.current, "its own write does not supersede it");
+    gate.resolve();
+    await ownDone;
+    queued.shift()();
+    assert.deepEqual(
+      own.changes.map(([value]) => value),
+      [1],
+      "a deferred change commits after a normal end"
+    );
+
+    const stale = controlled({ items: [A, B] });
+    const staleGate = deferred();
+    const staleDone = stale.engine.control.update(async (scope) => {
+      scope.select(A);
+      await staleGate.promise;
+    });
+    stale.engine.select(B);
+    const [ownNext, manualNext] = queued.splice(0);
+    manualNext();
+    ownNext();
+    staleGate.resolve();
+    await staleDone;
+    assert.deepEqual(
+      stale.changes.map(([value]) => value),
+      [2],
+      "a superseded update's queued change never overwrites the newer pick"
+    );
+  });
+
+  test("in a multi-select a manual add drops the async add", async function (assert) {
+    const { engine, changes } = controlled({
+      items: [A, B, C],
+      multiple: true,
+      value: [1],
+    });
+    const gate = deferred();
+
+    const done = engine.control.update(async (scope) => {
+      await gate.promise;
+      scope.select(C);
+    });
+    engine.select(B);
+    gate.resolve();
+    await done;
+
+    assert.deepEqual(
+      changes.map(([value]) => value),
+      [[1, 2]],
+      "only the manual add landed"
+    );
+  });
+
+  test("destroying the engine releases the display barrier before the work settles", async function (assert) {
+    const { engine, changes } = controlled({ items: [A], value: null });
+    const gate = deferred();
+    let seen;
+
+    const done = engine.control.update(async (scope) => {
+      seen = scope;
+      await gate.promise;
+      scope.select(A);
+    });
+    const barrier = engine.resolveSelection(engine.value);
+
+    destroy(engine);
+    assert.strictEqual(
+      await barrier,
+      undefined,
+      "the barrier fulfils while the work is still blocked"
+    );
+    assert.false(seen.current, "the scope is dead");
+
+    gate.resolve();
+    await done;
+    assert.strictEqual(
+      changes.length,
+      0,
+      "a write after destroy emits nothing"
+    );
+  });
+
+  test("an update keeps writing when the parent declines its change", async function (assert) {
+    const emitted = [];
+    const engine = new SelectEngine({
+      items: [A, B],
+      getValue: () => null,
+      onChange: (nextValue) => emitted.push(nextValue),
+    });
+
+    await engine.control.update(async (scope) => {
+      scope.select(A);
+      scope.select(B);
+    });
+
+    assert.deepEqual(
+      emitted,
+      [1, 2],
+      "a declined change is not mistaken for a parent change"
+    );
+  });
+
+  test("scope writes are refused while the select is locked", async function (assert) {
+    let locked = false;
+    const { engine, changes } = controlled({
+      items: [A],
+      getLocked: () => locked,
+    });
+
+    await engine.control.update(async (scope) => {
+      locked = true;
+      scope.select(A);
+    });
+
+    assert.strictEqual(
+      changes.length,
+      0,
+      "a locked select takes no scope write"
+    );
+  });
+
+  test("a control deselect of an item not held, or a clear of nothing, emits nothing", function (assert) {
+    const single = controlled({ items: [A, B], value: 1 });
+    single.engine.control.deselect(B);
+    assert.strictEqual(
+      single.changes.length,
+      0,
+      "deselecting another item is a no-op"
+    );
+
+    single.engine.control.deselect(A);
+    assert.deepEqual(
+      single.changes,
+      [[null, null]],
+      "deselecting the held item clears"
+    );
+
+    const empty = controlled({ items: [A] });
+    empty.engine.control.clear();
+    assert.strictEqual(
+      empty.changes.length,
+      0,
+      "clearing nothing emits nothing"
+    );
+  });
+
+  test("settled() waits for an update's work", async function (assert) {
+    const { engine } = controlled({ items: [A] });
+    const gate = deferred();
+
+    engine.control.update(async (scope) => {
+      await gate.promise;
+      scope.select(A);
+    });
+
+    assert.false(isSettled(), "unsettled while the work is blocked");
+    gate.resolve();
+    await settled();
+    assert.false(engine.control.pending, "settled once the work ended");
   });
 });

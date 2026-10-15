@@ -4,7 +4,10 @@ import { cancel, next as nextRunloop } from "@ember/runloop";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
+import { LOADING_FEEDBACK_DELAY } from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
+import type { SelectionOrigin } from "discourse/ui-kit/select/-internals/engine/selection-updates";
 import SelectEngine, {
+  type SelectItem,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -39,11 +42,14 @@ interface SelectAnnouncerOptions {
 }
 
 interface ValueChangedOptions {
+  origin?: SelectionOrigin;
+  reason?: "clear";
   onAddedWithQuery: () => void;
 }
 
 export default class SelectAnnouncer {
   #a11y: A11y;
+  #updateTimer?: ReturnType<typeof discourseLater>;
   #engine: SelectEngine;
   #getActiveOptionKey: () => string | null;
   #getNoResultsLabel: () => string | undefined;
@@ -93,7 +99,10 @@ export default class SelectAnnouncer {
     this.#reannounceActive = reannounceActive;
     this.#getNoResultsLabel = getNoResultsLabel;
     this.#getShouldSuppressEntryCount = getShouldSuppressEntryCount;
-    registerDestructor(this, () => this.#cancelPendingCount());
+    registerDestructor(this, () => {
+      this.#cancelPendingCount();
+      cancel(this.#updateTimer);
+    });
   }
 
   /**
@@ -326,11 +335,38 @@ export default class SelectAnnouncer {
     this.#revealAnnounced = false;
   }
 
+  /** Confirms programmatic intent even when the controlled value does not change. */
+  reconfirm(item: SelectItem, origin: SelectionOrigin): void {
+    if (!this.#engine.multiple && (origin.programmatic || origin.record)) {
+      this.#a11y.announce(
+        i18n("d_select.item_selected", {
+          item: this.#engine.getSelectionLabel(item),
+        }),
+        "polite"
+      );
+    }
+  }
+
+  /** Delays feedback so work that finishes quickly stays silent. */
+  updateStarted(isCurrent: () => boolean): void {
+    cancel(this.#updateTimer);
+    this.#updateTimer = discourseLater(() => {
+      this.#updateTimer = undefined;
+      if (!isDestroying(this) && isCurrent()) {
+        this.#a11y.announce(i18n("d_select.updating_selection"), "polite");
+      }
+    }, LOADING_FEEDBACK_DELAY);
+  }
+
   valueChanged(
     oldValues: SelectValue,
     nextValues: SelectValue,
-    { onAddedWithQuery }: ValueChangedOptions
+    { onAddedWithQuery, origin, reason }: ValueChangedOptions
   ): void {
+    if (reason === "clear" && this.#engine.hasValue) {
+      this.#a11y.announce(i18n("d_select.selection_cleared"), "polite");
+      return;
+    }
     if (this.#engine.multiple) {
       const { added, removed } = this.#engine.diffValues(
         makeArray(oldValues),
@@ -365,6 +401,11 @@ export default class SelectAnnouncer {
       // trigger's name changes, and a name change on an already-focused element is not reliably
       // re-read. So the one single-select transition that needs saying out loud is this one.
       this.#a11y.announce(i18n("d_select.selection_cleared"), "polite");
+    } else if (origin && nextValues != null) {
+      const item = this.#engine.resolveSingleSync(nextValues);
+      if (item) {
+        this.reconfirm(item, origin);
+      }
     }
   }
 

@@ -423,7 +423,7 @@ export default class VariantPresenter {
   }
 
   get queryPlaceholder(): string {
-    if (this.#engine.hasValue) {
+    if (this.#engine.hasValue || this.#engine.pending) {
       return "";
     }
     return this.#getArgs().placeholder || i18n("d_select.add_placeholder");

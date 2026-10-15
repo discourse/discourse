@@ -6,9 +6,15 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectOptionsView from "./select-options.ts";
+import type { SelectionOrigin } from "./selection-updates.ts";
 
 export default class SelectionActions {
   #options: SelectOptionsView;
+  #onIntent: (origin?: SelectionOrigin) => void;
+  #beforeEmit: (
+    origin: SelectionOrigin | undefined,
+    value: SelectValue
+  ) => boolean;
   #runActionItem: (item: SelectItem) => void;
   #cacheResolved: (item: SelectItem | null | undefined) => void;
   #resolveOneSync: (value: SelectItemId) => SelectItem | undefined;
@@ -20,6 +26,11 @@ export default class SelectionActions {
 
   constructor(opts: {
     options: SelectOptionsView;
+    onIntent: (origin?: SelectionOrigin) => void;
+    beforeEmit: (
+      origin: SelectionOrigin | undefined,
+      value: SelectValue
+    ) => boolean;
     runActionItem: (item: SelectItem) => void;
     cacheResolved: (item: SelectItem | null | undefined) => void;
     resolveOneSync: (value: SelectItemId) => SelectItem | undefined;
@@ -30,6 +41,8 @@ export default class SelectionActions {
     getExtensionContext: () => Record<string, unknown>;
   }) {
     this.#options = opts.options;
+    this.#onIntent = opts.onIntent;
+    this.#beforeEmit = opts.beforeEmit;
     this.#runActionItem = opts.runActionItem;
     this.#cacheResolved = opts.cacheResolved;
     this.#resolveOneSync = opts.resolveOneSync;
@@ -185,8 +198,12 @@ export default class SelectionActions {
    * emits `onChange`. For single-select it also requests the overlay to close (when
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
-  select(item: SelectItem): void {
+  select(item: SelectItem, origin?: SelectionOrigin): void {
+    this.#onIntent(origin);
     if (this.isSelected(item)) {
+      if (origin) {
+        this.#options.onReconfirm?.(item, origin);
+      }
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
       // keystroke after opening, and leaving it inert would read as a broken control.
@@ -204,9 +221,12 @@ export default class SelectionActions {
     }
     this.#cacheResolved(item);
     if (this.#options.multiple) {
-      this.#emitChange([...this.#valueArray, this.#options.itemValue(item)]);
+      this.#emitChange(
+        [...this.#valueArray, this.#options.itemValue(item)],
+        origin
+      );
     } else {
-      this.#emitChange(this.#options.itemValue(item));
+      this.#emitChange(this.#options.itemValue(item), origin);
       if (this.#options.closeOnSelect) {
         this.#options.requestClose?.();
       }
@@ -216,19 +236,25 @@ export default class SelectionActions {
   /**
    * Removes an item from the selection (emits the next value).
    */
-  deselect(item: SelectItem): void {
+  deselect(item: SelectItem, origin?: SelectionOrigin): void {
+    this.#onIntent(origin);
     if (!this.#options.multiple) {
-      this.#emitChange(null);
+      if (origin && !this.isSelected(item)) {
+        return;
+      }
+      this.#emitChange(null, origin);
       return;
     }
     const key = this.#options.valueKey(this.#options.itemValue(item));
     this.#emitChange(
-      this.#valueArray.filter((v) => this.#options.valueKey(v) !== key)
+      this.#valueArray.filter((v) => this.#options.valueKey(v) !== key),
+      origin
     );
   }
 
   /** Removes the last held value from a multi-select selection. */
-  deselectLast(): void {
+  deselectLast(origin?: SelectionOrigin): void {
+    this.#onIntent(origin);
     if (!this.#options.multiple) {
       return;
     }
@@ -236,19 +262,29 @@ export default class SelectionActions {
     if (values.length === 0) {
       return;
     }
-    this.#emitChange(values.slice(0, -1));
+    this.#emitChange(values.slice(0, -1), origin);
   }
 
   /**
    * Clears the entire selection (emits an empty value).
    */
-  clear(): void {
-    this.#emitChange(this.#options.multiple ? [] : null);
+  clear(origin?: SelectionOrigin): void {
+    this.#onIntent(origin);
+    if (origin && !this.hasValue) {
+      return;
+    }
+    this.#emitChange(this.#options.multiple ? [] : null, origin, "clear");
   }
 
-  // Emits the next value plus the best-effort resolved item(s) for it. Controlled: the
-  // engine never stores the value — the parent applies `nextValue` to `@value`.
-  #emitChange(rawNextValue: SelectValue): void {
+  /**
+   * Emits the next value plus the best-effort resolved item(s) for it. Controlled: the engine
+   * never stores the value; the parent applies `nextValue` to `@value`.
+   */
+  #emitChange(
+    rawNextValue: SelectValue,
+    origin?: SelectionOrigin,
+    reason?: "clear"
+  ): void {
     // Coerce ids to their source item's native type up front, so the payload, the
     // `select-on-change` transformer context, and the legacy bridge all emit one consistent,
     // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
@@ -262,7 +298,11 @@ export default class SelectionActions {
     // may run `next()` to proceed or skip it).
     applyBehaviorTransformer(
       "select-on-change",
-      () => this.#options.onChange?.(nextValue, payload),
+      () => {
+        if (this.#beforeEmit(origin, nextValue)) {
+          this.#options.onChange?.(nextValue, payload, { origin, reason });
+        }
+      },
       {
         identifiers: this.#options.identifiers,
         value: nextValue,

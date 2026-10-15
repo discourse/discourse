@@ -26,6 +26,8 @@ import { i18n } from "discourse-i18n";
 
 interface MultiChipsSignature {
   Args: {
+    /** Whether asynchronous selection work is pending. */
+    pending: boolean;
     /** The current bound selection. */
     value?: SelectValue;
     /** The headless selection engine. */
@@ -56,7 +58,7 @@ interface MultiChipsSignature {
       options?: SelectLoadOptions
     ) =>
       | readonly SelectDescriptor[]
-      | Promise<readonly SelectDescriptor[]>
+      | Promise<readonly SelectDescriptor[] | undefined>
       | undefined;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (
@@ -113,11 +115,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   }
 
   /**
-   * Chip-shaped placeholder rows while the held values resolve — one per bound id, so
-   * the loading state matches the number of chips about to appear.
+   * Mirrors held chips, with one placeholder for an update on an empty selection.
    */
   get chipSkeletons(): Array<{ key: number }> {
-    const count = makeArray(this.args.value).length;
+    const count = Math.max(
+      this.args.pending ? 1 : 0,
+      makeArray(this.args.value).length
+    );
     return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
@@ -308,6 +312,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       </ul>
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
+          aria-busy={{if @pending "true"}}
           aria-describedby={{@composeDescribedBy
             (if @engine.hasValue this.chipHintId)
             @describedBy

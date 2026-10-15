@@ -8,6 +8,7 @@ import type {
   SelectLoadResult,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectOptionsView from "./select-options.ts";
+import type { UpdateRecord } from "./selection-updates.ts";
 
 export const MAX_RENDERED = 200;
 
@@ -61,6 +62,9 @@ function matchesFilter(
  * the value is controlled by the parent (see {@link SelectEngine}).
  */
 export class SelectState {
+  /** Mirrors only asynchronous updates so synchronous work never invalidates a render. */
+  @tracked update: UpdateRecord | null = null;
+
   /** The current filter/search term. */
   @tracked filter = "";
 

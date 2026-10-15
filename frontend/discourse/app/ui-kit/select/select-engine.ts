@@ -1,6 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import { isDestroying } from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
@@ -21,6 +21,9 @@ import {
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import { i18n } from "discourse-i18n";
+import SelectionUpdates, {
+  type SelectionOrigin,
+} from "./-internals/engine/selection-updates.ts";
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -208,10 +211,32 @@ export interface SelectControl {
   readonly value: SelectValue;
   /** The current filter text. */
   readonly filter: string;
+  /** Whether asynchronous update work is in flight. */
+  readonly pending: boolean;
   /** Closes the overlay. */
   close(): void;
   /** Selects an item, exactly as picking its row would. */
   select(item: SelectItem): void;
+  /** Removes an item if held; single-select clears its held item. */
+  deselect(item: SelectItem): void;
+  /** Clears a nonempty selection. */
+  clear(): void;
+  /** Runs event-time work with write authority until it ends or is superseded. */
+  update(
+    work: (scope: SelectUpdateScope) => void | Promise<void>
+  ): Promise<void>;
+}
+
+/** The write authority of one update, without overlay or update controls. */
+export interface SelectUpdateScope {
+  /** Whether this update still owns the live value. A pure read. */
+  readonly current: boolean;
+  /** Selects an item while current and unlocked. */
+  select(item: SelectItem): void;
+  /** Removes a held item while current and unlocked. */
+  deselect(item: SelectItem): void;
+  /** Clears a nonempty selection while current and unlocked. */
+  clear(): void;
 }
 
 /**
@@ -236,6 +261,9 @@ export interface SelectEngineOptions {
    * id array). Defaults to always-`null`.
    */
   getValue?: () => SelectValue;
+
+  /** Live reader for whether scope writes are locked. Defaults to false. */
+  getLocked?: () => boolean;
 
   /** Live reader for {@link multiple}. */
   getMultiple?: () => boolean | undefined;
@@ -431,12 +459,24 @@ export interface SelectEngineOptions {
   /**
    * `(nextValue, item|items) => void`, where `nextValue` is the id(s) and the second arg
    * is the resolved item(s), each matching the arity. The parent applies `nextValue` to
-   * `@value`.
+   * `@value`. The third argument carries internal origin and clear metadata.
    */
   onChange?: (
     nextValue: SelectValue,
-    item: SelectItem | SelectItem[] | null
+    item: SelectItem | SelectItem[] | null,
+    change: {
+      /** The programmatic intent behind this change, absent for hand picks. */
+      origin?: SelectionOrigin;
+      /** Distinguishes a whole-selection clear from removing an item. */
+      reason?: "clear";
+    }
   ) => void;
+
+  /** Called when a programmatic pick confirms an already held item. */
+  onReconfirm?: (item: SelectItem, origin: SelectionOrigin) => void;
+
+  /** Called when asynchronous work becomes pending; the reader checks its authority. */
+  onUpdateStart?: (isCurrent: () => boolean) => void;
 
   /**
    * Called by the engine to ask the overlay to close (wired by the component to the menu
@@ -469,16 +509,38 @@ class EngineControl implements SelectControl {
     return this.#engine.filter;
   }
 
+  get pending(): boolean {
+    return this.#engine.pending;
+  }
+
+  clear(): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.clear({ programmatic: true });
+    }
+  }
+
   close(): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.requestClose();
     }
   }
 
+  deselect(item: SelectItem): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.deselect(item, { programmatic: true });
+    }
+  }
+
   select(item: SelectItem): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.select(item);
+      this.#engine.select(item, { programmatic: true });
     }
+  }
+
+  update(
+    work: (scope: SelectUpdateScope) => void | Promise<void>
+  ): Promise<void> {
+    return this.#engine.update(work);
   }
 }
 
@@ -505,6 +567,7 @@ export default class SelectEngine {
   #options: SelectOptionsView;
   #valueResolver: ValueResolver;
   #selectionActions: SelectionActions;
+  #selectionUpdates: SelectionUpdates;
   #listComposer: ListComposer;
   #source!: SelectSource;
   #control: SelectControl;
@@ -522,6 +585,9 @@ export default class SelectEngine {
     });
     this.#selectionActions = new SelectionActions({
       options: this.#options,
+      onIntent: (origin) => this.#selectionUpdates.handleIntent(origin),
+      beforeEmit: (origin, value) =>
+        this.#selectionUpdates.prepareEmit(origin, value),
       runActionItem: (item) => item.onSelect!(this.#control, item),
       getExtensionContext: () => this.#extensionContext(),
       cacheResolved: (item) => this.#valueResolver.cacheResolved(item),
@@ -529,6 +595,13 @@ export default class SelectEngine {
       applyLegacyOnChange: (value, payload) =>
         applyLegacySelectKitOnChange(this, value, payload),
     });
+    this.#selectionUpdates = new SelectionUpdates({
+      engine: this,
+      options: this.#options,
+      state: this.#state,
+      actions: this.#selectionActions,
+    });
+    registerDestructor(this, () => this.#selectionUpdates.supersede());
     this.#listComposer = new ListComposer({
       options: this.#options,
       getFilter: () => this.#state.filter,
@@ -666,6 +739,11 @@ export default class SelectEngine {
   /** The select's handle for action rows and `select-content` transformers. */
   get control(): SelectControl {
     return this.#control;
+  }
+
+  /** Whether asynchronous update work is in flight. */
+  get pending(): boolean {
+    return this.#selectionUpdates.pending;
   }
 
   /**
@@ -878,8 +956,12 @@ export default class SelectEngine {
     | SelectItem[]
     | Promise<SelectItem>
     | Promise<SelectItem[]>
+    | Promise<void>
     | undefined {
-    return this.#valueResolver.resolveSelection(value, opts);
+    return (
+      this.#selectionUpdates.done ??
+      this.#valueResolver.resolveSelection(value, opts)
+    );
   }
 
   /**
@@ -974,30 +1056,42 @@ export default class SelectEngine {
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
   @bind
-  select(item: SelectItem): void {
-    this.#selectionActions.select(item);
+  select(item: SelectItem, origin?: SelectionOrigin): void {
+    this.#selectionActions.select(item, origin);
   }
 
   /**
    * Removes an item from the selection (emits the next value).
    */
   @bind
-  deselect(item: SelectItem): void {
-    this.#selectionActions.deselect(item);
+  deselect(item: SelectItem, origin?: SelectionOrigin): void {
+    this.#selectionActions.deselect(item, origin);
   }
 
   /** Removes the last held value from a multi-select selection. */
   @bind
-  deselectLast(): void {
-    this.#selectionActions.deselectLast();
+  deselectLast(origin?: SelectionOrigin): void {
+    this.#selectionActions.deselectLast(origin);
   }
 
   /**
    * Clears the entire selection (emits an empty value).
    */
   @bind
-  clear(): void {
-    this.#selectionActions.clear();
+  clear(origin?: SelectionOrigin): void {
+    this.#selectionActions.clear(origin);
+  }
+
+  /** Revokes update authority when newer interaction intent takes over. */
+  supersedeUpdate(): void {
+    this.#selectionUpdates.supersede();
+  }
+
+  /** Runs event-time work with a scope owned by this update. */
+  update(
+    work: (scope: SelectUpdateScope) => void | Promise<void>
+  ): Promise<void> {
+    return this.#selectionUpdates.update(work);
   }
 
   /**

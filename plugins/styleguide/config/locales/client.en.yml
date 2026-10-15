@@ -81,7 +81,7 @@ en:
               description: "Where options come from: a client array, an async source, pagination, and how a query reaches them."
             states:
               title: "Loading and empty states"
-              description: "What the control shows on its own while it is waiting, when it finds nothing, and when its source fails. Replacing any of them is covered in Row content."
+              description: "What the control shows while loading options or updating a selection, when it finds nothing, and when its source fails. Replacing these states is covered in Row content."
             appearance:
               title: "Appearance"
               description: "Trigger chrome: icons, carets, where the panel opens, and the open and close callbacks."
@@ -104,6 +104,14 @@ en:
           mobile_guidance: "Resize to a mobile viewport to verify that the typeahead query input opens inside the modal."
           default_example: "Default synchronous typeahead"
           reload_example: "Reloading: a fast source and a slow one"
+          async_update_example: "Async selection updates"
+          async_update_description: "Action rows can suggest or clear a value after asynchronous work. The value slot shows skeletons and a spinner while the update is pending. The validation example simulates an invalid value and clears it."
+          async_update_try_this: "Choose Suggest a value or Clear if invalid, then watch the trigger for 1.5 seconds. Suggest tags adds two tags. Reopen either select during the wait to supersede the update."
+          async_update_suggest: "Suggest a value"
+          async_update_clear: "Clear if invalid"
+          async_update_suggest_tags: "Suggest tags"
+          async_update_single_label: "Language suggestion"
+          async_update_multi_label: "Tag suggestions"
           async_button_example: "Async button with loading state"
           static_example: "Static select"
           multi_example: "Multi-select"

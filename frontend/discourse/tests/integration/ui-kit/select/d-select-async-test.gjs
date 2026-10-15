@@ -994,3 +994,61 @@ module(
     }
   }
 );
+
+module("Integration | ui-kit | select | DSelect (async)", function () {
+  module("a pending update on mobile", function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const multiple of [false, true]) {
+      test(`an empty mobile ${multiple ? "multi" : "single"} shows pending selection feedback`, async function (assert) {
+        forceMobile();
+        let release;
+        const gate = new Promise((resolve) => (release = resolve));
+        const items = [
+          {
+            id: "suggest",
+            name: "Suggest",
+            onSelect(control) {
+              control.close();
+              control.update(async () => {
+                await gate;
+              });
+            },
+          },
+        ];
+        await render(
+          <template>
+            <DSelect
+              @items={{items}}
+              @multiple={{multiple}}
+              @placeholder="Pick a value"
+            />
+          </template>
+        );
+        await click(".d-combobox__trigger");
+        const clicking = click(".d-combobox__option");
+        try {
+          await waitFor(".d-combobox__pending-icon", { timeout: 2000 });
+          assert
+            .dom(".d-combobox__trigger .d-skeleton")
+            .exists("an empty selection still has a loading slot");
+          assert
+            .dom(".d-combobox__trigger")
+            .hasAttribute("aria-busy", "true", "the mobile trigger is busy");
+          assert
+            .dom(".d-combobox__placeholder")
+            .doesNotExist("the placeholder is replaced");
+        } finally {
+          release();
+          await clicking;
+        }
+        assert
+          .dom(".d-combobox__trigger")
+          .doesNotHaveAttribute(
+            "aria-busy",
+            "the mobile trigger finishes loading"
+          );
+      });
+    }
+  });
+});

@@ -44,6 +44,8 @@ import StaticSelectExample from "../../examples/molecules/select/start/static.gj
 import staticSelectSource from "../../examples/molecules/select/start/static?source=file";
 import AsyncButtonSelectExample from "../../examples/molecules/select/states/async-button.gjs";
 import asyncButtonSelectSource from "../../examples/molecules/select/states/async-button?source=file";
+import AsyncUpdateSelectExample from "../../examples/molecules/select/states/async-update.gjs";
+import asyncUpdateSelectSource from "../../examples/molecules/select/states/async-update?source=file";
 import EmptySelectExample from "../../examples/molecules/select/states/empty.gjs";
 import emptySelectSource from "../../examples/molecules/select/states/empty?source=file";
 import ErrorSelectExample from "../../examples/molecules/select/states/error.gjs";
@@ -173,6 +175,17 @@ export default class Select extends Component {
       </Group>
 
       <Group @id="states">
+        <StyleguideExample
+          class="--wide"
+          @code={{asyncUpdateSelectSource}}
+          @description={{i18n
+            "styleguide.sections.select.async_update_description"
+          }}
+          @title={{i18n "styleguide.sections.select.async_update_example"}}
+          @tryThis={{i18n "styleguide.sections.select.async_update_try_this"}}
+        >
+          <AsyncUpdateSelectExample />
+        </StyleguideExample>
         <StyleguideExample
           class="--wide"
           @code={{reloadSelectSource}}

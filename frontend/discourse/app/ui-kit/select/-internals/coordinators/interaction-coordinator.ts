@@ -216,6 +216,7 @@ export default class InteractionCoordinator {
       this.#focusTriggerInput();
     }
     if (!wasExpanded) {
+      this.#engine.supersedeUpdate();
       this.#onShow();
     }
   }

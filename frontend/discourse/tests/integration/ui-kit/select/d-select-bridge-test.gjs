@@ -1,9 +1,22 @@
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { click, fillIn, find, render, settled } from "@ember/test-helpers";
+import { action } from "@ember/object";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerKeyEvent,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   Host,
@@ -407,6 +420,659 @@ module(
       stored.close();
 
       assert.true(onChange.notCalled, "a late select reaches no parent");
+    });
+  }
+);
+
+/** A promise with its resolve and reject exposed, so a test controls when work settles. */
+function deferred() {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
+/** An action row that (optionally) closes the select and starts an update running `work`. */
+function updateRow(name, work, { close = true } = {}) {
+  return {
+    id: `row-${name}`,
+    name,
+    onSelect: (control) => {
+      if (close) {
+        control.close();
+      }
+      control.update(work).catch(() => {});
+    },
+  };
+}
+
+/**
+ * Waits for the pending state, runs `whilePending`, then releases the work and the click. The
+ * release runs even when an assertion throws, so a failure stays in its own test instead of
+ * holding settledness until the suite times out.
+ */
+async function duringUpdate(gate, clicking, whilePending) {
+  try {
+    await waitFor(".d-combobox__pending-icon", { timeout: 2000 });
+    await whilePending?.();
+  } finally {
+    gate.resolve();
+    await clicking;
+  }
+}
+
+function politeText() {
+  return find("#a11y-announcements-polite")?.textContent ?? "";
+}
+
+class AsyncUpdateHost extends Component {
+  @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <A11yLiveRegions />
+    <DSelect
+      @icon={{@icon}}
+      @iconOnly={{@iconOnly}}
+      @items={{@items}}
+      @label={{@label}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick one"
+      @showCaret={{@showCaret}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+class AsyncUpdateSelectionHost extends Component {
+  @tracked value = this.args.value ?? null;
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @items={{@items}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick one"
+      @value={{this.value}}
+    >
+      <:selection as |item|>{{item.name}}</:selection>
+    </DSelect>
+  </template>
+}
+
+class AsyncUpdateVisibility {
+  @tracked show = true;
+}
+
+module(
+  "Integration | ui-kit | select | DSelect async update",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      disableClearA11yAnnouncementsInTests();
+    });
+
+    /** Items plus a row whose update waits on `gate`, then selects `pick`. */
+    function suggestItems(gate, pick) {
+      return [
+        ...ITEMS,
+        updateRow("Suggest", async (scope) => {
+          await gate.promise;
+          scope.select(pick);
+        }),
+      ];
+    }
+
+    test("a pending update shows the skeleton and a spinner in place of the caret, then the result", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+        assert.true(
+          find(".d-combobox__trigger").lastElementChild.classList.contains(
+            "d-combobox__pending-icon"
+          ),
+          "the spinner takes the caret's place as the trigger's last child"
+        );
+        assert.dom(".d-combobox__caret").doesNotExist("the caret is replaced");
+        assert
+          .dom(".d-combobox__trigger .d-skeleton")
+          .exists("the value slot shows the loading skeleton");
+        assert
+          .dom(".d-combobox__trigger")
+          .hasAttribute("aria-busy", "true", "the trigger region is busy");
+        assert
+          .dom("input[role='combobox']")
+          .hasAttribute("aria-busy", "true", "the focused combobox is busy");
+        assert
+          .dom("input[role='combobox']")
+          .hasValue("", "the input shows no stale label while pending");
+      });
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Banana", "the new value shows once the update ends");
+      assert.dom(".d-combobox__caret").exists("the caret is back");
+      assert
+        .dom(".d-combobox__pending-icon")
+        .doesNotExist("the spinner is gone");
+      assert
+        .dom(".d-combobox__trigger")
+        .doesNotHaveAttribute("aria-busy", "the trigger is no longer busy");
+      assert
+        .dom("input[role='combobox']")
+        .doesNotHaveAttribute("aria-busy", "the combobox is no longer busy");
+    });
+
+    test("an async update shows the skeleton in a :selection typeahead that keeps focus", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template>
+          <AsyncUpdateSelectionHost @items={{items}} @value={{1}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+        assert
+          .dom("input[role='combobox']")
+          .isFocused(
+            "focus stays in the input after the row closes the select"
+          );
+        assert
+          .dom(".d-combobox__presentation .d-skeleton")
+          .exists("the skeleton renders even though the input has focus");
+      });
+
+      const input = find("input[role='combobox']");
+      assert.strictEqual(
+        input.value,
+        "Banana",
+        "the new label lands in the input"
+      );
+      assert.strictEqual(
+        input.selectionStart,
+        0,
+        "the label is selected from its start"
+      );
+      assert.strictEqual(
+        input.selectionEnd,
+        input.value.length,
+        "to its end, ready to overtype"
+      );
+    });
+
+    test("an async update keeps a button trigger's accessible name on the held value", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template>
+          <AsyncUpdateHost @items={{items}} @value={{1}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+      await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+        assert
+          .dom(".d-combobox__trigger")
+          .hasAttribute("aria-busy", "true", "the trigger is busy");
+        assert.true(
+          find(".d-combobox__trigger")
+            .getAttribute("aria-label")
+            .includes("Apple"),
+          "the accessible name still carries the held value"
+        );
+        assert
+          .dom(".d-combobox__trigger .d-skeleton")
+          .exists("the value slot shows the skeleton");
+      });
+
+      assert
+        .dom(".d-combobox__trigger")
+        .includesText("Banana", "the new value shows once the update ends");
+    });
+
+    test("an async update spins an icon-only trigger even without a caret", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template>
+          <AsyncUpdateHost
+            @icon="gear"
+            @iconOnly={{true}}
+            @items={{items}}
+            @label="Fruit"
+            @showCaret={{false}}
+            @value={{1}}
+            @variant="button"
+          />
+        </template>
+      );
+      assert.dom(".d-combobox__caret").doesNotExist("no caret to begin with");
+
+      await click(".d-combobox__trigger");
+      await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+        assert
+          .dom(".d-combobox__pending-icon")
+          .exists("the spinner shows although the caret is hidden");
+      });
+
+      assert
+        .dom(".d-combobox__pending-icon")
+        .doesNotExist("the spinner is gone");
+      assert.dom(".d-combobox__caret").doesNotExist("the caret stays hidden");
+    });
+
+    test("an async update turns a multi-select's chips into skeletons", async function (assert) {
+      const gate = deferred();
+      const value = [1, 2];
+      const items = suggestItems(gate, ITEMS[2]);
+
+      await render(
+        <template>
+          <AsyncUpdateHost
+            @items={{items}}
+            @multiple={{true}}
+            @value={{value}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+        assert
+          .dom(".d-combobox__chip .d-skeleton")
+          .exists("the chips show the loading skeleton");
+        assert
+          .dom(".d-combobox__chip-list")
+          .doesNotIncludeText(
+            "Apple",
+            "the held chips are replaced while pending"
+          );
+        assert
+          .dom("input[role='combobox']")
+          .hasAttribute("aria-busy", "true", "the combobox is busy");
+      });
+
+      assert
+        .dom(".d-combobox__chip-list")
+        .includesText(
+          "Cherry pie",
+          "the added chip shows once the update ends"
+        );
+      assert
+        .dom(".d-combobox__chip-list")
+        .includesText("Apple", "the held chips come back");
+    });
+
+    test("an async update on an empty select shows the loading state with no placeholder", async function (assert) {
+      for (const multiple of [false, true]) {
+        const gate = deferred();
+        const items = suggestItems(gate, ITEMS[1]);
+        const label = multiple ? "multi" : "single";
+
+        await render(
+          <template>
+            <AsyncUpdateHost @items={{items}} @multiple={{multiple}} />
+          </template>
+        );
+        await click("[role='combobox']");
+        await duringUpdate(gate, click(optionWithText("Suggest")), () => {
+          assert
+            .dom(".d-combobox__trigger .d-skeleton")
+            .exists(`the empty ${label} select shows the skeleton`);
+          assert.strictEqual(
+            find("input[role='combobox']").placeholder,
+            "",
+            `the empty ${label} select shows no placeholder beside it`
+          );
+        });
+      }
+    });
+
+    test("an async update that clears, changes nothing, or fails restores the trigger", async function (assert) {
+      const outcomes = [
+        {
+          name: "a clear",
+          work: async (scope) => scope.clear(),
+          value: "",
+          placeholder: "Pick one",
+        },
+        {
+          name: "no change",
+          work: async () => {},
+          value: "Apple",
+          placeholder: "",
+        },
+        {
+          name: "a failure",
+          work: async () => {
+            throw new Error("boom");
+          },
+          value: "Apple",
+          placeholder: "",
+        },
+      ];
+
+      for (const { name, work, value, placeholder } of outcomes) {
+        const gate = deferred();
+        const items = [
+          ...ITEMS,
+          updateRow("Suggest", async (scope) => {
+            await gate.promise;
+            await work(scope);
+          }),
+        ];
+
+        await render(
+          <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        );
+        await click("[role='combobox']");
+        await duringUpdate(gate, click(optionWithText("Suggest")));
+
+        const input = find("input[role='combobox']");
+        assert.strictEqual(
+          input.value,
+          value,
+          `${name} leaves the right label`
+        );
+        assert.strictEqual(
+          input.placeholder,
+          placeholder,
+          `${name} leaves the right placeholder`
+        );
+        assert
+          .dom(".d-combobox__trigger [role='alert']")
+          .doesNotExist(`${name} shows no inline error in the trigger`);
+        assert
+          .dom(".d-combobox__pending-icon")
+          .doesNotExist(`${name} ends the pending state`);
+      }
+    });
+
+    test("an async update yields to the user reopening the select or picking by hand", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      const pending = [];
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        await waitUntil(() => !find("[role='listbox']"));
+        pending.push(click("[role='combobox']"));
+        await waitFor("[role='listbox']");
+        assert
+          .dom(".d-combobox__pending-icon")
+          .doesNotExist("reopening ends the pending state at once");
+        pending.push(click(optionWithText("Cherry pie")));
+      });
+      await Promise.all(pending);
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Cherry pie", "the hand pick wins over the late result");
+    });
+
+    test("an async update ends at once when the user removes a chip with Backspace", async function (assert) {
+      const gate = deferred();
+      const value = [1, 2];
+      const items = suggestItems(gate, ITEMS[2]);
+
+      await render(
+        <template>
+          <AsyncUpdateHost
+            @items={{items}}
+            @multiple={{true}}
+            @value={{value}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      let pressing;
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        await waitUntil(() => !find("[role='listbox']"));
+        pressing = triggerKeyEvent(
+          "input[role='combobox']",
+          "keydown",
+          "Backspace"
+        );
+        await waitUntil(() => !find(".d-combobox__pending-icon"));
+        assert
+          .dom(".d-combobox__chip .d-skeleton")
+          .doesNotExist("the chips are back at once");
+        assert
+          .dom(".d-combobox__chip-list")
+          .includesText("Apple", "the kept chip shows");
+        assert
+          .dom(".d-combobox__chip-list")
+          .doesNotIncludeText("Banana", "only the removal applied");
+      });
+      await pressing;
+
+      assert
+        .dom(".d-combobox__chip-list")
+        .doesNotIncludeText("Cherry pie", "the late add never lands");
+    });
+
+    test("an async update survives the close that resets a typed query", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await fillIn("input[role='combobox']", "Sugg");
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        await waitUntil(() => !find("[role='listbox']"));
+      });
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Banana", "the update applied after the query was reset");
+    });
+
+    test("an async update announces its start and its outcome", async function (assert) {
+      const gate = deferred();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        await waitUntil(() => politeText().includes("Updating selection"), {
+          timeout: 2000,
+        });
+        assert.true(
+          politeText().includes("Updating selection…"),
+          "the start is announced while the update is pending"
+        );
+      });
+
+      assert.true(
+        politeText().includes("Selected Banana"),
+        "the outcome names the selected item"
+      );
+    });
+
+    test("an async update announces a synchronous set and a re-pick, but no start", async function (assert) {
+      const items = [
+        ...ITEMS,
+        updateRow("Set", (scope) => scope.select(ITEMS[1])),
+        updateRow("Repick", (scope) => scope.select(ITEMS[1])),
+      ];
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Set"));
+
+      assert.true(
+        politeText().includes("Selected Banana"),
+        "a programmatic set is announced"
+      );
+      assert.false(
+        politeText().includes("Updating selection"),
+        "a synchronous update never announces a start"
+      );
+
+      await click("[role='combobox']");
+      await click(optionWithText("Repick"));
+
+      assert.true(
+        politeText().includes("Selected Banana"),
+        "a programmatic re-pick of the held value is announced"
+      );
+    });
+
+    test("an async update leaves hand picks unannounced, even when deferred", async function (assert) {
+      const queued = [];
+      withPluginApi((api) => {
+        api.registerBehaviorTransformer("select-on-change", ({ next }) => {
+          queued.push(next);
+        });
+      });
+
+      await render(
+        <template><AsyncUpdateHost @items={{ITEMS}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Banana"));
+      queued.shift()();
+      await settled();
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Banana", "the deferred hand pick applied");
+      assert.false(
+        politeText().includes("Selected"),
+        "a hand pick, deferred or not, is not announced"
+      );
+    });
+
+    test("an async update announces a multi clear as one cleared selection", async function (assert) {
+      const value = [1, 2];
+      const items = [
+        ...ITEMS,
+        updateRow("Clear all", (scope) => scope.clear()),
+      ];
+
+      await render(
+        <template>
+          <AsyncUpdateHost
+            @items={{items}}
+            @multiple={{true}}
+            @value={{value}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Clear all"));
+
+      assert.true(
+        politeText().includes("Selection cleared"),
+        "the clear is announced once, not as a removal"
+      );
+      assert.false(
+        politeText().includes("Removed"),
+        "no single removal is announced"
+      );
+    });
+
+    test("an async update that changes nothing announces no outcome", async function (assert) {
+      const items = [...ITEMS, updateRow("Check", async () => {})];
+
+      await render(
+        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Check"));
+
+      assert.false(politeText().includes("Selected"), "nothing was selected");
+      assert.false(politeText().includes("cleared"), "nothing was cleared");
+      assert.false(
+        politeText().includes("Updating selection"),
+        "an update that ends before the delay announces no start"
+      );
+    });
+
+    test("an async update re-runs a select-content transformer that reads pending", async function (assert) {
+      const gate = deferred();
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value, context }) => [
+          ...value,
+          updateRow(
+            context.control.pending ? "Loading suggestion" : "Suggest",
+            async () => {
+              await gate.promise;
+            },
+            { close: false }
+          ),
+        ]);
+      });
+
+      await render(
+        <template><AsyncUpdateHost @items={{ITEMS}} @value={{1}} /></template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        await waitUntil(() => optionWithText("Loading suggestion"), {
+          timeout: 2000,
+        });
+        assert.notStrictEqual(
+          optionWithText("Loading suggestion"),
+          undefined,
+          "the row follows the pending state"
+        );
+      });
+
+      assert.notStrictEqual(
+        optionWithText("Suggest"),
+        undefined,
+        "the row returns once the update ends"
+      );
+    });
+
+    test("an async update survives the select being unrendered mid-flight", async function (assert) {
+      const gate = deferred();
+      const visibility = new AsyncUpdateVisibility();
+      const items = suggestItems(gate, ITEMS[1]);
+
+      await render(
+        <template>
+          {{#if visibility.show}}
+            <AsyncUpdateHost @items={{items}} @value={{1}} />
+          {{/if}}
+        </template>
+      );
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+        visibility.show = false;
+        await waitUntil(() => !find(".d-combobox__trigger"));
+      });
+
+      assert.dom(".d-combobox__trigger").doesNotExist("the select is gone");
     });
   }
 );

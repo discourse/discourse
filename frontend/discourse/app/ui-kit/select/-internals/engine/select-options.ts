@@ -23,6 +23,7 @@ const EMPTY_CONTEXT: object = Object.freeze({});
  */
 export default class SelectOptionsView {
   #readMultiple?: SelectEngineOptions["getMultiple"];
+  #readLocked?: SelectEngineOptions["getLocked"];
   #multiple?: SelectEngineOptions["multiple"];
   #identifiers: string[];
   #readKindContext?: SelectEngineOptions["getKindContext"];
@@ -60,6 +61,8 @@ export default class SelectOptionsView {
   #groupLabelFn?: SelectEngineOptions["groupLabel"];
   #readCloseOnSelect: boolean | undefined;
   #onChange?: SelectEngineOptions["onChange"];
+  #onReconfirm?: SelectEngineOptions["onReconfirm"];
+  #onUpdateStart?: SelectEngineOptions["onUpdateStart"];
   #requestClose?: SelectEngineOptions["requestClose"];
   #readValue: () => SelectValue;
   #isAsync: boolean;
@@ -67,6 +70,7 @@ export default class SelectOptionsView {
 
   constructor(opts: SelectEngineOptions) {
     this.#readMultiple = opts.getMultiple;
+    this.#readLocked = opts.getLocked;
     this.#multiple = opts.multiple;
     this.#identifiers = makeArray(opts.identifiers) as string[];
     this.#readKindContext = opts.getKindContext;
@@ -109,6 +113,8 @@ export default class SelectOptionsView {
     // runtime `multiple` flip flips the default close behavior with it.
     this.#readCloseOnSelect = opts.closeOnSelect;
     this.#onChange = opts.onChange;
+    this.#onReconfirm = opts.onReconfirm;
+    this.#onUpdateStart = opts.onUpdateStart;
     this.#requestClose = opts.requestClose;
     this.#legacy = opts.legacy ?? null;
     // The controlled value is read live via this thunk, so the engine reflects the
@@ -119,6 +125,10 @@ export default class SelectOptionsView {
 
   get multiple(): boolean {
     return this.#readMultiple?.() ?? this.#multiple ?? false;
+  }
+
+  get locked(): boolean {
+    return this.#readLocked?.() ?? false;
   }
 
   get minChars(): number {
@@ -236,6 +246,14 @@ export default class SelectOptionsView {
 
   get onChange(): SelectEngineOptions["onChange"] {
     return this.#onChange;
+  }
+
+  get onReconfirm(): SelectEngineOptions["onReconfirm"] {
+    return this.#onReconfirm;
+  }
+
+  get onUpdateStart(): SelectEngineOptions["onUpdateStart"] {
+    return this.#onUpdateStart;
   }
 
   get requestClose(): SelectEngineOptions["requestClose"] {

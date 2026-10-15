@@ -79,7 +79,10 @@ interface DSelectSignature {
      * unlabeled splitter; omitted entirely, every boundary is a splitter.
      */
     groupLabel?: SelectEngineOptions["groupLabel"];
-    onChange?: SelectEngineOptions["onChange"];
+    onChange?: (
+      nextValue: SelectValue,
+      item: SelectItemModel | SelectItemModel[] | null
+    ) => void;
     placeholder?: string;
     searchPlaceholder?: string;
     noResultsLabel?: string;
@@ -297,9 +300,10 @@ export default class DSelect extends Component<DSelectSignature> {
 
   // Constructed once from the (stable) args; never exposed to consumers — internal
   // parts receive it but touch only its public API.
-  engine = new SelectEngine({
+  engine: SelectEngine = new SelectEngine({
     // Read lazily so the engine reflects the parent's (reactive) @value — controlled.
     getValue: () => this.args.value,
+    getLocked: () => this.presenter.isLocked,
     // Live readers for the reactive inputs, so a runtime change to any of these args
     // propagates into the engine (which reads them on every access). Static-by-contract
     // args below are passed by value.
@@ -333,6 +337,8 @@ export default class DSelect extends Component<DSelectSignature> {
     groupBy: this.args.groupBy,
     groupLabel: this.args.groupLabel,
     onChange: this.handleChange,
+    onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
+    onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
     // Gated on the overlay actually being open: `DMenuInstance.close` focuses the trigger by
     // default, so closing an already-closed menu would steal focus from wherever the user has
     // moved on to. Reachable from the compat bridge, which exposes both `close()` and a
@@ -355,7 +361,7 @@ export default class DSelect extends Component<DSelectSignature> {
     },
   });
 
-  presenter = new VariantPresenter({
+  presenter: VariantPresenter = new VariantPresenter({
     getArgs: () => this.args,
     engine: this.engine,
     shouldRenderInModal: (modalForMobile) =>
@@ -497,7 +503,7 @@ export default class DSelect extends Component<DSelectSignature> {
     opts?: SelectLoadOptions
   ):
     | readonly SelectDescriptor[]
-    | Promise<readonly SelectDescriptor[]>
+    | Promise<readonly SelectDescriptor[] | undefined>
     | undefined {
     const resolved = this.engine.resolveSelection(value as SelectValue, opts);
     if (resolved == null) {
@@ -505,7 +511,9 @@ export default class DSelect extends Component<DSelectSignature> {
     }
     if (resolved instanceof Promise) {
       return resolved.then((items) =>
-        this.engine.describeItems(items as SelectItemModel[])
+        items === undefined
+          ? undefined
+          : this.engine.describeItems(items as SelectItemModel[])
       );
     }
     return this.engine.describeItems(resolved as SelectItemModel[]);
@@ -530,11 +538,13 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   handleChange(
     nextValue: SelectValue,
-    payload: SelectItemModel | SelectItemModel[] | null
+    payload: SelectItemModel | SelectItemModel[] | null,
+    change: Parameters<NonNullable<SelectEngineOptions["onChange"]>>[2]
   ): void {
     // This must be read before forwarding because the parent applies nextValue synchronously.
     const oldValues = this.args.value;
     this.announcer.valueChanged(oldValues, nextValue, {
+      ...change,
       onAddedWithQuery: () => {
         this.engine.setFilter("");
         this.interaction.queryActive = false;
@@ -550,6 +560,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
   <template>
     <DMenu
+      aria-busy={{if this.engine.pending "true"}}
       aria-controls={{this.presenter.triggerRootControls}}
       aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
       aria-disabled={{this.presenter.triggerRootDisabled}}
@@ -627,6 +638,7 @@ export default class DSelect extends Component<DSelectSignature> {
           @icon={{@icon}}
           @onClear={{this.interaction.handleClear}}
           @onLabelActivate={{this.interaction.focusFromLabel}}
+          @pending={{this.engine.pending}}
           @showCaret={{this.presenter.showCaret}}
           @showClear={{this.presenter.showClear}}
         >
@@ -650,6 +662,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onEdit={{this.interaction.beginQuery}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
               @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+              @pending={{this.engine.pending}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
               @resolveSelection={{this.resolveMulti}}
@@ -685,6 +698,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onEdit={{this.interaction.beginQuery}}
               @onFocus={{this.interaction.handleTriggerFocus}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @pending={{this.engine.pending}}
               @placeholder={{@placeholder}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}

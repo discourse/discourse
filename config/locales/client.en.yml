@@ -3537,6 +3537,8 @@ en:
       remove_hint: "Press Backspace or Delete to remove"
       selected_items: "Selected items"
       chips_hint: "Press Left arrow to reach selected items."
+      updating_selection: "Updating selection…"
+      item_selected: "Selected %{item}"
       item_added: "Added %{item}"
       item_removed: "Removed %{item}"
       expand: "Show options"

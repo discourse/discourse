@@ -181,7 +181,11 @@ function adaptInjectedRows(
     if (original.has(row) || typeof row?.onSelect !== "function") {
       return row;
     }
-    const legacyOnSelect = row.onSelect;
+    // Injected by a legacy extension, so it was written for the facade, not the control.
+    const legacyOnSelect = row.onSelect as unknown as (
+      selectKit: LegacySelectKit,
+      item: SelectItem
+    ) => void;
     return {
       ...row,
       onSelect: (_control: unknown, item: SelectItem) =>

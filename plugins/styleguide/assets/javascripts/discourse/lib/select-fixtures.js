@@ -39,7 +39,7 @@ import { i18n } from "discourse-i18n";
  */
 
 /** Rejects when `signal` aborts, otherwise resolves after `ms`. */
-function delay(signal, ms = 750) {
+export function delay(signal, ms = 750) {
   return new Promise((resolve, reject) => {
     // `signal` is optional on purpose: the engine's resolve path may call a source without one
     // (`resolveSelection` defaults its options to `{}`), and a TypeError there is swallowed into

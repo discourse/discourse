@@ -5,9 +5,11 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
-// A source that answers faster than this never shows a placeholder, so a quick server does
-// not flash one; only a wait long enough to read as "stuck" gets visible feedback.
-const LOADING_FEEDBACK_DELAY = 250;
+/**
+ * A wait shorter than this gets no feedback, so a quick source or update never flashes a
+ * placeholder or an announcement; only a wait long enough to read as stuck is shown.
+ */
+export const LOADING_FEEDBACK_DELAY = 250;
 // Placeholder rows appended at the loading frontier while a server page is in flight, so a
 // pending fetch reads as "more coming" in the list rather than a silent stop.
 const FRONTIER_SKELETON_COUNT = 3;
