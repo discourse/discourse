@@ -127,9 +127,13 @@ export default class SiteSettingFilter {
           return false;
         }
       );
+      // An inline dependent is displayed as its parent, which may belong to an
+      // earlier category that already lists it.
       const siteSettings = opts.dependsOn
         ? matchedSiteSettings
-        : this.displaySettingsFor(matchedSiteSettings);
+        : this.displaySettingsFor(matchedSiteSettings).filter(
+            (setting) => !matches.includes(setting)
+          );
 
       if (siteSettings.length > 0) {
         matches.push(...siteSettings);
