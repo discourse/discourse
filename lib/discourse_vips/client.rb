@@ -14,6 +14,9 @@ module DiscourseVips
     WORKER_GRACE_SECONDS = 2
     private_constant :WORKER_GRACE_SECONDS
 
+    SHARED_WORKER_RETRY_SECONDS = 10
+    private_constant :SHARED_WORKER_RETRY_SECONDS
+
     @owner_pid = Process.pid
     @shared_worker = false
     @worker_process_mutex = Mutex.new
@@ -48,6 +51,9 @@ module DiscourseVips
     def self.send_command(request, timeout:)
       deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout + WORKER_GRACE_SECONDS
       socket = connect_socket(deadline:)
+      if @shared_worker
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout + WORKER_GRACE_SECONDS
+      end
 
       write_request(socket, MessagePack.pack(request), deadline:)
       socket.close_write
@@ -69,7 +75,20 @@ module DiscourseVips
     private_class_method :send_command
 
     def self.connect_socket(deadline:)
-      Addrinfo.unix(worker_socket_path).connect(timeout: remaining_time(deadline))
+      if @shared_worker
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + SHARED_WORKER_RETRY_SECONDS
+      end
+      delay_seconds = 0.1
+
+      begin
+        Addrinfo.unix(worker_socket_path).connect(timeout: remaining_time(deadline))
+      rescue Errno::ENOENT, Errno::ECONNREFUSED
+        raise if !@shared_worker
+
+        sleep [delay_seconds, remaining_time(deadline)].min
+        delay_seconds = [delay_seconds * 2, 1].min
+        retry
+      end
     rescue IO::TimeoutError
       raise WorkerUnavailable, "libvips worker did not respond"
     end
