@@ -10,6 +10,7 @@ export default (inboxType, filter) => {
     "private-messages-groups",
     filter
   ) {
+    /** @type {string | null | undefined} */
     groupName = null;
 
     titleToken() {

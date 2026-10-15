@@ -9,12 +9,32 @@ import { i18n } from "discourse-i18n";
 
 const CODE_FIELD = "code";
 
+/**
+ * @typedef {Object} ActivationCodeFormApi
+ * @property {(name: string, value: unknown) => Promise<void>} set
+ * @property {(values: Record<string, unknown>) => Promise<void>} setProperties
+ * @property {(name: string) => unknown} get
+ * @property {() => void} commit
+ * @property {(name: string) => void} commitField
+ * @property {(event?: Event) => Promise<void>} submit
+ * @property {(event?: Event) => Promise<void>} reset
+ * @property {(name: string, error: { title?: string, message?: string }) => void} addError
+ * @property {(name: string) => void} removeError
+ * @property {() => void} removeErrors
+ * @property {boolean} isDirty
+ */
 export default class UserApiKeyActivateController extends Controller {
   @tracked page;
+
+  /** @type {string | null} */
   @tracked error = null;
   @tracked isLoading = false;
   queryParams = ["request"];
+
+  /** @type {string | null} */
   request = null;
+
+  /** @type {ActivationCodeFormApi | null} */
   codeFormApi = null;
   codeFormData = { [CODE_FIELD]: "" };
   approvalFormData = {};

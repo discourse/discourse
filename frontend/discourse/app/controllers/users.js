@@ -9,6 +9,18 @@ import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
 
+/**
+ * @typedef {Object} DirectoryParams
+ * @property {string} [period]
+ * @property {string} [order]
+ * @property {boolean | string | null} [asc]
+ * @property {string} [name]
+ * @property {string | null} [group]
+ * @property {string | null} [exclude_usernames]
+ * @property {string | null} [exclude_groups]
+ * @property {string} [user_field_ids]
+ * @property {string} [plugin_column_ids]
+ */
 export default class UsersController extends Controller {
   @service modal;
   @service siteSettings;
@@ -26,15 +38,31 @@ export default class UsersController extends Controller {
   ];
 
   order = "";
+
+  /** @type {boolean | string | null} */
   asc = null;
   name = "";
+
+  /** @type {string | null | undefined} */
   group = null;
+
+  /** @type {string | null | undefined} */
   nameInput = null;
+
+  /** @type {string | null} */
   exclude_usernames = null;
+
+  /** @type {string | null} */
   exclude_groups = null;
   isLoading = false;
+
+  /** @type {{ id: number, name: string, type: string, position: number, icon: string | null, user_field_id: number | null }[] | null} */
   columns = null;
+
+  /** @type {{ name: string, id: string }[] | null} */
   groupOptions = null;
+
+  /** @type {DirectoryParams | null} */
   params = null;
 
   @computed("currentUser", "groupOptions")
