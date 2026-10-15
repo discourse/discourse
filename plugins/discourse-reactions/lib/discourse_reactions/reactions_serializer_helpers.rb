@@ -5,13 +5,33 @@ module DiscourseReactions::ReactionsSerializerHelpers
     posts = Array(posts).compact
     return { reactions: {}, reaction_users_count: {} } if posts.blank?
 
-    ActiveRecord::Associations::Preloader.new(
-      records: posts,
-      associations: [:post_actions, { reactions: { reaction_users: :user } }],
-    ).call
+    ignored_user_ids = user&.ignored_user_ids || []
+    associations =
+      if ignored_user_ids.present?
+        [:post_actions, { reactions: { reaction_users: :user } }]
+      else
+        %i[post_actions reactions]
+      end
+
+    ActiveRecord::Associations::Preloader.new(records: posts, associations: associations).call
+
+    if ignored_user_ids.empty?
+      reaction_users =
+        if user
+          DiscourseReactions::ReactionUser.where(
+            reaction_id: posts.flat_map { |post| post.reactions.map(&:id) },
+            user_id: user.id,
+          ).index_by(&:reaction_id)
+        else
+          {}
+        end
+
+      posts.each { |post| post.preloaded_reaction_users = { user&.id => reaction_users } }
+    else
+      posts.each { |post| post.preloaded_reaction_users = nil }
+    end
 
     post_ids = posts.map(&:id).uniq
-    ignored_user_ids = user&.ignored_user_ids || []
     ignored_user_ids_set = ignored_user_ids.to_set
 
     reaction_users_count_map =
@@ -197,7 +217,7 @@ module DiscourseReactions::ReactionsSerializerHelpers
     return nil if scope.is_anonymous?
 
     post.emoji_reactions.each do |reaction|
-      reaction_user = reaction.reaction_users.find { |ru| ru.user_id == scope.user.id }
+      reaction_user = reaction_user_for(post: post, reaction: reaction, user: scope.user)
       next if reaction_user.blank?
 
       if reaction.reaction_users_count
@@ -279,7 +299,7 @@ module DiscourseReactions::ReactionsSerializerHelpers
 
     has_matching_reaction_user =
       post.emoji_reactions.any? do |reaction|
-        reaction.reaction_users.any? { |ru| ru.user_id == scope.user.id } &&
+        reaction_user_for(post: post, reaction: reaction, user: scope.user).present? &&
           (
             if SiteSetting.discourse_reactions_allow_any_emoji
               reaction.reaction_value != DiscourseReactions::Reaction.main_reaction_id
@@ -293,6 +313,15 @@ module DiscourseReactions::ReactionsSerializerHelpers
 
     like_post_action.present? && !has_matching_reaction_user
   end
+
+  def self.reaction_user_for(post:, reaction:, user:)
+    if post.preloaded_reaction_users&.key?(user.id)
+      post.preloaded_reaction_users[user.id][reaction.id]
+    else
+      reaction.reaction_users.find { |reaction_user| reaction_user.user_id == user.id }
+    end
+  end
+  private_class_method :reaction_user_for
 
   def self.op_reactions_data_for_topic(topic, scope)
     return nil unless topic.first_post
