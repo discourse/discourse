@@ -682,13 +682,18 @@ RSpec.describe Chat::ChatController do
       expect(response.body).not_to include(dm_message.cooked)
     end
 
-    it "renders no messages when anonymous users are not allowed to chat" do
+    it "404s channels and renders an empty index when anonymous users are not allowed to chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
       get chat_channel.relative_url, headers: crawler_headers
 
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(404)
       expect(response.body).not_to include(message_0.cooked)
+
+      get "/chat", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(chat_channel.url)
     end
 
     it "renders no messages for regular browsers" do

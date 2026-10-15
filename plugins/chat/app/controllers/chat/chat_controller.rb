@@ -7,13 +7,12 @@ module Chat
                   except: %i[respond set_user_chat_status dismiss_retention_reminder rebake]
 
     def respond
-      if !use_crawler_layout? || !Chat.anonymous_public_channel_access_allowed?
-        raise ApplicationController::RenderEmpty
-      end
+      raise ApplicationController::RenderEmpty if !use_crawler_layout?
 
+      # Channel routes 404 when anonymous access is off, so already-indexed pages drop out of search.
       if params[:channel_id].present?
         render_crawler_channel
-      elsif params[:crawler_directory]
+      elsif params[:crawler_directory] && Chat.anonymous_public_channel_access_allowed?
         render_crawler_directory
       else
         raise ApplicationController::RenderEmpty
