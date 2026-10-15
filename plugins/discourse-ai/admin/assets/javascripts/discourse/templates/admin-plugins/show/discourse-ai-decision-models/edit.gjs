@@ -1,5 +1,5 @@
-import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form";
-import AiDecisionModelsListEditor from "../../../../components/ai-decision-models-list-editor";
+import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form.gjs";
+import AiDecisionModelsListEditor from "../../../../components/ai-decision-models-list-editor.gjs";
 
 export default <template>
   {{#if @controller.model}}

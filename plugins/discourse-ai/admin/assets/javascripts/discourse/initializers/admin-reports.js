@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AdminReportEmotion from "../components/admin-report-emotion";
-import AdminReportSentimentAnalysis from "../components/admin-report-sentiment-analysis";
+import AdminReportSentimentAnalysis from "../components/admin-report-sentiment-analysis.gjs";
 
 export default {
   name: "discourse-ai-admin-reports",

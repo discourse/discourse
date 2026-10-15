@@ -6,7 +6,7 @@ import {
   cakeday,
   cakedayTitle,
 } from "discourse/plugins/discourse-cakeday/discourse/lib/cakeday";
-import EmojiImages from "../../components/emoji-images";
+import EmojiImages from "../../components/emoji-images.gjs";
 
 export default class UserCakeday extends Component {
   @service currentUser;

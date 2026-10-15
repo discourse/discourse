@@ -14,8 +14,8 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
-import AddColumnModal from "./add-column-modal";
-import CellEditor from "./cell-editor";
+import AddColumnModal from "./add-column-modal.gjs";
+import CellEditor from "./cell-editor.gjs";
 
 const autofocus = modifier((element) => {
   element.focus();

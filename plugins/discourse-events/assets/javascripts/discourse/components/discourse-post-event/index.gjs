@@ -12,19 +12,22 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { recurrenceContext, recurrenceRef } from "../../lib/event-recurrence";
-import ChatChannel from "./chat-channel";
-import Creator from "./creator";
-import Dates from "./dates";
-import Description from "./description";
-import EventStatus from "./event-status";
-import Image from "./image";
-import Invitees from "./invitees";
-import Livestream from "./livestream";
-import DiscoursePostEventLocation from "./location";
-import MoreMenu from "./more-menu";
-import Status from "./status";
-import Url from "./url";
+import {
+  recurrenceContext,
+  recurrenceRef,
+} from "../../lib/event-recurrence.js";
+import ChatChannel from "./chat-channel.gjs";
+import Creator from "./creator.gjs";
+import Dates from "./dates.gjs";
+import Description from "./description.gjs";
+import EventStatus from "./event-status.gjs";
+import Image from "./image.gjs";
+import Invitees from "./invitees.gjs";
+import Livestream from "./livestream.gjs";
+import DiscoursePostEventLocation from "./location.gjs";
+import MoreMenu from "./more-menu.gjs";
+import Status from "./status.gjs";
+import Url from "./url.gjs";
 
 const StatusSeparator = <template>
   <span class="separator">·</span>

@@ -16,9 +16,9 @@ import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/com
 import {
   getCalendarButtonsText,
   getCurrentBcp47Locale,
-} from "../lib/calendar-locale";
-import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
-import CalendarPlaceholder from "./calendar-placeholder";
+} from "../lib/calendar-locale.js";
+import { normalizeViewForCalendar } from "../lib/calendar-view-helper.js";
+import CalendarPlaceholder from "./calendar-placeholder.gjs";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent

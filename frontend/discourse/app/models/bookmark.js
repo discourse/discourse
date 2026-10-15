@@ -20,7 +20,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.js";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,

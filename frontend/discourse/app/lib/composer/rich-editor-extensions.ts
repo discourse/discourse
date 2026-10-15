@@ -27,7 +27,7 @@ import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
 import type GlimmerNodeView from "discourse/static/prosemirror/lib/glimmer-node-view";
-import type { ToolbarBase } from "./toolbar";
+import type { ToolbarBase } from "./toolbar.ts";
 
 export interface MarkdownOptions {
   /** Avatar template of a post in the host editor's topic. */

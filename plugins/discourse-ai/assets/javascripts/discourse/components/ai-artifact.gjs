@@ -7,7 +7,7 @@ import { trustHTML } from "@ember/template";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
-import AiArtifactShare from "./ai-artifact-share";
+import AiArtifactShare from "./ai-artifact-share.gjs";
 
 export default class AiArtifactComponent extends Component {
   @service siteSettings;

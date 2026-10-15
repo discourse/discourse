@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import richEditorExtension from "../lib/ai-artifact-rich-editor-extension";
+import richEditorExtension from "../lib/ai-artifact-rich-editor-extension.js";
 
 export default apiInitializer((api) => {
   if (api.container.lookup("service:site-settings").discourse_ai_enabled) {

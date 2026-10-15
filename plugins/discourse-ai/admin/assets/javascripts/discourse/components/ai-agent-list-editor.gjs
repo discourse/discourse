@@ -22,7 +22,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiAgent from "../admin/models/ai-agent";
-import AiAgentEditor from "./ai-agent-editor";
+import AiAgentEditor from "./ai-agent-editor.gjs";
 
 const LAYOUT_BUTTONS = [
   {

@@ -9,8 +9,8 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
-import ChatThreadParticipants from "../../chat-thread-participants";
-import ChatUserAvatar from "../../chat-user-avatar";
+import ChatThreadParticipants from "../../chat-thread-participants.gjs";
+import ChatUserAvatar from "../../chat-user-avatar.gjs";
 
 export default class ChatThreadListItem extends Component {
   @service router;

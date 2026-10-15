@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
-import PaymentPlan from "./payment-plan";
+import PaymentPlan from "./payment-plan.gjs";
 
 @tagName("")
 export default class PaymentOptions extends Component {

@@ -1,7 +1,7 @@
 import {
   buildConnectedOutputsIndex,
   normalizeTargetInput,
-} from "../../../lib/workflows/graph-constants";
+} from "../../../lib/workflows/graph-constants.js";
 
 const HANDLE_LENGTH = 30;
 const HANDLE_TOTAL = HANDLE_LENGTH + 14;

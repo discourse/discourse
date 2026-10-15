@@ -5,9 +5,9 @@ import {
   type StepOutcome,
   stepRow,
 } from "discourse/ui-kit/-internals/cursor/navigation";
-import type { DRovingFocusConfig } from "./config";
-import TypeAhead from "./type-ahead";
-import type { DRovingFocusApi, DRovingFocusAxis } from "./types";
+import type { DRovingFocusConfig } from "./config.ts";
+import TypeAhead from "./type-ahead.ts";
+import type { DRovingFocusApi, DRovingFocusAxis } from "./types.ts";
 
 /**
  * Input types with no text caret, so an arrow key means navigation there rather than a cursor

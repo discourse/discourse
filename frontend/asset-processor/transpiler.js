@@ -1,12 +1,12 @@
-import "./shims";
-import "./postcss";
-import "./asset-processor-rollup";
+import "./shims.js";
+import "./postcss.js";
+import "./asset-processor-rollup.js";
 import { transform as babelTransform } from "@babel/standalone";
 import DecoratorTransforms from "decorator-transforms";
 import EMBER_PACKAGE from "ember-source/package.json";
 import { minify as terserMinify } from "terser";
-import { browsers } from "../discourse/config/targets";
-import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
+import { browsers } from "../discourse/config/targets.js";
+import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames.js";
 
 globalThis.emberVersion = function () {
   return EMBER_PACKAGE.version;

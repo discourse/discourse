@@ -7,7 +7,7 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import I18n, { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.js";
 
 export const PENDING = 0;
 export const APPROVED = 1;

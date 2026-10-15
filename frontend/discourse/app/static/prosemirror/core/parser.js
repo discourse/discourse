@@ -1,5 +1,5 @@
 import { defaultMarkdownParser, MarkdownParser } from "prosemirror-markdown";
-import { parse } from "../lib/markdown-it";
+import { parse } from "../lib/markdown-it.js";
 
 // TODO(renato): We need a workaround for this parsing issue:
 //   https://github.com/ProseMirror/prosemirror-markdown/issues/82

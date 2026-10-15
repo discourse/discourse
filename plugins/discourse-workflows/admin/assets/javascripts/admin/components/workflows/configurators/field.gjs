@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
-import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
-import { fieldValidator } from "../../../lib/workflows/field-validators";
+import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry.js";
+import { fieldValidator } from "../../../lib/workflows/field-validators.js";
 import {
   fieldControl,
   fieldFormat,
@@ -18,7 +18,7 @@ import {
   propertyLabel,
   propertyPlaceholder,
   propertyTooltip,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 
 export default class Field extends Component {
   get control() {

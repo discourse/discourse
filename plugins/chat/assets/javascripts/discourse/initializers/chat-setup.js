@@ -12,9 +12,9 @@ import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/c
 import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
 import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
-import richEditorExtension from "../../lib/rich-editor-extension";
-import ChatHeaderIcon from "../components/chat/header/icon";
-import chatStyleguide from "../components/styleguide/organisms/chat";
+import richEditorExtension from "../../lib/rich-editor-extension.js";
+import ChatHeaderIcon from "../components/chat/header/icon.gjs";
+import chatStyleguide from "../components/styleguide/organisms/chat.gjs";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -45,7 +45,7 @@ class ChatSetupInit {
       api.registerReviewableComponent(
         "ReviewableChatMessage",
         async () =>
-          (await import("../components/reviewable/chat-message")).default
+          (await import("../components/reviewable/chat-message.gjs")).default
       );
 
       api.addAboutPageActivity("chat_messages", (periods) => {
