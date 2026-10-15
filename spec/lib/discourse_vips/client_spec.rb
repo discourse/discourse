@@ -9,10 +9,10 @@ RSpec.describe DiscourseVips::Client do
     let(:requests) { Queue.new }
 
     around do |example|
-      shared_worker = described_class.instance_variable_get(:@shared_worker)
+      shared_worker = described_class.shared_worker?
       example.run
     ensure
-      described_class.instance_variable_set(:@shared_worker, shared_worker)
+      shared_worker ? described_class.use_shared_worker : described_class.use_private_worker
     end
 
     before do
@@ -43,37 +43,60 @@ RSpec.describe DiscourseVips::Client do
       end
     end
 
-    [Errno::ENOENT, Errno::ECONNREFUSED].each do |connection_error|
-      it "recovers when a shared socket initially raises #{connection_error}" do
-        UNIXServer.new(socket_path).close if connection_error == Errno::ECONNREFUSED
-        address = Addrinfo.unix(socket_path)
-        allow(Addrinfo).to receive(:unix).with(socket_path).and_return(address)
-        allow(address).to receive(:connect).and_wrap_original do |connect, **options|
-          connect.call(**options)
-        rescue connection_error
-          sleep 1.1
-          File.unlink(socket_path) if File.exist?(socket_path)
-          serve(response: MessagePack.pack({ "status" => "ok", "value" => "8.15.0" }))
-          raise
+    def restore_socket_after_failure(connection_error:)
+      address = Addrinfo.unix(socket_path)
+      allow(Addrinfo).to receive(:unix).with(socket_path).and_return(address)
+      allow(address).to receive(:connect).and_wrap_original do |connect, **options|
+        connect.call(**options)
+      rescue connection_error
+        sleep 1.1
+        File.unlink(socket_path) if File.exist?(socket_path)
+        serve(response: MessagePack.pack({ "status" => "ok", "value" => "8.15.0" }))
+        raise
+      end
+    end
+
+    it "recovers when the shared worker socket is missing" do
+      restore_socket_after_failure(connection_error: Errno::ENOENT)
+
+      result =
+        stub_const(described_class, :WORKER_GRACE_SECONDS, 0) do
+          Timeout.timeout(5) do
+            described_class.call(
+              ["version"],
+              operation: :vips_version,
+              timeout: 1,
+              read: [],
+              write: [],
+            )
+          end
         end
 
-        result =
-          stub_const(described_class, :WORKER_GRACE_SECONDS, 0) do
-            Timeout.timeout(5) do
-              described_class.call(
-                ["version"],
-                operation: :vips_version,
-                timeout: 1,
-                read: [],
-                write: [],
-              )
-            end
-          end
+      expect(result).to eq("8.15.0")
+      expect(requests.size).to eq(1)
+      expect(requests.pop.fetch("timeout")).to eq(1)
+    end
 
-        expect(result).to eq("8.15.0")
-        expect(requests.size).to eq(1)
-        expect(requests.pop.fetch("timeout")).to eq(1)
-      end
+    it "recovers when the shared worker socket refuses connections" do
+      UNIXServer.new(socket_path).close
+      restore_socket_after_failure(connection_error: Errno::ECONNREFUSED)
+
+      result =
+        stub_const(described_class, :WORKER_GRACE_SECONDS, 0) do
+          Timeout.timeout(5) do
+            described_class.call(
+              ["version"],
+              operation: :vips_version,
+              timeout: 1,
+              read: [],
+              write: [],
+            )
+          end
+        end
+
+      expect(result).to eq("8.15.0")
+      expect(requests.size).to eq(1)
+      expect(requests.pop.fetch("timeout")).to eq(1)
     end
 
     it "bounds the wait when the shared worker remains unavailable" do
@@ -92,7 +115,7 @@ RSpec.describe DiscourseVips::Client do
     end
 
     it "reports a private worker startup failure without retrying" do
-      described_class.instance_variable_set(:@shared_worker, false)
+      described_class.use_private_worker
       Process.expects(:spawn).once.raises(Errno::ENOENT)
 
       expect {
@@ -100,32 +123,56 @@ RSpec.describe DiscourseVips::Client do
       }.to raise_error(DiscourseVips::WorkerUnavailable)
     end
 
-    [nil, "\xC1"].each do |response|
-      it "preserves a failed response without replaying the accepted request (#{response.inspect})" do
-        serve(response:)
+    it "preserves an empty response without replaying the accepted request" do
+      serve(response: nil)
 
-        expect {
-          described_class.call(["version"], operation: :vips_version, read: [], write: [])
-        }.to raise_error(DiscourseVips::WorkerUnavailable)
+      expect {
+        described_class.call(["version"], operation: :vips_version, read: [], write: [])
+      }.to raise_error(DiscourseVips::WorkerUnavailable)
 
-        expect(requests.size).to eq(1)
-      end
+      expect(requests.size).to eq(1)
     end
 
-    {
-      "timeout" => DiscourseVips::OperationTimeout,
-      "invalid_image" => DiscourseVips::InvalidImage,
-      "error" => DiscourseVips::Error,
-    }.each do |status, error_class|
-      it "preserves the #{status} operation result without replaying the request" do
-        serve(response: MessagePack.pack({ "status" => status, "message" => "operation failed" }))
+    it "preserves an invalid response without replaying the accepted request" do
+      serve(response: "\xC1")
 
-        expect {
-          described_class.call(["version"], operation: :vips_version, read: [], write: [])
-        }.to raise_error(error_class)
+      expect {
+        described_class.call(["version"], operation: :vips_version, read: [], write: [])
+      }.to raise_error(DiscourseVips::WorkerUnavailable)
 
-        expect(requests.size).to eq(1)
-      end
+      expect(requests.size).to eq(1)
+    end
+
+    it "preserves an operation timeout without replaying the request" do
+      serve(response: MessagePack.pack({ "status" => "timeout" }))
+
+      expect {
+        described_class.call(["version"], operation: :vips_version, read: [], write: [])
+      }.to raise_error(DiscourseVips::OperationTimeout)
+
+      expect(requests.size).to eq(1)
+    end
+
+    it "preserves an invalid image error without replaying the request" do
+      serve(
+        response: MessagePack.pack({ "status" => "invalid_image", "message" => "invalid image" }),
+      )
+
+      expect {
+        described_class.call(["version"], operation: :vips_version, read: [], write: [])
+      }.to raise_error(DiscourseVips::InvalidImage)
+
+      expect(requests.size).to eq(1)
+    end
+
+    it "preserves an operation error without replaying the request" do
+      serve(response: MessagePack.pack({ "status" => "error", "message" => "operation failed" }))
+
+      expect {
+        described_class.call(["version"], operation: :vips_version, read: [], write: [])
+      }.to raise_error(DiscourseVips::Error)
+
+      expect(requests.size).to eq(1)
     end
   end
 end

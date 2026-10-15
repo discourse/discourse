@@ -26,6 +26,17 @@ module DiscourseVips
       reset_worker_process
     end
 
+    if Rails.env.test?
+      def self.shared_worker?
+        @shared_worker
+      end
+
+      def self.use_private_worker
+        reset_worker_process
+        @shared_worker = false
+      end
+    end
+
     def self.call(command, operation:, timeout: DEFAULT_TIMEOUT_SECONDS, nice: nil, read:, write:)
       payload = { command: command.map(&:to_s), timeout:, nice:, read:, write: }
 
