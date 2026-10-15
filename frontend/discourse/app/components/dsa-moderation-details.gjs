@@ -50,7 +50,6 @@ export default class DsaModerationDetails extends Component {
           {{/each}}
         </field.Control>
       </form.Field>
-      {{yield form}}
     </Form>
   </template>
 }
