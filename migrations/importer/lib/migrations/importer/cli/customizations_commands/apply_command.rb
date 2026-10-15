@@ -11,7 +11,7 @@ module Migrations
 
           options do
             option "-h/--help", "Print out help."
-            option "--target <target>", "Which items to apply: template or import."
+            option "--target <target>", "Which items to apply: template or migrated."
             option "--mappings-db <path>", "MappingsDB of the import, to find imported records."
             option "--dry-run", "Report what would change without changing anything."
             option "--from-backups",

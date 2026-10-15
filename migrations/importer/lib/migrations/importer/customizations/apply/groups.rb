@@ -34,7 +34,7 @@ module Migrations
           private
 
           def create(entry, desired)
-            if @target == "import" || entry["automatic"]
+            if @target == "migrated" || entry["automatic"]
               raise SkipItem,
                     "no matching group found (tried #{(entry["match"] || {}).keys.join(", ").presence || "name"})"
             end
