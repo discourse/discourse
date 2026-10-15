@@ -71,9 +71,11 @@ describe "Classifying reviewable moderation" do
       modal.continue
       expect(modal).to have_action_title("#{label} @#{post.user.username}")
       expect(modal).to have_classification
+      expect(modal).to have_focused_step("DSA classification")
       modal.select_rule(rule[:ground])
       modal.select_category(category)
       modal.back
+      expect(modal).to have_focused_step("Action details")
       expect(modal).to have_action_title("#{label} @#{post.user.username}")
       modal.continue
       expect(modal).to have_selected_category(category)
@@ -84,5 +86,30 @@ describe "Classifying reviewable moderation" do
       page.refresh
       expect(review_page).to have_note(note)
     end
+  end
+
+  it "classifies actions on flagged posts loaded after the first queue page" do
+    post = Fabricate(:post, topic: topic)
+    reviewable =
+      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic: topic)
+    newer_reviewable = Fabricate(:reviewable_flagged_post)
+
+    stub_const(ReviewablesController, "PER_PAGE", 1) do
+      visit("/review?sort_order=created_at")
+      expect(page).to have_css(".review-item[data-reviewable-id='#{newer_reviewable.id}']")
+      page.scroll_to(:bottom)
+      expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable.id}']")
+      review_page.select_bundled_action(reviewable, "post-agree_and_hide", bundle_index: 1)
+
+      expect(modal).to have_action_title("Hide post")
+      modal.select_rule(rule[:ground])
+      modal.select_category(category)
+      modal.confirm("Hide post")
+      expect(modal).to be_closed
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    end
+
+    review_page.visit_reviewable(reviewable)
+    expect(review_page).to have_note(note)
   end
 end

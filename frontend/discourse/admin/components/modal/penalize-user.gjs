@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -103,6 +104,11 @@ export default class PenalizeUser extends Component {
   @action
   backToAction() {
     this.classificationStep = false;
+  }
+
+  @action
+  focusCurrentStep(element) {
+    element.querySelector('[aria-current="step"]').focus();
   }
 
   @action
@@ -225,14 +231,17 @@ export default class PenalizeUser extends Component {
             <ol
               aria-label={{i18n "dsa_statements.steps.label"}}
               class="dsa-moderation-steps"
+              {{didUpdate this.focusCurrentStep this.classificationStep}}
             >
               <li
                 aria-current={{unless this.classificationStep "step"}}
                 class={{if this.classificationStep "" "--current"}}
+                tabindex="-1"
               >{{i18n "dsa_statements.steps.action"}}</li>
               <li
                 aria-current={{if this.classificationStep "step"}}
                 class={{if this.classificationStep "--current"}}
+                tabindex="-1"
               >{{i18n "dsa_statements.steps.classification"}}</li>
             </ol>
           {{/if}}

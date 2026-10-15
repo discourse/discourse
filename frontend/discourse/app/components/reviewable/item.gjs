@@ -237,12 +237,12 @@ export default class ReviewableItem extends Component {
   }
 
   get dsaClassificationOptions() {
-    const { reviewable } = this.args;
+    const { reviewable, classificationOptions } = this.args;
     if (
       reviewable.type === "ReviewableFlaggedPost" &&
-      reviewable.extras?.dsa_classification?.community_rules?.length
+      classificationOptions?.community_rules?.length
     ) {
-      return reviewable.extras.dsa_classification;
+      return classificationOptions;
     }
   }
 

@@ -45,6 +45,10 @@ module PageObjects
         within(full_modal_selector) { has_select?("Category", selected: category) }
       end
 
+      def has_focused_step?(label)
+        has_css?("#{full_modal_selector} [aria-current='step']:focus", text: label)
+      end
+
       def has_required_errors?
         has_css?("#{full_modal_selector} .form-kit__errors", text: "Required")
       end
