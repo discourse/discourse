@@ -1,12 +1,11 @@
 # Customizations transfer
 
 Moves site customizations (settings, themes, palettes, group and category
-looks, translation overrides) from one Discourse site to others. Typical use:
-someone customized the migrated site instead of the template site. We find
-those changes, put them into one ZIP, and apply each part where it belongs:
+looks, translation overrides) from one Discourse site to others. It finds the
+changes, puts them into one ZIP, and applies each part where it belongs:
 
 - `template`: the template site, applied once.
-- `import`: every migrated site, applied after each test migration. Used for
+- `migrated`: the site a migration produced, applied after each test migration. Used for
   things that reference imported data and for login/SSO configuration.
 - `skip`: not transferred.
 
@@ -27,7 +26,7 @@ migrations/bin/disco customizations export --plan plan.yml --output bundle.zip [
 
 # 4. Apply, connected to the destination site
 migrations/bin/disco customizations apply bundle.zip --target template [--dry-run]
-migrations/bin/disco customizations apply bundle.zip --target import --mappings-db mappings.db
+migrations/bin/disco customizations apply bundle.zip --target migrated [--mappings-db mappings.db]
 ```
 
 `diff` fingerprints every table and only diffs the ones that differ, row by
@@ -60,7 +59,7 @@ site_settings:
     reset: true            # back to the default value
     target: template
   - name: openid_connect_client_secret
-    target: import
+    target: migrated
     secret: true
 themes:
   - name: My component     # whole theme: code, settings, palettes, children
@@ -76,18 +75,18 @@ groups:
     target: template
     attributes: [flair_bg_color, flair_upload]
   - name: members
-    target: import
+    target: migrated
     match: { original_id: 12, import_id: "12", name: members }
     attributes: [title, primary_group]
 categories:
   - name: Announcements
-    target: import
+    target: migrated
     match: { original_id: 3, slug_path: announcements }
     attributes: [color, text_color, uploaded_logo]
 translation_overrides:
   - locale: en
     key: js.login.oidc.title
-    target: import
+    target: migrated
 ```
 
 Only the listed group and category `attributes` are written, so unrelated
@@ -120,7 +119,7 @@ with these strategies, in order:
 `--mappings-db` is only needed for imports done with `disco import`. Leave it
 out for the other importers.
 
-On the `import` target, an item that matches nothing is skipped. On the
+On the `migrated` target, an item that matches nothing is skipped. On the
 `template` target, missing groups and categories are created.
 
 ## Plan rules
@@ -136,15 +135,15 @@ On the `import` target, an item that matches nothing is skipped. On the
   Hidden settings changed through admin pages (about page, email appearance,
   robots.txt) are skipped too; add them to the plan by hand if needed. Login
   and SSO settings, secrets, and settings that reference categories, topics,
-  users or non-automatic groups go to `import`. The rest goes to `template`.
-- Automatic and site-created groups go to `template`, imported ones to `import`.
-- Imported categories go to `import`, others to `template`.
+  users or non-automatic groups go to `migrated`. The rest goes to `template`.
+- Automatic and site-created groups go to `template`, imported ones to `migrated`.
+- Imported categories go to `migrated`, others to `template`.
   Changed group permissions are added as a `permissions` attribute (group
   names and permission types); a group missing on the destination fails the item.
 - Attributes that only changed between NULL and an empty string are ignored.
 - Themes and palettes go to `template`. Palettes owned by a theme travel with
   that theme.
-- Translation overrides for login providers go to `import`, others to `template`.
+- Translation overrides for login providers go to `migrated`, others to `template`.
 - Changes in tables the tool doesn't handle are listed as comments at the end
   of the plan. Review them by hand.
 

@@ -32,12 +32,12 @@ RSpec.describe Migrations::Importer::Customizations::Plan do
 
   it "requires the natural key of each item" do
     expect {
-      described_class.new("format_version" => 1, "categories" => [{ "target" => "import" }])
+      described_class.new("format_version" => 1, "categories" => [{ "target" => "migrated" }])
     }.to raise_error(error, /match is required/)
     expect {
       described_class.new(
         "format_version" => 1,
-        "translation_overrides" => [{ "locale" => "en", "target" => "import" }],
+        "translation_overrides" => [{ "locale" => "en", "target" => "migrated" }],
       )
     }.to raise_error(error, /locale and key/)
   end

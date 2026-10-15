@@ -60,7 +60,7 @@ module Migrations
           end
 
           def create(entry, keys, desired, permissions)
-            if @target == "import"
+            if @target == "migrated"
               raise SkipItem, "no matching category found (tried #{keys.keys.join(", ")})"
             end
 

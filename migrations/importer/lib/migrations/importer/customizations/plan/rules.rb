@@ -161,13 +161,13 @@ module Migrations
               secret = info[:secret] || Secrets.secret_name?(name)
               result =
                 if auth_setting?(name)
-                  { "target" => "import", "note" => "auth: apply to migrated site" }
+                  { "target" => "migrated", "note" => "login/SSO" }
                 elsif IMPORT_SETTING_TYPES.include?(info[:type])
-                  { "target" => "import", "note" => "references imported data" }
+                  { "target" => "migrated", "note" => "references imported data" }
                 elsif GROUP_SETTING_TYPES.include?(info[:type]) && custom_groups?(value, facts)
-                  { "target" => "import", "note" => "references non-automatic groups" }
+                  { "target" => "migrated", "note" => "references non-automatic groups" }
                 elsif secret
-                  { "target" => "import", "note" => "secret" }
+                  { "target" => "migrated", "note" => "secret" }
                 else
                   { "target" => "template" }
                 end
@@ -188,7 +188,7 @@ module Migrations
             def translation_override(key)
               segments = key.split(".")
               if segments.include?("login") && (segments & AUTH_PROVIDER_NAMES).any?
-                { "target" => "import", "note" => "auth: apply to migrated site" }
+                { "target" => "migrated", "note" => "login/SSO" }
               else
                 { "target" => "template" }
               end
@@ -196,13 +196,13 @@ module Migrations
 
             def group(info)
               return { "target" => "template" } if info[:automatic]
-              return { "target" => "import", "note" => "imported group" } if info[:imported]
+              return { "target" => "migrated", "note" => "imported group" } if info[:imported]
 
               { "target" => "template", "note" => "created on this site; created if missing" }
             end
 
             def category(info)
-              return { "target" => "import", "note" => "imported category" } if info[:imported]
+              return { "target" => "migrated", "note" => "imported category" } if info[:imported]
 
               { "target" => "template", "note" => "created on this site; created if missing" }
             end

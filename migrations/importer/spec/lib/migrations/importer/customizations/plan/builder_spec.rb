@@ -390,14 +390,14 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
     expect(settings["enable_welcome_banner"]["target"]).to eq("skip")
     expect(settings["openid_connect_client_secret"]).to include(
-      "target" => "import",
+      "target" => "migrated",
       "secret" => true,
-      "note" => "auth: apply to migrated site",
+      "note" => "login/SSO",
     )
-    expect(settings["openid_connect_enabled"]).to include("target" => "import")
+    expect(settings["openid_connect_enabled"]).to include("target" => "migrated")
     expect(settings["approve_unless_allowed_groups"]["target"]).to eq("template")
-    expect(settings["uncategorized_category_id"]["target"]).to eq("import")
-    expect(settings["some_api_key"]).to include("target" => "import", "secret" => true)
+    expect(settings["uncategorized_category_id"]["target"]).to eq("migrated")
+    expect(settings["some_api_key"]).to include("target" => "migrated", "secret" => true)
   end
 
   it "skips hosting-managed settings" do
@@ -431,11 +431,11 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     expect(settings["invite_only"]).to include("reset" => true, "target" => "template")
   end
 
-  it "sends group_list settings with custom groups to the import target" do
+  it "sends group_list settings with custom groups to the migrated target" do
     diff["tables"]["site_settings"]["added"] = [
       setting_row(1, "approve_unless_allowed_groups", "1|77"),
     ]
-    expect(settings["approve_unless_allowed_groups"]["target"]).to eq("import")
+    expect(settings["approve_unless_allowed_groups"]["target"]).to eq("migrated")
   end
 
   it "detects changed themes and ignores system theme screenshot noise" do
@@ -470,7 +470,7 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
       "attributes" => %w[flair_upload flair_bg_color],
     )
     expect(groups["imported_group"]).to include(
-      "target" => "import",
+      "target" => "migrated",
       "attributes" => ["title"],
       "match" => {
         "original_id" => 9,
@@ -514,7 +514,7 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     categories = plan["categories"].index_by { |item| item["name"] }
 
     expect(categories["Imported"]).to include(
-      "target" => "import",
+      "target" => "migrated",
       "attributes" => %w[color uploaded_logo],
       "match" => {
         "import_id" => "3",
@@ -527,13 +527,13 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
   end
 
-  it "sends login provider translation overrides to the import target" do
+  it "sends login provider translation overrides to the migrated target" do
     expect(plan["translation_overrides"]).to contain_exactly(
       {
         "locale" => "en",
         "key" => "js.login.oidc.title",
-        "target" => "import",
-        "note" => "auth: apply to migrated site",
+        "target" => "migrated",
+        "note" => "login/SSO",
       },
       { "locale" => "en", "key" => "js.topic.title", "target" => "template" },
     )

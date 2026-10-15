@@ -18,8 +18,8 @@ module Migrations
           categories
           translation_overrides
         ].freeze
-        TARGETS = %w[template import skip].freeze
-        APPLY_TARGETS = %w[template import].freeze
+        TARGETS = %w[template migrated skip].freeze
+        APPLY_TARGETS = %w[template migrated].freeze
 
         attr_reader :data
 

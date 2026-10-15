@@ -112,7 +112,7 @@ RSpec.describe "customizations export and apply", :rails do
       "site_settings" => [
         { "name" => "title", "target" => "template" },
         { "name" => "logo", "target" => "template" },
-        { "name" => "github_client_secret", "target" => "import", "secret" => true },
+        { "name" => "github_client_secret", "target" => "migrated", "secret" => true },
       ],
       "themes" => [
         { "name" => "Custom component", "target" => "template" },
@@ -130,7 +130,7 @@ RSpec.describe "customizations export and apply", :rails do
           "match" => {
             "import_id" => "g-42",
           },
-          "target" => "import",
+          "target" => "migrated",
           "attributes" => ["title"],
         },
       ],
@@ -223,7 +223,7 @@ RSpec.describe "customizations export and apply", :rails do
     )
   end
 
-  it "restores everything on the template and import targets, and is idempotent" do
+  it "restores everything on the template and migrated targets, and is idempotent" do
     export!
     wipe!
 
@@ -271,20 +271,22 @@ RSpec.describe "customizations export and apply", :rails do
       TranslationOverride.find_by(locale: "en", translation_key: "js.topic.create").value,
     ).to eq("Start a discussion")
 
-    import_report = apply!("import", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
-    expect(import_report.failed?).to eq(false), output.string
+    migrated_report =
+      apply!("migrated", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
+    expect(migrated_report.failed?).to eq(false), output.string
     expect(SiteSetting.github_client_secret).to eq(secret_value)
     expect(imported_group.reload.title).to eq("Imported")
-    expect(statuses(import_report)["groups: imported_group"]).to eq(:changed)
-    expect(import_report.entries.find { |e| e.label == "imported_group" }.message).to eq(
+    expect(statuses(migrated_report)["groups: imported_group"]).to eq(:changed)
+    expect(migrated_report.entries.find { |e| e.label == "imported_group" }.message).to eq(
       "matched by import_id",
     )
 
     again = apply!("template")
     expect(again.entries.map(&:status).uniq).to eq([:unchanged]), output.string
 
-    again_import = apply!("import", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
-    expect(again_import.entries.map(&:status).uniq).to eq([:unchanged]), output.string
+    again_migrated =
+      apply!("migrated", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
+    expect(again_migrated.entries.map(&:status).uniq).to eq([:unchanged]), output.string
   end
 
   it "fails a category whose permission group is missing on the destination" do
@@ -315,7 +317,7 @@ RSpec.describe "customizations export and apply", :rails do
     export!
     imported_group.destroy!
 
-    report = apply!("import")
+    report = apply!("migrated")
 
     expect(statuses(report)).to include(
       "groups: imported_group" => :skipped,
