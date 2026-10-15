@@ -96,7 +96,8 @@ class DiscourseEvents::Livestream::ChatTranscript
   # Done once per message, as escaping again would stack backslashes. Read-only
   # so the escaped text can never be saved back to the message.
   def contained(message)
-    message.message = message.message.gsub(CLOSING_TAGS) { "\\#{it}" }
+    # An upload-only message has no text.
+    message.message = message.message.to_s.gsub(CLOSING_TAGS) { "\\#{it}" }
     message.readonly!
     message
   end

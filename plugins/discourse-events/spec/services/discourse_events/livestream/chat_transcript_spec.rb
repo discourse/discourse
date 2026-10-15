@@ -78,6 +78,20 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
     end
 
+    context "with a message that only has uploads" do
+      fab!(:upload)
+
+      before do
+        upload_only = Fabricate(:chat_message, chat_channel: channel, user: alice)
+        UploadReference.create!(target: upload_only, upload:)
+        upload_only.update_columns(message: nil)
+      end
+
+      it "quotes the uploads" do
+        expect(transcript.raw).to include(upload.short_url, "third")
+      end
+    end
+
     context "when the messages do not fit" do
       let(:max_length) do
         described_class.new(channel:, messages:, event_date:, max_length: 32_000).raw.length - 1
