@@ -1,4 +1,4 @@
-<% if SiteSetting.chat_enabled && Chat.anonymous_public_channel_access_allowed? %>
+<% if defined?(::Chat) && SiteSetting.chat_enabled && Chat.anonymous_public_channel_access_allowed? %>
   <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
     <span itemprop='name'>
       <a href='<%= path "/chat" %>' itemprop="url"><%= t "chat.crawler.nav_title" %> </a>
