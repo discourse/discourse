@@ -9,8 +9,9 @@ import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
+import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import { extractError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
@@ -31,6 +32,9 @@ export default class PenalizeUser extends Component {
   @tracked reason;
   @tracked message;
   @tracked readyToDeleteAll = false;
+  @tracked classificationStep = false;
+  #classification;
+  #classificationForm;
   #beforeCompleted = false;
 
   constructor() {
@@ -41,6 +45,11 @@ export default class PenalizeUser extends Component {
   }
 
   get modalTitle() {
+    if (this.args.model.dsaClassification) {
+      return this.args.model.penaltyType === "suspend"
+        ? "dsa_statements.action.agree_and_suspend"
+        : "dsa_statements.action.agree_and_silence";
+    }
     if (this.args.model.penaltyType === "suspend") {
       return "admin.user.suspend_modal_title";
     } else if (this.args.model.penaltyType === "silence") {
@@ -49,6 +58,9 @@ export default class PenalizeUser extends Component {
   }
 
   get buttonLabel() {
+    if (this.args.model.dsaClassification) {
+      return `dsa_statements.penalty_action.${this.args.model.penaltyType}_${this.postAction}`;
+    }
     if (this.args.model.penaltyType === "suspend") {
       return "admin.user.suspend";
     } else if (this.args.model.penaltyType === "silence") {
@@ -76,10 +88,45 @@ export default class PenalizeUser extends Component {
     return (
       this.penalizing ||
       isEmpty(this.penalizeUntil) ||
-      !this.reason ||
-      this.reason.length < 1 ||
+      (!this.args.model.dsaClassification && !this.reason) ||
       (this.postAction === "delete_all" && !this.readyToDeleteAll)
     );
+  }
+
+  @action
+  continueToClassification() {
+    if (!this.submitDisabled) {
+      this.classificationStep = true;
+    }
+  }
+
+  @action
+  backToAction() {
+    this.classificationStep = false;
+  }
+
+  @action
+  registerClassificationForm(api) {
+    this.#classificationForm = api;
+  }
+
+  @action
+  async submitClassification(data) {
+    this.#classification = data;
+    const rule = this.args.model.dsaClassification.community_rules.find(
+      (entry) => entry.id === data.community_rule
+    );
+    this.reason = rule.ground.slice(0, 300);
+    await this.penalizeUser();
+  }
+
+  @action
+  async submitPenalty() {
+    if (this.args.model.dsaClassification) {
+      await this.#classificationForm.submit();
+    } else {
+      await this.penalizeUser();
+    }
   }
 
   @action
@@ -105,6 +152,7 @@ export default class PenalizeUser extends Component {
         post_edit: this.postEdit,
         other_user_ids: this.otherUserIds,
         reviewable_id: this.args.model.reviewableId,
+        dsa_classification: this.#classification,
       };
 
       if (this.args.model.penaltyType === "suspend") {
@@ -138,6 +186,10 @@ export default class PenalizeUser extends Component {
 
   @action
   warnBeforeClosing() {
+    if (this.penalizing) {
+      return false;
+    }
+
     if (!this.confirmClose && (this.reason?.length || this.message?.length)) {
       this.dialog.confirm({
         message: i18n("admin.user.confirm_cancel_penalty"),
@@ -163,60 +215,91 @@ export default class PenalizeUser extends Component {
     <DModal
       class="{{@model.penaltyType}}-user-modal --large"
       @closeModal={{this.warnBeforeClosing}}
+      @dismissable={{not this.penalizing}}
       @flash={{this.flash}}
-      @title={{i18n this.modalTitle}}
+      @title={{i18n this.modalTitle username=@model.user.username}}
     >
       <:body>
         {{#if this.canPenalize}}
-          <div class="penalty-duration-controls">
-            {{#if (eq @model.penaltyType "suspend")}}
-              <DFutureDateInput
-                class="suspend-until"
-                @clearable={{false}}
-                @input={{this.penalizeUntil}}
-                @label="admin.user.suspend_duration"
-                @onChangeInput={{fn (mut this.penalizeUntil)}}
+          {{#if @model.dsaClassification}}
+            <ol
+              aria-label={{i18n "dsa_statements.steps.label"}}
+              class="dsa-moderation-steps"
+            >
+              <li
+                aria-current={{unless this.classificationStep "step"}}
+                class={{if this.classificationStep "" "--current"}}
+              >{{i18n "dsa_statements.steps.action"}}</li>
+              <li
+                aria-current={{if this.classificationStep "step"}}
+                class={{if this.classificationStep "--current"}}
+              >{{i18n "dsa_statements.steps.classification"}}</li>
+            </ol>
+          {{/if}}
+          <div hidden={{this.classificationStep}}>
+            <div class="penalty-duration-controls">
+              {{#if (eq @model.penaltyType "suspend")}}
+                <DFutureDateInput
+                  class="suspend-until"
+                  @clearable={{false}}
+                  @input={{this.penalizeUntil}}
+                  @label="admin.user.suspend_duration"
+                  @onChangeInput={{fn (mut this.penalizeUntil)}}
+                />
+              {{else if (eq @model.penaltyType "silence")}}
+                <DFutureDateInput
+                  class="silence-until"
+                  @clearable={{false}}
+                  @input={{this.penalizeUntil}}
+                  @label="admin.user.silence_duration"
+                  @onChangeInput={{fn (mut this.penalizeUntil)}}
+                />
+              {{/if}}
+            </div>
+            {{#unless @model.dsaClassification}}
+              {{#if (eq @model.penaltyType "suspend")}}
+                <div class="penalty-reason-visibility">
+                  {{#if this.siteSettings.hide_suspension_reasons}}
+                    {{trustHTML
+                      (i18n "admin.user.suspend_reason_hidden_label")
+                    }}
+                  {{else}}
+                    {{trustHTML (i18n "admin.user.suspend_reason_label")}}
+                  {{/if}}
+                </div>
+              {{/if}}
+              <AdminPenaltyReason
+                @message={{this.message}}
+                @penaltyType={{@model.penaltyType}}
+                @reason={{this.reason}}
               />
-            {{else if (eq @model.penaltyType "silence")}}
-              <DFutureDateInput
-                class="silence-until"
-                @clearable={{false}}
-                @input={{this.penalizeUntil}}
-                @label="admin.user.silence_duration"
-                @onChangeInput={{fn (mut this.penalizeUntil)}}
+            {{/unless}}
+            {{#if @model.postId}}
+              <AdminPenaltyPostAction
+                @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
+                @postAction={{this.postAction}}
+                @postEdit={{this.postEdit}}
+                @postId={{@model.postId}}
+                @user={{@model.user}}
+              />
+            {{/if}}
+            {{#if @model.user.similar_users_count}}
+              <AdminPenaltySimilarUsers
+                @onUsersChanged={{this.similarUsersChanged}}
+                @penaltyType={{@model.penaltyType}}
+                @selectedUserIds={{this.otherUserIds}}
+                @user={{@model.user}}
               />
             {{/if}}
           </div>
-          {{#if (eq @model.penaltyType "suspend")}}
-            <div class="penalty-reason-visibility">
-              {{#if this.siteSettings.hide_suspension_reasons}}
-                {{trustHTML (i18n "admin.user.suspend_reason_hidden_label")}}
-              {{else}}
-                {{trustHTML (i18n "admin.user.suspend_reason_label")}}
-              {{/if}}
+          {{#if @model.dsaClassification}}
+            <div hidden={{not this.classificationStep}}>
+              <DsaModerationDetails
+                @onRegisterApi={{this.registerClassificationForm}}
+                @onSubmit={{this.submitClassification}}
+                @options={{@model.dsaClassification}}
+              />
             </div>
-          {{/if}}
-          <AdminPenaltyReason
-            @message={{this.message}}
-            @penaltyType={{@model.penaltyType}}
-            @reason={{this.reason}}
-          />
-          {{#if @model.postId}}
-            <AdminPenaltyPostAction
-              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
-              @postAction={{this.postAction}}
-              @postEdit={{this.postEdit}}
-              @postId={{@model.postId}}
-              @user={{@model.user}}
-            />
-          {{/if}}
-          {{#if @model.user.similar_users_count}}
-            <AdminPenaltySimilarUsers
-              @onUsersChanged={{this.similarUsersChanged}}
-              @penaltyType={{@model.penaltyType}}
-              @selectedUserIds={{this.otherUserIds}}
-              @user={{@model.user}}
-            />
           {{/if}}
         {{else}}
           {{#if (eq @model.penaltyType "suspend")}}
@@ -225,16 +308,36 @@ export default class PenalizeUser extends Component {
             <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
           {{/if}}
         {{/if}}
-        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
+        <div
+          class="penalty-history"
+          hidden={{this.classificationStep}}
+        >{{trustHTML this.penaltyHistory}}</div>
       </:body>
       <:footer>
-        <DButton
-          class="btn-danger perform-penalize"
-          @action={{this.penalizeUser}}
-          @disabled={{this.submitDisabled}}
-          @icon="ban"
-          @label={{this.buttonLabel}}
-        />
+        {{#if (and @model.dsaClassification (not this.classificationStep))}}
+          <DButton
+            class="btn-primary"
+            @action={{this.continueToClassification}}
+            @disabled={{this.submitDisabled}}
+            @label="dsa_statements.steps.continue"
+          />
+        {{else}}
+          <DButton
+            class="btn-danger perform-penalize"
+            @action={{this.submitPenalty}}
+            @disabled={{this.submitDisabled}}
+            @icon="ban"
+            @label={{this.buttonLabel}}
+          />
+          {{#if @model.dsaClassification}}
+            <DButton
+              class="btn-flat"
+              @action={{this.backToAction}}
+              @disabled={{this.penalizing}}
+              @label="dsa_statements.steps.back"
+            />
+          {{/if}}
+        {{/if}}
         <DButton
           class="btn-flat d-modal-cancel"
           @action={{this.warnBeforeClosing}}

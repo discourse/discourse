@@ -265,6 +265,20 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    if params[:dsa_classification].present?
+      unless guardian.is_staff? && DsaStatementOfRecord.classification_enabled?
+        raise Discourse::InvalidAccess
+      end
+      classification = params.require(:dsa_classification).permit(:community_rule, :category)
+      rule =
+        DsaStatementOfRecord.community_rules.find do |entry|
+          entry["id"] == classification[:community_rule]
+        end
+      unless rule && DsaStatementOfRecord::CATEGORIES.include?(classification[:category])
+        raise Discourse::InvalidParameters.new(:dsa_classification)
+      end
+      args[:dsa_classification] = { community_rule: rule, category: classification[:category] }
+    end
 
     result = nil
     begin
