@@ -545,6 +545,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was closed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -595,6 +596,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was unlisted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -645,6 +647,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -695,6 +698,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was locked.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -744,6 +748,7 @@ RSpec.describe ReviewableAiToolAction do
 
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
@@ -774,6 +779,8 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The topic was placed in slow mode, limiting how often users can reply.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -824,6 +831,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was edited.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -855,6 +863,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The account was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -887,6 +896,7 @@ RSpec.describe ReviewableAiToolAction do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The account had its ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "content_type" => ["CONTENT_TYPE_OTHER"],

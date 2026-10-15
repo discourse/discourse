@@ -1046,7 +1046,11 @@ class Reviewable < ActiveRecord::Base
   # Failure to save the statement rolls back the transaction.
   #
   # Keys must be symbols. Each hash must include :content_type, :content_date,
-  # :automated_detection, :automated_decision, and at least one decision field.
+  # :automated_detection, :automated_decision, :decision_facts, and at least one
+  # decision field.
+  #
+  # * :decision_facts [String] Required. Facts and circumstances known when the action
+  #   succeeds. Maximum 5000 characters. Core actions use fixed English wording.
   #
   # Decision fields:
   #
@@ -1130,6 +1134,7 @@ class Reviewable < ActiveRecord::Base
   #     {
   #       decision_visibility: ["DECISION_VISIBILITY_OTHER"],
   #       decision_visibility_other: "Content edited",
+  #       decision_facts: "The flagged post was edited.",
   #       content_type: ["CONTENT_TYPE_TEXT"],
   #       content_date: post.created_at.to_date.iso8601,
   #       automated_detection:,

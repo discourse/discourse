@@ -300,6 +300,8 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The post was flagged by an automated system and access to it was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -323,6 +325,8 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The post was flagged by an automated system and access to it was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -374,6 +378,7 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -395,6 +400,7 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -420,6 +426,7 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of a post flagged by an automated system was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -447,6 +454,8 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -472,6 +481,8 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -496,6 +507,8 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -528,6 +541,7 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -559,6 +573,7 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],

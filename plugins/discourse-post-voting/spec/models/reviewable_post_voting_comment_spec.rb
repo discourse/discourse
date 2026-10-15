@@ -76,6 +76,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -97,6 +98,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -120,6 +122,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -175,6 +178,7 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged voting comment was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -202,6 +206,8 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged voting comment had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",

@@ -539,6 +539,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -563,6 +564,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -584,6 +586,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account had its ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -606,6 +609,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
@@ -632,6 +636,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account's avatar was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
           "automated_detection" => "Yes",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",

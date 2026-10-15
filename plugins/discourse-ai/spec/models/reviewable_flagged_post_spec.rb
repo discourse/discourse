@@ -26,6 +26,7 @@ RSpec.describe ReviewableFlaggedPost do
 
       expect(statement.payload).to eq(
         "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+        "decision_facts" => "The flagged post was removed.",
         "source_type" => "SOURCE_VOLUNTARY",
         "automated_detection" => "Yes",
         "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
