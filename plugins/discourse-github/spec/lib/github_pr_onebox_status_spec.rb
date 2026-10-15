@@ -27,7 +27,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       end
 
       it "does not include status class" do
-        expect(onebox_html).not_to include("--gh-status-")
+        html = onebox_html
+        expect(html).not_to include("--gh-status-")
+        expect(Nokogiri.HTML5(html).at_css(".github-pr-status")).to be_nil
       end
     end
 
@@ -43,7 +45,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes open status and shows created_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-open")
-          expect(html).to include(I18n.t("onebox.github.status_date.open"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.open"),
+          )
           expect(html).to include('data-date="2013-07-26"')
         end
       end
@@ -59,7 +63,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes merged status and shows merged_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-merged")
-          expect(html).to include(I18n.t("onebox.github.status_date.merged"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.merged"),
+          )
           expect(html).to include('data-date="2024-02-15"')
         end
       end
@@ -75,7 +81,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes closed status and shows closed_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-closed")
-          expect(html).to include(I18n.t("onebox.github.status_date.closed"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.closed"),
+          )
           expect(html).to include('data-date="2024-03-20"')
         end
       end
@@ -90,7 +98,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes draft status and shows created_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-draft")
-          expect(html).to include(I18n.t("onebox.github.status_date.draft"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.draft"),
+          )
           expect(html).to include('data-date="2013-07-26"')
         end
       end
@@ -113,7 +123,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes approved status and shows review submitted_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-approved")
-          expect(html).to include(I18n.t("onebox.github.status_date.approved"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.approved"),
+          )
           expect(html).to include('data-date="2024-04-10"')
         end
       end
@@ -136,7 +148,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "includes changes_requested status and shows review submitted_at date" do
           html = onebox_html
           expect(html).to include("--gh-status-changes_requested")
-          expect(html).to include(I18n.t("onebox.github.status_date.changes_requested"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.changes_requested"),
+          )
           expect(html).to include('data-date="2024-05-05"')
         end
       end
@@ -167,7 +181,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
           html = onebox_html
           expect(html).to include("--gh-status-changes_requested")
           expect(html).not_to include("--gh-status-approved")
-          expect(html).to include(I18n.t("onebox.github.status_date.changes_requested"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.changes_requested"),
+          )
           expect(html).to include('data-date="2024-06-01"')
         end
       end
@@ -198,7 +214,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
           html = onebox_html
           expect(html).to include("--gh-status-approved")
           expect(html).not_to include("--gh-status-changes_requested")
-          expect(html).to include(I18n.t("onebox.github.status_date.approved"))
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status").text).to eq(
+            I18n.t("onebox.github.pr_status.approved"),
+          )
           expect(html).to include('data-date="2024-01-02"')
         end
       end
@@ -212,6 +230,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         it "falls back gracefully without status class and shows opened with created_at date" do
           html = onebox_html
           expect(html).not_to include("--gh-status-")
+          expect(Nokogiri.HTML5(html).at_css(".github-pr-status")).to be_nil
           expect(html).to include(I18n.t("onebox.github.status_date.open"))
           expect(html).to include('data-date="2013-07-26"')
         end
