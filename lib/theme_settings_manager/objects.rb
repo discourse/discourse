@@ -18,9 +18,23 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
     objects = remove_disallowed_groups(objects)
     ensure_is_valid_value!(objects)
     objects = SchemaSettingsObjectValidator.normalize_uploads(schema:, objects:)
-    record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
-    theme.reload
-    record.json_value
+    # preserve pending changes on the caller's theme.
+    Theme
+      .find(theme.id)
+      .with_lock do
+        theme.association(:theme_settings).reset
+        previous_defaults =
+          begin
+            theme.object_translation_defaults(reload: true)
+          rescue Discourse::InvalidParameters
+            nil
+          end
+        record =
+          has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
+        current_defaults = theme.object_translation_defaults(reload: true)
+        theme.refresh_object_translations!(invalidate: previous_defaults != current_defaults)
+        record.json_value
+      end
   end
 
   def schema
@@ -52,6 +66,14 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
     return [] if category_ids.empty?
 
     Category.secured(guardian).where(id: category_ids)
+  end
+
+  def translations?
+    ThemeSettingsValidator.translatable_object_schema?(schema)
+  end
+
+  def translation_defaults
+    ThemeObjectTranslations.collect(schema:, objects: value, name:)
   end
 
   private
