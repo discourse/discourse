@@ -4,6 +4,7 @@ import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
 import SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
 import {
@@ -1004,6 +1005,21 @@ export default class SelectEngine {
     }
 
     return this.getItemLabel(this.#valueResolver.resolveOneSync(value));
+  }
+
+  /**
+   * Additional option-row classes from render-time transformers. Each call starts with
+   * a fresh array so classes cannot leak between rows or renders.
+   */
+  @bind
+  itemClasses(descriptor: SelectDescriptor): string[] {
+    return applyValueTransformer("select-item-class", [], {
+      identifiers: this.identifiers,
+      item: descriptor.item,
+      selected: descriptor.flags.selected,
+      disabled: descriptor.flags.disabled,
+      ...this.#extensionContext(),
+    });
   }
 
   /**

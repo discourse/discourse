@@ -120,13 +120,30 @@ Worked examples of every point above live on the styleguide's select page, under
 
 ## Extension points
 
-Plugins and themes customize a select through two transformers, both keyed on `@identifiers`:
+Plugins and themes customize a select through three transformers, all keyed on `@identifiers`:
 
 - `select-content` (value transformer) receives the item list and returns a new one. Its context
   is `{identifiers, filter, value, kind, instance, control}`.
+- `select-item-class` (value transformer) starts with a fresh `[]` and returns an array of class
+  names added to option rows, including none, create, and action rows. It does not apply to group
+  headers, dividers, chips, or the trigger. Its context is
+  `{identifiers, item, selected, disabled, kind, instance}`. `item` is the raw row item,
+  `selected` reports whether it is held, and `disabled` includes selection-cap restrictions.
+  The active highlight is not exposed. It has no `control`: it runs at render time, where the
+  control's verbs must not be called. To style a row from the select's state, such as
+  `control.pending`, change the row in `select-content` instead.
 - `select-on-change` (behavior transformer) wraps the controlled `@onChange`; call `next()` to
   proceed. Its context is `{identifiers, value, items, kind, instance}`, where `value` and `items`
   are the change being made.
+
+```js
+api.registerValueTransformer("select-item-class", ({ value, context }) => {
+  if (context.identifiers.includes("choices") && context.item.featured) {
+    return [...value, "is-featured"];
+  }
+  return value;
+});
+```
 
 Core keys sit at the top level of the context. Data from outside core lives in two namespaces, so
 a key core adds later never collides with one a customization relies on:
@@ -186,10 +203,10 @@ multi adds and removals keep their item announcements, and clear announces "Sele
 No-change and superseded work announce no outcome, so extensions should announce their own
 no-change result alongside a toast.
 
-`select-content` runs while the list renders, so it must be pure: it must not write tracked state
-or call `update()` or any control or scope verbs. Those are for event time, such as a row's
-`onSelect`. A transformer that reads tracked state runs again when that state changes. Read
-`control.pending` there to return a reactive loading row, for example with
+`select-content` and `select-item-class` run while the list renders, so both must be pure. They
+must not write tracked state or call `update()` or any control or scope verbs. Those are for event
+time, such as a row's `onSelect`. A transformer that reads tracked state runs again when that
+state changes. Read `control.pending` there to return a reactive loading row, for example with
 `name: control.pending ? i18n("suggesting") : i18n("suggest")` and
 `disabled: control.pending`. Control methods do nothing once the select is destroyed.
 
@@ -251,8 +268,8 @@ by mechanism.
   limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
   error body), and the limit state is exposed on the engine and yielded to `:footer`.
 - Value transformers and behavior hooks keyed on `@identifiers` (`select-content` /
-  `select-on-change`, see [Extension points](#extension-points)), plus richer screen-reader
-  announcements than the legacy family.
+  `select-item-class` / `select-on-change`, see [Extension points](#extension-points)), plus richer
+  screen-reader announcements than the legacy family.
 - Groups via `@groupBy` (a field name or `(item) => key`). The engine segments the filtered
   options and renders a structural boundary before each segment, and the boundary's presentation
   is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header

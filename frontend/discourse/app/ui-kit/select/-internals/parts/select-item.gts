@@ -66,6 +66,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
         (if @descriptor.flags.selected "--selected")
         (if @descriptor.flags.__create "--create")
         (if @descriptor.flags.__none "--none")
+        (@engine.itemClasses @descriptor)
       }}
       role="option"
       ...attributes

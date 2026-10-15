@@ -98,9 +98,10 @@ Paths are relative to the repository root.
   callers, per family: discourse-ai reads `element` (inside `#reply-control`) and
   `selectKit.filter`, `value`, `set`, `select`, `close`, `triggerSearch` and `isLoading`; the
   customer plugin reads `content`, `elementId`, `value` and `selectKit.options`. Bridge gaps to
-  close: `triggerSearch`, a working `isLoading`, row `classNames`, per-callback rather than
+  close: `triggerSearch`, a working `isLoading`, per-callback rather than
   identifier-wide suppression, and per-use telemetry (the RFC asks for it; the bridge warns once
-  per engine today).
+  per engine today). Row `classNames` is not bridged: its one known user moves to the
+  `select-item-class` transformer when it is ported.
 - **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
   After `modifyClass` or `modifyClassStatic` applies a patch, it fires
   `discourse.select-kit-rollout.modify-class` when the patched class is exactly the default export

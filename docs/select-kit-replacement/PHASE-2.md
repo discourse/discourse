@@ -28,7 +28,8 @@ facade and codemod plan this phase used to carry is superseded.
 - **Third-party notice:** moved to wave 1 ([Phase 3](PHASE-3.md)) as a render-time notice; the
   import-time design was dropped (see `ROLLOUT.md`).
 - ☐ **Bridge contract:** fixtures mirroring real `modifySelectKit` callers; add `triggerSearch`, a
-  working `isLoading`, row `classNames`, per-callback suppression, per-use telemetry.
+  working `isLoading`, per-callback suppression, per-use telemetry. Row `classNames` is not
+  bridged: callers move to the `select-item-class` transformer when they are ported.
 - ☐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported
   APIs they move to.
 - ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`

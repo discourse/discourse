@@ -21,6 +21,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   Host,
   ITEMS,
+  MultiLimitsHost,
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
@@ -1073,6 +1074,319 @@ module(
       });
 
       assert.dom(".d-combobox__trigger").doesNotExist("the select is gone");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect item classes",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("item classes are added to option rows without replacing core classes", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) =>
+            context.identifiers.includes("test-select")
+              ? [...value, "x-extra", `x-item-${context.item.id}`]
+              : value
+        );
+      });
+
+      await render(<template><Host @value={{2}} /></template>);
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].x-extra")
+        .exists({ count: 3 }, "every option row gets the class");
+      assert
+        .dom(optionWithText("Banana"))
+        .hasClass("x-item-2", "a class can depend on the row's item")
+        .hasClass("d-combobox__option", "the core class stays")
+        .hasClass("--selected", "the core state modifier stays");
+    });
+
+    test("item classes receive the row item and the extension data, without the control", async function (assert) {
+      const seen = [];
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) => {
+            seen.push(context);
+            return value;
+          }
+        );
+      });
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Banana" },
+      ];
+      const kind = { scope: "recipe" };
+      const instance = { topicId: 7 };
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="item-class-select"
+            @instanceContext={{instance}}
+            @items={{items}}
+            @kindContext={{kind}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      const apple = seen.find((context) => context.item?.id === 1);
+      assert.true(!!apple, "the transformer runs for the Apple row");
+      assert.strictEqual(apple.item, items[0], "item is the raw source item");
+      assert.true(
+        apple.identifiers.includes("item-class-select"),
+        "identifiers include @identifier"
+      );
+      assert.strictEqual(apple.kind, kind, "kind is the recipe context");
+      assert.strictEqual(
+        apple.instance,
+        instance,
+        "instance is the call-site context"
+      );
+      assert.false(
+        "control" in apple,
+        "the control's verbs are not offered at render time"
+      );
+      assert.false(apple.selected, "an unheld row is not selected");
+      assert.false(apple.disabled, "an ordinary row is not disabled");
+    });
+
+    test("item classes follow the selection as it changes", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) =>
+            context.selected ? [...value, "is-held"] : value
+        );
+      });
+      const empty = [];
+
+      await render(<template><MultiLimitsHost @value={{empty}} /></template>);
+      await click("[role='combobox']");
+
+      assert.dom("[role='option'].is-held").doesNotExist("nothing is held yet");
+
+      await click(optionWithText("Banana"));
+      assert
+        .dom(optionWithText("Banana"))
+        .hasClass("is-held", "picking a row passes selected: true");
+      assert
+        .dom("[role='option'].is-held")
+        .exists({ count: 1 }, "only the picked row");
+
+      await click(optionWithText("Banana"));
+      assert
+        .dom(optionWithText("Banana"))
+        .doesNotHaveClass("is-held", "removing it passes selected: false");
+    });
+
+    test("item classes see rows disabled by the selection cap", async function (assert) {
+      const disabledById = {};
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) => {
+            disabledById[context.item.id] = context.disabled;
+            return context.disabled ? [...value, "is-capped"] : value;
+          }
+        );
+      });
+      const held = [1];
+
+      await render(
+        <template><MultiLimitsHost @maximum={{1}} @value={{held}} /></template>
+      );
+      await click("[role='combobox']");
+
+      assert.deepEqual(
+        disabledById,
+        { 1: false, 2: true, 3: true },
+        "unheld rows report disabled at the cap"
+      );
+      assert
+        .dom("[role='option'].is-capped")
+        .exists({ count: 2 }, "and can be styled from it");
+    });
+
+    test("item classes skip group headers and dividers", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-item-class", ({ value }) => [
+          ...value,
+          "x-row",
+        ]);
+      });
+      const sectioned = [
+        { id: 1, name: "Apple", section: "fruit" },
+        { id: 2, name: "Apricot", section: "fruit" },
+        { id: 3, name: "Beet", section: "vegetable" },
+        { id: 4, name: "Kale", section: "leafy" },
+      ];
+      const groupLabel = (key) => (key === "fruit" ? "Fruit" : null);
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="section"
+            @groupLabel={{groupLabel}}
+            @identifier="test-select"
+            @items={{sectioned}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom(".d-combobox__group-header")
+        .exists("a labeled group renders a header");
+      assert
+        .dom(".d-combobox__divider")
+        .exists("an unlabeled boundary renders a divider");
+      assert
+        .dom(".d-combobox__group-header.x-row")
+        .doesNotExist("headers are not items");
+      assert
+        .dom(".d-combobox__divider.x-row")
+        .doesNotExist("dividers are not items");
+      assert
+        .dom("[role='option'].x-row")
+        .exists({ count: 4 }, "every option still gets the class");
+    });
+
+    test("item classes apply to the none row and the create row", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-item-class", ({ value }) => [
+          ...value,
+          "x-row",
+        ]);
+      });
+      const createItem = (filter) => ({
+        id: filter,
+        name: `Create ${filter}`,
+        __create: true,
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @noneLabel="None"
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].--none")
+        .hasClass("x-row", "the none row is an item");
+
+      await fillIn("[role='combobox']", "dragonfruit");
+      assert
+        .dom("[role='option'].--create")
+        .hasClass("x-row", "the create row is an item");
+    });
+
+    test("item classes start from a fresh array for every row and render", async function (assert) {
+      const inputs = [];
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) => {
+            inputs.push({ value, length: value.length });
+            value.push(`x-item-${context.item.id}`);
+            return value;
+          }
+        );
+      });
+
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "a");
+      await fillIn("[role='combobox']", "");
+
+      assert.true(
+        inputs.length > ITEMS.length,
+        "rows are transformed again after filtering"
+      );
+      assert.true(
+        inputs.every(({ length }) => length === 0),
+        "each input starts empty"
+      );
+      assert.strictEqual(
+        new Set(inputs.map(({ value }) => value)).size,
+        inputs.length,
+        "every call gets its own array"
+      );
+      for (const item of ITEMS) {
+        assert
+          .dom(`[role='option'].x-item-${item.id}`)
+          .exists(
+            { count: 1 },
+            "a mutated input adds a class only to its own row"
+          );
+      }
+    });
+
+    test("item classes apply to action rows but not to chips or the trigger", async function (assert) {
+      const items = [...ITEMS, { id: "action", name: "Action", onSelect() {} }];
+      const held = [1];
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-item-class", ({ value }) => [
+          ...value,
+          "x-row",
+        ]);
+      });
+
+      await render(
+        <template>
+          <DSelect @items={{items}} @multiple={{true}} @value={{held}} />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].x-row")
+        .exists(
+          { count: 4 },
+          "the action row and ordinary options get the class"
+        );
+      assert.dom(".d-combobox__chip").exists("a held item renders a chip");
+      assert
+        .dom(".x-row")
+        .exists({ count: 4 }, "chips and the trigger get no option classes");
+    });
+
+    test("item classes ignore empty and falsy entries", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-item-class",
+          ({ value, context }) =>
+            context.item.id === 3 ? [...value, null, "", false] : value
+        );
+      });
+
+      await render(<template><Host /></template>);
+      await click("[role='combobox']");
+
+      assert.deepEqual(
+        [...optionWithText("Cherry").classList],
+        [...optionWithText("Banana").classList],
+        "falsy entries add no classes"
+      );
+      assert.deepEqual(
+        [...optionWithText("Banana").classList],
+        ["d-combobox__option"],
+        "an empty result leaves only the core class"
+      );
     });
   }
 );
