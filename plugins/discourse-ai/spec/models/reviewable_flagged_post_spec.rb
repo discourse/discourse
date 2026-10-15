@@ -28,6 +28,7 @@ RSpec.describe ReviewableFlaggedPost do
         "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
         "decision_facts" => "The flagged post was removed.",
         "source_type" => "SOURCE_VOLUNTARY",
+        "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
         "automated_detection" => "Yes",
         "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
         "content_type" => ["CONTENT_TYPE_TEXT"],

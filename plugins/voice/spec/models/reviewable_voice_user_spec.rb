@@ -155,6 +155,7 @@ RSpec.describe ReviewableVoiceUser do
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
           "decision_facts" => "The user reported during a voice call was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -184,6 +185,7 @@ RSpec.describe ReviewableVoiceUser do
           "decision_facts" =>
             "The user reported during a voice call had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],

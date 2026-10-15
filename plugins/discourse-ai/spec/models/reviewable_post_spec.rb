@@ -33,6 +33,7 @@ RSpec.describe ReviewablePost do
         "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
         "decision_facts" => "The post was rejected and removed.",
         "source_type" => "SOURCE_VOLUNTARY",
+        "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
         "automated_detection" => "Yes",
         "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
         "content_type" => ["CONTENT_TYPE_TEXT"],

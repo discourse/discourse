@@ -458,6 +458,7 @@ class Reviewable < ActiveRecord::Base
                 application_date: Date.current.iso8601,
                 territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
                 source_type: "SOURCE_VOLUNTARY",
+                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
               ),
           )
         end
@@ -1116,9 +1117,10 @@ class Reviewable < ActiveRecord::Base
   #   * AUTOMATED_DECISION_NOT_AUTOMATED
   #
   # Multiple decision fields may describe the same action. Reviewable#perform
-  # supplies :application_date, :territorial_scope, and :source_type.
-  # Pending statements receive their grounds, category, and supporting explanation
-  # during human classification.
+  # supplies :application_date, :territorial_scope, :source_type, and :decision_ground.
+  # The decision ground is DECISION_GROUND_INCOMPATIBLE_CONTENT.
+  # Pending statements receive their contractual ground, category, and supporting
+  # explanation during human classification.
   #
   # @param action_id [Symbol] Requested action ID, before alias resolution.
   # @param result [Reviewable::PerformResult] Successful action result, including
