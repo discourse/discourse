@@ -139,6 +139,7 @@ class ReviewableAiChatMessage < Reviewable
     when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
          :agree_and_keep_hidden
       {
+        decision_facts: "The chat message was flagged by an automated system and removed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: chat_message.created_at.to_date.iso8601,
@@ -149,6 +150,8 @@ class ReviewableAiChatMessage < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts:
+          "The author of a chat message flagged by an automated system was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -162,6 +165,8 @@ class ReviewableAiChatMessage < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts:
+          "The author of a chat message flagged by an automated system had their ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

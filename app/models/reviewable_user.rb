@@ -223,6 +223,7 @@ class ReviewableUser < Reviewable
       user = target.reload
 
       {
+        decision_facts: "The reviewed account was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -236,6 +237,7 @@ class ReviewableUser < Reviewable
       user = target.reload
 
       {
+        decision_facts: "The reviewed account had its ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -250,6 +252,7 @@ class ReviewableUser < Reviewable
       return unless user&.destroyed?
 
       {
+        decision_facts: "The reviewed account was deleted.",
         decision_account: "DECISION_ACCOUNT_TERMINATED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -259,6 +262,7 @@ class ReviewableUser < Reviewable
       }
     when :remove_avatar
       {
+        decision_facts: "The reviewed account's avatar was removed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         content_type: ["CONTENT_TYPE_IMAGE"],
         content_date: result.removed_avatar.created_at.to_date.iso8601,
