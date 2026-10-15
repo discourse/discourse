@@ -59,3 +59,37 @@ RSpec.configure do |config|
     puts "DIRECT_MEASUREMENT_RETRY_AUDIT=#{JSON.generate({ count: DirectMeasurementRetryAudit::ROWS.length, recoveries: DirectMeasurementRetryAudit::ROWS })}"
   end
 end
+
+module DiscourseConnectPortAudit
+  def setup_test_discourse_connect_server(**options)
+    super
+  rescue Errno::EADDRINUSE
+    port = DiscourseConnectHelpers.provider_port
+    sockets =
+      %w[/proc/net/tcp /proc/net/tcp6].flat_map do |path|
+        File
+          .readlines(path)
+          .drop(1)
+          .filter_map do |line|
+            fields = line.split
+            fields[9] if fields[1].split(":").last.to_i(16) == port && fields[3] == "0A"
+          end
+      end
+    owners =
+      Dir["/proc/[0-9]*/fd/*"]
+        .filter_map do |path|
+          next unless sockets.any? { |inode| File.readlink(path) == "socket:[#{inode}]" }
+          pid = path.split("/")[2]
+          { pid: pid, process: File.read("/proc/#{pid}/comm").strip }
+        rescue SystemCallError
+          nil
+        end
+        .uniq
+    warn "DISCOURSE_CONNECT_PORT_COLLISION=#{JSON.generate(port: port, worker: ENV["TEST_ENV_NUMBER"], current_pid: Process.pid, owners: owners)}"
+    raise
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:suite) { DiscourseConnectHelpers.prepend(DiscourseConnectPortAudit) }
+end
