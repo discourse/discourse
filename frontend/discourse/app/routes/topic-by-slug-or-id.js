@@ -12,29 +12,27 @@ export default class TopicBySlugOrId extends DiscourseRoute {
     }
   }
 
-  model(params, transition) {
+  async model(params, transition) {
     if (params.slug_or_id.match(ID_CONSTRAINT)) {
       return { url: `/t/topic/${params.slug_or_id}` };
     }
 
-    return Topic.idForSlug(params.slug_or_id)
-      .then((data) => ({ url: `/t/${data.slug}/${data.topic_id}` }))
-      .catch((error) => {
-        if (error?.jqXHR?.status !== 404) {
-          throw error;
-        }
-        return resolvePermalink(
-          `/t/${params.slug_or_id}`,
-          transition,
-          this.router
-        ).then((result) => {
-          if (result.type === "redirect") {
-            // The permalink redirect already navigated away
-            return {};
-          }
-          // Rethrow so the app-level 404 handling applies
-          throw error;
-        });
-      });
+    try {
+      const { slug, topic_id } = await Topic.idForSlug(params.slug_or_id);
+      return { url: `/t/${slug}/${topic_id}` };
+    } catch (error) {
+      if (error?.jqXHR?.status !== 404) {
+        throw error;
+      }
+      const permalink = await resolvePermalink(
+        `/t/${params.slug_or_id}`,
+        transition,
+        this.router
+      ).catch(() => null);
+      if (permalink?.type === "redirect") {
+        return {};
+      }
+      throw error;
+    }
   }
 }

@@ -105,21 +105,16 @@ export default class TopicFromParams extends DiscourseRoute {
           console.log("Could not view topic", e);
         }
 
-        // The id-only JSON request drops the slug, so the server cannot match
-        // a permalink for the original URL; resolve it here when it rendered a
-        // not-found page instead.
+        // The id-only topic JSON drops the slug, so the server can't match a
+        // permalink for the original URL; resolve it here instead.
         if (topic.errorHtml) {
-          try {
-            const result = await resolvePermalink(
-              originalTopicPath(topic, params),
-              transition,
-              this.router
-            );
-            if (result.type === "redirect") {
-              return params;
-            }
-          } catch {
-            // Permalink lookup failed; fall back to the server 404 page
+          const result = await resolvePermalink(
+            originalTopicPath(topic, params),
+            transition,
+            this.router
+          ).catch(() => null);
+          if (result?.type === "redirect") {
+            return params;
           }
         }
 
