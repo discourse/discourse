@@ -133,7 +133,7 @@
   - ui-kit/d-date-time-input-range
   - plugins/discourse-assign/remind-assigns-frequency
   - plugins/discourse-zendesk-plugin/connectors/zendesk-topic-actions
-- [#44614](https://github.com/discourse/discourse/pull/44614)
+- [#44614](https://github.com/discourse/discourse/pull/44614) ☑️
   - bread-crumbs
   - ui-kit/d-conditional-loading-section
   - ui-kit/d-date-time-input
@@ -142,8 +142,19 @@
   - plugins/discourse-adplugin/house-ads-setting
   - plugins/discourse-cakeday/connectors/user-card-cakeday
   - plugins/discourse-data-explorer/connectors/nav-item
-  - plugins/discourse-patreon/connectors/patreon
+  - plugins/discourse-patreon/connectors/admin-user-details/patreon
   - plugins/poll/modal/poll-breakdown
   - plugins/poll/poll-breakdown-option
-- [#44615](https://github.com/discourse/discourse/pull/44615)
+- [#44615](https://github.com/discourse/discourse/pull/44615) ✅
   - search-result-entry
+- [#44660](https://github.com/discourse/discourse/pull/44660)
+  - admin/report-filters/bool
+  - admin/report-filters/category
+  - admin/report-filters/category-list
+  - admin/report-filters/filter
+  - admin/report-filters/group
+  - admin/report-filters/groups
+  - admin/report-filters/list
+  - categories-only
+  - navigation-item
+  - plugins/discourse-patreon/connectors/topic-above-footer-buttons/patreon
