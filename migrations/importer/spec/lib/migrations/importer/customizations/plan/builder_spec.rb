@@ -480,6 +480,36 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     expect(groups["local_group"]).to include("target" => "template", "attributes" => ["title"])
   end
 
+  it "pairs groups by name when their ids differ between the databases" do
+    diff["tables"]["groups"] = {
+      "added" => [{ "id" => "57", "name" => "ai_users", "full_name" => "AI users" }],
+      "changed" => [
+        {
+          "key" => ["55"],
+          "diffs" => {
+            "name" => %w[ai_users local_group],
+            "full_name" => ["AI users", "Locals"],
+          },
+          "after" => {
+            "id" => "55",
+            "name" => "local_group",
+            "full_name" => "Locals",
+          },
+        },
+      ],
+    }
+    facts.define_singleton_method(:group) do |id|
+      { 55 => { name: "local_group", automatic: false, imported: false, match: {} } }[id] ||
+        { name: "ai_users", automatic: true, imported: false, match: {} }
+    end
+
+    groups = plan["groups"].index_by { |item| item["name"] }
+
+    expect(groups.keys).to eq(["local_group"])
+    expect(groups["local_group"]["attributes"]).to eq(["full_name"])
+    expect(trailer.join("\n")).not_to include("groups:")
+  end
+
   it "classifies categories" do
     categories = plan["categories"].index_by { |item| item["name"] }
 

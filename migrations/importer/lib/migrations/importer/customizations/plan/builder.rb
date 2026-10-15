@@ -147,9 +147,12 @@ module Migrations
           end
 
           def groups
-            note_removed("groups")
-
-            attribute_changes("groups", Rules::GROUP_ATTRIBUTES).filter_map do |id, attributes|
+            # Ids can differ between the two databases; names are unique.
+            attribute_changes(
+              "groups",
+              Rules::GROUP_ATTRIBUTES,
+              pair_by: "name",
+            ).filter_map do |id, attributes|
               info = @facts.group(id)
               next if info.nil?
 
@@ -161,8 +164,6 @@ module Migrations
           end
 
           def categories
-            note_removed("categories")
-
             changes = attribute_changes("categories", Rules::CATEGORY_ATTRIBUTES).to_h
             changed_permission_category_ids.each do |id|
               changes[id] = (changes[id] || []) + [Rules::CATEGORY_PERMISSIONS]
@@ -201,31 +202,36 @@ module Migrations
           end
 
           # @return [Array<Array(Integer, Array<String>)>] id and plan attribute names
-          def attribute_changes(table, allowed)
-            changes = {}
+          # Pairs before and after rows by `pair_by`. A row whose key exists on
+          # both sides has its counterpart in the diff too, unless both are equal.
+          def attribute_changes(table, allowed, pair_by: "id")
+            before = removed_and_before(table).index_by { |row| row[pair_by] }
+            data = table_data(table)
+            after =
+              data.fetch("added", []) +
+                data
+                  .fetch("changed", [])
+                  .map { |change| change["after"].merge(change["diffs"].transform_values(&:last)) }
 
-            table_data(table)
-              .fetch("added", [])
-              .each do |row|
+            removed = before.keys - after.map { |row| row[pair_by] }
+            if removed.any?
+              @trailer << "#{table}: #{removed.size} removed row(s), deletions are not transferred"
+            end
+
+            after
+              .filter_map do |row|
+                old = before[row[pair_by]]
                 columns =
                   allowed.select do |column|
-                    row.key?(column) && !@facts.default_value?(table, column, row[column])
+                    next false unless row.key?(column)
+                    if old
+                      old[column] != row[column] && !Rules.blank_equal?(old[column], row[column])
+                    else
+                      !@facts.default_value?(table, column, row[column])
+                    end
                   end
-                changes[row["id"].to_i] = columns
+                [row["id"].to_i, columns] if columns.any?
               end
-
-            table_data(table)
-              .fetch("changed", [])
-              .each do |change|
-                columns =
-                  (allowed & change["diffs"].keys).reject do |column|
-                    Rules.blank_equal?(*change["diffs"][column])
-                  end
-                changes[change["after"]["id"].to_i] = columns
-              end
-
-            changes
-              .reject { |_, columns| columns.empty? }
               .sort
               .map { |id, columns| [id, columns.map { |c| Rules.plan_attribute_name(c) }] }
           end
