@@ -156,9 +156,13 @@ export default class UserCardContents extends CardContentsBase {
     );
   }
 
-  @computed("user.name", "user.username")
+  @computed("siteSettings.enable_names", "user.name", "user.username")
   get showName() {
-    return this.user.name !== this.user.username;
+    return (
+      this.siteSettings.enable_names &&
+      this.user.name &&
+      this.user.name !== this.user.username
+    );
   }
 
   @computed("user.id", "currentUser.id")
@@ -203,9 +207,9 @@ export default class UserCardContents extends CardContentsBase {
     return this.user?.trust_level === 0 ? "new-user" : "";
   }
 
-  @computed("user.name")
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.user?.name);
+    return this.showName && prioritizeNameInUx(this.user.name);
   }
 
   @computed("user")
@@ -578,7 +582,11 @@ export default class UserCardContents extends CardContentsBase {
                           (formatUsername this.user.username)
                         }}
                       </span>
-                      {{userStatus this.user currentUser=this.currentUser}}
+                      {{userStatus
+                        this.user
+                        currentUser=this.currentUser
+                        showName=this.showName
+                      }}
                     </a>
                   {{/if}}
                 </div>
@@ -595,7 +603,7 @@ export default class UserCardContents extends CardContentsBase {
                     class="names__secondary username"
                   >{{this.user.username}}</div>
                 {{else}}
-                  {{#if this.user.name}}
+                  {{#if this.showName}}
                     <div
                       class="names__secondary full-name"
                     >{{this.user.name}}</div>
