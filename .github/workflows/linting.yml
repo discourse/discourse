@@ -87,10 +87,6 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:types
 
-          - name: Strict types
-            if: ${{ !cancelled() }}
-            run: pnpm types:strict
-
           - name: Prettier
             if: ${{ !cancelled() }}
             run: |
