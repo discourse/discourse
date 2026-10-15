@@ -6,6 +6,7 @@ import RestModel from "discourse/models/rest";
 import Category from "./category";
 
 export default class PendingPost extends RestModel {
+  /** @type {string | import("@ember/template").TrustedHTML | null} */
   expandedExcerpt = null;
 
   truncated = false;

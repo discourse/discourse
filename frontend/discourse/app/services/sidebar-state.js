@@ -25,6 +25,8 @@ export default class SidebarState extends Service {
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
   @tracked isForcingSidebar = false;
+
+  /** @type {string | null} */
   @tracked forcingSidebarPanel = null;
 
   panels = panels;
