@@ -126,8 +126,27 @@
       overflow-y: auto;
       max-height: none;
 
+      // same block spacing as .chat-cooked, so the message does not shift
+      // when it is sent or edited
+      > :first-child {
+        margin-top: 0;
+      }
+
+      > :last-child {
+        margin-bottom: 0;
+      }
+
+      > p {
+        margin: 0.5em 0;
+      }
+
       p {
-        margin: 0;
+        line-height: inherit;
+      }
+
+      ul,
+      ol {
+        padding-left: 1.25em;
       }
 
       p[data-placeholder]::before {
