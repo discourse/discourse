@@ -1,13 +1,13 @@
-import { isStaticDataMap } from "../../../lib/workflows/static-data";
-import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
+import { isStaticDataMap } from "../../../lib/workflows/static-data.js";
+import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note.js";
 import {
   deserializeConnections,
   serializeConnections,
-} from "../../../models/workflow-connection";
+} from "../../../models/workflow-connection.js";
 import WorkflowNode, {
   NODE_DIRECT_SETTING_KEYS,
-} from "../../../models/workflow-node";
-import { defaultNodeName } from "../editor/node-factory";
+} from "../../../models/workflow-node.js";
+import { defaultNodeName } from "../editor/node-factory.js";
 
 function sanitizeImportedObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {

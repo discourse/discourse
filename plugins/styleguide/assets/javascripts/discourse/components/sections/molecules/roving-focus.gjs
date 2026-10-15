@@ -1,23 +1,23 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
-import RovingFocusAdjacentGroupsExample from "../../examples/molecules/roving-focus/adjacent-groups";
+import RovingFocusAdjacentGroupsExample from "../../examples/molecules/roving-focus/adjacent-groups.gjs";
 import rovingFocusAdjacentGroupsSource from "../../examples/molecules/roving-focus/adjacent-groups?source=file";
-import RovingFocusComboboxExample from "../../examples/molecules/roving-focus/combobox";
+import RovingFocusComboboxExample from "../../examples/molecules/roving-focus/combobox.gjs";
 import rovingFocusComboboxSource from "../../examples/molecules/roving-focus/combobox?source=file";
-import RovingFocusListboxExample from "../../examples/molecules/roving-focus/listbox";
+import RovingFocusListboxExample from "../../examples/molecules/roving-focus/listbox.gjs";
 import rovingFocusListboxSource from "../../examples/molecules/roving-focus/listbox?source=file";
-import RovingFocusMultiSelectExample from "../../examples/molecules/roving-focus/multi-select";
+import RovingFocusMultiSelectExample from "../../examples/molecules/roving-focus/multi-select.gjs";
 import rovingFocusMultiSelectSource from "../../examples/molecules/roving-focus/multi-select?source=file";
-import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group";
+import RovingFocusRadioGroupExample from "../../examples/molecules/roving-focus/radio-group.gjs";
 import rovingFocusRadioGroupSource from "../../examples/molecules/roving-focus/radio-group?source=file";
-import RovingFocusRemovableTagsExample from "../../examples/molecules/roving-focus/removable-tags";
+import RovingFocusRemovableTagsExample from "../../examples/molecules/roving-focus/removable-tags.gjs";
 import rovingFocusRemovableTagsSource from "../../examples/molecules/roving-focus/removable-tags?source=file";
-import RovingFocusToolbarExample from "../../examples/molecules/roving-focus/toolbar";
+import RovingFocusToolbarExample from "../../examples/molecules/roving-focus/toolbar.gjs";
 import rovingFocusToolbarSource from "../../examples/molecules/roving-focus/toolbar?source=file";
-import RovingFocusTreeExample from "../../examples/molecules/roving-focus/tree";
+import RovingFocusTreeExample from "../../examples/molecules/roving-focus/tree.gjs";
 import rovingFocusTreeSource from "../../examples/molecules/roving-focus/tree?source=file";
-import StyleguideExample from "../../styleguide-example";
-import StyleguideGroups from "../../styleguide-groups";
+import StyleguideExample from "../../styleguide-example.gjs";
+import StyleguideGroups from "../../styleguide-groups.gjs";
 
 const GROUPS = [
   "toolbar",

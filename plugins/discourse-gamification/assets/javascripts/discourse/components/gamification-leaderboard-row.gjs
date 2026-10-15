@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { or } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dNumber from "discourse/ui-kit/helpers/d-number";
-import fullnumber from "../helpers/fullnumber";
+import fullnumber from "../helpers/fullnumber.js";
 
 export default class GamificationLeaderboardRow extends Component {
   @service site;

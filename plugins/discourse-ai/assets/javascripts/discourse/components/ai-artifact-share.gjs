@@ -5,7 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
-import AiArtifactShareModal from "./modal/ai-artifact-share-modal";
+import AiArtifactShareModal from "./modal/ai-artifact-share-modal.gjs";
 
 export default class AiArtifactShare extends Component {
   @service currentUser;

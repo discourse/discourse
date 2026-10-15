@@ -3,7 +3,7 @@ import { computed } from "@ember/object";
 import { cook } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
-import Category from "./category";
+import Category from "./category.js";
 
 export default class PendingPost extends RestModel {
   expandedExcerpt = null;

@@ -1,7 +1,7 @@
 import { trustHTML } from "@ember/template";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
-import TopicStatus from "./topic-status";
+import TopicStatus from "./topic-status.gjs";
 
 const FeaturedTopic = <template>
   <div class="featured-topic" ...attributes data-topic-id={{@topic.id}}>

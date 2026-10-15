@@ -12,7 +12,7 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import selectKit from "../helpers/select-kit-helper";
+import selectKit from "../helpers/select-kit-helper.js";
 
 acceptance("Personal Message", function (needs) {
   needs.user({ id: 1 });

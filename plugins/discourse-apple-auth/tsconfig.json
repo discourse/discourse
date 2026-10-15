@@ -7,9 +7,10 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-apple-auth/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-apple-auth/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-apple-auth/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts"
       ]
     }
   }

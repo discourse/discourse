@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function buildEvent(overrides = {}) {
   return DiscoursePostEventEvent.create({

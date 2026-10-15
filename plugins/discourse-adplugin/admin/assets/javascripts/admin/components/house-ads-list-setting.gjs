@@ -2,8 +2,8 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import DButton from "discourse/ui-kit/d-button";
-import HouseAdsChooser from "./house-ads-chooser";
-import HouseAdsSetting from "./house-ads-setting";
+import HouseAdsChooser from "./house-ads-chooser.js";
+import HouseAdsSetting from "./house-ads-setting.gjs";
 
 @tagName("")
 export default class HouseAdsListSetting extends HouseAdsSetting {

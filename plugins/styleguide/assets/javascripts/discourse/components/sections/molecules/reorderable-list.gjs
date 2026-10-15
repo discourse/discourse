@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
-import ReorderableListBasicExample from "../../examples/molecules/reorderable-list/basic";
+import ReorderableListBasicExample from "../../examples/molecules/reorderable-list/basic.gjs";
 import reorderableListBasicSource from "../../examples/molecules/reorderable-list/basic?source=file";
-import ReorderableListCreateExample from "../../examples/molecules/reorderable-list/create";
+import ReorderableListCreateExample from "../../examples/molecules/reorderable-list/create.gjs";
 import reorderableListCreateSource from "../../examples/molecules/reorderable-list/create?source=file";
-import ReorderableListCrossListExample from "../../examples/molecules/reorderable-list/cross-list";
+import ReorderableListCrossListExample from "../../examples/molecules/reorderable-list/cross-list.gjs";
 import reorderableListCrossListSource from "../../examples/molecules/reorderable-list/cross-list?source=file";
-import ReorderableListEditableExample from "../../examples/molecules/reorderable-list/editable";
+import ReorderableListEditableExample from "../../examples/molecules/reorderable-list/editable.gjs";
 import reorderableListEditableSource from "../../examples/molecules/reorderable-list/editable?source=file";
-import ReorderableListPoliciesExample from "../../examples/molecules/reorderable-list/policies";
+import ReorderableListPoliciesExample from "../../examples/molecules/reorderable-list/policies.gjs";
 import reorderableListPoliciesSource from "../../examples/molecules/reorderable-list/policies?source=file";
-import ReorderableListTableExample from "../../examples/molecules/reorderable-list/table";
+import ReorderableListTableExample from "../../examples/molecules/reorderable-list/table.gjs";
 import reorderableListTableSource from "../../examples/molecules/reorderable-list/table?source=file";
-import ReorderableListTogglesExample from "../../examples/molecules/reorderable-list/toggles";
+import ReorderableListTogglesExample from "../../examples/molecules/reorderable-list/toggles.gjs";
 import reorderableListTogglesSource from "../../examples/molecules/reorderable-list/toggles?source=file";
-import StyleguideGroups from "../../styleguide-groups";
+import StyleguideGroups from "../../styleguide-groups.gjs";
 
 const GROUPS = ["start", "policies", "content", "layouts", "groups"];
 

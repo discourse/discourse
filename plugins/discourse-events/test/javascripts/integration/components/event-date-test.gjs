@@ -3,7 +3,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import EventDate from "../../discourse/components/event-date";
+import EventDate from "discourse/plugins/discourse-events/discourse/components/event-date";
 
 module("Integration | Component | EventDate", function (hooks) {
   setupRenderingTest(hooks);

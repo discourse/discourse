@@ -3,7 +3,7 @@ import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import Chart from "./chart";
+import Chart from "./chart.gjs";
 
 const DOTTED_LINE = [5, 5];
 

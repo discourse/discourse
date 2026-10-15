@@ -9,14 +9,14 @@ import {
   isKeyedValue,
   keyedValue,
   withoutKey,
-} from "../../../lib/workflows/keyed-collection";
+} from "../../../lib/workflows/keyed-collection.js";
 import {
   isExpression,
   usesInlineBooleanControl,
-} from "../../../lib/workflows/property-engine";
-import CollectionAddMenu from "./collection-add-menu";
-import CollectionOptionRow from "./collection-option-row";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import CollectionAddMenu from "./collection-add-menu.gjs";
+import CollectionOptionRow from "./collection-option-row.gjs";
+import Field from "./field.gjs";
 
 const COLUMN_FIELD_TYPES = { number: "integer", boolean: "boolean" };
 

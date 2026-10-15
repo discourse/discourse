@@ -7,7 +7,7 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { loadCategories } from "../../lib/boards-categories";
+import { loadCategories } from "../../lib/boards-categories.js";
 
 export default class BoardsConstraintFix extends Component {
   @tracked selectedCategoryId = null;

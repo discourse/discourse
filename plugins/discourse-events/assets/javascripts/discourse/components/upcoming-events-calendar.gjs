@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import moment from "moment";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import { normalizeViewForRoute } from "../lib/calendar-view-helper";
-import formatEventForCalendar from "../lib/format-event-for-calendar";
-import openEventComposer from "../lib/open-event-composer";
-import FullCalendar from "./full-calendar";
+import { normalizeViewForRoute } from "../lib/calendar-view-helper.js";
+import formatEventForCalendar from "../lib/format-event-for-calendar.js";
+import openEventComposer from "../lib/open-event-composer.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class UpcomingEventsCalendar extends Component {
   @service composer;

@@ -9,7 +9,7 @@ import ApplicationInstance from "@ember/application/instance";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { getLoadedFaker } from "discourse/lib/load-faker";
-import { excerpt } from "./text";
+import { excerpt } from "./text.js";
 
 let sequence = 1;
 

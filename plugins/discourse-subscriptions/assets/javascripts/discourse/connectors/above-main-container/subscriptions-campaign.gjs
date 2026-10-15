@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import CampaignBanner from "../../components/campaign-banner";
+import CampaignBanner from "../../components/campaign-banner.gjs";
 
 export default class SubscriptionsCampaign extends Component {
   static shouldRender(args, context) {

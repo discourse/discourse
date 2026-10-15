@@ -3,9 +3,9 @@ import { i18n } from "discourse-i18n";
 import {
   applySchemaDefaults,
   getPropertySchema,
-} from "../../../lib/workflows/property-engine";
-import { STICKY_NOTE_NAME } from "../../../models/sticky-note";
-import WorkflowNode from "../../../models/workflow-node";
+} from "../../../lib/workflows/property-engine.js";
+import { STICKY_NOTE_NAME } from "../../../models/sticky-note.js";
+import WorkflowNode from "../../../models/workflow-node.js";
 
 const NODE_DEFAULTS = {
   "trigger:webhook": () => ({

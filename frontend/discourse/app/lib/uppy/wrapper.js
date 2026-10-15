@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/owner";
-import UppyUploadDebugging from "./upload-debugging";
+import UppyUploadDebugging from "./upload-debugging.js";
 
 /**
  * Use this class whenever you need to upload files or images

@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import { isAiBotRecipient } from "../lib/ai-bot-helper";
+import { isAiBotRecipient } from "../lib/ai-bot-helper.js";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();

@@ -11,7 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { isNotFullDayEvent } from "../lib/guess-best-date-format";
+import { isNotFullDayEvent } from "../lib/guess-best-date-format.js";
 
 export const DEFAULT_TIME_FORMAT = "LT";
 const DEFAULT_UPCOMING_DAYS = 180;

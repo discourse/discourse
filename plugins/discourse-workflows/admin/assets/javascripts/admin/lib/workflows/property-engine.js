@@ -5,7 +5,7 @@ import {
   nodeTypeI18nScope,
   resolveNodeTypeVersion,
   translatedOrNull,
-} from "./node-types";
+} from "./node-types.js";
 
 function cloneValue(value) {
   return value === undefined ? undefined : structuredClone(value);

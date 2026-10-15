@@ -5,7 +5,7 @@ import { trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction";
+import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction.js";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 

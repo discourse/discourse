@@ -13,22 +13,22 @@ import {
 import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import HeaderActivityCell from "./header/activity-cell";
-import HeaderBulkSelectCell from "./header/bulk-select-cell";
-import HeaderLikesCell from "./header/likes-cell";
-import HeaderOpLikesCell from "./header/op-likes-cell";
-import HeaderPostersCell from "./header/posters-cell";
-import HeaderRepliesCell from "./header/replies-cell";
-import HeaderTopicCell from "./header/topic-cell";
-import HeaderViewsCell from "./header/views-cell";
-import ItemActivityCell from "./item/activity-cell";
-import ItemBulkSelectCell from "./item/bulk-select-cell";
-import ItemLikesCell from "./item/likes-cell";
-import ItemOpLikesCell from "./item/op-likes-cell";
-import ItemPostersCell from "./item/posters-cell";
-import ItemRepliesCell from "./item/replies-cell";
-import ItemTopicCell from "./item/topic-cell";
-import ItemViewsCell from "./item/views-cell";
+import HeaderActivityCell from "./header/activity-cell.gjs";
+import HeaderBulkSelectCell from "./header/bulk-select-cell.gjs";
+import HeaderLikesCell from "./header/likes-cell.gjs";
+import HeaderOpLikesCell from "./header/op-likes-cell.gjs";
+import HeaderPostersCell from "./header/posters-cell.gjs";
+import HeaderRepliesCell from "./header/replies-cell.gjs";
+import HeaderTopicCell from "./header/topic-cell.gjs";
+import HeaderViewsCell from "./header/views-cell.gjs";
+import ItemActivityCell from "./item/activity-cell.gjs";
+import ItemBulkSelectCell from "./item/bulk-select-cell.gjs";
+import ItemLikesCell from "./item/likes-cell.gjs";
+import ItemOpLikesCell from "./item/op-likes-cell.gjs";
+import ItemPostersCell from "./item/posters-cell.gjs";
+import ItemRepliesCell from "./item/replies-cell.gjs";
+import ItemTopicCell from "./item/topic-cell.gjs";
+import ItemViewsCell from "./item/views-cell.gjs";
 
 export default class TopicList extends Component {
   @service currentUser;

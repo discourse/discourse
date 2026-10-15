@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Description from "../../discourse/components/discourse-post-event/description";
+import Description from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/description";
 
 module("Integration | Component | Description", function (hooks) {
   setupRenderingTest(hooks);

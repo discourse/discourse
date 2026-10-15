@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import MinimalGamificationLeaderboard from "../discourse/components/minimal-gamification-leaderboard";
+import MinimalGamificationLeaderboard from "discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard";
 
 module(
   "Discourse Gamification | Component | MinimalGamificationLeaderboard",

@@ -5,9 +5,9 @@ import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AllTagsSectionLink from "../common/all-tags-section-link";
-import Section from "../section";
-import SectionLink from "../section-link";
+import AllTagsSectionLink from "../common/all-tags-section-link.gjs";
+import Section from "../section.gjs";
+import SectionLink from "../section-link.gjs";
 
 export default class SidebarAnonymousTagsSection extends Component {
   @service router;

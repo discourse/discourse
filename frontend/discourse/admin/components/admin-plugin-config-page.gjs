@@ -5,7 +5,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminPluginConfigArea from "./admin-plugin-config-area";
+import AdminPluginConfigArea from "./admin-plugin-config-area.gjs";
 
 export default class AdminPluginConfigPage extends Component {
   @service adminPluginNavManager;

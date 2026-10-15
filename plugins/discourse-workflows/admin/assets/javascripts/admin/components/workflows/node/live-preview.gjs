@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
-import { findNodeType } from "../../../lib/workflows/property-engine";
+import { findNodeType } from "../../../lib/workflows/property-engine.js";
 
 const DEBOUNCE_MS = 400;
 const MAX_CELL_LENGTH = 80;

@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiArtifactOptionsModal from "./modal/ai-artifact-options-modal";
+import AiArtifactOptionsModal from "./modal/ai-artifact-options-modal.gjs";
 
 function metadataPath({ share, id, version }) {
   if (share) {

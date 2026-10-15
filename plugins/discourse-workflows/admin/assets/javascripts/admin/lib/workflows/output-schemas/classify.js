@@ -1,4 +1,4 @@
-import { fixedCollectionRows } from "../property-engine";
+import { fixedCollectionRows } from "../property-engine.js";
 
 function answerSchema(type) {
   const properties = {

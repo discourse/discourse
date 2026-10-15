@@ -12,16 +12,16 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import addEventToCalendar from "../../lib/add-event-to-calendar";
+import addEventToCalendar from "../../lib/add-event-to-calendar.js";
 import {
   buildParams,
   removeEvent,
   replaceRaw,
-} from "../../lib/raw-event-helper";
-import PostEventBuilder from "../modal/post-event-builder";
-import PostEventBulkInvite from "../modal/post-event-bulk-invite";
-import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group";
-import PostEventInvitees from "../modal/post-event-invitees";
+} from "../../lib/raw-event-helper.js";
+import PostEventBuilder from "../modal/post-event-builder.gjs";
+import PostEventBulkInvite from "../modal/post-event-bulk-invite.gjs";
+import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group.gjs";
+import PostEventInvitees from "../modal/post-event-invitees/index.gjs";
 
 export default class DiscoursePostEventMoreMenu extends Component {
   @service currentUser;

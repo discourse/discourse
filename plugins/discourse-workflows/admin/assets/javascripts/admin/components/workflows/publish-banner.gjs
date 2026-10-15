@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import WorkflowPublishState from "../../lib/workflows/publish-state";
+import WorkflowPublishState from "../../lib/workflows/publish-state.js";
 
 export default class PublishBanner extends Component {
   @service dialog;
