@@ -16,7 +16,7 @@ module Migrations
             option "--mappings-db <path>",
                    "MappingsDB of the import, to record ids of imported records."
             option "--upload-base-url <url>",
-                   "Download upload files from this site when the store doesn't have them."
+                   "Site to download upload files with relative URLs from when the store doesn't have them."
             option "--include-secrets", "Write secret setting values into the bundle."
           end
 
