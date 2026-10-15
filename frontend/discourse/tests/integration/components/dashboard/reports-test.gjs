@@ -199,17 +199,14 @@ module("Integration | Component | DashboardReports", function (hooks) {
       return new Promise((resolve) => (resolveSecondFetch = resolve));
     });
 
-    class State {
-      @tracked startDate = "2026-01-01";
-    }
-    const state = new State();
+    const startDate = tracked("2026-01-01");
     const singleItem = [ITEMS[0]];
 
     await render(
       <template>
         <DashboardReports
           @data={{hash items=singleItem}}
-          @startDate={{state.startDate}}
+          @startDate={{startDate.value}}
         />
       </template>
     );
@@ -218,7 +215,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
       .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
       .exists("the initial load renders real content");
 
-    state.startDate = "2026-02-01";
+    startDate.value = "2026-02-01";
     await waitFor(
       '[data-identifier="test_source:signups"] .loading-container.visible'
     );

@@ -97,6 +97,11 @@ id:
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      discourse_workflows:
+        classify:
+          name: "Nama"
+          type: "Tipe"
+          type_score: "Skor"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -231,6 +236,12 @@ id:
         short_title: "Kredensial"
         name: "Nama"
         save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
+      decision_models:
+        no_preset: "Tidak ada"
+        display_name: "Nama"
+        model: "Model"
         edit: "Ubah"
         delete: "Hapus"
       mcp_servers:

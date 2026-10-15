@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures";
+import { LOCALES } from "../../../../../lib/select-fixtures.js";
 
 /**
  * A panel that owns controls of its own — the `button` variant's filter, plus a footer action —

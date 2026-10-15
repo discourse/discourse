@@ -6,10 +6,6 @@ import TopicNotificationsButton from "discourse/select-kit/components/topic-noti
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
 
-class TestClass {
-  @tracked topic;
-}
-
 function buildTopic(opts) {
   return this.store.createRecord("topic", {
     id: 4563,
@@ -42,12 +38,11 @@ module(
     });
 
     test("the header has correct labels", async function (assert) {
-      const state = new TestClass();
-      state.topic = buildTopic.call(this, { level: 1 });
+      const topic = tracked(buildTopic.call(this, { level: 1 }));
 
       await render(
         <template>
-          <TopicNotificationsButton @expanded={{true}} @topic={{state.topic}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic.value}} />
         </template>
       );
 
@@ -55,7 +50,7 @@ module(
         .dom(".notifications-tracking-trigger")
         .hasText("Normal", "has the correct label");
 
-      state.topic = buildTopic.call(this, { level: 2 });
+      topic.value = buildTopic.call(this, { level: 2 });
       await settled();
 
       assert
@@ -100,16 +95,15 @@ module(
     });
 
     test("notification reason text - bad notification reason", async function (assert) {
-      const state = new TestClass();
-      state.topic = buildTopic.call(this, { level: 2 });
+      const topic = tracked(buildTopic.call(this, { level: 2 }));
 
       await render(
         <template>
-          <TopicNotificationsButton @expanded={{true}} @topic={{state.topic}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic.value}} />
         </template>
       );
 
-      state.topic = buildTopic.call(this, { level: 3, reason: 999 });
+      topic.value = buildTopic.call(this, { level: 3, reason: 999 });
       await settled();
 
       assert

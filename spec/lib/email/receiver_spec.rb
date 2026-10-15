@@ -179,6 +179,21 @@ RSpec.describe Email::Receiver do
   describe "new message to a group" do
     fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
+    it "delivers email when the sender's name matches a watched word" do
+      SiteSetting.enable_staged_users = true
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      mail = Mail.read_from_string(email(:encoded_display_name))
+      mail.from = "Badger <badger@example.com>"
+
+      post = Email::Receiver.new(mail.to_s).process!
+
+      expect(post).to be_persisted
+      expect(post.topic.allowed_groups).to include(group)
+      expect(post.user).to be_staged
+      expect(post.user.email).to eq("badger@example.com")
+      expect(UsernameValidator.new(post.user.username).valid_format?).to eq(true)
+    end
+
     it "handles encoded display names" do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
 

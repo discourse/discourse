@@ -1,6 +1,6 @@
 import { eq } from "discourse/truth-helpers";
-import ImageNodeView from "./image-node-view";
-import VideoNodeView from "./video-node-view";
+import ImageNodeView from "./image-node-view.gjs";
+import VideoNodeView from "./video-node-view.gjs";
 
 export default <template>
   {{#if (eq @node.attrs.extras "video")}}

@@ -214,6 +214,13 @@ Discourse::Application.routes.draw do
       collection { post :test }
     end
 
+    resources :ai_decision_models,
+              only: %i[index new create edit update destroy],
+              path: "ai-decision-models",
+              controller: "discourse_ai/admin/ai_decision_models" do
+      collection { post :test }
+    end
+
     resources :ai_llm_quotas,
               controller: "discourse_ai/admin/ai_llm_quotas",
               path: "quotas",

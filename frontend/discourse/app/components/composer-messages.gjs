@@ -18,7 +18,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { userPath } from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { autoTrackedArray } from "../lib/tracked-tools";
+import { autoTrackedArray } from "../lib/tracked-tools.js";
 
 let _messagesCache = {};
 let _educationMessageShown = false;

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { notificationLevels } from "../../../../../lib/select-fixtures";
+import { notificationLevels } from "../../../../../lib/select-fixtures.js";
 
 export default class ValueIconSelectExample extends Component {
   @tracked value = "tracking";

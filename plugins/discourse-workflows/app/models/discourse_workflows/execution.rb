@@ -30,6 +30,20 @@ module DiscourseWorkflows
 
     scope :expired_waiting, -> { where(status: :waiting).where("waiting_until < ?", Time.current) }
 
+    scope :with_snapshot_summary,
+          -> do
+            joins(
+              "LEFT JOIN discourse_workflows_execution_data snapshot " \
+                "ON snapshot.execution_id = discourse_workflows_executions.id",
+            ).select(
+              "discourse_workflows_executions.*",
+              "snapshot.workflow_data ->> 'name' AS snapshot_workflow_name",
+              "jsonb_path_query_first(snapshot.workflow_data, '$.nodes[*] ? (@.id == $id)', " \
+                "jsonb_build_object('id', discourse_workflows_executions.trigger_node_id)) " \
+                "AS snapshot_trigger_node",
+            )
+          end
+
     TERMINAL_STATUSES_FOR_PURGE = %i[success error rate_limited skipped].freeze
     PURGE_BATCH_SIZE = 5_000
 
@@ -54,7 +68,11 @@ module DiscourseWorkflows
           )
         end
       end.tap do |execution|
-        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+        ExecutionProgressPublisher.publish_created(
+          execution,
+          workflow_name: workflow.name,
+          trigger_node: workflow.find_node(trigger_node_id),
+        )
       end
     end
 
@@ -83,7 +101,11 @@ module DiscourseWorkflows
           )
         end
       end.tap do |execution|
-        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+        ExecutionProgressPublisher.publish_created(
+          execution,
+          workflow_name: workflow.name,
+          trigger_node: workflow.find_node(node_id),
+        )
       end
     end
 
@@ -136,6 +158,13 @@ module DiscourseWorkflows
       execution.updated_at = now
       ExecutionProgressPublisher.publish(execution)
       execution
+    end
+
+    def self.trigger_summary(node)
+      return if node.nil?
+
+      node = node.to_workflow_node if node.respond_to?(:to_workflow_node)
+      { name: node["name"], type: node["type"] }
     end
 
     def self.compute_run_time_ms(steps)

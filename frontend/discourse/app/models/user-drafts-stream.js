@@ -15,6 +15,8 @@ export default class UserDraftsStream extends RestModel {
   limit = 30;
   loading = false;
   hasMore = false;
+
+  /** @type {UserDraft[] | null} */
   content = null;
 
   init() {

@@ -172,6 +172,12 @@ it:
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
+        classify:
+          text: "Testo"
+          upload_ids: "Immagini"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Punteggio"
       ai_tool_approval:
         loading: "In caricamento..."
         tool: "Azione"
@@ -573,6 +579,14 @@ it:
         delete: "Elimina"
         embedding: "Integrazione"
         tool: "Strumento"
+      decision_models:
+        no_preset: "Nessuna"
+        display_name: "Nome"
+        model: "Modello"
+        provider: "Fornitore"
+        edit: "Modifica"
+        delete: "Elimina"
+        test: "Esegui test"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"

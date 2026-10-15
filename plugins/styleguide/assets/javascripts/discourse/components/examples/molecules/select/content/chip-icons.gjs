@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { USER_GROUPS } from "../../../../../lib/select-fixtures";
+import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
 export default class ChipIconsSelectExample extends Component {
   @tracked value = [1, 3];

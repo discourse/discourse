@@ -97,35 +97,7 @@ class UserMerger
                            user_ids: [@acting_user.id]
     end
 
-    sql = <<~SQL
-      INSERT INTO given_daily_likes AS g (user_id, likes_given, given_date, limit_reached)
-        SELECT
-          :target_user_id                AS user_id,
-          COUNT(1)                       AS likes_given,
-          a.created_at::DATE             AS given_date,
-          COUNT(1) >= :max_likes_per_day AS limit_reached
-        FROM post_actions AS a
-        WHERE a.user_id = :target_user_id
-              AND a.deleted_at IS NULL
-              AND EXISTS(
-                  SELECT 1
-                  FROM given_daily_likes AS g
-                  WHERE g.user_id = :source_user_id AND a.created_at::DATE = g.given_date
-              )
-        GROUP BY given_date
-      ON CONFLICT (user_id, given_date)
-        DO UPDATE
-          SET likes_given = EXCLUDED.likes_given,
-            limit_reached = EXCLUDED.limit_reached
-    SQL
-
-    DB.exec(
-      sql,
-      source_user_id: @source_user.id,
-      target_user_id: @target_user.id,
-      max_likes_per_day: SiteSetting.max_likes_per_day,
-      action_type_id: PostActionType.types[:like],
-    )
+    GivenDailyLike.recalculate!([@target_user.id])
   end
 
   def merge_post_timings
@@ -235,12 +207,12 @@ class UserMerger
       WHERE user_id = :target_user_id
     SQL
 
-    # likes_given, likes_received, new_since, read_faq, first_post_created_at
+    UserStat.recalculate_likes!([@target_user.id])
+
+    # new_since, read_faq, first_post_created_at
     DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE user_stats AS t
-      SET likes_given         = t.likes_given + s.likes_given,
-        likes_received        = t.likes_received + s.likes_received,
-        new_since             = LEAST(t.new_since, s.new_since),
+      SET new_since             = LEAST(t.new_since, s.new_since),
         read_faq              = LEAST(t.read_faq, s.read_faq),
         first_post_created_at = LEAST(t.first_post_created_at, s.first_post_created_at)
       FROM user_stats AS s

@@ -8,7 +8,7 @@ import type {
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options";
+import type SelectOptionsView from "./select-options.ts";
 
 interface ValueResolverOptions {
   options: SelectOptionsView;

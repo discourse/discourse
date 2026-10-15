@@ -29,18 +29,11 @@ module("payment-options", function (hooks) {
       },
     ];
 
-    class State {
-      @tracked selectedPlan;
-    }
-
-    const testState = new State();
+    const selectedPlan = tracked(undefined);
 
     await render(
       <template>
-        <PaymentOptions
-          @plans={{plans}}
-          @selectedPlan={{testState.selectedPlan}}
-        />
+        <PaymentOptions @plans={{plans}} @selectedPlan={{selectedPlan.value}} />
       </template>
     );
 

@@ -751,6 +751,10 @@ hu:
       title:
         search: "Üzenet keresése"
         placeholder: "írja ide az üzenet címét, webcímét vagy azonosítóját"
+    dsa_statements:
+      category: "Kategória"
+      category_prompt: "Válasszon kategóriát"
+      saving: "Mentés…"
     review:
       show_more: "Több megjelenítése"
       show_less: "Kevesebb megjelenítése"

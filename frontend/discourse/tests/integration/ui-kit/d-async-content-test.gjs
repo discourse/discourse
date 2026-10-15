@@ -199,15 +199,8 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
     });
   });
 
-  // Drives the debounced tests from outside a component, so state can be changed
-  // without `click` awaiting the debounce timer in between.
-  class DebounceState {
-    @tracked context = "first";
-    @tracked rendered = true;
-    @tracked debounce = true;
-    @tracked source = null;
-  }
-
+  // Debounced tests change tracked state directly instead of through `click`, which would
+  // await the debounce timer in between.
   module("@debounce", function () {
     // The debounced path only engages from the second evaluation onward, so this asserts
     // after a context change rather than on first render.
@@ -592,7 +585,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
     // promise: an abandoned one would keep an async waiter pending and hang the test.
     test("it coalesces evaluations inside one window into a single call", async function (assert) {
       const seen = [];
-      const state = new DebounceState();
+      const currentContext = tracked("first");
 
       const load = (context) => {
         seen.push(context);
@@ -603,7 +596,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
         <template>
           <DAsyncContent
             @asyncData={{load}}
-            @context={{state.context}}
+            @context={{currentContext.value}}
             @debounce={{true}}
           >
             <:content as |data|>
@@ -620,7 +613,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       );
 
       for (const next of ["a", "b", "c"]) {
-        state.context = next;
+        currentContext.value = next;
         await rerender();
       }
 
@@ -638,7 +631,8 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
     // still drop the call the previous evaluation left waiting on its timer.
     test("it drops a scheduled call when the next evaluation is not debounced", async function (assert) {
       const seen = [];
-      const state = new DebounceState();
+      const currentContext = tracked("first");
+      const debounce = tracked(true);
 
       const load = (context) => {
         seen.push(context);
@@ -649,8 +643,8 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
         <template>
           <DAsyncContent
             @asyncData={{load}}
-            @context={{state.context}}
-            @debounce={{state.debounce}}
+            @context={{currentContext.value}}
+            @debounce={{debounce.value}}
           >
             <:content as |data|>
               <div class="content">{{data}}</div>
@@ -662,12 +656,12 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       assert.deepEqual(seen, ["first"]);
 
       // Schedules a debounced call for "second"...
-      state.context = "second";
+      currentContext.value = "second";
       await rerender();
 
       // ...which this evaluation supersedes before the timer fires.
-      state.debounce = false;
-      state.context = "third";
+      debounce.value = false;
+      currentContext.value = "third";
       await rerender();
 
       await settled();
@@ -684,17 +678,17 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
     // does, for every shape the argument accepts.
     test("it drops a scheduled call when @asyncData is replaced by a promise", async function (assert) {
       const seen = [];
-      const state = new DebounceState();
-      state.source = (context) => {
+      const currentContext = tracked("first");
+      const source = tracked((context) => {
         seen.push(context);
         return context;
-      };
+      });
 
       await render(
         <template>
           <DAsyncContent
-            @asyncData={{state.source}}
-            @context={{state.context}}
+            @asyncData={{source.value}}
+            @context={{currentContext.value}}
             @debounce={{true}}
           >
             <:content as |data|>
@@ -706,10 +700,10 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       assert.deepEqual(seen, ["first"]);
 
-      state.context = "second";
+      currentContext.value = "second";
       await rerender();
 
-      state.source = Promise.resolve("replacement");
+      source.value = Promise.resolve("replacement");
       await rerender();
 
       await settled();
@@ -724,17 +718,17 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
     test("it drops a scheduled call when @asyncData is replaced by a TrackedAsyncData", async function (assert) {
       const seen = [];
-      const state = new DebounceState();
-      state.source = (context) => {
+      const currentContext = tracked("first");
+      const source = tracked((context) => {
         seen.push(context);
         return context;
-      };
+      });
 
       await render(
         <template>
           <DAsyncContent
-            @asyncData={{state.source}}
-            @context={{state.context}}
+            @asyncData={{source.value}}
+            @context={{currentContext.value}}
             @debounce={{true}}
           >
             <:content as |data|>
@@ -746,10 +740,10 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       assert.deepEqual(seen, ["first"]);
 
-      state.context = "second";
+      currentContext.value = "second";
       await rerender();
 
-      state.source = new TrackedAsyncData(Promise.resolve("replacement"));
+      source.value = new TrackedAsyncData(Promise.resolve("replacement"));
       await rerender();
 
       await settled();
@@ -764,7 +758,8 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
     test("it does not invoke a debounced source after the component is destroyed", async function (assert) {
       const seen = [];
-      const state = new DebounceState();
+      const currentContext = tracked("first");
+      const rendered = tracked(true);
 
       const load = (context) => {
         seen.push(context);
@@ -773,10 +768,10 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          {{#if state.rendered}}
+          {{#if rendered.value}}
             <DAsyncContent
               @asyncData={{load}}
-              @context={{state.context}}
+              @context={{currentContext.value}}
               @debounce={{true}}
             >
               <:content as |data|>
@@ -790,9 +785,9 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       assert.deepEqual(seen, ["first"]);
 
       // Schedule a debounced load, then tear the component down before its timer fires.
-      state.context = "second";
+      currentContext.value = "second";
       await rerender();
-      state.rendered = false;
+      rendered.value = false;
 
       await settled();
 
@@ -806,7 +801,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
     test("a function decides per evaluation from the previous and next context", async function (assert) {
       const seen = [];
       const transitions = [];
-      const state = new DebounceState();
+      const currentContext = tracked("first");
 
       const load = (context) => {
         seen.push(context);
@@ -821,7 +816,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
         <template>
           <DAsyncContent
             @asyncData={{load}}
-            @context={{state.context}}
+            @context={{currentContext.value}}
             @debounce={{debounce}}
           >
             <:content as |data|>
@@ -837,14 +832,14 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
         "the first evaluation is never debounced, so it is not asked"
       );
 
-      state.context = "fast";
+      currentContext.value = "fast";
       await rerender();
 
       assert
         .dom(".content")
         .hasText("fast", "a transition answered false takes the direct path");
 
-      state.context = "slow";
+      currentContext.value = "slow";
       await rerender();
 
       assert.deepEqual(

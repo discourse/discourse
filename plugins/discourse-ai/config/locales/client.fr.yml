@@ -271,6 +271,12 @@ fr:
           upload_ids: "ID téléversés"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Sélectionner un agent..."
+        classify:
+          text: "Texte"
+          upload_ids: "Images"
+          name: "Nom"
+          type: "Type"
+          type_score: "Score"
       bot_chats:
         tab_label: "Chats avec les bots"
       ai_tool_approval:
@@ -913,7 +919,6 @@ fr:
           result: "Résultat du test"
       secrets:
         short_title: "Identifiants"
-        description: "Gérer les identifiants d'authentification partagés entre les LLM, les intégrations et les outils."
         name: "Nom"
         secret: "Valeur"
         select_secret: "Sélectionner un identifiant..."
@@ -938,6 +943,16 @@ fr:
         mcp_server_oauth_client_secret: "Secret client OAuth du serveur MCP"
         modal:
           title: "Créer un nouvel identifiant"
+      decision_models:
+        no_preset: "Jamais"
+        display_name: "Nom"
+        model: "Modèle"
+        provider: "Fournisseur"
+        api_key: "Identifiant"
+        vision_enabled: "Prend en charge l'entrée d'images"
+        edit: "Modifier"
+        delete: "Supprimer"
+        test: "Lancer le test"
       mcp_servers:
         short_title: "Serveurs MCP"
         new: "Nouveau serveur MCP"

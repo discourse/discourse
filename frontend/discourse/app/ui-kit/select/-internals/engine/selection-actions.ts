@@ -5,7 +5,7 @@ import type {
   SelectItemId,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options";
+import type SelectOptionsView from "./select-options.ts";
 
 export default class SelectionActions {
   #options: SelectOptionsView;

@@ -63,6 +63,9 @@ acceptance("Managing Group Email Settings - SMTP Enabled", function (needs) {
 
     await click("#enable_smtp");
     assert.dom(".group-smtp-email-settings").exists();
+    assert
+      .dom(".group-manage-save")
+      .isDisabled("cannot save until the SMTP settings are valid");
 
     await click("#prefill_smtp_gmail");
     assert

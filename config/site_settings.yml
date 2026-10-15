@@ -4908,6 +4908,23 @@ experimental:
     default: false
     hidden: true
     area: "experimental"
+  dsa_community_rules:
+    type: objects
+    default: []
+    area: "experimental"
+    schema:
+      name: community_rule
+      properties:
+        ground:
+          type: string
+          required: true
+          validations:
+            max_length: 500
+        explanation:
+          type: string
+          required: true
+          validations:
+            max_length: 2000
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true

@@ -9,7 +9,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { speakQueue } from "../../lib/voice/speak-queue";
+import { speakQueue } from "../../lib/voice/speak-queue.js";
 
 // The ordered request-to-speak queue of a stage room. Everyone sees the
 // order; moderators get approve/dismiss controls, a queued viewer can lower

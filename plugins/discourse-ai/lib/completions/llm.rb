@@ -705,17 +705,23 @@ module DiscourseAi
                   (attachment && %w[data base64].include?(key.to_s)) ||
                     (binary_source && key.to_s == "bytes") ||
                     (
-                      %w[url file_data].include?(key.to_s) &&
+                      %w[url image_url file_data].include?(key.to_s) &&
                         part.match?(%r{\Adata:(?:image/|application/pdf).*;base64,}) &&
                         (
-                          parent_key.to_s == "image_url" || value.key?(:filename) ||
-                            value.key?("filename")
+                          parent_key.to_s == "image_url" ||
+                            (
+                              key.to_s == "image_url" &&
+                                (value[:type] || value["type"]) == "input_image"
+                            ) || value.key?(:filename) || value.key?("filename")
                         )
                     )
                 )
             content =
               if blob
                 "[binary upload]"
+              elsif key.to_s == "images" && (value[:role] || value["role"]) == "user" &&
+                    part.is_a?(Array)
+                part.map { "[binary upload]" }
               else
                 capacity_payload(
                   part,

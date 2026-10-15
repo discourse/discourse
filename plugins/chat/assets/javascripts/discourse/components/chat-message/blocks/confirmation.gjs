@@ -1,6 +1,6 @@
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import ChatMessageText from "../../chat-message-text";
-import Actions from "./actions";
+import ChatMessageText from "../../chat-message-text.gjs";
+import Actions from "./actions.gjs";
 
 function showBody(definition) {
   return definition.show_description !== false;

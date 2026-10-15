@@ -4,7 +4,7 @@ import MathEditModal from "discourse/plugins/discourse-math/discourse/components
 import {
   buildDiscourseMathOptions,
   renderMathInElement,
-} from "./math-renderer";
+} from "./math-renderer.js";
 
 const createMathNodeView =
   ({ getContext, pmState: { NodeSelection } }) =>

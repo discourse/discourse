@@ -1,5 +1,5 @@
 import { not } from "discourse/truth-helpers";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default <template>
   <ExpressionWrapper

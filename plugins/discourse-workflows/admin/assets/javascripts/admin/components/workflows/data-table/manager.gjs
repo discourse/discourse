@@ -7,11 +7,11 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
-import InUseDialog from "../in-use-dialog";
-import PaginatedListManager from "../paginated-list-manager";
-import DataTableModal from "./modal";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
+import InUseDialog from "../in-use-dialog.gjs";
+import PaginatedListManager from "../paginated-list-manager.js";
+import DataTableModal from "./modal.gjs";
 
 export default class DataTablesManager extends PaginatedListManager {
   @service router;

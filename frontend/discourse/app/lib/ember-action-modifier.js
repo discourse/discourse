@@ -1,5 +1,5 @@
 import { modifier } from "ember-modifier";
-import deprecated from "./deprecated";
+import deprecated from "./deprecated.js";
 
 /**
  * Creates a replacement for Ember's built-in `action` modifier that uses

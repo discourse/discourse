@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { PEOPLE } from "../../../../../lib/select-fixtures";
+import { PEOPLE } from "../../../../../lib/select-fixtures.js";
 
 export default class DefaultsSelectExample extends Component {
   @tracked value = 102;

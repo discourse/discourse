@@ -21,7 +21,7 @@ import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 import processNode, {
   registerPostInTopicPostStream,
-} from "../lib/process-node";
+} from "../lib/process-node.js";
 
 export default class NestedController extends Controller {
   @service appEvents;

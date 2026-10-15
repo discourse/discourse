@@ -548,10 +548,10 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
               tool_results: [{ tool_call_id: call.id, content: result }],
             ),
           )
-        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /unusable_summary/)
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /empty_summary/)
       end
       reply = Post.where(topic_id: topic_id, user: ai_agent.user).last
-      expect(reply.raw).to include("Partial answer before the action", "unusable_summary")
+      expect(reply.raw).to include("Partial answer before the action", "empty_summary")
       expect(reply.post_custom_prompt.custom_prompt.to_s).to include(result, call.id)
       expect(reply.post_custom_prompt.custom_prompt.to_s).not_to include("<compressed_context>")
       expect(described_class.resume_state_exists?(token)).to eq(false)

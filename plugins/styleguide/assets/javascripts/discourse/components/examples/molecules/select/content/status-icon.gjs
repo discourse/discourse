@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { USER_GROUPS } from "../../../../../lib/select-fixtures";
+import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
 export default class StatusIconSelectExample extends Component {
   @tracked value = null;

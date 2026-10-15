@@ -94,6 +94,7 @@ DiscourseWorkflows::Engine.routes.draw do
       delete "/data-tables/:id" => "data_tables#destroy"
       post "/data-tables/:data_table_id/columns" => "data_table_columns#create"
       patch "/data-tables/:data_table_id/columns/:column_name/rename" => "data_table_columns#rename"
+      put "/data-tables/:data_table_id/columns/:column_name/move" => "data_table_columns#move"
       delete "/data-tables/:data_table_id/columns/:column_name" => "data_table_columns#destroy"
       get "/data-tables/:data_table_id/rows" => "data_table_rows#index"
       post "/data-tables/:data_table_id/rows" => "data_table_rows#create"

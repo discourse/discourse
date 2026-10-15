@@ -7,6 +7,8 @@ import RestModel from "discourse/models/rest";
 @singleton
 export default class Session extends RestModel {
   @tracked requiresRefresh = false;
+
+  /** @type {boolean | null} */
   hasFocus = null;
 
   init() {

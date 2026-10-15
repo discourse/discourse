@@ -8,7 +8,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
+import ToggleChannelMembershipButton from "./toggle-channel-membership-button.gjs";
 
 export default class ChatChannelPreviewCard extends Component {
   @service currentUser;

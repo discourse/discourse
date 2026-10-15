@@ -20,8 +20,20 @@ module DiscourseWorkflows
 
     before_destroy :drop_storage_table
 
+    # Postgres can't reorder physical columns, so the display order lives in `column_order`.
+    # User columns sit between `id` and the timestamps; unlisted ones keep their physical order.
     def columns
-      DataTables::Storage.columns(id)
+      system, user =
+        DataTables::Storage
+          .columns(id)
+          .partition { |column| DataTables::Types.system_column?(column["name"]) }
+      id_column, *timestamps = system
+      user =
+        user.sort_by.with_index do |column, index|
+          [column_order.index(column["name"]) || column_order.size, index]
+        end
+
+      [id_column, *user, *timestamps]
     end
 
     def user_columns
@@ -51,6 +63,7 @@ end
 # Table name: discourse_workflows_data_tables
 #
 #  id            :bigint           not null, primary key
+#  column_order  :string           default([]), not null, is an Array
 #  name          :string(100)      not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

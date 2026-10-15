@@ -1,31 +1,31 @@
 import { i18n } from "discourse-i18n";
-import ChipIconsSelectExample from "../../examples/molecules/select/content/chip-icons";
+import ChipIconsSelectExample from "../../examples/molecules/select/content/chip-icons.gjs";
 import chipIconsSelectSource from "../../examples/molecules/select/content/chip-icons?source=file";
-import ComputedSelectExample from "../../examples/molecules/select/content/computed";
+import ComputedSelectExample from "../../examples/molecules/select/content/computed.gjs";
 import computedSelectSource from "../../examples/molecules/select/content/computed?source=file";
-import DefaultsSelectExample from "../../examples/molecules/select/content/defaults";
+import DefaultsSelectExample from "../../examples/molecules/select/content/defaults.gjs";
 import defaultsSelectSource from "../../examples/molecules/select/content/defaults?source=file";
-import DividerSelectExample from "../../examples/molecules/select/content/divider";
+import DividerSelectExample from "../../examples/molecules/select/content/divider.gjs";
 import dividerSelectSource from "../../examples/molecules/select/content/divider?source=file";
-import CustomEmptySelectExample from "../../examples/molecules/select/content/empty";
+import CustomEmptySelectExample from "../../examples/molecules/select/content/empty.gjs";
 import customEmptySelectSource from "../../examples/molecules/select/content/empty?source=file";
-import CustomErrorSelectExample from "../../examples/molecules/select/content/error";
+import CustomErrorSelectExample from "../../examples/molecules/select/content/error.gjs";
 import customErrorSelectSource from "../../examples/molecules/select/content/error?source=file";
-import FooterSelectExample from "../../examples/molecules/select/content/footer";
+import FooterSelectExample from "../../examples/molecules/select/content/footer.gjs";
 import footerSelectSource from "../../examples/molecules/select/content/footer?source=file";
-import GroupedSelectExample from "../../examples/molecules/select/content/grouped";
+import GroupedSelectExample from "../../examples/molecules/select/content/grouped.gjs";
 import groupedSelectSource from "../../examples/molecules/select/content/grouped?source=file";
-import RowIconsSelectExample from "../../examples/molecules/select/content/row-icons";
+import RowIconsSelectExample from "../../examples/molecules/select/content/row-icons.gjs";
 import rowIconsSelectSource from "../../examples/molecules/select/content/row-icons?source=file";
-import SelectionBlockSelectExample from "../../examples/molecules/select/content/selection";
+import SelectionBlockSelectExample from "../../examples/molecules/select/content/selection.gjs";
 import selectionBlockSelectSource from "../../examples/molecules/select/content/selection?source=file";
-import StatusIconSelectExample from "../../examples/molecules/select/content/status-icon";
+import StatusIconSelectExample from "../../examples/molecules/select/content/status-icon.gjs";
 import statusIconSelectSource from "../../examples/molecules/select/content/status-icon?source=file";
-import TopicGlyphSelectExample from "../../examples/molecules/select/content/topic-glyph";
+import TopicGlyphSelectExample from "../../examples/molecules/select/content/topic-glyph.gjs";
 import topicGlyphSelectSource from "../../examples/molecules/select/content/topic-glyph?source=file";
-import WholePickerSelectExample from "../../examples/molecules/select/content/whole-picker";
+import WholePickerSelectExample from "../../examples/molecules/select/content/whole-picker.gjs";
 import wholePickerSelectSource from "../../examples/molecules/select/content/whole-picker?source=file";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
   <StyleguideExample

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options";
-import AiSearchDiscoveries from "../../components/ai-search-discoveries";
+import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options.gjs";
+import AiSearchDiscoveries from "../../components/ai-search-discoveries.gjs";
 
 export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {

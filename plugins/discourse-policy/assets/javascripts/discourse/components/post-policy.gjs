@@ -12,7 +12,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PolicyBuilder from "./modal/policy-builder";
+import PolicyBuilder from "./modal/policy-builder.gjs";
 
 export default class PostPolicy extends Component {
   @service appEvents;

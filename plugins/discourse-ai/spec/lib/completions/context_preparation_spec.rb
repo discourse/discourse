@@ -133,7 +133,59 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "drops the oldest history when an unusable summary leaves the prompt over capacity" do
+    it "logs empty_summary when compression produces only whitespace" do
+      prompt = history_prompt(repetitions: 600)
+      original = prompt.messages.deep_dup
+      logger =
+        track_log_messages do
+          DiscourseAi::Completions::Llm.with_prepared_responses([" \n\t"]) do
+            expect(described_class.new(model.to_llm, threshold: 20).prepare!(prompt)).to eq(
+              :skipped,
+            )
+          end
+        end
+
+      expect(logger.warnings).to include("DiscourseAi: context_preparation reason=empty_summary")
+      expect(prompt.messages).to eq(original)
+    end
+
+    it "logs summary_not_smaller when compression expands the prompt" do
+      prompt = history_prompt(repetitions: 600)
+      original = prompt.messages.deep_dup
+      logger =
+        track_log_messages do
+          DiscourseAi::Completions::Llm.with_prepared_responses(["inflated " * 10_000]) do
+            expect(described_class.new(model.to_llm, threshold: 20).prepare!(prompt)).to eq(
+              :skipped,
+            )
+          end
+        end
+
+      expect(logger.warnings).to include(
+        "DiscourseAi: context_preparation reason=summary_not_smaller",
+      )
+      expect(prompt.messages).to eq(original)
+    end
+
+    it "logs summary_over_capacity when a smaller summary still exceeds the answering capacity" do
+      prompt = history_prompt(repetitions: 600)
+      logger =
+        track_log_messages do
+          DiscourseAi::Completions::Llm.with_prepared_responses(["inflated " * 2500]) do
+            expect(described_class.new(model.to_llm).prepare!(prompt, max_tokens: 14_000)).to eq(
+              :compressed,
+            )
+          end
+        end
+
+      expect(logger.warnings).to include(
+        "DiscourseAi: context_preparation reason=summary_over_capacity",
+        "DiscourseAi: context_preparation reason=history_dropped original_reason=summary_over_capacity dropped_history_messages=4",
+      )
+      expect_history_dropped(prompt)
+    end
+
+    it "drops the oldest history when an empty summary leaves the prompt over capacity" do
       prompt = history_prompt(repetitions: 4000)
       DiscourseAi::Completions::Llm.with_prepared_responses([""]) do |canned|
         llm = DiscourseAi::Completions::Llm.proxy(model)
@@ -270,7 +322,7 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
 
         expect { described_class.new(llm).prepare!(prompt) }.to raise_error(
           described_class::Error,
-          /unusable_summary/,
+          /empty_summary/,
         )
         expect(prompt.messages).to eq(original)
       end

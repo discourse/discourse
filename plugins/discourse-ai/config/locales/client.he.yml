@@ -208,6 +208,12 @@ he:
       discourse_workflows:
         ai_agent:
           mode: "מצב"
+        classify:
+          text: "טקסט"
+          upload_ids: "תמונות"
+          name: "שם"
+          type: "סוג"
+          type_score: "ניקוד"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -633,6 +639,14 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      decision_models:
+        no_preset: "ללא"
+        display_name: "שם"
+        model: "מודל"
+        provider: "ספק"
+        edit: "עריכה"
+        delete: "מחיקה"
+        test: "הרצת בדיקה"
       mcp_servers:
         name: "שם"
         description: "תיאור"

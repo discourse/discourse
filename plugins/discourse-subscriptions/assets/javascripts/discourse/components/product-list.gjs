@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { isEmpty } from "@ember/utils";
 import { i18n } from "discourse-i18n";
-import ProductItem from "./product-item";
+import ProductItem from "./product-item.gjs";
 
 export default class ProductList extends Component {
   get emptyProducts() {

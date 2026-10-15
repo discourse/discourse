@@ -57,6 +57,12 @@ cs:
       discourse_workflows:
         ai_agent:
           mode: "Režim"
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Jméno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -254,6 +260,13 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žádný"
+        display_name: "Jméno"
+        model: "Model"
+        edit: "Upravit"
+        delete: "Smazat"
+        test: "Spustit test"
       mcp_servers:
         name: "Název"
         description: "Popis"

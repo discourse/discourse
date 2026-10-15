@@ -998,7 +998,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   end
 
   describe "request header providers" do
-    after { described_class.reset_request_headers_providers! }
+    after { DiscourseAi::RequestHeaders.reset! }
 
     def capture_headers(feature_name: nil)
       captured = nil
@@ -1026,24 +1026,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(headers["X-Test-Feature"]).to eq("summarize")
     end
 
-    it "passes request context (llm_model, streaming, vision) to the provider" do
+    it "passes request context (model, streaming, vision) to the provider" do
       captured_context = nil
-      described_class.register_request_headers_provider do |context|
+      DiscourseAi::RequestHeaders.register do |context|
         captured_context = context
         {}
       end
 
       capture_headers(feature_name: "ai_helper")
 
-      expect(captured_context.llm_model).to eq(llm_model)
+      expect(captured_context.model).to eq(llm_model)
       expect(captured_context.feature_name).to eq("ai_helper")
       expect(captured_context.streaming).to eq(false)
       expect(captured_context.has_images).to eq(false)
     end
 
     it "isolates provider failures so the completion still succeeds" do
-      described_class.register_request_headers_provider { |_context| raise "boom" }
-      described_class.register_request_headers_provider { |_context| { "X-Test-Survivor" => "1" } }
+      DiscourseAi::RequestHeaders.register { |_context| raise "boom" }
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Survivor" => "1" } }
 
       headers = nil
       expect { headers = capture_headers }.not_to raise_error

@@ -27,6 +27,17 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     assert.dom(".name").hasText("Evil Trout");
   });
 
+  test("names disabled", async function (assert) {
+    this.siteSettings.enable_names = false;
+    this.siteSettings.prioritize_username_in_ux = false;
+    this.currentUser.name = "Evil Trout";
+
+    await render(<template><DUserInfo @user={{this.currentUser}} /></template>);
+
+    assert.dom(".username").hasText("eviltrout");
+    assert.dom(".name").doesNotExist();
+  });
+
   test("includeLink", async function (assert) {
     await render(
       <template>

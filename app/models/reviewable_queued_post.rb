@@ -252,6 +252,7 @@ class ReviewableQueuedPost < Reviewable
     case action_id
     when :reject_post, :revise_and_reject_post, :discard_post
       {
+        decision_facts: "The post was held for approval and rejected before publication.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: created_at.to_date.iso8601,
@@ -262,6 +263,7 @@ class ReviewableQueuedPost < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts: "The author of a post held for approval was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -275,6 +277,8 @@ class ReviewableQueuedPost < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts:
+          "The author of a post held for approval had their ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -288,6 +292,7 @@ class ReviewableQueuedPost < Reviewable
       user = result.deleted_user
 
       {
+        decision_facts: "The author of a post held for approval had their account deleted.",
         decision_account: "DECISION_ACCOUNT_TERMINATED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

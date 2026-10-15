@@ -5,7 +5,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures";
+import { LOCALES } from "../../../../../lib/select-fixtures.js";
 
 const MAX_ENTRIES = 6;
 

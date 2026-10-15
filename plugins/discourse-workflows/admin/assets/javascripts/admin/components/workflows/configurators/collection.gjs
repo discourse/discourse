@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import {
   keyedValue,
   withoutKey,
-} from "../../../lib/workflows/keyed-collection";
+} from "../../../lib/workflows/keyed-collection.js";
 import {
   fieldValue,
   findNodeType,
@@ -14,11 +14,11 @@ import {
   propertyDescription,
   propertyLabel,
   usesInlineBooleanControl,
-} from "../../../lib/workflows/property-engine";
-import WorkflowsEmptyState from "../empty-state";
-import CollectionAddMenu from "./collection-add-menu";
-import CollectionOptionRow from "./collection-option-row";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import WorkflowsEmptyState from "../empty-state.gjs";
+import CollectionAddMenu from "./collection-add-menu.gjs";
+import CollectionOptionRow from "./collection-option-row.gjs";
+import Field from "./field.gjs";
 
 export default class Collection extends Component {
   get nodeDefinition() {

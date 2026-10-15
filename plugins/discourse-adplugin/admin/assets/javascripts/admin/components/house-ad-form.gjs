@@ -8,9 +8,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import HouseAdsCategorySelector from "./house-ads-category-selector";
-import HouseAdsRouteSelector from "./house-ads-route-selector";
-import Preview from "./modal/preview";
+import HouseAdsCategorySelector from "./house-ads-category-selector.gjs";
+import HouseAdsRouteSelector from "./house-ads-route-selector.gjs";
+import Preview from "./modal/preview.gjs";
 
 export default class HouseAdForm extends Component {
   @service router;

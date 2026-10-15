@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import PollResultsRankedChoice from "./poll-results-ranked-choice";
-import PollResultsStandard from "./poll-results-standard";
+import PollResultsRankedChoice from "./poll-results-ranked-choice.gjs";
+import PollResultsStandard from "./poll-results-standard.gjs";
 
 export default class TabsComponent extends Component {
   @tracked activeTab;

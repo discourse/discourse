@@ -639,7 +639,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -661,7 +663,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_FULLY",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -685,7 +689,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -710,7 +716,10 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -734,7 +743,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -757,7 +768,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -822,7 +835,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -843,7 +858,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -865,7 +882,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was edited.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -901,7 +920,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -928,7 +949,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -957,7 +980,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -984,7 +1009,10 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -1013,7 +1041,10 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -1038,7 +1069,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -1062,7 +1095,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -1094,7 +1129,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -1125,7 +1162,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],

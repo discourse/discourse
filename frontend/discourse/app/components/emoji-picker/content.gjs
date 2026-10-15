@@ -32,7 +32,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
-import DiversityMenu from "./diversity-menu";
+import DiversityMenu from "./diversity-menu.gjs";
 
 const DEFAULT_LAST_SECTION = "favorites";
 

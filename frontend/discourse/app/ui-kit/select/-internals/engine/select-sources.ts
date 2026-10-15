@@ -7,7 +7,7 @@ import type {
   SelectLoadResponse,
   SelectLoadResult,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options";
+import type SelectOptionsView from "./select-options.ts";
 
 export const MAX_RENDERED = 200;
 

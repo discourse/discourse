@@ -42,6 +42,13 @@ sl:
       ai_decoded_transcript:
         type: "Tip"
         error: "napaka"
+      discourse_workflows:
+        classify:
+          text: "Besedilo"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocena"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -204,6 +211,11 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      decision_models:
+        no_preset: "Brez"
+        display_name: "Ime"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"

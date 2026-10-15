@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { topics } from "../../../../../lib/select-fixtures";
+import { topics } from "../../../../../lib/select-fixtures.js";
 
 export default class TopicGlyphSelectExample extends Component {
   @tracked value = null;

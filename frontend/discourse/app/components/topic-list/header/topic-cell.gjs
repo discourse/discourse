@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import SortableColumn from "./sortable-column";
+import SortableColumn from "./sortable-column.gjs";
 
 export default class TopicCell extends Component {
   @service moreTopicsTabs;

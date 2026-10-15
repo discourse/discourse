@@ -11,18 +11,6 @@ const TOPICS = [
   { id: 34, title: "Cube leaderboard", fancy_title: "Cube leaderboard" },
 ];
 
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
-}
-
 function searchResponse(term) {
   const topics = TOPICS.filter(
     (topic) =>
@@ -42,7 +30,7 @@ function searchResponse(term) {
 }
 
 async function renderControl(context, value) {
-  context.field = new TestField(value);
+  context.field = tracked(value);
 
   await render(
     <template>

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { TIMEZONES } from "../../../../../lib/select-fixtures";
+import { TIMEZONES } from "../../../../../lib/select-fixtures.js";
 
 const hourCycle = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",

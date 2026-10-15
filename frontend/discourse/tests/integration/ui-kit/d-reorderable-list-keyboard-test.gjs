@@ -193,11 +193,9 @@ module(
     });
 
     test("removal is announced and leaves focus on the row that took its place", async function (assert) {
-      const state = new (class {
-        @tracked items = objectItems();
-      })();
+      const items = tracked(objectItems());
       const onRemove = (item) => {
-        state.items = state.items.filter((candidate) => candidate !== item);
+        items.value = items.value.filter((candidate) => candidate !== item);
       };
       // Spied rather than read back off the service: an announcement schedules
       // its own clear, and `settled()` waits that timer out.
@@ -207,7 +205,7 @@ module(
         <template>
           <DMenus />
           <DReorderableList
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
@@ -1243,9 +1241,7 @@ module(
     test("a run cut short by teardown does not speak for a list that is gone", async function (assert) {
       const items = trackedArray(objectItems());
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
-      const state = new (class {
-        @tracked show = true;
-      })();
+      const show = tracked(true);
       const handleMove = (move) => {
         items.splice(0, items.length, ...move.proposedToItems);
       };
@@ -1253,7 +1249,7 @@ module(
       await render(
         <template>
           <DMenus />
-          {{#if state.show}}
+          {{#if show.value}}
             <DReorderableList
               @items={{items}}
               @key="id"
@@ -1279,7 +1275,7 @@ module(
         })
       );
 
-      state.show = false;
+      show.value = false;
       await settled();
 
       assert.deepEqual(
@@ -1407,16 +1403,14 @@ module(
     });
 
     test("a removal that defers is not spoken for until it completes", async function (assert) {
-      const state = new (class {
-        @tracked items = objectItems();
-      })();
+      const items = tracked(objectItems());
       let release;
       const confirmed = new Promise((resolve) => (release = resolve));
       // What a consumer putting a confirmation in front of the removal returns:
       // the handler is back long before the reader has answered.
       const onRemove = (item) =>
         confirmed.then(() => {
-          state.items = state.items.filter((candidate) => candidate !== item);
+          items.value = items.value.filter((candidate) => candidate !== item);
         });
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
 
@@ -1424,7 +1418,7 @@ module(
         <template>
           <DMenus />
           <DReorderableList
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
@@ -1458,9 +1452,7 @@ module(
     });
 
     test("a removal behind a confirmation lands focus once the dialog has gone", async function (assert) {
-      const state = new (class {
-        @tracked items = objectItems();
-      })();
+      const items = tracked(objectItems());
       const dialog = this.owner.lookup("service:dialog");
       // Exactly the shape a consumer with a confirmation writes: the promise is
       // returned so the list waits, and the store is only touched on confirm.
@@ -1468,7 +1460,7 @@ module(
         dialog.yesNoConfirm({
           message: "Remove it?",
           didConfirm: () => {
-            state.items = state.items.filter((candidate) => candidate !== item);
+            items.value = items.value.filter((candidate) => candidate !== item);
           },
         });
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
@@ -1478,7 +1470,7 @@ module(
           <DMenus />
           <DialogHolder />
           <DReorderableList
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}

@@ -1,11 +1,11 @@
 import { i18n } from "discourse-i18n";
-import KeyboardClearingSelectExample from "../../examples/molecules/select/keyboard/clearing";
-import MobileSelectExample from "../../examples/molecules/select/keyboard/mobile";
-import OpenBehaviourSelectExample from "../../examples/molecules/select/keyboard/open-behaviour";
-import TabOrderSelectExample from "../../examples/molecules/select/keyboard/tab-order";
-import KeyboardTranscriptSelectExample from "../../examples/molecules/select/keyboard/transcript";
-import KeyboardWalkthroughSelectExample from "../../examples/molecules/select/keyboard/walkthrough";
-import StyleguideExample from "../../styleguide-example";
+import KeyboardClearingSelectExample from "../../examples/molecules/select/keyboard/clearing.gjs";
+import MobileSelectExample from "../../examples/molecules/select/keyboard/mobile.gjs";
+import OpenBehaviourSelectExample from "../../examples/molecules/select/keyboard/open-behaviour.gjs";
+import TabOrderSelectExample from "../../examples/molecules/select/keyboard/tab-order.gjs";
+import KeyboardTranscriptSelectExample from "../../examples/molecules/select/keyboard/transcript.gjs";
+import KeyboardWalkthroughSelectExample from "../../examples/molecules/select/keyboard/walkthrough.gjs";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
   <StyleguideExample

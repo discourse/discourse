@@ -4,7 +4,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import MoreMenu from "../../discourse/components/discourse-post-event/more-menu";
+import MoreMenu from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/more-menu";
 
 module("Integration | Component | MoreMenu", function (hooks) {
   setupRenderingTest(hooks);

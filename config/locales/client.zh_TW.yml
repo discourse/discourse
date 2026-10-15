@@ -827,6 +827,10 @@ zh_TW:
       title:
         search: "搜尋訊息"
         placeholder: "在這裡輸入訊息標題、網址或 ID"
+    dsa_statements:
+      category: "分類"
+      category_prompt: "選擇一個分類"
+      saving: "正在儲存..."
     review:
       show_more: "顯示更多"
       show_less: "顯示更少"

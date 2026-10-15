@@ -9,7 +9,7 @@ import type {
   SelectedText,
   SurroundOptions,
   ToolbarState,
-} from "./text-manipulation";
+} from "./text-manipulation.ts";
 
 type ToolbarCommand = (...args: unknown[]) => unknown;
 type ListHead = string | ((previous?: string) => string);

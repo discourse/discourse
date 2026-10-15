@@ -8,7 +8,7 @@ import {
   emptyApi,
   peopleApi,
   unavailableApi,
-} from "../../../../../lib/select-fixtures";
+} from "../../../../../lib/select-fixtures.js";
 
 const FooterContents = <template>
   {{#if @state.loadedCount}}

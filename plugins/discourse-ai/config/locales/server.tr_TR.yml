@@ -917,8 +917,8 @@ tr_TR:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
         choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
         model_test_failed: "Bu modelle bir test gömme oluşturmayı başaramadık. Doğru şekilde yapılandırıldığını kontrol edin."
-    secrets:
-      delete_failed_in_use: "Bu kimlik bilgisi şu anda bir veya daha fazla LLM, gömme veya araç tarafından kullanılmaktadır ve silinemez."
+    decision_models:
+      secret_not_found: "Seçilen kimlik bilgisi mevcut değil"
     llm_models:
       missing_provider_param: "%{param} boş olamaz"
       secret_required: "Bir kimlik bilgisi seçilmelidir."

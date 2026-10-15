@@ -9,7 +9,7 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
-import Slot from "./slot";
+import Slot from "./slot.gjs";
 
 const DEFAULT_SLOTS = 6;
 

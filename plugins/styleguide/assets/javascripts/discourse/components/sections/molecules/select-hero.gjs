@@ -10,7 +10,7 @@ import {
   categories,
   notificationLevels,
   TAGS,
-} from "../../../lib/select-fixtures";
+} from "../../../lib/select-fixtures.js";
 
 /**
  * The page's opening statement: three selects side by side at real composer density.

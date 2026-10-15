@@ -191,6 +191,7 @@ module Chat
       when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
            :agree_and_keep_hidden
         {
+          decision_facts: "The flagged chat message was removed.",
           decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
           content_type: ["CONTENT_TYPE_TEXT"],
           content_date: chat_message.created_at.to_date.iso8601,
@@ -201,6 +202,7 @@ module Chat
         user = target_created_by.reload
 
         {
+          decision_facts: "The author of the flagged chat message was suspended.",
           decision_account: "DECISION_ACCOUNT_SUSPENDED",
           content_type: ["CONTENT_TYPE_OTHER"],
           content_type_other: "User account",
@@ -214,6 +216,8 @@ module Chat
         user = target_created_by.reload
 
         {
+          decision_facts:
+            "The author of the flagged chat message had their ability to participate restricted.",
           decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
           content_type: ["CONTENT_TYPE_OTHER"],
           content_type_other: "User account",

@@ -664,7 +664,8 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
   end
 
   describe "#rename_column!" do
-    it "renames a column in the storage table" do
+    it "renames a column in the storage table and keeps its display position" do
+      data_table.update!(column_order: %w[score email])
       facade.rename_column!(old_name: "email", new_name: "contact_email")
 
       table_name = DiscourseWorkflows::DataTables::Storage.table_name(data_table.id)
@@ -676,11 +677,21 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
       expect(columns).to include("contact_email")
       expect(columns).not_to include("email")
+      expect(data_table.reload.column_order).to eq(%w[score contact_email])
+    end
+  end
+
+  describe "#move_column!" do
+    it "clamps the position to the end of the user columns" do
+      facade.move_column!("email", 99)
+
+      expect(data_table.reload.column_order).to eq(%w[score active joined_at email])
     end
   end
 
   describe "#drop_column!" do
-    it "drops a column from the storage table" do
+    it "drops a column from the storage table and its display position" do
+      data_table.update!(column_order: %w[active email])
       facade.drop_column!("active")
 
       table_name = DiscourseWorkflows::DataTables::Storage.table_name(data_table.id)
@@ -691,6 +702,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
         )
 
       expect(columns).not_to include("active")
+      expect(data_table.reload.column_order).to eq(%w[email])
     end
   end
 end

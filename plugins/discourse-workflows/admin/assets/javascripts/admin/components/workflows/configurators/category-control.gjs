@@ -7,8 +7,11 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import { integerIdsFromValue, sameIds } from "../../../lib/workflows/id-values";
-import ExpressionWrapper from "./expression-wrapper";
+import {
+  integerIdsFromValue,
+  sameIds,
+} from "../../../lib/workflows/id-values.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class CategoryControl extends Component {
   @service siteSettings;

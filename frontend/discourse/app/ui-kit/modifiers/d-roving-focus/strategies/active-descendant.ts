@@ -1,7 +1,7 @@
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
-import type { DRovingFocusConfig } from "../config";
-import { activeSeed } from "../entry-policy";
+import type { DRovingFocusConfig } from "../config.ts";
+import { activeSeed } from "../entry-policy.ts";
 
 /** The state transition requested by active-descendant reconciliation. */
 export type ActiveReconcileResult =

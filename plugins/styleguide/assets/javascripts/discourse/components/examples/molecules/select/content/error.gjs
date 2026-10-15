@@ -5,7 +5,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { createRetryingPeopleApi } from "../../../../../lib/select-fixtures";
+import { createRetryingPeopleApi } from "../../../../../lib/select-fixtures.js";
 
 export default class CustomErrorSelectExample extends Component {
   @tracked value = null;

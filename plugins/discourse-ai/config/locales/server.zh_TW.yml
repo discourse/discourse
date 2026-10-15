@@ -1144,8 +1144,8 @@ zh_TW:
         disable_embeddings: "你必須先停用「ai embeddings enabled」。"
         choose_model: "請先設定「ai embeddings selected model」。"
         model_test_failed: "無法使用此模型產生測試嵌入。請確認模型設定正確。"
-    secrets:
-      delete_failed_in_use: "一或多個 LLM、嵌入模型或工具正在使用此憑證，因此無法刪除。"
+    decision_models:
+      secret_not_found: "所選的憑證不存在"
     llm_models:
       missing_provider_param: "%{param} 不得空白"
       invalid_provider_param: "%{param} 的格式無效"

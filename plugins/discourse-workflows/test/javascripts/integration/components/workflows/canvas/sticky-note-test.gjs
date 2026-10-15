@@ -564,18 +564,16 @@ module(
       const translates = [];
       // The note the user grabbed is replaced on every move, the way the canvas
       // replaces it, so a stale read of the previous object would show up here.
-      const state = new (class {
-        @tracked note = noteFixture();
-      })();
+      const note = tracked(noteFixture());
       const onMove = (position) => {
-        state.note = { ...state.note, position: { ...position } };
+        note.value = { ...note.value, position: { ...position } };
       };
       const onTranslateSelected = (dx, dy) => translates.push([dx, dy]);
 
       await render(
         <template>
           <StickyNote
-            @note={{state.note}}
+            @note={{note.value}}
             @onMove={{onMove}}
             @onTranslateSelected={{onTranslateSelected}}
             @zoom={{1}}

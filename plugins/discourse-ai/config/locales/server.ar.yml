@@ -1120,8 +1120,8 @@ ar:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
         model_test_failed: "لقد فشلنا في إنشاء اختبار تضمين باستخدام هذا النموذج. تأكَّد من صحة إعداداته."
-    secrets:
-      delete_failed_in_use: "بيانات الاعتماد هذه قيد الاستخدام حاليًا بواسطة واحد أو أكثر من النماذج اللغوية الكبيرة، أو عمليات التضمين، أو الأدوات، ولا يمكن حذفها."
+    decision_models:
+      secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"
       invalid_provider_param: "تنسيق %{param} غير صالح"

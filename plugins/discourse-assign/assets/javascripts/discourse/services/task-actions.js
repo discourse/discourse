@@ -4,8 +4,8 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
-import AssignUser from "../components/modal/assign-user";
-import assignmentPayload from "../lib/assignment-payload";
+import AssignUser from "../components/modal/assign-user.gjs";
+import assignmentPayload from "../lib/assignment-payload.js";
 
 export default class TaskActions extends Service {
   @service modal;

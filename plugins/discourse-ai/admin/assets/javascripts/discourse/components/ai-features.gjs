@@ -9,8 +9,8 @@ import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiDefaultLlmSelector from "./ai-default-llm-selector";
-import AiFeaturesList from "./ai-features-list";
+import AiFeaturesList from "discourse/plugins/discourse-ai/discourse/components/ai-features-list";
+import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
 
 const ALL = "all";
 const ENABLED = "enabled";

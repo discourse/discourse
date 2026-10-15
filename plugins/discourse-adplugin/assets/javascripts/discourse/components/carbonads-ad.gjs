@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 export default class CarbonadsAd extends AdComponent {
   serve_id = null;

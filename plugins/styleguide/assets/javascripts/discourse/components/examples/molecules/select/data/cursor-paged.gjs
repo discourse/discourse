@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { cursorTopicApi } from "../../../../../lib/select-fixtures";
+import { cursorTopicApi } from "../../../../../lib/select-fixtures.js";
 
 export default class CursorPagedSelectExample extends Component {
   @tracked value = null;

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { reviewerApi } from "../../../../../lib/select-fixtures";
+import { reviewerApi } from "../../../../../lib/select-fixtures.js";
 
 export default class ReviewersSelectExample extends Component {
   @tracked value = [101, 102, 103, 104, 105, 106, 999];

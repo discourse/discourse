@@ -1,6 +1,10 @@
+import { settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - html-inline extension",
@@ -121,10 +125,85 @@ module(
         "<p>Line1<br>Line2</p>",
         "Line1\nLine2",
       ],
+      "list HTML inside a table cell": [
+        "| Column 1 | Column 2 |\n|---|---|\n| An HTML-built list | <ul><li>line 1</li><li>line 2</li></ul> |\n",
+        (assert) => {
+          assert.dom("td ul li").exists({ count: 2 });
+          assert.dom("td ul li:first-child").hasText("line 1");
+        },
+        "| Column 1 | Column 2 |\n|----|----|\n| An HTML-built list | <ul><li>line 1</li><li>line 2</li></ul>  |\n\n",
+      ],
+      "unclosed inline HTML does not swallow the next cell": [
+        "| a | b |\n|---|---|\n| <ul><li>x | y |\n",
+        (assert) => {
+          assert.dom("tbody td").exists({ count: 2 });
+          assert.dom("tbody td:first-child ul li").hasText("x");
+          assert.dom("tbody td:last-child").hasText("y");
+        },
+        "| a | b |\n|----|----|\n| <ul><li>x</li></ul>  | y |\n\n",
+      ],
+      "stray closing tag is ignored": ["a</li>b", "<p>ab</p>", "ab"],
+      "closing an outer tag closes the inner ones": [
+        "<kbd><sup>x</kbd> y",
+        "<p><kbd><sup>x</sup></kbd> y</p>",
+        "<kbd><sup>x</sup></kbd> y",
+      ],
+      "anchor without href keeps its name": [
+        'see <a name="top">here</a>',
+        '<p>see <a name="top">here</a> </p>',
+        'see <a name="top">here</a> ',
+      ],
+      "allow-listed tags and attributes inside a table round-trip": [
+        '| a |\n|---|\n| <ol start="3"><li>c</li></ol> <div data-x="1" onclick="y()">d</div> <abbr title="T">e</abbr> <h2>f</h2> |\n',
+        (assert) => {
+          assert.dom("td ol").hasAttribute("start", "3");
+          assert.dom("td div[data-x='1']").doesNotHaveAttribute("onclick");
+          assert.dom("td abbr").hasAttribute("title", "T");
+          assert.dom("td h2").hasText("f");
+        },
+        '| a |\n|----|\n| <ol start="3"><li>c</li></ol> <div data-x="1">d</div> <abbr title="T">e</abbr> <h2>f</h2>  |\n\n',
+      ],
+      "mark tags keep being marks when they carry attributes": [
+        '<strong class="x">bold</strong> <code class="lang-js">c</code>',
+        "<p><strong>bold</strong> <code>c</code></p>",
+        "**bold** `c`",
+      ],
+      "tags the cook strips, embedded media and block-level tags outside a table are dropped":
+        [
+          'a <blink>b</blink> <iframe src="https://example.com"></iframe> <div>c</div> <ul><li>d</li></ul> e',
+          "<p>a b  c d e</p>",
+          "a b  c d e",
+        ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);
       });
+    });
+
+    test("a list pasted into a table cell stays inline HTML", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "");
+
+      editor.view.pasteHTML(
+        "<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>"
+      );
+      await settled();
+
+      assert.dom(".ProseMirror table ul li").exists({ count: 2 });
+      assert.true(editor.value.includes("| <ul><li>a</li><li>b</li></ul>"));
+    });
+
+    test("pasted phrasing tags keep allow-listed attributes", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "");
+
+      editor.view.pasteHTML(
+        'x <abbr title="T">a</abbr> <kbd>k</kbd> <blink>b</blink>'
+      );
+      await settled();
+
+      assert.strictEqual(
+        editor.value,
+        'x <abbr title="T">a</abbr> <kbd>k</kbd> b'
+      );
     });
   }
 );

@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { localeApi } from "../../../../../lib/select-fixtures";
+import { localeApi } from "../../../../../lib/select-fixtures.js";
 
 export default class DebounceSelectExample extends Component {
   @tracked value = null;

@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import {
   fastTopicApi,
   pagedTopicApi,
-} from "../../../../../lib/select-fixtures";
+} from "../../../../../lib/select-fixtures.js";
 
 export default class ReloadSelectExample extends Component {
   @tracked value = null;
