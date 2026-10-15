@@ -4,6 +4,8 @@ Migrations::Tooling::Schema.table :users do
   add_column :original_username, :text
   add_column :avatar_type, :integer
 
+  index :uploaded_avatar_id, where: "uploaded_avatar_id IS NOT NULL"
+
   column :created_at, required: true
 
   ignore :flag_level,

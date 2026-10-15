@@ -294,7 +294,6 @@ pt_BR:
       zh_CN:
         name: Chinês simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Compartilhar no X"
@@ -348,6 +347,12 @@ pt_BR:
     skip_to_last_reply: "Ir para a última resposta"
     skip_to_top: "Pular para o topo"
     skip_user_nav: "Pular para o conteúdo do perfil"
+    reorder:
+      remove: "Remover %{label}"
+      removed: "Removeu %{label}"
+      move_up: "Mover para cima"
+      move_down: "Mover para baixo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_no_smtp: "O envio de e-mails está desativado porque nenhum servidor SMTP foi configurado. Não é possível enviar nenhum tipo de e-mail."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários(as) que não são da equipe."
@@ -477,9 +482,6 @@ pt_BR:
     max_of_count:
       one: "máx de %{count}"
       other: "máx de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:
@@ -505,18 +507,9 @@ pt_BR:
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
         icebreakers:
-          fun_facts:
-            title: "Quais são algumas curiosidades interessantes sobre você?"
-            body: "Olá a todos! Estou animada para começar esta nova comunidade. Para começar, que tal cada um de nós compartilhar uma curiosidade sobre si? Eu começo: adoro caminhar na natureza e descobrir novas trilhas! E você? Conte algo interessante sobre você!"
-          coolest_thing_you_have_seen_today:
-            title: "Qual foi a coisa mais legal que você viu hoje?"
-            body: "Qual foi a coisa mais legal que você viu ou vivenciou hoje? Pode ser qualquer coisa, desde um lindo pôr do sol até um ato aleatório de bondade. Eu começo: vi um cachorro ajudando uma pessoa idosa a atravessar a rua!"
           introduce_yourself:
             title: "Apresente-se"
             body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
-          what_is_your_favorite_food:
-            title: "Qual é a sua comida favorita?"
-            body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
     design_wizard:
       back: "Voltar"
       next: "Próximo"
@@ -782,6 +775,10 @@ pt_BR:
       title:
         search: "Pesquisar mensagem"
         placeholder: "digite o título da mensagem, URL ou ID aqui"
+    dsa_statements:
+      category: "Categoria"
+      category_prompt: "Escolha uma categoria"
+      saving: "Salvando…"
     review:
       show_more: "Exibir mais"
       show_less: "Exibir menos"
@@ -2053,7 +2050,6 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou envie um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -2636,7 +2632,7 @@ pt_BR:
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
-      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente. :heart:"
+      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente."
     offline_indicator:
       no_internet: "Sem conexão à internet."
       refresh_page: "Atualizar página"
@@ -3100,8 +3096,7 @@ pt_BR:
       cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
-      title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -5044,9 +5039,6 @@ pt_BR:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Emblema obtido %{count} vez"
-        other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
       others_count:
         one: "Concedido a outros %{count} vez"
@@ -5829,13 +5821,13 @@ pt_BR:
             use_preset: "Configurar"
             presets:
               custom: "Personalizadas"
+            automatic: "Automático"
           authorizations:
             user: "Usuário(a)"
             last_used: "Último uso"
             status: "Status"
             actions: "Ações"
           activity:
-            rate_limits: "Limites de frequência"
             outcome: "Resultado"
             time: "Hora"
             user: "Usuário(a)"
@@ -6433,6 +6425,7 @@ pt_BR:
           series:
             anonymous: "Anônimo(a)"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"
@@ -7369,8 +7362,8 @@ pt_BR:
           upload: "Enviar"
           select_component: "Selecione um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
-          unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
+          leave: "Sair"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"
@@ -8477,13 +8470,14 @@ pt_BR:
           multiselect: "Multisseleção"
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
-        search: "Pesquise o texto que você gostaria de editar"
+        search_label: "Pesquisar"
+        theme_disabled: "Desativados"
+        filters: "Filtros"
+        status:
+          invalid: "Inválido"
         title: "Textos do site"
         edit: "Editar"
-        revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter suas alterações?"
-        go_back: "Voltar para pesquisa"
-        recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
         show_overriden: "Exibir apenas substituídos"
         show_outdated: "Mostrar somente desatualizado/inválido"
         show_untranslated: "Mostrar apenas sem tradução"

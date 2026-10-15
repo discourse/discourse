@@ -677,6 +677,7 @@ class BulkImport::Generic < BulkImport::Base
     import_engagement
     import_post_voting_votes
     import_topic_voting_votes
+    import_category_topic_voting
     import_answers
     import_gamification_scores
     import_post_events
@@ -695,6 +696,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_user_stats
     merge_delta_user_aliases if delta_import?
+    import_user_associated_groups
 
     import_permalink_normalizations
     import_permalinks
@@ -1328,6 +1330,7 @@ class BulkImport::Generic < BulkImport::Base
 
         if current_read_restricted != expected_read_restricted
           category.update_column(:read_restricted, expected_read_restricted)
+          Jobs.enqueue(:update_category_upload_security, category_id: category.id)
           updated_count += 1
         else
           skipped_count += 1
@@ -1472,6 +1475,10 @@ class BulkImport::Generic < BulkImport::Base
       update_delta_users
     end
 
+    query("SELECT id, username, email, sso_record, anonymized FROM users ORDER BY id") do |rows|
+      reserve_valid_usernames(rows)
+    end
+
     users = query(<<~SQL)
       SELECT *
       FROM users
@@ -1531,6 +1538,37 @@ class BulkImport::Generic < BulkImport::Base
 
     users.close
     finish_delta_entity(:users, :users)
+  end
+
+  # Lets each source username that is already valid claim its name before an
+  # earlier row's sanitized username can take it, so only the sanitized one
+  # receives a dedup suffix. Rows that process_user will map onto an existing
+  # user by email or external ID reserve nothing.
+  def reserve_valid_usernames(rows)
+    @reserved_usernames = {}
+    emails = Set.new
+    external_ids = Set.new
+
+    rows.each do |row|
+      next if user_id_from_imported_id(row["id"]).present? || row["anonymized"] == 1
+
+      if (email = row["email"].presence&.downcase)
+        next if @emails.key?(email) || emails.include?(email)
+      end
+
+      external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+      if external_id.present?
+        next if @external_ids.key?(external_id) || external_ids.include?(external_id)
+      end
+
+      emails.add(email) if email
+      external_ids.add(external_id) if external_id.present?
+
+      username = row["username"]
+      next if username.blank? || fix_name(username) != username
+
+      @reserved_usernames[User.normalize_username(username)] ||= row["id"].to_i
+    end
   end
 
   def update_delta_users
@@ -2009,6 +2047,71 @@ class BulkImport::Generic < BulkImport::Base
     )
   ensure
     rows&.close
+  end
+
+  # An authenticator that provides group claims rewrites each user's
+  # associated groups on every login, and only a destroyed claim row removes
+  # the user from the Discourse groups that claim granted. Imported members
+  # hold group_users rows alone, so seed the claim rows a login would have
+  # created for the linked groups they already belong to; their next login
+  # then reconciles against the provider like any other user's. A group
+  # granted by several claims seeds all of them, and the login keeps only the
+  # ones the provider still returns.
+  def import_user_associated_groups
+    puts "", "Importing user associated groups..."
+
+    provider_names = Discourse.enabled_authenticators.select(&:provides_groups?).map(&:name)
+    if provider_names.empty?
+      puts "  Skipped: no enabled authenticator provides group claims"
+      return
+    end
+
+    links =
+      GroupAssociatedGroup
+        .joins(:associated_group)
+        .where(associated_groups: { provider_name: provider_names })
+        .pluck(:group_id, :associated_group_id)
+    if links.empty?
+      puts "  Skipped: no Discourse group is linked to a #{provider_names.join(", ")} group"
+      return
+    end
+
+    associated_group_ids_by_group_id =
+      links.group_by(&:first).transform_values { |pairs| pairs.map(&:last).uniq }
+    imported_user_ids = @users.values.to_set
+    existing_claims =
+      UserAssociatedGroup
+        .where(associated_group_id: links.map(&:last).uniq)
+        .pluck(:user_id, :associated_group_id)
+        .to_set
+
+    memberships =
+      GroupUser
+        .where(group_id: associated_group_ids_by_group_id.keys)
+        .order(:user_id, :group_id)
+        .pluck(:user_id, :group_id)
+
+    seeded_associated_group_ids = Set.new
+    seeded_user_ids = Set.new
+    claims =
+      memberships.flat_map do |user_id, group_id|
+        next [] if imported_user_ids.exclude?(user_id)
+
+        associated_group_ids_by_group_id[group_id].filter_map do |associated_group_id|
+          next unless existing_claims.add?([user_id, associated_group_id])
+
+          seeded_associated_group_ids << associated_group_id
+          seeded_user_ids << user_id
+          { user_id: user_id, associated_group_id: associated_group_id }
+        end
+      end
+
+    create_user_associated_groups(claims) { |claim| claim }
+
+    # The daily cleanup drops associated groups unused for a week; the seeded
+    # claims count as use.
+    AssociatedGroup.where(id: seeded_associated_group_ids.to_a).update_all(last_used: Time.zone.now)
+    puts "  Seeded #{claims.size} group claim(s) for #{seeded_user_ids.size} imported user(s)"
   end
 
   def import_topics
@@ -3874,7 +3977,7 @@ class BulkImport::Generic < BulkImport::Base
       intermediate_group_ids = []
       if row["tag_group_ids"] && !row["tag_group_ids"].empty?
         intermediate_group_ids = JSON.parse(row["tag_group_ids"])
-      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+      elsif row["tag_group_id"].present?
         # Support old single tag_group_id
         intermediate_group_ids = [row["tag_group_id"]]
       end
@@ -4059,6 +4162,30 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  # Runs after the votes are imported because creating a CategorySetting unarchives
+  # votes of the category's existing open topics.
+  def import_category_topic_voting
+    unless defined?(DiscourseTopicVoting)
+      puts "", "Skipping topic voting categories, because the topic voting plugin is not installed."
+      return
+    end
+
+    return if table_column_names("categories").exclude?("topic_voting")
+
+    puts "", "Enabling topic voting on categories..."
+
+    rows = query("SELECT id FROM categories WHERE topic_voting = 1 ORDER BY id")
+
+    rows.each do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next unless category_id
+
+      DiscourseTopicVoting::CategorySetting.find_or_create_by!(category_id:)
+    end
+
+    rows.close
   end
 
   def import_answers
@@ -4311,6 +4438,7 @@ class BulkImport::Generic < BulkImport::Base
     rows = query(<<~SQL)
       SELECT DISTINCT badge_group
         FROM badges
+       WHERE badge_group IS NOT NULL
        ORDER BY badge_group
     SQL
 
@@ -4353,7 +4481,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]] || BadgeGrouping::Other,
         long_description: row["long_description"],
         image_upload_id:
           (

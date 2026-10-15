@@ -208,6 +208,12 @@ he:
       discourse_workflows:
         ai_agent:
           mode: "מצב"
+        classify:
+          text: "טקסט"
+          upload_ids: "תמונות"
+          name: "שם"
+          type: "סוג"
+          type_score: "ניקוד"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -633,6 +639,14 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      decision_models:
+        no_preset: "ללא"
+        display_name: "שם"
+        model: "מודל"
+        provider: "ספק"
+        edit: "עריכה"
+        delete: "מחיקה"
+        test: "הרצת בדיקה"
       mcp_servers:
         name: "שם"
         description: "תיאור"
@@ -866,9 +880,21 @@ he:
         quick_search:
           suffix: "בכל הנושאים והפוסטים עם בינה מלאכותית"
       ai_artifact:
+        editor:
+          version: "גרסה"
+          default: "ברירת מחדל"
+          apply: "החלה"
         expand_view_label: "הרחבת תצוגה"
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
+        share: "שיתוף"
+        create_link: "יצירת קישור"
+        copied: "הועתקה ללוח הגזירים"
+        copy_link: "העתקת קישור"
+        copy_embed: "העתקת הטמעה"
+        new_tab: "הצגה בלשונית חדשה"
+        filter_all: "הכול"
+        filter_standalone: "עצמאי"
       ai_bot:
         title: "בוט בינה מלאכותית"
         llm: "מודל:"

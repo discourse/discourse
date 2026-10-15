@@ -107,24 +107,6 @@ describe Jobs::GenerateAskAiReport do
     expect(report.subjects).to be_empty
   end
 
-  it "fails without publishing when the model invents ask IDs" do
-    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
-    report = request_report
-    output = {
-      insights: [],
-      summary: "Email",
-      subjects: [{ name: "Email", description: "Email questions", ask_ids: [ask.id + 1] }],
-    }
-
-    DiscourseAi::Completions::Llm.with_prepared_responses([output.to_json]) do
-      described_class.new.execute(report_id: report.id)
-    end
-
-    expect(report.reload).to be_report_status_failed
-    expect(report.topic_id).to be_nil
-    expect(report.subjects).to be_empty
-  end
-
   it "keeps ungrouped questions without requesting a second analysis" do
     grouped = AskAiLog.create!(user:, query: "Email setup", asked_at: Time.current)
     ungrouped = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
@@ -145,24 +127,73 @@ describe Jobs::GenerateAskAiReport do
     expect(report.topic_id).to be_present
   end
 
-  it "rejects duplicate assignments without requesting a corrected report" do
+  it "deduplicates subjects and removes unknown references without another analysis" do
     ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     report = request_report
-    subject = { name: "Cats", description: "Cat questions", ask_ids: [ask.id] }
-    invalid = {
+    outside_report = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
+    unknown_id = outside_report.id
+    output = {
       insights: [],
       summary: "Cats",
-      subjects: [subject.merge(ask_ids: [ask.id, ask.id])],
+      subjects: [
+        { name: "Cats", description: "Cat questions", ask_ids: [ask.id, ask.id, unknown_id] },
+        { name: "Unknown", description: "Unknown questions", ask_ids: [unknown_id] },
+      ],
     }
-    corrected = { insights: [], summary: "Cats", subjects: [subject] }
 
-    DiscourseAi::Completions::Llm.with_prepared_responses([invalid.to_json, corrected.to_json]) do
+    DiscourseAi::Completions::Llm.with_prepared_responses([output.to_json]) do
+      described_class.new.execute(report_id: report.id)
+    end
+
+    expect(report.reload).to be_report_status_completed
+    expect(report.subjects.pluck(:name)).to eq(%w[Cats Unknown])
+    expect(report.subjects.first.ask_count).to eq(1)
+    expect(report.subjects.first.ask_ai_logs).to contain_exactly(ask)
+    expect(report.subjects.last.ask_count).to eq(0)
+    expect(report.subjects.last.ask_ai_logs).to be_empty
+    expect(report.topic_id).to be_present
+  end
+
+  it "keeps subjects without valid references and places supplied questions in ungrouped" do
+    ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
+    report = request_report
+    output = {
+      insights: [],
+      summary: "Cats",
+      subjects: [
+        { name: "Unknown", description: "Unknown questions", ask_ids: [-1] },
+        { name: "Empty", description: "No references", ask_ids: [] },
+      ],
+    }
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([output.to_json]) do
+      described_class.new.execute(report_id: report.id)
+    end
+
+    expect(report.reload).to be_report_status_completed
+    expect(report.subjects.pluck(:name, :ask_count)).to eq(
+      [["Ungrouped questions", 1], ["Unknown", 0], ["Empty", 0]],
+    )
+    expect(report.subjects.first.ask_ai_logs).to contain_exactly(ask)
+    expect(report.subjects.where(ask_count: 0).flat_map(&:ask_ai_logs)).to be_empty
+  end
+
+  it "rejects malformed subject question IDs even when valid questions are included" do
+    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
+    report = request_report
+    output = {
+      insights: [],
+      summary: "Email",
+      subjects: [{ name: "Email", description: "Email questions", ask_ids: [ask.id, "invalid"] }],
+    }
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([output.to_json]) do
       described_class.new.execute(report_id: report.id)
     end
 
     expect(report.reload).to be_report_status_failed
-    expect(report.subjects).to be_empty
     expect(report.topic_id).to be_nil
+    expect(report.subjects).to be_empty
   end
 
   it "delivers to the admins group only when selected" do

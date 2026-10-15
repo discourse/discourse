@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import ChatChannelPane from "./chat-channel-pane";
+import ChatChannelPane from "./chat-channel-pane.js";
 
 export default class ChatThreadPane extends ChatChannelPane {
   @service router;

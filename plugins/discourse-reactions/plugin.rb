@@ -28,6 +28,15 @@ require_relative "lib/discourse_reactions/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::PostReaction::V1,
+        DiscourseWorkflows::Nodes::PostReactionChanged::V1,
+      ]
+    end
+  end
+
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
     app/models/discourse_reactions/reaction_user.rb

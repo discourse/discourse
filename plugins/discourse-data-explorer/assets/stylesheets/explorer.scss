@@ -385,31 +385,33 @@ table.group-reports {
     white-space: pre-wrap;
   }
 
-  .groups {
-    margin: 10px 0;
+  &__metadata-fields {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin: 10px 0;
+  }
 
-    @include viewport.until(md) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  &__metadata-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
 
-    .label {
-      margin-right: 10px;
-      color: var(--primary-high);
-    }
-
-    .name {
-      display: inline;
+    @include viewport.from(md) {
+      flex-direction: row;
+      align-items: center;
     }
 
     .select-kit.multi-select {
       @include viewport.until(md) {
-        width: 360px;
+        width: min(22.5rem, 100%);
       }
     }
+  }
+
+  &__metadata-label {
+    color: var(--primary-high);
   }
 }
 
@@ -705,6 +707,18 @@ table.group-reports {
     margin-top: 1.5em;
   }
 
+  .query-new__access-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: 1em;
+  }
+
+  .query-new__access-field {
+    flex: 1 1 15rem;
+    min-width: 0;
+  }
+
   .query-new__preview {
     margin-top: 0.5em;
   }
@@ -735,7 +749,8 @@ table.group-reports {
     min-height: 60px;
   }
 
-  .query-group-select {
+  .query-group-select,
+  .query-tag-chooser {
     width: 100%;
   }
 
@@ -980,18 +995,6 @@ table.group-reports {
     .query-name {
       color: var(--primary);
       max-width: 100%;
-    }
-
-    .query-badge {
-      font-size: var(--font-down-2);
-      padding: 0.15rem 0.3rem;
-      border-radius: 4px;
-      color: var(--primary-high);
-      background: var(--primary-low);
-      letter-spacing: 0.25px;
-      align-items: center;
-      display: inline-flex;
-      gap: var(--space-1);
     }
 
     .query-desc {

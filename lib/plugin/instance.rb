@@ -1063,10 +1063,18 @@ class Plugin::Instance
   # Register a new API key scope.
   #
   # Example:
-  # add_api_key_scope(:groups, { delete: { actions: %w[groups#add_members], params: %i[id] } })
+  # add_api_key_scope(
+  #   :groups,
+  #   { delete: { actions: %w[groups#remove_member], path_params: %i[id] } },
+  # )
   #
-  # This scope lets you add members to a group. Additionally, you can specify which group ids are allowed.
-  # The delete action is added to the groups resource.
+  # Use path_params for resource identifiers selected by the Rails route, and params for intentional
+  # query or body restrictions. Query and body values cannot satisfy path_params. Aliases are only
+  # for route parameters containing the same literal identifier. All configured restrictions in one
+  # scope row must match; use separate rows for alternate identifier systems.
+  #
+  # This scope lets you remove members from a group. Additionally, you can specify which group ids
+  # are allowed. Registering an existing resource and action replaces conflicting mapping arrays.
   def add_api_key_scope(resource, action)
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
@@ -1169,7 +1177,23 @@ class Plugin::Instance
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request
-  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+  # @param enabled [Proc, nil] site-wide condition for offering this homepage in
+  #   the admin setting; while it returns false, a site that selected it falls
+  #   back to the top menu homepage
+  # @param available [Proc, nil] called with `guardian:` and `request:` (which
+  #   may be nil); when it returns false the visitor gets the regular top menu
+  #   homepage instead. It runs whenever the homepage is resolved, including on
+  #   page loads and topic list requests, so keep it cheap.
+  def register_homepage(
+    id,
+    name:,
+    path:,
+    route:,
+    anonymous: false,
+    server_side: false,
+    enabled: nil,
+    available: nil
+  )
     id = id.to_s
 
     if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
@@ -1186,6 +1210,12 @@ class Plugin::Instance
     end
     if ![true, false].include?(server_side)
       raise ArgumentError, "homepage server_side must be true or false"
+    end
+    if !enabled.nil? && !enabled.respond_to?(:call)
+      raise ArgumentError, "homepage enabled must be callable"
+    end
+    if !available.nil? && !available.respond_to?(:call)
+      raise ArgumentError, "homepage available must be callable"
     end
 
     registered_ids =
@@ -1204,6 +1234,8 @@ class Plugin::Instance
         route: route.to_s,
         anonymous: anonymous,
         server_side: server_side,
+        enabled: enabled,
+        available: available,
       },
       self,
     )

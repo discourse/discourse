@@ -207,7 +207,7 @@ export default class InvitesShowController extends Controller {
   @computed("codeInviteStep", "showCodeInviteForm", "successMessage")
   get progressBarStep() {
     if (this.showCodeInviteForm) {
-      if (this.codeInviteStep === "complete") {
+      if (this.codeInviteStep === "signup-details") {
         return "login";
       }
 

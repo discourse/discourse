@@ -145,6 +145,17 @@ RSpec.describe Group do
   describe "validation" do
     let(:group) { build(:group) }
 
+    it "allows creating and renaming groups whose names match watched words" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      group.name = "badgers"
+
+      group.save!
+      group.update!(name: "badger_team")
+
+      expect(group.reload.name).to eq("badger_team")
+      expect(Group.can_use_name?("badgers", group)).to eq(true)
+    end
+
     it "is invalid for blank" do
       group.name = ""
       expect(group.valid?).to eq false
@@ -1985,6 +1996,16 @@ RSpec.describe Group do
       group.save!
       expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
       expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag1.id])
+    end
+
+    it "moves a tag between levels without clearing the previous level" do
+      group.update!(tracking_tags: [tag1.name])
+
+      group.reload.update!(watching_tags: [tag1.name])
+
+      expect(
+        group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+      ).to eq([[tag1.id, NotificationLevels.all[:watching]]])
     end
 
     it "can apply default notifications for admins group" do

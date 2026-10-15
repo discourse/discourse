@@ -34,6 +34,26 @@ module("Voice | Unit | Lib | transcript-markdown", function (hooks) {
     );
   });
 
+  test("names the room as the source on the first entry only", function (assert) {
+    const markdown = transcriptToMarkdown(entries, { roomName: "Weekly sync" });
+
+    assert.strictEqual(
+      markdown,
+      [
+        '[chat quote="alice;7;2026-08-20T16:38:24.000Z" source="Weekly sync" sourceType=voice chained="true"]\nhello world\n[/chat]',
+        '[chat quote="bob;8;2026-08-20T16:38:46.000Z" chained="true"]\nhi there\n[/chat]',
+      ].join("\n\n")
+    );
+  });
+
+  test("keeps a room name with quotes in one attribute", function (assert) {
+    const markdown = transcriptToMarkdown(entries, {
+      roomName: 'The "big" room',
+    });
+
+    assert.true(markdown.includes(` source='The "big" room' `));
+  });
+
   test("falls back to plain quotes without chat markup", function (assert) {
     const markdown = transcriptToMarkdown(entries, { chatMarkup: false });
 

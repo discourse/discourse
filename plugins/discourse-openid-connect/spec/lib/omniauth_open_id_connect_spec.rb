@@ -33,6 +33,47 @@ describe OmniAuth::Strategies::OpenIDConnect do
 
   after { OmniAuth.config.test_mode = false }
 
+  describe "#info" do
+    let(:userinfo) { { "email" => "standard@example.com", "mail" => "custom@example.com" } }
+    let(:id_token) { { "email" => "token@example.com", "mail" => "custom-token@example.com" } }
+
+    before do
+      strategy.stubs(:userinfo_response).returns(userinfo)
+      strategy.stubs(:id_token_info).returns(id_token)
+    end
+
+    it "uses the standard email claim by default" do
+      expect(strategy.info[:email]).to eq(userinfo["email"])
+    end
+
+    it "uses the configured claim from UserInfo" do
+      strategy.options.email_claim = "mail"
+
+      expect(strategy.info[:email]).to eq(userinfo["mail"])
+    end
+
+    it "uses the configured claim from the ID token when UserInfo is disabled" do
+      strategy.options.email_claim = "mail"
+      strategy.options.use_userinfo = false
+
+      expect(strategy.info[:email]).to eq(id_token["mail"])
+    end
+
+    it "omits a missing configured claim without falling back to another email" do
+      strategy.options.email_claim = "mail"
+      userinfo.delete("mail")
+
+      expect(strategy.info).not_to have_key(:email)
+    end
+
+    it "omits a non-string email claim" do
+      strategy.options.email_claim = "mail"
+      userinfo["mail"] = ["custom@example.com"]
+
+      expect(strategy.info).not_to have_key(:email)
+    end
+  end
+
   context "when discovery document is missing" do
     let(:discovery_document) { nil }
 

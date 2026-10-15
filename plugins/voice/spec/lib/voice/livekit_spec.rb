@@ -97,7 +97,6 @@ RSpec.describe Voice::Livekit do
     end
 
     it "mints a least-privilege token for a speaker in a video room" do
-      SiteSetting.voice_video_enabled = true
       room.update!(video_enabled: true)
 
       freeze_time
@@ -125,8 +124,27 @@ RSpec.describe Voice::Livekit do
       )
     end
 
+    it "grants only the camera source when screen sharing is not allowed" do
+      SiteSetting.voice_screen_share_allowed_groups = ""
+      room.update!(video_enabled: true)
+
+      payload = decoded_token
+
+      expect(payload["video"]["canPublishSources"]).to eq(%w[microphone camera])
+    end
+
+    it "grants only the screen sources when the camera is not allowed" do
+      SiteSetting.voice_video_allowed_groups = ""
+      room.update!(video_enabled: true)
+
+      payload = decoded_token
+
+      expect(payload["video"]["canPublishSources"]).to eq(
+        %w[microphone screen_share screen_share_audio],
+      )
+    end
+
     it "grants only the microphone source when the room has no video" do
-      SiteSetting.voice_video_enabled = true
       room.update!(video_enabled: false)
 
       payload = decoded_token
@@ -146,7 +164,6 @@ RSpec.describe Voice::Livekit do
     end
 
     it "grants all publish sources to a stage speaker when the room has video" do
-      SiteSetting.voice_video_enabled = true
       room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE, video_enabled: true)
       room.room_memberships.create!(user: user, role: Voice::RoomMembership::ROLE_SPEAKER)
 
@@ -159,7 +176,6 @@ RSpec.describe Voice::Livekit do
     end
 
     it "grants only the microphone to a stage speaker when the room has no video" do
-      SiteSetting.voice_video_enabled = true
       room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE, video_enabled: false)
       room.room_memberships.create!(user: user, role: Voice::RoomMembership::ROLE_SPEAKER)
 

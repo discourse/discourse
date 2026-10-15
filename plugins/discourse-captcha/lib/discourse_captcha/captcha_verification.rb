@@ -14,7 +14,9 @@ module DiscourseCaptcha
       captcha_token = captcha_provider.fetch_captcha_token(server_session)
       return :captcha_verification_failed if captcha_token.blank?
 
-      validate_captcha_response(captcha_provider.send_captcha_verification(captcha_token))
+      captcha_provider.validate_captcha_response(
+        captcha_provider.send_captcha_verification(captcha_token),
+      )
       nil
     rescue StandardError => e
       Rails.logger.warn("Captcha verification error: #{e.class} - #{e.message}")
@@ -27,19 +29,16 @@ module DiscourseCaptcha
         if SiteSetting.hcaptcha_site_key.present? && SiteSetting.hcaptcha_secret_key.present?
           DiscourseCaptcha::HcaptchaProvider.new
         end
-      when CaptchaProvider::RECAPTCHA
-        if SiteSetting.recaptcha_site_key.present? && SiteSetting.recaptcha_secret_key.present?
+      when CaptchaProvider::RECAPTCHA_V2
+        if SiteSetting.recaptcha_v2_site_key.present? &&
+             SiteSetting.recaptcha_v2_secret_key.present?
           DiscourseCaptcha::RecaptchaProvider.new
         end
-      end
-    end
-
-    def validate_captcha_response(response)
-      raise Discourse::InvalidAccess if response.code.to_i >= 500
-
-      response_json = JSON.parse(response.body)
-      if response_json["success"].nil? || response_json["success"] == false
-        raise Discourse::InvalidAccess
+      when CaptchaProvider::RECAPTCHA_V3
+        if SiteSetting.recaptcha_v3_site_key.present? &&
+             SiteSetting.recaptcha_v3_secret_key.present?
+          DiscourseCaptcha::RecaptchaV3Provider.new
+        end
       end
     end
   end

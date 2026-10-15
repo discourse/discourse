@@ -11,8 +11,8 @@ interface BaseAutocompleteResult {
  */
 export interface UserAutocompleteResult extends BaseAutocompleteResult {
   isUser: true;
-  isEmail?: never;
-  isGroup?: never;
+  isEmail?: false;
+  isGroup?: false;
   username: string;
   name?: string;
   status?: unknown;
@@ -23,9 +23,9 @@ export interface UserAutocompleteResult extends BaseAutocompleteResult {
  * Email autocomplete result type
  */
 export interface EmailAutocompleteResult extends BaseAutocompleteResult {
-  isUser?: never;
+  isUser?: false;
   isEmail: true;
-  isGroup?: never;
+  isGroup?: false;
   username: string;
 }
 
@@ -33,8 +33,8 @@ export interface EmailAutocompleteResult extends BaseAutocompleteResult {
  * Group autocomplete result type
  */
 export interface GroupAutocompleteResult extends BaseAutocompleteResult {
-  isUser?: never;
-  isEmail?: never;
+  isUser?: false;
+  isEmail?: false;
   isGroup: true;
   name: string;
   full_name?: string;

@@ -1,5 +1,5 @@
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import sanitizeError from "./sanitize-error";
+import sanitizeError from "./sanitize-error.js";
 
 // The diagnostic message must contain only trusted metadata. Error details
 // belong in the optional error argument so they pass through sanitization.

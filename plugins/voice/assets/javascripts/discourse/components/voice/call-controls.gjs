@@ -15,22 +15,22 @@ import { i18n } from "discourse-i18n";
 import {
   isAiMode,
   NOISE_SUPPRESSION_MODES,
-} from "../../lib/voice/audio-processing";
+} from "../../lib/voice/audio-processing.js";
 import {
   enumerateAudioDevices,
   enumerateVideoDevices,
   outputSelectionSupported,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/voice/media-devices";
-import { prefetchEngineAssets } from "../../lib/voice/noise-suppression";
+} from "../../lib/voice/media-devices.js";
+import { prefetchEngineAssets } from "../../lib/voice/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
-} from "../../lib/voice/ns-engines";
-import { queuePosition } from "../../lib/voice/speak-queue";
-import VoiceVideoSettingsModal from "../modal/voice-video-settings";
-import VoiceVoiceSettingsModal from "../modal/voice-voice-settings";
-import VoiceCallSubmenu from "./call-submenu";
+} from "../../lib/voice/ns-engines.js";
+import { queuePosition } from "../../lib/voice/speak-queue.js";
+import VoiceVideoSettingsModal from "../modal/voice-video-settings.gjs";
+import VoiceVoiceSettingsModal from "../modal/voice-voice-settings.gjs";
+import VoiceCallSubmenu from "./call-submenu.gjs";
 
 const AUDIO_MENU = "voice-audio-menu";
 const VIDEO_MENU = "voice-video-menu";
@@ -63,6 +63,10 @@ export default class VoiceCallControls extends Component {
     return this.voiceWebrtc.videoAllowedIn(this.room);
   }
 
+  get screenShareAllowed() {
+    return this.voiceWebrtc.screenShareAllowedIn(this.room);
+  }
+
   get cameraActive() {
     return this.voiceWebrtc.localVideoKind === "camera";
   }
@@ -73,19 +77,19 @@ export default class VoiceCallControls extends Component {
 
   get cameraDisabled() {
     return (
-      !this.cameraActive && !this.voiceWebrtc.canPublishVideo(this.room?.id)
+      !this.cameraActive && !this.voiceWebrtc.canPublishCamera(this.room?.id)
     );
   }
 
   get screenShareDisabled() {
     return (
       !this.screenShareActive &&
-      !this.voiceWebrtc.canPublishVideo(this.room?.id)
+      !this.voiceWebrtc.canPublishScreen(this.room?.id)
     );
   }
 
   get showScreenShare() {
-    return this.videoAllowed && this.voiceWebrtc.screenShareSupported;
+    return this.screenShareAllowed && this.voiceWebrtc.screenShareSupported;
   }
 
   get #ownParticipant() {

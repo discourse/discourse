@@ -69,20 +69,17 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
   });
 
   test("trigger label reacts to @period changes", async function (assert) {
-    class State {
-      @tracked period = "last_30_days";
-    }
-    const state = new State();
+    const period = tracked("last_30_days");
 
     await render(
-      <template><DashboardDateRange @period={{state.period}} /></template>
+      <template><DashboardDateRange @period={{period.value}} /></template>
     );
 
     assert
       .dom(".db-date-range__trigger .d-button-label")
       .hasText("Last 30 days");
 
-    state.period = "last_7_days";
+    period.value = "last_7_days";
     await settled();
 
     assert

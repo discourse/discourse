@@ -331,7 +331,6 @@ cs:
       zh_CN:
         name: Čínština zjednodušená
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek č.%{postNumber} od @%{username}"
       close: "zavřít"
       twitter: "Sdílet na X"
@@ -385,6 +384,12 @@ cs:
     skip_to_last_reply: "Přejít na poslední odpověď"
     skip_to_top: "Přejít na začátek"
     skip_user_nav: "Přejít na obsah profilu"
+    reorder:
+      remove: "Odstranit %{label}"
+      removed: "Odebráno %{label}"
+      move_up: "Posunout nahoru"
+      move_down: "Posunout dolů"
+      position: "%{position} z %{total}"
     emails_are_disabled: "Všechny odchozí e-maily byly globálně zakázány správcem. Nebudou zasílána žádná e-mailová oznámení jakéhokoli druhu."
     emails_are_disabled_non_staff: "Odchozí e-maily byly zakázány pro uživatele, kteří nejsou členy redakce."
     software_update_prompt:
@@ -500,11 +505,6 @@ cs:
       few: "max z %{count}"
       many: "max z %{count}"
       other: "max z %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znaky"
-      many: "%{count} znaků"
-      other: "%{count} znaků"
     period_chooser:
       aria_label: "Filtrovat dle období"
     related_messages:
@@ -821,6 +821,10 @@ cs:
       title:
         search: "Vyhledat zprávu"
         placeholder: "zde zadejte název tématu, adresu URL nebo id"
+    dsa_statements:
+      category: "Kategorie"
+      category_prompt: "Vyberte kategorii"
+      saving: "Ukládání…"
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"
@@ -2148,7 +2152,6 @@ cs:
         upload_title: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš obrázek; šířka a délka nebyla stejná."
         logo_small: "Malé logo webu. Používá se ve výchozím nastavení."
-        use_custom: "Nebo nahrajte vlastní avatar:"
       change_profile_background:
         title: "Záhlaví profilu"
         instructions: "Záhlaví profilu bude vycentrována a má výchozí šířku 1110px."
@@ -2774,7 +2777,7 @@ cs:
       hide_forever: "děkuji, ne"
       hidden_for_session: "Dobře, zeptáme se vás zítra. K vytvoření účtu můžete kdykoli použít také funkci \"Přihlásit se\"."
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
-      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá. :heart:"
+      value_prop: "Už vás nebaví procházet stejné příspěvky? Když si vytvoříte účet, vždy se vrátíte tam, kde jste skončili. S účtem můžete být také upozorňováni na nové odpovědi, ukládat záložky a používat lajky jako poděkování ostatním. Všichni můžeme spolupracovat na tom, aby tato komunita byla skvělá."
     offline_indicator:
       no_internet: "Žádné internetové připojení."
       refresh_page: "Obnovit stránku"
@@ -3244,8 +3247,7 @@ cs:
       discard: "Zrušit"
       draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
-      title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
-      title_placeholder_redesign: "Název"
+      title_placeholder: "Název"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
       edit_reason_placeholder: "Proč byla nutná úprava?"
       topic_featured_link_placeholder: "Zadejte odkaz s titulkem"
@@ -5363,11 +5365,6 @@ cs:
       admin:
         title: "Administrace"
     badges:
-      earned_n_times:
-        one: "Získal/a tento odznak %{count} krát"
-        few: "Získal/a tento odznak %{count} krát"
-        many: "Získal/a tento odznak %{count} krát"
-        other: "Získal/a tento odznak %{count} krát"
       granted_on: "Udělen %{date}"
       others_count:
         one: "Uděleno ostatním %{count}x"
@@ -6169,13 +6166,13 @@ cs:
             block: "Zablokovat"
             presets:
               custom: "Přizpůsobené"
+            automatic: "Automatické"
           authorizations:
             user: "Uživatel"
             last_used: "Poslední použití"
             status: "Stav"
             actions: "Akce"
           activity:
-            rate_limits: "Limity"
             outcome: "Výsledky"
             time: "Čas"
             user: "Uživatel"
@@ -6758,6 +6755,7 @@ cs:
           series:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
+          crawler_learn_more: "Zjistit více"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
@@ -7718,8 +7716,8 @@ cs:
           upload: "Nahrát"
           select_component: "Vyberte komponentu…"
           unsaved_changes_alert: "Ještě jste neuložili své změny, chcete je zahodit a pokračovat?"
-          unsaved_parent_themes: "Nepřiřadili jste komponentu k žádným motivům, chcete pokračovat?"
           discard: "Zahodit"
+          leave: "Opustit"
           stay: "Stay"
           css_html: "Vlastní kód"
           edit_css_html: "Upravit kód"
@@ -8862,13 +8860,12 @@ cs:
           multiselect: "Více možností"
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
-        search: "Vyhledejte text, který chcete upravit"
+        search_label: "Vyhledat"
+        theme_disabled: "Vypnuto"
+        filters: "Filtry"
         title: "Texty"
         edit: "Upravit"
-        revert: "Vrátit změny"
         revert_confirm: "Opravdu chcete vrátit změny?"
-        go_back: "Zpět na hledání"
-        recommended: "Doporučujeme přizpůsobit následující texty tak, aby vyhovovaly vašim potřebám:"
         show_overriden: "Zobrazit pouze změněné"
         show_outdated: "Zobrazit pouze zastaralé/neplatné"
         show_untranslated: "Zobrazit pouze nepřeložené"

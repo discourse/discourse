@@ -15,8 +15,8 @@ import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { loadCategories } from "../lib/boards-categories";
-import BoardsBoardSettings from "./modal/boards-board-settings";
+import { loadCategories } from "../lib/boards-categories.js";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
 
 export default class BoardsPage extends Component {
   @service modal;

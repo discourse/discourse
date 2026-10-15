@@ -26,6 +26,12 @@ hr:
           actions:
             duplicate: "Dupliciraj"
             delete: "Izbriši"
+        reorderable_list:
+          policies_pinned: "Zakvačeno"
+          policies_required: "Potrebno"
+          table_field: "Polje"
+          table_type: "Tip"
+          cross_list_primary: "Primarna"
         font_scale:
           title: "Sustav fonta"
         colors:

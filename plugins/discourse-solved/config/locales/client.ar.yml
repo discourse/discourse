@@ -67,6 +67,12 @@ ar:
                 slower: "أبطأ بمقدار %{duration}"
                 tooltip: "اتجاه متوسط وقت الاستجابة"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "التغييرات"
+        changes_removed: "تمت إزالتها"
+        tag_names: "الوسوم"
+        tag_names_description: "التشغيل للموضوعات التي تحتوي على واحد على الأقل من تلك الوسوم"
     notifications:
       alt:
         solved:

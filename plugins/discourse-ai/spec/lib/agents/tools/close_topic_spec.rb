@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::CloseTopic do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
 
@@ -17,6 +17,40 @@ RSpec.describe DiscourseAi::Agents::Tools::CloseTopic do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews both directions with the topic title and explicit states" do
+    target = topic
+    target.update!(closed: false)
+    action_tool = tool(topic_id: target.id, closed: true, reason: "Testing")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(action_tool.approval_title))
+    expect(title.at_css("a").text).to eq(target.title)
+    expect(title.at_css("a")["href"]).to eq(target.url)
+    expect(action_tool.approval_changes).to eq(
+      [{ label: "Changing status:", before: "Open", after: "Closed" }],
+    )
+    expect(action_tool.approval_parameters).to be_empty
+    expect(target.reload.closed).to eq(false)
+
+    target.update!(closed: true)
+    expect(tool(topic_id: target.id, closed: false, reason: "Testing").approval_changes).to eq(
+      [{ label: "Changing status:", before: "Closed", after: "Open" }],
+    )
+  end
+
+  it "falls back to the generic preview when the requester cannot see the topic" do
+    private_topic = Fabricate(:topic, category: Fabricate(:private_category, group: Group[:staff]))
+    requester_context = DiscourseAi::Agents::BotContext.new(user: Fabricate(:user))
+    action_tool =
+      described_class.new(
+        { topic_id: private_topic.id, closed: true, reason: "Testing" },
+        bot_user: bot_user,
+        llm: llm,
+        context: requester_context,
+      )
+
+    expect(action_tool.approval_title).to eq(action_tool.summary)
+    expect(action_tool.approval_changes).to be_empty
+  end
 
   it "closes the topic when closed is true" do
     result = tool(topic_id: topic.id, closed: true, reason: "Off-topic discussion").invoke

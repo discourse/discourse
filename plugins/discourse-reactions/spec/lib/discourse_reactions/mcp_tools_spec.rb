@@ -4,25 +4,34 @@ describe DiscourseReactions::McpTools::SetReaction do
   fab!(:user)
   fab!(:post)
 
+  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: user.guardian) }
+
   before do
     SiteSetting.discourse_reactions_enabled = true
     SiteSetting.discourse_reactions_enabled_reactions = "laughing"
   end
 
-  it "rejects a reaction that is not enabled" do
-    request_context = instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
-
-    expect do
-      described_class.call(
-        arguments: {
-          "post_id" => post.id,
-          "reaction" => "disabled-reaction",
-        },
-        request_context:,
-      )
-    end.to raise_error(DiscourseMcp::ToolError)
-    expect(DiscourseReactions::Reaction.find_by(post:, reaction_value: "disabled-reaction")).to eq(
-      nil,
+  def set_reaction(reaction)
+    described_class.call(
+      arguments: {
+        "post_id" => post.id,
+        "reaction" => reaction,
+      },
+      request_context:,
     )
+  end
+
+  it "reacts to the post" do
+    expect(set_reaction("laughing")).to include(
+      structuredContent: {
+        post_id: post.id,
+        reaction: "laughing",
+      },
+    )
+    expect(DiscourseReactions::ReactionManager.reaction_value_for(user:, post:)).to eq("laughing")
+  end
+
+  it "rejects a reaction that is not enabled" do
+    expect { set_reaction("disabled-reaction") }.to raise_error(DiscourseMcp::ToolError)
   end
 end

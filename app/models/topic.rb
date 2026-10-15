@@ -352,6 +352,20 @@ class Topic < ActiveRecord::Base
           )
         end
 
+  scope :allowed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
+    EXISTS (
+      SELECT 1
+      FROM topic_allowed_users tau
+      WHERE tau.topic_id = topics.id AND tau.user_id = :user_id
+    )
+    OR EXISTS (
+      SELECT 1
+      FROM topic_allowed_groups tg
+      JOIN group_users gu ON gu.group_id = tg.group_id AND gu.user_id = :user_id
+      WHERE tg.topic_id = topics.id
+    )
+  SQL
+
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
@@ -939,7 +953,6 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
-    DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
 
     if status == "closed"
       StaffActionLogger.new(user).log_topic_closed(self, closed: enabled)
@@ -1700,10 +1713,10 @@ class Topic < ActiveRecord::Base
     @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
-  def delete_topic_timer(status_type, by_user: Discourse.system_user)
+  def delete_topic_timer(status_type, by_user: Discourse.system_user, reason: :cancelled)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
-    topic_timers.find_by(options)&.trash!(by_user)
+    topic_timers.find_by(options)&.finish!(reason, by_user: by_user)
     @public_topic_timer = nil
     nil
   end
@@ -2426,7 +2439,7 @@ end
 #  index_topics_on_pinned_globally                  (pinned_globally) WHERE pinned_globally
 #  index_topics_on_pinned_until                     (pinned_until) WHERE (pinned_until IS NOT NULL)
 #  index_topics_on_timestamps_private               (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
-#  index_topics_on_updated_at_for_locale_detection  (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
-#  index_topics_on_updated_at_for_localization      (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_topics_on_updated_at_for_locale_detection  (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_topics_on_updated_at_for_localization      (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_topics_on_updated_at_public                (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

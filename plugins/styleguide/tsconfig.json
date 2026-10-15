@@ -7,9 +7,13 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/styleguide/*": ["./assets/javascripts/*"],
-      "discourse/plugins/styleguide/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/styleguide/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
   }

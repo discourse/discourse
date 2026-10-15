@@ -86,25 +86,37 @@ export default class VoiceRecordingList extends Component {
       {{/unless}}
 
       {{#if this.recordings.length}}
-        <table class="d-admin-table voice-recordings__table">
-          <thead>
+        <table class="d-table voice-recordings__table">
+          <thead class="d-table__header">
             <tr>
-              <th>{{i18n "voice.admin.recordings.room"}}</th>
-              <th>{{i18n "voice.admin.recordings.requested_by"}}</th>
-              <th>{{i18n "voice.admin.recordings.status"}}</th>
-              <th>{{i18n "voice.admin.recordings.started_at"}}</th>
-              <th>{{i18n "voice.admin.recordings.duration"}}</th>
-              <th>{{i18n "voice.admin.recordings.file"}}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.room"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.requested_by"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.status"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.started_at"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.duration"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "voice.admin.recordings.file"
+                }}</th>
             </tr>
           </thead>
           <tbody>
             {{#each this.recordings as |recording|}}
-              <tr class="d-admin-row__content">
-                <td class="d-admin-row__overview voice-recordings__room">
+              <tr class="d-table__row">
+                <td class="d-table__cell --overview voice-recordings__room">
                   {{recording.room_name}}
                 </td>
-                <td class="d-admin-row__detail voice-recordings__requester">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-recordings__requester">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.recordings.requested_by"}}
                   </div>
                   {{#if recording.started_by}}
@@ -114,8 +126,8 @@ export default class VoiceRecordingList extends Component {
                     -
                   {{/if}}
                 </td>
-                <td class="d-admin-row__detail voice-recordings__status">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-recordings__status">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.recordings.status"}}
                   </div>
                   <span
@@ -124,20 +136,20 @@ export default class VoiceRecordingList extends Component {
                     {{this.statusLabel recording.status}}
                   </span>
                 </td>
-                <td class="d-admin-row__detail voice-recordings__started-at">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-recordings__started-at">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.recordings.started_at"}}
                   </div>
                   {{dFormatDate recording.started_at leaveAgo="true"}}
                 </td>
-                <td class="d-admin-row__detail voice-recordings__duration">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-recordings__duration">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.recordings.duration"}}
                   </div>
                   {{this.formatDuration recording.duration_ms}}
                 </td>
-                <td class="d-admin-row__detail voice-recordings__file">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail voice-recordings__file">
+                  <div class="d-table__mobile-label">
                     {{i18n "voice.admin.recordings.file"}}
                   </div>
                   {{#if (this.isDownloadUrl recording.location)}}

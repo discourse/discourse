@@ -85,6 +85,31 @@ RSpec.describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
+      it "logs unexpected upload errors and returns a generic message" do
+        error =
+          Discourse::Utils::CommandError.new(
+            "magick /private/tmp/upload.png /private/tmp/image.jpg\nImage conversion failed",
+          )
+        FileStore::LocalStore.any_instance.stubs(:store_upload).raises(error)
+
+        logger =
+          track_log_messages do
+            post "/uploads.json", params: { file: logo, upload_type: "composer" }
+          end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          "failed" => "FAILED",
+          "message" => I18n.t("upload.failed"),
+        )
+        expect(logger.errors.join("\n")).to include(
+          "Failed to create upload",
+          error.class.name,
+          error.message,
+          error.backtrace.first,
+        )
+      end
+
       it 'returns "raw" url for site settings' do
         set_cdn_url "https://awesome.com"
 
@@ -1139,6 +1164,20 @@ RSpec.describe UploadsController do
 
     context "when the store is not external" do
       before { sign_in(user) }
+
+      it "returns 404 even when direct S3 uploads are enabled" do
+        SiteSetting.enable_s3_uploads = false
+        SiteSetting.enable_direct_s3_uploads = true
+
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+
+        expect(response.status).to eq(404)
+      end
 
       it "returns 404" do
         post "/uploads/generate-presigned-put.json",

@@ -95,10 +95,6 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
-  def is_gzip_req?
-    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
-  end
-
   def generate_import_map(plugin_assets)
     imports =
       plugin_assets
@@ -150,11 +146,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.sub("/assets/js/", "/assets/br/")
-      elsif is_gzip_req?
-        path = path.sub("/assets/js/", "/assets/gz/")
-      end
+      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
     end
 
     path
@@ -684,6 +676,7 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    return if scheme_id.nil?
 
     @user_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,
@@ -711,6 +704,7 @@ module ApplicationHelper
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    return if scheme_id.nil?
 
     @user_dark_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,

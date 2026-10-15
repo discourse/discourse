@@ -68,6 +68,7 @@ module Boards
               Publisher.publish_card_deleted!(
                 board,
                 adopted_floater_id,
+                topic: false,
                 client_id: message_bus_client_id,
               )
               Publisher.publish_card_created!(
@@ -153,7 +154,12 @@ module Boards
           service_params.deep_merge(params: { board_id: params[:board_id], id: params[:id] }),
         ) do
           on_success do |card:, board:|
-            Publisher.publish_card_deleted!(board, card.id, client_id: message_bus_client_id)
+            Publisher.publish_card_deleted!(
+              board,
+              card.id,
+              topic: card.topic?,
+              client_id: message_bus_client_id,
+            )
 
             if card.topic.present?
               Publisher.publish_topic_memberships_changed!(

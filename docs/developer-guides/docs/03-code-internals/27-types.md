@@ -49,6 +49,10 @@ To do so, temporarily change the plugin or theme's `package.json` to:
 
 Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
 
+## Relative imports
+
+Relative imports name the file with its extension: `./foo.ts`, `./foo.js`, `./foo.gts`, `./foo.gjs`. TypeScript 7 only resolves a `.gts` or `.gjs` module when the specifier carries the extension, and the same rule is applied to every extension so that the type checker, the build and ESLint agree. ESLint reports a missing extension and adds it with `--fix`.
+
 ## Enable checking for a file
 
 `.ts` and `.gts` files are always type-checked. For `.js` / `.gjs` files, type-checking is opt-in: add `/** @ts-check */` at the top. For some examples, search Discourse core for `@ts-check`.

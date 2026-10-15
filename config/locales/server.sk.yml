@@ -5,8 +5,20 @@
 # https://translate.discourse.org/
 
 sk:
+  markdown_endpoints:
+    latest: "Najnovšie"
+    categories: "Kategórie"
+    tags: "Značky"
+    previous_page: "Predchádzajúca stránka"
+    next_page: "Nasledujúca stránka"
+    replies: "Odpovede"
+    last_updated: "Posledná aktualizácia"
+    event:
+      location: "Poloha"
+      link: "Odkaz"
   mcp:
     errors:
+      category_not_found: "Kategória sa nenašla"
       draft_too_long: "Koncept je príliš dlhý"
       topic_not_found: "Téma sa nenašla"
     oauth:

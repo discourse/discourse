@@ -84,7 +84,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DDateInput`, `DDatePicker`, `DTimeInput`, `DDateTimeInput`, `DDateTimeInputRange`, `DFutureDateInput`, `DRelativeTimePicker`, `DTimeShortcutPicker`, `DCalendarDateTimeInput` | Dates, times, and ranges.                   | [Date/time inputs](https://meta.discourse.org/styleguide/atoms/date-time-inputs) |
 | `DOtp`, `DSecondFactorInput`                                                                                                                                                   | One-time codes.                             | [OTP](https://meta.discourse.org/styleguide/atoms/otp)                           |
 | `DFilterInput`, `DFilterControls`                                                                                                                                              | Filter a list.                              |                                                                                  |
-| `DColorPicker`, `DIconGridPicker`, `DPickFilesButton`                                                                                                                          | Specialised pickers.                        |                                                                                  |
+| `DIconGridPicker`, `DPickFilesButton`                                                                                                                                          | Specialised pickers.                        |                                                                                  |
 | `DCharCounter`, `DInputTip`, `DPopupInputTip`                                                                                                                                  | Feedback attached to an input.              | [Char counter](https://meta.discourse.org/styleguide/molecules/char-counter)     |
 | `DAccessControl`, `DAccessControlField`                                                                                                                                        | Edit access control lists.                  |                                                                                  |
 | `DEditor`                                                                                                                                                                      | The composer's markdown editor.             |                                                                                  |
@@ -100,6 +100,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DTabs`                                                 | Tab panels switched in place, with the strip, keyboard cursor, and ARIA pairing built in.                                      | [Tabs](https://meta.discourse.org/styleguide/molecules/tabs)                           |
 | `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.                                                     |                                                                                        |
 | `DVirtualList`                                          | Long lists that render only the rows in view.                                                                                  | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)           |
+| `DReorderableList`, `DReorderableListGroup`             | Lists the user can reorder by drag, a move menu, or the keyboard. The group lets a row move between lists.                     | [Reorderable list](https://meta.discourse.org/styleguide/molecules/reorderable-list)   |
 | `DStatTiles`                                            | Rows of headline numbers.                                                                                                      |                                                                                        |
 | `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                                                                     |                                                                                        |
 | `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                          |                                                                                        |
@@ -202,7 +203,7 @@ Use the buckets that apply; a two-file split needs only `types.ts`. What goes wh
 - **`-internals/constants.ts`** exists so two collaborators that must agree on a value (a menu identifier, a selector) import it rather than restating it.
 - **`README.md`** explains the split: what each collaborator owns, the invariants that cross files, and the design decisions a future reader would otherwise undo.
 
-Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers.
+Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers. [Private modules](32-private-modules.md) covers where a shared mechanism goes and how to move one out of a single owner.
 
 # Blast radius and backward compatibility
 
@@ -237,3 +238,4 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Designing for devices](28-designing-for-devices.md) and [responsive widths](29-designing-for-responsive-widths.md).
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
+- [Private modules](32-private-modules.md) for where `-internals` code goes.

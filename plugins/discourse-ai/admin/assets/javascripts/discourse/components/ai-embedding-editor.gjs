@@ -19,7 +19,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiSecretSelector from "./ai-secret-selector";
+import AiSecretSelector from "discourse/plugins/discourse-ai/discourse/components/ai-secret-selector";
 
 export default class AiEmbeddingEditor extends Component {
   @service toasts;

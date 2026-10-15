@@ -4,8 +4,8 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import UserChooserComponent from "discourse/select-kit/components/user-chooser";
-import EmailGroupUserChooserFilter from "./email-group-user-chooser-filter";
-import EmailGroupUserChooserRow from "./email-group-user-chooser-row";
+import EmailGroupUserChooserFilter from "./email-group-user-chooser-filter.js";
+import EmailGroupUserChooserRow from "./email-group-user-chooser-row.gjs";
 
 @classNames("email-group-user-chooser")
 @classNameBindings("selectKit.options.fullWidthWrap:full-width-wrap")

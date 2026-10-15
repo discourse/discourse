@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import laterFn from "../../../modifiers/chat/later-fn";
+import laterFn from "../../../modifiers/chat/later-fn.js";
 
 export default class MentionWithoutMembership extends Component {
   @service("chat-api") chatApi;

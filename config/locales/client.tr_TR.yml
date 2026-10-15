@@ -289,7 +289,6 @@ tr_TR:
       zh_CN:
         name: Basitleştirilmiş Çince
     share:
-      topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
       twitter: "X'te paylaş"
@@ -344,6 +343,12 @@ tr_TR:
     skip_to_last_reply: "Son cevaba atla"
     skip_to_top: "En üste atla"
     skip_user_nav: "Profil içeriğine atla"
+    reorder:
+      remove: "%{label} öğesini kaldır"
+      removed: "%{label} kaldırıldı"
+      move_up: "Yukarı taşı"
+      move_down: "Aşağı taşı"
+      position: "%{position} / %{total}"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     emails_are_disabled_no_smtp: "SMTP sunucusu yapılandırılmadığı için giden tüm e-postalar devre dışı bırakılmıştır. Hiçbir tür e-posta gönderilemez."
     emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
@@ -478,9 +483,6 @@ tr_TR:
     max_of_count:
       one: "maksimum %{count}"
       other: "maksimum %{count}"
-    character_count:
-      one: "%{count} karakter"
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Döneme göre filtrele"
     related_messages:
@@ -506,18 +508,9 @@ tr_TR:
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
         icebreakers:
-          fun_facts:
-            title: "Hakkında ilginç bilgiler nelerdir?"
-            body: "Herkese merhaba! Bu yeni topluluğu başlatmaktan dolayı çok heyecanlıyım. Başlangıç olarak, kendimizle ilgili eğlenceli bir bilgi paylaşalım. Ben başlayayım: Yürüyüş yapmayı ve yeni parkurları keşfetmeyi seviyorum! Sizinle ilgili ilginç bir şey nedir?"
-          coolest_thing_you_have_seen_today:
-            title: "Bugün gördüğün en havalı şey neydi?"
-            body: "Bugün gördüğün veya yaşadığın en havalı şey neydi? Güzel bir gün batımı ya da rastgele bir iyilik hareketi gibi herhangi bir şey olabilir. Ben başlayayım: Bir köpeğin yaşlı bir insana karşıdan karşıya geçmesine yardım ettiğini gördüm!"
           introduce_yourself:
             title: "Kendinizi tanıtın"
             body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
-          what_is_your_favorite_food:
-            title: "En sevdiğin yemek nedir?"
-            body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
     design_wizard:
       back: "Geri"
       next: "Sonraki"
@@ -787,6 +780,10 @@ tr_TR:
       title:
         search: "Mesaj Arama"
         placeholder: "mesaj başlığını, url'yi veya kimliği buraya yazın"
+    dsa_statements:
+      category: "Kategori"
+      category_prompt: "Kategori seçin"
+      saving: "Kaydediliyor…"
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"
@@ -2055,7 +2052,6 @@ tr_TR:
         upload_title: "Resminizi yükleyin"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kırptık."
         logo_small: "Sitenin küçük logosu. Varsayılan olarak kullanılır."
-        use_custom: "Veya özel bir avatar yükleyin:"
       change_profile_background:
         title: "Profil Başlığı"
         instructions: "Profil başlıkları ortalanır ve varsayılan olarak 1110 px boyutunda olur."
@@ -2638,7 +2634,7 @@ tr_TR:
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, yarın yine sorarız. Hesap oluşturmak için dilediğiniz zaman \"Giriş Yap\"ı da kullanabilirsiniz."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap açmadınız."
-      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
+      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz."
     offline_indicator:
       no_internet: "İnternet bağlantısı yok."
       refresh_page: "Sayfayı yenileyin"
@@ -3093,8 +3089,7 @@ tr_TR:
       cancel_edit: "Düzenlemeyi iptal et"
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
-      title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
-      title_placeholder_redesign: "Başlık"
+      title_placeholder: "Başlık"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
       edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
@@ -5166,9 +5161,6 @@ tr_TR:
       admin:
         title: "Yönetici"
     badges:
-      earned_n_times:
-        one: "Bu rozeti %{count} kez kazandı"
-        other: "Bu rozeti %{count} kez kazandı"
       granted_on: "%{date} tarihinde verildi"
       others_count:
         one: "Başkalarına %{count} kez verildi"
@@ -5962,6 +5954,7 @@ tr_TR:
             use_preset: "Kur"
             presets:
               custom: "Özel"
+            automatic: "Otomatik"
           authorizations:
             user: "Kullanıcı"
             scopes: "Verilen kapsamlar"
@@ -5969,7 +5962,6 @@ tr_TR:
             status: "Durum"
             actions: "Eylemler"
           activity:
-            rate_limits: "Oran limitleri"
             outcome: "Sonuç"
             time: "Saat"
             user: "Kullanıcı"
@@ -6565,6 +6557,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
@@ -7502,8 +7495,8 @@ tr_TR:
           upload: "Yükle"
           select_component: "Bileşen seçin…"
           unsaved_changes_alert: "Değişikliklerinizi henüz kaydetmediniz, bunları silip devam etmek istiyor musunuz?"
-          unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "Kapat"
+          leave: "Ayrıl"
           stay: "Kal"
           css_html: "Özel Kod"
           edit_css_html: "Kodu düzenle"
@@ -8612,13 +8605,14 @@ tr_TR:
           multiselect: "Çoklu seçim"
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
-        search: "Düzenlemek istediğiniz metni arayın"
+        search_label: "Ara"
+        theme_disabled: "Devre Dışı"
+        filters: "Filtreler"
+        status:
+          invalid: "Geçersiz"
         title: "Site metinleri"
         edit: "Düzenle"
-        revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
-        go_back: "Aramaya geri dön"
-        recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"

@@ -197,6 +197,25 @@ RSpec.describe Voice::RoomsController do
       expect(response.status).to eq(403)
     end
 
+    it "refuses a token for a new participant when the room is full" do
+      full_room_participant = Fabricate(:user)
+      room.update!(max_participants: 2)
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, other_user.id)
+      Voice::ParticipantTracker.add(room.id, full_room_participant.id)
+      sign_in(user)
+
+      post "/voice/rooms/#{room.id}/livekit_token.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("voice.errors.room_full"))
+      expect(response.parsed_body).not_to have_key("token")
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to contain_exactly(
+        other_user.id,
+        full_room_participant.id,
+      )
+    end
+
     it "reissues a token, re-adds lapsed presence, and mints a fresh participant session" do
       sign_in(user)
       Voice::ParticipantTracker.pin_transport!(room.id, "livekit")

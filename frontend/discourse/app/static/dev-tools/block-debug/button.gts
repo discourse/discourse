@@ -6,7 +6,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import devToolsState from "../state";
+import devToolsState from "../state.js";
 
 /**
  * Block debug button with dropdown menu.

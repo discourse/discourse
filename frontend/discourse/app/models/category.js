@@ -25,7 +25,7 @@ import { removeAccents } from "discourse/lib/utilities";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import Topic from "./topic";
+import Topic from "./topic.js";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};

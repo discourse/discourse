@@ -37,7 +37,10 @@ export default class SignupPageController extends Controller {
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
   @tracked codeSignupStep = "email";
+  @tracked signupContext;
   @autoTrackedArray rejectedEmails = [];
+
+  queryParams = [{ signupContext: "signup_context" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -552,7 +555,11 @@ export default class SignupPageController extends Controller {
 
             let { destination_url } = this.authOptions || {};
 
-            if (destination_url && destination_url !== "/signup") {
+            if (
+              result.active &&
+              destination_url &&
+              destination_url !== "/signup"
+            ) {
               set("redirect", destination_url);
             } else {
               set("redirect", userPath("account-created"));

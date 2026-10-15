@@ -11,14 +11,6 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 const ROW_PX = 44;
 const estimate = () => ROW_PX;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -56,7 +48,7 @@ module("Integration | ui-kit | DVirtualList | deep scroll", function (hooks) {
   });
 
   test("rows keep their absolute positioning across a keyed re-render", async function (assert) {
-    const state = new State(buildRows(10000));
+    const items = tracked(buildRows(10000));
 
     await render(
       <template>
@@ -70,7 +62,7 @@ module("Integration | ui-kit | DVirtualList | deep scroll", function (hooks) {
         <DVirtualList
           @estimateSize={{estimate}}
           @itemRole="listitem"
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @role="list"
           as |row|
@@ -88,7 +80,7 @@ module("Integration | ui-kit | DVirtualList | deep scroll", function (hooks) {
     // SAME element. If the destroy runs last, its cleanup strips the styles the
     // new modifier just wrote.
     for (let i = 0; i < 5; i++) {
-      state.items = state.items.map((row) => ({ ...row }));
+      items.value = items.value.map((row) => ({ ...row }));
       await settled();
     }
 

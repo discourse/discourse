@@ -15,7 +15,7 @@ import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { FeedEnabledToggle } from "discourse/plugins/discourse-rss-polling/discourse/lib/rss-polling-item";
-import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings.js";
 
 export default class RssPollingFeedRow extends Component {
   @service dialog;

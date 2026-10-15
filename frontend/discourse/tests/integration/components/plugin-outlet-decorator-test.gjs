@@ -6,7 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { registerTemporaryModule } from "../../helpers/temporary-module-helper";
+import { registerTemporaryModule } from "../../helpers/temporary-module-helper.js";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 

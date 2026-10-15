@@ -29,6 +29,23 @@ sw:
           title: "Machelezo"
       read_post:
         unknown_post: "ujumbe"
+      chat_tool_approval:
+        topic_states:
+          open: "Fungua"
+          closed: "Imefungwa"
+          active: "Amilifu"
+        solution_post: "Taarifa #%{number}"
+        user_duration:
+          one: "siku %{count}"
+          other: "siku %{count}"
+        posts_label: "Machapisho"
+        category_label: "Kikundi"
+        category_fields:
+          name: "jina"
+          description: "maelezo"
+          color: "rangi"
+        approve_label: "Ndio"
+        reject_label: "Hapana"
       tool_summary:
         search: "Tafuta"
         time: "Muda"

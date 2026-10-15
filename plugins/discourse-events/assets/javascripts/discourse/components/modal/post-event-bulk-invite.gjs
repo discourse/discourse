@@ -12,8 +12,8 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import BulkInviteSampleCsvFile from "../bulk-invite-sample-csv-file";
-import CsvUploader from "../csv-uploader";
+import BulkInviteSampleCsvFile from "../bulk-invite-sample-csv-file.gjs";
+import CsvUploader from "../csv-uploader.gjs";
 
 const DEFAULT_ATTENDANCE = "going";
 

@@ -95,7 +95,14 @@ class ReviewablesController < ApplicationController
     end
     json.merge!(hash)
 
-    render_json_dump(json, rest_serializer: true)
+    render_json_dump(
+      json,
+      rest_serializer: true,
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
+    )
   end
 
   def user_menu_list
@@ -172,6 +179,10 @@ class ReviewablesController < ApplicationController
       rest_serializer: true,
       claimed_topics: ReviewableClaimedTopic.claimed_hash([reviewable.topic_id]),
       root: "reviewable",
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
       meta: {
         types: meta_types,
       },
@@ -257,7 +268,7 @@ class ReviewablesController < ApplicationController
 
     result = nil
     begin
-      reviewable = find_reviewable
+      reviewable = with_deleted_content { find_reviewable }
 
       if error = claim_error?(reviewable)
         return render_json_error(error)

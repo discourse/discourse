@@ -17,8 +17,6 @@ RSpec.describe DiscourseVips do
               output_path: File.join(directory, "output.jpg"),
               quality: SiteSetting.image_quality,
               timeout: 20,
-              read: [input_path],
-              write: [File.dirname(File.join(directory, "output.jpg"))],
             )
           end
 
@@ -130,8 +128,6 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.image_quality,
             timeout: 20,
-            read: [input_path],
-            write: [File.dirname(output_path)],
           )
 
           expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -151,14 +147,7 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
 
-        described_class.heif_to_jpeg(
-          input_path:,
-          output_path:,
-          quality: 95,
-          timeout: 20,
-          read: [input_path],
-          write: [directory],
-        )
+        described_class.heif_to_jpeg(input_path:, output_path:, quality: 95, timeout: 20)
 
         expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
       end
@@ -176,8 +165,6 @@ RSpec.describe DiscourseVips do
           output_path:,
           quality: SiteSetting.image_quality,
           timeout: 20,
-          read: [input_path],
-          write: [File.dirname(output_path)],
         )
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -198,16 +185,12 @@ RSpec.describe DiscourseVips do
           output_path: lower_quality_path,
           quality: 40,
           timeout: 20,
-          read: [input_path],
-          write: [File.dirname(lower_quality_path)],
         )
         described_class.heif_to_jpeg(
           input_path:,
           output_path: higher_quality_path,
           quality: 95,
           timeout: 20,
-          read: [input_path],
-          write: [File.dirname(higher_quality_path)],
         )
 
         expect(File.size(lower_quality_path)).to be < File.size(higher_quality_path)
@@ -227,8 +210,6 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.image_quality,
             timeout: 20,
-            read: [input_path],
-            write: [File.dirname(output_path)],
           )
         }.to raise_error(DiscourseVips::InvalidImage)
 
@@ -237,28 +218,19 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "rejects overwriting the source image" do
-      original_content = File.binread(file_from_fixtures("should_be_jpeg.heic").path)
-
+    it "converts the source image to JPEG in place" do
       Dir.mktmpdir do |directory|
         input_path = File.join(directory, "source.heic")
-        File.binwrite(input_path, original_content)
+        FileUtils.cp(file_from_fixtures("should_be_jpeg.heic").path, input_path)
 
-        expect {
-          described_class.heif_to_jpeg(
-            input_path:,
-            output_path: input_path,
-            quality: SiteSetting.image_quality,
-            timeout: 20,
-            read: [input_path],
-            write: [File.dirname(input_path)],
-          )
-        }.to raise_error(
-          DiscourseVips::Error,
-          "JPEG conversion requires separate input and output files",
+        described_class.heif_to_jpeg(
+          input_path:,
+          output_path: input_path,
+          quality: SiteSetting.image_quality,
+          timeout: 20,
         )
 
-        expect(File.binread(input_path)).to eq(original_content)
+        expect(FastImage.type(input_path)).to eq(:jpeg)
       end
     end
 
@@ -275,8 +247,6 @@ RSpec.describe DiscourseVips do
               output_path:,
               quality: SiteSetting.image_quality,
               timeout: 0.05,
-              read: [input_path],
-              write: [File.dirname(output_path)],
             )
           }.to raise_error(DiscourseVips::OperationTimeout)
         end
@@ -429,8 +399,6 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.ImageQuality.png_to_jpg_quality,
             timeout: 5,
-            read: [input_path],
-            write: [directory],
           )
 
           expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -457,8 +425,6 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.ImageQuality.png_to_jpg_quality,
             timeout: 5,
-            read: [input_path],
-            write: [File.dirname(output_path)],
           )
         }.to raise_error(DiscourseVips::InvalidImage)
         expect(File.exist?(output_path)).to eq(false)
@@ -477,14 +443,7 @@ RSpec.describe DiscourseVips do
         output_path = File.join(directory, "converted.jpg")
         input_path = file_from_fixtures("logo.jpg").path
 
-        described_class.reencode_jpeg(
-          input_path:,
-          output_path:,
-          quality: 40,
-          timeout: 5,
-          read: [input_path],
-          write: [File.dirname(output_path)],
-        )
+        described_class.reencode_jpeg(input_path:, output_path:, quality: 40, timeout: 5)
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
         expect(FastImage.size(output_path)).to eq(FastImage.size(input_path))
@@ -494,8 +453,6 @@ RSpec.describe DiscourseVips do
           output_path: higher_quality_path,
           quality: 95,
           timeout: 5,
-          read: [input_path],
-          write: [File.dirname(higher_quality_path)],
         )
         expect(File.size(output_path)).to be < File.size(higher_quality_path)
       end
@@ -514,8 +471,6 @@ RSpec.describe DiscourseVips do
               output_path: input_path,
               quality: 95,
               timeout: 5,
-              read: [input_path],
-              write: [input_path],
             )
           }.to raise_error(DiscourseVips::InvalidImage)
           expect(File.binread(input_path)).to eq(original)
@@ -615,12 +570,7 @@ RSpec.describe DiscourseVips do
           </svg>
         SVG
 
-        described_class.svg_to_png(
-          input_path:,
-          output_path:,
-          read: [directory],
-          write: [output_directory],
-        )
+        described_class.svg_to_png(input_path:, output_path:, asset_paths: [directory])
 
         png = ChunkyPNG::Image.from_file(output_path)
         expect(png[20, 20]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
@@ -645,36 +595,12 @@ RSpec.describe DiscourseVips do
           </svg>
         SVG
 
-        described_class.svg_to_png(
-          input_path:,
-          output_path:,
-          read: [input_path, allowed_path],
-          write: [output_path],
-        )
+        described_class.svg_to_png(input_path:, output_path:, asset_paths: [allowed_path])
 
         png = ChunkyPNG::Image.from_file(output_path)
         expect([png[20, 20], png[60, 20]]).to eq(
           [ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 255, 255)],
         )
-      end
-    end
-
-    it "raises an error when reading the input is not permitted" do
-      skip "Landlock is not supported" if !Discourse::SafeExec.landlock_supported?
-
-      file = file_from_fixtures("tiny.svg")
-
-      Dir.mktmpdir do |directory|
-        output_path = File.join(directory, "output.png")
-
-        expect {
-          described_class.svg_to_png(
-            input_path: file.path,
-            output_path:,
-            read: [],
-            write: [directory],
-          )
-        }.to raise_error(DiscourseVips::Error)
       end
     end
 
@@ -689,12 +615,7 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "output.png")
 
-        described_class.svg_to_png(
-          input_path: file.path,
-          output_path:,
-          read: [file.path],
-          write: [directory],
-        )
+        described_class.svg_to_png(input_path: file.path, output_path:)
 
         png = ChunkyPNG::Image.from_file(output_path)
         expect([png[2, 2], png[10, 2]]).to eq(
@@ -709,18 +630,13 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "output.png")
 
-        expect {
-          described_class.svg_to_png(
-            input_path: file.path,
-            output_path:,
-            read: [file.path],
-            write: [directory],
-          )
-        }.to raise_error(DiscourseVips::Error)
+        expect { described_class.svg_to_png(input_path: file.path, output_path:) }.to raise_error(
+          DiscourseVips::Error,
+        )
       end
     end
 
-    it "raises an error when input and output refer to the same file" do
+    it "renders PNG output when input and output refer to the same file" do
       svg = '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
 
       Dir.mktmpdir do |directory|
@@ -729,14 +645,10 @@ RSpec.describe DiscourseVips do
         File.write(input_path, svg)
         File.link(input_path, output_path)
 
-        expect {
-          described_class.svg_to_png(
-            input_path:,
-            output_path:,
-            read: [input_path],
-            write: [directory],
-          )
-        }.to raise_error(DiscourseVips::Error, "SVG input and PNG output must be different files")
+        described_class.svg_to_png(input_path:, output_path:)
+
+        expect(FastImage.type(input_path)).to eq(:png)
+        expect(FastImage.size(output_path)).to eq([10, 10])
       end
     end
 
@@ -751,14 +663,10 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "output.png")
 
-        expect {
-          described_class.svg_to_png(
-            input_path: file.path,
-            output_path:,
-            read: [file.path],
-            write: [directory],
-          )
-        }.to raise_error(DiscourseVips::Error, /SVG exceeds/)
+        expect { described_class.svg_to_png(input_path: file.path, output_path:) }.to raise_error(
+          DiscourseVips::Error,
+          /SVG exceeds/,
+        )
       end
     end
 
@@ -772,37 +680,11 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "output.png")
 
-        described_class.svg_to_png(
-          input_path: file.path,
-          output_path:,
-          read: [file.path],
-          write: [directory],
-        )
+        described_class.svg_to_png(input_path: file.path, output_path:)
 
         png = ChunkyPNG::Image.from_file(output_path)
         expect([png.width, png.height]).to eq([600, 200])
         expect(png[png.width / 2, png.height / 2]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
-      end
-    end
-
-    it "raises an error when writing the output is not permitted" do
-      skip "Landlock is not supported" if !Discourse::SafeExec.landlock_supported?
-
-      file =
-        file_from_contents(
-          '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="20"/>',
-          "input.svg",
-        )
-
-      Dir.mktmpdir do |directory|
-        expect {
-          described_class.svg_to_png(
-            input_path: file.path,
-            output_path: File.join(directory, "output.png"),
-            read: [file.path],
-            write: [],
-          )
-        }.to raise_error(DiscourseVips::Error)
       end
     end
   end
@@ -826,8 +708,6 @@ RSpec.describe DiscourseVips do
         sharpen: true,
         timeout: 10,
         operation: :optimized_image_resize,
-        read: [input_path],
-        write: [directory],
       )
 
       expect(FastImage.size(output_path)).to eq([100, 50])
@@ -847,8 +727,6 @@ RSpec.describe DiscourseVips do
         crop: :centre,
         timeout: 10,
         operation: :optimized_image_resize,
-        read: [input_path],
-        write: [directory],
       )
 
       expect(FastImage.size(destination_path)).to eq([100, 50])
@@ -865,8 +743,6 @@ RSpec.describe DiscourseVips do
           height: 50,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::InvalidImage)
     end
@@ -881,8 +757,6 @@ RSpec.describe DiscourseVips do
           height: 50,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::Error, "unsupported input format")
     end
@@ -896,8 +770,6 @@ RSpec.describe DiscourseVips do
           height: 50,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::Error)
     end
@@ -912,8 +784,6 @@ RSpec.describe DiscourseVips do
           quality: 75,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::Error)
     end
@@ -928,8 +798,6 @@ RSpec.describe DiscourseVips do
           size: :invalid,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(
         DiscourseVips::Error,
@@ -949,8 +817,6 @@ RSpec.describe DiscourseVips do
           height: 50,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::InvalidImage)
 
@@ -969,8 +835,6 @@ RSpec.describe DiscourseVips do
           height: 50,
           timeout: 10,
           operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::InvalidImage)
     end
@@ -983,8 +847,6 @@ RSpec.describe DiscourseVips do
         sharpen: true,
         timeout: 20,
         operation: :optimized_image_downsize,
-        read: [input_path],
-        write: [directory],
       )
 
       expect(FastImage.size(output_path)).to eq([122, 33])
@@ -1001,8 +863,6 @@ RSpec.describe DiscourseVips do
           max_pixels:,
           timeout: 20,
           operation: :optimized_image_downsize,
-          read: [input_path],
-          write: [directory],
         )
 
         output_width, output_height = FastImage.size(output_path)
@@ -1020,8 +880,6 @@ RSpec.describe DiscourseVips do
           height: 100,
           timeout: 20,
           operation: :optimized_image_downsize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(
         ArgumentError,
@@ -1037,8 +895,6 @@ RSpec.describe DiscourseVips do
           scale: 0,
           timeout: 20,
           operation: :optimized_image_downsize,
-          read: [input_path],
-          write: [directory],
         )
       }.to raise_error(DiscourseVips::Error, "invalid resize scale")
     end

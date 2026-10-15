@@ -1604,6 +1604,51 @@ RSpec.describe Topic do
 
     before { user.admin = true }
 
+    it "emits a status event only when the status changes" do
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          2.times { topic.update_status("closed", true, user) }
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+    end
+
+    it "emits pin status events only when pin attributes change" do
+      freeze_time
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          2.times { topic.update_status("pinned", false, user) }
+          2.times { topic.update_status("pinned", true, user) }
+          2.times { topic.update_status("pinned", false, user) }
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "pinned", true], [topic, "pinned", false]],
+      )
+    end
+
+    it "emits pin status events when re-pinning or changing the pin scope or expiry" do
+      freeze_time
+      topic.update_status("pinned", true, user)
+      freeze_time(1.hour.from_now)
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          topic.update_status("pinned", true, user)
+          topic.update_status("pinned_globally", true, user)
+          topic.update_status("pinned_globally", true, user, until: 1.day.from_now.iso8601)
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [topic, "pinned", true],
+          [topic, "pinned_globally", true],
+          [topic, "pinned_globally", true],
+        ],
+      )
+    end
+
     context "with visibility" do
       let(:category) { Fabricate(:category_with_definition) }
 
@@ -2323,6 +2368,20 @@ RSpec.describe Topic do
   end
 
   describe "scopes" do
+    describe "private message access" do
+      it "keeps participant access consistent across scopes" do
+        direct_pm = Fabricate(:private_message_topic, recipient: user)
+        group = Fabricate(:group, users: [user])
+        group_pm = Fabricate(:group_private_message_topic, recipient_group: group)
+        Fabricate(:private_message_topic)
+
+        expected_ids = [direct_pm.id, group_pm.id]
+
+        expect(Topic.private_messages_for_user(user).pluck(:id)).to match_array(expected_ids)
+        expect(Topic.private_messages.allowed_to_user(user).pluck(:id)).to match_array(expected_ids)
+      end
+    end
+
     describe "#by_most_recently_created" do
       it "returns topics ordered by created_at desc, id desc" do
         now = Time.now
