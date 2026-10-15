@@ -27,12 +27,16 @@ module DiscourseWorkflows
       [last_id - MAX_BACKLOG_SIZE, 0].max
     end
 
-    def self.publish_created(execution, workflow_name:)
+    def self.publish_created(execution, workflow_name:, trigger_node: nil)
       MessageBus.publish(
         EXECUTIONS_CHANNEL,
         {
           type: "execution_created",
-          execution: execution_summary(execution, workflow_name: workflow_name),
+          execution:
+            execution_summary(execution, workflow_name:).merge(
+              trigger: Execution.trigger_summary(trigger_node),
+              execution_mode: execution.execution_mode,
+            ),
         },
         **publish_options,
       )

@@ -90,6 +90,60 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       )
     end
 
+    it "returns the trigger node from the stored snapshot and the execution mode" do
+      execution =
+        Fabricate(
+          :discourse_workflows_completed_execution,
+          workflow:,
+          trigger_node_id: "trigger-1",
+          execution_mode: :manual,
+        )
+      Fabricate(
+        :discourse_workflows_execution_data,
+        execution:,
+        workflow_data: {
+          "name" => "Original workflow",
+          "nodes" => [
+            {
+              "id" => "trigger-1",
+              "name" => "When topic created",
+              "type" => "trigger:topic_created",
+            },
+          ],
+          "connections" => {
+          },
+        },
+      )
+
+      get "/admin/plugins/discourse-workflows/executions.json"
+
+      expect(response.parsed_body["executions"][0]).to include(
+        "execution_mode" => "manual",
+        "trigger" => {
+          "name" => "When topic created",
+          "type" => "trigger:topic_created",
+        },
+      )
+    end
+
+    it "falls back to the published trigger node without a stored snapshot" do
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual", name: "Run it" }
+      published_workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      Fabricate(
+        :discourse_workflows_completed_execution,
+        workflow: published_workflow,
+        trigger_node_id: "trigger-1",
+      )
+
+      get "/admin/plugins/discourse-workflows/executions.json"
+
+      expect(response.parsed_body["executions"][0]["trigger"]).to eq(
+        "name" => "Run it",
+        "type" => "trigger:manual",
+      )
+    end
+
     it "paginates with cursor param" do
       execution_1 = Fabricate(:discourse_workflows_execution, workflow: workflow)
       execution_2 = Fabricate(:discourse_workflows_execution, workflow: workflow)
