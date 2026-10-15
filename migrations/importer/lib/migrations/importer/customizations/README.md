@@ -113,8 +113,12 @@ Ids differ between test migrations. Imported groups and categories are found
 with these strategies, in order:
 
 1. the importer's MappingsDB (`--mappings-db`), via the original id
-2. the `import_id` custom field written by the older import scripts
+2. the `import_id` custom field written by `script/import_scripts` and
+   `script/bulk_import` (e.g. `generic_bulk.rb`)
 3. the group name or the category slug path (`parent/child`)
+
+`--mappings-db` is only needed for imports done with `disco import`. Leave it
+out for the other importers.
 
 On the `import` target, an item that matches nothing is skipped. On the
 `template` target, missing groups and categories are created.
