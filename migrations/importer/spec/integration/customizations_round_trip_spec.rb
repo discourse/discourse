@@ -162,8 +162,15 @@ RSpec.describe "customizations export and apply", :rails do
     customizations::Matcher.build
   end
 
-  def export!
-    report = customizations::Exporter.new(plan:, output_path: bundle_path, matcher:, output:).run
+  def export!(include_secrets: true)
+    report =
+      customizations::Exporter.new(
+        plan:,
+        output_path: bundle_path,
+        matcher:,
+        include_secrets:,
+        output:,
+      ).run
     expect(report.entries.map(&:status).uniq).to eq([:exported]), output.string
   end
 
@@ -194,23 +201,16 @@ RSpec.describe "customizations export and apply", :rails do
     customizations::Bundle::Reader.open(bundle_path) { |bundle| bundle.manifest }
   end
 
-  it "never writes secrets unless asked to" do
+  it "writes secrets unless told not to" do
     export!
+    expect(JSON.generate(exported_manifest)).to include(secret_value)
+    expect(output.string).to include("contains secret values")
 
+    export!(include_secrets: false)
     manifest = exported_manifest
     entry = manifest.dig("items", "site_settings").find { |e| e["name"] == "github_client_secret" }
     expect(entry).to include("secret" => true, "value" => nil)
     expect(JSON.generate(manifest)).not_to include(secret_value)
-
-    customizations::Exporter.new(
-      plan:,
-      output_path: bundle_path,
-      matcher:,
-      include_secrets: true,
-      output:,
-    ).run
-    expect(JSON.generate(exported_manifest)).to include(secret_value)
-    expect(output.string).to include("contains secret values")
   end
 
   it "stores uploads in the bundle, not ids or URLs" do
@@ -271,8 +271,7 @@ RSpec.describe "customizations export and apply", :rails do
       TranslationOverride.find_by(locale: "en", translation_key: "js.topic.create").value,
     ).to eq("Start a discussion")
 
-    migrated_report =
-      apply!("migrated", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
+    migrated_report = apply!("migrated")
     expect(migrated_report.failed?).to eq(false), output.string
     expect(SiteSetting.github_client_secret).to eq(secret_value)
     expect(imported_group.reload.title).to eq("Imported")
@@ -284,8 +283,7 @@ RSpec.describe "customizations export and apply", :rails do
     again = apply!("template")
     expect(again.entries.map(&:status).uniq).to eq([:unchanged]), output.string
 
-    again_migrated =
-      apply!("migrated", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
+    again_migrated = apply!("migrated")
     expect(again_migrated.entries.map(&:status).uniq).to eq([:unchanged]), output.string
   end
 
@@ -313,8 +311,17 @@ RSpec.describe "customizations export and apply", :rails do
     expect(differences).to be_empty
   end
 
+  it "reads secrets left out of the bundle from the environment" do
+    export!(include_secrets: false)
+    SiteSetting.github_client_secret = ""
+
+    apply!("migrated", env: { "DISCO_SECRET_GITHUB_CLIENT_SECRET" => secret_value })
+
+    expect(SiteSetting.github_client_secret).to eq(secret_value)
+  end
+
   it "skips imported records it can't find and secrets it isn't given" do
-    export!
+    export!(include_secrets: false)
     imported_group.destroy!
 
     report = apply!("migrated")
