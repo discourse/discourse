@@ -14,6 +14,11 @@ export const SELECT_VARIANTS = {
   static: "static",
 } as const;
 
+/** The filter of a list load context, which `DAsyncContent` hands back untyped. */
+function filterOf(context: unknown): string | undefined {
+  return (context as { filter?: string } | undefined)?.filter;
+}
+
 export type SelectVariant =
   (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
 
@@ -441,10 +446,7 @@ export default class VariantPresenter {
    * reload keeps the query the reader is looking at, so it fetches at once.
    */
   @bind
-  debounceFor(
-    previous: { filter: string } | undefined,
-    next: { filter: string }
-  ): number {
-    return previous?.filter !== next.filter ? this.filterDebounceDelay : 0;
+  debounceFor(previous: unknown, next: unknown): number {
+    return filterOf(previous) !== filterOf(next) ? this.filterDebounceDelay : 0;
   }
 }
