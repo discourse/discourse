@@ -26,9 +26,9 @@ module DiscourseReactions::ReactionsSerializerHelpers
           {}
         end
 
-      posts.each { |post| post.preloaded_reaction_users = { user&.id => reaction_users } }
+      posts.each { |post| post.preloaded_viewer_reaction_users = { user&.id => reaction_users } }
     else
-      posts.each { |post| post.preloaded_reaction_users = nil }
+      posts.each { |post| post.preloaded_viewer_reaction_users = nil }
     end
 
     post_ids = posts.map(&:id).uniq
@@ -315,8 +315,8 @@ module DiscourseReactions::ReactionsSerializerHelpers
   end
 
   def self.reaction_user_for(post:, reaction:, user:)
-    if post.preloaded_reaction_users&.key?(user.id)
-      post.preloaded_reaction_users[user.id][reaction.id]
+    if post.preloaded_viewer_reaction_users&.key?(user.id)
+      post.preloaded_viewer_reaction_users[user.id][reaction.id]
     else
       reaction.reaction_users.find { |reaction_user| reaction_user.user_id == user.id }
     end
