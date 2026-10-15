@@ -6369,6 +6369,13 @@ en:
         changes_requested: "Changes Requested"
         merged: "Merged Pull Request"
         closed: "Closed Pull Request"
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        changes_requested: "Changes requested"
+        merged: "Merged"
+        closed: "Closed"
       status_date:
         open: "opened"
         draft: "drafted"

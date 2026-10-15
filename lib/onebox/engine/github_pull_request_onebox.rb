@@ -71,6 +71,9 @@ module Onebox
         status_data = fetch_pr_status(result)
         result["pr_status"] = status_data&.dig(:status)
         result["pr_status_title"] = pr_status_title(result["pr_status"])
+        if result["pr_status"]
+          result["pr_status_label"] = I18n.t("onebox.github.pr_status.#{result["pr_status"]}")
+        end
 
         status_timestamp = status_data&.dig(:timestamp) || result["created_at"]
         status_date = Time.parse(status_timestamp)

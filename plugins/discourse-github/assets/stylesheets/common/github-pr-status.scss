@@ -1,9 +1,3 @@
-@use "lib/viewport";
-
-$icon-aspect-ratio: calc(12 / 16);
-$icon-width: 2.5em;
-$icon-width-mobile: 1.8em;
-
 .onebox.githubpullrequest .github-row,
 a.inline-onebox {
   --gh-icon-draft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.25 1A2.25 2.25 0 0 1 4 5.372v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.251 2.251 0 0 1 3.25 1Zm9.5 14a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5ZM2.5 3.25a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0ZM3.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm9.5 0a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM14 4.25a.75.75 0 0 1-.75.75h-2a.75.75 0 0 1 0-1.5h2a.75.75 0 0 1 .75.75Zm-.75 3.75a.75.75 0 0 0 0-1.5h-2a.75.75 0 0 0 0 1.5Z'/%3E%3C/svg%3E");
@@ -42,41 +36,35 @@ a.inline-onebox {
   }
 }
 
-.onebox.githubpullrequest .github-row {
-  &[class*="--gh-status-"] {
-    .github-icon-container {
-      display: block;
-      grid-area: icon;
-      align-self: center;
-      justify-self: center;
+.onebox.githubpullrequest .github-row.--has-status {
+  .github-info-container > h4,
+  .branches,
+  .github-info {
+    grid-column: 1 / -1;
+  }
+}
 
-      // Fixed height prevents layout shift when status icon changes
-      min-height: calc($icon-width / $icon-aspect-ratio);
+.github-pr-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.25em 0.65em;
+  border-radius: var(--token-radius-full);
+  background: color-mix(in srgb, var(--gh-status-color) 70%, var(--primary));
+  color: var(--secondary);
+  font-size: var(--font-down-1);
+  font-weight: var(--token-font-weight-semibold);
+  line-height: var(--line-height-medium);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 
-      @include viewport.until(sm) {
-        min-height: calc($icon-width-mobile / $icon-aspect-ratio);
-      }
-
-      .github-icon {
-        display: none;
-      }
-
-      &::before {
-        content: "";
-        display: block;
-        width: $icon-width;
-        aspect-ratio: $icon-aspect-ratio;
-        mask-size: 100% 100%;
-        mask-repeat: no-repeat;
-        mask-position: center;
-        mask-image: var(--gh-status-icon);
-        background-color: var(--gh-status-color);
-
-        @include viewport.until(sm) {
-          width: $icon-width-mobile;
-        }
-      }
-    }
+  &::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    mask: var(--gh-status-icon) center / contain no-repeat;
+    background: currentcolor;
   }
 }
 
