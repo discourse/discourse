@@ -26,6 +26,20 @@ class HomepageHelper
     top_menu_homepage(current_user)
   end
 
+  def self.option_path(option, guardian)
+    path = option[:path]
+    return path if !path.respond_to?(:call)
+
+    effective_homepage = guardian.anonymous? ? SiteSetting.anonymous_homepage : SiteSetting.homepage
+    return if !option[:server_side] && option[:id] != effective_homepage
+    return if !option_available?(option[:id], nil, guardian.user)
+
+    path.call
+  rescue StandardError => e
+    Discourse.warn_exception(e, message: "Homepage path failed for '#{option[:id]}'")
+    nil
+  end
+
   def self.custom_homepage_route(request)
     if CrawlerDetection.crawler_layout_request?(request)
       return SiteSetting.custom_homepage_crawler_route

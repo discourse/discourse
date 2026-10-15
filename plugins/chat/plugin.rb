@@ -442,6 +442,29 @@ after_initialize do
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
+
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
     PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
