@@ -5,7 +5,8 @@ module Migrations
     module Customizations
       class Matcher
         module Strategies
-          # The `import_id` custom field written by the older import scripts.
+          # The `import_id` custom field written by `script/import_scripts` and
+          # `script/bulk_import`.
           class ImportId
             FIELD_NAME = "import_id"
 
