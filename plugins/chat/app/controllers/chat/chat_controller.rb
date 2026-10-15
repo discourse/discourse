@@ -2,11 +2,22 @@
 
 module Chat
   class ChatController < ::Chat::BaseController
+    skip_before_action :check_xhr, if: -> { action_name == "respond" && use_crawler_layout? }
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[respond set_user_chat_status dismiss_retention_reminder rebake]
 
     def respond
-      render
+      if !use_crawler_layout? || !Chat.anonymous_public_channel_access_allowed?
+        raise ApplicationController::RenderEmpty
+      end
+
+      if params[:channel_id].present?
+        render_crawler_channel
+      elsif params[:crawler_directory]
+        render_crawler_directory
+      else
+        raise ApplicationController::RenderEmpty
+      end
     end
 
     def react
@@ -97,6 +108,45 @@ module Chat
           messages_or_ids: message_ids,
         ).generate_markdown
       render json: success_json.merge(markdown: markdown)
+    end
+
+    private
+
+    # Crawler requests skip check_xhr, so respond itself decides what anonymous visitors may see.
+    def allow_anonymous_public_chat_access?
+      action_name == "respond" && use_crawler_layout?
+    end
+
+    def render_crawler_channel
+      channel = Chat::Channel.includes(:chatable).find_by_id_or_slug(params[:channel_id])
+      raise Discourse::NotFound if !guardian.can_preview_anonymous_public_chat_channel?(channel)
+
+      thread = channel.threads.find_by(id: params[:thread_id]) if params[:thread_id].present?
+      raise Discourse::NotFound if params[:thread_id].present? && !thread
+
+      @crawler_view =
+        Chat::CrawlerView.new(
+          channel:,
+          thread:,
+          date: params[:date],
+          page: params[:page],
+          target_message_id: params[:message_id],
+        )
+      raise Discourse::NotFound if !@crawler_view.valid?
+
+      canonical_url(@crawler_view.canonical_url)
+      render :crawler_channel
+    end
+
+    def render_crawler_directory
+      @crawler_channels =
+        Chat::CategoryChannel
+          .includes(:chatable, :last_message)
+          .where(chatable_id: Category.secured(Guardian.new).select(:id))
+          .sort_by { |channel| channel.title.downcase }
+
+      canonical_url("#{Discourse.base_url}/chat")
+      render :crawler_directory
     end
   end
 end
