@@ -87,6 +87,15 @@ export function cameraEncodingFor(tier) {
   return encodingFor("camera", 1, tier);
 }
 
+// Lower simulcast layers for an SFU camera publish, lowest first. Maximum has
+// no ladder of its own, so it borrows the high tier's lower rungs.
+export function cameraSimulcastLayersFor(tier = QUALITY_STANDARD) {
+  const ladder =
+    CAMERA_LADDERS[tier === QUALITY_MAXIMUM ? QUALITY_HIGH : tier] ??
+    CAMERA_LADDERS[QUALITY_STANDARD];
+  return [ladder[2], ladder[1]];
+}
+
 export function screenEncodingFor(tier) {
   return encodingFor("screen", 1, tier);
 }
