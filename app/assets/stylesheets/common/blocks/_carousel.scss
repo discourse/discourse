@@ -1,0 +1,57 @@
+/* Carousel block — a horizontal scroll-snapping slideshow. Slides page one (or
+   `perView`) at a time; the same paged track renders live and in an editing
+   context. */
+
+.d-block-carousel {
+  position: relative;
+}
+
+.d-block-carousel__viewport {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 1rem;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.d-block-carousel__slide {
+  flex: 0 0
+    calc(
+      (100% - (var(--d-block-carousel-per-view, 1) - 1) * 1rem) /
+        var(--d-block-carousel-per-view, 1)
+    );
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.d-block-carousel__controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.d-block-carousel__dots {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.d-block-carousel__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary-low-mid);
+  cursor: pointer;
+
+  &.is-active {
+    background: var(--tertiary);
+  }
+}

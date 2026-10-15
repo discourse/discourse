@@ -1,0 +1,9 @@
+/* New-topic button block — opens the composer pre-filled with a category and
+   tags. Styling mirrors a standard button; the BEM root is kept so themes can
+   target it specifically. */
+
+.d-block-new-topic-button {
+  display: inline-flex;
+  gap: 0.5em;
+  align-items: center;
+}

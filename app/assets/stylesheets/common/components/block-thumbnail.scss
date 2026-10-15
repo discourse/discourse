@@ -1,0 +1,16 @@
+// The loading skeleton for a lazily-loaded block thumbnail. Reserves the
+// standard block-thumbnail box (the built-in thumbnails are authored at 120 × 80,
+// a 3:2 ratio) so revealing the resolved thumbnail doesn't shift the layout, and
+// stretches the shimmer item to fill that box.
+.block-thumbnail__skeleton {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+
+  .d-skeleton__item {
+    height: 100%;
+
+    // Slow the shimmer sweep: the shared default (4s) reads as too fast across
+    // the small thumbnail box, so give it a calmer cadence here.
+    animation-duration: 16s;
+  }
+}

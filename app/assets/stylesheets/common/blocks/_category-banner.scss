@@ -1,0 +1,50 @@
+.d-block-category-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__logo {
+    align-self: flex-start;
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: clamp(1.75rem, calc(1rem + 2vw), 2.75rem);
+    line-height: 1.1;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    max-width: 900px;
+    font-size: 1.125rem;
+    line-height: 1.4;
+
+    p:not(:has(+ p)) {
+      margin: 0;
+    }
+  }
+
+  &__subcategories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__subcategory {
+    display: block;
+  }
+}

@@ -1,0 +1,28 @@
+.d-block-featured-badges__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.d-block-featured-badges__item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.d-block-featured-badges__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.d-block-featured-badges__age {
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  white-space: nowrap;
+}

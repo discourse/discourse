@@ -281,6 +281,39 @@ module("Unit | Service | store", function (hooks) {
     assert.strictEqual(result.filter, "topics/created-by/trout");
   });
 
+  test("findFiltered forwards opts to the adapter", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const adapter = store.adapterFor("topicList");
+    const originalFind = adapter.find;
+    const originalBuild = store._build;
+    let receivedOpts;
+
+    // Capture the opts the adapter receives and short-circuit the rest of the
+    // pipeline so the assertion isn't coupled to response hydration.
+    adapter.find = (_store, _type, _findArgs, opts) => {
+      receivedOpts = opts;
+      return Promise.resolve({ topics: [] });
+    };
+    store._build = (_type, result) => result;
+
+    try {
+      await store.findFiltered(
+        "topicList",
+        { filter: "latest" },
+        { ignoreUnsent: false }
+      );
+    } finally {
+      adapter.find = originalFind;
+      store._build = originalBuild;
+    }
+
+    assert.deepEqual(
+      receivedOpts,
+      { ignoreUnsent: false },
+      "the opts argument reached the adapter's find"
+    );
+  });
+
   test("Spec incompliant embedded record name", async function (assert) {
     const stub = sinon.stub(console, "warn");
 

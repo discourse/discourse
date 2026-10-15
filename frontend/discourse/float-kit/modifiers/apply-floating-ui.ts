@@ -45,6 +45,11 @@ export default class FloatKitApplyFloatingUi extends Modifier<FloatKitApplyFloat
       instance,
     ]: FloatKitApplyFloatingUiSignature["Args"]["Positional"]
   ) {
+    // A re-run means the trigger or options changed; the observers bound to the previous
+    // trigger would otherwise keep repositioning the float for an element it no longer follows.
+    this.cleanup?.();
+    this.cleanup = undefined;
+
     instance.content = element;
     this.instance = instance;
     this.options = options ?? {};

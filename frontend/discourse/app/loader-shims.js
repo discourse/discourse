@@ -10,6 +10,9 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
 );
+loaderShim("@ember/object/internals", () =>
+  importSync("@ember/object/internals")
+);
 loaderShim("@ember/application", () => importSync("@ember/application"));
 loaderShim("@ember/application/instance", () =>
   importSync("@ember/application/instance")
@@ -19,9 +22,6 @@ loaderShim("@ember/array/proxy", () => importSync("@ember/array/proxy"));
 loaderShim("@ember/component", () => importSync("@ember/component"));
 loaderShim("@ember/component/helper", () =>
   importSync("@ember/component/helper")
-);
-loaderShim("@ember/component/template-only", () =>
-  importSync("@ember/component/template-only")
 );
 loaderShim("@ember/component/template-only", () =>
   importSync("@ember/component/template-only")
@@ -63,7 +63,6 @@ loaderShim("@ember/template-factory", () =>
   importSync("@ember/template-factory")
 );
 loaderShim("@ember/template", () => importSync("@ember/template"));
-// Needed in production: plugins register their dynamic imports so tests wait for them.
 loaderShim("@ember/test-waiters", () => importSync("@ember/test-waiters"));
 loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
@@ -76,6 +75,7 @@ loaderShim("@uppy/utils", () => importSync("@uppy/utils"));
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
+loaderShim("ember-async-data", () => importSync("ember-async-data"));
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));

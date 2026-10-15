@@ -1,8 +1,11 @@
+import { DEBUG } from "@glimmer/env";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { siteDir } from "discourse/lib/text-direction";
+import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const SUPPORTED_TYPES = [
@@ -108,9 +111,26 @@ export default class FKControlInput extends FKBaseControl {
     this.args.field.set(value);
   }
 
+  @action
+  validateAddons(hasBeforeBlock, hasAfterBlock) {
+    if (DEBUG) {
+      assert(
+        "Do not pass @before and a named before block to the same input.",
+        !hasBeforeBlock || this.args.before === undefined
+      );
+      assert(
+        "Do not pass @after and a named after block to the same input.",
+        !hasAfterBlock || this.args.after === undefined
+      );
+    }
+  }
+
   <template>
+    {{this.validateAddons (has-block "before") (has-block "after")}}
     <div class="form-kit__control-input-wrapper">
-      {{#if @before}}
+      {{#if (has-block "before")}}
+        <div class="form-kit__before-input --block">{{yield to="before"}}</div>
+      {{else if @before}}
         <span class="form-kit__before-input">{{@before}}</span>
       {{/if}}
 
@@ -119,8 +139,8 @@ export default class FKControlInput extends FKBaseControl {
         aria-invalid={{if @field.error "true"}}
         class={{dConcatClass
           "form-kit__control-input"
-          (if @before "has-prefix")
-          (if @after "has-suffix")
+          (if (or @before (has-block "before")) "has-prefix")
+          (if (or @after (has-block "after")) "has-suffix")
         }}
         dir={{this.dir}}
         disabled={{@field.disabled}}
@@ -135,7 +155,9 @@ export default class FKControlInput extends FKBaseControl {
         {{on "input" this.handleInput}}
       />
 
-      {{#if @after}}
+      {{#if (has-block "after")}}
+        <div class="form-kit__after-input --block">{{yield to="after"}}</div>
+      {{else if @after}}
         <span class="form-kit__after-input">{{@after}}</span>
       {{/if}}
     </div>

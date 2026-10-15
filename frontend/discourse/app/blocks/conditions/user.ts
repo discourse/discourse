@@ -117,6 +117,8 @@ interface UserLike {
  */
 @blockCondition({
   type: "user",
+  displayName: "User",
+  description: "Match by login state, trust level, group membership, or role.",
   sourceType: "outletArgs",
   args: {
     loggedIn: { type: "boolean" },
@@ -195,6 +197,14 @@ export default class BlockUserCondition extends BlockCondition {
 
   /**
    * Evaluates whether the user condition passes.
+   *
+   * When `context.simulation.user` is set and `args.source` is not provided,
+   * the simulated user replaces the real `currentUser`, so condition-gated
+   * visibility can be previewed under a hypothetical viewer.
+   *
+   * @param args - The condition arguments.
+   * @param context - Evaluation context.
+   * @returns True if the condition passes.
    */
   evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
     const {
@@ -207,10 +217,19 @@ export default class BlockUserCondition extends BlockCondition {
       groups,
     } = args as UserConditionArgs;
 
-    const user = this.getSourceValue(args, context) as
-      | UserLike
-      | null
-      | undefined;
+    // When the caller provided an explicit `source`, treat it as the user to
+    // check against (overrides simulation). When `source` is absent, the
+    // condition is asking about the current viewer — and that's where the
+    // simulated identity kicks in. The check uses `in` so an
+    // explicit `null` (meaning "simulated as anonymous") wins over the real
+    // `currentUser` service.
+    const user = (
+      args.source !== undefined
+        ? this.getSourceValue(args, context)
+        : context?.simulation && "user" in context.simulation
+          ? context.simulation.user
+          : this.currentUser
+    ) as UserLike | null | undefined;
 
     // Check login state or current user match (when source is provided)
     if (loggedIn !== undefined) {

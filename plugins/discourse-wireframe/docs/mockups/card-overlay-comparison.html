@@ -1,0 +1,77 @@
+<div id="wf-card-overlay-comparison">
+  <style>
+    #wf-card-overlay-comparison {
+      --preview-section: light-dark(#f2edfc, #211b35);
+      --preview-surface: light-dark(#ffffff, #202022);
+      --preview-text: light-dark(#25222c, #f1f0f5);
+      --preview-accent: light-dark(#6841bd, #b99aff);
+      --preview-border: light-dark(#dcd5eb, #514368);
+      --preview-overlay-text: #f7f5ff;
+      --preview-overlay-accent: #d0baff;
+      font: 14px/1.5 system-ui, sans-serif;
+      color: var(--preview-text);
+    }
+    #wf-card-overlay-comparison * { box-sizing: border-box; }
+    #wf-card-overlay-comparison .overlay-study__defs { position: absolute; inline-size: 0; block-size: 0; overflow: hidden; }
+    #wf-card-overlay-comparison .overlay-study__section { background: var(--preview-section); padding: 20px; }
+    #wf-card-overlay-comparison .overlay-study__heading { margin: 0 0 20px; font: 600 30px/1.2 Georgia, serif; color: var(--preview-text); }
+    #wf-card-overlay-comparison .overlay-study__comparison { display: flex; flex-wrap: wrap; align-items: start; gap: 24px; }
+    #wf-card-overlay-comparison .overlay-study__example { margin: 0; inline-size: 324px; max-inline-size: 100%; }
+    #wf-card-overlay-comparison .overlay-study__label { margin-block-end: 8px; font: 500 12px/1.5 system-ui, sans-serif; }
+    #wf-card-overlay-comparison .overlay-study__card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-block-size: 350px; overflow: clip; border: 1px solid var(--preview-border); border-radius: 12px; background: var(--preview-surface); }
+    #wf-card-overlay-comparison .overlay-study__media { display: block; inline-size: 100%; block-size: 170px; flex: none; }
+    #wf-card-overlay-comparison .overlay-study__body { display: flex; flex-direction: column; gap: 10px; padding: 16px; overflow-wrap: anywhere; }
+    #wf-card-overlay-comparison .overlay-study__eyebrow { color: var(--preview-accent); font: 700 10px/1.5 system-ui, sans-serif; letter-spacing: .09em; text-transform: uppercase; }
+    #wf-card-overlay-comparison .overlay-study__title { margin: 0; font: 650 18px/1.3 system-ui, sans-serif; color: inherit; }
+    #wf-card-overlay-comparison .overlay-study__action { display: block; padding-block-start: 12px; font: 600 12px/1.5 system-ui, sans-serif; color: var(--preview-accent); }
+    #wf-card-overlay-comparison .overlay-study__card.--behind { color: var(--preview-overlay-text); background: #0b1522; justify-content: end; }
+    #wf-card-overlay-comparison .--behind .overlay-study__media { position: absolute; inset: 0; block-size: 100%; z-index: -2; }
+    #wf-card-overlay-comparison .--behind .overlay-study__body { position: relative; padding-block-start: 186px; }
+    #wf-card-overlay-comparison .--behind .overlay-study__body::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #0b112000 0%, #0b112035 22%, #0b1120ed 48%, #0b1120fa 100%); }
+    #wf-card-overlay-comparison .--behind .overlay-study__eyebrow,
+    #wf-card-overlay-comparison .--behind .overlay-study__action { color: var(--preview-overlay-accent); }
+  </style>
+  <svg class="overlay-study__defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="overlay-prism-bg" x2="1" y2="1"><stop stop-color="#071825"/><stop offset="1" stop-color="#294653"/></linearGradient>
+      <linearGradient id="overlay-spectrum" x2="0" y2="1"><stop stop-color="#fd9170"/><stop offset=".25" stop-color="#f4d86b"/><stop offset=".5" stop-color="#8ac3a8"/><stop offset=".75" stop-color="#6eabcf"/><stop offset="1" stop-color="#a08ddd"/></linearGradient>
+      <linearGradient id="overlay-glass" x2="1" y2="1"><stop stop-color="#dce9e8" stop-opacity=".85"/><stop offset=".5" stop-color="#577885" stop-opacity=".15"/><stop offset="1" stop-color="#c0d5dc" stop-opacity=".7"/></linearGradient>
+      <symbol id="overlay-prism" viewBox="0 0 600 400">
+        <rect width="600" height="400" fill="url(#overlay-prism-bg)"/>
+        <path d="M0 80H600M0 160H600M0 240H600M0 320H600M100 0V400M200 0V400M300 0V400M400 0V400M500 0V400" stroke="#8da4a8" opacity=".18"/>
+        <path d="M270 205L600 55V200Z" fill="url(#overlay-spectrum)" opacity=".8"/>
+        <path d="M0 245L273 199" stroke="#f4f1d9" stroke-width="5"/>
+        <path d="M260 78L360 300L170 300Z" fill="url(#overlay-glass)" stroke="#dce7e7" stroke-width="2"/>
+        <path d="M260 78L270 255L360 300M170 300L270 255" fill="none" stroke="#9faeb6" stroke-width="2"/>
+        <circle cx="472" cy="80" r="6" fill="#f3d79a"/>
+      </symbol>
+    </defs>
+  </svg>
+  <section class="overlay-study__section" aria-labelledby="overlay-study-heading">
+    <h2 class="overlay-study__heading" id="overlay-study-heading">Watch &amp; Listen</h2>
+    <div class="overlay-study__comparison">
+      <figure class="overlay-study__example">
+        <figcaption class="overlay-study__label">Image above</figcaption>
+        <article class="overlay-study__card">
+          <svg class="overlay-study__media" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#overlay-prism"/></svg>
+          <div class="overlay-study__body">
+            <span class="overlay-study__eyebrow">Podcast</span>
+            <h3 class="overlay-study__title">What a Decade of Running Discourse Taught Sam Saffron About AI in Communities</h3>
+            <span class="overlay-study__action">Watch now <span aria-hidden="true">→</span></span>
+          </div>
+        </article>
+      </figure>
+      <figure class="overlay-study__example">
+        <figcaption class="overlay-study__label">Image behind</figcaption>
+        <article class="overlay-study__card --behind">
+          <svg class="overlay-study__media" viewBox="0 0 600 400" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#overlay-prism"/></svg>
+          <div class="overlay-study__body">
+            <span class="overlay-study__eyebrow">Podcast</span>
+            <h3 class="overlay-study__title">What a Decade of Running Discourse Taught Sam Saffron About AI in Communities</h3>
+            <span class="overlay-study__action">Watch now <span aria-hidden="true">→</span></span>
+          </div>
+        </article>
+      </figure>
+    </div>
+  </section>
+</div>

@@ -11,7 +11,7 @@ const MAX_COUNT = 50;
 
 const VARIANTS = ["text", "rect", "circle"] as const;
 
-type SkeletonVariant = (typeof VARIANTS)[number];
+export type SkeletonVariant = (typeof VARIANTS)[number];
 
 /**
  * The dimension custom properties, each paired with the property the stylesheet
