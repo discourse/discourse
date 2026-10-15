@@ -1996,7 +1996,7 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    if SiteSetting.prioritize_username_in_ux?
+    if !SiteSetting.enable_names? || SiteSetting.prioritize_username_in_ux?
       username
     else
       name.presence || username

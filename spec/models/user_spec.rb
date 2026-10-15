@@ -243,6 +243,22 @@ RSpec.describe User do
         ) { user.update(name: "Batman") }
       end
     end
+
+    describe "#display_name" do
+      it "uses the name when names are enabled and names are prioritized" do
+        SiteSetting.enable_names = true
+        SiteSetting.prioritize_username_in_ux = false
+
+        expect(user.display_name).to eq(user.name)
+      end
+
+      it "uses the username when names are disabled" do
+        SiteSetting.enable_names = false
+        SiteSetting.prioritize_username_in_ux = false
+
+        expect(user.display_name).to eq(user.username)
+      end
+    end
   end
 
   describe "Validations" do
