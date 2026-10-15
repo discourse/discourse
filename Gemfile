@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.4"
+ruby ">= 3.4", "< 4.1"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
