@@ -135,12 +135,8 @@ export default class StoreService extends Service {
   }
 
   refreshResults(resultSet, type, url) {
-    const adapter = this.adapterFor(type);
     return ajax(url).then((result) => {
-      const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
-      const content = result[typeName].map((obj) =>
-        this._hydrate(type, obj, result)
-      );
+      const content = this._resultSet(type, result).content;
 
       // reset the content of the array
       resultSet instanceof ResultSet
@@ -158,9 +154,7 @@ export default class StoreService extends Service {
       let totalRows =
         pageTarget["total_rows_" + typeName] || resultSet.totalRows;
       let loadMoreUrl = pageTarget["load_more_" + typeName];
-      let content = result[typeName].map((obj) =>
-        this._hydrate(type, obj, result)
-      );
+      let content = this._resultSet(type, result).content;
 
       resultSet.totalRows = totalRows;
       resultSet.loadMoreUrl = loadMoreUrl;
