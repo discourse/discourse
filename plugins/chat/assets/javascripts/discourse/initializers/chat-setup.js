@@ -129,8 +129,8 @@ class ChatSetupInit {
           action(context) {
             const didSelectEmoji = (emoji) => {
               const composer = owner.lookup(`service:chat-${context}-composer`);
-              composer.textarea.addText(
-                composer.textarea.getSelected(),
+              composer.editor.addText(
+                composer.editor.getSelected(),
                 `:${emoji}:`
               );
             };
@@ -148,6 +148,23 @@ class ChatSetupInit {
           },
         });
       }
+
+      api.registerChatComposerButton({
+        id: "toggle-editor",
+        icon() {
+          return this.useRichEditor ? "fab-markdown" : "a";
+        },
+        label() {
+          return this.useRichEditor
+            ? "chat.composer.switch_to_markdown"
+            : "chat.composer.switch_to_rich_text";
+        },
+        position: "dropdown",
+        action: "toggleEditor",
+        displayed() {
+          return !!this.currentUser;
+        },
+      });
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",

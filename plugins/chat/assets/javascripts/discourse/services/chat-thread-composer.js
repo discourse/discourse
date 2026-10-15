@@ -1,13 +1,17 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
+import {
+  requestComposerFocus,
+  takeComposerFocusRequest,
+} from "discourse/plugins/chat/discourse/lib/pending-composer-focus";
 
 export default class ChatThreadComposer extends Service {
   @service chat;
   @service appEvents;
   @service site;
 
-  @tracked textarea;
+  @tracked editor;
   @tracked scroller;
 
   init() {
@@ -20,14 +24,39 @@ export default class ChatThreadComposer extends Service {
     this.appEvents.off("discourse:focus-changed", this, this.blur);
   }
 
+  registerEditor(editor) {
+    this.editor = editor;
+
+    const options = takeComposerFocusRequest(this);
+
+    // never steal focus from a composer the user is already in
+    if (
+      options &&
+      !document.activeElement?.classList.contains("chat-composer__input")
+    ) {
+      this.focus(options);
+    }
+  }
+
+  unregisterEditor(editor) {
+    if (this.editor === editor) {
+      this.editor = null;
+    }
+  }
+
   @action
   focus(options = {}) {
-    this.textarea?.focus(options);
+    if (!this.editor) {
+      requestComposerFocus(this, options);
+      return;
+    }
+
+    this.editor.focus(options);
   }
 
   @action
   blur() {
-    this.textarea?.blur();
+    this.editor?.blur();
   }
 
   @action

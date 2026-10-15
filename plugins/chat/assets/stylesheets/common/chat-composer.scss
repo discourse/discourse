@@ -77,6 +77,12 @@
     box-sizing: border-box;
     width: 100%;
     align-self: stretch;
+
+    .ProseMirror-container {
+      width: 100%;
+      height: auto;
+      max-height: 25dvh;
+    }
   }
 
   &__input {
@@ -114,6 +120,21 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    &.ProseMirror {
+      overflow-y: auto;
+      max-height: none;
+
+      p {
+        margin: 0;
+      }
+
+      p[data-placeholder]::before {
+        padding-top: 0;
+        line-height: inherit;
+        color: var(--primary-medium);
+      }
     }
   }
 }

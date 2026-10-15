@@ -1,162 +1,172 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat | composer | channel" do
-  fab!(:channel_1, :chat_channel)
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
-  fab!(:current_user, :admin)
-
-  let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let(:cdp) { PageObjects::CDP.new }
-
-  before do
-    chat_system_bootstrap
-    channel_1.add(current_user)
-    sign_in(current_user)
-  end
-
-  describe "reply to message" do
-    context "when raw contains html" do
-      fab!(:message_1) do
-        Fabricate(
-          :chat_message,
-          use_service: true,
-          chat_channel: channel_1,
-          message: "<abbr>abbr</abbr>",
+  %i[markdown rich].each do |composition_mode|
+    context "with the #{composition_mode} editor" do
+      before do
+        current_user.user_option.update!(
+          composition_mode: UserOption.composition_mode_types[composition_mode],
         )
       end
 
-      it "renders text in the details" do
-        chat_page.visit_channel(channel_1)
+      fab!(:channel_1, :chat_channel)
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:current_user, :admin)
 
-        channel_page.reply_to(message_1)
+      let(:chat_page) { PageObjects::Pages::Chat.new }
+      let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+      let(:thread_page) { PageObjects::Pages::ChatThread.new }
+      let(:cdp) { PageObjects::CDP.new }
 
-        expect(channel_page.composer.message_details).to have_message(
-          id: message_1.id,
-          exact_text: "<abbr>abbr</abbr>",
-        )
+      before do
+        chat_system_bootstrap
+        channel_1.add(current_user)
+        sign_in(current_user)
       end
-    end
 
-    context "when threading is disabled" do
-      it "replies to the message" do
-        chat_page.visit_channel(channel_1)
-        channel_page.reply_to(message_1)
+      describe "reply to message" do
+        context "when raw contains html" do
+          fab!(:message_1) do
+            Fabricate(
+              :chat_message,
+              use_service: true,
+              chat_channel: channel_1,
+              message: "<abbr>abbr</abbr>",
+            )
+          end
 
-        expect(channel_page.composer.message_details).to be_replying_to(message_1)
+          it "renders text in the details" do
+            chat_page.visit_channel(channel_1)
+
+            channel_page.reply_to(message_1)
+
+            expect(channel_page.composer.message_details).to have_message(
+              id: message_1.id,
+              exact_text: "<abbr>abbr</abbr>",
+            )
+          end
+        end
+
+        context "when threading is disabled" do
+          it "replies to the message" do
+            chat_page.visit_channel(channel_1)
+            channel_page.reply_to(message_1)
+
+            expect(channel_page.composer.message_details).to be_replying_to(message_1)
+          end
+        end
+
+        context "when threading is enabled" do
+          before { channel_1.update!(threading_enabled: true) }
+
+          it "replies in the thread" do
+            chat_page.visit_channel(channel_1)
+            channel_page.reply_to(message_1)
+
+            expect(thread_page.composer).to be_focused
+
+            screenshot_marker(label: "chat-thread", only: "desktop")
+          end
+        end
       end
-    end
 
-    context "when threading is enabled" do
-      before { channel_1.update!(threading_enabled: true) }
+      describe "edit message" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 
-      it "replies in the thread" do
-        chat_page.visit_channel(channel_1)
-        channel_page.reply_to(message_1)
+        it "adds the edit indicator" do
+          chat_page.visit_channel(channel_1)
+          channel_page.edit_message(message_1)
 
-        expect(thread_page.composer).to be_focused
+          expect(channel_page.composer).to be_editing_message(message_1)
+        end
 
-        screenshot_marker(label: "chat-thread", only: "desktop")
+        it "updates the message instantly" do
+          chat_page.visit_channel(channel_1)
+
+          cdp.with_network_disconnected do
+            channel_page.edit_message(message_1, "instant")
+
+            expect(channel_page.messages).to have_message(
+              text: message_1.message + " instant",
+              persisted: false,
+            )
+          end
+        end
+
+        context "when pressing escape" do
+          it "cancels editing" do
+            chat_page.visit_channel(channel_1)
+            channel_page.edit_message(message_1)
+            channel_page.composer.cancel_shortcut
+
+            expect(channel_page.composer).to be_editing_no_message
+            expect(channel_page.composer.value).to eq("")
+          end
+        end
+
+        context "when closing edited message" do
+          it "cancels editing" do
+            chat_page.visit_channel(channel_1)
+            channel_page.edit_message(message_1)
+            channel_page.composer.cancel_editing
+
+            expect(channel_page.composer).to be_editing_no_message
+            expect(channel_page.composer.value).to eq("")
+          end
+        end
       end
-    end
-  end
 
-  describe "edit message" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+      context "when click on reply indicator" do
+        before do
+          Fabricate(:chat_message, chat_channel: channel_1)
+          Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
+        end
 
-    it "adds the edit indicator" do
-      chat_page.visit_channel(channel_1)
-      channel_page.edit_message(message_1)
+        it "highlights the message" do
+          chat_page.visit_channel(channel_1)
 
-      expect(channel_page.composer).to be_editing_message(message_1)
-    end
+          page.find(".chat-reply").click
 
-    it "updates the message instantly" do
-      chat_page.visit_channel(channel_1)
-
-      cdp.with_network_disconnected do
-        channel_page.edit_message(message_1, "instant")
-
-        expect(channel_page.messages).to have_message(
-          text: message_1.message + " instant",
-          persisted: false,
-        )
+          expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
+        end
       end
-    end
 
-    context "when pressing escape" do
-      it "cancels editing" do
-        chat_page.visit_channel(channel_1)
-        channel_page.edit_message(message_1)
-        channel_page.composer.cancel_shortcut
+      describe "emoji autocomplete" do
+        let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
 
-        expect(channel_page.composer).to be_editing_no_message
-        expect(channel_page.composer.value).to eq("")
+        it "preserves message draft when selecting emoji from picker via 'more...'" do
+          incomplete_emoji_term = ":gri"
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.input.send_keys("Hello #{incomplete_emoji_term}")
+
+          expect(page).to have_css(".autocomplete.ac-emoji")
+          find(".autocomplete.ac-emoji ul li", text: "more").click
+          expect(page).to have_css(".emoji-picker")
+
+          emoji_element = find(".emoji-picker .emoji[data-emoji]", match: :first)
+          emoji_element.click
+
+          actual_value = channel_page.composer.value
+
+          expect(actual_value).to start_with("Hello "),
+          "Expected message to preserve 'Hello' but got: '#{actual_value}'"
+
+          expect(actual_value).not_to end_with(incomplete_emoji_term),
+          "Expected incomplete emoji term to be replaced with emoji but got: '#{actual_value}'"
+
+          expect(actual_value).to match(/Hello :\w+: $/),
+          "Expected format 'Hello :emoji_name: ' but got: '#{actual_value}'"
+        end
+
+        it "does not show emoji autocomplete menu after whitespace" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.input.send_keys(":zznotemoji ")
+
+          expect(page).to have_no_css(".autocomplete.ac-emoji")
+        end
       end
-    end
-
-    context "when closing edited message" do
-      it "cancels editing" do
-        chat_page.visit_channel(channel_1)
-        channel_page.edit_message(message_1)
-        channel_page.composer.cancel_editing
-
-        expect(channel_page.composer).to be_editing_no_message
-        expect(channel_page.composer.value).to eq("")
-      end
-    end
-  end
-
-  context "when click on reply indicator" do
-    before do
-      Fabricate(:chat_message, chat_channel: channel_1)
-      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
-    end
-
-    it "highlights the message" do
-      chat_page.visit_channel(channel_1)
-
-      page.find(".chat-reply").click
-
-      expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
-    end
-  end
-
-  describe "emoji autocomplete" do
-    let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
-
-    it "preserves message draft when selecting emoji from picker via 'more...'" do
-      incomplete_emoji_term = ":gri"
-      chat_page.visit_channel(channel_1)
-
-      channel_page.composer.input.send_keys("Hello #{incomplete_emoji_term}")
-
-      expect(page).to have_css(".autocomplete.ac-emoji")
-      find(".autocomplete.ac-emoji ul li", text: "more").click
-      expect(page).to have_css(".emoji-picker")
-
-      emoji_element = find(".emoji-picker .emoji[data-emoji]", match: :first)
-      emoji_element.click
-
-      actual_value = channel_page.composer.value
-
-      expect(actual_value).to start_with("Hello "),
-      "Expected message to preserve 'Hello' but got: '#{actual_value}'"
-
-      expect(actual_value).not_to end_with(incomplete_emoji_term),
-      "Expected incomplete emoji term to be replaced with emoji but got: '#{actual_value}'"
-
-      expect(actual_value).to match(/Hello :\w+: $/),
-      "Expected format 'Hello :emoji_name: ' but got: '#{actual_value}'"
-    end
-
-    it "does not show emoji autocomplete menu after whitespace" do
-      chat_page.visit_channel(channel_1)
-
-      channel_page.composer.input.send_keys(":zznotemoji ")
-
-      expect(page).to have_no_css(".autocomplete.ac-emoji")
     end
   end
 end

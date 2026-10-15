@@ -253,9 +253,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
 
     const block = firstBlockOf(this.convertFromMarkdown(head + text + tail));
+    const content = block.type.name === "paragraph" ? block.content : block;
 
     this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, block)
+      this.view.state.tr.replaceWith(sel.start, sel.end, content)
     );
   }
 

@@ -1,0 +1,93 @@
+import { setOwner } from "@ember/owner";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
+
+// Rich editor counterpart of TextareaInteractor: the chat composer and its
+// services talk to either through this same surface.
+export default class RichEditorInteractor {
+  @service capabilities;
+  @service site;
+
+  textManipulation;
+
+  constructor(owner, textManipulation) {
+    setOwner(this, owner);
+    this.textManipulation = textManipulation;
+  }
+
+  get element() {
+    return this.textManipulation.view.dom;
+  }
+
+  get value() {
+    return this.textManipulation.convertToMarkdown(
+      this.textManipulation.view.state.doc
+    );
+  }
+
+  // The editor is bound to the draft's markdown, so transactions already
+  // report their serialized value; nothing to push back in.
+  syncValue() {}
+
+  refreshHeight() {}
+
+  @bind
+  blur() {
+    next(() => {
+      this.element.blur();
+    });
+  }
+
+  // Synchronous on purpose: keys typed before the editor had focus arrive
+  // one per call, and a deferred focus lets a later-mounting composer win.
+  @bind
+  focus(opts = { ensureAtEnd: false, addText: null }) {
+    if (this.capabilities.isIpadOS || this.site.mobileView) {
+      return;
+    }
+
+    if (opts.addText) {
+      this.textManipulation.addText(
+        this.textManipulation.getSelected(),
+        opts.addText
+      );
+    }
+
+    if (opts.ensureAtEnd) {
+      this.textManipulation.putCursorAtEnd();
+    }
+
+    this.textManipulation.focus();
+  }
+
+  @bind
+  getSelected() {
+    return this.textManipulation.getSelected(...arguments);
+  }
+
+  @bind
+  applySurround() {
+    return this.textManipulation.applySurround(...arguments);
+  }
+
+  @bind
+  addText() {
+    return this.textManipulation.addText(...arguments);
+  }
+
+  @bind
+  applyLink() {
+    return this.textManipulation.applyLink(...arguments);
+  }
+
+  // The document keeps the partial `:term` while the picker is open, so the
+  // editor can find it on its own.
+  emojiTermContext() {
+    return null;
+  }
+
+  insertEmoji(emoji) {
+    this.textManipulation.emojiSelected(emoji);
+  }
+}
