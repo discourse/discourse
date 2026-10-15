@@ -93,6 +93,20 @@ translation_overrides:
 Only the listed group and category `attributes` are written, so unrelated
 fields stay as they are on the destination.
 
+## Applying from the backup store
+
+With `--from-backups`, `apply` reads the bundle from the site's backup store
+instead of a local path, so it doesn't have to be copied onto the server:
+
+```sh
+aws s3 cp bundle.zip s3://<s3_backup_bucket>/default/bundle.zip
+migrations/bin/disco customizations apply bundle.zip --from-backups --target template
+```
+
+The bundle goes into the same folder as the backups (`<s3_backup_bucket>/<db>/`
+on S3, `public/backups/<db>/` locally). It doesn't show up in the admin backup
+list and isn't removed by backup cleanup, so delete it when you're done.
+
 ## Finding imported records
 
 Ids differ between test migrations. Imported groups and categories are found
