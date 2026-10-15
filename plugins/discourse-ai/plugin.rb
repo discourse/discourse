@@ -155,6 +155,13 @@ after_initialize do
           "context LIKE ?",
           "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
         )
+        .exists? ||
+      reviewable
+        .reviewable_scores
+        .where(
+          user_id: SiteSetting.ai_spam_detection_user_id.presence || Discourse::SYSTEM_USER_ID,
+          reviewable_score_type: ReviewableScore.types[:spam],
+        )
         .exists?
   end
 

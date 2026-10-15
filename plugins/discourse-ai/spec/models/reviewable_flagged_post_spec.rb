@@ -8,6 +8,53 @@ RSpec.describe ReviewableFlaggedPost do
       SiteSetting.dsa_reporting_enabled = true
     end
 
+    ["spam bot", "system user"].each do |flagger|
+      it "records automatic detection when a moderator deletes spam detected by the #{flagger}" do
+        AiModerationSetting.create!(setting_type: :spam, llm_model: Fabricate(:llm_model))
+        SiteSetting.ai_spam_detection_enabled = true
+        SiteSetting.ai_spam_detection_user_id = "" if flagger == "system user"
+        post = Fabricate(:post, user: Fabricate(:user, trust_level: TrustLevel[0]))
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { DiscourseAi::AiModeration::SpamScanner.perform_scan(post) }
+        reviewable = AiSpamLog.find_by!(post: post).reviewable
+        SiteSetting.ai_spam_detection_enabled = false
+
+        reviewable.perform(Fabricate(:admin), :delete_and_agree)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+        expect(statement.payload).to include(
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+        )
+      end
+    end
+
+    it "records manual detection when a moderator deletes a post flagged as spam by a human" do
+      DiscourseAi::AiModeration::SpamScanner.ensure_flagging_user!
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(Fabricate(:user), ReviewableScore.types[:spam])
+
+      reviewable.perform(Fabricate(:admin), :delete_and_agree)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["automated_detection"]).to eq("No")
+    end
+
+    it "records manual detection for a nonspam flag from the configured spam flagger" do
+      DiscourseAi::AiModeration::SpamScanner.ensure_flagging_user!
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(
+        DiscourseAi::AiModeration::SpamScanner.flagging_user,
+        ReviewableScore.types[:off_topic],
+      )
+
+      reviewable.perform(Fabricate(:admin), :delete_and_agree)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["automated_detection"]).to eq("No")
+    end
+
     it "records automatic detection when a moderator deletes a post queued for review by AI triage" do
       reviewable = Fabricate(:reviewable_flagged_post)
       post = reviewable.target
