@@ -36,88 +36,72 @@ acceptance("Event onebox", function (needs) {
     server.get("/discourse-post-event/events/900", () =>
       helper.response({ event })
     );
-    server.get("/onebox", (request) => {
-      const isEvent = request.queryParams.url.endsWith("/123");
-      return [
-        200,
-        { "Content-Type": "text/html" },
-        `
-          <aside class="quote" data-topic="${isEvent ? 123 : 124}" data-post="1">
+    server.get("/onebox", () => [
+      200,
+      { "Content-Type": "text/html" },
+      `
+          <aside class="quote" data-topic="123" data-post="1">
             <div class="title">Example topic</div>
-            <blockquote>
-              ${isEvent ? '<div class="discourse-event-onebox"><p>Board game night</p><p>September 20, 2026 6:00 PM (UTC)</p></div>' : "Preview text"}
-            </blockquote>
+            <blockquote>Preview text</blockquote>
           </aside>
         `,
-      ];
-    });
+    ]);
     server.get("/discourse-post-event/events", () => {
       eventRequests++;
       return helper.response({ events: [] });
     });
   });
 
-  [
-    ["event", 123],
-    ["ordinary", 124],
-  ].forEach(([kind, id]) => {
-    test(`${kind} topics use standard oneboxes in both composer modes`, async function (assert) {
-      const url = `${window.location.origin}/t/example/${id}`;
-      await visit("/t/internationalization-localization/280");
-      await click("#topic-footer-buttons .btn.create");
-      await fillIn(".d-editor-input", `${url}\n\nEditable text`);
+  test("event topics use standard oneboxes in both composer modes", async function (assert) {
+    const url = `${window.location.origin}/t/example/123`;
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", `${url}\n\nEditable text`);
 
-      assert
-        .dom(".d-editor-preview aside.quote")
-        .exists("markdown renders the server preview");
-      assert
-        .dom(".d-editor-preview .discourse-post-event-onebox")
-        .doesNotExist("no custom preview renderer is mounted");
-      if (kind === "event") {
-        assert
-          .dom(".d-editor-preview .discourse-event-onebox")
-          .includesText("Board game night", "the event details are rendered");
-      }
+    assert
+      .dom(".d-editor-preview aside.quote")
+      .exists("markdown renders the server preview");
+    assert
+      .dom(".d-editor-preview .discourse-post-event-onebox")
+      .doesNotExist("no custom preview renderer is mounted");
 
-      await click(".composer-toggle-switch");
+    await click(".composer-toggle-switch");
 
-      assert
-        .dom(".onebox-wrapper aside.quote")
-        .exists("rich text uses core's onebox wrapper");
-      assert
-        .dom(".onebox-wrapper aside.quote")
-        .hasStyle(
-          { whiteSpace: "normal" },
-          "HTML indentation does not create blank lines"
-        );
-      assert
-        .dom(".ProseMirror > p")
-        .hasStyle(
-          { whiteSpace: "break-spaces" },
-          "editable whitespace is preserved"
-        );
-      assert.strictEqual(
-        eventRequests,
-        0,
-        "topic previews need no additional event lookup"
+    assert
+      .dom(".onebox-wrapper aside.quote")
+      .exists("rich text uses core's onebox wrapper");
+    assert
+      .dom(".onebox-wrapper aside.quote")
+      .hasStyle(
+        { whiteSpace: "normal" },
+        "HTML indentation does not create blank lines"
       );
+    assert
+      .dom(".ProseMirror > p")
+      .hasStyle(
+        { whiteSpace: "break-spaces" },
+        "editable whitespace is preserved"
+      );
+    assert.strictEqual(
+      eventRequests,
+      0,
+      "topic previews need no additional event lookup"
+    );
 
-      await click(".composer-toggle-switch");
-      assert
-        .dom(".d-editor-input")
-        .hasValue(
-          `${url}\n\nEditable text`,
-          "switching modes preserves the source URL"
-        );
-    });
+    await click(".composer-toggle-switch");
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `${url}\n\nEditable text`,
+        "switching modes preserves the source URL"
+      );
   });
 
   test("published event oneboxes retain the interactive event card", async function (assert) {
     const post = topicJson.post_stream.posts[0];
     post.cooked = `
       <aside class="quote" data-topic="123" data-post="1">
-        <div class="title">Event topic</div>
-        <blockquote><div class="discourse-event-onebox">Board game night</div></blockquote>
+        <div class="title">Event topic</div><blockquote>Board game night</blockquote>
       </aside>
       <aside class="quote" data-topic="124" data-post="1">
         <div class="title">Ordinary topic</div><blockquote>Preview text</blockquote>

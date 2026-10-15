@@ -9,34 +9,6 @@ module DiscourseEvents
         new(fragment, post: post).call
       end
 
-      # +starts_at+ and +ends_at+ must already be in the event's wall-clock
-      # time; +timezone+ is only used as a label
-      def self.format_dates(starts_at, ends_at, all_day:, timezone:)
-        ends_at = nil if all_day && same_day?(starts_at, ends_at)
-
-        dates = format_date(starts_at, all_day)
-        dates = t("date_range", from: dates, to: format_date(ends_at, all_day)) if ends_at.present?
-        dates = t("date_with_timezone", date: dates, timezone: timezone) unless all_day
-        dates
-      end
-
-      def self.format_date(value, all_day)
-        I18n.l(value, format: t(all_day ? "date_format" : "datetime_format"))
-      rescue I18n::ArgumentError
-        value.to_s
-      end
-
-      def self.same_day?(starts_at, ends_at)
-        [starts_at, ends_at].all? { |date| date.is_a?(Date) || date.is_a?(Time) } &&
-          starts_at.to_date == ends_at.to_date
-      end
-
-      def self.t(key, **args)
-        I18n.t("discourse_post_event.event_excerpt.#{key}", **args)
-      end
-
-      private_class_method :format_date, :same_day?
-
       def initialize(fragment, post: nil)
         @fragment = fragment
         @topic_title = post&.topic&.title
@@ -62,28 +34,41 @@ module DiscourseEvents
         parts << dates(event_node)
         parts << location
 
-        summary = parts.compact.join(self.class.t("separator"))
-        summary.present? ? self.class.t("summary", summary: summary) : ""
+        summary = parts.compact.join(t("separator"))
+        summary.present? ? t("summary", summary: summary) : ""
       end
 
       def dates(event_node)
         starts_at = event_node["data-start"]
         return if starts_at.blank?
 
-        self.class.format_dates(
-          parse_date(starts_at),
-          parse_date(event_node["data-end"]),
-          all_day: event_node["data-all-day"] == "true",
-          timezone: event_node["data-timezone"] || "UTC",
-        )
+        all_day = event_node["data-all-day"] == "true"
+        ends_at = event_node["data-end"]
+        ends_at = nil if all_day && same_day?(starts_at, ends_at)
+        timezone = event_node["data-timezone"] || "UTC"
+
+        dates = format_date(starts_at, all_day)
+        dates = t("date_range", from: dates, to: format_date(ends_at, all_day)) if ends_at.present?
+        dates = t("date_with_timezone", date: dates, timezone: timezone) unless all_day
+        dates
       end
 
-      # unparseable values are kept as-is so the summary still shows something
-      def parse_date(value)
-        return if value.blank?
-        DateTime.parse(value)
-      rescue ArgumentError
+      # an all-day event starting and ending on one date reads as a single day
+      def same_day?(starts_at, ends_at)
+        return false if ends_at.blank?
+        Date.parse(starts_at) == Date.parse(ends_at)
+      rescue Date::Error
+        false
+      end
+
+      def format_date(value, all_day)
+        I18n.l(DateTime.parse(value), format: t(all_day ? "date_format" : "datetime_format"))
+      rescue StandardError
         value
+      end
+
+      def t(key, **args)
+        I18n.t("discourse_post_event.event_excerpt.#{key}", **args)
       end
     end
   end
