@@ -79,6 +79,17 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
+  it "uses usernames in topic user information when names are disabled" do
+    SiteSetting.enable_names = false
+    user.update!(name: "Hidden Participant")
+    builder.push(type: :user, content: "How do I solve this?", id: user.username)
+
+    content = builder.to_a(style: :topic).first[:content]
+
+    expect(content).to include("User information:", "#{user.username}:")
+    expect(content).not_to include(user.name)
+  end
+
   it "formats messages for topic style" do
     # Create a topic with tags
     topic = Fabricate(:topic, title: "This is an Example Topic")
