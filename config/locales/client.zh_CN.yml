@@ -852,6 +852,10 @@ zh_CN:
       title:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
+    dsa_statements:
+      category: "类别"
+      category_prompt: "选择一个类别"
+      saving: "正在保存…"
     review:
       show_more: "展开"
       show_less: "收起"

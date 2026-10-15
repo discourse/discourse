@@ -147,6 +147,13 @@ lt:
         type: "Tipas"
         error: "Klaida"
         response: "Atsakymas"
+      discourse_workflows:
+        classify:
+          text: "Tekstas"
+          upload_ids: "Paveiksliukai"
+          name: "Vardas"
+          type: "Tipas"
+          type_score: "Rezultatas"
       ai_tool_approval:
         loading: "Kraunasi..."
         tool: "Veiksmai"
@@ -413,6 +420,12 @@ lt:
         delete: "Pašalinti"
         embedding: "Įterpimai"
         tool: "Įrankis"
+      decision_models:
+        no_preset: "Nieko"
+        display_name: "Vardas"
+        model: "Modelis"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
       mcp_servers:
         name: "Vardas"
         description: "Aprašymas"

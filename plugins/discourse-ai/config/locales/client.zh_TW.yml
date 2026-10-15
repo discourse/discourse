@@ -281,6 +281,12 @@ zh_TW:
           upload_ids: "上傳 ID"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
+        classify:
+          text: "文字"
+          upload_ids: "圖像"
+          name: "名稱"
+          type: "類型"
+          type_score: "分數"
       bot_chats:
         tab_label: "機器人聊天"
       ai_tool_approval:
@@ -984,7 +990,6 @@ zh_TW:
           result: "測試結果"
       secrets:
         short_title: "憑據"
-        description: "管理在 LLM 和嵌入向量之間共享的身份驗證憑據。"
         name: "名稱"
         secret: "值"
         select_secret: "選擇憑據…"
@@ -1009,6 +1014,16 @@ zh_TW:
         mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
         modal:
           title: "創建新憑據"
+      decision_models:
+        no_preset: "無"
+        display_name: "名稱"
+        model: "模型"
+        provider: "服務提供者"
+        api_key: "憑據"
+        vision_enabled: "支持圖片輸入"
+        edit: "編輯"
+        delete: "刪除"
+        test: "運行測試"
       mcp_servers:
         short_title: "MCP 服務器"
         new: "新 MCP 服務器"

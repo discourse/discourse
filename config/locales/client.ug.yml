@@ -816,6 +816,10 @@ ug:
       title:
         search: "ئۇچۇر ئىزدە"
         placeholder: "بۇ جايغا ئۇچۇر ماۋزۇسى، تور ئادرېسى ياكى كىملىكى كىرگۈزۈلىدۇ"
+    dsa_statements:
+      category: "سەھىپە"
+      category_prompt: "سەھىپە تاللىنىدۇ"
+      saving: "ساقلاۋاتىدۇ…"
     review:
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"

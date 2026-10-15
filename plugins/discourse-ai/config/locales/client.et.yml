@@ -43,6 +43,13 @@ et:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Pildid"
+          name: "Nimi"
+          type: "Tüüp"
+          type_score: "Skoor"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -183,6 +190,12 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      decision_models:
+        no_preset: "Pole"
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        delete: "Kustuta"
       mcp_servers:
         name: "Nimi"
         description: "Kirjeldus"

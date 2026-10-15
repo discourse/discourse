@@ -172,6 +172,12 @@ fi:
       discourse_workflows:
         ai_agent:
           mode: "Tila"
+        classify:
+          text: "Teksti"
+          upload_ids: "Kuvat"
+          name: "Nimi"
+          type: "Tyyppi"
+          type_score: "Arvo"
       ai_tool_approval:
         loading: "Ladataan..."
         tool: "Toiminto"
@@ -573,6 +579,14 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      decision_models:
+        no_preset: "Ei valittu"
+        display_name: "Nimi"
+        model: "Malli"
+        provider: "Palveluntarjoaja"
+        edit: "Muokkaa"
+        delete: "Poista"
+        test: "Suorita testi"
       mcp_servers:
         name: "Nimi"
         description: "Kuvaus"

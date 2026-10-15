@@ -449,6 +449,9 @@ bg:
       title:
         search: "Търси съобщения"
         placeholder: "въведете тук заглавието на съобщението, url или ID"
+    dsa_statements:
+      category: "Категория"
+      saving: "Запазване…"
     review:
       show_more: "Покажи повече"
       show_less: "Покажи по-малко"

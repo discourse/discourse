@@ -505,6 +505,10 @@ ko:
       title:
         search: "메시지 검색"
         placeholder: "여기에 메시지 제목, URL 또는 ID를 입력하세요"
+    dsa_statements:
+      category: "카테고리"
+      category_prompt: "카테고리 선택"
+      saving: "저장 중…"
     review:
       show_more: "더 보기"
       show_less: "간략히 보기"

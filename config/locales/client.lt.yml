@@ -1019,6 +1019,20 @@ lt:
       title:
         search: "Ieškoti žinutės"
         placeholder: "čia įveskite pranešimo pavadinimą, URL ar ID"
+    dsa_statements:
+      title: "DSA klasifikacija"
+      help_title: "Apie DSA klasifikaciją"
+      help: "Pasirinkite bendruomenės taisyklę ir kategoriją, kurios paaiškina šį moderavimo sprendimą. Jos išsaugomos kartu su skaitmeninių paslaugų įstatymo motyvų sąrašu."
+      rule: "Bendruomenės taisyklė"
+      rule_prompt: "Pasirinkite bendruomenės taisyklę"
+      category: "Kategorija"
+      category_prompt: "Pasirinkite kategoriją"
+      pending: "Laukiama DSA klasifikacijos"
+      confirm_title: "Išsaugoti DSA klasifikaciją?"
+      confirm_message: "Patikrinkite bendruomenės taisyklę ir kategoriją. Šios klasifikacijos negalima pakeisti išsaugojus."
+      save: "Išsaugoti klasifikaciją"
+      saving: "Saugoma..."
+      saved: "Klasifikacija išsaugota"
     review:
       show_more: "Rodyti daugiau"
       show_less: "Rodyti mažiau"

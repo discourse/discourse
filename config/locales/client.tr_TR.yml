@@ -780,6 +780,10 @@ tr_TR:
       title:
         search: "Mesaj Arama"
         placeholder: "mesaj başlığını, url'yi veya kimliği buraya yazın"
+    dsa_statements:
+      category: "Kategori"
+      category_prompt: "Kategori seçin"
+      saving: "Kaydediliyor…"
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"

@@ -249,6 +249,12 @@ es:
         ai_agent:
           agent_id: "Agente"
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imágenes"
+          name: "Nombre"
+          type: "Tipo"
+          type_score: "Puntuación"
       ai_tool_approval:
         loading: "Cargando..."
         agent: "Agente"
@@ -803,7 +809,6 @@ es:
           result: "Resultado de la prueba"
       secrets:
         short_title: "Credenciales"
-        description: "Gestionar las credenciales de autenticación compartidas entre LLM, integraciones y herramientas."
         name: "Nombre"
         secret: "Valor"
         select_secret: "Selecciona una credencial..."
@@ -828,6 +833,15 @@ es:
         mcp_server_oauth_client_secret: "Secreto del cliente OAuth del servidor MCP"
         modal:
           title: "Crear nueva credencial"
+      decision_models:
+        no_preset: "Ninguna"
+        display_name: "Nombre"
+        model: "Modelo"
+        provider: "Proveedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Eliminar"
+        test: "Ejecutar prueba"
       mcp_servers:
         short_title: "Servidores MCP"
         new: "Nuevo servidor MCP"

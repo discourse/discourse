@@ -917,8 +917,8 @@ es:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
         choose_model: "Establece primero «ai embeddings selected model»."
         model_test_failed: "No hemos podido generar una prueba de incrustación con este modelo. Comprueba que esté configurada correctamente."
-    secrets:
-      delete_failed_in_use: "Esta credencial está siendo utilizada actualmente por uno o más LLM, incrustaciones o herramientas y no puede eliminarse."
+    decision_models:
+      secret_not_found: "La credencial seleccionada no existe"
     llm_models:
       missing_provider_param: "%{param} no puede estar en blanco"
       secret_required: "Se debe seleccionar una credencial"

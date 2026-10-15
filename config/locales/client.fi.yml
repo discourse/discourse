@@ -681,6 +681,10 @@ fi:
       title:
         search: "Hae viestiä"
         placeholder: "Syötä viestin otsikko, url tai tunnus tähän"
+    dsa_statements:
+      category: "Luokka"
+      category_prompt: "Valitse alue"
+      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"

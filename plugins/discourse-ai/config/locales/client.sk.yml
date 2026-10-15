@@ -169,6 +169,13 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Meno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -574,6 +581,14 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žiadny"
+        display_name: "Meno"
+        model: "Model"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        test: "Spustiť test"
       mcp_servers:
         name: "Meno"
         description: "Popis"

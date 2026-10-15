@@ -503,6 +503,9 @@ sv:
       title:
         search: "Sök efter ett meddelande"
         placeholder: "skriv meddelandets titel, url eller id här"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Sparar…"
     review:
       show_more: "Visa mer"
       show_less: "Visa mindre"
