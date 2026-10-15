@@ -8,6 +8,7 @@ const INDENT = "  ";
 
 // cached hljs instance with custom plugins/languages
 let hljs;
+let hljsLoading;
 
 function selectedCodeLines(state) {
   const { selection } = state;
@@ -91,7 +92,13 @@ class CodeBlockWithLangSelectorNodeView {
     this.dom = pre;
     this.contentDOM = code;
 
-    this.appendSelect();
+    // a block created before the highlighter arrives would otherwise only
+    // get its select on a later edit
+    if (hljs) {
+      this.appendSelect();
+    } else {
+      hljsLoading?.then(() => this.appendSelect());
+    }
   }
 
   changeListener(e) {
@@ -326,8 +333,10 @@ const extension = {
         },
       }),
     async ({ getContext }) => {
+      hljsLoading ??= ensureHighlightJs(getContext().session.highlightJsPath);
+
       return highlightPlugin(
-        (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
+        (hljs = await hljsLoading),
         ["code_block", "html_block", "preview_source"],
 
         // NOTE: If the language has not been set with the code block, we default to plain
