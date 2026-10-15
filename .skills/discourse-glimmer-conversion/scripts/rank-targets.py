@@ -28,6 +28,11 @@ INFRA = {
 BLOCKED = {
     "frontend/discourse/app/components/anonymous-topic-footer-buttons.gjs": "passes `this` to getTopicFooterButtons, which calls context.get(); needs the plugin API reworked",
     "frontend/discourse/app/components/discourse-root.js": "root element owning event dispatch; glimmerified once and reverted (27408c7e14b)",
+    "frontend/discourse/admin/components/edit-category-panel.gjs": "buildCategoryPanel() factory; convert together with the edit-category-* tabs built from it",
+    "frontend/discourse/app/components/avatar-uploader.gjs": "writes uploadedAvatarId/uploadedAvatarTemplate back into callers, three external plugins included; needs @done(upload) and coordinated external updates",
+    "frontend/discourse/app/components/flag-selection.gjs": "observer checks radios that the yielded FlagActionType renders; convert both together with a checked binding",
+    "plugins/styleguide/assets/javascripts/discourse/components/styleguide-markdown.js": "cooks its own rendered block via innerHTML; needs a markdown arg instead",
+    "plugins/chat/assets/javascripts/discourse/components/chat-to-topic-selector.gjs": "topicTitle/categoryId/tags/selection flow back to the archive-channel modal by two-way binding; needs callbacks there",
 }
 EXTERNAL = [
     "all-the-plugins/official", "all-the-plugins/third-party",

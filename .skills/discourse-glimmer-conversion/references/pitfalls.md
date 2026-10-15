@@ -46,6 +46,10 @@ end of the matching section with the commit sha.
   `DiscourseLinkedText` called `i18n(this.text)` while still declaring `textParams`, so
   `pwa.install_banner`'s `%{title}` never interpolated. When a `@computed` key is never read
   in the getter, check the pre-`@computed` version before assuming it is dead weight.
+- **`?.` is not a truthiness check.** Callers and tests pass `false` as well as nothing
+  (`<PaymentOptions @plans={{false}} />`). The classic `if (this.plans)` skipped it;
+  `this.args.plans?.toSorted(...)` throws, because `false` is not nullish. Keep the classic
+  guard's truthiness when the arg can be a boolean.
 
 ## Reactivity
 
@@ -79,6 +83,11 @@ end of the matching section with the commit sha.
   state; the Glimmer version forgot to, so claimed/edited flags leaked from one reviewable
   to the next. Fix: `@cached get state()` keyed on `this.args.reviewable`, or
   `@resettableTracked` (`3f7cf1139da`).
+- **Deprecated array extensions still work.** `firstObject`, `lastObject` and friends resolve
+  through `app/array-shim.js` with a deprecation even though `EXTEND_PROTOTYPES` is off, so
+  `aliasLevelOptions.firstObject.value` in a classic getter is not a bug. Switch to `[0]`
+  while converting but do not report it as a fix (`GroupsFormInteractionFields`; a mutation
+  run caught the false claim).
 
 ## Lifecycle and DOM
 
@@ -113,6 +122,11 @@ end of the matching section with the commit sha.
   replacements do not fire deterministically under test; `load-more` needed exported
   test toggles (`7b062e24def`). Prefer `TrackedMediaQuery` / `dOnResize` and assert on the
   state, not on timing.
+- **select-kit takes focus back after a selection.** It refocuses its header in a `next()`
+  tick, so focusing a field the selection just revealed loses, whether from a modifier or
+  the classic `@afterRender`. `AdminPenaltyPostAction`'s "focus the edit textarea" never
+  held. Run a focus assertion against the classic version before treating its failure as a
+  regression.
 
 ## The component as a receiver
 
@@ -167,6 +181,11 @@ end of the matching section with the commit sha.
   Dropping the wrapper would have "fixed" the borders — a visual change nobody asked for.
   Before deciding a wrapper is dead weight, grep the scss for `:last-child`, `:first-child`,
   `+`, `~`, and `:nth-` on the classes its children carry.
+- **A blanket `this.` → `@` template rewrite also catches the component's own members.**
+  `PaymentPlan`'s `@action={{this.planClick}}` became `{{@planClick}}`, an arg nobody passes,
+  so clicking a plan did nothing; no test clicked one (`3dd5c4039d3`, fixed in the next
+  batch that touched the caller). After rewriting, run `scripts/self-args.py <files>`: it
+  lists template `@name` reads that match a member of the same class.
 
 ## Consumers
 

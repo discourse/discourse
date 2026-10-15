@@ -311,7 +311,8 @@ Full recipes in the data-flow reference, including `<Input>`/`<Textarea>`, selec
   add one covering the wrapper, each redesigned binding, and each lifecycle replacement, or
   state in the report which acceptance tests are the coverage.
 - New tests follow `discourse-writing-js-tests`; the pattern for outer mutable state (a
-  local tracked class, assign, `await settled()`) is in the consumers-and-tests reference.
+  `tracked(v)` box, assign `.value`, `await settled()`) is in the consumers-and-tests
+  reference.
 - Objects the component mutates through an arg must be reactive in the test
   (`trackedObject(...)` from `@ember/reactive/collections`), and the test asserts the
   write reached the caller.
@@ -327,8 +328,10 @@ Full recipes in the data-flow reference, including `<Input>`/`<Textarea>`, selec
 
 ```bash
 bin/lint --fix path/to/component.gjs path/to/changed/callsites... path/to/tests...
-bin/qunit path/to/component-test.gjs        # by PATH, once per component in a batch
+.skills/discourse-glimmer-conversion/scripts/self-args.py path/to/component.gjs...
+bin/qunit path/to/component-test.gjs        # by PATH, one file per invocation
 bin/qunit frontend/discourse/tests/acceptance/<each file the script listed>.js
+bin/qunit --target <plugin-dir> --filter "/<module>|<module>/i"   # plugin tests
 bin/rspec spec/system/<each spec the script listed>
 ```
 

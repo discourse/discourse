@@ -174,12 +174,21 @@ page" section closes that gap — it matches test *filenames* against each call 
 not just the ones matching the component name; `AdminEditableField` shipped broken because
 `admin-user-index-test.js` was never run.
 
-### Plugin test paths run the whole plugin suite
+### Plugin tests need `--target`
 
-`bin/qunit plugins/<name>/test/...` runs every test in that plugin, and a large plugin's
-suite (discourse-ai: ~340) regularly dies on an unrelated browser timeout before reaching
-yours. Add `--filter "<module name>"` alongside the path when checking one file, especially
-for mutation runs, and confirm your test's own `ok`/`not ok` line appears.
+`bin/qunit plugins/<name>/...` now runs with `target=core` and `Load plugins: false`, and
+fails with `No tests matched with the filter: discourse/plugins/<name>/...` (check with
+`--dry-run`). Pass the plugin instead: `bin/qunit --target <name> --filter "/<module>/i"`.
+The target runs the plugin's whole suite, and a large one (discourse-ai: ~340) regularly
+dies on an unrelated browser timeout before reaching yours, so keep the `--filter`, and
+confirm your test's own `ok`/`not ok` line appears.
+
+### One test file per invocation
+
+Passing a dozen files to one `bin/qunit` run aborts at a random test with
+`Browser timeout exceeded: 30s` after 40-95 tests, on `origin/main` as well. The named test
+passes alone, and everything after it never runs. Loop over the files with one invocation
+each and collect the `# pass`/`# fail` lines.
 
 ### Running a test file you just created
 
@@ -189,6 +198,15 @@ its inputs but not the test-entrypoint glob, so `bin/qunit path/to/new-test.gjs`
 happily. Restart `bin/dev` and wait for the new file to appear in the bundle
 (`grep -rl <basename> frontend/discourse/dist/assets/js/`) before believing the run. Editing
 an existing test file is picked up normally.
+
+### After swapping files under a running `bin/dev`
+
+Copying `origin/main` versions over your files and back (to compare against the classic
+behavior, or to bisect) can leave the watcher serving a stale module: `bulk-user-suspend-
+confirmation.gjs` stayed at main's version in the admin bundle for an hour while the file on
+disk was correct, `touch` did not trigger a rebuild, and only the system spec that rendered
+it noticed (`this.args.onChangeReason is not a function`). Restart `bin/dev` after any such
+experiment and before system specs, which load the same `frontend/discourse/dist`.
 
 ### Components that mount a third-party editor
 
