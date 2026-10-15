@@ -174,10 +174,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Classify::V1 do
         stub_request(:post, decision_model.url)
           .with(headers: { "X-Image-Input" => "true" }) do |req|
             payload = JSON.parse(req.body)
-            asset = payload.fetch("assets").values.sole
-            payload.fetch("state") == { "text" => "Lunch", "images" => payload["assets"].keys } &&
-              asset["format"] == "png" &&
-              Base64.strict_decode64(asset["data_base64"]).start_with?("\x89PNG".b)
+            image = payload.fetch("images").sole
+            payload.fetch("state") == "Lunch" && !payload.key?("assets") &&
+              image.start_with?("data:image/png;base64,") &&
+              Base64.strict_decode64(image.split(",", 2).last).start_with?("\x89PNG".b)
           end
           .to_return(body: { answers: { is_hotdog: { type: "noul", noul: 0.97 } } }.to_json)
       config =

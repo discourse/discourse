@@ -82,10 +82,13 @@ RSpec.describe DecisionModel do
         [{ name: "X-Token", value: "one" }, { name: "x-token", value: "two" }],
         21.times.map { |index| { name: "X-#{index}", value: "ok" } },
       ]
-      invalid_headers.each do |headers|
-        model = Fabricate.build(:decision_model, custom_headers: headers)
-        expect(model).not_to be_valid
-        expect(model.errors[:custom_headers]).to be_present
+      %w[system_one typesafe].each do |provider|
+        invalid_headers.each do |headers|
+          model = Fabricate.build(:decision_model, provider:, custom_headers: headers)
+          expect(model).not_to be_valid
+          expect(model.errors[:custom_headers]).to be_present
+          expect(model.custom_headers_for_request).to eq({})
+        end
       end
     end
 
@@ -100,9 +103,13 @@ RSpec.describe DecisionModel do
       end
     end
 
-    it "only permits nonempty custom headers for System One" do
+    it "only permits nonempty custom headers for System One and TypeSafe" do
       model = Fabricate.build(:decision_model, custom_headers: [{ name: "X-Token", value: "x" }])
-      expect(model).to be_valid
+      %w[system_one typesafe].each do |provider|
+        model.provider = provider
+        expect(model).to be_valid
+        expect(model.custom_headers_for_request).to eq("X-Token" => "x")
+      end
       model.provider = "open_ai"
       expect(model).not_to be_valid
       expect(model.errors[:custom_headers]).to include(
@@ -118,7 +125,7 @@ RSpec.describe DecisionModel do
       preset = described_class.presets.find { |item| item[:preset_id] == "jev-latest-vision" }
       expect(preset).to include(
         name: "jev-latest",
-        provider: "system_one",
+        provider: "typesafe",
         url: "https://api.typesafe.ai/v1/systemone",
         vision_enabled: true,
         custom_headers: [{ name: "TypeSafe-Danger-Zone-Images", value: "true" }],
@@ -126,7 +133,15 @@ RSpec.describe DecisionModel do
       expect(preset[:custom_headers]).to be_frozen
       expect(preset[:custom_headers]).to all(be_frozen)
       expect(described_class.new(preset.except(:preset_id))).to be_valid
-      expect(described_class.presets.first[:vision_enabled]).to eq(false)
+      text_preset = described_class.presets.find { |item| item[:preset_id] == "jev-latest" }
+      expect(text_preset).to include(provider: "typesafe", vision_enabled: false)
+      expect(described_class.new(text_preset.except(:preset_id))).to be_valid
+      expect(
+        described_class
+          .presets
+          .select { |item| item[:provider] == "system_one" }
+          .map { |item| item[:preset_id] },
+      ).to eq(%w[vllm-sr-d3 cloudflare-clef cloudflare-clef-flash])
     end
 
     it "provides immutable preset metadata" do

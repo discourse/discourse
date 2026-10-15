@@ -1198,6 +1198,7 @@ en:
         test_success: "The decision model answered the test question (yes: %{percentage}%)."
         providers:
           system_one: "System One"
+          typesafe: "TypeSafe"
           open_ai: "OpenAI Decisions"
 
       mcp_servers:

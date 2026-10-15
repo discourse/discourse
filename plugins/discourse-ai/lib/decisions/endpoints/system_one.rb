@@ -36,27 +36,16 @@ module DiscourseAi
             state:,
             questions: questions.to_h { |question| [question.name, wire_question(question)] },
           }
-          if images.present?
-            payload[:assets] = images.to_h do |image|
-              match = image.match(%r{\Adata:image/(png|jpeg|jpg);base64,(.+)\z})
-              raise InvalidRequest, "Images must be PNG or JPEG base64 data URLs" if !match
-
-              format = match[1] == "jpg" ? "jpeg" : match[1]
-              [SecureRandom.uuid, { type: "image", format:, data_base64: match[2] }]
-            end
-            # Every asset must be referenced in the state, without changing the original text or structure.
-            payload[:state] = { text: state, images: payload[:assets].keys }
-          end
+          payload[:images] = images if images.present?
           payload
         end
 
         def audit_payload(payload)
           payload = payload.deep_dup
-          payload[:assets]&.each_value do |asset|
-            asset[:data_base64] = redacted_image(
-              asset[:data_base64],
-              mime_type: "image/#{asset[:format]}",
-            )
+          payload[:images]&.map! do |image|
+            header, data = image.split(",", 2)
+            mime_type = header.delete_prefix("data:").delete_suffix(";base64")
+            redacted_image(data, mime_type:)
           end
           payload
         end

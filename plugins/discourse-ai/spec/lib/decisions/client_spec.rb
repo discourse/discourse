@@ -455,51 +455,31 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(AiApiAuditLog.last).to have_attributes(request_tokens: 296, response_tokens: nil)
     end
 
-    it "sends PNG and JPEG assets with stable references and redacts only their binary audit data" do
+    it "sends legacy images separately from unchanged string and structured state and redacts image audits" do
       decision_model.update!(vision_enabled: true)
-      image = "data:image/png;base64,AAAA"
-      jpeg = "data:image/jpeg;base64,BBBB"
-      state = image + "x" * 20_001
-      sent = nil
-      request =
-        stub_request(:post, decision_model.url)
-          .with do |req|
-            sent = JSON.parse(req.body)
-            references = sent.dig("state", "images")
-            sent.dig("state", "text") == state && references.is_a?(Array) && references.size == 2 &&
-              references.uniq.size == 2 &&
-              references.all? { |reference| reference.match?(/\A[0-9a-f-]{36}\z/) } &&
-              sent["assets"].keys == references && !sent.key?("images") &&
-              sent["assets"].values ==
-                [
-                  { "type" => "image", "format" => "png", "data_base64" => "AAAA" },
-                  { "type" => "image", "format" => "jpeg", "data_base64" => "BBBB" },
-                ]
-          end
-          .to_return(body: response_body.to_json)
+      images = %w[data:image/png;base64,AAAA data:image/jpeg;base64,BBBB]
+      [images.first + "x" * 20_001, { posts: [{ text: "Hello" }] }].each do |state|
+        sent = nil
+        request =
+          stub_request(:post, decision_model.url)
+            .with do |req|
+              sent = JSON.parse(req.body)
+              sent["state"] == JSON.parse(state.to_json) && sent["images"] == images &&
+                !sent.key?("assets")
+            end
+            .to_return(body: response_body.to_json)
 
-      result = client.decide(state, questions:, images: [image, jpeg], feature_name: "test")
+        result = client.decide(state, questions:, images:, feature_name: "test")
 
-      payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
-      expect(payload["state"]).to eq(sent["state"])
-      expect(payload["assets"].keys).to eq(sent["assets"].keys)
-      expect(payload["assets"].values).to eq(
-        [
-          {
-            "type" => "image",
-            "format" => "png",
-            "data_base64" => "[redacted image/png, 3 Bytes]",
-          },
-          {
-            "type" => "image",
-            "format" => "jpeg",
-            "data_base64" => "[redacted image/jpeg, 3 Bytes]",
-          },
-        ],
-      )
-      expect(payload["questions"]).to eq(sent["questions"])
-      expect(payload).not_to have_key("images")
-      expect(request).to have_been_requested.once
+        payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
+        expect(payload).to eq(
+          sent.merge(
+            "images" => ["[redacted image/png, 3 Bytes]", "[redacted image/jpeg, 3 Bytes]"],
+          ),
+        )
+        expect(images).to eq(%w[data:image/png;base64,AAAA data:image/jpeg;base64,BBBB])
+        expect(request).to have_been_requested
+      end
     end
 
     it "serializes Time values in structured state consistently on the wire and in audits" do
@@ -518,39 +498,6 @@ RSpec.describe DiscourseAi::Decisions::Client do
       expect(sent.dig("state", "posts", 0, "created_at")).to eq("2026-10-14T12:34:56.000Z")
       expect(JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)).to eq(sent)
       expect(request).to have_been_requested.once
-    end
-
-    it "preserves structured state and normalizes the JPEG alias for image assets" do
-      decision_model.update!(vision_enabled: true)
-      state = { posts: [{ text: "Hello" }] }
-      request =
-        stub_request(:post, decision_model.url)
-          .with do |req|
-            payload = JSON.parse(req.body)
-            reference = payload.dig("state", "images", 0)
-            payload.dig("state", "text") == state.deep_stringify_keys &&
-              payload["assets"] ==
-                { reference => { "type" => "image", "format" => "jpeg", "data_base64" => "AAAA" } }
-          end
-          .to_return(body: response_body.to_json)
-
-      client.decide(state, questions:, images: ["data:image/jpg;base64,AAAA"], feature_name: "test")
-
-      expect(request).to have_been_requested.once
-    end
-
-    it "rejects unsupported image formats before transport" do
-      decision_model.update!(vision_enabled: true)
-
-      expect {
-        client.decide(
-          "Hello",
-          questions:,
-          images: ["data:image/webp;base64,AAAA"],
-          feature_name: "test",
-        )
-      }.to raise_error(DiscourseAi::Decisions::InvalidRequest, /PNG or JPEG/)
-      expect(AiApiAuditLog.count).to eq(0)
     end
 
     it "resolves SRV endpoints and preserves the path" do
@@ -619,6 +566,127 @@ RSpec.describe DiscourseAi::Decisions::Client do
       }.to raise_error(DiscourseAi::Decisions::RequestFailed)
       expect(request).to have_been_requested.once
       expect(AiApiAuditLog.last.request_attempts).to be_nil
+    end
+  end
+
+  describe "#decide with TypeSafe" do
+    before { decision_model.update!(provider: "typesafe", vision_enabled: true) }
+
+    after { DiscourseAi::RequestHeaders.reset! }
+
+    it "sends PNG and JPEG assets with stable references and redacts only their binary audit data" do
+      image = "data:image/png;base64,AAAA"
+      jpeg = "data:image/jpeg;base64,BBBB"
+      state = image + "x" * 20_001
+      sent = nil
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            sent = JSON.parse(req.body)
+            references = sent.dig("state", "images")
+            sent.dig("state", "text") == state && references.is_a?(Array) && references.size == 2 &&
+              references.uniq.size == 2 &&
+              references.all? { |reference| reference.match?(/\A[0-9a-f-]{36}\z/) } &&
+              sent["assets"].keys == references && !sent.key?("images") &&
+              sent["assets"].values ==
+                [
+                  { "type" => "image", "format" => "png", "data_base64" => "AAAA" },
+                  { "type" => "image", "format" => "jpeg", "data_base64" => "BBBB" },
+                ]
+          end
+          .to_return(body: response_body.to_json)
+
+      result = client.decide(state, questions:, images: [image, jpeg], feature_name: "test")
+
+      payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
+      expect(payload["state"]).to eq(sent["state"])
+      expect(payload["assets"].keys).to eq(sent["assets"].keys)
+      expect(payload["assets"].values).to eq(
+        [
+          {
+            "type" => "image",
+            "format" => "png",
+            "data_base64" => "[redacted image/png, 3 Bytes]",
+          },
+          {
+            "type" => "image",
+            "format" => "jpeg",
+            "data_base64" => "[redacted image/jpeg, 3 Bytes]",
+          },
+        ],
+      )
+      expect(payload["questions"]).to eq(sent["questions"])
+      expect(payload).not_to have_key("images")
+      expect(request).to have_been_requested.once
+    end
+
+    it "preserves structured state and normalizes the JPEG alias for image assets" do
+      state = { posts: [{ text: "Hello" }] }
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            payload = JSON.parse(req.body)
+            reference = payload.dig("state", "images", 0)
+            payload.dig("state", "text") == state.deep_stringify_keys &&
+              payload["assets"] ==
+                { reference => { "type" => "image", "format" => "jpeg", "data_base64" => "AAAA" } }
+          end
+          .to_return(body: response_body.to_json)
+
+      client.decide(state, questions:, images: ["data:image/jpg;base64,AAAA"], feature_name: "test")
+
+      expect(request).to have_been_requested.once
+    end
+
+    it "rejects unsupported image formats before transport" do
+      expect {
+        client.decide(
+          "Hello",
+          questions:,
+          images: ["data:image/webp;base64,AAAA"],
+          feature_name: "test",
+        )
+      }.to raise_error(DiscourseAi::Decisions::InvalidRequest, /PNG or JPEG/)
+      expect(AiApiAuditLog.count).to eq(0)
+    end
+
+    it "preserves text-only string and structured state without adding image fields" do
+      ["Hello", { posts: [{ text: "Hello" }] }].each do |state|
+        sent = nil
+        request =
+          stub_request(:post, decision_model.url)
+            .with do |req|
+              sent = JSON.parse(req.body)
+              sent["state"] == JSON.parse(state.to_json) && (sent.keys & %w[images assets]).empty?
+            end
+            .to_return(body: response_body.to_json)
+
+        result = client.decide(state, questions:, feature_name: "test")
+
+        expect(result["urgent"].probability).to eq(0.95)
+        log = AiApiAuditLog.find(result.audit_log_id)
+        expect(log.provider_id).to eq(AiApiAuditLog::Provider::SystemOne)
+        expect(JSON.parse(log.raw_request_payload)).to eq(sent)
+        expect(request).to have_been_requested
+      end
+    end
+
+    it "shares custom and registered routing headers with System One" do
+      decision_model.update!(custom_headers: [{ name: "X-Custom-Key", value: "sensitive" }])
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Feature" => "workflow" } }
+      request =
+        stub_request(:post, decision_model.url).with(
+          headers: {
+            "X-Custom-Key" => "sensitive",
+            "X-Test-Feature" => "workflow",
+            "Content-Type" => "application/json",
+            "Authorization" => "Bearer #{decision_model.api_key}",
+          },
+        ).to_return(body: response_body.to_json)
+
+      client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(request).to have_been_requested.once
     end
   end
 

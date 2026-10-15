@@ -15,7 +15,7 @@ module("Integration | Component | AiDecisionModelEditorForm", function (hooks) {
 
     this.decisionModels = {
       resultSetMeta: {
-        providers: ["system_one", "open_ai"],
+        providers: ["system_one", "typesafe", "open_ai"],
         presets: [],
         ai_secrets: [],
         custom_header_limits: {
@@ -131,7 +131,7 @@ module("Integration | Component | AiDecisionModelEditorForm", function (hooks) {
       preset_id: "jev-latest",
       display_name: "TypeSafe Jev",
       name: "jev-latest",
-      provider: "system_one",
+      provider: "typesafe",
       url: "https://api.typesafe.ai/v1/systemone",
       vision_enabled: false,
     };
@@ -155,6 +155,10 @@ module("Integration | Component | AiDecisionModelEditorForm", function (hooks) {
       </template>
     );
     await formKit().field("preset").select("jev-latest-vision");
+    assert
+      .form()
+      .field("provider")
+      .hasValue("typesafe", "uses the dedicated TypeSafe endpoint");
     assert.form().field("vision_enabled").hasValue(true, "enables image input");
     assert
       .form()
@@ -235,7 +239,41 @@ module("Integration | Component | AiDecisionModelEditorForm", function (hooks) {
     );
   });
 
+  test("switching between System One and TypeSafe preserves custom headers", async function (assert) {
+    await render(
+      <template>
+        <AiDecisionModelEditorForm
+          @decisionModels={{this.decisionModels}}
+          @model={{this.model}}
+        />
+      </template>
+    );
+
+    for (const provider of ["typesafe", "system_one"]) {
+      await formKit().field("provider").select(provider);
+      assert
+        .form()
+        .field("custom_headers.0.name")
+        .hasValue(
+          "X-Image-Input",
+          `preserves headers when switching to ${provider}`
+        );
+      await formKit().submit();
+      assert.strictEqual(
+        this.savedPayload.provider,
+        provider,
+        "submits the selected provider"
+      );
+      assert.deepEqual(
+        this.savedPayload.custom_headers,
+        [{ name: "X-Image-Input", value: "true" }],
+        "submits the preserved headers"
+      );
+    }
+  });
+
   test("switching providers clears unsupported custom headers", async function (assert) {
+    this.model.provider = "typesafe";
     await render(
       <template>
         <AiDecisionModelEditorForm

@@ -1397,7 +1397,7 @@ en:
       custom_headers:
         invalid_format: "must be an array of header name and value pairs"
         too_many: "cannot contain more than %{count} entries"
-        unsupported_provider: "are only supported for System One models"
+        unsupported_provider: "are only supported for System One and TypeSafe models"
         invalid_name: "must have valid HTTP names of at most %{name_length} characters"
         invalid_value: "must have printable ASCII values of at most %{value_length} characters"
         reserved_name: "cannot override reserved transport or authentication headers"

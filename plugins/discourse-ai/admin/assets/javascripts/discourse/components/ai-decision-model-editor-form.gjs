@@ -10,7 +10,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq, gte } from "discourse/truth-helpers";
+import { eq, gte, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "./ai-secret-selector";
 
@@ -125,7 +125,7 @@ export default class AiDecisionModelEditorForm extends Component {
   @action
   async selectProvider(value, { set }) {
     await set("provider", value);
-    if (value !== "system_one") {
+    if (!["system_one", "typesafe"].includes(value)) {
       await set("custom_headers", []);
     }
     this.testResult = null;
@@ -242,7 +242,7 @@ export default class AiDecisionModelEditorForm extends Component {
         </field.Control>
       </form.Field>
 
-      {{#if (eq data.provider "system_one")}}
+      {{#if (or (eq data.provider "system_one") (eq data.provider "typesafe"))}}
         <form.Container @direction="column" @format="large">
           <form.Section
             @title={{i18n "discourse_ai.decision_models.custom_headers.title"}}

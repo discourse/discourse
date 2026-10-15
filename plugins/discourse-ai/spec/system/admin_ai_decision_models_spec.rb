@@ -13,6 +13,7 @@ RSpec.describe "Managing decision models" do
   it "keeps header fields aligned with the rest of the form at every layout size" do
     visit "/admin/plugins/discourse-ai/ai-decision-models/new"
     form.field("preset").select("jev-latest-vision")
+    expect(form.field("provider")).to have_value("typesafe")
 
     [390, 1000, 1440].each do |width|
       resize_window(width: width) do

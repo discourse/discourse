@@ -35,7 +35,7 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       expect(response.parsed_body["ai_decision_models"].first["custom_headers"]).to eq(
         valid_attrs[:custom_headers],
       )
-      expect(response.parsed_body.dig("meta", "providers")).to eq(%w[system_one open_ai])
+      expect(response.parsed_body.dig("meta", "providers")).to eq(%w[system_one typesafe open_ai])
       expect(response.parsed_body.dig("meta", "custom_header_limits")).to eq(
         DecisionModel::CUSTOM_HEADER_LIMITS.stringify_keys,
       )
@@ -334,7 +334,7 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
 
       post "/admin/plugins/discourse-ai/ai-decision-models/test.json",
            params: {
-             ai_decision_model: valid_attrs.merge(vision_enabled: true),
+             ai_decision_model: valid_attrs.merge(provider: "typesafe", vision_enabled: true),
            },
            as: :json
 

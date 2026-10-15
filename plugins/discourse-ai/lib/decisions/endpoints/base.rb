@@ -11,6 +11,8 @@ module DiscourseAi
           case model.provider
           when "system_one"
             SystemOne.new(model)
+          when "typesafe"
+            Typesafe.new(model)
           when "open_ai"
             OpenAi.new(model)
           else

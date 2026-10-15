@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DecisionModel < ActiveRecord::Base
-  PROVIDERS = %w[system_one open_ai].freeze
+  PROVIDERS = %w[system_one typesafe open_ai].freeze
   MAX_CUSTOM_HEADERS = 20
   MAX_CUSTOM_HEADER_NAME_LENGTH = 128
   MAX_CUSTOM_HEADER_VALUE_LENGTH = 4000
@@ -52,7 +52,7 @@ class DecisionModel < ActiveRecord::Base
         display_name: "TypeSafe Jev",
         name: "jev-latest",
         url: "https://api.typesafe.ai/v1/systemone",
-        provider: "system_one",
+        provider: "typesafe",
         vision_enabled: false,
       }.freeze,
       {
@@ -60,7 +60,7 @@ class DecisionModel < ActiveRecord::Base
         display_name: "TypeSafe Jev with images (experimental)",
         name: "jev-latest",
         url: "https://api.typesafe.ai/v1/systemone",
-        provider: "system_one",
+        provider: "typesafe",
         vision_enabled: true,
         custom_headers: [{ name: "TypeSafe-Danger-Zone-Images", value: "true" }.freeze].freeze,
       }.freeze,
@@ -125,9 +125,13 @@ class DecisionModel < ActiveRecord::Base
     "https://#{service.target}:#{service.port}#{uri.path}#{"?#{uri.query}" if uri.query}"
   end
 
+  def supports_custom_headers?
+    %w[system_one typesafe].include?(provider)
+  end
+
   def custom_headers_for_request
     # Stored configuration can bypass validations, so check it again before transport.
-    return {} if provider != "system_one" || custom_headers_error
+    return {} if !supports_custom_headers? || custom_headers_error
 
     custom_headers.to_h { |header| [header["name"], header["value"]] }
   end
@@ -147,7 +151,7 @@ class DecisionModel < ActiveRecord::Base
   def custom_headers_error
     return :invalid_format if !custom_headers.is_a?(Array)
     return :too_many if custom_headers.size > MAX_CUSTOM_HEADERS
-    return :unsupported_provider if custom_headers.present? && provider != "system_one"
+    return :unsupported_provider if custom_headers.present? && !supports_custom_headers?
 
     names = Set.new
     custom_headers.each do |header|
