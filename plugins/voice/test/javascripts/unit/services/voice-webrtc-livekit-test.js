@@ -192,9 +192,18 @@ function buildFakeSdk() {
     },
   };
 
+  class VideoPreset {
+    constructor(width, height, maxBitrate, maxFramerate) {
+      this.width = width;
+      this.height = height;
+      this.encoding = { maxBitrate, maxFramerate };
+    }
+  }
+
   class FakeLivekitRoom {
     static instances = [];
     static connectErrors = [];
+    static publishDelayMs = 0;
 
     options;
     connectCalls = [];
@@ -211,6 +220,9 @@ function buildFakeSdk() {
         published: [],
         unpublishCalls: [],
         async publishTrack(track, publishOptions) {
+          if (FakeLivekitRoom.publishDelayMs) {
+            await wait(FakeLivekitRoom.publishDelayMs);
+          }
           const publication = {
             source: publishOptions?.source,
             options: publishOptions,
@@ -272,6 +284,7 @@ function buildFakeSdk() {
       DisconnectReason,
       Track,
       VideoQuality,
+      VideoPreset,
       isBrowserSupported: () => true,
     },
     FakeLivekitRoom,
@@ -1280,8 +1293,20 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
         source: "camera",
         simulcast: true,
         videoEncoding: { maxBitrate: 1_200_000, maxFramerate: 24 },
+        videoSimulcastLayers: [
+          {
+            width: 640,
+            height: 360,
+            encoding: { maxBitrate: 400_000, maxFramerate: 15 },
+          },
+          {
+            width: 853,
+            height: 480,
+            encoding: { maxBitrate: 700_000, maxFramerate: 24 },
+          },
+        ],
       },
-      "publishes with simulcast and the camera encoding preset"
+      "publishes simulcast layers from the camera encoding ladder"
     );
     assert.deepEqual(
       this.stateRequests.at(-1),
@@ -1314,6 +1339,32 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       FakeRTCPeerConnection.created,
       0,
       "video never creates mesh peer connections"
+    );
+  });
+
+  test("a roster update during a camera publish does not publish it twice", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    this.FakeLivekitRoom.publishDelayMs = 30;
+    const toggled = this.subject.toggleCamera();
+    await wait(5);
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id, role: "participant", is_video_on: true },
+      ],
+    });
+    await toggled;
+    await wait(80);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    assert.strictEqual(
+      lkRoom.localParticipant.published.filter(
+        ({ source }) => source === "camera"
+      ).length,
+      1,
+      "publishes the camera exactly once"
     );
   });
 
@@ -1490,8 +1541,8 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
     assert.deepEqual(
       cameraPublication.qualityCalls,
-      [1],
-      "cameras subscribe at the MEDIUM layer in small rooms"
+      [2],
+      "cameras subscribe at the HIGH layer in small rooms"
     );
     assert.deepEqual(
       screenPublication.qualityCalls,
@@ -1499,11 +1550,30 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       "screenshares subscribe at the HIGH layer"
     );
 
-    const participants = [{ id: this.currentUser.id, role: "participant" }];
-    for (let id = 2; id <= 8; id++) {
-      participants.push({ id, role: "participant", is_video_on: true });
-    }
-    this.rooms.emit(1, { type: "participants", participants });
+    const participantsWithCameras = (count) => {
+      const participants = [{ id: this.currentUser.id, role: "participant" }];
+      for (let id = 2; id < count + 2; id++) {
+        participants.push({ id, role: "participant", is_video_on: true });
+      }
+      return participants;
+    };
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: participantsWithCameras(4),
+    });
+    await wait(20);
+
+    assert.strictEqual(
+      cameraPublication.qualityCalls.at(-1),
+      1,
+      "more than three publishers drops cameras to the MEDIUM layer"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: participantsWithCameras(7),
+    });
     await wait(20);
 
     assert.strictEqual(
