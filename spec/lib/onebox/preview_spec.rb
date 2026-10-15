@@ -28,6 +28,81 @@ RSpec.describe Onebox::Preview do
     it "returns an empty string if the url is not valid" do
       expect(described_class.new("not a url").to_s).to eq("")
     end
+
+    it "omits loopback, private, and local-hostname images from Discourse oneboxes" do
+      preview =
+        described_class.new(preview_url, sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX)
+      preview.stubs(:engine_html).returns(<<~HTML)
+        <img src="http://127.0.0.1/a.png">
+        <img src="http://192.168.1.1/a.png">
+        <img src="http://[::1]/a.png">
+        <img src="http://2130706433/a.png">
+        <img src="http://127.0.0.%31/a.png">
+        <img src="http://%31%32%37.0.0.1/a.png">
+        <img src="///127.0.0.1/a.png">
+        <img src="////127.0.0.1/a.png">
+        <img src="http://printer.local/a.png">
+        <img src="http://localhost/a.png">
+        <img src="https://cdn.example.com/a.png">
+      HTML
+
+      images = Nokogiri::HTML5.fragment(preview.to_s).css("img")
+
+      expect(images.filter_map { |image| image["src"] }).to eq(["https://cdn.example.com/a.png"])
+    end
+
+    it "omits local URLs in other automatically loaded media attributes" do
+      preview =
+        described_class.new(
+          preview_url,
+          sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX,
+          allowed_iframe_origins: ["http://127.0.0.1"],
+        )
+      preview.stubs(:engine_html).returns(<<~HTML)
+        <img src="https://cdn.example.com/a.png" srcset="https://cdn.example.com/a.png 1x, http://127.0.0.1/b.png 2x">
+        <video poster="http://127.0.0.1/a.png"><source src="http://10.0.0.1/a.mp4"></video>
+        <iframe src="http://127.0.0.1/a"></iframe>
+        <span style="background-image: url(http://127.0.0.1/a.png)">Text</span>
+        <span style="background-image: image-set(&quot;http://127.0.0.1/a.png&quot; 1x)">Text</span>
+        <span style="background-image: u\\72l(http://127.0.0.1/a.png); color: red">Text</span>
+        <style>.local-image { background-image: url(http://127.0.0.1/a.png) }</style>
+        <svg xmlns:xlink="http://www.w3.org/1999/xlink">
+          <use href="///127.0.0.1/a.svg#icon"></use>
+          <use xlink:href="///127.0.0.1/a.svg#icon"></use>
+          <use href="#local-icon"></use>
+          <use xlink:href="#local-xlink-icon"></use>
+        </svg>
+      HTML
+
+      output = Nokogiri::HTML5.fragment(preview.to_s)
+
+      expect(output.at_css("img")["src"]).to eq("https://cdn.example.com/a.png")
+      expect(output.at_css("img")["srcset"]).to be_nil
+      expect(output.at_css("video")["poster"]).to be_nil
+      expect(output.at_css("source")["src"]).to be_nil
+      expect(output.at_css("iframe")["src"]).to be_nil
+      expect(output.css("span").map { |span| span["style"] }).to eq([nil, nil, " color: red"])
+      expect(output.at_css("style")).to be_nil
+      expect(output.css("use").map { |use| [use["href"], use["xlink:href"]] }).to eq(
+        [[nil, nil], [nil, nil], ["#local-icon", nil], [nil, "#local-xlink-icon"]],
+      )
+    end
+
+    it "retains relative and own-site image URLs" do
+      preview =
+        described_class.new(preview_url, sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX)
+      own_image_url = "#{Discourse.base_url_no_prefix}/uploads/image.png"
+      preview.stubs(:engine_html).returns(<<~HTML)
+        <img src="/uploads/image.png">
+        <img src="#{own_image_url}">
+      HTML
+
+      images = Nokogiri::HTML5.fragment(preview.to_s).css("img")
+
+      expect(images.filter_map { |image| image["src"] }).to eq(
+        ["/uploads/image.png", own_image_url],
+      )
+    end
   end
 
   describe "max_width" do
