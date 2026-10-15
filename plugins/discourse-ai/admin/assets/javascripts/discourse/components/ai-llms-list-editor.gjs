@@ -3,15 +3,13 @@ import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import AiCreditBar from "discourse/plugins/discourse-ai/discourse/components/ai-credit-bar";
+import AiCreditAllocationStatus from "discourse/plugins/discourse-ai/discourse/components/ai-credit-allocation-status";
 import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
 import AiLlmEditor from "./ai-llm-editor.gjs";
 
@@ -141,18 +139,6 @@ export default class AiLlmsListEditor extends Component {
     return options;
   }
 
-  formatResetDate(dateString) {
-    const resetDate = new Date(dateString);
-    const options = {
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: "UTC",
-    };
-    return resetDate.toLocaleString(undefined, options);
-  }
-
   @action
   modelDescription(llm) {
     // this is a bit of an odd object, it can be an llm model or a preset model
@@ -273,36 +259,9 @@ export default class AiLlmsListEditor extends Component {
                         </ul>
                       {{/if}}
                       {{#if llm.llm_credit_allocation}}
-                        <div class="ai-llm-list__credit-allocation">
-                          <AiCreditBar
-                            @allocation={{llm.llm_credit_allocation}}
-                          />
-                          {{#if llm.llm_credit_allocation.hard_limit_reached}}
-                            <div class="alert alert-danger ai-credit-warning">
-                              {{dIcon "circle-info"}}
-                              {{trustHTML
-                                (i18n
-                                  "discourse_ai.llms.credit_allocation.hard_limit_warning"
-                                  reset_date=(this.formatResetDate
-                                    llm.llm_credit_allocation.next_reset_at
-                                  )
-                                )
-                              }}
-                            </div>
-                          {{else if
-                            llm.llm_credit_allocation.soft_limit_reached
-                          }}
-                            <div class="alert alert-warning ai-credit-warning">
-                              {{dIcon "circle-info"}}
-                              {{trustHTML
-                                (i18n
-                                  "discourse_ai.llms.credit_allocation.soft_limit_warning"
-                                  percentage=llm.llm_credit_allocation.percentage_remaining
-                                )
-                              }}
-                            </div>
-                          {{/if}}
-                        </div>
+                        <AiCreditAllocationStatus
+                          @allocation={{llm.llm_credit_allocation}}
+                        />
                       {{/if}}
                     </td>
                     <td class="d-table__cell --detail">
