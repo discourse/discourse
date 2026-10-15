@@ -111,11 +111,14 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Restore baseline browser integration
-        if: matrix.variant == 'baseline'
+      - name: Prepare selected browser integration
         run: |
           git fetch --depth=1 origin ef39767ea7f0af060f6f182c2fd8b391e6dbc2e5
-          git restore --source=ef39767ea7f0af060f6f182c2fd8b391e6dbc2e5 --worktree spec
+          benchmark_spec_ref=HEAD
+          if [ "$CORE_SYSTEM_VARIANT" = "baseline" ]; then
+            benchmark_spec_ref=ef39767ea7f0af060f6f182c2fd8b391e6dbc2e5
+          fi
+          git restore --source="$benchmark_spec_ref" --worktree spec
 
       - name: Install identical scheduling input and measurement observers
         run: |
