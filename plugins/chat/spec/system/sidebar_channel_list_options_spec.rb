@@ -33,6 +33,36 @@ RSpec.describe "Chat sidebar channel list options" do
     sign_in(current_user)
   end
 
+  it "puts unread channels first, alphabetically, ahead of read channels" do
+    # Bravo is unread but older than Alpha's last message, so it separates
+    # "unread first" from "recent activity", which would place it last.
+    older_unread_channel = Fabricate(:category_channel, name: "Bravo channel")
+    older_unread_channel.add(current_user)
+    older_unread_message =
+      Fabricate(
+        :chat_message,
+        chat_channel: older_unread_channel,
+        user: message_author,
+        created_at: 3.days.ago,
+      )
+    older_unread_channel.update!(last_message: older_unread_message, messages_count: 1)
+
+    visit("/")
+
+    chat_sidebar.set_channel_sort("unread_first")
+
+    try_until_success(reason: "channel list re-sorts after the menu closes") do
+      expect(chat_sidebar.channel_names).to eq(["Bravo channel", "Zulu channel", "Alpha channel"])
+    end
+    try_until_success(reason: "channel sort preference saves asynchronously") do
+      expect(current_user.user_option.reload.chat_channel_list_sort).to eq("unread_first")
+    end
+
+    page.refresh
+
+    expect(chat_sidebar.channel_names).to eq(["Bravo channel", "Zulu channel", "Alpha channel"])
+  end
+
   it "sorts, filters, and persists the user's choices" do
     visit("/")
 

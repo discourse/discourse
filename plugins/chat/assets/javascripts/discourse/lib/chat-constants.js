@@ -37,6 +37,7 @@ export const CHAT_CHANNEL_LIST_SORTS = Object.freeze({
   ALPHABETICAL: "alphabetical",
   RECENT_ACTIVITY: "recent_activity",
   PRIORITY: "priority",
+  UNREAD_FIRST: "unread_first",
 });
 export const CHAT_CHANNEL_LIST_ACTIVE_DAYS = 30;
 export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
