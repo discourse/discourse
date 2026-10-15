@@ -1287,7 +1287,7 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       this.cameraTrack,
       "publishes the camera track"
     );
-    assert.deepEqual(
+    assert.propEqual(
       publication.options,
       {
         source: "camera",
