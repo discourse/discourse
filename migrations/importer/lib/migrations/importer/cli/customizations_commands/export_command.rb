@@ -17,7 +17,8 @@ module Migrations
                    "MappingsDB of the import, to record ids of imported records."
             option "--upload-base-url <url>",
                    "Site to download upload files with relative URLs from when the store doesn't have them."
-            option "--include-secrets", "Write secret setting values into the bundle."
+            option "--no-secrets",
+                   "Leave secret setting values out of the bundle; apply asks for them instead."
           end
 
           def call
@@ -34,7 +35,7 @@ module Migrations
                   output_path: @options[:output],
                   matcher:,
                   upload_base_url: @options[:upload_base_url],
-                  include_secrets: @options[:include_secrets],
+                  include_secrets: !@options[:no_secrets],
                 ).run
               ensure
                 matcher.close

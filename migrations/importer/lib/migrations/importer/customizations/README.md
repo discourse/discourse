@@ -22,7 +22,7 @@ migrations/bin/disco customizations diff \
 migrations/bin/disco customizations plan --diff diff.json --output plan.yml [--mappings-db mappings.db]
 
 # 3. Review plan.yml, then export the current values from the same site
-migrations/bin/disco customizations export --plan plan.yml --output bundle.zip [--upload-base-url https://site]
+migrations/bin/disco customizations export --plan plan.yml --output bundle.zip [--upload-base-url https://site] [--no-secrets]
 
 # 4. Apply, connected to the destination site
 migrations/bin/disco customizations apply bundle.zip --target template [--dry-run]
@@ -159,8 +159,9 @@ example on a restored dump), files with absolute URLs (S3, CDN) are downloaded
 directly; files with relative URLs need `--upload-base-url`, and `export` says
 so when it's missing.
 
-Secret values are not exported unless `--include-secrets` is given. On apply,
-a secret without a value is read from `DISCO_SECRET_<SETTING_NAME>`, or asked
-for on a terminal, and skipped otherwise.
+Secret values are exported, so handle the bundle like a password and delete
+it when you're done. With `--no-secrets` they are left out; on apply, a secret
+without a value is then read from `DISCO_SECRET_<SETTING_NAME>`, or asked for
+on a terminal, and skipped otherwise.
 
 Theme children are only added on apply, never removed.

@@ -13,7 +13,7 @@ module Migrations
           output_path:,
           matcher:,
           upload_base_url: nil,
-          include_secrets: false,
+          include_secrets: true,
           output: $stdout
         )
           @plan = plan
