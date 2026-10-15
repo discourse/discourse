@@ -37,6 +37,7 @@ class Skeleton extends Component {
 export default class DMultiSelect extends Component {
   @tracked searchTerm = "";
 
+  /** @type {object | null | undefined} */
   @tracked preselectedItem = null;
 
   compareKey = "id";

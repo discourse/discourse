@@ -9,6 +9,14 @@ import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {Object} DateInputPicker
+ * @property {(date: import("moment").Moment | Date | string | null, preventOnSelect?: boolean) => void} setDate
+ * @property {(date: import("moment").Moment | Date | string | null | undefined) => void} setMinDate
+ * @property {() => void} hide
+ * @property {() => void} destroy
+ */
+
 function isInputDateSupported() {
   const input = document.createElement("input");
   const value = "a";
@@ -19,8 +27,11 @@ function isInputDateSupported() {
 
 @classNames("d-date-input")
 export default class DDateInput extends Component {
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   date = null;
   useNativePicker = isInputDateSupported();
+
+  /** @type {DateInputPicker | null} */
   _picker = null;
 
   @computed("_placeholder")
