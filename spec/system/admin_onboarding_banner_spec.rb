@@ -269,7 +269,9 @@ describe "Admin Onboarding Banner" do
       banner.click_step_action("select_theme")
       expect(design_wizard_panel).to be_visible
 
-      browser_page.set_viewport_size({ width: 320, height: 740 })
+      browser_page
+        .set_viewport_size({ width: 320, height: 740 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       dimensions = design_wizard_panel.layout_dimensions
 

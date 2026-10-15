@@ -21,12 +21,16 @@ RSpec.describe "Header Search - Responsive Behavior" do
 
       expect(search_page).to have_search_field
 
-      browser_page.set_viewport_size({ width: 500, height: 1024 })
+      browser_page
+        .set_viewport_size({ width: 500, height: 1024 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       expect(search_page).to have_search_icon
       expect(search_page).to have_no_search_field
 
-      browser_page.set_viewport_size({ width: 1000, height: 1024 })
+      browser_page
+        .set_viewport_size({ width: 1000, height: 1024 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       expect(search_page).to have_search_field
       expect(search_page).to have_no_search_icon
@@ -40,12 +44,16 @@ RSpec.describe "Header Search - Responsive Behavior" do
       expect(search_page).to have_search_field
       expect(search_page).to have_no_search_icon
 
-      browser_page.set_viewport_size({ width: 500, height: 1024 })
+      browser_page
+        .set_viewport_size({ width: 500, height: 1024 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       expect(search_page).to have_search_icon
       expect(search_page).to have_no_search_field
 
-      browser_page.set_viewport_size({ width: 1000, height: 1024 })
+      browser_page
+        .set_viewport_size({ width: 1000, height: 1024 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       expect(search_page).to have_search_field
       expect(search_page).to have_no_search_icon

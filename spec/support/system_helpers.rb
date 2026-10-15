@@ -158,9 +158,11 @@ module SystemHelpers
       width: width || original_size[:width],
       height: height || original_size[:height],
     )
+    SystemBrowserSynchronization.wait_for_resize(browser_page)
     yield
   ensure
     browser_page.set_viewport_size(original_size)
+    SystemBrowserSynchronization.wait_for_resize(browser_page)
   end
 
   def using_browser_timezone(timezone, &example)

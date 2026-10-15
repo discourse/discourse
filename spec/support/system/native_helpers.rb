@@ -4,6 +4,15 @@ module PlaywrightMatchers
 end
 
 class SystemBrowserSynchronization
+  def self.wait_for_resize(page)
+    page.evaluate(<<~JS)
+      () => new Promise(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      })
+    JS
+    SystemBrowserBootstrap.wait_for(page)
+  end
+
   def self.wait_for(page)
     page.wait_for_function(
       <<~JS,
