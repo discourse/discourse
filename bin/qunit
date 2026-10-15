@@ -621,7 +621,7 @@ class QunitRunner
   end
 
   def target_from_path(path)
-    match = path.match(%r{(?:^|/)plugins/([^/]+)/})
+    match = path.match(%r{(?:^|/)plugins/([^/]+)(?:/|\z)})
     return "core" unless match
 
     resolve_plugin_namespace(match[1])
