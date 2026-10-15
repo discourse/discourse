@@ -137,6 +137,11 @@ the files of local themes (`themes/`). Git themes are stored as repository URL
 and branch; private repositories are skipped. Uploads are created on the
 destination when they are first needed and reused when the same file exists.
 
+`export` reads upload files from the site's store. When they aren't there (for
+example on a restored dump), files with absolute URLs (S3, CDN) are downloaded
+directly; files with relative URLs need `--upload-base-url`, and `export` says
+so when it's missing.
+
 Secret values are not exported unless `--include-secrets` is given. On apply,
 a secret without a value is read from `DISCO_SECRET_<SETTING_NAME>`, or asked
 for on a terminal, and skipped otherwise.

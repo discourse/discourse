@@ -36,16 +36,23 @@ module Migrations
             return yield(path) if path
 
             file = store_download(upload) || http_download(upload)
-            if file.nil?
-              hint = @base_url ? "" : "; pass --upload-base-url to download it from the site"
-              raise Error,
-                    "file of upload #{upload.id} (#{upload.original_filename}) not found#{hint}"
-            end
+            raise Error, missing_file_message(upload) if file.nil?
 
             begin
               yield file.path
             ensure
               file.close! if file.respond_to?(:close!)
+            end
+          end
+
+          def missing_file_message(upload)
+            message = "file of upload #{upload.id} (#{upload.original_filename}) not found"
+            if (url = download_url(upload.url))
+              "#{message}, download from #{url} failed"
+            elsif upload.url.present?
+              "#{message} locally; pass --upload-base-url to download it from the site"
+            else
+              message
             end
           end
 
@@ -62,16 +69,9 @@ module Migrations
           end
 
           def http_download(upload)
-            return if @base_url.nil? || upload.url.blank?
+            url = download_url(upload.url)
+            return if url.nil?
 
-            url =
-              if upload.url.start_with?("//")
-                "#{URI(@base_url).scheme}:#{upload.url}"
-              elsif upload.url.match?(%r{\Ahttps?://})
-                upload.url
-              else
-                "#{@base_url}#{upload.url}"
-              end
             ::FileHelper.download(
               url,
               max_file_size: MAX_DOWNLOAD_SIZE,
@@ -80,6 +80,19 @@ module Migrations
             )
           rescue StandardError
             nil
+          end
+
+          # Only relative URLs need the base URL; store and CDN URLs are absolute.
+          def download_url(url)
+            if url.blank?
+              nil
+            elsif url.start_with?("//")
+              "#{@base_url ? URI(@base_url).scheme : "https"}:#{url}"
+            elsif url.match?(%r{\Ahttps?://})
+              url
+            elsif @base_url
+              "#{@base_url}#{url}"
+            end
           end
         end
       end
