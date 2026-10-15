@@ -26,7 +26,11 @@ export default class NestedPostChildren extends Component {
 
   // Tracks whether we've fetched from the server yet (vs only having preloaded data)
   _fetchedFromServer = false;
+
+  /** @type {string | null} */
   _identityKey = null;
+
+  /** @type {string | null} */
   _activeCacheKey = null;
 
   constructor() {

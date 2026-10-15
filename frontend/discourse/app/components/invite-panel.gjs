@@ -25,14 +25,20 @@ export default class InvitePanel extends Component {
 
   // scope to allowed usernames
 
+  /** @type {number[] | null} */
   groupIds = null;
+
+  /** @type {{ id: number, name: string, automatic: boolean }[] | null} */
   allGroups = null;
 
   // invitee is either a user, group or email
+  /** @type {string | null} */
   invitee = null;
 
   isInviteeGroup = false;
   hasCustomMessage = false;
+
+  /** @type {string | null} */
   customMessage = null;
   inviteIcon = "envelope";
   invitingExistingUserToTopic = false;

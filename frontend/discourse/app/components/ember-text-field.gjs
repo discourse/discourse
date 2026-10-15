@@ -112,16 +112,22 @@ const TextField = Component.extend({
     },
   }),
 
+  /** @type {string | number | null | undefined} */
   size: null,
 
+  /** @type {string | null | undefined} */
   pattern: null,
 
+  /** @type {string | number | null | undefined} */
   min: null,
 
+  /** @type {string | number | null | undefined} */
   max: null,
 
+  /** @type {string | null | undefined} */
   placeholder: null,
   disabled: false,
+  /** @type {string | number | null | undefined} */
   maxlength: null,
 
   init() {

@@ -31,7 +31,7 @@ export default class EditUserDirectoryColumns extends Component {
    * announcements — the rendered header title can carry icon markup, which an
    * accessible name cannot.
    *
-   * @param {Object} column - The column to name.
+   * @param {{ name: string, type: string, user_field?: { name: string } | null }} column - The column to name.
    * @returns {string} The translated column name.
    */
   columnLabel = (column) => {
@@ -111,7 +111,7 @@ export default class EditUserDirectoryColumns extends Component {
    * Applies a committed move and renumbers every column from its new visible
    * slot — the stored order is exactly the displayed one here.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<{ id: number, name: string, type: string, position: number, enabled: boolean, icon: string | null, user_field_id: number | null, automatic_position: number | null, user_field?: { name: string, position: number } | null }>} move - The normalized move from the list.
    */
   @action
   handleMove(move) {
