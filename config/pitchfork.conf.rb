@@ -71,6 +71,8 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
+  Scheduler::ForkDrain.reset_after_fork
+  Scheduler::Defer.resume
   if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
@@ -100,6 +102,7 @@ after_mold_fork do |server, mold|
 end
 
 after_worker_fork do |server, worker|
+  Scheduler::ForkDrain.reset_after_fork
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_db_variables_overrides(web: true)
   Discourse.after_fork

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "weakref"
+require_relative "fork_drain"
 
 module Scheduler
   module Deferrable
@@ -70,11 +71,21 @@ module Scheduler
         stats[:queued] += 1
       end
 
+      ForkDrain.register
       if @async
-        start_thread if !@thread&.alive? && !@paused
-        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        begin
+          start_thread if !@thread&.alive? && !@paused
+          @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        rescue Exception
+          ForkDrain.complete
+          raise
+        end
       else
-        blk.call
+        begin
+          blk.call
+        ensure
+          ForkDrain.complete
+        end
       end
     end
 
@@ -115,6 +126,13 @@ module Scheduler
     def reset_after_fork
       @queue.shift(block: false) until @queue.empty?
       @pid = Process.pid
+      @mutex = Mutex.new
+      @stats_mutex = Mutex.new
+      @thread = nil
+      @reactor = nil
+      @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
+      @finish = false
+      @paused = false
     end
 
     def start_thread
@@ -156,17 +174,21 @@ module Scheduler
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
-      if ActiveRecord::Base.connection&.verify!
-        ActiveRecord::Base.connection_handler.clear_active_connections!
-      end
-      if start
-        @stats_mutex.synchronize do
-          stats = @stats[desc]
-          if stats
-            stats[:finished] += 1
-            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+      begin
+        if ActiveRecord::Base.connection&.verify!
+          ActiveRecord::Base.connection_handler.clear_active_connections!
+        end
+        if start
+          @stats_mutex.synchronize do
+            stats = @stats[desc]
+            if stats
+              stats[:finished] += 1
+              stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            end
           end
         end
+      ensure
+        ForkDrain.complete if job
       end
     end
   end
