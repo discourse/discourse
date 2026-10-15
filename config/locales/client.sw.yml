@@ -318,6 +318,8 @@ sw:
       edit: "Hariri"
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
+    dsa_statements:
+      category: "Kikundi"
     review:
       explain:
         total: "Jumla"

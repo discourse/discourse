@@ -338,6 +338,12 @@ zh_CN:
           upload_ids_tooltip: "可选的上传 ID，可附加到提示信息中。所有上传内容都必须到达模型，否则节点将无法正常工作：图像需要在代理和 LLM 上都具有可视性，文档需要在 LLM 上启用其文件类型。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "选择智能体…"
+        classify:
+          text: "文本"
+          upload_ids: "图片"
+          name: "名称"
+          type: "类型"
+          type_score: "分数"
       bot_chats:
         tab_label: "机器人聊天"
       ai_tool_approval:
@@ -1048,7 +1054,6 @@ zh_CN:
           result: "测试结果"
       secrets:
         short_title: "凭据"
-        description: "管理在 LLM 和嵌入向量之间共享的身份验证凭据。"
         name: "名称"
         secret: "值"
         select_secret: "选择凭据…"
@@ -1073,6 +1078,16 @@ zh_CN:
         mcp_server_oauth_client_secret: "MCP 服务器 OAuth 客户端密钥"
         modal:
           title: "创建新凭据"
+      decision_models:
+        no_preset: "无"
+        display_name: "名称"
+        model: "模型"
+        provider: "提供商"
+        api_key: "凭据"
+        vision_enabled: "支持图片输入"
+        edit: "编辑"
+        delete: "删除"
+        test: "运行测试"
       mcp_servers:
         short_title: "MCP 服务器"
         new: "新 MCP 服务器"

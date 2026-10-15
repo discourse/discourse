@@ -5,24 +5,23 @@ import UrlList from "discourse/admin/components/site-settings/url-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "https://a.com\nhttps://b.com";
-}
-
 module("Integration | Component | SiteSettings | UrlList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports changes as a newline-joined string and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("https://a.com\nhttps://b.com");
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
       <template>
-        <UrlList @changeValueCallback={{changeValue}} @value={{state.value}} />
+        <UrlList
+          @changeValueCallback={{changeValue}}
+          @value={{settingValue.value}}
+        />
       </template>
     );
 
@@ -37,7 +36,7 @@ module("Integration | Component | SiteSettings | UrlList", function (hooks) {
     );
     assert.dom(".values .value").exists({ count: 3 }, "shows the added url");
 
-    state.value = "https://z.com";
+    settingValue.value = "https://z.com";
     await settled();
 
     assert

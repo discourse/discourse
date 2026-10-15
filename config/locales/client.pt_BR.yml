@@ -775,6 +775,10 @@ pt_BR:
       title:
         search: "Pesquisar mensagem"
         placeholder: "digite o título da mensagem, URL ou ID aqui"
+    dsa_statements:
+      category: "Categoria"
+      category_prompt: "Escolha uma categoria"
+      saving: "Salvando…"
     review:
       show_more: "Exibir mais"
       show_less: "Exibir menos"

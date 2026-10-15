@@ -2,8 +2,8 @@ import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
-import Poll from "../components/poll";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
+import Poll from "../components/poll.gjs";
 
 function attachPolls(elem, helper) {
   let pollNodes = [...elem.querySelectorAll(".poll")];

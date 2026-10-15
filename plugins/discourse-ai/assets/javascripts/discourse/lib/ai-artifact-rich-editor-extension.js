@@ -1,4 +1,4 @@
-import AiArtifactNodeView from "../components/ai-artifact-node-view";
+import AiArtifactNodeView from "../components/ai-artifact-node-view.gjs";
 
 const SHARE_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 const DECIMAL_PATTERN = /^[0-9]{1,19}$/;

@@ -62,7 +62,9 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The chat message was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => chat_message.created_at.to_date.iso8601,
@@ -83,7 +85,9 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The chat message was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => chat_message.created_at.to_date.iso8601,
@@ -106,7 +110,9 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The chat message was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => chat_message.created_at.to_date.iso8601,
@@ -161,7 +167,10 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a chat message flagged by an automated system was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_type_other" => "User account",
@@ -188,7 +197,10 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a chat message flagged by an automated system had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_type_other" => "User account",

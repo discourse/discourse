@@ -24,8 +24,8 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AiCreditBar from "discourse/plugins/discourse-ai/discourse/components/ai-credit-bar";
 import { normalizeAiUsageTimeSeriesData } from "discourse/plugins/discourse-ai/discourse/lib/ai-usage-time-series";
-import AiCreditBar from "./ai-credit-bar";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 const DEFAULT_PERIOD = "month";

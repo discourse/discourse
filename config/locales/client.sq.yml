@@ -541,6 +541,9 @@ sq:
       title:
         search: "Kërkoni për një Mesazh"
         placeholder: "shkruani këtu titullin, url-në ose ID-në e mesazhit"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Po ruhet..."
     review:
       show_more: "Shfaq më shumë"
       show_less: "Shfaq më pak"

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
-import AiSecretCreateModal from "./modal/ai-secret-create-modal";
+import AiSecretCreateModal from "./modal/ai-secret-create-modal.gjs";
 
 export default class AiSecretSelector extends Component {
   @service modal;

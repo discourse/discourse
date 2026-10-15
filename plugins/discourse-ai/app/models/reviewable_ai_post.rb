@@ -185,6 +185,8 @@ class ReviewableAiPost < Reviewable
     case action_id
     when :agree_and_hide, :agree_and_keep_hidden
       {
+        decision_facts:
+          "The post was flagged by an automated system and access to it was disabled.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -194,6 +196,7 @@ class ReviewableAiPost < Reviewable
     when :delete_and_agree, :delete_and_ignore, :delete_and_agree_replies,
          :delete_and_ignore_replies
       {
+        decision_facts: "The post was flagged by an automated system and removed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -204,6 +207,7 @@ class ReviewableAiPost < Reviewable
       user = post.user.reload
 
       {
+        decision_facts: "The author of a post flagged by an automated system was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -217,6 +221,8 @@ class ReviewableAiPost < Reviewable
       user = post.user.reload
 
       {
+        decision_facts:
+          "The author of a post flagged by an automated system had their ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -230,6 +236,8 @@ class ReviewableAiPost < Reviewable
       user = post.user
 
       {
+        decision_facts:
+          "The author of a post flagged by an automated system had their account deleted.",
         decision_account: "DECISION_ACCOUNT_TERMINATED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

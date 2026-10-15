@@ -300,7 +300,10 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The post was flagged by an automated system and access to it was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,
@@ -323,7 +326,10 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The post was flagged by an automated system and access to it was disabled.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,
@@ -374,7 +380,9 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,
@@ -395,7 +403,9 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,
@@ -420,7 +430,9 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of a post flagged by an automated system was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_date" => target.user.created_at.to_date.iso8601,
@@ -447,7 +459,10 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_date" => target.user.created_at.to_date.iso8601,
@@ -472,7 +487,10 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_date" => content_date,
@@ -496,7 +514,10 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post flagged by an automated system had their account deleted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
           "content_date" => content_date,
@@ -528,7 +549,9 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,
@@ -559,7 +582,9 @@ describe ReviewableAiPost do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was flagged by an automated system and removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
           "content_date" => target.created_at.to_date.iso8601,

@@ -108,17 +108,14 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
   });
 
   test("renders the notes of the reviewable currently passed in", async function (assert) {
-    const state = new (class {
-      @tracked
-      reviewable = {
-        reviewable_scores: [],
-        reviewable_notes: [note(10, "Note on the first reviewable")],
-      };
-    })();
+    const reviewable = tracked({
+      reviewable_scores: [],
+      reviewable_notes: [note(10, "Note on the first reviewable")],
+    });
 
     await render(
       <template>
-        <ReviewableTimeline @reviewable={{state.reviewable}} />
+        <ReviewableTimeline @reviewable={{reviewable.value}} />
       </template>
     );
 
@@ -126,7 +123,7 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
       .dom(".timeline-event__description")
       .hasText("Note on the first reviewable", "renders the note it owns");
 
-    state.reviewable = { reviewable_scores: [] };
+    reviewable.value = { reviewable_scores: [] };
     await settled();
 
     assert

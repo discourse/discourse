@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
+} from "../../lib/ai-errors.js";
 
 export default class ChatModalChannelSummary extends Component {
   @tracked sinceHours = null;

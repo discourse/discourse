@@ -333,6 +333,10 @@ pl_PL:
           llm_cannot_read_documents: "Prześlij %{upload_id} to dokument, a LLM '%{llm}' nie akceptuje żadnych załączników"
           unsupported_image_format: "Prześlij %{upload_id} nie jest obsługiwanym formatem obrazu (%{formats})"
           upload_skipped: "Przesłanie %{upload_id} (%{filename}) nie zostało wysłane: %{message}"
+      classify:
+        errors:
+          decision_model_not_found: "Nie znaleziono modelu decyzyjnego o identyfikatorze %{id}"
+          classify_failed: "Model decyzyjny '%{decision_model}' nie mógł odpowiedzieć: %{error}"
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -1378,8 +1382,21 @@ pl_PL:
         disable_embeddings: "Najpierw musisz wyłączyć opcję „włączone osadzanie sztucznej inteligencji”."
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
         model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
+    decision_models:
+      custom_headers:
+        invalid_format: "musi być tablicą par nazw nagłówków i wartości"
+        too_many: "nie może zawierać więcej niż %{count} wpisów"
+        unsupported_provider: "są obsługiwane tylko przez modele System One i TypeSafe"
+        invalid_name: "musi mieć prawidłowe nazwy HTTP składające się maksymalnie z %{name_length} znaków"
+        invalid_value: "musi mieć wartości ASCII nadające się do druku, wynoszące maksymalnie %{value_length} znaków"
+        reserved_name: "nie można zastąpić zarezerwowanych nagłówków transportu lub uwierzytelniania"
+        duplicate_name: "muszą mieć unikalne nazwy (bez uwzględniania wielkości liter)"
+      secret_not_found: "Wybrane poświadczenie nie istnieje"
+      invalid_url: "musi to być adres URL http:// lub https:// albo adres URL srv:// bez portu"
+      test_refused: "Model decyzyjny odmówił odpowiedzi na pytanie testowe."
+      test_image_not_read: "Model decyzyjny nie rozpoznał obrazu testowego. Odznacz opcję „Obsługuje obraz wejściowy”, jeśli nie może odczytać obrazów."
     secrets:
-      delete_failed_in_use: "To poświadczenie jest obecnie używane przez jedno lub więcej LLM, osadzeń lub narzędzi i nie może zostać usunięte."
+      delete_failed_in_use: "Te dane uwierzytelniające są obecnie używane przez co najmniej jeden program LLM, osadzenia, modele decyzyjne lub narzędzia i nie można ich usunąć."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       invalid_provider_param: "%{param} ma nieprawidłowy format"

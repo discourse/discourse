@@ -2546,7 +2546,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         [["Partial answer before the action", call], ""],
       ) { small_window_playground.reply_to(source, auto_set_title: false) }
       reply = source.topic.posts.order(:post_number).last
-      expect(reply.raw).to include("Partial answer before the action", "unusable_summary")
+      expect(reply.raw).to include("Partial answer before the action", "empty_summary")
       entries = reply.post_custom_prompt.custom_prompt
       expect(entries.find { |entry| entry[2] == "tool" }[1]).to eq(call.id)
       expect(entries.to_s).to include("Important tool evidence")

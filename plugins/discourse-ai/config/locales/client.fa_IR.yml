@@ -70,6 +70,13 @@ fa_IR:
         type: "نوع"
         error: "خطا"
         response: "پاسخ"
+      discourse_workflows:
+        classify:
+          text: "متن"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "نوع"
+          type_score: "امتیاز"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -242,6 +249,14 @@ fa_IR:
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      decision_models:
+        no_preset: "هیچ‌کدام"
+        display_name: "نام"
+        model: "مدل"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        delete: "حذف"
+        test: "اجرا کردن تست"
       mcp_servers:
         name: "نام"
         description: "توضیح"

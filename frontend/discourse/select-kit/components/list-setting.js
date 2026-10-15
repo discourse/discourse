@@ -8,9 +8,9 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import CreateColorRow from "./create-color-row";
-import SelectedChoice from "./selected-choice";
-import SelectedChoiceColor from "./selected-choice-color";
+import CreateColorRow from "./create-color-row.gjs";
+import SelectedChoice from "./selected-choice.gjs";
+import SelectedChoiceColor from "./selected-choice-color.js";
 
 @classNames("list-setting")
 @selectKitOptions({

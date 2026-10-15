@@ -5,8 +5,8 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Livestream from "../../discourse/components/discourse-post-event/livestream";
-import OneboxEmbed from "../../discourse/components/discourse-post-event/onebox-embed";
+import Livestream from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/livestream";
+import OneboxEmbed from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/onebox-embed";
 
 const ZOOM_URL = "https://us06web.zoom.us/j/123456789?pwd=secret";
 const ZOOM_ENTRY_SELECTOR = ".discourse-calendar-livestream-zoom-entry";

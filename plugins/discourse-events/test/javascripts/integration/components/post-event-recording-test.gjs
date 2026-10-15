@@ -3,7 +3,7 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import PostEventRecording from "../../discourse/components/modal/post-event-recording";
+import PostEventRecording from "discourse/plugins/discourse-events/discourse/components/modal/post-event-recording";
 
 const RAW = `[event start="2026-10-08 15:00" status="public" livestream="true" location="https://www.youtube.com/live/abc"]
 Description

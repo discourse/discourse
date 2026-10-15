@@ -5,26 +5,22 @@ import SiteSettingValueList from "discourse/admin/components/site-settings/value
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "a\nb";
-}
-
 module("Integration | Component | SiteSettings | ValueList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports changes as a newline-joined string and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("a\nb");
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
       <template>
         <SiteSettingValueList
           @changeValueCallback={{changeValue}}
-          @value={{state.value}}
+          @value={{settingValue.value}}
         />
       </template>
     );
@@ -40,7 +36,7 @@ module("Integration | Component | SiteSettings | ValueList", function (hooks) {
     );
     assert.dom(".values .value").exists({ count: 3 }, "shows the added value");
 
-    state.value = "z";
+    settingValue.value = "z";
     await settled();
 
     assert

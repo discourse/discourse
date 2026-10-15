@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import loadCodemirrorEditor from "discourse/lib/load-codemirror";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import buildJsonEditorExtensions from "../../../lib/workflows/json-editor-extensions";
+import buildJsonEditorExtensions from "../../../lib/workflows/json-editor-extensions.js";
 
 const EMPTY_SEED = [{}];
 const DEFAULT_MAX_BYTES = 1_048_576;

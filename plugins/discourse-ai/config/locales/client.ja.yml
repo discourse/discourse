@@ -218,6 +218,12 @@ ja:
       discourse_workflows:
         ai_agent:
           mode: "モード"
+        classify:
+          text: "テキスト"
+          upload_ids: "画像"
+          name: "名前"
+          type: "タイプ"
+          type_score: "スコア"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -678,6 +684,14 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      decision_models:
+        no_preset: "なし"
+        display_name: "名前"
+        model: "モデル"
+        provider: "プロバイダー"
+        edit: "編集"
+        delete: "削除"
+        test: "テストを実行"
       mcp_servers:
         name: "名前"
         description: "説明"

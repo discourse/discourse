@@ -130,6 +130,7 @@ class ReviewablePost < Reviewable
     case action_id
     when :reject_and_delete, :reject_and_keep_deleted
       {
+        decision_facts: "The post was rejected and removed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -140,6 +141,7 @@ class ReviewablePost < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts: "The author of the rejected post was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -153,6 +155,8 @@ class ReviewablePost < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts:
+          "The author of the rejected post had their ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

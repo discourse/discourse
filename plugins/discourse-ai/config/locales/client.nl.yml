@@ -250,6 +250,12 @@ nl:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Afbeeldingen"
+          name: "Naam"
+          type: "Type"
+          type_score: "Score"
       ai_tool_approval:
         loading: "Laden..."
         agent: "Agent"
@@ -807,7 +813,6 @@ nl:
           result: "Testresultaat"
       secrets:
         short_title: "Aanmeldgegevens"
-        description: "Beheer verificatieaanmeldingsgegevens die worden gedeeld door LLM's, insluitingen en tools."
         name: "Naam"
         secret: "Waarde"
         select_secret: "Selecteer aanmeldingsgegevens..."
@@ -832,6 +837,15 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      decision_models:
+        no_preset: "Geen"
+        display_name: "Naam"
+        model: "Model"
+        provider: "Provider"
+        api_key: "Aanmeldgegevens"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        test: "Test uitvoeren"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"

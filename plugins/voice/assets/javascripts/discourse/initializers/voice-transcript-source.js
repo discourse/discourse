@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { TRANSCRIPT_SOURCE_TYPE } from "../lib/voice/transcript-markdown";
+import { TRANSCRIPT_SOURCE_TYPE } from "../lib/voice/transcript-markdown.js";
 
 export default {
   name: "voice-transcript-source",

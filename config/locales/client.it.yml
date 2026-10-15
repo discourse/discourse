@@ -681,6 +681,10 @@ it:
       title:
         search: "Cerca un messaggio"
         placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
+    dsa_statements:
+      category: "Categoria"
+      category_prompt: "Scegli una categoria"
+      saving: "Salvataggio…"
     review:
       show_more: "Mostra altro"
       show_less: "Mostra meno"

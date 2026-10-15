@@ -1,5 +1,5 @@
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import { voiceAssetAppUrl, voiceAssetUrl } from "./voice-assets";
+import { voiceAssetAppUrl, voiceAssetUrl } from "./voice-assets.js";
 
 // Stable filenames in the discourse_voice_assets gem's stt/ directory.
 const STT_WORKER_FILE = "subtitles-worker.js";

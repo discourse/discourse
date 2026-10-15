@@ -45,6 +45,13 @@ sv:
         type: "Typ"
         error: "Fel"
         response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Namn"
+          type: "Typ"
+          type_score: "Poäng"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -208,6 +215,12 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Namn"
+        provider: "Leverantör"
+        edit: "Redigera"
+        delete: "Radera"
       mcp_servers:
         name: "Namn"
         description: "Beskrivning"

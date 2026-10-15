@@ -5,24 +5,20 @@ import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import StyleguideSection from "discourse/plugins/styleguide/discourse/components/styleguide-section";
 
-class State {
-  @tracked section = { id: "colors", category: "atoms" };
-}
-
 module("Integration | Component | StyleguideSection", function (hooks) {
   setupRenderingTest(hooks);
 
   test("scrolls to the top whenever another section is shown", async function (assert) {
     const scrollTo = sinon.stub(window, "scrollTo");
-    const state = new State();
+    const section = tracked({ id: "colors", category: "atoms" });
 
     await render(
-      <template><StyleguideSection @section={{state.section}} /></template>
+      <template><StyleguideSection @section={{section.value}} /></template>
     );
 
     assert.strictEqual(scrollTo.callCount, 1, "scrolls when first shown");
 
-    state.section = { id: "icons", category: "atoms" };
+    section.value = { id: "icons", category: "atoms" };
     await settled();
 
     assert.strictEqual(scrollTo.callCount, 2, "scrolls on a section change");

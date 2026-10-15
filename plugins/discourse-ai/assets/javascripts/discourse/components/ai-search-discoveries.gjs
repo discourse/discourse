@@ -23,10 +23,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
+import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions.js";
+import { showComposerAiHelper } from "../lib/show-ai-helper.js";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 async function requestSuggestion(url, data) {
   try {

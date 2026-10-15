@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  dsa_statements:
+    classification_note: "Sklasyfikowano tę decyzję o moderacji w celu raportowania DSA.\nZasada społeczności: %{ground}\nKategoria: %{category}"
+    errors:
+      statements_changed: "Oświadczenia zawarte w tej recenzji uległy zmianie. Odśwież stronę, aby zobaczyć ich aktualną klasyfikację."
+      failed: "Nie udało się zapisać klasyfikacji. Spróbuj ponownie."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Dobrostan zwierząt"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Naruszenia informacji konsumenckich"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyberprzemoc"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyberprzemoc wobec kobiet"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Ochrona danych i naruszenia prywatności"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Nielegalna lub szkodliwa mowa"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Naruszenia własności intelektualnej"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negatywne skutki dla dyskursu obywatelskiego lub wyborów"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Rodzaj rzekomo niezgodnej z prawem treści nie został określony przez osobę powiadamiającą"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Inne naruszenie warunków umowy"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Ochrona nieletnich"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Ryzyko dla bezpieczeństwa publicznego"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Oszustwa i wyłudzenia"
+      STATEMENT_CATEGORY_SELF_HARM: "Samookaleczenie"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Produkty niebezpieczne lub zakazane"
+      STATEMENT_CATEGORY_VIOLENCE: "Przemoc"
   markdown_endpoints:
     latest: "Najnowsze"
     categories: "Kategorie"
@@ -2157,6 +2179,7 @@ pl_PL:
   random_username:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
+    dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
@@ -3634,6 +3657,11 @@ pl_PL:
       must_end_with_alphanumeric: "musi kończyć się literą lub cyfrą"
       must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
       must_not_end_with_confusing_suffix: "nie może kończyć się w sposób wprowadzający w błąd, np. .json, .png itp."
+      contains_blocked_words:
+        one: "zawiera zablokowane „%{words}” słowo"
+        few: "zawiera zablokowane „%{words}” słowa"
+        many: "zawiera zablokowanych „%{words}” słów"
+        other: "zawiera zablokowanych „%{words}” słów"
     email:
       blank: "nie może być puste."
       invalid: "jest nieprawidłowy."

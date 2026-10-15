@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import type User from "discourse/models/user";
-import { BlockCondition, type ConditionContext } from "./condition";
-import { blockCondition } from "./decorator";
+import { BlockCondition, type ConditionContext } from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /** Args accepted by the `user` condition. */
 interface UserConditionArgs {

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn, get } from "@ember/helper";
+import { array, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -8,6 +8,8 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
+import DsaStatementClassification from "discourse/components/dsa-statement-classification";
+import DsaClassificationModal from "discourse/components/modal/dsa-classification";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -39,7 +41,7 @@ import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
-import { eq, not, or } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -101,6 +103,7 @@ export function registerReviewableTypeLabel(reviewableType, labelKey) {
 
 export default class ReviewableItem extends Component {
   @service dialog;
+  @service capabilities;
   @service modal;
   @service siteSettings;
   @service currentUser;
@@ -302,6 +305,16 @@ export default class ReviewableItem extends Component {
   @bind
   resolveReviewableComponent(type) {
     return resolveReviewableComponent(getOwner(this), type);
+  }
+
+  @action
+  openClassification() {
+    this.modal.show(DsaClassificationModal, {
+      model: {
+        classificationOptions: this.args.classificationOptions,
+        reviewable: this.args.reviewable,
+      },
+    });
   }
 
   @action
@@ -798,6 +811,21 @@ export default class ReviewableItem extends Component {
             {{/if}}
           </div>
 
+          {{#if
+            (and
+              (not this.capabilities.viewport.sm)
+              @reviewable.dsa_classification.statement_ids.length
+            )
+          }}
+            <DButton
+              class="review-item__classify --pending-notice"
+              @action={{this.openClassification}}
+              @icon="clock"
+              @label="dsa_statements.pending"
+              @suffixIcon="chevron-right"
+            />
+          {{/if}}
+
           <div class="review-item__insights">
             <div class="d-nav-submenu">
               <DHorizontalOverflowNav
@@ -849,7 +877,12 @@ export default class ReviewableItem extends Component {
           </div>
         </div>
 
-        <div class="review-item__aside">
+        <div
+          class={{dConcatClass
+            "review-item__aside"
+            (if @reviewable.dsa_classification "--dsa-classification")
+          }}
+        >
 
           {{#unless @reviewable.last_performing_username}}
             {{#if this.canPerform}}
@@ -936,7 +969,19 @@ export default class ReviewableItem extends Component {
             </div>
           {{/if}}
 
-          {{#if @showHelp}}
+          {{#if
+            (and
+              this.capabilities.viewport.sm
+              @reviewable.dsa_classification.statement_ids.length
+            )
+          }}
+            {{#each (array @reviewable) as |reviewable|}}
+              <DsaStatementClassification
+                @classificationOptions={{@classificationOptions}}
+                @reviewable={{reviewable}}
+              />
+            {{/each}}
+          {{else if (and @showHelp (not @reviewable.dsa_classification))}}
             <ReviewableHelpResources />
           {{/if}}
         </div>

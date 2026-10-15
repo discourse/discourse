@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
-import PostEventBuilder from "../components/modal/post-event-builder";
-import { buildParams, removeEvent, replaceRaw } from "./raw-event-helper";
-import { savePostRaw } from "./save-post-raw";
+import PostEventBuilder from "../components/modal/post-event-builder.gjs";
+import { buildParams, removeEvent, replaceRaw } from "./raw-event-helper.js";
+import { savePostRaw } from "./save-post-raw.js";
 
 // Opens the event builder against a published event, writing changes back to
 // the post's raw.

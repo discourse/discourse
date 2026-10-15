@@ -30,10 +30,10 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
-import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval";
-import AiLogFeatureFilter from "./ai-log-feature-filter";
-import AiLogDetailModal from "./modal/ai-log-detail-modal";
-import AiLogRetentionModal from "./modal/ai-log-retention-modal";
+import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval.js";
+import AiLogFeatureFilter from "./ai-log-feature-filter.js";
+import AiLogDetailModal from "./modal/ai-log-detail-modal.gjs";
+import AiLogRetentionModal from "./modal/ai-log-retention-modal.gjs";
 
 const ALL_FILTER_VALUE = "__all__";
 const CUSTOM_DEFAULT_DAYS = 30;

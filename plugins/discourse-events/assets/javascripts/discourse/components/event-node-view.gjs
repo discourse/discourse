@@ -10,7 +10,7 @@ import {
   parseEventAttrs,
   stateToEventInput,
 } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
-import CompactEventEditor from "./compact-event-editor";
+import CompactEventEditor from "./compact-event-editor.gjs";
 
 const CLEARABLE_ATTRS = [
   "name",

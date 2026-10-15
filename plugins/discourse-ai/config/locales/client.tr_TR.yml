@@ -250,6 +250,12 @@ tr_TR:
         ai_agent:
           agent_id: "Ajan"
           mode: "Mod"
+        classify:
+          text: "Metin"
+          upload_ids: "Görüntüler"
+          name: "Ad"
+          type: "Tür"
+          type_score: "Puan"
       ai_tool_approval:
         loading: "Yükleniyor..."
         agent: "Ajan"
@@ -807,7 +813,6 @@ tr_TR:
           result: "Test sonucu"
       secrets:
         short_title: "Kimlik bilgileri"
-        description: "LLM'ler, gömülü öğeler ve araçlar arasında paylaşılan kimlik doğrulama bilgilerini yönetin."
         name: "Ad"
         secret: "Değer"
         select_secret: "Bir kimlik bilgisi seçin..."
@@ -832,6 +837,15 @@ tr_TR:
         mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      decision_models:
+        no_preset: "Hiçbiri"
+        display_name: "Ad"
+        model: "Model"
+        provider: "Sağlayıcı"
+        api_key: "Kimlik bilgisi"
+        edit: "Düzenle"
+        delete: "Sil"
+        test: "Testi çalıştır"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"

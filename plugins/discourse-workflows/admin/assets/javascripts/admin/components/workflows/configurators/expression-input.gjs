@@ -8,23 +8,23 @@ import discourseLater from "discourse/lib/later";
 import {
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-preview";
-import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
+} from "../../../lib/workflows/data-preview.js";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions/index.js";
 import {
   inputIndexForConnection,
   nodeOutputJsonPath,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+} from "../../../lib/workflows/expression-paths.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import ExpressionPreview from "../variable/expression-preview";
-import VariableInput from "../variable/input";
-import ReferencePropertyPicker from "../variable/reference-property-picker";
+} from "../../../lib/workflows/schema-graph.js";
+import ExpressionPreview from "../variable/expression-preview.gjs";
+import VariableInput from "../variable/input.gjs";
+import ReferencePropertyPicker from "../variable/reference-property-picker.gjs";
 
 const REFERENCE_PICKER_IDENTIFIER = "workflows-reference-picker";
 

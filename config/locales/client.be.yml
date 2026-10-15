@@ -647,6 +647,9 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
+      saving: "Захаванне…"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"

@@ -279,7 +279,11 @@ export default class ReviewableTimeline extends Component {
                     </div>
                     {{#if event.description}}
                       <DDecoratedHtml
-                        @className="timeline-event__description"
+                        @className={{if
+                          (eq event.type "note")
+                          "timeline-event__description --note"
+                          "timeline-event__description"
+                        }}
                         @html={{event.description}}
                       />
                     {{/if}}

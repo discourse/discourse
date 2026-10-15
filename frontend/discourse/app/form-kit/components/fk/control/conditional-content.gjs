@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import FKControlConditionalDisplayCondition from "./conditional-content/condition";
-import FKControlConditionalContentContent from "./conditional-content/content";
+import FKControlConditionalDisplayCondition from "./conditional-content/condition.gjs";
+import FKControlConditionalContentContent from "./conditional-content/content.gjs";
 
 const Conditions = <template>
   <div class="form-kit__inline-radio">

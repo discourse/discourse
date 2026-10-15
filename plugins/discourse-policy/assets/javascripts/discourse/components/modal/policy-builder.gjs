@@ -7,7 +7,7 @@ import { cook } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import PolicyBuilderForm from "../policy-builder-form";
+import PolicyBuilderForm from "../policy-builder-form.gjs";
 
 const POLICY_MARKDOWN_FIELDS = [
   ["groups", "groups"],

@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import PostVotingFlag from "../lib/post-voting-flag";
+import PostVotingFlag from "../lib/post-voting-flag.js";
 
 export default class PostVotingCommentActions extends Component {
   @service dialog;

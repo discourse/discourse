@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import { isEmptyExpression, isExpression } from "./property-engine";
+import { isEmptyExpression, isExpression } from "./property-engine.js";
 
 const CRON_FIELD_PATTERN =
   /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;

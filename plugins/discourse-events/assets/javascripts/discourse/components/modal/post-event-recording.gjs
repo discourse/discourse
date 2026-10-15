@@ -6,8 +6,8 @@ import Form from "discourse/components/form";
 import { extractError } from "discourse/lib/ajax-error";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { setEventAttribute } from "../../lib/raw-event-helper";
-import { savePostRaw } from "../../lib/save-post-raw";
+import { setEventAttribute } from "../../lib/raw-event-helper.js";
+import { savePostRaw } from "../../lib/save-post-raw.js";
 
 // Sets just the event's recording link, so adding one after the stream does
 // not mean going through (and rewriting) the whole event.

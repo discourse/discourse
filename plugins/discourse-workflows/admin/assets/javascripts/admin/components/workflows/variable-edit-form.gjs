@@ -13,7 +13,7 @@ import { i18n } from "discourse-i18n";
 import {
   WORKFLOW_VARIABLE_TYPE_VALUES,
   workflowVariableTypeLabel,
-} from "../../lib/workflows/variable-types";
+} from "../../lib/workflows/variable-types.js";
 
 const KEY_FORMAT_RE = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 

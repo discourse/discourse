@@ -49,6 +49,13 @@ ko:
         type: "형식"
         error: "에러"
         response: "응답"
+      discourse_workflows:
+        classify:
+          text: "텍스트"
+          upload_ids: "이미지"
+          name: "그룹명"
+          type: "형식"
+          type_score: "점수"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -220,6 +227,12 @@ ko:
         edit: "편집"
         delete: "삭제"
         embedding: "삽입(Embedding)"
+      decision_models:
+        no_preset: "없음"
+        display_name: "그룹명"
+        provider: "공급자"
+        edit: "편집"
+        delete: "삭제"
       mcp_servers:
         name: "그룹명"
         description: "내용"

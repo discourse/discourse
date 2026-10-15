@@ -150,9 +150,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
   test("a member re-registering during a re-render keeps its place in the group", async function (assert) {
     const outer = objectItems().slice(0, 1);
     const inner = objectItems().slice(0, 2);
-    const state = new (class {
-      @tracked frozen = false;
-    })();
+    const frozen = tracked(false);
     let raised;
 
     setupOnerror((error) => {
@@ -169,7 +167,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
                 the replacement member is constructed before the old one is torn
                 down and both briefly claim the same listId. }}
             <DReorderableList
-              @disabled={{state.frozen}}
+              @disabled={{frozen.value}}
               @items={{outer}}
               @key="id"
               @label={{label}}
@@ -193,9 +191,9 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
         </template>
       );
 
-      state.frozen = true;
+      frozen.value = true;
       await settled();
-      state.frozen = false;
+      frozen.value = false;
       await settled();
     } finally {
       resetOnerror();
@@ -919,15 +917,13 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     // service's registry for the life of the app, holding the trigger element
     // and, through the menu data, the list itself.
     const items = objectItems();
-    const state = new (class {
-      @tracked showList = true;
-    })();
+    const showList = tracked(true);
     const menu = this.owner.lookup("service:menu");
 
     await render(
       <template>
         <DMenus />
-        {{#if state.showList}}
+        {{#if showList.value}}
           <DReorderableList
             id="teardown-menu-list"
             @items={{items}}
@@ -951,7 +947,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       "and the service is holding it"
     );
 
-    state.showList = false;
+    showList.value = false;
     await settled();
 
     assert
@@ -970,9 +966,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
   test("DReorderableList refuses a drop after the source member is torn down", async function (assert) {
     const primaryItems = [{ id: "primary-alpha", name: "Primary Alpha" }];
     const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
-    const state = new (class {
-      @tracked showPrimary = true;
-    })();
+    const showPrimary = tracked(true);
     const onMove = sinon.spy();
     const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
 
@@ -980,7 +974,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       <template>
         <DMenus />
         <DReorderableListGroup @onMove={{onMove}} as |group|>
-          {{#if state.showPrimary}}
+          {{#if showPrimary.value}}
             <DReorderableList
               id="teardown-primary-list"
               @group={{group}}
@@ -1024,7 +1018,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       ...centerOf(sourceHandle),
     });
 
-    state.showPrimary = false;
+    showPrimary.value = false;
     await settled();
 
     assert
@@ -1112,9 +1106,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     const secondary = trackedArray([
       { id: "secondary-alpha", name: "Secondary Alpha" },
     ]);
-    const state = new (class {
-      @tracked secondaryLabel = "Secondary";
-    })();
+    const secondaryLabel = tracked("Secondary");
 
     await render(
       <template>
@@ -1138,7 +1130,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
             @key="id"
             @label={{label}}
             @listId="secondary"
-            @listLabel={{state.secondaryLabel}}
+            @listLabel={{secondaryLabel.value}}
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1148,7 +1140,7 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       </template>
     );
 
-    state.secondaryLabel = "Renamed";
+    secondaryLabel.value = "Renamed";
     await settled();
 
     await openMoveMenu("alpha");
@@ -2187,9 +2179,7 @@ module(
       const secondaryItems = [
         { id: "stale-secondary-alpha", name: "Stale Secondary Alpha" },
       ];
-      const state = new (class {
-        @tracked showSecondary = true;
-      })();
+      const showSecondary = tracked(true);
       const onMove = sinon.spy();
       const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
 
@@ -2209,7 +2199,7 @@ module(
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
-            {{#if state.showSecondary}}
+            {{#if showSecondary.value}}
               <DReorderableList
                 id="rev-stale-target"
                 @group={{group}}
@@ -2235,7 +2225,7 @@ module(
           "the destination stands in the menu while its member is mounted"
         );
 
-      state.showSecondary = false;
+      showSecondary.value = false;
       await settled();
 
       await click(moveItemSelector("list"));

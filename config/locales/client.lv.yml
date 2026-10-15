@@ -381,6 +381,8 @@ lv:
       title:
         search: "Meklēt ziņojumu"
         placeholder: "šeit ierakstiet tēmas nosaukumu, URL vai ID"
+    dsa_statements:
+      category: "Sadaļa"
     review:
       order_by: "Kārtot pēc"
       in_reply_to: "atbildot uz"

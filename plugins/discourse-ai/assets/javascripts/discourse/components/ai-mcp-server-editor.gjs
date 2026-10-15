@@ -1,5 +1,5 @@
 import BackButton from "discourse/components/back-button";
-import AiMcpServerEditorForm from "./ai-mcp-server-editor-form";
+import AiMcpServerEditorForm from "./ai-mcp-server-editor-form.gjs";
 
 const AiMcpServerEditor = <template>
   <BackButton

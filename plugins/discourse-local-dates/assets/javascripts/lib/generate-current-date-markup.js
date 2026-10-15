@@ -1,4 +1,4 @@
-import generateDateMarkup from "./local-date-markup-generator";
+import generateDateMarkup from "./local-date-markup-generator.js";
 
 /**
  * Generates BBCode markup for the current date/time.

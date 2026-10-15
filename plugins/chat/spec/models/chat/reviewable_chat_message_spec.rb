@@ -90,7 +90,9 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -111,7 +113,9 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -134,7 +138,9 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_TEXT"],
@@ -189,7 +195,9 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged chat message was suspended.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],
@@ -216,7 +224,10 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(statement).to be_pending
         expect(statement.payload).to eq(
           "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged chat message had their ability to participate restricted.",
           "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
           "automated_detection" => "No",
           "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
           "content_type" => ["CONTENT_TYPE_OTHER"],

@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { prefixProtocol } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
-import PostEventRecording from "../modal/post-event-recording";
-import OneboxEmbed from "./onebox-embed";
+import PostEventRecording from "../modal/post-event-recording.gjs";
+import OneboxEmbed from "./onebox-embed.gjs";
 
 export default class DiscoursePostEventRecording extends Component {
   @service currentUser;

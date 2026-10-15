@@ -4,11 +4,11 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import loadChartJS from "discourse/lib/load-chart-js";
+import { loadChartJSGetHoverColor } from "discourse/lib/load-chart-js";
 import { deepEqual } from "discourse/lib/object";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import decoratePollOption from "../modifiers/decorate-poll-option";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
 
 @tagName("")
 export default class PollBreakdownOption extends Component {
@@ -24,8 +24,8 @@ export default class PollBreakdownOption extends Component {
 
   constructor() {
     super(...arguments);
-    loadChartJS().then((Chart) => {
-      this.set("Chart", Chart);
+    loadChartJSGetHoverColor().then((getHoverColor) => {
+      this.set("getHoverColor", getHoverColor);
     });
   }
 
@@ -59,13 +59,14 @@ export default class PollBreakdownOption extends Component {
     }
   }
 
-  @computed("Chart", "highlighted", "optionColors", "index")
+  @computed("getHoverColor", "highlighted", "optionColors", "index")
   get colorPreviewStyle() {
-    const color = this.highlighted
-      ? this.Chart?.helpers.getHoverColor(this.optionColors[this.index])
-      : this.optionColors[this.index];
+    const color = this.optionColors[this.index];
+    const previewColor = this.highlighted
+      ? (this.getHoverColor?.(color) ?? color)
+      : color;
 
-    return trustHTML(`background: ${color};`);
+    return trustHTML(`background: ${previewColor};`);
   }
 
   <template>

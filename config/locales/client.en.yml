@@ -981,6 +981,20 @@ en:
         search: "Search for a Message"
         placeholder: "type the message title, url or id here"
 
+    dsa_statements:
+      title: "DSA classification"
+      help_title: "About DSA classification"
+      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      rule: "Community rule"
+      rule_prompt: "Choose a community rule"
+      category: "Category"
+      category_prompt: "Choose a category"
+      pending: "DSA classification pending"
+      confirm_title: "Save DSA classification?"
+      confirm_message: "Check the community rule and category. This classification cannot be changed after saving."
+      save: "Save classification"
+      saving: "Saving…"
+      saved: "Classification saved"
     review:
       show_more: "Show more"
       show_less: "Show less"

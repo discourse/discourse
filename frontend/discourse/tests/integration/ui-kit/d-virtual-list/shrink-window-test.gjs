@@ -21,14 +21,6 @@ const SHORT_COUNT = 10;
 
 const estimate = () => ROW_PX;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 /**
  * Ids start at `from` so a shrink can hand over rows the outgoing list never
  * contained. The engine resolves its scroll anchor by key, so reusing ids would
@@ -63,7 +55,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
     // the shrunk total. Until that height lands the browser has not clamped
     // `scrollTop`, so the engine still answers from the outgoing list's offset
     // and the published range collapses onto the last row of the new list.
-    const state = new State(buildRows(LONG_COUNT));
+    const items = tracked(buildRows(LONG_COUNT));
     const ranges = [];
     // Recorded as strings so a failure names the offending window rather than
     // printing `[object Object]`.
@@ -81,7 +73,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimate}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @onVisibleRangeChange={{onVisibleRangeChange}}
           @overscan={{0}}
@@ -103,7 +95,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
     // list; only what is published from the shrink onwards is under test.
     ranges.length = 0;
 
-    state.items = buildRows(SHORT_COUNT, 1000);
+    items.value = buildRows(SHORT_COUNT, 1000);
     await settled();
 
     assert.true(
@@ -125,7 +117,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
     // The positive half. This one can also pass on the defective ordering once
     // the browser's clamp fires its scroll event and a corrected flush lands, so
     // it guards the settled result rather than discriminating the bug.
-    const state = new State(buildRows(LONG_COUNT));
+    const items = tracked(buildRows(LONG_COUNT));
     const ranges = [];
     const onVisibleRangeChange = (range) =>
       ranges.push(`${range.startIndex}-${range.endIndex}`);
@@ -141,7 +133,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimate}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @onVisibleRangeChange={{onVisibleRangeChange}}
           @overscan={{0}}
@@ -154,7 +146,7 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
 
     await scrollTo(LONG_COUNT * ROW_PX - VIEWPORT_PX);
 
-    state.items = buildRows(SHORT_COUNT, 1000);
+    items.value = buildRows(SHORT_COUNT, 1000);
     await settled();
 
     assert.strictEqual(

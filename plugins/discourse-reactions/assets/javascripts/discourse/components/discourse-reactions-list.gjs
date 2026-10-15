@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DiscourseReactionsListEmoji from "./discourse-reactions-list-emoji";
+import DiscourseReactionsListEmoji from "./discourse-reactions-list-emoji.gjs";
 
 export default class DiscourseReactionsList extends Component {
   @service siteSettings;

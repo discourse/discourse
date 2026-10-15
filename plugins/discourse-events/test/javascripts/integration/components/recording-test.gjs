@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Recording from "../../discourse/components/discourse-post-event/recording";
+import Recording from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/recording";
 
 module(
   "Integration | Component | DiscoursePostEvent::Recording",

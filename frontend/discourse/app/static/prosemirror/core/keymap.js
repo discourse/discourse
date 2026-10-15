@@ -8,7 +8,7 @@ import {
 import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
 import { splitListItem } from "prosemirror-schema-list";
-import { atBlockStart, inNode } from "../lib/plugin-utils";
+import { atBlockStart, inNode } from "../lib/plugin-utils.js";
 
 const BACKSPACE_UNSET_NODES = ["heading", "code_block"];
 

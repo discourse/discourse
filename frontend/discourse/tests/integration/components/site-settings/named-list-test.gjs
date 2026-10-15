@@ -5,15 +5,11 @@ import NamedList from "discourse/admin/components/site-settings/named-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-class State {
-  @tracked value = "1";
-}
-
 module("Integration | Component | SiteSettings | NamedList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("reports changes as a pipe-joined string and follows @value", async function (assert) {
-    const state = new State();
+    const settingValue = tracked("1");
     const setting = {
       setting: "named_list_setting",
       choices: [
@@ -24,7 +20,7 @@ module("Integration | Component | SiteSettings | NamedList", function (hooks) {
     const changes = [];
     const changeValue = (value) => {
       changes.push(value);
-      state.value = value;
+      settingValue.value = value;
     };
 
     await render(
@@ -32,7 +28,7 @@ module("Integration | Component | SiteSettings | NamedList", function (hooks) {
         <NamedList
           @changeValueCallback={{changeValue}}
           @setting={{setting}}
-          @value={{state.value}}
+          @value={{settingValue.value}}
         />
       </template>
     );
@@ -43,7 +39,7 @@ module("Integration | Component | SiteSettings | NamedList", function (hooks) {
 
     assert.deepEqual(changes, ["1|2"], "reports the new list");
 
-    state.value = "2";
+    settingValue.value = "2";
     await settled();
 
     assert.strictEqual(

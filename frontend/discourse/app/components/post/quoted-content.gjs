@@ -16,7 +16,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import PostCookedHtml from "./cooked-html";
+import PostCookedHtml from "./cooked-html.gjs";
 
 export default class PostQuotedContent extends Component {
   @service store;
