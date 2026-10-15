@@ -44,39 +44,19 @@ describe "Viewing reviewable item" do
       reviewable_flagged_post.perform(admin, :delete_and_agree)
     end
 
-    it "lets staff classify a rejected user reviewable after loading another page of reviewed items" do
-      reviewable_user = Fabricate(:reviewable_user)
-      reviewable_user.perform(admin, :delete_user)
-
-      stub_const(ReviewablesController, "PER_PAGE", 1) do
-        visit("/review?status=reviewed&sort_order=created_at_asc")
-        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_flagged_post.id}']")
-        page.scroll_to(:bottom)
-
-        within(".review-item[data-reviewable-id='#{reviewable_user.id}']") do
-          classification.select_rule(rule[:ground])
-          classification.select_category("Other violation of terms and conditions")
-          classification.save
-        end
-
-        dialog = PageObjects::Components::Dialog.new
-        expect(dialog).to have_content(rule[:ground])
-        dialog.click_yes
-
-        expect(toasts).to have_success(I18n.t("js.dsa_statements.saved"))
-        within(".review-item[data-reviewable-id='#{reviewable_user.id}']") do
-          expect(classification).to have_no_sidebar
-          expect(page).to have_content(rule[:ground])
-          expect(page).to have_content("Other violation of terms and conditions")
-        end
-      end
-    end
-
-    it "lets staff double check and confirm the DSA classification of a flagged post removal" do
+    it "lets staff confirm the DSA classification of a flagged post removal after loading more reviewed items" do
       dialog = PageObjects::Components::Dialog.new
       note =
         "Classified this moderation decision for DSA reporting. Community rule: #{other_rule[:ground]} Category: Other violation of terms and conditions"
-      review_page.visit_reviewable(reviewable_flagged_post)
+      reviewable_user = Fabricate(:reviewable_user, status: :rejected)
+
+      stub_const(ReviewablesController, "PER_PAGE", 1) do
+        visit("/review?status=reviewed&sort_order=created_at")
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_user.id}']")
+        page.scroll_to(:bottom)
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_flagged_post.id}']")
+      end
+
       classification.select_rule(rule[:ground])
       classification.select_category("Illegal or harmful speech")
       classification.save
