@@ -69,6 +69,8 @@ export default class TopicTimelineScrollArea extends Component {
   );
   @tracked total;
   @tracked date;
+
+  /** @type {number | null} */
   @tracked lastReadPercentage = null;
   @tracked lastRead;
   @tracked lastReadTop;
@@ -78,9 +80,16 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked dragging = false;
   @tracked excerpt = "";
 
+  /** @type {IntersectionObserver | null} */
   intersectionObserver = null;
+
+  /** @type {HTMLElement | null} */
   scrollareaElement = null;
+
+  /** @type {HTMLElement | null} */
   scrollerElement = null;
+
+  /** @type {number | null} */
   dragOffset = null;
 
   constructor() {

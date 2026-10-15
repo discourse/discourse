@@ -63,9 +63,16 @@ export default class AceEditor extends Component {
 
   @tracked isLoading = true;
 
-  /** The resized box, handed to the separator once the editor has built it. */
+  /**
+   * The resized box, handed to the separator once the editor has built it.
+   * @type {HTMLElement | null}
+   */
   @tracked editorContainer = null;
+
+  /** @type {import("ace-builds").Ace.Editor | null} */
   editor = null;
+
+  /** @type {typeof import("ace-builds") | null} */
   ace = null;
   skipChangePropagation = false;
 

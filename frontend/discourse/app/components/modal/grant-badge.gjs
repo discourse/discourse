@@ -22,8 +22,14 @@ import { i18n } from "discourse-i18n";
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;
   @tracked saving = false;
+
+  /** @type {number | null} */
   @tracked selectedBadgeId = null;
+
+  /** @type {string | null} */
   @tracked flash = null;
+
+  /** @type {"success" | "error" | null} */
   @tracked flashType = null;
   @tracked allBadges = [];
   @tracked availableBadges = [];

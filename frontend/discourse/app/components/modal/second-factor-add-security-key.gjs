@@ -20,6 +20,8 @@ export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;
 
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked errorMessage = null;
   @tracked securityKeyName;
 
