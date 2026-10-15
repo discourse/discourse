@@ -1,0 +1,169 @@
+import { cached } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { eq } from "discourse/truth-helpers";
+import { brotliLabel, fmt, matches } from "./analysis";
+import EntrypointCard from "./entrypoint-card";
+import ExpandableRow from "./expandable-row";
+import { routeBundlesByFile } from "./plugins-analysis";
+
+// One plugin, expanding to the same cards the core tab is built from: what it
+// loads up front, and what its routes load on demand.
+//
+// `main` is the baseline — a plugin loads it on every page, so an admin or test
+// entrypoint reads as what it adds on top. A route bundle measures against the
+// entrypoint that owns it instead, since reaching one of its urls means that
+// entrypoint is already loaded.
+export default class PluginCard extends ExpandableRow {
+  get analysis() {
+    return this.args.analysis;
+  }
+
+  get plugin() {
+    return this.args.plugin;
+  }
+
+  get graph() {
+    return this.analysis.graphFor(this.plugin);
+  }
+
+  get autoExpanded() {
+    return !!this.args.filter;
+  }
+
+  // Lit as soon as any one of its chunks has been fetched, so a collapsed list
+  // says which plugins this page actually pulled in.
+  get isLoaded() {
+    return Object.keys(this.plugin.chunks).some((f) =>
+      this.args.loaded?.has(f)
+    );
+  }
+
+  get totals() {
+    return this.analysis.totalsFor(this.plugin);
+  }
+
+  get baselineFile() {
+    const { entrypoints } = this.plugin;
+    return entrypoints.main ?? Object.values(entrypoints)[0];
+  }
+
+  @cached
+  get baselineClosure() {
+    return this.graph.staticClosure(this.baselineFile);
+  }
+
+  get entrypoints() {
+    const base = this.baselineFile;
+    const others = Object.values(this.plugin.entrypoints).filter(
+      (f) => f !== base
+    );
+    return [base, ...others].filter(
+      (f) =>
+        f &&
+        this.graph.cardVisible(
+          f,
+          this.args.filter,
+          f === base ? null : this.baselineClosure
+        )
+    );
+  }
+
+  @cached
+  get routeBundles() {
+    return [...routeBundlesByFile(this.plugin)]
+      .map(([file, { entry, urls }]) => ({
+        file,
+        urls,
+        base: this.graph.staticClosure(this.plugin.entrypoints[entry]),
+      }))
+      .filter(
+        (b) =>
+          this.graph.cardVisible(b.file, this.args.filter, b.base) ||
+          (this.graph.visibleClosure(b.file).size > 0 &&
+            b.urls.some((u) => matches(u, this.args.filter)))
+      )
+      .sort(
+        (a, b) => this.graph.sortSize(b.file) - this.graph.sortSize(a.file)
+      );
+  }
+
+  <template>
+    <div
+      class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
+    >
+      <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        class="ba-head"
+        type="button"
+        {{on "click" this.toggle}}
+      >
+        <span class="ba-name">
+          <span class="ba-tw">▶</span>
+          {{#if this.isLoaded}}
+            <span
+              class="ba-loaded-dot"
+              title="Loaded in this browser session"
+            >●</span>
+          {{/if}}
+          <span class="ba-badge entry">plugin</span>
+          <span class="ba-label">{{this.plugin.plugin}}</span>
+        </span>
+        <span class="ba-num"><b>{{brotliLabel this.totals}}</b>
+          <span class="ba-pill">br</span></span>
+        <span class="ba-num muted">{{fmt this.totals.raw}}
+          <span class="ba-pill">raw</span></span>
+      </button>
+      {{#if this.expanded}}
+        <div class="ba-body">
+          <div class="ba-sub-list">
+            {{#each this.entrypoints as |f|}}
+              <EntrypointCard
+                @analysis={{this.graph}}
+                @baseline={{eq f this.baselineFile}}
+                @baselineClosure={{this.baselineClosure}}
+                @file={{f}}
+                @filter={{@filter}}
+                @loaded={{@loaded}}
+              />
+            {{/each}}
+          </div>
+
+          {{#if this.routeBundles}}
+            <div class="ba-hint" style="margin-top:10px">
+              Loaded on demand, when a url matches.
+            </div>
+            <div class="ba-sub-list">
+              {{#each this.routeBundles as |b|}}
+                <EntrypointCard
+                  @analysis={{this.graph}}
+                  @baselineClosure={{b.base}}
+                  @file={{b.file}}
+                  @filter={{@filter}}
+                  @loaded={{@loaded}}
+                  @urls={{b.urls}}
+                />
+              {{/each}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  </template>
+}
+
+// True when the filter names the plugin, one of its chunks, or a route url.
+export function pluginMatches(plugin, filter) {
+  if (!filter) {
+    return true;
+  }
+  return (
+    matches(plugin.plugin, filter) ||
+    Object.values(plugin.chunks).some(
+      (c) =>
+        matches(c.file, filter) || c.modules.some((m) => matches(m.id, filter))
+    ) ||
+    Object.values(plugin.routeBundles)
+      .flat()
+      .some((b) => matches(b.url, filter))
+  );
+}

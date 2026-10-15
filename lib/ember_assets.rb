@@ -142,6 +142,14 @@ class EmberAssets < ActiveSupport::CurrentAttributes
     { "message" => text, "messageHtml" => ERB::Util.html_escape(text) }
   end
 
+  # Logical path of the bundle analyzer's report, digested so each build gets
+  # its own URL. Nil when the frontend has not been built.
+  def self.bundle_analysis_asset
+    cache[:bundle_analysis] ||= read_manifest!(exception: false)&.dig(
+      "bundleAnalysis",
+    )&.delete_prefix("assets/")
+  end
+
   def self.is_ember_asset?(name)
     assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
