@@ -97,6 +97,10 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:css
 
+          - name: Vendored icon sprites
+            if: ${{ !cancelled() }}
+            run: bin/rake svgicons:check
+
           - name: English locale lint (core)
             if: ${{ !cancelled() }}
             run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"

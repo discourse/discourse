@@ -35,11 +35,6 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.search("this-is-not-an-icon")).to eq(false)
   end
 
-  it "vendors the sprites of the installed icon package" do
-    expect(SvgSprite::FontAwesomeSync.new.stale_files).to be_empty,
-    "Vendored icon sprites don't match node_modules, run `bin/rake svgicons:update`"
-  end
-
   it "can get a raw SVG for an icon" do
     expect(SvgSprite.raw_svg("heart")).to match(/svg.*svg/) # SVG inside SVG
     expect(SvgSprite.raw_svg("this-is-not-an-icon")).to eq("")

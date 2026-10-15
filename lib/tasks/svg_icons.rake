@@ -15,6 +15,17 @@ task "svgicons:sync" do
   end
 end
 
+desc "Fail if the vendored sprites don't match the icon package in node_modules"
+task "svgicons:check" do
+  require_relative "../svg_sprite/font_awesome_sync"
+
+  stale_files = SvgSprite::FontAwesomeSync.new.stale_files
+  next puts "Sprites are up to date" if stale_files.empty?
+
+  stale_files.each { |path| puts "Out of date: #{path.relative_path_from(Rails.root)}" }
+  abort "Vendored icon sprites don't match node_modules, run `bin/rake svgicons:update`"
+end
+
 desc "Install JS packages, then run svgicons:sync"
 task "svgicons:update" do
   system("pnpm install", exception: true)
