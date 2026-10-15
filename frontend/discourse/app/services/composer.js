@@ -249,6 +249,12 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
+    // The redesign has no toolbar toggle, so a preference stored by the legacy
+    // composer would hide the toolbar with no way to restore it.
+    if (this.siteSettings.enable_composer_redesign) {
+      return true;
+    }
+
     return (
       this._toolbarEnabled ??
       this.keyValueStore.get("toolbar-enabled") !== "false"
