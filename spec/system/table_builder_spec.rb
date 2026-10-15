@@ -200,7 +200,7 @@ describe "Table Builder" do
     it "ignores default Discourse keyboard shortcuts" do
       topic_page.visit_topic(topic)
       topic_page.locator(".btn-edit-table").click
-      insert_table_modal.find_cell(0, 0)
+      insert_table_modal.find_cell(0, 0).wait_for(state: "visible")
       browser_page.keyboard.press(%w[Shift s].join("+"))
       expect(
         browser_root.locator(".insert-table-modal").filter(visible: true),
