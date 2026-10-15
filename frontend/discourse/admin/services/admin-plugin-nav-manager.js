@@ -41,7 +41,7 @@ export default class AdminPluginNavManager extends Service {
         .map((item) => item.route)
         .includes("adminPlugins.show.settings")
     ) {
-      configNav.links.unshift(settingsNav.links[0]);
+      configNav.links.push(settingsNav.links[0]);
     }
     return configNav;
   }
