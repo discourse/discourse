@@ -13,7 +13,7 @@ RSpec.describe "TypeScript language server" do
       @stdin, @stdout, @wait =
         Open3.popen2(
           "node",
-          "node_modules/typescript-7/bin/tsc",
+          "node_modules/typescript/bin/tsc",
           "--lsp",
           "--stdio",
           chdir: root,
