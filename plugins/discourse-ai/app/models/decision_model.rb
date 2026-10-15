@@ -1,7 +1,39 @@
 # frozen_string_literal: true
 
 class DecisionModel < ActiveRecord::Base
-  PROVIDERS = %w[system_one open_ai].freeze
+  PROVIDERS = %w[system_one typesafe open_ai].freeze
+  MAX_CUSTOM_HEADERS = 20
+  MAX_CUSTOM_HEADER_NAME_LENGTH = 128
+  MAX_CUSTOM_HEADER_VALUE_LENGTH = 4000
+  CUSTOM_HEADER_LIMITS = {
+    count: MAX_CUSTOM_HEADERS,
+    name_length: MAX_CUSTOM_HEADER_NAME_LENGTH,
+    value_length: MAX_CUSTOM_HEADER_VALUE_LENGTH,
+  }.freeze
+  CUSTOM_HEADER_NAME = /\A[!\#$%&'*+\-.^_`|~0-9A-Za-z]+\z/
+  CUSTOM_HEADER_VALUE = /\A[\x20-\x7E]*\z/
+  RESERVED_CUSTOM_HEADERS = %w[
+    authorization
+    content-type
+    host
+    content-length
+    transfer-encoding
+    connection
+    cookie
+    cookie2
+    set-cookie
+    proxy-authorization
+    proxy-authenticate
+    proxy-connection
+    www-authenticate
+    keep-alive
+    te
+    trailer
+    upgrade
+    expect
+    accept-encoding
+    content-encoding
+  ].freeze
 
   belongs_to :ai_secret, optional: true
 
@@ -11,6 +43,7 @@ class DecisionModel < ActiveRecord::Base
   validates :url, presence: true, length: { maximum: 1000 }
   validate :valid_endpoint_url
   validate :secret_exists
+  validate :valid_custom_headers
 
   def self.presets
     @presets ||= [
@@ -19,8 +52,17 @@ class DecisionModel < ActiveRecord::Base
         display_name: "TypeSafe Jev",
         name: "jev-latest",
         url: "https://api.typesafe.ai/v1/systemone",
-        provider: "system_one",
+        provider: "typesafe",
         vision_enabled: false,
+      }.freeze,
+      {
+        preset_id: "jev-latest-vision",
+        display_name: "TypeSafe Jev with images (experimental)",
+        name: "jev-latest",
+        url: "https://api.typesafe.ai/v1/systemone",
+        provider: "typesafe",
+        vision_enabled: true,
+        custom_headers: [{ name: "TypeSafe-Danger-Zone-Images", value: "true" }.freeze].freeze,
       }.freeze,
       {
         preset_id: "vllm-sr-d3",
@@ -83,7 +125,52 @@ class DecisionModel < ActiveRecord::Base
     "https://#{service.target}:#{service.port}#{uri.path}#{"?#{uri.query}" if uri.query}"
   end
 
+  def supports_custom_headers?
+    %w[system_one typesafe].include?(provider)
+  end
+
+  def custom_headers_for_request
+    # Stored configuration can bypass validations, so check it again before transport.
+    return {} if !supports_custom_headers? || custom_headers_error
+
+    custom_headers.to_h { |header| [header["name"], header["value"]] }
+  end
+
   private
+
+  def valid_custom_headers
+    error = custom_headers_error
+    if error
+      errors.add(
+        :custom_headers,
+        I18n.t("discourse_ai.decision_models.custom_headers.#{error}", **CUSTOM_HEADER_LIMITS),
+      )
+    end
+  end
+
+  def custom_headers_error
+    return :invalid_format if !custom_headers.is_a?(Array)
+    return :too_many if custom_headers.size > MAX_CUSTOM_HEADERS
+    return :unsupported_provider if custom_headers.present? && !supports_custom_headers?
+
+    names = Set.new
+    custom_headers.each do |header|
+      return :invalid_format if !header.is_a?(Hash) || header.keys.sort != %w[name value]
+      name, value = header.values_at("name", "value")
+      if !name.is_a?(String) || name.length > MAX_CUSTOM_HEADER_NAME_LENGTH ||
+           !CUSTOM_HEADER_NAME.match?(name)
+        return :invalid_name
+      end
+      if !value.is_a?(String) || value.length > MAX_CUSTOM_HEADER_VALUE_LENGTH ||
+           !CUSTOM_HEADER_VALUE.match?(value)
+        return :invalid_value
+      end
+      return :reserved_name if RESERVED_CUSTOM_HEADERS.include?(name.downcase)
+      return :duplicate_name if !names.add?(name.downcase)
+    end
+
+    nil
+  end
 
   def valid_endpoint_url
     return if url.blank?
@@ -108,6 +195,7 @@ end
 # Table name: decision_models
 #
 #  id             :bigint           not null, primary key
+#  custom_headers :jsonb            not null
 #  display_name   :string(100)      not null
 #  name           :string(255)      not null
 #  provider       :string(50)       not null

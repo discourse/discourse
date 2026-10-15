@@ -165,11 +165,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Classify::V1 do
     end
 
     it "sends image uploads to a vision-enabled model" do
-      decision_model.update!(vision_enabled: true)
+      decision_model.update!(
+        vision_enabled: true,
+        custom_headers: [{ name: "X-Image-Input", value: "true" }],
+      )
       upload = Fabricate(:image_upload)
       request =
         stub_request(:post, decision_model.url)
-          .with { |req| JSON.parse(req.body)["images"].sole.start_with?("data:image/png;base64,") }
+          .with(headers: { "X-Image-Input" => "true" }) do |req|
+            payload = JSON.parse(req.body)
+            image = payload.fetch("images").sole
+            payload.fetch("state") == "Lunch" && !payload.key?("assets") &&
+              image.start_with?("data:image/png;base64,") &&
+              Base64.strict_decode64(image.split(",", 2).last).start_with?("\x89PNG".b)
+          end
           .to_return(body: { answers: { is_hotdog: { type: "noul", noul: 0.97 } } }.to_json)
       config =
         configuration(

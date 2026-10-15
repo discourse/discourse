@@ -11,6 +11,8 @@ module DiscourseAi
           case model.provider
           when "system_one"
             SystemOne.new(model)
+          when "typesafe"
+            Typesafe.new(model)
           when "open_ai"
             OpenAi.new(model)
           else
@@ -31,6 +33,10 @@ module DiscourseAi
           headers
         end
 
+        def audit_payload(payload)
+          payload
+        end
+
         # Token counts only feed usage stats, so unusable values become nil rather than
         # discarding valid answers.
         # @return [Array(Integer, Integer)] input and output tokens, either may be nil
@@ -46,6 +52,11 @@ module DiscourseAi
         end
 
         private
+
+        def redacted_image(data, mime_type:)
+          size = ActiveSupport::NumberHelper.number_to_human_size(data.length * 3 / 4)
+          "[redacted #{mime_type}, #{size}]"
+        end
 
         def validate_names!(answers, questions)
           if answers.keys.to_set != questions.map(&:name).to_set

@@ -24,6 +24,22 @@ module DiscourseAi
           }
         end
 
+        def audit_payload(payload)
+          payload = payload.deep_dup
+          if payload[:input].is_a?(Array)
+            payload[:input].each do |message|
+              message[:content].each do |content|
+                next if content[:type] != "input_image"
+
+                header, data = content[:image_url].split(",", 2)
+                mime_type = header.delete_prefix("data:").delete_suffix(";base64")
+                content[:image_url] = redacted_image(data, mime_type:)
+              end
+            end
+          end
+          payload
+        end
+
         def parse(body, questions)
           if !body.is_a?(Hash) || !body["answers"].is_a?(Array) || !body["answers"].all?(Hash)
             malformed!("answers must be a list of objects")

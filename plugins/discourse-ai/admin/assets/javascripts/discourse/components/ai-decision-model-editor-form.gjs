@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
@@ -10,6 +10,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { eq, gte, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "./ai-secret-selector";
 
@@ -32,7 +33,12 @@ export default class AiDecisionModelEditorForm extends Component {
       url: model.url,
       ai_secret_id: model.ai_secret_id,
       vision_enabled: model.vision_enabled ?? false,
+      custom_headers: model.custom_headers ?? [],
     };
+  }
+
+  get customHeaderLimits() {
+    return this.args.decisionModels.resultSetMeta.custom_header_limits;
   }
 
   get presets() {
@@ -104,15 +110,23 @@ export default class AiDecisionModelEditorForm extends Component {
     await set("preset", value);
     const preset = this.presets.find((item) => item.preset_id === value);
     if (preset) {
-      for (const name of [
-        "display_name",
-        "name",
-        "provider",
-        "url",
-        "vision_enabled",
-      ]) {
+      for (const name of ["display_name", "name", "url", "vision_enabled"]) {
         await set(name, preset[name]);
       }
+      await this.selectProvider(preset.provider, { set });
+      await set(
+        "custom_headers",
+        (preset.custom_headers ?? []).map((header) => ({ ...header }))
+      );
+    }
+    this.testResult = null;
+  }
+
+  @action
+  async selectProvider(value, { set }) {
+    await set("provider", value);
+    if (!["system_one", "typesafe"].includes(value)) {
+      await set("custom_headers", []);
     }
     this.testResult = null;
   }
@@ -175,6 +189,7 @@ export default class AiDecisionModelEditorForm extends Component {
       <form.Field
         @format="large"
         @name="provider"
+        @onSet={{this.selectProvider}}
         @title={{i18n "discourse_ai.decision_models.provider"}}
         @type="select"
         @validation="required"
@@ -226,6 +241,74 @@ export default class AiDecisionModelEditorForm extends Component {
           />
         </field.Control>
       </form.Field>
+
+      {{#if (or (eq data.provider "system_one") (eq data.provider "typesafe"))}}
+        <form.Container @direction="column" @format="large">
+          <form.Section
+            @title={{i18n "discourse_ai.decision_models.custom_headers.title"}}
+          >
+            <form.Collection @name="custom_headers" as |collection index|>
+              <form.Fieldset>
+                <collection.Field
+                  @format="large"
+                  @name="name"
+                  @title={{i18n
+                    "discourse_ai.decision_models.custom_headers.name"
+                  }}
+                  @type="input"
+                  @validation={{concat
+                    "required|length:1,"
+                    this.customHeaderLimits.name_length
+                  }}
+                  as |field|
+                >
+                  <field.Control />
+                </collection.Field>
+
+                <collection.Field
+                  @format="large"
+                  @name="value"
+                  @title={{i18n
+                    "discourse_ai.decision_models.custom_headers.value"
+                  }}
+                  @type="input"
+                  @validation={{concat
+                    "length:0,"
+                    this.customHeaderLimits.value_length
+                  }}
+                  as |field|
+                >
+                  <field.Control />
+                </collection.Field>
+                <form.Actions>
+                  <form.Button
+                    class="btn-default ai-decision-model-editor__remove-header"
+                    @action={{fn collection.remove index}}
+                    @icon="trash-can"
+                    @title="discourse_ai.decision_models.custom_headers.remove"
+                  />
+                </form.Actions>
+              </form.Fieldset>
+            </form.Collection>
+            <form.Actions>
+              <form.Button
+                class="btn-default ai-decision-model-editor__add-header"
+                @action={{fn
+                  form.addItemToCollection
+                  "custom_headers"
+                  (hash name="" value="")
+                }}
+                @disabled={{gte
+                  data.custom_headers.length
+                  this.customHeaderLimits.count
+                }}
+                @icon="plus"
+                @label="discourse_ai.decision_models.custom_headers.add"
+              />
+            </form.Actions>
+          </form.Section>
+        </form.Container>
+      {{/if}}
 
       <form.Field
         @format="large"

@@ -20,7 +20,14 @@ module DiscourseAi
               has_images:,
               streaming: false,
             )
-          super.merge(RequestHeaders.for(context))
+          headers = decision_model.custom_headers_for_request
+          [super, RequestHeaders.for(context)].each do |authoritative_headers|
+            authoritative_headers.each do |name, value|
+              headers.delete_if { |existing_name, _| existing_name.casecmp?(name) }
+              headers[name] = value
+            end
+          end
+          headers
         end
 
         def payload(state:, questions:, images:)
@@ -30,6 +37,16 @@ module DiscourseAi
             questions: questions.to_h { |question| [question.name, wire_question(question)] },
           }
           payload[:images] = images if images.present?
+          payload
+        end
+
+        def audit_payload(payload)
+          payload = payload.deep_dup
+          payload[:images]&.map! do |image|
+            header, data = image.split(",", 2)
+            mime_type = header.delete_prefix("data:").delete_suffix(";base64")
+            redacted_image(data, mime_type:)
+          end
           payload
         end
 
