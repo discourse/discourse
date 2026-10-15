@@ -108,7 +108,7 @@ export default class DiscoursePostEvent extends Component {
 
   constructor() {
     super(...arguments);
-    if (this.isPartialEvent) {
+    if (this.isPartialEvent && !this.readOnly) {
       this.loadEvent();
     }
   }
@@ -299,6 +299,7 @@ export default class DiscoursePostEvent extends Component {
                     @name="discourse-post-event-status-and-creators"
                     @outletArgs={{lazyHash
                       event=event
+                      readOnly=this.readOnly
                       Separator=StatusSeparator
                       Status=(component EventStatus event=event)
                       Creator=(component
@@ -344,6 +345,7 @@ export default class DiscoursePostEvent extends Component {
               @name="discourse-post-event-info"
               @outletArgs={{lazyHash
                 event=event
+                readOnly=this.readOnly
                 Section=(component InfoSection event=event)
                 Url=(component Url url=this.displayUrl)
                 Description=(component

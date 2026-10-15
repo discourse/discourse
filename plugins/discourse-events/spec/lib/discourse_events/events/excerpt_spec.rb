@@ -76,6 +76,12 @@ describe DiscourseEvents::Events::Excerpt do
       expect(html).to include("📅 not-a-date (UTC)")
     end
 
+    it "keeps the range when an all-day date is too long to parse" do
+      html = excerpt(start: "2018-06-05", end: "2" * 200, all_day: "true")
+
+      expect(html).to include("📅 June 5, 2018 → #{"2" * 200}")
+    end
+
     it "keeps dates too long to parse as-is" do
       html = excerpt(start: "2" * 200)
 

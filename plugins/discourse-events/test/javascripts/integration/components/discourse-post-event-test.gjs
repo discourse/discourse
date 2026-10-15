@@ -75,6 +75,40 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       .doesNotExist();
   });
 
+  test("read-only mode neither fetches details nor subscribes to updates", async function (assert) {
+    let fetched = 0;
+    getOwner(this).unregister("service:discourse-post-event-api");
+    getOwner(this).register(
+      "service:discourse-post-event-api",
+      {
+        async event() {
+          fetched++;
+          return buildEvent();
+        },
+      },
+      { instantiate: false }
+    );
+    const messageBus = getOwner(this).lookup("service:message-bus");
+    const subscribed = [];
+    const originalSubscribe = messageBus.subscribe;
+    messageBus.subscribe = (path) => subscribed.push(path);
+
+    try {
+      const event = buildEvent({ creator: null });
+      await render(
+        <template>
+          <DiscoursePostEvent @event={{event}} @readOnly={{true}} />
+        </template>
+      );
+
+      assert.dom(".event-date .day").exists("the card still renders");
+      assert.strictEqual(fetched, 0, "a creator-less event is not refetched");
+      assert.deepEqual(subscribed, [], "no message-bus subscription is made");
+    } finally {
+      messageBus.subscribe = originalSubscribe;
+    }
+  });
+
   test("interpolates the weekday into the recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_week" }));
 
