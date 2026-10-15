@@ -5992,7 +5992,9 @@ CREATE TABLE public.dsa_statement_of_records (
     status integer DEFAULT 0 NOT NULL,
     payload jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    classified_by_id bigint,
+    classified_at timestamp(6) without time zone
 );
 
 
@@ -25925,6 +25927,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261014065735'),
 ('20261013222431'),
 ('20261013183208'),
+('20261013062937'),
 ('20261013010026'),
 ('20261013010022'),
 ('20261012021959'),

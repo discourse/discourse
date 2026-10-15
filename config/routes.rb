@@ -618,6 +618,10 @@ Discourse::Application.routes.draw do
     get "review/settings" => "reviewables#settings"
     get "review/user-menu-list" => "reviewables#user_menu_list", :format => :json
     put "review/settings" => "reviewables#settings"
+    put "review/:reviewable_id/dsa-classification" => "dsa_statements#classify",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
     put "review/:reviewable_id/perform/:action_id" => "reviewables#perform",
         :constraints => {
           reviewable_id: /\d+/,
