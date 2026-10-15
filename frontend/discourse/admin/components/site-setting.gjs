@@ -108,11 +108,18 @@ export default class SiteSettingComponent extends Component {
   @service messageBus;
   @service site;
 
+  /** @type {boolean | null | undefined} */
   @tracked isSecret = null;
+
+  /** @type {"enqueued" | "completed" | null} */
   @tracked status = null;
+
+  /** @type {string | null | undefined} */
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
 
   #formKitData;
