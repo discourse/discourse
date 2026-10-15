@@ -17,7 +17,8 @@
   "scripts": {
     "compile-dts-generator": "tsc --ignoreConfig --types node dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
     "generate-external-types": "node generate-external-types.js",
-    "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types"
+    "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types",
+    "test": "node --test --test-timeout=60000 language-server.test.mjs"
   },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
