@@ -2,7 +2,7 @@ import { isAllowListedAttr } from "pretty-text/sanitizer";
 import { Fragment } from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
 import { i18n } from "discourse-i18n";
-import { getAllowLister } from "../lib/markdown-it";
+import { getAllowLister } from "../lib/markdown-it.js";
 
 const HTML_INLINE_MARKS = {
   s: "strikethrough",
