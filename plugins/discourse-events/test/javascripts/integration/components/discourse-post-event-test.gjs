@@ -38,6 +38,43 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
     );
   }
 
+  test("read-only mode keeps the card but drops its controls", async function (assert) {
+    const attrs = {
+      can_update_attendance: true,
+      stats: { going: 1, interested: 0, invited: 0, not_going: 0 },
+      should_display_invitees: true,
+    };
+
+    const event = buildEvent(attrs);
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+
+    const day = document.querySelector(".event-date .day").textContent;
+    assert.dom(".going-button").exists("the interactive card offers an RSVP");
+    assert.dom(".event-invitees").exists();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .exists();
+
+    const readOnlyEvent = buildEvent(attrs);
+    await render(
+      <template>
+        <DiscoursePostEvent @event={{readOnlyEvent}} @readOnly={{true}} />
+      </template>
+    );
+
+    assert.dom(".event-date .day").hasText(day, "the date box is unchanged");
+    assert.dom(".event-dates").exists("the dates are still listed");
+    assert.dom(".going-button").doesNotExist();
+    assert.dom(".event-invitees").doesNotExist();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .doesNotExist();
+  });
+
   test("interpolates the weekday into the recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_week" }));
 

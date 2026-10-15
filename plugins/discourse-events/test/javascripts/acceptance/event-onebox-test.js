@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -23,8 +23,10 @@ acceptance("Event onebox", function (needs) {
     status: "public",
     post: { id: 900, url: "/t/example/123", topic: { id: 123 } },
     creator: { username: "bob", id: 5 },
-    should_display_invitees: false,
+    can_update_attendance: true,
+    should_display_invitees: true,
     sample_invitees: [],
+    stats: { going: 1, interested: 0, invited: 0, not_going: 0 },
   };
   needs.hooks.beforeEach(() => {
     eventRequests = 0;
@@ -36,65 +38,97 @@ acceptance("Event onebox", function (needs) {
     server.get("/discourse-post-event/events/900", () =>
       helper.response({ event })
     );
-    server.get("/onebox", () => [
-      200,
-      { "Content-Type": "text/html" },
-      `
-          <aside class="quote" data-topic="123" data-post="1">
+    server.get("/onebox", (request) => {
+      const topicId = request.queryParams.url.split("/").pop();
+      return [
+        200,
+        { "Content-Type": "text/html" },
+        `
+          <aside class="quote" data-topic="${topicId}" data-post="1">
             <div class="title">Example topic</div>
             <blockquote>Preview text</blockquote>
           </aside>
         `,
-    ]);
-    server.get("/discourse-post-event/events", () => {
+      ];
+    });
+    server.get("/discourse-post-event/events", (request) => {
       eventRequests++;
-      return helper.response({ events: [] });
+      const events = request.queryParams.topic_id === "123" ? [event] : [];
+      return helper.response({ events });
     });
   });
 
-  test("event topics use standard oneboxes in both composer modes", async function (assert) {
+  test("event topics show the read-only event card in both composer modes", async function (assert) {
     const url = `${window.location.origin}/t/example/123`;
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(".d-editor-input", `${url}\n\nEditable text`);
+    // the onebox is fetched after the preview is decorated; the card appears
+    // on the next preview update, once the cached onebox is cooked inline
+    await waitFor(".d-editor-preview aside.quote");
+    await fillIn(".d-editor-input", `${url}\n\nEditable text!`);
+    await waitFor(".d-editor-preview .discourse-post-event-widget");
 
     assert
-      .dom(".d-editor-preview aside.quote")
-      .exists("markdown renders the server preview");
+      .dom(".d-editor-preview .discourse-post-event-widget .event-date .day")
+      .exists("the markdown preview renders the event card's date box");
     assert
-      .dom(".d-editor-preview .discourse-post-event-onebox")
-      .doesNotExist("no custom preview renderer is mounted");
+      .dom(".d-editor-preview .discourse-post-event-widget .name")
+      .hasText(event.name);
+    assert
+      .dom(".d-editor-preview .going-button")
+      .doesNotExist("the preview card has no RSVP controls");
+    assert
+      .dom(".d-editor-preview .event-invitees")
+      .doesNotExist("the preview card lists no invitees");
 
     await click(".composer-toggle-switch");
+    await waitFor(".onebox-wrapper .discourse-post-event-widget");
 
     assert
-      .dom(".onebox-wrapper aside.quote")
-      .exists("rich text uses core's onebox wrapper");
+      .dom(".onebox-wrapper .discourse-post-event-widget .event-date .day")
+      .exists("the rich editor renders the same card");
     assert
-      .dom(".onebox-wrapper aside.quote")
+      .dom(".onebox-wrapper .discourse-post-event-widget .name")
+      .hasText(event.name);
+    assert
+      .dom(".onebox-wrapper")
       .hasStyle(
         { whiteSpace: "normal" },
-        "HTML indentation does not create blank lines"
-      );
-    assert
-      .dom(".ProseMirror > p")
-      .hasStyle(
-        { whiteSpace: "break-spaces" },
-        "editable whitespace is preserved"
+        "the card wrapper collapses editor whitespace"
       );
     assert.strictEqual(
       eventRequests,
-      0,
-      "topic previews need no additional event lookup"
+      1,
+      "the event is fetched once per topic across both modes"
     );
 
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        `${url}\n\nEditable text`,
+        `${url}\n\nEditable text!`,
         "switching modes preserves the source URL"
       );
+  });
+
+  test("ordinary topics keep the standard onebox in both composer modes", async function (assert) {
+    const url = `${window.location.origin}/t/example/124`;
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", `${url}\n\nEditable text`);
+
+    assert
+      .dom(".d-editor-preview aside.quote")
+      .exists("the markdown preview keeps the server onebox");
+    assert.dom(".d-editor-preview .discourse-post-event-widget").doesNotExist();
+
+    await click(".composer-toggle-switch");
+
+    assert
+      .dom(".onebox-wrapper aside.quote")
+      .exists("the rich editor keeps the server onebox");
+    assert.dom(".onebox-wrapper .discourse-post-event-widget").doesNotExist();
   });
 
   test("published event oneboxes retain the interactive event card", async function (assert) {
@@ -114,6 +148,9 @@ acceptance("Event onebox", function (needs) {
     assert
       .dom("#post_1 .discourse-post-event-onebox .discourse-post-event-widget")
       .exists("the confirmed event is decorated with its interactive card");
+    assert
+      .dom("#post_1 .discourse-post-event-onebox .going-button")
+      .exists("the published card keeps its RSVP controls");
     assert
       .dom("#post_1 .discourse-post-event-onebox .name a")
       .hasText(event.name, "the card links to the event");

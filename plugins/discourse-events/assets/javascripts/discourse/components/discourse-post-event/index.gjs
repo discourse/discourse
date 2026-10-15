@@ -93,7 +93,7 @@ export default class DiscoursePostEvent extends Component {
 
   setupMessageBus = modifier(() => {
     const topicId = this.event?.post?.topic?.id;
-    if (!topicId) {
+    if (this.readOnly || !topicId) {
       return;
     }
 
@@ -143,6 +143,10 @@ export default class DiscoursePostEvent extends Component {
 
   get withDescription() {
     return this.args.withDescription ?? true;
+  }
+
+  get readOnly() {
+    return this.args.readOnly ?? false;
   }
 
   get startsAtMonth() {
@@ -314,15 +318,17 @@ export default class DiscoursePostEvent extends Component {
               </div>
 
               <div class="event-header__controls">
-                {{#if event.creator}}
-                  <MoreMenu
-                    @composePrivateMessage={{routeAction
-                      "composePrivateMessage"
-                    }}
-                    @event={{event}}
-                    @isStandaloneEvent={{this.isStandaloneEvent}}
-                  />
-                {{/if}}
+                {{#unless this.readOnly}}
+                  {{#if event.creator}}
+                    <MoreMenu
+                      @composePrivateMessage={{routeAction
+                        "composePrivateMessage"
+                      }}
+                      @event={{event}}
+                      @isStandaloneEvent={{this.isStandaloneEvent}}
+                    />
+                  {{/if}}
+                {{/unless}}
 
                 {{#if @onClose}}
                   <DButton
@@ -374,11 +380,13 @@ export default class DiscoursePostEvent extends Component {
               <Url @url={{this.displayUrl}} />
               <ChatChannel @event={{event}} />
 
-              {{#if event.stats}}
-                <Invitees @event={{event}} />
-              {{else if this.loadingDetails}}
-                <InviteesPlaceholder />
-              {{/if}}
+              {{#unless this.readOnly}}
+                {{#if event.stats}}
+                  <Invitees @event={{event}} />
+                {{else if this.loadingDetails}}
+                  <InviteesPlaceholder />
+                {{/if}}
+              {{/unless}}
 
               {{#if this.withDescription}}
                 <Description
@@ -387,14 +395,16 @@ export default class DiscoursePostEvent extends Component {
                 />
               {{/if}}
 
-              {{#if this.showStatus}}
-                <Status @event={{event}} />
-              {{else if this.loadingDetails}}
-                <StatusPlaceholder />
-              {{/if}}
+              {{#unless this.readOnly}}
+                {{#if this.showStatus}}
+                  <Status @event={{event}} />
+                {{else if this.loadingDetails}}
+                  <StatusPlaceholder />
+                {{/if}}
 
-              {{#unless @hideLivestreamVideo}}
-                <Livestream @event={{event}} @post={{@post}} />
+                {{#unless @hideLivestreamVideo}}
+                  <Livestream @event={{event}} @post={{@post}} />
+                {{/unless}}
               {{/unless}}
             </PluginOutlet>
           {{/if}}
