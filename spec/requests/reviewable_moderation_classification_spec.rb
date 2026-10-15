@@ -42,8 +42,10 @@ describe ReviewablesController do
       expect(reviewable.reviewable_notes.sole.content).to include(rule[:ground])
     end
 
-    it "rejects outdated rules and invalid categories before performing moderation" do
+    it "rejects malformed classification, outdated rules and invalid categories before moderation" do
       [
+        "invalid",
+        [classification],
         classification.merge(community_rule: "outdated-rule"),
         classification.merge(category: "unknown-category"),
       ].each do |invalid_classification|

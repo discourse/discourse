@@ -269,6 +269,9 @@ class ReviewablesController < ApplicationController
       unless guardian.is_staff? && DsaStatementOfRecord.classification_enabled?
         raise Discourse::InvalidAccess
       end
+      unless params[:dsa_classification].is_a?(ActionController::Parameters)
+        raise Discourse::InvalidParameters.new(:dsa_classification)
+      end
       classification = params.require(:dsa_classification).permit(:community_rule, :category)
       rule =
         DsaStatementOfRecord.community_rules.find do |entry|
