@@ -92,6 +92,11 @@ type and the CSS before choosing.
 `attributeBindings` of `"prop:attr"` → `attr={{this.prop}}`; bare `"role"` → `role={{this.role}}`
 (and if `role` was a class field, `role="button"`). `elementId = "x"` → `id="x"`;
 `this.set("elementId", ...)` in `init` → `id={{this.id}}` with a getter.
+A boolean bound to an `aria-*` attribute rendered as the string `"true"`/`"false"`; Glimmer
+drops an attribute whose value is `false`, so write `aria-pressed={{if this.active "true"
+"false"}}` (`DTapTile`). When unsure what the classic wrapper rendered, render it in a
+scratch test that asserts its `innerHTML` against a wrong value (the failure prints the
+markup), convert, and compare.
 
 Splat placement (before the splat the caller wins, after it the component wins, `class`
 merges) is `discourse-frontend-conventions` Step 4. A component with `@tagName("")` already

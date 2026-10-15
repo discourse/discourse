@@ -180,7 +180,22 @@ end of the matching section with the commit sha.
 - **External subclasses of the converted class** get a Glimmer base under a classic body.
   Select-kit bases (`ComboBoxComponent`, `DropdownSelectBoxComponent`,
   `SelectKitRowComponent`, `MultiSelectComponent`) and `UserCardContents` are subclassed
-  externally; select-kit is out of scope for this skill.
+  externally; select-kit is out of scope for this skill. When the external subclass only
+  *reads* the base (its own template uses `this.date`, `this.showTime`, the base's actions),
+  keep the base's former class fields as same-named getters (`get date() { return
+  this.args.date; }`, with a one-line comment saying subclasses read them). The skill
+  already turns overridable fields into getters; naming them as before keeps such a subclass
+  rendering, and only its own reads of caller args (`this.tabindex` → `this.args.tabindex`)
+  need a follow-up (`DDateTimeInput`, discourse-custom-wizard).
+- **A bundled plugin's `modifyClass` that adds `classNameBindings`** has nothing to bind to on
+  a Glimmer wrapper. A class on the row is a contract: before replacing it, search every
+  `all-the` checkout (with `command grep`) for the class. discourse-ai's `ai-result` looked
+  like styling for its own icon, but a private plugin's search analytics and CSS select
+  `.search-results .ai-result`. Keep the class with a `<component>-class` value transformer
+  (`applyValueTransformer("search-result-entry-class", [], { post })` into `dConcatClass`,
+  registered in `lib/registry/transformers.js`, plugin moved to `registerValueTransformer`);
+  passing `post` to the existing outlet so the plugin's connector renders only for AI posts is
+  a separate cleanup on top (`SearchResultEntry`).
 - **Non-colocated `templates/components/*.hbs` in themes/plugins** are served by a
   classic backing class from `instance-initializers/component-templates.js`; converting a
   core component that such a theme template *overrides* changes what the theme gets

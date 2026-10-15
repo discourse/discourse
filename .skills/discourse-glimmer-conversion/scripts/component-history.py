@@ -392,8 +392,8 @@ body { margin: 0; background: var(--surface-1); }
   padding: 24px 32px; min-height: 100vh; box-sizing: border-box; }
 h1 { font-size: 20px; margin: 0 0 4px; }
 .sub { color: var(--text-secondary); margin: 0 0 20px; }
-.legend { display: flex; gap: 20px; margin-bottom: 8px; color: var(--text-secondary); }
-.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+.legend { display: flex; gap: 20px; margin-bottom: 8px; color: var(--text-secondary); font-size: 16px; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 2px;
   margin-right: 6px; vertical-align: -1px; background: var(--c); }
 .chart { margin: 0 0 32px; position: relative; }
 .chart h2 { font-size: 16px; margin: 0 0 8px; }
@@ -402,8 +402,8 @@ svg .cap { fill: var(--text-secondary); font-weight: 600; }
 svg .grid { stroke: var(--grid); }
 svg .hit { fill: transparent; }
 svg .col:hover .seg { opacity: .85; }
-/* Ink out-contrasts white on every series fill, in both modes */
-svg .in { fill: #0b0b0b; font-weight: 600; }
+/* White out-contrasts ink on every series fill in both modes (APCA |Lc| 64-76 vs 34-45) */
+svg .in { fill: #fff; font-weight: 600; }
 svg .count { fill: var(--text-secondary); }
 .tip { position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary);
   border: 1px solid var(--grid); border-radius: 6px; padding: 8px 10px; box-shadow: 0 4px 12px #0003;

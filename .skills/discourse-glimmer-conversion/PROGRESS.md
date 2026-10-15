@@ -111,7 +111,7 @@
   - admin/site-settings/tag-list
   - admin/site-settings/url-list
   - admin/site-settings/value-list
-- [#44592](https://github.com/discourse/discourse/pull/44592) ✅
+- [#44592](https://github.com/discourse/discourse/pull/44592) ☑️
   - composer-action-title
   - login-buttons
   - reviewable-field-editor
@@ -122,7 +122,7 @@
   - signup-cta
   - plugins/discourse-subscriptions/create-coupon-form
   - plugins/styleguide/styleguide-section
-- [#44593](https://github.com/discourse/discourse/pull/44593)
+- [#44593](https://github.com/discourse/discourse/pull/44593) ☑️
   - admin/admin-report-storage-stats
   - admin/admin-report-table-cell
   - categories-boxes
@@ -133,3 +133,15 @@
   - ui-kit/d-date-time-input-range
   - plugins/discourse-assign/remind-assigns-frequency
   - plugins/discourse-zendesk-plugin/connectors/zendesk-topic-actions
+- [#44614](https://github.com/discourse/discourse/pull/44614)
+  - bread-crumbs
+  - ui-kit/d-conditional-loading-section
+  - ui-kit/d-date-time-input
+  - ui-kit/d-tap-tile
+  - plugins/discourse-adplugin/house-ads-list-setting
+  - plugins/discourse-adplugin/house-ads-setting
+  - plugins/discourse-cakeday/connectors/user-card-cakeday
+  - plugins/discourse-data-explorer/connectors/nav-item
+  - plugins/discourse-patreon/connectors/patreon
+  - plugins/poll/modal/poll-breakdown
+  - plugins/poll/poll-breakdown-option

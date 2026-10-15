@@ -151,6 +151,9 @@ over a dropped default the callers relied on.
   target that wraps the button, so the test switches EDIT → EDIT_SHARED_DRAFT, where the
   target stays and only the `=== EDIT` check flips. Check the field is really untracked
   first: `Post#can_edit` is a tracked accessor and needed no `get()`.
+- A mutation that removes `@tracked` from a field written through `(mut this.x)` still
+  passes: `mut` writes with `set()`, which notifies the template on any field. Only plain
+  assignments (`this.x = v`) need the decorator to update the DOM.
 - `settled()` does not wait for an Uppy upload to complete. Hold the upload request in
   pretender to assert the in-flight state, then `waitUntil` the finished state.
 - `discourseLater` runs as soon as the test settles, so a delayed side effect fires inside
@@ -167,6 +170,13 @@ page" section closes that gap — it matches test *filenames* against each call 
 (`admin/templates/admin-user/index.gjs` → `acceptance/admin-user-index-test.js`). Run those,
 not just the ones matching the component name; `AdminEditableField` shipped broken because
 `admin-user-index-test.js` was never run.
+
+### Plugin test paths run the whole plugin suite
+
+`bin/qunit plugins/<name>/test/...` runs every test in that plugin, and a large plugin's
+suite (discourse-ai: ~340) regularly dies on an unrelated browser timeout before reaching
+yours. Add `--filter "<module name>"` alongside the path when checking one file, especially
+for mutation runs, and confirm your test's own `ok`/`not ok` line appears.
 
 ### Running a test file you just created
 
