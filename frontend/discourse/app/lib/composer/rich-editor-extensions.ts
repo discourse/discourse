@@ -69,6 +69,8 @@ export interface PluginContext {
   replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
   /** Markdown cook options provided by the host editor. */
   markdownOptions?: MarkdownOptions;
+  /** Whether an empty paragraph is kept after a trailing non-paragraph block. */
+  trailingParagraph?: boolean;
   /** Registers a rendered component-backed node view. */
   addGlimmerNodeView: (nodeView: GlimmerNodeView) => void;
   /** Unregisters a rendered component-backed node view. */

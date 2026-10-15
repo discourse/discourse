@@ -61,6 +61,26 @@ RSpec.describe "Chat composer editor toggle" do
     expect(channel_page.composer).to have_rich_editor
   end
 
+  it "keeps Enter structural inside a list and sends from a plain paragraph" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("- first")
+    channel_page.composer.enter_shortcut
+    channel_page.composer.input.send_keys("second")
+
+    expect(channel_page.composer).to have_value("* first\n* second")
+    expect(channel_page.composer.input).to have_no_xpath("./p")
+
+    channel_page.composer.enter_shortcut
+    channel_page.composer.enter_shortcut
+
+    expect(channel_page.composer).to have_value("* first\n* second")
+
+    channel_page.composer.enter_shortcut
+
+    expect(channel_page.messages).to have_message(text: "first")
+    expect(page).to have_css(".chat-message-text ul li", count: 2)
+  end
+
   it "sends rich text as markdown" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.fill_in(with: "**bold** text")

@@ -164,8 +164,10 @@ export default class ChatComposer extends Component {
     };
 
     return {
+      // Inside lists, code blocks and the like Enter keeps its structural
+      // meaning (new item, new line); only a plain paragraph sends.
       Enter: () => {
-        if (skip()) {
+        if (skip() || !this.#inPlainParagraph()) {
           return true;
         }
 
@@ -174,7 +176,8 @@ export default class ChatComposer extends Component {
           return false;
         }
 
-        return !this.#insertLineBreak();
+        this.#insertLineBreak();
+        return false;
       },
       "Mod+Enter": send,
       "Ctrl+Enter": send,
@@ -623,25 +626,25 @@ export default class ChatComposer extends Component {
     }
   }
 
-  // Enter without sending matches the markdown editor's newline inside a
-  // plain paragraph; structured blocks keep the editor's own Enter handling.
-  #insertLineBreak() {
+  #inPlainParagraph() {
     const { view } = this.editor.textManipulation;
     const { $from } = view.state.selection;
 
-    if (
-      $from.depth !== 1 ||
-      $from.parent.type !== view.state.schema.nodes.paragraph
-    ) {
-      return false;
-    }
+    return (
+      $from.depth === 1 &&
+      $from.parent.type === view.state.schema.nodes.paragraph
+    );
+  }
+
+  // Matches the markdown editor's newline rather than starting a paragraph.
+  #insertLineBreak() {
+    const { view } = this.editor.textManipulation;
 
     view.dispatch(
       view.state.tr
         .replaceSelectionWith(view.state.schema.nodes.hard_break.create())
         .scrollIntoView()
     );
-    return true;
   }
 
   #sendsOnEnter(shiftKey) {
@@ -956,6 +959,7 @@ export default class ChatComposer extends Component {
                     @onSetup={{this.setupRichEditor}}
                     @placeholder={{this.placeholder}}
                     @toggleRichEditor={{this.toggleEditor}}
+                    @trailingParagraph={{false}}
                     @value={{this.draft.message}}
                   />
                 {{/if}}
