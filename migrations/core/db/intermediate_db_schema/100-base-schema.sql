@@ -329,6 +329,7 @@ CREATE TABLE posts
 );
 
 CREATE INDEX idx_posts_topic_id_post_number ON posts (topic_id, post_number);
+CREATE INDEX idx_posts_created_at ON posts (created_at);
 
 CREATE TABLE site_settings
 (
@@ -451,6 +452,7 @@ CREATE TABLE topics
     created_at           DATETIME,
     deleted_at           DATETIME,
     deleted_by_id        NUMERIC,
+    existing_id          INTEGER,
     external_id          NUMERIC,
     featured_link        TEXT,
     locale               TEXT,
@@ -469,6 +471,7 @@ CREATE TABLE topics
 );
 
 CREATE INDEX idx_topics_archetype ON topics (archetype);
+CREATE INDEX idx_topics_existing_id ON topics (existing_id);
 CREATE INDEX idx_topics_slug ON topics (slug);
 
 CREATE TABLE upload_sources

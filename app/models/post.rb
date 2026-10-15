@@ -92,6 +92,7 @@ class Post < ActiveRecord::Base
   NOTICE = "notice"
 
   SHORT_POST_CHARS = 1200
+  WORD_PATTERN = /[[:word:]]+/
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
@@ -189,6 +190,10 @@ class Post < ActiveRecord::Base
 
   def self.notices
     @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
+  end
+
+  def self.count_words(raw)
+    raw.scan(WORD_PATTERN).size
   end
 
   def self.find_by_detail(key, value)

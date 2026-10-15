@@ -615,7 +615,7 @@ class PostRevisor
 
     @post.edit_reason = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
-    @post.word_count = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
+    @post.word_count = Post.count_words(@fields[:raw]) if @fields.has_key?(:raw)
     @post.self_edits += 1 if self_edit?
 
     @post.extract_quoted_post_numbers

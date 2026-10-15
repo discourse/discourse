@@ -47,6 +47,12 @@ RSpec.describe Post do
     end
   end
 
+  describe ".count_words" do
+    it "counts words using the post word-counting rules" do
+      expect(described_class.count_words("hello, world! Здравствуйте 123_456")).to eq(4)
+    end
+  end
+
   # Help us build a post with a raw body
   def post_with_body(body, user = nil)
     args = post_args.merge(raw: body)

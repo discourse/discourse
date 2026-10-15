@@ -78,6 +78,10 @@ module Migrations
         @db.query_array(sql, *parameters, &block)
       end
 
+      def query_column(sql, *parameters, &block)
+        @db.query_splat(sql, *parameters, &block)
+      end
+
       def query_value(sql, *parameters)
         @db.query_single_splat(sql, *parameters)
       end
@@ -98,6 +102,10 @@ module Migrations
       def attach_database(path, name:)
         commit_transaction
         @db.execute("ATTACH DATABASE ? AS #{quote_identifier(name)}", path)
+      end
+
+      def attached?(name)
+        query_value("SELECT 1 FROM pragma_database_list WHERE name = ?", name) == 1
       end
 
       # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a

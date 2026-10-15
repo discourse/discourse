@@ -54,6 +54,16 @@ module Migrations
           @rows_query_parameters = parameters
           nil
         end
+
+        # stree-ignore
+        def batch_size(value = (getter = true; nil))
+          return @batch_size if getter
+          @batch_size = value
+        end
+
+        def batch_size_default
+          @batch_size = DiscourseDB::COPY_BATCH_SIZE
+        end
       end
 
       def initialize(intermediate_db, discourse_db, shared_data, config)
@@ -106,24 +116,53 @@ module Migrations
       end
 
       def fetch_rows
-        skip_row_marker = DiscourseDB::SKIP_ROW_MARKER
-
         Enumerator.new do |enumerator|
           query, parameters = self.class.rows_query
+          batch_size = self.class.batch_size
 
-          @intermediate_db.query(query, *parameters) do |row|
-            if (transformed_row = transform_row(row))
-              enumerator << transformed_row
-              @stats.reset
-            else
-              row[skip_row_marker] = true
-              enumerator << row
-              @stats.reset(skip_count: 1)
+          if batch_size
+            batch = []
+
+            @intermediate_db.query(query, *parameters) do |row|
+              batch << row
+              next if batch.size < batch_size
+
+              emit_batch(batch, enumerator)
+              batch = []
             end
 
-            update_progressbar
+            emit_batch(batch, enumerator)
+          else
+            @intermediate_db.query(query, *parameters) { |row| emit_row(row, enumerator) }
           end
         end
+      end
+
+      def emit_batch(rows, enumerator)
+        return if rows.empty?
+
+        before_batch(rows)
+        rows.each { |row| emit_row(row, enumerator) }
+      end
+
+      def emit_row(row, enumerator)
+        if (transformed_row = transform_row(row))
+          enumerator << transformed_row
+          @stats.reset
+        else
+          row[DiscourseDB::SKIP_ROW_MARKER] = true
+          enumerator << row
+          @stats.reset(skip_count: 1)
+        end
+
+        update_progressbar
+      end
+
+      # Sees the untransformed rows of one batch, for work that is cheaper once
+      # per batch than once per row. A step needs to set `batch_size` for this;
+      # without it rows are transformed one by one, as they arrive.
+      def before_batch(rows)
+        # Override in step implementation if needed
       end
 
       def after_commit_of_inserted_rows(rows)
@@ -193,7 +232,7 @@ module Migrations
       # The files database is attached only when an import was run with uploads.
       # Steps that read from it check this so they can skip cleanly otherwise.
       def files_db_attached?
-        @intermediate_db.query_value("SELECT 1 FROM pragma_database_list WHERE name = 'files'") == 1
+        @intermediate_db.attached?("files")
       end
     end
   end

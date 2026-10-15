@@ -6,6 +6,13 @@ en:
     site_settings:
       id_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original %{type_name} ID '%{original_id}' to Discourse ID"
       username_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original username '%{original_username}' to Discourse username"
+    posts:
+      topic_not_imported: "Skipped post %{post_id}: its topic %{topic_id} was not imported"
+      invalid_post_type: "Post %{post_id}: post type %{post_type} is invalid, using %{default_post_type}"
+      invalid_locale: "Post %{post_id}: locale '%{value}' is not supported and was dropped"
+      orphan_placeholder: "Post %{post_id}: a %{kind} placeholder has no linkage row and was removed"
+      unresolved_embeds: "Could not resolve %{count} %{kind} embeds"
+      empty_raw: "<Empty imported post>"
     fallback_names:
       user: "user"
       group: "group"

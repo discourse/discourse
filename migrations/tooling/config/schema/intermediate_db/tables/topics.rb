@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 Migrations::Tooling::Schema.table :topics do
+  add_column :existing_id, :integer
+
   index :archetype
+  index :existing_id
   index :slug
 
   # The destination regenerates its own slug from the title, but the SOURCE
