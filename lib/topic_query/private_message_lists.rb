@@ -269,6 +269,7 @@ class TopicQuery
     def private_messages_default_scope(user)
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
+      options[:per_page] = options[:per_page].to_i
 
       result =
         Topic
