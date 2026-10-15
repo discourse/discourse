@@ -145,3 +145,5 @@
   - plugins/discourse-patreon/connectors/patreon
   - plugins/poll/modal/poll-breakdown
   - plugins/poll/poll-breakdown-option
+- [#44615](https://github.com/discourse/discourse/pull/44615)
+  - search-result-entry
