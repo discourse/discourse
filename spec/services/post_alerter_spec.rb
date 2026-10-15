@@ -1209,6 +1209,14 @@ RSpec.describe PostAlerter do
       DiscoursePluginRegistry.clear_modifiers!
     end
 
+    it "does not add a display name when names are disabled" do
+      SiteSetting.enable_names = false
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+
+      expect(notification.data_hash).not_to have_key(:display_name)
+    end
+
     it "applies modifiers to notification_data" do
       Plugin::Instance
         .new

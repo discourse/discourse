@@ -672,7 +672,7 @@ class PostAlerter
       notification_data[:consolidated_count] = consolidated_count if consolidated_count
     end
 
-    if display_name = opts[:display_name] || post.user.name
+    if SiteSetting.enable_names? && (display_name = opts[:display_name] || post.user.name)
       notification_data[:display_name] = display_name
     end
 

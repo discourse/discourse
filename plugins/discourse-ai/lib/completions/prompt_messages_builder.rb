@@ -674,7 +674,8 @@ module DiscourseAi
         info << "Trust level #{user.trust_level}" if user.trust_level > 0
         info << "#{account_age(user)}"
         info << "#{user.user_stat.post_count} posts" if user.user_stat.post_count.to_i > 0
-        "#{user.username} (#{user.name}): #{info.compact.join(", ")}"
+        author = SiteSetting.enable_names? ? "#{user.username} (#{user.name})" : user.username
+        "#{author}: #{info.compact.join(", ")}"
       end
 
       def format_timestamp(timestamp)

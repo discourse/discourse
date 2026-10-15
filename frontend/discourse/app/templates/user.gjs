@@ -201,17 +201,20 @@ export default <template>
                   {{userStatus
                     @controller.model
                     currentUser=@controller.currentUser
+                    showName=@controller.showName
                   }}
                   {{#if @controller.model.status}}
                     <DUserStatusMessage @status={{@controller.model.status}} />
                   {{/if}}
                 </div>
-                <div
-                  class="{{if @controller.nameFirst 'username' 'full-name'}}
-                    user-profile-names__secondary"
-                >{{#if
-                    @controller.nameFirst
-                  }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
+                {{#if @controller.showName}}
+                  <div
+                    class="{{if @controller.nameFirst 'username' 'full-name'}}
+                      user-profile-names__secondary"
+                  >{{#if
+                      @controller.nameFirst
+                    }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
+                {{/if}}
                 {{#if @controller.model.staged}}
                   <div class="staged user-profile-names__secondary">{{i18n
                       "user.staged"
