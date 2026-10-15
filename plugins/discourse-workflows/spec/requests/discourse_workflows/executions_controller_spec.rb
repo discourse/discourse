@@ -189,6 +189,33 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json.dig("meta", "message_bus_last_id")).to be_a(Integer)
     end
 
+    it "replays the progress backlog of a running execution without stored steps" do
+      running = Fabricate(:discourse_workflows_execution, workflow:, status: :running)
+      channel = DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(running.id)
+      2.times { MessageBus.publish(channel, { type: "execution_progress" }) }
+
+      get "/admin/plugins/discourse-workflows/executions/#{running.id}.json"
+
+      expect(response.parsed_body.dig("meta", "message_bus_last_id")).to eq(
+        [
+          MessageBus.last_id(channel) -
+            DiscourseWorkflows::ExecutionProgressPublisher::MAX_BACKLOG_SIZE,
+          0,
+        ].max,
+      )
+    end
+
+    it "only subscribes to new progress once steps are stored" do
+      channel = DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(execution.id)
+      2.times { MessageBus.publish(channel, { type: "execution_progress" }) }
+
+      get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
+
+      expect(response.parsed_body.dig("meta", "message_bus_last_id")).to eq(
+        MessageBus.last_id(channel),
+      )
+    end
+
     it "returns caller workflow data for child executions" do
       target_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
       child_execution =

@@ -21,6 +21,12 @@ module DiscourseWorkflows
       "/discourse-workflows/execution/#{execution_id}"
     end
 
+    def self.subscription_start_id(execution, last_id)
+      return last_id if !execution.running? || execution.execution_data&.entries.present?
+
+      [last_id - MAX_BACKLOG_SIZE, 0].max
+    end
+
     def self.publish_created(execution, workflow_name:)
       MessageBus.publish(
         EXECUTIONS_CHANNEL,
