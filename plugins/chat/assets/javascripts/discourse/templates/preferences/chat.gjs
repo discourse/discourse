@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,6 +20,8 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class Chat extends Component {
+  @service siteSettings;
+
   @tracked saved = false;
 
   get chatQuickReactionTypes() {
@@ -119,41 +122,43 @@ export default class Chat extends Component {
       </form.Field>
 
       <form.Section @title={{i18n "chat.personalization_title"}}>
-        <form.Field
-          @format="large"
-          @name="chat_quick_reaction_type"
-          @title={{i18n "chat.quick_reaction_type.title"}}
-          @type="radio-group"
-          as |field|
-        >
-          <field.Control as |radioGroup|>
-            {{#each this.chatQuickReactionTypes as |option|}}
-              <radioGroup.Radio @value={{option.value}}>
-                {{option.label}}
-              </radioGroup.Radio>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-
-        {{#if (eq data.chat_quick_reaction_type "custom")}}
+        {{#if this.siteSettings.enable_emoji}}
           <form.Field
             @format="large"
-            @name="chat_quick_reactions_custom"
-            @title={{i18n "chat.quick_reaction_type.options.custom"}}
-            @type="custom"
+            @name="chat_quick_reaction_type"
+            @title={{i18n "chat.quick_reaction_type.title"}}
+            @type="radio-group"
             as |field|
           >
-            <field.Control>
-              {{#each data.chat_quick_reactions_custom as |emoji index|}}
-                <EmojiPicker
-                  @btnClass="btn-default"
-                  @context="chat_preferences"
-                  @didSelectEmoji={{fn this.handleEmojiSet index field}}
-                  @emoji={{emoji}}
-                />
+            <field.Control as |radioGroup|>
+              {{#each this.chatQuickReactionTypes as |option|}}
+                <radioGroup.Radio @value={{option.value}}>
+                  {{option.label}}
+                </radioGroup.Radio>
               {{/each}}
             </field.Control>
           </form.Field>
+
+          {{#if (eq data.chat_quick_reaction_type "custom")}}
+            <form.Field
+              @format="large"
+              @name="chat_quick_reactions_custom"
+              @title={{i18n "chat.quick_reaction_type.options.custom"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                {{#each data.chat_quick_reactions_custom as |emoji index|}}
+                  <EmojiPicker
+                    @btnClass="btn-default"
+                    @context="chat_preferences"
+                    @didSelectEmoji={{fn this.handleEmojiSet index field}}
+                    @emoji={{emoji}}
+                  />
+                {{/each}}
+              </field.Control>
+            </form.Field>
+          {{/if}}
         {{/if}}
         <form.Field
           @format="large"

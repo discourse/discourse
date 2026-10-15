@@ -9,6 +9,8 @@ import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `flags-reorderable.gjs` replaces it.
 export default class AdminConfigAreasFlags extends Component {
   @service site;
 

@@ -37,7 +37,7 @@ RSpec.describe JsLocaleHelper do
 
     { "ar" => "ar", "fa_IR" => "fa" }.each do |locale, moment_locale|
       it "formats dates with ASCII digits for #{locale}" do
-        v8_ctx.eval(File.read(Rails.root.join("frontend/discourse/node_modules/moment/moment.js")))
+        v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
         v8_ctx.eval("moment.tz = {};")
         v8_ctx.eval(JsLocaleHelper.output_locale(locale))
         v8_ctx.eval("window._discourse_locale_data.configureMoment();")

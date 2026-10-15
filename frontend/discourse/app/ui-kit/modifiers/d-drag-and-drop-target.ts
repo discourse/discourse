@@ -7,6 +7,7 @@ import {
   type DropTargetKernelArgs,
   type DropTargetKernelEvent,
   type DropTargetKernelFeedback,
+  type DropTargetRegistrar,
   registerDropTargetKernel,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
 import {
@@ -112,7 +113,10 @@ export function registerDragAndDropTarget(
   return registerDropTargetKernel({
     element,
     attribute: "data-drop-target",
-    register: dropTargetForElements,
+    // The library falls back to its default drop effect when `getDropEffect`
+    // returns `undefined` (`getDropEffect?.() ?? defaultDropEffect`), but its type
+    // does not admit `undefined`.
+    register: dropTargetForElements as DropTargetRegistrar<ElementDragPayload>,
     decorateSource: (source: ElementDragPayload) => normalizeDragSource(source),
     accepts: (source) => {
       const args = getArgsRef();

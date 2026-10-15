@@ -192,14 +192,7 @@ module DiscourseWorkflows
                 },
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 

@@ -1,0 +1,171 @@
+@use "lib/viewport";
+
+.calendar-placeholder {
+  --calendar-placeholder-gutter: 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  box-sizing: border-box;
+  min-height: 20em;
+  padding-bottom: 5px;
+  overflow: hidden;
+
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--font-0);
+
+    @include viewport.from(md) {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__toolbar-chunk {
+    display: flex;
+    gap: 0.75em;
+  }
+
+  &__button {
+    --d-skeleton-item-height: calc(2.3em + 2px);
+
+    &.--today {
+      @include viewport.until(md) {
+        display: none;
+      }
+    }
+  }
+
+  &__title {
+    line-height: 1.4;
+  }
+
+  // the real title is an h2, which picks up this spacing inside the topic list
+  #list-area &__title {
+    margin: var(--space-5) 0 var(--space-3);
+  }
+
+  &__grid,
+  &__time-grid,
+  &__list {
+    flex: 1;
+    min-height: 0;
+    border: 1px solid var(--fc-border-color);
+  }
+
+  &__header-cell {
+    display: flex;
+    justify-content: center;
+    padding: 0.2rem 4px;
+    font-size: var(--font-down-2);
+  }
+
+  // month
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--calendar-placeholder-columns), 1fr);
+    grid-template-rows: auto repeat(6, minmax(0, 1fr));
+    border-width: 1px 0 0 1px;
+
+    .calendar-placeholder__header-cell,
+    .calendar-placeholder__day {
+      border-right: 1px solid var(--fc-border-color);
+      border-bottom: 1px solid var(--fc-border-color);
+    }
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    min-height: 0;
+    padding: 0.25em;
+    overflow: hidden;
+  }
+
+  &__day-number {
+    align-self: center;
+  }
+
+  // week and day
+  &__time-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header-row,
+  &__body {
+    display: grid;
+    grid-template-columns:
+      var(--calendar-placeholder-gutter)
+      repeat(var(--calendar-placeholder-columns), 1fr);
+  }
+
+  &__header-row {
+    border-bottom: 1px solid var(--fc-border-color);
+  }
+
+  &__body {
+    flex: 1;
+    min-height: 0;
+
+    // one line per slot, matching the slot labels' 10% height
+    background: linear-gradient(
+        to bottom,
+        transparent calc(100% - 1px),
+        var(--fc-border-color) 0
+      )
+      0 0 / 100% 10%;
+  }
+
+  &__header-row .calendar-placeholder__header-cell,
+  &__column {
+    border-left: 1px solid var(--fc-border-color);
+  }
+
+  &__slot-label {
+    display: flex;
+    justify-content: flex-end;
+    height: 10%;
+    padding: 0.25em;
+    box-sizing: border-box;
+  }
+
+  &__column {
+    position: relative;
+  }
+
+  &__timed-event {
+    position: absolute;
+    inset-inline: 2px;
+
+    .d-skeleton {
+      height: 100%;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__list-heading {
+    --d-skeleton-fill: var(--primary-low);
+    --d-skeleton-shimmer: var(--primary-low-mid);
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 0.75em;
+    background: var(--primary-very-low);
+    border-bottom: 1px solid var(--fc-border-color);
+  }
+
+  &__list-row {
+    display: grid;
+    grid-template-columns: 8em auto 1fr;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.6em 0.75em;
+    border-bottom: 1px solid var(--fc-border-color);
+  }
+}

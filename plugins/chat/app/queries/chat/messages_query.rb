@@ -137,15 +137,23 @@ module Chat
 
       past_messages =
         messages
-          .where("chat_messages.created_at < ?", target_message.created_at)
-          .order(created_at: :desc)
+          .where(
+            "(chat_messages.created_at, chat_messages.id) < (?, ?)",
+            target_message.created_at,
+            target_message.id,
+          )
+          .order(created_at: :desc, id: :desc)
           .limit(PAST_MESSAGE_LIMIT)
           .to_a
 
       future_messages =
         messages
-          .where("chat_messages.created_at > ?", target_message.created_at)
-          .order(created_at: :asc)
+          .where(
+            "(chat_messages.created_at, chat_messages.id) > (?, ?)",
+            target_message.created_at,
+            target_message.id,
+          )
+          .order(created_at: :asc, id: :asc)
           .limit(FUTURE_MESSAGE_LIMIT)
           .to_a
 
@@ -180,7 +188,10 @@ module Chat
           condition = direction == PAST ? "<" : ">"
         end
 
-        messages = messages.where("chat_messages.id #{condition} ?", target_message_id.to_i)
+        messages = messages.where(<<~SQL, target_message_id: target_message_id.to_i)
+          (chat_messages.created_at, chat_messages.id) #{condition}
+          (SELECT created_at, id FROM chat_messages WHERE id = :target_message_id)
+        SQL
       end
 
       order = direction == FUTURE ? "ASC" : "DESC"
@@ -212,14 +223,14 @@ module Chat
       past_messages =
         messages
           .where("chat_messages.created_at <= ?", target_date.to_time.utc)
-          .order(created_at: :desc)
+          .order(created_at: :desc, id: :desc)
           .limit(PAST_MESSAGE_LIMIT)
           .to_a
 
       future_messages =
         messages
           .where("chat_messages.created_at > ?", target_date.to_time.utc)
-          .order(created_at: :asc)
+          .order(created_at: :asc, id: :asc)
           .limit(FUTURE_MESSAGE_LIMIT)
           .to_a
 

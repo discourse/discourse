@@ -74,13 +74,13 @@ export function isBlockRegistryFrozen(): boolean {
  * @param nameOrClass - Block name string or BlockClass.
  * @returns True if the block is registered.
  */
-export function hasBlock(nameOrClass: string | BlockClass) {
+export function hasBlock(nameOrClass: string | BlockClass): boolean {
   if (typeof nameOrClass === "string") {
     return blockRegistry.has(nameOrClass);
   }
   const metadata: BlockMetadata | null = getBlockMetadata(nameOrClass);
   const blockName = metadata?.blockName;
-  return blockName && blockRegistry.has(blockName);
+  return blockName !== undefined && blockRegistry.has(blockName);
 }
 
 /**

@@ -20,7 +20,7 @@ module DiscourseAi
         end
 
         def default_options
-          { max_tokens: 2000, model: llm_model.name }
+          { model: llm_model.name }
         end
 
         def provider_id

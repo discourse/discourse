@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { assert } from "@ember/debug";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
@@ -12,10 +13,14 @@ import {
   rangeExtractorWithPins,
   remeasureViewport,
   updateElementVirtualizer,
+  type VirtualItem,
+  type VirtualizerApi,
+  type VirtualizerOptions,
+  type VirtualKey,
+  type VirtualRange,
+  type VisibleRange,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
-
-type VirtualKey = number | string | bigint;
 
 /**
  * How close (in rows) the visible range must come to an edge before its reach
@@ -40,16 +45,6 @@ const EDGE_HYSTERESIS = 4;
  */
 const SCROLL_EPSILON = 1.5;
 
-interface VisibleRange {
-  startIndex: number;
-  endIndex: number;
-}
-
-interface VirtualRange extends VisibleRange {
-  overscan: number;
-  count: number;
-}
-
 type PinnedIndices = (
   indices: readonly number[],
   range: VirtualRange
@@ -58,15 +53,6 @@ type PinnedIndices = (
 /** The visible range plus the total item count, handed to an edge callback. */
 interface EdgeInfo extends VisibleRange {
   count: number;
-}
-
-interface VirtualItem {
-  key: VirtualKey;
-  index: number;
-  start: number;
-  end: number;
-  size: number;
-  lane: number;
 }
 
 interface PublishedState {
@@ -89,48 +75,6 @@ interface StateSignature {
   virtualItems: Array<
     readonly [VirtualKey, number, number, number, number, number]
   >;
-}
-
-interface VirtualizerOptions {
-  anchorTo: "start" | "end";
-  count: number;
-  getScrollElement: () => HTMLDivElement | null;
-  estimateSize: (index: number) => number;
-  getItemKey: (index: number) => VirtualKey;
-  overscan: number;
-  onChange: () => void;
-  followOnAppend: boolean;
-  scrollEndThreshold?: number;
-  rangeExtractor?: (range: VirtualRange) => number[];
-}
-
-interface VirtualizerApi {
-  range: VisibleRange | null;
-  isScrolling: boolean;
-  /** The viewport the engine measures and scrolls. Null until it mounts. */
-  scrollElement: HTMLElement | null;
-
-  /**
-   * The engine's cached scroll offset (px). Null until the first measure. The
-   * element's real `scrollTop` is the source of truth; this can drift from it
-   * when the browser clamps a scroll the engine never observed.
-   */
-  scrollOffset: number | null;
-  _didMount(): () => void;
-  _willUpdate(): void;
-  getTotalSize(): number;
-  getVirtualItems(): VirtualItem[];
-  measure(): void;
-  measureElement(element: HTMLElement | null): void;
-  scrollToIndex(
-    index: number,
-    options?: Parameters<DVirtualListApi["scrollToIndex"]>[1]
-  ): void;
-  scrollToOffset(
-    offset: number,
-    options?: Parameters<DVirtualListApi["scrollToOffset"]>[1]
-  ): void;
-  setOptions(options: VirtualizerOptions): void;
 }
 
 interface DVirtualizerSignature<T> {
@@ -340,12 +284,7 @@ export default class DVirtualizer<T> extends Modifier<
       // is already assigned, every later `modify()` takes the update branch and
       // the API is never registered — so `measureRow` stays a no-op and NO row is
       // ever measured, silently, for the life of the list.
-      //
-      // TODO(devxp-typescript-pending): Remove once the JavaScript adapter
-      // preserves the engine's element and option types.
-      const virtualizer = createElementVirtualizer(
-        options
-      ) as unknown as VirtualizerApi;
+      const virtualizer = createElementVirtualizer(options);
 
       let cleanup: (() => void) | null = null;
       try {
@@ -450,8 +389,10 @@ export default class DVirtualizer<T> extends Modifier<
     if (this.#syncingScroll || !element?.isConnected || isDestroying(this)) {
       return;
     }
-    const engineOffset = this.#virtualizer?.scrollOffset ?? null;
+    const virtualizer = this.#virtualizer;
+    const engineOffset = virtualizer?.scrollOffset ?? null;
     if (
+      !virtualizer ||
       engineOffset === null ||
       Math.abs(engineOffset - element.scrollTop) < SCROLL_EPSILON
     ) {
@@ -468,7 +409,7 @@ export default class DVirtualizer<T> extends Modifier<
     // The flush calls again after settling the height so a shrink's forced layout
     // exposes the browser-clamped position before the window is read.
     const maxOffset = Math.max(
-      this.#virtualizer.getTotalSize() - element.clientHeight,
+      virtualizer.getTotalSize() - element.clientHeight,
       0
     );
     if (engineOffset <= maxOffset + SCROLL_EPSILON) {
@@ -477,7 +418,7 @@ export default class DVirtualizer<T> extends Modifier<
 
     this.#syncingScroll = true;
     try {
-      pushScrollOffset(this.#virtualizer);
+      pushScrollOffset(virtualizer);
     } finally {
       this.#syncingScroll = false;
     }
@@ -612,9 +553,13 @@ export default class DVirtualizer<T> extends Modifier<
     ) {
       return;
     }
+    // `scrollTop` only moves here because the engine scrolled, so it exists.
+    const virtualizer = this.#virtualizer;
+    assert("dVirtualizer: scroll synced without an engine", virtualizer);
+
     this.#syncingScroll = true;
     try {
-      pushScrollOffset(this.#virtualizer);
+      pushScrollOffset(virtualizer);
     } finally {
       this.#syncingScroll = false;
     }

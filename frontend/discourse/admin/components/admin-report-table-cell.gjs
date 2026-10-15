@@ -1,73 +1,45 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed, set } from "@ember/object";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import AdminReportTableSummary from "discourse/admin/components/admin-report-table-summary";
 import { adminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-@tagName("")
 export default class AdminReportTableCell extends Component {
-  options = null;
-
-  @computed("label.type")
   get type() {
-    return this.label?.type;
+    return this.args.label?.type;
   }
 
-  set type(value) {
-    set(this, "label.type", value);
-  }
-
-  @computed("label.mainProperty")
   get property() {
-    return this.label?.mainProperty;
+    return this.args.label?.mainProperty;
   }
 
-  set property(value) {
-    set(this, "label.mainProperty", value);
-  }
-
-  @computed("computedLabel.formattedValue")
   get formattedValue() {
     return this.computedLabel?.formattedValue;
   }
 
-  set formattedValue(value) {
-    set(this, "computedLabel.formattedValue", value);
-  }
-
-  @computed("computedLabel.value")
   get value() {
     return this.computedLabel?.value;
   }
 
-  set value(value) {
-    set(this, "computedLabel.value", value);
-  }
-
-  @computed("label", "data", "options")
+  @cached
   get computedLabel() {
-    return this.label.compute(this.data, this.options || {});
+    return this.args.label.compute(this.args.data, this.args.options || {});
   }
 
-  @computed("hasRelatedItems", "type", "property", "value")
   get hasRelatedItemsSummary() {
     return (
-      this.hasRelatedItems &&
+      this.args.hasRelatedItems &&
       this.type === "number" &&
       this.property === "y" &&
       this.value > 0
     );
   }
 
-  @computed("reportType")
   get relatedItemsRenderer() {
-    return adminReportRelatedItemsRenderer(this.reportType);
+    return adminReportRelatedItemsRenderer(this.args.reportType);
   }
 
-  @computed("reportType")
   get relatedItemsSummary() {
     return this.relatedItemsRenderer?.tableSummary;
   }
@@ -82,13 +54,13 @@ export default class AdminReportTableCell extends Component {
         {{#if this.relatedItemsRenderer}}
           {{#if this.relatedItemsSummary}}
             <AdminReportTableSummary
-              @date={{this.data.x}}
+              @date={{@data.x}}
               @formattedValue={{this.formattedValue}}
               @itemComponent={{this.relatedItemsSummary.itemComponent}}
               @itemsKey={{this.relatedItemsSummary.itemsKey}}
               @listClass={{this.relatedItemsSummary.listClass}}
-              @reportFilters={{this.reportFilters}}
-              @reportType={{this.reportType}}
+              @reportFilters={{@reportFilters}}
+              @reportType={{@reportType}}
               @titleKey={{this.relatedItemsSummary.titleKey}}
             />
           {{else}}
@@ -96,10 +68,10 @@ export default class AdminReportTableCell extends Component {
           {{/if}}
         {{else}}
           <AdminReportTableSummary
-            @date={{this.data.x}}
+            @date={{@data.x}}
             @formattedValue={{this.formattedValue}}
-            @reportFilters={{this.reportFilters}}
-            @reportType={{this.reportType}}
+            @reportFilters={{@reportFilters}}
+            @reportType={{@reportType}}
           />
         {{/if}}
       {{else}}

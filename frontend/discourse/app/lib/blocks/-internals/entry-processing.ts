@@ -373,12 +373,12 @@ export function processBlockEntries({
     }
 
     let processedChildren: ChildBlockResult[] | undefined;
-    if (childEntries?.length) {
+    if (containerPath !== undefined && childEntries?.length) {
       processedChildren = processBlockEntries({
         entries: childEntries,
         cache, // Same root cache for all levels.
         owner,
-        baseHierarchy: containerPath!,
+        baseHierarchy: containerPath,
         outletName,
         outletArgs,
         showGhosts,

@@ -22,7 +22,6 @@ describe "Solved | Shared issue button" do
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.enable_solved_shared_issues = true
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
@@ -76,7 +75,7 @@ describe "Solved | Shared issue button" do
     expect(shared_issue_button).to have_shared_issue_button
   end
 
-  it "hides the button when the upcoming change is disabled" do
+  it "hides the button when shared issues are disabled" do
     SiteSetting.enable_solved_shared_issues = false
 
     sign_in(member)

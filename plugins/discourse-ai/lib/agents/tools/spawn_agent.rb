@@ -94,6 +94,10 @@ module DiscourseAi
           end
         end
 
+        def work_evidence(result)
+          result.is_a?(Hash) ? result.except(:response).to_json : super
+        end
+
         def invoke
           @result =
             SubagentRunner

@@ -67,8 +67,14 @@ def resolved_ember_env
   ENV["EMBER_ENV"] || "development"
 end
 
+def ci_minify?
+  ENV["DISCOURSE_CI_MINIFY"] == "1"
+end
+
 def build_info
-  { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
+  info = { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
+  info["ci_minify"] = true if ci_minify?
+  info
 end
 
 def existing_core_build_usable?
@@ -152,7 +158,8 @@ if low_memory_environment?
 end
 
 core_build_reusable =
-  existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
+  existing_core_build_usable? ||
+    (!ci_minify? && download_prebuild_assets! && existing_core_build_usable?)
 
 if core_build_reusable
   log "Reusing existing core ember build. All done."

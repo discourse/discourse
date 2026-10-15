@@ -24,6 +24,9 @@ ro:
         remove: "Elimină această apreciere"
         cant_remove: "Nu-ți mai poți elimina aprecierea"
         unauthenticated: "Te rog să te înregistrezi sau să te conectezi pentru a aprecia această postare."
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Adăugat"
     notifications:
       reaction_1_user_multiple_posts:
         one: "a reacționat la %{count} din postările tale"

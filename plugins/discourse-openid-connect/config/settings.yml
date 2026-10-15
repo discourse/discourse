@@ -57,6 +57,9 @@ discourse_openid_connect:
   openid_connect_match_by_email:
     default: true
     area: "oidc"
+  openid_connect_email_verified_claim_fallback:
+    default: false
+    area: "oidc"
   openid_connect_email_claim:
     default: "email"
     validator: "RegexPresenceValidator"

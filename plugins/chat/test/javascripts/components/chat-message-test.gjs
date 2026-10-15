@@ -9,6 +9,37 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Component | ChatMessage", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("Confirmation messages render their body once inside the card", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      cooked: "<p>Changing name from Storm → Wind &amp; Rain</p>",
+      blocks: [
+        {
+          type: "confirmation",
+          title: "Edit category",
+          cooked_question: "<p>Do you want to make this change?</p>",
+          parameters: [],
+          elements: [
+            { type: "button", action_id: "approve", text: { text: "Yes" } },
+          ],
+        },
+      ],
+    });
+
+    await render(
+      <template><ChatMessage @message={{this.message}} /></template>
+    );
+
+    assert
+      .dom(".chat-confirmation__description")
+      .hasText(
+        "Changing name from Storm → Wind & Rain",
+        "renders the change inside the card"
+      );
+    assert
+      .dom(".chat-message-content > .chat-message-text")
+      .doesNotExist("does not repeat the body outside the card");
+  });
+
   test("Message with edits", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       edited: true,

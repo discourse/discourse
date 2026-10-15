@@ -291,6 +291,16 @@ da:
         providers:
           google: "Google"
           fake: "Tilpasset"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Anvend"
+        share: "Del"
+        create_link: "Opret link"
+        copy_link: "Kopiér link"
+        filter_all: "Alle"
+        filter_standalone: "Enkeltstående"
       ai_bot:
         llm: "Model:"
         debug_ai_modal:

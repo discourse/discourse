@@ -37,6 +37,22 @@ RSpec.describe Jobs::UserEmail do
     fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
+    it "records a digest attempt after delivering content selected by a plugin" do
+      freeze_time
+      reply = Fabricate(:post, topic: popular_topic, post_number: 2)
+      plugin = Plugin::Instance.new
+      modifier = proc { |content| content.merge(topics: [], posts: [reply]) }
+      DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+      Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+
+      expect(ActionMailer::Base.deliveries.last.to).to eq([user.email])
+      expect(ActionMailer::Base.deliveries.last.text_part.body.to_s).to include(reply.raw)
+      expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+    end
+
     it "delivers translated digests according to each recipient's language preferences" do
       SiteSetting.allow_user_locale = true
       SiteSetting.content_localization_enabled = true

@@ -677,6 +677,7 @@ class BulkImport::Generic < BulkImport::Base
     import_engagement
     import_post_voting_votes
     import_topic_voting_votes
+    import_category_topic_voting
     import_answers
     import_gamification_scores
     import_post_events
@@ -3976,7 +3977,7 @@ class BulkImport::Generic < BulkImport::Base
       intermediate_group_ids = []
       if row["tag_group_ids"] && !row["tag_group_ids"].empty?
         intermediate_group_ids = JSON.parse(row["tag_group_ids"])
-      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+      elsif row["tag_group_id"].present?
         # Support old single tag_group_id
         intermediate_group_ids = [row["tag_group_id"]]
       end
@@ -4161,6 +4162,30 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  # Runs after the votes are imported because creating a CategorySetting unarchives
+  # votes of the category's existing open topics.
+  def import_category_topic_voting
+    unless defined?(DiscourseTopicVoting)
+      puts "", "Skipping topic voting categories, because the topic voting plugin is not installed."
+      return
+    end
+
+    return if table_column_names("categories").exclude?("topic_voting")
+
+    puts "", "Enabling topic voting on categories..."
+
+    rows = query("SELECT id FROM categories WHERE topic_voting = 1 ORDER BY id")
+
+    rows.each do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next unless category_id
+
+      DiscourseTopicVoting::CategorySetting.find_or_create_by!(category_id:)
+    end
+
+    rows.close
   end
 
   def import_answers
@@ -4413,6 +4438,7 @@ class BulkImport::Generic < BulkImport::Base
     rows = query(<<~SQL)
       SELECT DISTINCT badge_group
         FROM badges
+       WHERE badge_group IS NOT NULL
        ORDER BY badge_group
     SQL
 
@@ -4455,7 +4481,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]] || BadgeGrouping::Other,
         long_description: row["long_description"],
         image_upload_id:
           (

@@ -82,7 +82,7 @@ export function buildConfig({ devMode } = {}) {
         : undefined),
     },
     output: {
-      minify: isProduction,
+      minify: isProduction || process.env.DISCOURSE_CI_MINIFY === "1",
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,

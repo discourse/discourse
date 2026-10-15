@@ -231,6 +231,36 @@ RSpec.describe Admin::GroupsController do
     let(:user2) { Fabricate(:user) }
     let(:user3) { Fabricate(:user) }
 
+    it "rejects an unknown username without changing ownership" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: "unknown_owner",
+               },
+             }
+
+      expect(response.status).to eq(400)
+      expect(group.group_users.find_by(user:)).to be_owner
+    end
+
+    it "matches owner usernames regardless of case" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: user.username.upcase,
+               },
+             }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.find_by(user:)).not_to be_owner
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 

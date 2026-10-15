@@ -131,15 +131,14 @@ module DiscourseAi
 
             prompt = section_prompt(topic, section, guidance)
 
-            summary =
-              DiscourseAi::Completions::Llm.text_from_response(
-                llm.generate(
-                  prompt,
-                  max_tokens: 400,
-                  user: bot_user,
-                  feature_name: "summarize_tool",
-                ),
-              )
+            summary = +""
+            llm.generate(
+              prompt,
+              max_response_tokens: 400,
+              user: bot_user,
+              feature_name: "summarize_tool",
+              execution_context: context.execution_context,
+            ) { |partial| summary << partial if partial.is_a?(String) }
 
             summaries << summary
           end
@@ -148,20 +147,27 @@ module DiscourseAi
             progress << "."
             progress_blk.call(progress)
 
-            concatenation_prompt = {
-              insts: "You are a helpful bot",
-              input:
-                "concatenated the disjoint summaries, creating a cohesive narrative:\n#{summaries.join("\n")}}",
-            }
-
-            result =
-              llm.generate(
-                concatenation_prompt,
-                max_tokens: 500,
-                user: bot_user,
-                feature_name: "summarize_tool",
+            concatenation_prompt =
+              DiscourseAi::Completions::Prompt.new(
+                "You are a helpful bot",
+                messages: [
+                  {
+                    type: :user,
+                    content:
+                      "Concatenate the disjoint summaries, creating a cohesive narrative:\n#{summaries.join("\n")}",
+                  },
+                ],
               )
-            DiscourseAi::Completions::Llm.text_from_response(result)
+
+            result = +""
+            llm.generate(
+              concatenation_prompt,
+              max_response_tokens: 500,
+              user: bot_user,
+              feature_name: "summarize_tool",
+              execution_context: context.execution_context,
+            ) { |partial| result << partial if partial.is_a?(String) }
+            result
           else
             summaries.first
           end

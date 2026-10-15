@@ -38,6 +38,12 @@ ug:
             delete: "ئۆچۈر"
         multi_select:
           title: "كۆپ تاللاش"
+        reorderable_list:
+          policies_pinned: "چوققىلاندى"
+          policies_required: "زۆرۈر"
+          table_field: "بۆلەك"
+          table_type: "تىپى"
+          cross_list_primary: "ئاساسىي"
         toasts:
           title: "ئۇچۇر رامكىسى"
         font_scale:

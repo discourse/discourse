@@ -99,8 +99,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
       )
     end
 
-    it "enables shared issues by default when the upcoming change is enabled" do
-      SiteSetting.enable_solved_shared_issues = true
+    it "enables shared issues by default" do
       described_class.configure_category(category, guardian: admin.guardian)
 
       expect(category.custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD]).to eq(
@@ -110,7 +109,6 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     end
 
     it "uses provided configuration_values for shared issues" do
-      SiteSetting.enable_solved_shared_issues = true
       described_class.configure_category(
         category,
         guardian: admin.guardian,

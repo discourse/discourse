@@ -26,6 +26,7 @@ export function resetEngine() {
 
 export const parse = (text) => getEngine().parse(text);
 
+/** @returns {import("discourse/lib/link-matcher").LinkMatcher} */
 export const getLinkify = () => getEngine().linkify;
 
 export const isWhiteSpace = (str, index) =>

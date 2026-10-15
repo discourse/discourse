@@ -3,6 +3,7 @@ import { focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import AssignUserForm from "discourse/plugins/discourse-assign/discourse/components/assign-user-form";
 
@@ -13,10 +14,48 @@ module("Integration | Component | AssignUserForm", function (hooks) {
     pretender.get("/assign/suggestions", () =>
       response({
         suggestions: [],
-        assign_allowed_on_groups: [],
-        assign_allowed_for_groups: [],
+        groups: [],
       })
     );
+  });
+
+  test("searches assignees for the target and assigns groups as groups", async function (assert) {
+    let params;
+    pretender.get("/assign/search", (request) => {
+      params = request.queryParams;
+      return response({
+        users: [{ username: "searched_user" }],
+        groups: [{ name: "searched_team" }],
+      });
+    });
+    const model = trackedObject({ targetId: 42, targetType: "Post" });
+    const formApi = {};
+    const onSubmit = () => {};
+    const assigneeChooser = selectKit("#assignee-chooser");
+
+    await render(
+      <template>
+        <AssignUserForm
+          @formApi={{formApi}}
+          @model={{model}}
+          @onSubmit={{onSubmit}}
+        />
+      </template>
+    );
+    await assigneeChooser.fillInFilter("searched");
+
+    assert.strictEqual(params.term, "searched");
+    assert.strictEqual(params.target_id, "42");
+    assert.strictEqual(params.target_type, "Post");
+    assert.deepEqual(
+      assigneeChooser.displayedContent().map((row) => row.id),
+      ["searched_user", "searched_team"]
+    );
+
+    await assigneeChooser.selectRowByValue("searched_team");
+
+    assert.strictEqual(model.group_name, "searched_team");
+    assert.strictEqual(model.username, null);
   });
 
   for (const modifier of ["metaKey", "ctrlKey"]) {

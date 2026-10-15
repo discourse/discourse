@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
+import ConfigureMenuReorderable from "discourse/admin/components/dashboard/configure-menu-reorderable";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
@@ -24,6 +25,7 @@ const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
+  @service siteSettings;
 
   get configurationSections() {
     return this.args.loadedSections?.configuration?.sections ?? [];
@@ -61,11 +63,21 @@ export default class RedesignedAdminDashboard extends Component {
             @triggerClass="btn-default"
           >
             <:content>
-              <ConfigureMenu
-                @onReorder={{@reorderSections}}
-                @onToggleVisibility={{@toggleSection}}
-                @sections={{this.configurationSections}}
-              />
+              {{! TODO (ui-kit-reorderable-list-cleanup) drop the branch and the
+                  legacy component once the change ships. }}
+              {{#if this.siteSettings.enable_new_reordering_controls}}
+                <ConfigureMenuReorderable
+                  @onReorder={{@reorderSections}}
+                  @onToggleVisibility={{@toggleSection}}
+                  @sections={{this.configurationSections}}
+                />
+              {{else}}
+                <ConfigureMenu
+                  @onReorder={{@reorderSections}}
+                  @onToggleVisibility={{@toggleSection}}
+                  @sections={{this.configurationSections}}
+                />
+              {{/if}}
             </:content>
           </DMenu>
         {{/if}}

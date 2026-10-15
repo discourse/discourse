@@ -38,7 +38,7 @@ describe DiscourseAi::Admin::AskAiReportsController do
     expect(report.total_ask_count).to eq(1)
   end
 
-  it "expires abandoned reports when loading the dashboard and returns saved summaries" do
+  it "expires abandoned reports and only returns summaries when a report is opened" do
     sign_in(admin)
     report =
       AskAiReport.create!(
@@ -54,7 +54,52 @@ describe DiscourseAi::Admin::AskAiReportsController do
     expect(response.parsed_body["reports"].first["report_status"]).to eq("failed")
     report.update!(report_status: :completed, summary: "Questions about 猫.")
     get "/admin/plugins/discourse-ai/ask-ai-reports.json"
-    expect(response.parsed_body["reports"].first["summary"]).to eq("Questions about 猫.")
+    expect(response.parsed_body["reports"].first.keys).to contain_exactly(
+      "id",
+      "start_date",
+      "end_date",
+      "report_status",
+    )
+    get "/admin/plugins/discourse-ai/ask-ai-reports/#{report.id}.json"
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["report"]["summary"]).to eq("Questions about 猫.")
+  end
+
+  it "lists the latest twenty reports without loading subjects or topics" do
+    sign_in(admin)
+    reports =
+      21.times.map do
+        AskAiReport.create!(
+          requested_by: admin,
+          start_date: Date.current,
+          end_date: Date.current,
+          total_ask_count: 1,
+          reported_ask_count: 1,
+          report_status: :completed,
+          summary: "Summary 猫",
+          created_at: Time.utc(2026, 9, 1),
+        )
+      end
+
+    queries = track_sql_queries { get "/admin/plugins/discourse-ai/ask-ai-reports.json" }
+    expect(response.parsed_body["reports"].pluck("id")).to eq(reports.last(20).reverse.map(&:id))
+    expect(queries.grep(/FROM "(?:ask_ai_report_subjects|topics)"/i)).to be_empty
+  end
+
+  it "restricts report details to admins" do
+    report =
+      AskAiReport.create!(
+        requested_by: admin,
+        start_date: Date.current,
+        end_date: Date.current,
+        total_ask_count: 1,
+        reported_ask_count: 1,
+      )
+    get "/admin/plugins/discourse-ai/ask-ai-reports/#{report.id}.json"
+    expect(response.status).to eq(404)
+    sign_in(moderator)
+    get "/admin/plugins/discourse-ai/ask-ai-reports/#{report.id}.json"
+    expect(response.status).to eq(404)
   end
 
   it "only exposes the query when Data Explorer is available" do
@@ -62,9 +107,11 @@ describe DiscourseAi::Admin::AskAiReportsController do
     SiteSetting.data_explorer_enabled = true
     get "/admin/plugins/discourse-ai/ask-ai-reports.json"
     expect(response.parsed_body["data_explorer_query_id"]).to eq(-47)
+    expect(response.parsed_body["period_query_id"]).to eq(-48)
     SiteSetting.data_explorer_enabled = false
     get "/admin/plugins/discourse-ai/ask-ai-reports.json"
     expect(response.parsed_body["data_explorer_query_id"]).to be_nil
+    expect(response.parsed_body["period_query_id"]).to be_nil
     hide_const("DiscourseDataExplorer")
     allow(SiteSetting).to receive(:data_explorer_enabled).and_raise(NoMethodError)
     get "/admin/plugins/discourse-ai/ask-ai-reports.json"

@@ -540,7 +540,10 @@ CREATE TABLE public.ai_api_audit_logs (
     response_status integer,
     request_attempts jsonb,
     estimated_cost numeric(20,10),
-    time_to_first_token_msecs integer
+    time_to_first_token_msecs integer,
+    completion_state smallint,
+    reasoning_tokens integer,
+    stop_reason character varying(50)
 );
 
 
@@ -639,6 +642,79 @@ CREATE SEQUENCE public.ai_artifact_key_values_id_seq
 --
 
 ALTER SEQUENCE public.ai_artifact_key_values_id_seq OWNED BY public.ai_artifact_key_values.id;
+
+
+--
+-- Name: ai_artifact_share_key_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_share_key_values (
+    id bigint NOT NULL,
+    ai_artifact_share_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    key character varying(50) NOT NULL,
+    value character varying(20000) NOT NULL,
+    public boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_share_key_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_share_key_values_id_seq OWNED BY public.ai_artifact_share_key_values.id;
+
+
+--
+-- Name: ai_artifact_shares; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_shares (
+    id bigint NOT NULL,
+    ai_artifact_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    share_key character varying NOT NULL,
+    name character varying NOT NULL,
+    version_number integer DEFAULT 0 NOT NULL,
+    html character varying(65535),
+    css character varying(65535),
+    js character varying(65535),
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_shares_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_shares_id_seq OWNED BY public.ai_artifact_shares.id;
 
 
 --
@@ -1008,7 +1084,8 @@ CREATE TABLE public.ai_summaries (
     summary_type integer DEFAULT 0 NOT NULL,
     origin integer,
     highest_target_number integer DEFAULT 1 NOT NULL,
-    locale character varying(20)
+    locale character varying(20),
+    summarized_cooked text
 );
 
 
@@ -4024,6 +4101,42 @@ ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_ta
 
 
 --
+-- Name: decision_models; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_models (
+    id bigint NOT NULL,
+    display_name character varying(100) NOT NULL,
+    name character varying(255) NOT NULL,
+    provider character varying(50) NOT NULL,
+    url character varying(1000) NOT NULL,
+    ai_secret_id bigint,
+    vision_enabled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_models_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_models_id_seq OWNED BY public.decision_models.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5283,7 +5396,8 @@ CREATE TABLE public.discourse_workflows_data_tables (
     created_by_id integer,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    column_order character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -5369,7 +5483,8 @@ CREATE TABLE public.discourse_workflows_executions (
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    job_id character varying
 );
 
 
@@ -5390,6 +5505,37 @@ CREATE SEQUENCE public.discourse_workflows_executions_id_seq
 --
 
 ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.discourse_workflows_executions.id;
+
+
+--
+-- Name: discourse_workflows_reviewable_agents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_reviewable_agents (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    ai_agent_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_reviewable_agents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_reviewable_agents_id_seq OWNED BY public.discourse_workflows_reviewable_agents.id;
 
 
 --
@@ -5430,11 +5576,14 @@ ALTER SEQUENCE public.discourse_workflows_tags_id_seq OWNED BY public.discourse_
 CREATE TABLE public.discourse_workflows_variables (
     id bigint NOT NULL,
     key character varying(100) NOT NULL,
-    value character varying(1000) DEFAULT ''::character varying NOT NULL,
+    value text,
     description text,
     created_by_id integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    workflow_id bigint,
+    variable_type character varying(30) DEFAULT 'string'::character varying NOT NULL,
+    type_options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -5652,7 +5801,8 @@ CREATE TABLE public.discourse_workflows_workflow_versions (
     created_by_id integer NOT NULL,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    variables_schema jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -5829,6 +5979,20 @@ CREATE SEQUENCE public.drafts_id_seq
 --
 
 ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
+
+
+--
+-- Name: dsa_statement_of_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_statement_of_records (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    reviewable_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    payload jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -13921,6 +14085,20 @@ ALTER TABLE ONLY public.ai_artifact_key_values ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_artifact_share_key_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_share_key_values_id_seq'::regclass);
+
+
+--
+-- Name: ai_artifact_shares id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_shares_id_seq'::regclass);
+
+
+--
 -- Name: ai_artifact_versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14502,6 +14680,13 @@ ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: decision_models id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models ALTER COLUMN id SET DEFAULT nextval('public.decision_models_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14765,6 +14950,13 @@ ALTER TABLE ONLY public.discourse_workflows_execution_stats ALTER COLUMN id SET 
 --
 
 ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_executions_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_reviewable_agents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_reviewable_agents_id_seq'::regclass);
 
 
 --
@@ -16417,6 +16609,22 @@ ALTER TABLE ONLY public.ai_artifact_key_values
 
 
 --
+-- Name: ai_artifact_share_key_values ai_artifact_share_key_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values
+    ADD CONSTRAINT ai_artifact_share_key_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_artifact_shares ai_artifact_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares
+    ADD CONSTRAINT ai_artifact_shares_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ai_artifact_versions ai_artifact_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17113,6 +17321,14 @@ ALTER TABLE ONLY public.data_explorer_tags
 
 
 --
+-- Name: decision_models decision_models_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models
+    ADD CONSTRAINT decision_models_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17425,6 +17641,14 @@ ALTER TABLE ONLY public.discourse_workflows_executions
 
 
 --
+-- Name: discourse_workflows_reviewable_agents discourse_workflows_reviewable_agents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT discourse_workflows_reviewable_agents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_tags discourse_workflows_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17526,6 +17750,14 @@ ALTER TABLE ONLY public.draft_sequences
 
 ALTER TABLE ONLY public.drafts
     ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dsa_statement_of_records dsa_statement_of_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_statement_of_records
+    ADD CONSTRAINT dsa_statement_of_records_pkey PRIMARY KEY (id);
 
 
 --
@@ -19363,6 +19595,13 @@ CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs U
 
 
 --
+-- Name: idx_ai_api_audit_logs_incomplete_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_incomplete_id ON public.ai_api_audit_logs USING btree (completion_state, id) WHERE (completion_state = ANY (ARRAY[2, 3]));
+
+
+--
 -- Name: idx_ai_api_audit_logs_payload_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19755,6 +19994,13 @@ CREATE UNIQUE INDEX idx_dwf_execution_stats_on_workflow_id_and_date ON public.di
 
 
 --
+-- Name: idx_dwf_executions_on_job_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_executions_on_job_id ON public.discourse_workflows_executions USING btree (job_id) WHERE (job_id IS NOT NULL);
+
+
+--
 -- Name: idx_dwf_executions_on_resume_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19804,6 +20050,20 @@ CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.di
 
 
 --
+-- Name: idx_dwf_reviewable_agents_on_agent_reviewable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_reviewable_agents_on_agent_reviewable ON public.discourse_workflows_reviewable_agents USING btree (ai_agent_id, reviewable_id);
+
+
+--
+-- Name: idx_dwf_reviewable_agents_on_reviewable_agent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_reviewable_agents_on_reviewable_agent ON public.discourse_workflows_reviewable_agents USING btree (reviewable_id, ai_agent_id);
+
+
+--
 -- Name: idx_dwf_tags_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19818,10 +20078,17 @@ CREATE INDEX idx_dwf_variables_on_created_by_id ON public.discourse_workflows_va
 
 
 --
--- Name: idx_dwf_variables_on_key; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_variables_on_key_global; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_variables_on_key ON public.discourse_workflows_variables USING btree (key);
+CREATE UNIQUE INDEX idx_dwf_variables_on_key_global ON public.discourse_workflows_variables USING btree (key) WHERE (workflow_id IS NULL);
+
+
+--
+-- Name: idx_dwf_variables_on_workflow_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_variables_on_workflow_key ON public.discourse_workflows_variables USING btree (workflow_id, key) WHERE (workflow_id IS NOT NULL);
 
 
 --
@@ -20119,6 +20386,13 @@ CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post
 
 
 --
+-- Name: idx_posts_search_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_posts_search_covering ON public.posts USING btree (id) INCLUDE (topic_id, post_number, post_type) WHERE ((deleted_at IS NULL) AND (NOT hidden));
+
+
+--
 -- Name: idx_posts_user_id_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20312,6 +20586,13 @@ CREATE INDEX idx_uploads_on_verification_status ON public.uploads USING btree (v
 --
 
 CREATE INDEX idx_user_actions_speed_up_user_all ON public.user_actions USING btree (user_id, created_at, action_type);
+
+
+--
+-- Name: idx_user_badges_granted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_badges_granted_at ON public.user_badges USING btree (granted_at DESC);
 
 
 --
@@ -20644,6 +20925,48 @@ CREATE UNIQUE INDEX index_ai_artifact_kv_unique ON public.ai_artifact_key_values
 
 
 --
+-- Name: index_ai_artifact_share_key_values_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_share_key_values_on_user_id ON public.ai_artifact_share_key_values USING btree (user_id);
+
+
+--
+-- Name: index_ai_artifact_share_kv_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_share_kv_unique ON public.ai_artifact_share_key_values USING btree (ai_artifact_share_id, user_id, key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_ai_artifact_id ON public.ai_artifact_shares USING btree (ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_share_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_share_key ON public.ai_artifact_shares USING btree (share_key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_user_id_and_ai_artifact_id ON public.ai_artifact_shares USING btree (user_id, ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_user_id_and_created_at ON public.ai_artifact_shares USING btree (user_id, created_at);
+
+
+--
 -- Name: index_ai_artifact_versions_on_ai_artifact_id_and_version_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20711,6 +21034,13 @@ CREATE UNIQUE INDEX index_ai_secrets_on_name ON public.ai_secrets USING btree (n
 --
 
 CREATE INDEX index_ai_spam_logs_on_post_id ON public.ai_spam_logs USING btree (post_id);
+
+
+--
+-- Name: index_ai_summaries_missing_cooked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_summaries_missing_cooked ON public.ai_summaries USING btree (id) WHERE ((summarized_cooked IS NULL) AND (summary_type = 0) AND ((target_type)::text = 'Topic'::text));
 
 
 --
@@ -21477,6 +21807,13 @@ CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON publ
 
 
 --
+-- Name: index_decision_models_on_ai_secret_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_decision_models_on_ai_secret_id ON public.decision_models USING btree (ai_secret_id);
+
+
+--
 -- Name: index_developers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21810,6 +22147,13 @@ CREATE UNIQUE INDEX index_draft_sequences_on_user_id_and_draft_key ON public.dra
 --
 
 CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING btree (user_id, draft_key);
+
+
+--
+-- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dsa_statement_of_records_on_reviewable_id ON public.dsa_statement_of_records USING btree (reviewable_id);
 
 
 --
@@ -24165,6 +24509,13 @@ CREATE UNIQUE INDEX index_topic_users_on_user_id_and_topic_id ON public.topic_us
 
 
 --
+-- Name: index_topic_users_on_user_id_and_topic_id_tracked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_users_on_user_id_and_topic_id_tracked ON public.topic_users USING btree (user_id, topic_id) WHERE (notification_level >= 2);
+
+
+--
 -- Name: index_topic_view_stats_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25600,6 +25951,14 @@ ALTER TABLE ONLY public.poll_votes
 
 
 --
+-- Name: discourse_workflows_reviewable_agents fk_rails_bf51f3a32a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT fk_rails_bf51f3a32a FOREIGN KEY (reviewable_id) REFERENCES public.reviewables(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ai_tool_actions fk_rails_bf8a76772d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25686,14 +26045,33 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261014145458'),
+('20261014065735'),
+('20261013222431'),
+('20261013183208'),
+('20261013010026'),
+('20261013010022'),
+('20261012021959'),
+('20261012015332'),
+('20261009144947'),
+('20261009130230'),
+('20261009121104'),
+('20261009113440'),
+('20261008005940'),
+('20261007082151'),
+('20261006113418'),
+('20261005091527'),
+('20261005091447'),
 ('20261001073226'),
 ('20260930114733'),
 ('20260928103925'),
 ('20260925155026'),
 ('20260925054715'),
+('20260923174053'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),
+('20260922233925'),
 ('20260922233816'),
 ('20260921120000'),
 ('20260921081150'),
@@ -25703,6 +26081,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260918062145'),
 ('20260918061735'),
 ('20260917145657'),
+('20260916113851'),
+('20260916113806'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),
@@ -25710,6 +26090,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172757'),
 ('20260914140746'),
 ('20260914032737'),
+('20260913105655'),
 ('20260910110851'),
 ('20260910033302'),
 ('20260910030427'),
@@ -25720,6 +26101,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
+('20260904171256'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),

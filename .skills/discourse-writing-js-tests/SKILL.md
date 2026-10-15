@@ -126,6 +126,11 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
   `{ stubRouter: true }` to stub `service:router`.
 - Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
   the rendered DOM with `find` (first match) / `findAll` (all matches).
+- To change an argument after render, hold it in a standalone `tracked()` (from
+  `@glimmer/tracking`) instead of a test-only class with `@tracked` fields:
+  `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
+  `await settled()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
+  returns a decorator. Writing an equal value (`Object.is`) does not re-render.
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 

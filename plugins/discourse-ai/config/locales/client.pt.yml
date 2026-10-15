@@ -361,6 +361,15 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+      ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Predefinição"
+          apply: "Aplicar"
+        share: "Partilhar"
+        create_link: "Criar ligação"
+        copy_link: "Copiar hiperligação"
+        filter_all: "Todos"
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:

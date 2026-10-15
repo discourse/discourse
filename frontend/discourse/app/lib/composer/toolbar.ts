@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import type Site from "discourse/models/site";
@@ -258,6 +259,7 @@ export class ToolbarBase {
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
     createdButton.hiddenByUser =
+      buttonAttrs.id !== undefined &&
       HIDEABLE_BUTTON_IDS.has(buttonAttrs.id) &&
       this.hiddenButtons.includes(buttonAttrs.id);
 
@@ -272,7 +274,9 @@ export class ToolbarBase {
 
       const actionFn =
         buttonAttrs.action ?? buttonAttrs.sendAction ?? buttonAttrs.perform;
-      actionFn?.(toolbarEvent);
+      // Undefined only on a toolbar without a context, such as the rich editor's
+      // floating toolbars, whose actions take no arguments.
+      actionFn?.(toolbarEvent as ToolbarEvent);
 
       // appEvents is only available on the main toolbar
       // only custom plugins listen to this event
@@ -303,8 +307,13 @@ export class ToolbarBase {
     // Popup menu option item shortcut bindings and title text.
     if (buttonAttrs.popupMenu) {
       // Default action passes toolbarEvent to option.action
-      buttonAttrs.popupMenu.action ??= (option) =>
+      buttonAttrs.popupMenu.action ??= (option) => {
+        assert(
+          "A popup menu needs a toolbar with a context",
+          this.context.newToolbarEvent
+        );
         option.action(this.context.newToolbarEvent());
+      };
 
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
@@ -351,6 +360,10 @@ export class ToolbarBase {
  * Standard editor toolbar with default buttons
  */
 export default class Toolbar extends ToolbarBase {
+  /** Always complete: the editor that creates this toolbar installs itself as the context. */
+  declare context: ToolbarContext &
+    Required<Pick<ToolbarContext, "newToolbarEvent" | "send">>;
+
   #listOptions?: PopupMenuOption[];
 
   constructor(opts: ToolbarOptions) {
@@ -400,7 +413,10 @@ export default class Toolbar extends ToolbarBase {
           return true;
         }
 
-        if (!state.inHeading || state.inHeadingLevel > 4) {
+        if (
+          !state.inHeading ||
+          (state.inHeadingLevel !== undefined && state.inHeadingLevel > 4)
+        ) {
           return false;
         }
 
@@ -411,7 +427,7 @@ export default class Toolbar extends ToolbarBase {
           return "discourse-text";
         }
 
-        if (state.inHeadingLevel > 4) {
+        if (state.inHeadingLevel !== undefined && state.inHeadingLevel > 4) {
           return "discourse-text";
         }
 
@@ -420,7 +436,7 @@ export default class Toolbar extends ToolbarBase {
       title: "composer.text_size_title",
       popupMenu: {
         options: () => {
-          const headingOptions = [];
+          const headingOptions: PopupMenuOption[] = [];
           for (let headingLevel = 1; headingLevel <= 4; headingLevel++) {
             headingOptions.push({
               name: `heading-${headingLevel}`,

@@ -26,6 +26,7 @@ class PlaywrightLogger
         @logs << {
           level: "error",
           message: error.message,
+          stack: error.stack,
           timestamp: Time.now.to_i * 1000,
           source: "pageerror-api",
         }
@@ -41,18 +42,21 @@ class PlaywrightLogger
     if logs.empty?
       lines << "(no logs)"
     else
-      logs.each do |log|
-        if (
-             log[:message].include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
-               (log[:message].include?("uploads") || log[:message].include?("images"))
-           ) || log[:message].include?("favicon.ico") ||
-             # Machine-readable stacks for the deprecation report, not for humans.
-             log[:message].start_with?("deprecation_detail:")
-          next
+      messages =
+        logs.filter_map do |log|
+          if (
+               log[:message].include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                 (log[:message].include?("uploads") || log[:message].include?("images"))
+             ) || log[:message].include?("favicon.ico") ||
+               # Machine-readable stacks for the deprecation report, not for humans.
+               log[:message].start_with?("deprecation_detail:")
+            next
+          end
+
+          log[:stack].presence || log[:message]
         end
 
-        lines << log[:message]
-      end
+      BrowserErrorStack.resolve(messages).each { |message| lines << message }
     end
 
     lines << "~~~~~ END JS LOGS ~~~~~"

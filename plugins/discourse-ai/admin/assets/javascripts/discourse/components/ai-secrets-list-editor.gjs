@@ -73,6 +73,14 @@ export default class AiSecretsListEditor extends Component {
                                 {{usage.name}}
                               </LinkTo>
                               ({{i18n "discourse_ai.secrets.embedding"}})
+                            {{else if (eq usage.type "decision_model")}}
+                              <LinkTo
+                                @model={{usage.id}}
+                                @route="adminPlugins.show.discourse-ai-decision-models.edit"
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n "discourse_ai.secrets.decision_model"}})
                             {{else if (eq usage.type "mcp_server")}}
                               <LinkTo
                                 @model={{usage.id}}

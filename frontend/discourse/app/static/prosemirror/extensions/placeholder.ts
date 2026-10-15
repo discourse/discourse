@@ -10,7 +10,7 @@ const extension: RichEditorExtension = {
     pmView: { Decoration, DecorationSet },
     getContext,
   }) {
-    let placeholder;
+    let placeholder: string | undefined;
 
     return new Plugin({
       key: new PluginKey("placeholder"),
