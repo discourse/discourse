@@ -7,7 +7,7 @@ RSpec.describe Middleware::ProcessingRequest do
     it "resumes background work before the request uses a thread pool" do
       pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
       result = Queue.new
-      Scheduler::ThreadPool.pause
+      Scheduler::ForkDrain.drain
       middleware =
         described_class.new(
           lambda do |_env|
@@ -18,7 +18,7 @@ RSpec.describe Middleware::ProcessingRequest do
 
       expect(middleware.call(create_request_env)).to eq([200, {}, ["completed"]])
     ensure
-      Scheduler::ThreadPool.resume
+      Scheduler::ForkDrain.resume
       pool&.shutdown
       pool&.wait_for_termination(timeout: 5)
     end
