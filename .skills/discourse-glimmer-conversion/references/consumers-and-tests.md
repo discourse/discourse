@@ -90,27 +90,30 @@ Structure per the `discourse-writing-js-tests` skill:
 `setupRenderingTest(hooks)` from `discourse/tests/helpers/component-test`, `render` and
 `settled` from `@ember/test-helpers`, an inline `<template>` with a real import, `assert.dom`.
 
-Outer state the test mutates after rendering goes in a local tracked class; this replaces
+Outer state the test mutates after rendering goes in a standalone `tracked(v)` box from
+`@glimmer/tracking`, not a local class with a `@tracked` field; this replaces
 `this.set(...)` on the classic test context:
 
 ```gjs
 test("updates when the arg changes", async function (assert) {
-  const state = new (class {
-    @tracked value = "a";
-  })();
+  const value = tracked("a");
 
-  await render(<template><FooBar @value={{state.value}} /></template>);
+  await render(<template><FooBar @value={{value.value}} /></template>);
   assert.dom(".foo-bar").hasText("a", "renders the initial value");
 
-  state.value = "b";
+  value.value = "b";
   await settled();
   assert.dom(".foo-bar").hasText("b", "re-renders when the arg changes");
 });
 ```
 
+The box skips a write of the same value (`Object.is`). `tracked()` with no argument, or
+with an object whose only keys are `value`/`initializer`/`equals`/`description`, returns
+a decorator instead, so use `tracked(undefined)` for an empty box.
+
 `this.set("x", ...)` on the test context with `{{this.x}}` inside the `<template>` still
 works (the template is lexically bound to the test function's `this`); prefer the tracked
-class for new tests and leave existing `this.set` tests alone unless they break. Only a
+box for new tests and leave existing `this.set` tests alone unless they break. Only a
 test that still uses an `hbs` string or lives in a `.js` file gets converted to `.gjs`
 with an inline `<template>` and a real import. A component with no integration test gets
 one covering the wrapper, each redesigned binding, and each lifecycle replacement, unless
