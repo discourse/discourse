@@ -149,6 +149,12 @@
         padding-left: 1.25em;
       }
 
+      // the form default width spans the whole narrow code block
+      .code-language-select {
+        width: auto;
+        max-width: 50%;
+      }
+
       p[data-placeholder]::before {
         padding-top: 0;
         line-height: inherit;

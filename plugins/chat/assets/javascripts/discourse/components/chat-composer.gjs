@@ -299,9 +299,15 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  focusOrPromptLogin() {
+  focusOrPromptLogin(event) {
     if (!this.currentUser) {
       this.showLogin();
+      return;
+    }
+
+    // clicks inside the editor focus it on their own, and stealing focus
+    // from its controls closes them
+    if (event.target.closest(".chat-composer__input")) {
       return;
     }
 
