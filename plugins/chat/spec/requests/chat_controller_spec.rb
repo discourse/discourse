@@ -479,11 +479,11 @@ RSpec.describe Chat::ChatController do
       an extremely insightful response :)
       [/chat]
 
-      [chat quote="#{user2.username};#{message2.id};#{message2.created_at.iso8601}" chained="true"]
+      [chat quote="#{user2.username};#{message2.id};#{message2.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
       says you!
       [/chat]
 
-      [chat quote="#{user.username};#{message3.id};#{message3.created_at.iso8601}" chained="true"]
+      [chat quote="#{user.username};#{message3.id};#{message3.created_at.iso8601}" channelId="#{channel.id}" chained="true"]
       aw :(
       [/chat]
       EXPECTED

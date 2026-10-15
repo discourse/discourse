@@ -68,6 +68,7 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.linkedin_oidc_client_id
                           strategy.options[:client_secret] = SiteSetting.linkedin_oidc_client_secret
+                          strategy.options[:client_options][:auth_scheme] = :request_body
                         }
   end
 

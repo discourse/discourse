@@ -3,13 +3,13 @@ import { ajax } from "discourse/lib/ajax";
 import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-} from "./graph-constants";
+} from "./graph-constants.js";
 import {
   inputForRun,
   latestRunWithInput,
   latestRunWithOutput,
   outputForRun,
-} from "./run-data";
+} from "./run-data.js";
 
 function compactObject(object) {
   return Object.fromEntries(
@@ -34,15 +34,18 @@ export default class WorkflowEditorSession {
   @tracked lastExecutionRunData = null;
   @tracked pinData = {};
   @tracked webhookTestListeners = {};
+  @tracked variables = [];
 
   constructor({
     workflowId = null,
     lastExecutionRunData = null,
     pinData = {},
+    variables = [],
   } = {}) {
     this.workflowId = workflowId;
     this.lastExecutionRunData = lastExecutionRunData;
     this.pinData = pinData || {};
+    this.variables = variables || [];
   }
 
   setEditingContext(node, nodes, connections) {

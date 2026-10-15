@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
-import GraphvizInline from "../components/graphviz-inline";
-import richEditorExtension from "../lib/rich-editor-extension";
+import GraphvizInline from "../components/graphviz-inline.gjs";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 function applyGraphviz(element, helper) {
   const src = element.textContent.trim();

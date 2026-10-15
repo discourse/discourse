@@ -15,6 +15,7 @@ be:
       link: "Спасылка"
   mcp:
     errors:
+      category_not_found: "Катэгорыя не знойдзена"
       topic_not_found: "Тэма не знойдзена"
     oauth:
       approve: "Аўтарызаваць"

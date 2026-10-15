@@ -72,17 +72,7 @@ if defined?(DiscourseWorkflows)
                 options: %w[priority recency],
                 default: "priority",
               },
-              actor_username: {
-                type: :string,
-                required: false,
-                default: "system",
-                ui: {
-                  control: :actor,
-                },
-                control_options: {
-                  allow_anonymous: false,
-                },
-              },
+              **actor_property(allow_anonymous: false),
             },
           )
 

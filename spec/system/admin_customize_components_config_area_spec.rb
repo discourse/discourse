@@ -362,4 +362,17 @@ describe "Admin Customize Themes Config Area Page" do
 
     expect(page).to have_current_path(%r{/admin/customize/components/\d+})
   end
+
+  it "warns when leaving a newly created component that isn't assigned to any themes" do
+    theme_page = PageObjects::Pages::AdminCustomizeThemes.new
+
+    config_area.visit.click_install_button.create_new_theme(
+      name: "some new component",
+      component: true,
+    )
+    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
+
+    theme_page.click_back_to_components
+    expect(dialog).to have_content(I18n.t("admin_js.admin.customize.theme.unsaved_parent_themes"))
+  end
 end

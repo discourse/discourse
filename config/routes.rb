@@ -530,6 +530,7 @@ Discourse::Application.routes.draw do
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
+          put "move"
           member { get "/" => "flags#edit" }
         end
 
@@ -617,6 +618,10 @@ Discourse::Application.routes.draw do
     get "review/settings" => "reviewables#settings"
     get "review/user-menu-list" => "reviewables#user_menu_list", :format => :json
     put "review/settings" => "reviewables#settings"
+    put "review/:reviewable_id/dsa-classification" => "dsa_statements#classify",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
     put "review/:reviewable_id/perform/:action_id" => "reviewables#perform",
         :constraints => {
           reviewable_id: /\d+/,
@@ -1605,6 +1610,7 @@ Discourse::Application.routes.draw do
 
     get "embed/topics" => "embed#topics"
     get "embed/comments" => "embed#comments"
+    get "embed/status" => "embed#status"
     get "embed/count" => "embed#count"
     get "embed/info" => "embed#info"
 

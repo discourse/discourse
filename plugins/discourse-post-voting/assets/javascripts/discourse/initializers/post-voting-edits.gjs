@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import PostVotingAnswerButton from "../components/post-voting-answer-button";
+import PostVotingAnswerButton from "../components/post-voting-answer-button.gjs";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
-} from "../components/post-voting-answer-header";
-import PostVotingComments from "../components/post-voting-comments";
-import PostVotingVoteControls from "../components/post-voting-vote-controls";
+} from "../components/post-voting-answer-header.gjs";
+import PostVotingComments from "../components/post-voting-comments.gjs";
+import PostVotingVoteControls from "../components/post-voting-vote-controls.gjs";
 
 function initPlugin(api, container) {
   customizePost(api);

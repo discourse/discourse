@@ -35,4 +35,42 @@ RSpec.describe "Discourse Workflows - Data Tables" do
 
     expect(data_tables_page).to have_row(count: 1)
   end
+
+  describe "column menu" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        name: "contacts",
+        columns: [
+          { "name" => "email", "type" => "string" },
+          { "name" => "score", "type" => "number" },
+        ],
+      )
+    end
+
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    it "renames a column" do
+      data_tables_page.visit_show(data_table.id)
+      data_tables_page.click_column_menu_item("email", "rename_column")
+      data_tables_page.fill_column_name("contact_email")
+
+      expect(data_tables_page).to have_column_names(%w[contact_email score])
+    end
+
+    it "moves a column" do
+      data_tables_page.visit_show(data_table.id)
+      data_tables_page.click_column_menu_item("email", "move_column_right")
+
+      expect(data_tables_page).to have_column_names(%w[score email])
+    end
+
+    it "deletes a column after confirmation" do
+      data_tables_page.visit_show(data_table.id)
+      data_tables_page.click_column_menu_item("email", "delete_column")
+      dialog.click_danger
+
+      expect(data_tables_page).to have_column_names(%w[score])
+    end
+  end
 end

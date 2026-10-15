@@ -2,17 +2,18 @@ import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 import {
   fieldVisible,
+  fixedCollectionRows,
   normalizeOptions,
   normalizeSchema,
   propertyLabel,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 import {
   summarizeOutputKey,
   summarizeOutputKeyIsDerived,
-} from "../../../lib/workflows/summarize-output-key";
-import FieldPathControl from "./field-path-control";
-import FixedCollection from "./fixed-collection";
+} from "../../../lib/workflows/summarize-output-key.js";
+import FieldPathControl from "./field-path-control.gjs";
+import FixedCollection from "./fixed-collection.gjs";
 
 function isVisible(field, item) {
   return field ? fieldVisible(field, item) : false;
@@ -22,9 +23,12 @@ function isDerived(item) {
   return summarizeOutputKeyIsDerived(item || {});
 }
 
-function derivedPlaceholder(item) {
+function derivedPlaceholder(item, configuration, fieldName) {
   return summarizeOutputKeyIsDerived(item || {})
-    ? summarizeOutputKey(item || {})
+    ? summarizeOutputKey(
+        item || {},
+        fixedCollectionRows(configuration?.[fieldName])
+      )
     : "";
 }
 
@@ -186,7 +190,11 @@ export default class SummarizeAggregations extends Component {
                 'workflows-summarize-row__control--derived'
               }}"
             @name="output_field_name"
-            @placeholder={{derivedPlaceholder row.item}}
+            @placeholder={{derivedPlaceholder
+              row.item
+              @configuration
+              @fieldName
+            }}
             @showTitle={{false}}
             @title={{this.fieldTitle "output_field_name"}}
             as |field|

@@ -5,10 +5,10 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AllCategoriesSectionLink from "../common/all-categories-section-link";
-import SidebarCommonCategoriesSection from "../common/categories-section";
-import Section from "../section";
-import SectionLink from "../section-link";
+import AllCategoriesSectionLink from "../common/all-categories-section-link.gjs";
+import SidebarCommonCategoriesSection from "../common/categories-section.gjs";
+import Section from "../section.gjs";
+import SectionLink from "../section-link.gjs";
 
 export default class SidebarAnonymousCategoriesSection extends SidebarCommonCategoriesSection {
   @service router;

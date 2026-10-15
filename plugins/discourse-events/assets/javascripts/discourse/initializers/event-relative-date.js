@@ -1,7 +1,7 @@
 import { cancel } from "@ember/runloop";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
-import eventRelativeDate from "../lib/event-relative-date";
+import eventRelativeDate from "../lib/event-relative-date.js";
 
 function computeRelativeEventDates() {
   document

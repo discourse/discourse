@@ -61,6 +61,12 @@ ug:
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
+        classify:
+          text: "تېكىست"
+          upload_ids: "سۈرەت"
+          name: "ئىسمى"
+          type: "تىپى"
+          type_score: "نومۇر"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -231,6 +237,12 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      decision_models:
+        no_preset: "يوق"
+        display_name: "ئىسمى"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        test: "سىناقنى ئىجرا قىل"
       mcp_servers:
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -301,6 +313,17 @@ ug:
         providers:
           google: "Google"
           fake: "ئىختىيارى"
+      ai_artifact:
+        editor:
+          version: "نەشرى"
+          default: "كۆڭۈلدىكى"
+          option_on: "ئوچۇق"
+          option_off: "تاقاق"
+          apply: "قوللان"
+        share: "ھەمبەھىر"
+        create_link: "ئۇلانما قۇر"
+        copy_link: "ئۇلانما كۆچۈر"
+        filter_all: "ھەممىسى"
       ai_bot:
         debug_ai_modal:
           duration_label: "داۋاملىشىش ۋاقتى:"

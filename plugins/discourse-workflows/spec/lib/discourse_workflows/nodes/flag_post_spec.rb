@@ -31,6 +31,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       expect(score.reviewable_score_type).to eq(ReviewableScore.types[:needs_approval])
       expect(score.user).to eq(Discourse.system_user)
       expect(score.reason).to eq(attribution)
+      expect(score.context).to eq("discourse_workflows:workflow:#{workflow.id}")
       expect(post.reload.hidden?).to eq(false)
       expect(result).to include(
         "post_id" => post.id,
@@ -92,11 +93,43 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
     end
 
     it "adds a single score when the same workflow flags the same post twice" do
-      execute_node(configuration: { "post_id" => post.id.to_s, "flag_type" => "review" })
+      execute_node(
+        configuration: {
+          "post_id" => post.id.to_s,
+          "flag_type" => "review",
+        },
+        workflow: workflow,
+      )
 
       expect do
-        execute_node(configuration: { "post_id" => post.id.to_s, "flag_type" => "review" })
+        execute_node(
+          configuration: {
+            "post_id" => post.id.to_s,
+            "flag_type" => "review",
+          },
+          workflow: workflow,
+        )
       end.not_to change { ReviewableScore.count }
+    end
+
+    it "records both workflows when they flag the same post" do
+      other_workflow = Fabricate(:discourse_workflows_workflow)
+
+      [workflow, other_workflow].each do |flagging_workflow|
+        execute_node(
+          configuration: {
+            "post_id" => post.id.to_s,
+            "flag_type" => "review",
+          },
+          workflow: flagging_workflow,
+        )
+      end
+
+      reviewable = ReviewablePost.pending.find_by(target: post)
+      expect(reviewable.reviewable_scores.pluck(:context)).to contain_exactly(
+        "discourse_workflows:workflow:#{workflow.id}",
+        "discourse_workflows:workflow:#{other_workflow.id}",
+      )
     end
 
     it "hides the post with review_hide", :aggregate_failures do
@@ -168,6 +201,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
               "flag_type" => "spam",
               "actor_username" => moderator.username,
             },
+            workflow: workflow,
           )
       end.to change {
         PostAction.where(post: post, post_action_type_id: PostActionType.types[:spam]).count
@@ -176,6 +210,9 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       reviewable = ReviewableFlaggedPost.pending.find_by(target: post)
 
       expect(PostAction.last.user).to eq(moderator)
+      expect(reviewable.reviewable_scores.last.context).to eq(
+        "discourse_workflows:workflow:#{workflow.id}",
+      )
       expect(post.reload.hidden?).to eq(true)
       expect(post.topic.reload.visible).to eq(false)
       expect(author.reload.silenced?).to eq(false)

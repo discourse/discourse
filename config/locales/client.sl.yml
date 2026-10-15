@@ -181,7 +181,6 @@ sl:
         last_7_days: "Zadnjih 7 dni"
         last_30_days: "Zadnjih 30 dni"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"
       facebook: "Deli na Facebooku"
       email: "Pošlji po e-pošti"
@@ -220,6 +219,9 @@ sl:
         enabled: "Je ustvaril ta oglasni trak %{when}. Pojavil se bo na vrhu vsake strani, dokler ga uporabnik ne opusti."
         disabled: "Je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
     topic_admin_menu: "dejanja teme"
+    reorder:
+      removed: "Je odstranil %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
@@ -309,11 +311,6 @@ sl:
       two: "največ od %{count}"
       few: "največ od %{count}"
       other: "največ od %{count}"
-    character_count:
-      one: "%{count} znak"
-      two: "%{count} znaka"
-      few: "%{count} znaki"
-      other: "%{count} znakov"
     period_chooser:
       aria_label: "Filtriraj po obdobju"
     related_messages:
@@ -495,6 +492,9 @@ sl:
       title:
         search: "Iskanje sporočila"
         placeholder: "tu vnesite naslov, URL ali id sporočila"
+    dsa_statements:
+      category: "Kategorija"
+      saving: "Shranjujem..."
     review:
       show_more: "Več"
       show_less: "Manj"
@@ -2100,8 +2100,7 @@ sl:
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
       discard: "Zavrzi"
-      title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
-      title_placeholder_redesign: "Naziv"
+      title_placeholder: "Naziv"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "Zakaj spreminjate prispevek?"
       topic_featured_link_placeholder: "Vnesite povezavo prikazano z naslovom."
@@ -3459,11 +3458,6 @@ sl:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Prislužili to značko %{count} krat"
-        two: "Prislužili to značko %{count} krat"
-        few: "Prislužili to značko %{count} krat"
-        other: "Prislužili to značko %{count} krat"
       granted_on: "Podeljeno %{date}"
       title: Značke
       allow_title: "To značko lahko uporabite kot naziv"
@@ -3856,6 +3850,7 @@ sl:
             block: "Blokiraj"
             presets:
               custom: "Po meri"
+            automatic: "Samodejno"
           authorizations:
             user: "Uporabnik"
             status: "Status"
@@ -4468,6 +4463,7 @@ sl:
           upload: "Prenesi"
           unsaved_changes_alert: "Niste shranili sprememb - ali jih želite zavreči in nadaljevati?"
           discard: "Zavrzi"
+          leave: "Zapusti"
           direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"

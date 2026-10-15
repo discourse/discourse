@@ -57,14 +57,7 @@ module DiscourseWorkflows
                 control: :tags,
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 

@@ -3,7 +3,7 @@ import * as cmLanguage from "@codemirror/language";
 import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as lezerHighlight from "@lezer/highlight";
-import { expressionUtils } from "./expression-utils";
+import { expressionUtils } from "./expression-utils.js";
 
 export function buildCmParams() {
   return {

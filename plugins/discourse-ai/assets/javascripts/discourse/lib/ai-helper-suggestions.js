@@ -3,7 +3,7 @@ import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors";
+import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors.js";
 
 export const MIN_CHARACTER_COUNT = 40;
 

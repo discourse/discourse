@@ -24,7 +24,13 @@ RSpec.describe "AI Bot - Header Toggle" do
     group.save
 
     allowed_agent = AiAgent.last
-    allowed_agent.update!(allowed_group_ids: [group.id], enabled: true)
+    allowed_agent.update!(
+      allowed_group_ids: [group.id],
+      default_llm: gpt_4,
+      enabled: true,
+      allow_personal_messages: true,
+    )
+    allowed_agent.ensure_user!
 
     sign_in(user)
   end

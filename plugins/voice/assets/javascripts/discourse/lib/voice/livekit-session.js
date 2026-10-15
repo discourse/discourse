@@ -11,8 +11,8 @@ import {
   cameraEncodingFor,
   screenEncodingFor,
   voiceBitrateFor,
-} from "./video-quality";
-import { voiceAssetAppUrl } from "./voice-assets";
+} from "./video-quality.js";
+import { voiceAssetAppUrl } from "./voice-assets.js";
 
 // The SDK bundle sits in the plugin's public dir, which static asset CDNs
 // never receive. Anchor to the page URL because this compiled chunk may

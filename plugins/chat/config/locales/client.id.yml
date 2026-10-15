@@ -261,6 +261,7 @@ id:
         "action:send_chat_message": "Kirim pesan obrolan"
       send_chat_message:
         message: "pesan"
+        actor_username: "Pengirim"
       chat_approval:
         message: "pesan"
         buttons: "Tombol"

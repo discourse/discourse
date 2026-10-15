@@ -208,6 +208,7 @@ export default class AccountController extends Controller {
   showUserStatusModal(status) {
     this.modal.show(UserStatusModal, {
       model: {
+        user: this.model,
         status,
         hidePauseNotifications: true,
         saveAction: (s) => this.set("newStatus", s),

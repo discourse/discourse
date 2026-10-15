@@ -21,13 +21,13 @@ class CategoryList
   end
 
   def self.included_associations
-    [
-      :uploaded_background,
-      :uploaded_background_dark,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url],
+    %i[
+      uploaded_background
+      uploaded_background_dark
+      uploaded_logo
+      uploaded_logo_dark
+      topic_only_relative_url
+      subcategories
     ].concat(@included_associations || [])
   end
 
@@ -144,8 +144,7 @@ class CategoryList
   end
 
   def find_categories
-    query = Category.includes(CategoryList.included_associations).secured(@guardian)
-    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
+    query = Category.secured(@guardian)
     query = self.class.order_categories(query)
 
     paginate = paginate_results?
@@ -180,22 +179,11 @@ class CategoryList
           .where(parent_category_id: @categories.map { |c| c.id })
 
       subcategories_query =
-        Category.includes(CategoryList.included_associations).where(
+        Category.where(
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )
-      if SiteSetting.content_localization_enabled
-        subcategories_query = subcategories_query.includes(:localizations)
-      end
       @categories += subcategories_query
-    end
-
-    if SiteSetting.content_localization_enabled
-      @categories.each { |c| LocalizationAttributesReplacer.localize_category(c, I18n.locale) }
-    end
-
-    if Site.preloaded_category_custom_fields.any?
-      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
     end
 
     include_subcategories = @options[:include_subcategories] == true
@@ -230,7 +218,25 @@ class CategoryList
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 
-    Category.preload_user_fields!(@guardian, categories_with_descendants)
+    displayed_categories = categories_with_descendants
+    associations = CategoryList.included_associations
+    associations << :localizations if SiteSetting.content_localization_enabled
+    ActiveRecord::Associations::Preloader.new(
+      records: displayed_categories,
+      associations: associations,
+    ).call
+
+    if SiteSetting.content_localization_enabled
+      displayed_categories.each do |c|
+        LocalizationAttributesReplacer.localize_category(c, I18n.locale)
+      end
+    end
+
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(displayed_categories, Site.preloaded_category_custom_fields)
+    end
+
+    Category.preload_user_fields!(@guardian, displayed_categories)
   end
 
   def prune_empty

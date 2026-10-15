@@ -339,7 +339,6 @@ en:
       zh_CN:
         name: Chinese Simplified
     share:
-      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on X"
@@ -397,6 +396,25 @@ en:
     skip_to_last_reply: "Skip to last reply"
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
+
+    reorder:
+      announcement: "Moved %{label} to position %{position} of %{total}"
+      announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"
+      handle: "Reorder %{label}"
+      handle_description: "Use the arrow keys to move between rows. Press Enter for move options."
+      handle_description_drag_only: "Drag to move this row."
+      remove: "Remove %{label}"
+      removed: "Removed %{label}"
+      move_up: "Move up"
+      move_down: "Move down"
+      move_to_top: "Move to top"
+      move_to_bottom: "Move to bottom"
+      move_to_list: "Move to %{list}"
+      position: "%{position} of %{total}"
+      at_start: "%{label} is already first"
+      at_end: "%{label} is already last"
+      move_refused: "Could not move %{label}"
+      add_item: "Add an item"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
@@ -556,9 +574,6 @@ en:
     max_of_count:
       one: "max of %{count}"
       other: "max of %{count}"
-    character_count:
-      one: "%{count} character"
-      other: "%{count} characters"
     period_chooser:
       aria_label: "Filter by period"
 
@@ -966,6 +981,20 @@ en:
         search: "Search for a Message"
         placeholder: "type the message title, url or id here"
 
+    dsa_statements:
+      title: "DSA classification"
+      help_title: "About DSA classification"
+      help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."
+      rule: "Community rule"
+      rule_prompt: "Choose a community rule"
+      category: "Category"
+      category_prompt: "Choose a category"
+      pending: "DSA classification pending"
+      confirm_title: "Save DSA classification?"
+      confirm_message: "Check the community rule and category. This classification cannot be changed after saving."
+      save: "Save classification"
+      saving: "Saving…"
+      saved: "Classification saved"
     review:
       show_more: "Show more"
       show_less: "Show less"
@@ -1258,6 +1287,9 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
+        mentions_not_notified:
+          one: "%{usernames} will not be notified because they do not have access to this reviewable."
+          other: "%{usernames} will not be notified because they do not have access to this reviewable."
       topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
@@ -2847,6 +2879,7 @@ en:
     user_status:
       save: "Save"
       set_custom_status: "Set custom status"
+      edit_status: "Edit status"
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
@@ -3028,7 +3061,7 @@ en:
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
+      value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great."
 
     offline_indicator:
       no_internet: "No internet connection."
@@ -3677,8 +3710,7 @@ en:
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
-      title_placeholder: "What is this discussion about in one brief sentence?"
-      title_placeholder_redesign: "Title"
+      title_placeholder: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
@@ -6139,9 +6171,6 @@ en:
         search_full_page: "Open full page admin search"
 
     badges:
-      earned_n_times:
-        one: "Earned this badge %{count} time"
-        other: "Earned this badge %{count} times"
       granted_on: "Granted %{date}"
       others_count:
         one: "Granted to others %{count} time"
@@ -6158,6 +6187,9 @@ en:
       awarded:
         one: "%{number} awarded"
         other: "%{number} awarded"
+      granted_times:
+        one: "Granted %{number} time"
+        other: "Granted %{number} times"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -9204,8 +9236,9 @@ en:
           upload: "Upload"
           select_component: "Select a component…"
           unsaved_changes_alert: "You haven't saved your changes yet, do you want to discard them and move on?"
-          unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
+          unsaved_parent_themes: "You haven't added this component to any themes, so it won't appear anywhere. Do you still want to leave?"
           discard: "Discard"
+          leave: "Leave"
           stay: "Stay"
           css_html: "Custom Code"
           edit_css_html: "Edit Code"

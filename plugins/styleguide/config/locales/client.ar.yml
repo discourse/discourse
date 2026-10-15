@@ -39,6 +39,12 @@ ar:
             delete: "حذف"
         multi_select:
           title: "اختيار متعدد"
+        reorderable_list:
+          policies_pinned: "مثبَّت"
+          policies_required: "مطلوب"
+          table_field: "الحقل"
+          table_type: "النوع"
+          cross_list_primary: "أساسي"
         toasts:
           title: "الرسائل المنبثقة"
         font_scale:

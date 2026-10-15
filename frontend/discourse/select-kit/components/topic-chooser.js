@@ -6,7 +6,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import TopicRow from "./topic-row";
+import TopicRow from "./topic-row.gjs";
 
 @classNames("topic-chooser")
 @selectKitOptions({

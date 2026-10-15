@@ -149,4 +149,52 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     assert.true(prevented, "native paste is prevented for handled rich paste");
     assert.strictEqual(textarea.value, "plain fallback");
   });
+
+  test("placeholder - restores the upload text after processing", function (assert) {
+    this.owner.lookup("service:composer").model = { reply: "" };
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+    const file = { id: "file-1", name: "notes.txt" };
+
+    try {
+      manipulation.placeholder.insert(file);
+      const uploading = textarea.value;
+
+      manipulation.placeholder.progress(file);
+      assert.notStrictEqual(textarea.value, uploading, "shows processing");
+
+      manipulation.placeholder.progressComplete(file);
+      assert.strictEqual(textarea.value, uploading, "restores uploading");
+    } finally {
+      textarea.remove();
+    }
+  });
+
+  // A preprocessor can complete a file it never reported progress for, such as
+  // the checksum step skipping every file when SubtleCrypto is unavailable.
+  test("placeholder - leaves the text alone when processing never started", function (assert) {
+    this.owner.lookup("service:composer").model = { reply: "" };
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+    const file = { id: "file-1", name: "notes.txt" };
+
+    try {
+      textarea.value = "this value is undefined ";
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      manipulation.placeholder.insert(file);
+      const uploading = textarea.value;
+
+      manipulation.placeholder.progressComplete(file);
+
+      assert.strictEqual(textarea.value, uploading);
+    } finally {
+      textarea.remove();
+    }
+  });
 });

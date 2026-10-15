@@ -11,8 +11,8 @@ import {
   normalizeOptions,
   propertyOptionLabel,
   propertySelectNoneKey,
-} from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export class DynamicOptionsComboBox extends ComboBox {
   search(filter) {
@@ -306,8 +306,9 @@ export default class ComboBoxField extends Component {
           <DButton
             class="btn-default"
             @action={{this.performAction}}
+            @ariaLabel={{this.actionLabel}}
             @icon={{this.actionIcon}}
-            @label={{this.actionLabel}}
+            @title={{this.actionLabel}}
           />
         </div>
       {{else}}

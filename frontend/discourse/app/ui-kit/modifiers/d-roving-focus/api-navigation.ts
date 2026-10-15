@@ -1,7 +1,12 @@
-import type { DRovingFocusConfig } from "./config";
-import ItemScope from "./item-scope";
-import { scan, step, type StepOutcome, stepRow } from "./navigation";
-import type { DRovingFocusAxis, DRovingFocusStepResult } from "./types";
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import {
+  scan,
+  step,
+  type StepOutcome,
+  stepRow,
+} from "discourse/ui-kit/-internals/cursor/navigation";
+import type { DRovingFocusConfig } from "./config.ts";
+import type { DRovingFocusAxis, DRovingFocusStepResult } from "./types.ts";
 
 /** Operations and state needed to step the cursor from the public API. */
 export interface ApiNavigationContext {

@@ -53,8 +53,11 @@ module PostGuardian
           return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
         end
 
-        # Silenced users can't flag
-        return false if is_flag && @user.silenced?
+        # Silenced users can't flag, except to report illegal content
+        if is_flag && @user.silenced? &&
+             !(action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content)
+          return false
+        end
 
         # Silenced users can't like
         return false if action_key == :like && @user.silenced?
@@ -183,7 +186,7 @@ module PostGuardian
     return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
-      return false if !is_staff? && !Topic.visible_post_types(@user).include?(post.post_type)
+      return false if !is_staff? && !visible_post_types.include?(post.post_type)
       return false if @user.silenced?
 
       return can_edit_hidden_post?(post) if post.hidden?
@@ -311,7 +314,7 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    return false if Topic.visible_post_types(@user).exclude?(post.post_type)
+    return false if visible_post_types.exclude?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
@@ -324,10 +327,10 @@ module PostGuardian
     return Post.with_deleted if is_admin?
     return Post.none if !is_staff? && !category_group_moderation_allowed?
 
-    topics = visible_topic_scope(Topic.with_deleted)
+    topics = visible_topic_scope(Topic.with_deleted.where("topics.id = posts.topic_id"))
     topics = topics.where(category_id: category_group_moderator_scope.select(:id)) if !is_staff?
 
-    Post.with_deleted.secured(self).where(topic_id: topics.select(:id))
+    Post.with_deleted.secured(self).where("EXISTS (#{topics.select(1).to_sql})")
   end
 
   def can_review_post?(post)
@@ -449,6 +452,10 @@ module PostGuardian
   end
 
   private
+
+  def visible_post_types
+    @visible_post_types ||= Topic.visible_post_types(@user)
+  end
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic&.subtype == "system_message"

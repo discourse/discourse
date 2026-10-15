@@ -12,14 +12,20 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
   let conversationRequests = 0;
 
   needs.user({
-    ai_enabled_agents: [],
-    ai_enabled_chat_bots: [
+    ai_enabled_agents: [
       {
-        id: 1,
-        model_name: "gpt-4",
-        username: "gpt-4",
-        is_agent: false,
+        id: -1,
+        user_id: -100,
+        username: "forum_helper",
+        name: "Forum helper",
+        allow_personal_messages: true,
+        default_llm_id: 1,
+        has_default_llm: true,
+        force_default_llm: false,
       },
+    ],
+    ai_available_llm_models: [
+      { id: 1, model_name: "gpt-4", display_name: "GPT-4" },
     ],
   });
 
@@ -30,6 +36,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/discourse-ai/credits/status", () => helper.response({}));
     server.get("/discourse-ai/ai-bot/conversations.json", () =>
       helper.response({
         conversations: [],
@@ -58,6 +65,16 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
   }
 
   test("Enter submits the message", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
+
+    assert.strictEqual(conversationRequests, 1, "submitted once");
+  });
+
+  test("submits with an agent default when no models are selectable", async function (assert) {
+    updateCurrentUser({ ai_available_llm_models: [] });
     await prepareDraft();
 
     await triggerEvent(INPUT, "keydown", { key: "Enter" });

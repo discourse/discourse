@@ -17,8 +17,8 @@ import {
   moveRow,
   runCommand,
   setColumnAlignment,
-} from "./commands";
-import { cellTarget, columnTarget, rowTarget } from "./grid";
+} from "./commands.js";
+import { cellTarget, columnTarget, rowTarget } from "./grid.js";
 
 export const TABLE_MENU_IDENTIFIER = "composer-table-menu";
 

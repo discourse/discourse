@@ -33,6 +33,23 @@ te:
           title: "బ్యాకప్పులు"
       read_post:
         unknown_post: "పోస్ట్"
+      chat_tool_approval:
+        topic_states:
+          closed: "మూసివేయబడినవి"
+          active: "క్రియాశీల"
+        solution_post: "పోస్ట్ #%{number}"
+        duration_label: "వ్యవధి:"
+        user_duration:
+          one: "%{count} రోజు"
+          other: "%{count} రోజులు"
+        posts_label: "పోస్ట్‌లు"
+        category_label: "వర్గం"
+        category_fields:
+          name: "పేరు"
+          description: "వివరణ"
+          color: "రంగు"
+        approve_label: "అవును"
+        reject_label: "లేదు"
       tool_summary:
         suspend_user: "సభ్యుడిని సస్పెండు చేయండి"
         silence_user: "సభ్యుని నిశ్శబ్దం చేయండి"

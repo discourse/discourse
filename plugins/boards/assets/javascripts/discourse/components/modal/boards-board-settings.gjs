@@ -16,10 +16,10 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { buildDefaultBoardAcl } from "../../lib/boards-access-control";
-import { loadCategories } from "../../lib/boards-categories";
-import BoardsAccessControlField from "../boards-access-control-field";
-import BoardsEditableTitle from "../boards-editable-title";
+import { buildDefaultBoardAcl } from "../../lib/boards-access-control.js";
+import { loadCategories } from "../../lib/boards-categories.js";
+import BoardsAccessControlField from "../boards-access-control-field.gjs";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 const CONSTRAINT_TYPE_OPTIONS = [
   {

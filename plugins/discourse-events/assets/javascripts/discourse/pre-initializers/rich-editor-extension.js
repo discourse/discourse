@@ -1,12 +1,12 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
-import EventNodeView from "../components/event-node-view";
-import { buildEventPreview } from "../lib/event-preview";
+import EventNodeView from "../components/event-node-view.gjs";
+import { buildEventPreview } from "../lib/event-preview.js";
 import {
   buildEventSkeleton,
   camelCase,
   getCustomFieldNames,
-} from "../lib/raw-event-helper";
+} from "../lib/raw-event-helper.js";
 
 export const EVENT_ATTRIBUTES = {
   name: { default: null },

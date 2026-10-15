@@ -1,27 +1,23 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
-import { tagName } from "@ember-decorators/component";
+import { hash } from "@ember/helper";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
-@tagName("")
-export default class Enum extends Component {
-  <template>
-    <div ...attributes>
-      <ComboBox
-        @content={{this.setting.validValues}}
-        @nameProperty={{this.setting.computedNameProperty}}
-        @onChange={{fn (mut this.value)}}
-        @options={{hash
-          castInteger=true
-          allowAny=this.setting.allowsNone
-          disabled=@disabled
-        }}
-        @value={{this.value}}
-        @valueProperty={{this.setting.computedValueProperty}}
-      />
+const Enum = <template>
+  <div ...attributes>
+    <ComboBox
+      @content={{@setting.validValues}}
+      @nameProperty={{@setting.computedNameProperty}}
+      @onChange={{@changeValueCallback}}
+      @options={{hash
+        castInteger=true
+        allowAny=@setting.allowsNone
+        disabled=@disabled
+      }}
+      @value={{@value}}
+      @valueProperty={{@setting.computedValueProperty}}
+    />
 
-      {{this.preview}}
-    </div>
-  </template>
-}
+    {{@preview}}
+  </div>
+</template>;
+
+export default Enum;

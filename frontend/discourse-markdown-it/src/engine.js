@@ -2,7 +2,7 @@ import markdownit from "markdown-it";
 import AllowLister from "pretty-text/allow-lister";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
-import { TextPostProcessRuler } from "./features/text-post-process";
+import { TextPostProcessRuler } from "./features/text-post-process.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor

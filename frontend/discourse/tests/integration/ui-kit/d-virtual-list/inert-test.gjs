@@ -9,14 +9,6 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 
 const estimateSize = () => 40;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, id) => ({
     id,
@@ -34,7 +26,7 @@ module("Integration | ui-kit | DVirtualList | inert", function (hooks) {
   test("disabled virtualization renders all rows without invoking callbacks", async function (assert) {
     disableVirtualization();
 
-    const state = new State(buildRows(5));
+    const items = tracked(buildRows(5));
     const calls = {
       registerApi: 0,
       reachEnd: 0,
@@ -57,7 +49,7 @@ module("Integration | ui-kit | DVirtualList | inert", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimateSize}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @onReachEnd={{onReachEnd}}
           @onReachStart={{onReachStart}}
@@ -70,7 +62,7 @@ module("Integration | ui-kit | DVirtualList | inert", function (hooks) {
       </template>
     );
 
-    state.items = state.items.map((item) => ({
+    items.value = items.value.map((item) => ({
       ...item,
       text: `${item.text} replaced`,
     }));

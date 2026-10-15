@@ -174,7 +174,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: trustHTML(`<p>${escape(note.content)}</p>`),
+        description: trustHTML(note.cooked ?? `<p>${escape(note.content)}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&
@@ -279,7 +279,11 @@ export default class ReviewableTimeline extends Component {
                     </div>
                     {{#if event.description}}
                       <DDecoratedHtml
-                        @className="timeline-event__description"
+                        @className={{if
+                          (eq event.type "note")
+                          "timeline-event__description --note"
+                          "timeline-event__description"
+                        }}
                         @html={{event.description}}
                       />
                     {{/if}}

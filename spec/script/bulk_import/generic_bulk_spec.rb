@@ -537,6 +537,125 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#import_category_topic_voting" do
+      fab!(:voting_category, :category)
+      fab!(:other_category, :category)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@categories,
+            { 1 => voting_category.id, 2 => other_category.id },
+          )
+        end
+      end
+
+      after { source_db.close }
+
+      context "when the topic voting plugin is installed" do
+        before do
+          skip "requires the topic voting plugin" unless defined?(DiscourseTopicVoting)
+          SiteSetting.topic_voting_enabled = true
+        end
+
+        it "enables voting only on flagged categories, also when run again" do
+          source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+          source_db.execute("INSERT INTO categories VALUES (1, 1), (2, NULL), (3, 1)")
+
+          importer.import_category_topic_voting
+          importer.import_category_topic_voting
+
+          expect(DiscourseTopicVoting::CategorySetting.pluck(:category_id)).to contain_exactly(
+            voting_category.id,
+          )
+          expect(Category.can_vote?(voting_category.id)).to eq(true)
+          expect(Category.can_vote?(other_category.id)).to eq(false)
+        end
+
+        it "skips intermediate databases without a topic_voting column" do
+          source_db.execute("CREATE TABLE categories (id INTEGER)")
+          source_db.execute("INSERT INTO categories VALUES (1)")
+
+          expect { importer.import_category_topic_voting }.not_to raise_error
+          expect(DiscourseTopicVoting::CategorySetting.count).to eq(0)
+        end
+      end
+
+      it "skips categories when the plugin is missing" do
+        hide_const("DiscourseTopicVoting")
+        source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+        source_db.execute("INSERT INTO categories VALUES (1, 1)")
+
+        expect { importer.import_category_topic_voting }.to output(
+          /plugin is not installed/,
+        ).to_stdout
+      end
+    end
+
+    describe "#import_tags" do
+      fab!(:tag_group)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@tag_group_mapping, { 7 => tag_group.id })
+        end
+      end
+
+      after { source_db.close }
+
+      it "adds tags to the group from the single tag_group_id column" do
+        source_db.execute(<<~SQL)
+          CREATE TABLE tags (
+            id INTEGER, name TEXT, description TEXT, tag_group_ids TEXT, tag_group_id INTEGER
+          )
+        SQL
+        source_db.execute("INSERT INTO tags (id, name, tag_group_id) VALUES (1, 'grouped', 7)")
+
+        importer.import_tags
+
+        expect(tag_group.reload.tags.pluck(:name)).to contain_exactly("grouped")
+      end
+    end
+
+    describe "badges without a group" do
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@badge_mapping, {})
+        end
+      end
+
+      before do
+        source_db.execute("CREATE TABLE badges (id INTEGER, name TEXT, badge_group TEXT)")
+        source_db.execute(
+          "INSERT INTO badges (id, name, badge_group) VALUES (1, 'Grouped', 'Imported'), (2, 'Ungrouped', NULL)",
+        )
+      end
+
+      after { source_db.close }
+
+      it "puts them into the Other grouping" do
+        badges = []
+        allow(importer).to receive(:create_badges) do |rows, &block|
+          badges = rows.filter_map(&block)
+        end
+
+        importer.import_badge_groupings
+        importer.import_badges
+
+        imported_grouping = BadgeGrouping.find_by!(name: "Imported")
+        expect(badges.map { |badge| badge.slice(:name, :badge_grouping_id) }).to contain_exactly(
+          { name: "Grouped", badge_grouping_id: imported_grouping.id },
+          { name: "Ungrouped", badge_grouping_id: BadgeGrouping::Other },
+        )
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)

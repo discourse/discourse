@@ -10,9 +10,11 @@ import type { ComponentLike } from "@glint/template";
  * is only ever stored, compared, and curried as an opaque token here — its
  * component-ness is enforced at runtime by the `@block` decorator's
  * `instanceof Component` check — a permissive construct signature is the
- * idiomatic way to accept "any block component class".
+ * idiomatic way to accept "any block component class". Its parameters are
+ * `never[]` because they are checked contravariantly: only `never` fits every
+ * constructor. Nothing constructs a block class through this type.
  */
-export type BlockClass = abstract new (...args: unknown[]) => object;
+export type BlockClass = abstract new (...args: never[]) => object;
 
 /**
  * A factory that lazily resolves to a block class (or a module whose default
