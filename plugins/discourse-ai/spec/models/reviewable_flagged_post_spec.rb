@@ -8,26 +8,34 @@ RSpec.describe ReviewableFlaggedPost do
       SiteSetting.dsa_reporting_enabled = true
     end
 
-    ["spam bot", "system user"].each do |flagger|
-      it "records automatic detection when a moderator deletes spam detected by the #{flagger}" do
-        AiModerationSetting.create!(setting_type: :spam, llm_model: Fabricate(:llm_model))
-        SiteSetting.ai_spam_detection_enabled = true
-        SiteSetting.ai_spam_detection_user_id = "" if flagger == "system user"
-        post = Fabricate(:post, user: Fabricate(:user, trust_level: TrustLevel[0]))
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          [{ spam: true, reason: "spam detected" }],
-        ) { DiscourseAi::AiModeration::SpamScanner.perform_scan(post) }
-        reviewable = AiSpamLog.find_by!(post: post).reviewable
-        SiteSetting.ai_spam_detection_enabled = false
+    it "records automatic detection when a moderator deletes spam detected by the spam bot" do
+      AiModerationSetting.create!(setting_type: :spam, llm_model: Fabricate(:llm_model))
+      SiteSetting.ai_spam_detection_enabled = true
+      post = Fabricate(:post, user: Fabricate(:user, trust_level: TrustLevel[0]))
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) { DiscourseAi::AiModeration::SpamScanner.perform_scan(post) }
+      reviewable = AiSpamLog.find_by!(post: post).reviewable
+      SiteSetting.ai_spam_detection_enabled = false
 
-        reviewable.perform(Fabricate(:admin), :delete_and_agree)
+      reviewable.perform(Fabricate(:admin), :delete_and_agree)
 
-        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
-        expect(statement.payload).to include(
-          "automated_detection" => "Yes",
-          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
-        )
-      end
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload).to include(
+        "automated_detection" => "Yes",
+        "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+      )
+    end
+
+    it "preserves manual detection for system spam flags when no scanner bot is configured" do
+      SiteSetting.ai_spam_detection_user_id = ""
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.add_score(Discourse.system_user, ReviewableScore.types[:spam])
+
+      reviewable.perform(Fabricate(:admin), :delete_and_agree)
+
+      statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+      expect(statement.payload["automated_detection"]).to eq("No")
     end
 
     it "records manual detection when a moderator deletes a post flagged as spam by a human" do

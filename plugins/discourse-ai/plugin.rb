@@ -148,19 +148,19 @@ after_initialize do
   register_problem_check ProblemCheck::AiImageCaptionAgent
 
   register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    scores = reviewable.reviewable_scores
+
     automated ||
-      reviewable
-        .reviewable_scores
+      scores
         .where(
           "context LIKE ?",
           "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
         )
-        .exists? ||
-      reviewable
-        .reviewable_scores
-        .where(
-          user_id: SiteSetting.ai_spam_detection_user_id.presence || Discourse::SYSTEM_USER_ID,
-          reviewable_score_type: ReviewableScore.types[:spam],
+        .or(
+          scores.where(
+            user_id: SiteSetting.ai_spam_detection_user_id.presence,
+            reviewable_score_type: ReviewableScore.types[:spam],
+          ),
         )
         .exists?
   end
