@@ -27,16 +27,28 @@ export default class AdminUsersListShowController extends Controller {
   @tracked bulkSelectedUsersMap = {};
 
   @tracked accountType = USER_ACCOUNT_TYPES.HUMAN;
+
+  /** @type {string | null | undefined} */
   @tracked activation = null;
   @tracked refreshing = false;
+
+  /** @type {string | null | undefined} */
   @tracked listFilter = null;
+
+  /** @type {string | null | undefined} */
   @tracked initialFilter = null;
 
+  /** @type {string | null} */
   @tracked query = null;
+
+  /** @type {string | null | undefined} */
   @tracked order = null;
+
+  /** @type {boolean | string | null | undefined} */
   @tracked asc = null;
   @tracked showEmails = false;
 
+  /** @type {HTMLInputElement | null} */
   lastSelected = null;
 
   #page = 1;

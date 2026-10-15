@@ -11,8 +11,14 @@ export default class EmailController extends Controller {
   saving = false;
   error = false;
   success = false;
+
+  /** @type {string | null | undefined} */
   oldEmail = null;
+
+  /** @type {string | null | undefined} */
   newEmail = null;
+
+  /** @type {string | null} */
   successMessage = null;
 
   @computed("newEmail")
