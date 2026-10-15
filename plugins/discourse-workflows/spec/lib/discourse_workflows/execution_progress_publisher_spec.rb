@@ -47,10 +47,25 @@ RSpec.describe DiscourseWorkflows::ExecutionProgressPublisher do
 
     created_messages =
       MessageBus.track_publish(described_class::EXECUTIONS_CHANNEL) do
-        described_class.publish_created(execution, workflow_name: workflow.name)
+        described_class.publish_created(
+          execution,
+          workflow_name: workflow.name,
+          trigger_node: {
+            "id" => "trigger-1",
+            "name" => "When topic created",
+            "type" => "trigger:topic_created",
+          },
+        )
       end
     expect(created_messages.first.data).to include(type: "execution_created")
-    expect(created_messages.first.data[:execution]).to include(workflow_name: workflow.name)
+    expect(created_messages.first.data[:execution]).to include(
+      workflow_name: workflow.name,
+      execution_mode: "normal",
+      trigger: {
+        name: "When topic created",
+        type: "trigger:topic_created",
+      },
+    )
   end
 
   describe ".subscription_start_id" do
