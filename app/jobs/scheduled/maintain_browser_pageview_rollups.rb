@@ -48,10 +48,21 @@ module Jobs
 
     def aggregate_engagement
       start_date, end_date = engagement_aggregation_window
-      return if start_date.nil?
+      if start_date.nil?
+        BrowserPageviewSessionRollupSummary.clear_uninitialized!
+        return
+      end
 
-      BrowserPageviewSessionEngagementDailyRollup.aggregate(
-        start_date: start_date,
+      recent_start = 1.day.ago.to_date
+      if start_date < recent_start
+        BrowserPageviewSessionEngagementDailyRollup.aggregate(
+          start_date: start_date,
+          end_date: recent_start - 1,
+        )
+      end
+
+      BrowserPageviewSessionRollupSummary.refresh_recent!(
+        start_date: [recent_start, start_date].max,
         end_date: end_date,
       )
     end
