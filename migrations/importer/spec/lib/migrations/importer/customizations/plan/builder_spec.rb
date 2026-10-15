@@ -49,6 +49,10 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
           "pop3_polling_host" => {
             type: :string,
           },
+          "min_new_topics_time" => {
+            type: :integer,
+            hidden: true,
+          },
           "about_banner_image" => {
             type: :upload,
             hidden: true,
@@ -199,6 +203,7 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
             setting_row(114, "extended_site_description", "About us"),
             setting_row(115, "email_custom_css_compiled", "a{}"),
             setting_row(116, "maxmind_license_key_shadowed", "abc"),
+            setting_row(117, "min_new_topics_time", "1727802561"),
           ],
           "removed" => [
             setting_row(10, "logo", "12"),
@@ -418,13 +423,11 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
   end
 
-  it "skips hidden settings except the email style" do
-    %w[about_banner_image extended_site_description].each do |name|
-      expect(settings[name]).to include("target" => "skip", "note" => "hidden")
+  it "skips hidden settings unless they are edited on their own admin pages" do
+    expect(settings["min_new_topics_time"]).to include("target" => "skip", "note" => "hidden")
+    %w[about_banner_image extended_site_description email_custom_css_compiled].each do |name|
+      expect(settings[name]).to include("target" => "template")
     end
-    expect(settings["email_custom_css_compiled"]).to include("target" => "template")
-    expect(settings).not_to have_key("email_custom_css")
-    expect(settings).not_to have_key("extended_site_description_cooked")
   end
 
   it "ignores settings re-added with the same value and resets removed ones" do
