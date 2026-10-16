@@ -97,10 +97,13 @@ export default class AceEditor extends Component {
   constructor() {
     super(...arguments);
 
-    deprecated("<AceEditor> is deprecated. Use <CodeEditor> instead.", {
-      since: "2026.9.0",
-      id: "discourse.ace-editor",
-    });
+    deprecated(
+      "<AceEditor> is deprecated. Use <CodeEditor> instead: @content becomes @value, @mode becomes @language, @save and @submit become @onSave and @onSubmit, and an HTML placeholder is passed through trustHTML() rather than @htmlPlaceholder.",
+      {
+        since: "2026.9.0",
+        id: "discourse.ace-editor",
+      }
+    );
 
     loadAce().then((ace) => {
       if (this.isDestroying) {

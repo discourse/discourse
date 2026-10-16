@@ -17,8 +17,11 @@ import type { Extension } from "@codemirror/state";
  */
 
 /**
- * What every extension builder receives. Plugins cannot import CodeMirror
- * themselves, so the modules arrive here instead.
+ * What every extension builder receives. Plugins cannot import the editor's
+ * modules themselves, so they arrive here instead.
+ *
+ * @experimental Exposes the underlying editor library; may change without
+ * warning.
  */
 export interface CodeEditorParams {
   /** The `@codemirror/autocomplete` module. */
@@ -32,9 +35,9 @@ export interface CodeEditorParams {
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
   /**
-   * Helpers for the workflow expression editors.
+   * Helpers for `{{ }}` expression editors.
    *
-   * @internal Not part of the public contract; it will move out of here.
+   * @internal Not part of the contract, experimental or otherwise.
    */
   utils: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
 }
@@ -42,6 +45,8 @@ export interface CodeEditorParams {
 /**
  * Builds the extensions an editor's `extensions` argument adds on top of the
  * language.
+ *
+ * @experimental
  */
 export type CodeEditorExtensionBuilder = (
   params: CodeEditorParams
@@ -50,13 +55,19 @@ export type CodeEditorExtensionBuilder = (
 /**
  * Builds a language's extensions. `options` is whatever the editor was given
  * as `languageOptions`, so a language decides its own configuration shape.
+ *
+ * @experimental
  */
 export type CodeEditorLanguageBuilder<Options extends object = object> = (
   params: CodeEditorParams,
   options?: Options
 ) => Extension;
 
-/** Resolves to a module whose default export builds the language. */
+/**
+ * Resolves to a module whose default export builds the language.
+ *
+ * @experimental
+ */
 export type CodeEditorLanguageLoader = () => Promise<{
   default: CodeEditorLanguageBuilder;
 }>;
@@ -75,6 +86,9 @@ const registered = new Map<string, CodeEditorLanguageLoader>();
 
 /**
  * Registers a language shortcut.
+ *
+ * @experimental The builder a language provides receives the underlying
+ * editor library, which may change without warning.
  *
  * @param name - identifier passed to an editor's `language` argument
  * @param loader - resolves to a module whose default export builds the extensions

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { isHTMLSafe } from "@ember/template";
+import { isTrustedHTML } from "@ember/template";
 import {
   autocompletion,
   closeCompletion,
@@ -83,7 +83,7 @@ export default class CodemirrorEditor extends Component {
   /** Markup only when the caller has marked it trusted, otherwise plain text. */
   get #placeholderContent() {
     const content = this.args.placeholder;
-    if (!isHTMLSafe(content)) {
+    if (!isTrustedHTML(content)) {
       return content;
     }
 
