@@ -1,7 +1,7 @@
 en:
   js:
     dsa_notice:
-      title: "Report potentially illegal content on %{site}"
+      title: "Report illegal content"
       content_url: "Exact URL of the content"
       explanation: "Why do you believe this content is illegal?"
       explanation_help: "Describe the facts and why the content may be illegal. You do not need to cite a specific law."

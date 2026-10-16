@@ -89,7 +89,7 @@ export default class DsaNoticeForm extends Component {
           <p>{{i18n "dsa_notice.anonymous_confirmation"}}</p>
         {{/if}}
       {{else}}
-        <h1>{{i18n "dsa_notice.title" site=this.siteSettings.title}}</h1>
+        <h1>{{i18n "dsa_notice.title"}}</h1>
         <FKContainer @direction="column" @format="max">
           <Form
             @data={{this.initialData}}
