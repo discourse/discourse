@@ -4,7 +4,7 @@ require "discourse/safe_exec"
 
 RSpec.describe Discourse::SafeExec do
   describe ".capture" do
-    it "delegates sandboxed execution to Landlock" do
+    it "delegates filesystem and seccomp sandboxing without Landlock network rules" do
       status = instance_double(Process::Status, exited?: true, exitstatus: 0)
       result =
         instance_double(
@@ -33,6 +33,7 @@ RSpec.describe Discourse::SafeExec do
             cpu_seconds: 1,
           },
           seccomp_deny_network: true,
+          seccomp_deny_child_processes: true,
           max_output_bytes: 1024,
           truncate_output: true,
         ),
@@ -51,12 +52,13 @@ RSpec.describe Discourse::SafeExec do
         },
         unsetenv_others: true,
         chdir: nil,
-        connect_tcp: [],
-        bind_tcp: [],
+        connect_tcp: nil,
+        bind_tcp: nil,
         rlimits: {
           cpu_seconds: 1,
         },
         seccomp_deny_network: true,
+        seccomp_deny_child_processes: true,
         max_output_bytes: 1024,
         truncate_output: true,
       )
@@ -214,6 +216,32 @@ RSpec.describe Discourse::SafeExec do
       end
     end
 
+    it "allows network access by default" do
+      skip "Landlock is not supported" if !described_class.landlock_supported?
+
+      script = <<~RUBY
+        server = TCPServer.new("127.0.0.1", 0)
+        TCPSocket.new("127.0.0.1", server.addr[1]).close
+        server.close
+      RUBY
+
+      expect(
+        described_class.capture(
+          RbConfig.ruby,
+          "--disable-gems",
+          "-rsocket",
+          "-e",
+          script,
+          read: described_class.default_read_paths,
+          execute: described_class.default_execute_paths,
+          env: {
+            "PATH" => ENV["PATH"].to_s,
+          },
+          unsetenv_others: true,
+        ),
+      ).to eq("")
+    end
+
     it "denies network syscalls when requested" do
       skip "Landlock is not supported" if !described_class.landlock_supported?
 
@@ -230,6 +258,35 @@ RSpec.describe Discourse::SafeExec do
           },
           unsetenv_others: true,
           seccomp_deny_network: true,
+        )
+      }.to raise_error(Discourse::Utils::CommandError)
+    end
+
+    it "denies child processes when requested" do
+      skip "Landlock is not supported" if !described_class.landlock_supported?
+
+      command = [RbConfig.ruby, "--disable-gems", "-e", "Process.wait(Process.spawn('/bin/true'))"]
+      paths = described_class.default_read_paths
+      execute_paths = described_class.default_execute_paths
+      env = { "PATH" => ENV["PATH"].to_s }
+
+      expect(
+        described_class.capture(
+          *command,
+          read: paths,
+          execute: execute_paths,
+          env: env,
+          unsetenv_others: true,
+        ),
+      ).to eq("")
+      expect {
+        described_class.capture(
+          *command,
+          read: paths,
+          execute: execute_paths,
+          env: env,
+          unsetenv_others: true,
+          seccomp_deny_child_processes: true,
         )
       }.to raise_error(Discourse::Utils::CommandError)
     end
