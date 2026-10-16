@@ -68,6 +68,17 @@ RSpec.describe "Chat channel as the homepage" do
     expect(page).to have_no_css(".chat-channel")
   end
 
+  context "when on mobile", mobile: true do
+    it "links back to the forum rather than the homepage" do
+      visit("/")
+      expect(channel_page.messages).to have_message(id: message_1.id)
+
+      chat_page.back_to_channels_list
+
+      expect(page).to have_css(".back-to-forum[href='/latest']")
+    end
+  end
+
   context "when the user prefers the drawer" do
     it "still opens full page from the homepage" do
       visit("/categories")
