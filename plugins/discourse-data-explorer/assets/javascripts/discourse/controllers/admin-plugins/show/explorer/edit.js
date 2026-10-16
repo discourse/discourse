@@ -39,26 +39,18 @@ export default class PluginsExplorerController extends Controller {
   @tracked dirty = false;
   @tracked isCachedResult = false;
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
-
   @tracked view = "table";
-
   @tracked mode = "manual";
-
   @tracked aiPrompt = "";
-
   @tracked aiGenerating = false;
-
   @tracked lastGeneratedPrompt = null;
   @tracked dashboardBusy = false;
   @tracked dashboardMounted = false;
   @tracked dashboardMountable = false;
 
   queryParams = ["params"];
-
   order = null;
-
   form = null;
-
   shouldAutoRun = false;
 
   /**

@@ -34,21 +34,15 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
-
   @tracked groups = null;
   @tracked availableTags = [];
   @tracked aiGroupIds = [];
   @tracked aiTags = [];
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
-
   @tracked manualSql = "SELECT 1";
-
   @tracked previewLoading = false;
-
   @tracked previewResults = null;
-
   @tracked showPreview = false;
-
   @tracked view = "sql";
 
   manualFormData = { name: "", description: "", groupIds: [], tags: [] };
