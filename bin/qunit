@@ -613,10 +613,11 @@ class QunitRunner
       collapsed = path
       dir = File.dirname(File.expand_path(path))
       loop do
+        break if !test_directory?(dir)
+
+        # stop at the target's root
         relative = convert_to_ember_relative_path(dir)
-        # stop at the target's root, or outside a tests directory
-        break if relative.empty? || relative.start_with?("/")
-        break if relative.match?(%r{\Adiscourse/plugins/[^/]+\z})
+        break if relative.empty? || relative.match?(%r{\Adiscourse/plugins/[^/]+\z})
         break if !complete[dir]
 
         collapsed = dir
