@@ -23,9 +23,12 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..");
 const parallel = parseInt(process.env.QUNIT_PARALLEL || 1, 10);
 
 // Parallel browsers can't share a fixed devtools port, so let Chrome pick one
-const parallelRun =
-  parallel > 1 || process.argv.some((arg) => /^--parallel(=|$)/.test(arg));
-const remoteDebuggingPort = process.env.CI || parallelRun ? 0 : 3001;
+const remoteDebuggingPort =
+  process.env.CI ||
+  parallel > 1 ||
+  process.argv.some((arg) => /^--parallel(=|$)/.test(arg))
+    ? 0
+    : 3001;
 
 /**
  * Label identifying which CI run group produced a report, so the artifacts of a

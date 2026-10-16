@@ -242,8 +242,7 @@ class QunitRunner
   # Directories become path-prefix filters, so they must map onto test module paths
   def test_directory?(path)
     expanded = File.expand_path(path)
-    tests_dir = File.join(frontend_dir, "tests")
-    expanded == tests_dir || expanded.start_with?("#{tests_dir}/") || plugin_path?(expanded)
+    "#{expanded}/".start_with?("#{frontend_dir}/tests/") || plugin_path?(expanded)
   end
 
   def run_tests
@@ -568,8 +567,6 @@ class QunitRunner
     return nil if paths.empty?
 
     filter = join_file_path_filter(paths)
-
-    # the core tests root matches everything
     return nil if filter.nil?
     return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
 
@@ -582,6 +579,7 @@ class QunitRunner
     MESSAGE
   end
 
+  # nil when the core tests root is included, since it matches everything
   def join_file_path_filter(paths)
     filters = paths.map { |path| file_path_filter_entry(path) }
     filters.uniq.join(",") if !filters.include?("")
