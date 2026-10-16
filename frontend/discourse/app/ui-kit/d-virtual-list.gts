@@ -44,8 +44,9 @@ interface RowContext<T> {
   start: number;
   size: number;
   /**
-   * Positions the row (absolute + `translateY`) when windowing; inert in the
-   * render-all fallback. Apply with the row's offset and index:
+   * Positions leading sticky rows with `sticky` and other windowed rows with
+   * absolute positioning + `translateY`. Inert in the render-all fallback.
+   * Apply with the row's offset and index:
    * `{{row.place row.start row.index}}`.
    *
    * Apply it BEFORE {@link measure}. It stamps the `data-index` that measurement
@@ -282,6 +283,14 @@ interface DVirtualListSignature<T> {
     /** Alignment for `@initialIndex` within the viewport. Default `"start"`. */
     initialAlign?: "start" | "center" | "end" | "auto";
     /**
+     * Number of leading rows kept mounted and sticky at the top while windowing.
+     * Rows must be contiguous from index zero; consumers supply their background.
+     * The render-all fallback keeps these rows in normal flow. Sticky rows are
+     * always kept mounted, so they need no `@keepMounted` entry. `@keepMounted`
+     * alone only keeps rows in the DOM; it never makes them visible.
+     */
+    stickyCount?: number;
+    /**
      * Extends the default window with extra absolute indices to keep mounted.
      *
      * REACTIVITY CONTRACT: pass a NEW function whenever any closed-over input
@@ -297,10 +306,10 @@ interface DVirtualListSignature<T> {
      *
      * This is also the mechanism for keeping a row mounted that must not be
      * destroyed while scrolled out of the window. A consumer managing focus or a
-     * roving tabindex has to pin the active index, or scrolling past it unmounts
+     * roving tabindex has to keep the active index mounted, or scrolling past it unmounts
      * the focused element and focus falls back to the document.
      */
-    pinnedIndices?: (
+    keepMounted?: (
       indices: readonly number[],
       range: VirtualRange
     ) => readonly number[];
@@ -386,6 +395,11 @@ interface DVirtualListSignature<T> {
  *
  * The consumer must give the outer viewport a nonzero height. Without one,
  * windowing has no visible area and renders no rows.
+ *
+ * `@stickyCount` keeps that many leading rows mounted and stacked at the top while
+ * scrolling. Put these rows first in `@items` and give them an opaque background.
+ * Their measured height reserves scroll padding so revealed rows remain below them.
+ * The render-all fallback leaves every row in normal flow.
  *
  * Simple consumers yield content and let the primitive wrap it in a measured,
  * `@itemRole`-stamped row. A consumer that needs native row elements passes
@@ -475,8 +489,19 @@ export default class DVirtualList<T> extends Component<
         element.style.removeProperty("top");
         element.style.removeProperty("inset-inline");
         element.style.removeProperty("transform");
+        element.style.removeProperty("z-index");
         return;
       }
+      if (index < (this.args.stickyCount ?? 0)) {
+        element.style.position = "sticky";
+        element.style.top = `${start}px`;
+        element.style.zIndex = "1";
+        element.style.removeProperty("transform");
+        element.style.removeProperty("inset-inline");
+        return;
+      }
+      element.style.removeProperty("top");
+      element.style.removeProperty("z-index");
       element.style.position = "absolute";
       // `top: 0` pins the translate base to the container origin; without it the
       // row translates from its browser-computed static position (nonzero for a
@@ -649,7 +674,8 @@ export default class DVirtualList<T> extends Component<
         overscan=@overscan
         anchor=@anchor
         scrollEndThreshold=@scrollEndThreshold
-        pinnedIndices=@pinnedIndices
+        keepMounted=@keepMounted
+        stickyCount=@stickyCount
         onState=this.onState
         onRegisterApi=this.onRegisterApi
         onVisibleRangeChange=@onVisibleRangeChange

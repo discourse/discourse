@@ -206,8 +206,9 @@ export interface DRovingFocusArgs {
   logicalCount?: number;
   /**
    * Called when a logical jump target is outside the currently-mounted item window, so the
-   * consumer can mount and focus that row. Without it an off-window jump cannot be serviced, so
-   * the key is left un-prevented rather than becoming a dead key.
+   * consumer can mount and focus that row. Home also calls this for a mounted first row, so
+   * consumers can reset the scroll offset when that row is sticky. Without it an off-window
+   * jump cannot be serviced, so the key is left un-prevented rather than becoming a dead key.
    */
   onJump?: (target: number, direction: "forward" | "backward") => void;
   /**
