@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/Shopify/raindrops
-  revision: 2ee42dabf76556e1010663932191b5ffaf4d4bf2
-  ref: 2ee42dabf76556e1010663932191b5ffaf4d4bf2
+  remote: https://github.com/discourse/raindrops
+  revision: d2ef03efc23504db76a9fd92eb35f508ac4f7546
+  ref: d2ef03efc23504db76a9fd92eb35f508ac4f7546
   specs:
     raindrops (0.20.1)
 
