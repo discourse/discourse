@@ -94,14 +94,22 @@ Paths are relative to the repository root.
   (`frontend/discourse/app/components/composer-container.gjs:483`), which `serializeTags`
   (`frontend/discourse/app/lib/serialize-tags.js`) expects as names or tag objects, while `DSelect`
   emits ids. A draft saved in one mode must load in the other.
-- **`modifySelectKit` contract.** The facade contract is written as test fixtures that mirror real
-  callers, per family: discourse-ai reads `element` (inside `#reply-control`) and
-  `selectKit.filter`, `value`, `set`, `select`, `close`, `triggerSearch` and `isLoading`; the
-  customer plugin reads `content`, `elementId`, `value` and `selectKit.options`. Bridge gaps to
-  close: `triggerSearch`, a working `isLoading`, per-callback rather than
-  identifier-wide suppression, and per-use telemetry (the RFC asks for it; the bridge warns once
-  per engine today). Row `classNames` is not bridged: its one known user moves to the
-  `select-item-class` transformer when it is ported.
+- **`modifySelectKit` contract.** Across the official, third-party and customer plugin and theme
+  repositories, the only callers are discourse-ai and one customer plugin, and wave 1 ports both.
+  The bridge therefore covers what any select can honour. The facade contract is written as
+  fixtures that mirror both callers' generic reads (`d-select-bridge-test.gjs`, "modifySelectKit
+  contract"):
+  - `triggerSearch()` starts a new query;
+  - `set("isLoading", …)` drives the trigger's pending state, and a `select()` made while it is
+    set lands as that update's outcome unless the user picked by hand in the meantime;
+  - `content` is the list entering the legacy stage, and `value` is the held value.
+
+  Some reads stay with the customer port: `selectKit.options`, `elementId` plus the parent DOM,
+  and the category components' own members. Reporting stays once per select per plugin. A ported
+  plugin keeps its legacy callbacks for the flag-off branch, so the bridge needs a per-callback
+  opt-out to avoid doubled rows; it is designed with the discourse-ai port in wave 1. Row
+  `classNames` is not bridged: its one known user moves to the `select-item-class` transformer
+  when it is ported.
 - **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
   After `modifyClass` or `modifyClassStatic` applies a patch, it fires
   `discourse.select-kit-rollout.modify-class` when the patched class is exactly the default export

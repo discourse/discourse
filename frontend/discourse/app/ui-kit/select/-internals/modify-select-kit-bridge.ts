@@ -13,6 +13,7 @@ import {
 import SelectEngine, {
   SelectItem,
   SelectItemId,
+  SelectUpdateScope,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -33,8 +34,10 @@ import SelectEngine, {
  *   - a live `element` and a resolvable owner (`getOwner(component)`), which content
  *     callbacks read to build their context (e.g. locating the composer);
  *   - `isDestroying` / `isDestroyed`, checked by callbacks after an await;
+ *   - `value`, and `content`, the list entering the current content run;
  *   - a `selectKit` sub-object (`value` / `filter` / `close()` / `select()` /
- *     `set("isLoading", …)`), the surface old callbacks and injected action rows call.
+ *     `triggerSearch()` / `set("isLoading", …)`), the surface old callbacks and injected
+ *     action rows call.
  *
  * Exactly one facade is memoized per engine instance, so a callback's per-instance
  * state lookups (which key a `WeakMap` on the component) stay stable across renders.
@@ -70,6 +73,8 @@ interface LegacySelectKit {
   readonly isLoading: boolean;
   close(): void;
   select(value: SelectItemId, item?: SelectItem): void;
+  /** Starts a new query using the current filter; accepts no filter argument. */
+  triggerSearch(): void;
   set(key: string, val: unknown): void;
 }
 
@@ -92,10 +97,12 @@ function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
 
   const facade = LegacySelectKitComponent.create({
     engine,
+    content: [],
     isLoading: false,
     __getElement: getElement,
     __isDestroyed: isDestroyed,
   });
+  let loading: { scope: SelectUpdateScope; resolve: () => void } | undefined;
 
   // The `selectKit` surface old callbacks and injected action rows drive. It closes
   // over the engine so it reflects live state and routes actions through the engine's
@@ -114,12 +121,35 @@ function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
       engine.requestClose();
     },
     // Old signature: `select(value, item)`. The engine selects by item, so synthesize a
-    // minimal item from the value when the caller passes only an id.
+    // minimal item from the value when the caller passes only an id. While `isLoading`
+    // holds an update, the write goes through its scope, so a hand pick made meanwhile
+    // wins and the late write is dropped.
     select(value, item) {
-      engine.select(item ?? { id: value });
+      const target = item ?? { id: value };
+      if (loading) {
+        loading.scope.select(target);
+      } else {
+        engine.select(target);
+      }
+    },
+    triggerSearch() {
+      engine.reload();
     },
     set(key, val) {
       facade.set(key, val);
+      if (key === "isLoading") {
+        if (val && !loading) {
+          engine.update(
+            (scope) =>
+              new Promise<void>((resolve) => {
+                loading = { scope, resolve };
+              })
+          );
+        } else if (!val && loading) {
+          loading.resolve();
+          loading = undefined;
+        }
+      }
     },
   };
   facade.selectKit = selectKit;
@@ -144,8 +174,15 @@ class LegacySelectKitComponent extends EmberObject {
   declare engine: SelectEngine;
   declare selectKit: LegacySelectKit;
   declare isLoading: boolean;
+
+  /** The items entering the current legacy content run, after `select-content`. */
+  declare content: SelectItem[];
   declare __getElement?: () => Element | null;
   declare __isDestroyed?: () => boolean;
+
+  get value(): SelectValue {
+    return this.engine.value;
+  }
 
   get pluginApiIdentifiers(): string[] {
     return this.engine.identifiers;
@@ -250,6 +287,7 @@ export function applyLegacySelectKitContent(
   }
 
   const facade = facadeFor(engine);
+  facade.content = items;
   report(facade, "content", identifiers, contentCallbackSources(identifiers));
   const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade);
 

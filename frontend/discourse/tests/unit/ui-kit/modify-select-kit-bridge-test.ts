@@ -2,6 +2,7 @@ import { type default as Owner, getOwner } from "@ember/owner";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -45,7 +46,11 @@ function ids(descriptors: readonly SelectDescriptor[]) {
 /** The parts of the legacy component facade that these tests' callbacks read. */
 interface LegacyComponentFacade {
   element: HTMLElement;
-  selectKit: { close(): void; select(...args: unknown[]): void };
+  selectKit: {
+    close(): void;
+    select(...args: unknown[]): void;
+    set(key: string, value: unknown): void;
+  };
 }
 
 module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
@@ -408,6 +413,34 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       0,
       "no deprecation is emitted when the bridge is inert"
     );
+  });
+
+  test("setting isLoading again holds the same update until it is cleared", async function (assert) {
+    let facade: LegacyComponentFacade | undefined;
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("test-select")
+        .appendContent((component: LegacyComponentFacade) => {
+          facade = component;
+        });
+    });
+    const engine = engineFor(getOwner(this));
+    engine.buildItems([]);
+    const updates = sinon.spy(engine, "update");
+
+    facade!.selectKit.set("isLoading", true);
+    facade!.selectKit.set("isLoading", true);
+    assert.strictEqual(updates.callCount, 1, "one update is started");
+    assert.true(engine.pending, "the held update drives the pending state");
+
+    facade!.selectKit.set("isLoading", false);
+    await settled();
+    assert.false(engine.pending, "clearing it ends the pending state");
+
+    facade!.selectKit.set("isLoading", true);
+    assert.strictEqual(updates.callCount, 2, "a later start holds a new one");
+    facade!.selectKit.set("isLoading", false);
+    await settled();
   });
 
   test("select-on-change behavior transformer wraps the controlled onChange", function (assert) {

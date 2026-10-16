@@ -2102,3 +2102,325 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
     });
   });
 });
+
+/** A controlled select carrying the identifier the contract fixtures target. */
+class ContractHost extends Component {
+  @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <A11yLiveRegions />
+    <DSelect
+      @identifier="contract-select"
+      @items={{ITEMS}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick one"
+      @value={{this.value}}
+    />
+  </template>
+}
+
+function rowNames() {
+  return [...document.querySelectorAll("[role='option']")].map((option) =>
+    option.textContent.trim()
+  );
+}
+
+/**
+ * Registers an extension whose action row reads the value, closes, flags `isLoading`,
+ * waits on `gate`, then selects its best match.
+ */
+function registerChooser(gate, { best, checksValue = true } = {}) {
+  const state = new WeakMap();
+  withPluginApi((api) => {
+    api.modifySelectKit("contract-select").prependContent((component) => {
+      if (component.selectKit.filter || state.get(component)) {
+        return;
+      }
+      return {
+        id: "contract-choose",
+        name: "Choose for me",
+        onSelect: async (selectKit) => {
+          const startValue = selectKit.value;
+          state.set(component, true);
+          selectKit.close();
+          selectKit.set("isLoading", true);
+          try {
+            await gate.promise;
+            if (component.isDestroying) {
+              return;
+            }
+            if (checksValue && selectKit.value !== startValue) {
+              return;
+            }
+            if (best) {
+              selectKit.select(best.id, best);
+            }
+          } finally {
+            state.set(component, false);
+            if (!component.isDestroying) {
+              selectKit.set("isLoading", false);
+            }
+          }
+        },
+      };
+    });
+  });
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (modifySelectKit contract)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    hooks.beforeEach(function () {
+      disableClearA11yAnnouncementsInTests();
+    });
+
+    // An extension that keeps per-component mode in a WeakMap, swaps rows with prepend and
+    // replace, and calls `triggerSearch` after every mode change to rebuild the list.
+    test("contract: triggerSearch rebuilds the list from an extension's new state", async function (assert) {
+      const gate = deferred();
+      const modes = new WeakMap();
+      const SUGGESTIONS = [
+        { id: 2, name: "Banana" },
+        { id: 3, name: "Cherry pie" },
+      ];
+      const modeOf = (component) => modes.get(component) ?? "idle";
+
+      withPluginApi((api) => {
+        api.modifySelectKit("contract-select").prependContent((component) => {
+          if (component.selectKit.filter) {
+            modes.set(component, "idle");
+            return;
+          }
+          if (modeOf(component) === "idle") {
+            return {
+              id: "contract-suggest",
+              name: "Suggest",
+              onSelect: async (selectKit) => {
+                modes.set(component, "loading");
+                selectKit.triggerSearch?.();
+                await gate.promise;
+                if (component.isDestroying) {
+                  return;
+                }
+                modes.set(component, "results");
+                selectKit.triggerSearch?.();
+              },
+            };
+          }
+        });
+
+        api.modifySelectKit("contract-select").replaceContent((component) => {
+          if (component.selectKit.filter) {
+            return;
+          }
+          const mode = modeOf(component);
+          if (mode === "loading") {
+            return [{ id: "contract-loading", name: "Loading", onSelect() {} }];
+          }
+          if (mode === "results") {
+            const taken = component.selectKit.value ?? [];
+            return [
+              {
+                id: "contract-exit",
+                name: "Back",
+                onSelect: (selectKit) => {
+                  modes.set(component, "idle");
+                  selectKit.triggerSearch?.();
+                },
+              },
+              ...SUGGESTIONS.filter((s) => !taken.includes(s.id)),
+            ];
+          }
+        });
+
+        api.modifySelectKit("contract-select").onChange((component) => {
+          if (modeOf(component) === "results") {
+            component.selectKit.triggerSearch?.();
+          }
+        });
+      });
+
+      await render(<template><ContractHost @multiple={{true}} /></template>);
+      await click("[role='combobox']");
+      assert.deepEqual(
+        rowNames(),
+        ["Suggest", "Apple", "Banana", "Cherry pie"],
+        "the action row leads the list"
+      );
+
+      const picking = click(optionWithText("Suggest"));
+      await waitUntil(() => rowNames().includes("Loading"), {
+        timeout: 2000,
+      });
+      assert.deepEqual(
+        rowNames(),
+        ["Loading"],
+        "the first triggerSearch shows the loading row"
+      );
+
+      gate.resolve();
+      await picking;
+      await settled();
+      assert.deepEqual(
+        rowNames(),
+        ["Back", "Banana", "Cherry pie"],
+        "the second triggerSearch shows the suggestions"
+      );
+
+      await click(optionWithText("Banana"));
+      assert.deepEqual(
+        rowNames(),
+        ["Back", "Cherry pie"],
+        "triggerSearch from onChange drops the taken suggestion"
+      );
+
+      await click(optionWithText("Back"));
+      assert.true(
+        rowNames().includes("Suggest"),
+        "leaving the suggestions brings the action row back"
+      );
+
+      await fillIn("input[role='combobox']", "App");
+      assert.false(
+        rowNames().includes("Suggest"),
+        "typing a query hides the action row"
+      );
+    });
+
+    test("contract: isLoading shows the pending state and the late select is announced", async function (assert) {
+      const gate = deferred();
+      registerChooser(gate, { best: { id: 2, name: "Banana" } });
+
+      await render(<template><ContractHost @value={{1}} /></template>);
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Choose for me")), () => {
+        assert
+          .dom(".d-select__trigger .d-skeleton")
+          .exists("the value slot shows the loading skeleton");
+        assert
+          .dom(".d-select__trigger")
+          .hasAttribute("aria-busy", "true", "the trigger is busy");
+      });
+      await settled();
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Banana", "the suggestion becomes the selection");
+      assert
+        .dom(".d-select__pending-icon")
+        .doesNotExist("clearing isLoading ends the pending state");
+      assert.true(
+        politeText().includes("Selected Banana"),
+        "the late selection is announced as the update's outcome"
+      );
+    });
+
+    test("contract: a hand pick made while isLoading is set beats the late select", async function (assert) {
+      const gate = deferred();
+      registerChooser(gate, {
+        best: { id: 2, name: "Banana" },
+        checksValue: false,
+      });
+
+      await render(<template><ContractHost @value={{1}} /></template>);
+      await click("[role='combobox']");
+      const pending = [];
+      await duringUpdate(
+        gate,
+        click(optionWithText("Choose for me")),
+        async () => {
+          await waitUntil(() => !find("[role='listbox']"));
+          pending.push(click("[role='combobox']"));
+          await waitFor("[role='listbox']");
+          assert
+            .dom(".d-select__pending-icon")
+            .doesNotExist("reopening ends the pending state at once");
+          pending.push(click(optionWithText("Cherry pie")));
+        }
+      );
+      await Promise.all(pending);
+      await settled();
+
+      assert
+        .dom("input[role='combobox']")
+        .hasValue(
+          "Cherry pie",
+          "the late select is dropped even without its own value check"
+        );
+    });
+
+    test("contract: clearing isLoading without a select restores the trigger", async function (assert) {
+      const gate = deferred();
+      registerChooser(gate);
+
+      await render(<template><ContractHost @value={{1}} /></template>);
+      await click("[role='combobox']");
+      await duringUpdate(gate, click(optionWithText("Choose for me")));
+      await settled();
+
+      assert
+        .dom(".d-select__pending-icon")
+        .doesNotExist("the pending state ends");
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("Apple", "the held value shows again");
+    });
+
+    // Mirrors the content filter a theme or plugin applies with replaceContent.
+    test("contract: content, value and filter are readable on the component", async function (assert) {
+      const seen = [];
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value, context }) =>
+          context.identifiers.includes("contract-select")
+            ? [...value, { id: 9, name: "Extra" }]
+            : value
+        );
+        api.modifySelectKit("contract-select").replaceContent((component) => {
+          // Read defensively so a missing member fails an assertion, not the render.
+          const content = component.content ?? [];
+          seen.push({
+            content: content.map((item) => item.id),
+            value: component.value,
+            filter: component.selectKit.filter,
+          });
+          return content.filter((item) => item.id !== 2);
+        });
+      });
+
+      await render(<template><ContractHost @value={{1}} /></template>);
+      await click("[role='combobox']");
+
+      assert.deepEqual(
+        rowNames(),
+        ["Apple", "Cherry pie", "Extra"],
+        "the returned list replaces the rows"
+      );
+      assert.deepEqual(
+        seen.at(-1),
+        { content: [1, 2, 3, 9], value: 1, filter: "" },
+        "content is the list after select-content, with the held value"
+      );
+
+      await click(optionWithText("Cherry pie"));
+      await click("[role='combobox']");
+      assert.strictEqual(seen.at(-1).value, 3, "value follows the selection");
+
+      await fillIn("input[role='combobox']", "pie");
+      assert.strictEqual(
+        seen.at(-1).filter,
+        "pie",
+        "the filter is the typed query"
+      );
+      assert.false(rowNames().includes("Banana"), "the filtered row stays out");
+    });
+  }
+);

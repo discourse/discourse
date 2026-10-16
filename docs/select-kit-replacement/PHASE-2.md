@@ -17,7 +17,7 @@ facade and codemod plan this phase used to carry is superseded.
   `siteSettings` like `enable_new_reordering_controls`. No rollout service and no runtime family
   list; a family joins when its converted call sites merge. `body_class` waits for the first family
   that needs CSS.
-- ☐ **Class root:** flip `.d-combobox` to `.d-select`.
+- ☑ **Class root:** flipped `.d-combobox` to `.d-select` (`0b437b5d674`).
 - ☑ **`modifyClass` deprecation** (`select-kit-modify-class-deprecation.ts`): fires after the
   patch is applied, for the exact class of a module in `MIGRATED_SELECT_KIT_MODULES` while the flag
   is on; throws in development, `notify-admin` in production; one admin notice per id. The set is
@@ -27,9 +27,11 @@ facade and codemod plan this phase used to carry is superseded.
   patch.
 - **Third-party notice:** moved to wave 1 ([Phase 3](PHASE-3.md)) as a render-time notice; the
   import-time design was dropped (see `ROLLOUT.md`).
-- ☐ **Bridge contract:** fixtures mirroring real `modifySelectKit` callers; add `triggerSearch`, a
-  working `isLoading`, per-callback suppression, per-use telemetry. Row `classNames` is not
-  bridged: callers move to the `select-item-class` transformer when they are ported.
+- ☑ **Bridge contract:** fixtures mirroring both known callers' generic reads; `triggerSearch`, an
+  `isLoading` that drives the pending state, and facade `content` and `value`. The per-callback
+  opt-out moves to wave 1 with the discourse-ai port; per-use telemetry is dropped, since
+  reporting once per select per plugin already measures use. Row `classNames` is not bridged:
+  callers move to the `select-item-class` transformer when they are ported.
 - ☐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported
   APIs they move to.
 - ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`
