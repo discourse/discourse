@@ -83,27 +83,6 @@ export default class DsaNoticeForm extends Component {
             <form.Section>
               <form.Field
                 @format="full"
-                @name="content_url"
-                @title={{i18n "dsa_notice.content_url"}}
-                @type="input-url"
-                @validation="required|url"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
-              <form.Field
-                @description={{i18n "dsa_notice.explanation_help"}}
-                @format="full"
-                @name="explanation"
-                @title={{i18n "dsa_notice.explanation"}}
-                @type="textarea"
-                @validation="required:trim|length:50,20000"
-                as |field|
-              >
-                <field.Control rows="6" />
-              </form.Field>
-              <form.Field
-                @format="full"
                 @name="anonymous"
                 @showOptional={{false}}
                 @title={{i18n "dsa_notice.anonymous_label"}}
@@ -134,6 +113,27 @@ export default class DsaNoticeForm extends Component {
                   <field.Control autocomplete="email" />
                 </form.Field>
               {{/unless}}
+              <form.Field
+                @format="full"
+                @name="content_url"
+                @title={{i18n "dsa_notice.content_url"}}
+                @type="input-url"
+                @validation="required|url"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+              <form.Field
+                @description={{i18n "dsa_notice.explanation_help"}}
+                @format="full"
+                @name="explanation"
+                @title={{i18n "dsa_notice.explanation"}}
+                @type="textarea"
+                @validation="required:trim|length:50,20000"
+                as |field|
+              >
+                <field.Control rows="6" />
+              </form.Field>
               <form.Field
                 @format="full"
                 @name="declaration"
