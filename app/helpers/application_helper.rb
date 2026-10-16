@@ -1090,6 +1090,10 @@ module ApplicationHelper
     user&.display_name
   end
 
+  def rss_cdata(value)
+    value.to_s.gsub("]]>", "]]]]><![CDATA[>").html_safe
+  end
+
   def anonymous_top_menu_items
     Discourse.anonymous_top_menu_items.map(&:to_s)
   end
