@@ -1,4 +1,29 @@
 en:
+  dsa_notice:
+    anonymous: "Anonymous, no contact details provided"
+    subject: "Illegal content notice %{reference}"
+    summary: "## Notice %{reference}\n\n**Reported content:** %{content_url}\n\n### Explanation from the reporter\n\n%{explanation}\n\n### Reporter details\n\n%{reporter}\n\n### Declaration\n\nI confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+    staff_guidance: "---\n\n**For the reviewing team:** Handle this notice in a timely, diligent, and neutral manner. Record your decision and reasons here. Contact the reporter separately by email, if provided, including the outcome and available ways to challenge it. Replies to this PM stay internal. Consider any statement of reasons owed to the affected author."
+    invalid_parameters: "The notice contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+    submission_changed: "This notice was already submitted with different details. Check your changes and submit again to send a new notice."
+    retry_submission: "Your notice was saved, but notifications could not be queued. Submit again to retry without creating another notice."
+    failed: "Your notice could not be saved. Please try again."
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your illegal content notice %{reference}"
+    text_body_template: |
+      # We have received your notice
+
+      Thank you for notifying %{site_title}. Your notice has been forwarded to the team responsible for reviewing reports.
+
+      **Notice reference: %{reference}**
+
+      Keep this reference for any correspondence. The team will review your notice and contact you at this email address about the outcome. Receipt does not mean that a decision has been made or that the content has been removed.
+
+      ---
+
+      %{summary}
   dsa_statements:
     classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
     errors:
@@ -2116,6 +2141,7 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
+    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"

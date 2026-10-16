@@ -14,6 +14,8 @@ class Topic < ActiveRecord::Base
   include Localizable
   extend Forwardable
 
+  register_custom_field_type("dsa_notice", :json)
+
   EXTERNAL_ID_MAX_LENGTH = 50
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
