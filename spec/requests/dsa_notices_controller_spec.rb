@@ -144,9 +144,53 @@ RSpec.describe DsaNoticesController do
       expect(response.status).to eq(429)
     end
 
+    it "preserves shared lookup capacity when one IP exceeds its allowance" do
+      RateLimiter.enable
+      979.times { RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed! }
+      20.times do
+        post "/dsa/illegal-content.json", params: { notice: }
+        expect(response.status).to eq(201)
+      end
+      post "/dsa/illegal-content.json", params: { notice: }
+      expect(response.status).to eq(429)
+
+      post "/dsa/illegal-content.json",
+           params: {
+             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
+           },
+           headers: {
+             "REMOTE_ADDR" => "198.51.100.51",
+           }
+      expect(response.status).to eq(201)
+    end
+
+    it "preserves shared notice capacity when an email exceeds its allowance" do
+      RateLimiter.enable
+      96.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
+      3.times do
+        post "/dsa/illegal-content.json",
+             params: {
+               notice: notice.merge(submission_id: SecureRandom.uuid),
+             }
+        expect(response.status).to eq(201)
+      end
+      post "/dsa/illegal-content.json", params: { notice: }
+      expect(response.status).to eq(429)
+
+      post "/dsa/illegal-content.json",
+           params: {
+             notice: notice.merge(anonymous: true),
+           },
+           headers: {
+             "REMOTE_ADDR" => "198.51.100.51",
+           }
+      expect(response.status).to eq(201)
+    end
+
     it "limits new notices globally across different IP addresses" do
       RateLimiter.enable
-      100.times do |index|
+      98.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
+      2.times do |index|
         post "/dsa/illegal-content.json",
              params: {
                notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),

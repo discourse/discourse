@@ -23,6 +23,10 @@ module Dsa
       new(post:, data: JSON.parse(match[1]))
     end
 
+    def self.without_metadata(raw)
+      raw.sub(METADATA_PATTERN, "")
+    end
+
     def self.create!(attributes:, group:)
       data = attributes.stringify_keys.slice("submission_id", *CONTENT_FIELDS)
       data["reference"] = "DSA-#{SecureRandom.hex(8).upcase}"
@@ -97,7 +101,7 @@ module Dsa
     private
 
     def metadata
-      "\n\n<!-- dsa-notice:#{ERB::Util.json_escape(@data.to_json)} -->"
+      "\n\n<!-- dsa-notice:#{ERB::Util.json_escape(JSON.generate(@data, ascii_only: true))} -->"
     end
 
     def escaped(value)

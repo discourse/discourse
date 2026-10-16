@@ -70,20 +70,21 @@ RSpec.describe Jobs::DsaNoticeReceipt do
       }.by(1)
     end
 
-    it "retries suppressed email after mail is enabled" do
-      SiteSetting.disable_emails = "yes"
-      expect { job.execute(post_id: topic.first_post.id) }.not_to change {
-        ActionMailer::Base.deliveries.size
-      }
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
-      scheduled = described_class.jobs.find { it["at"].present? }
-      expect(scheduled).to be_present
-      expect(scheduled.dig("args", 0, "post_id")).to eq(topic.first_post.id)
-      SiteSetting.disable_emails = "no"
-      expect { job.execute(post_id: topic.first_post.id) }.to change {
-        ActionMailer::Base.deliveries.size
-      }.by(1)
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
+    %w[yes non-staff].each do |suppression|
+      it "uses normal job failure recovery when email suppression is #{suppression}" do
+        SiteSetting.disable_emails = suppression
+        post_id = topic.first_post.id
+        expect do
+          expect { job.execute(post_id:) }.to raise_error(described_class::DeliverySuppressed)
+        end.not_to change { [ActionMailer::Base.deliveries.size, described_class.jobs.size] }
+        expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
+
+        SiteSetting.disable_emails = "no"
+        expect { job.execute(post_id: topic.first_post.id) }.to change {
+          ActionMailer::Base.deliveries.size
+        }.by(1)
+        expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
+      end
     end
 
     it "ignores a missing post" do

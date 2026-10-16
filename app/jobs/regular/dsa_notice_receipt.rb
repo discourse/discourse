@@ -2,6 +2,9 @@
 
 module Jobs
   class DsaNoticeReceipt < ::Jobs::Base
+    class DeliverySuppressed < StandardError
+    end
+
     def execute(args)
       DistributedMutex.synchronize("dsa-notice-receipt-#{args.fetch(:post_id)}") do
         notice = Dsa::Notice.from_post(Post.find_by(id: args[:post_id]))
@@ -11,7 +14,7 @@ module Jobs
         if sent.is_a?(EmailLog) && sent.persisted?
           notice.mark_receipt_sent!
         elsif sent.nil?
-          Jobs.enqueue_in(1.hour, :dsa_notice_receipt, post_id: notice.post.id)
+          raise DeliverySuppressed, "Receipt delivery is disabled for notice #{notice.reference}"
         end
       end
     end

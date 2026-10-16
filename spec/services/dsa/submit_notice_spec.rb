@@ -146,6 +146,28 @@ RSpec.describe Dsa::SubmitNotice do
       expect(retry_result.notice.reference).to eq(reference)
     end
 
+    it "preserves retry identity when pasted text contains Unicode spaces" do
+      params[:name] = "Alex\u00a0Morgan"
+      params[:explanation] += "\nEvidence\u2002copied\u202ffrom\u3000a listing."
+      Jobs.stubs(:enqueue).returns("queued")
+      Jobs.stubs(:enqueue).with(:dsa_notice_receipt, anything).raises(IOError, "queue unavailable")
+      expect(result).to fail_with_exception(IOError)
+      reference = result.notice.reference
+      Jobs.unstub(:enqueue)
+
+      retry_result = nil
+      expect do retry_result = described_class.call(params: { notice: params }) end.not_to change(
+        Topic,
+        :count,
+      )
+      expect(retry_result).to run_successfully
+      expect(retry_result.notice.reference).to eq(reference)
+      expect(retry_result.notice.summary(plain_text: true)).to include(
+        params[:name],
+        params[:explanation],
+      )
+    end
+
     it "queues no receipt when the PM cannot be saved" do
       PostCreator.stubs(:create!).raises(ActiveRecord::RecordNotSaved)
       expect { result }.not_to change(Topic, :count)

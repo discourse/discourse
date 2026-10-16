@@ -574,7 +574,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false, localization: nil)
-    result = +"#{localization&.raw.presence || post.raw}\n\n"
+    result = +"#{Dsa::Notice.without_metadata(localization&.raw.presence || post.raw)}\n\n"
     if add_posted_by
       result << "#{I18n.t("user_notifications.posted_by", username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end

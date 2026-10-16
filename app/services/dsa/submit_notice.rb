@@ -80,7 +80,7 @@ module Dsa
       policy :matches_submission
       only_if(:new_notice) do
         step :rate_limit_notice
-        transaction { model :notice, :create_notice }
+        model :notice, :create_notice
       end
 
       try do
@@ -96,10 +96,10 @@ module Dsa
     end
 
     def rate_limit_lookup(options:)
-      RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed!
       if options.ip_address.present?
         RateLimiter.new(nil, "dsa-notice-lookups-ip-#{options.ip_address}", 20, 1.hour).performed!
       end
+      RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed!
     end
 
     def find_notice(params:)
@@ -118,11 +118,11 @@ module Dsa
       if options.ip_address.present?
         RateLimiter.new(nil, "dsa-notice-ip-#{options.ip_address}", 5, 1.hour).performed!
       end
-      RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed!
       unless params.notice.anonymous
         email_key = Digest::SHA256.hexdigest(params.notice.email)
         RateLimiter.new(nil, "dsa-notice-email-#{email_key}", 3, 1.day).performed!
       end
+      RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed!
     end
 
     def create_notice(params:)
