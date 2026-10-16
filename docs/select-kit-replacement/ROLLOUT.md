@@ -147,8 +147,8 @@ Paths are relative to the repository root.
   migrated bundled-plugin call sites keep importing legacy select-kit for their `{{else}}` branch
   until cleanup, so it would fire for converted code too. Third-party code that renders select-kit
   doesn't break, so this is a nudge, not a guard.
-- **Supported replacements for today's patches.** A patch-by-patch matrix maps each live
-  customization to a supported API:
+- **Supported replacements for today's patches.** A matrix
+  ([`PATCH-MATRIX.md`](PATCH-MATRIX.md)) maps each live customization to a supported API:
   - caret icons;
   - hiding the title text;
   - filtering the category list;
