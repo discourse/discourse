@@ -11,3 +11,17 @@ enabled_site_setting :discourse_graphviz_enabled
 
 register_svg_icon "diagram-project"
 register_asset "stylesheets/common/graphviz.scss"
+
+after_initialize do
+  on(:reduce_cooked) do |fragment, post|
+    next if post.nil?
+
+    fragment
+      .css("div.graphviz")
+      .each do |graph|
+        graph.replace(
+          PrettyText.link_paragraph(fragment, post.full_url, I18n.t("emails.view_diagram")),
+        )
+      end
+  end
+end

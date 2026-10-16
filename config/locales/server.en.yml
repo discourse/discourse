@@ -485,6 +485,7 @@ en:
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
+    view_diagram: "View diagram"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
