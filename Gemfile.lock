@@ -5,7 +5,7 @@ PATH
       activesupport
       colored2
       i18n
-      markbridge (>= 0.3.1)
+      markbridge (~> 0.3.1)
       migrations-core
       pg
       zeitwerk
