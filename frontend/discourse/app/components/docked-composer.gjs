@@ -142,8 +142,7 @@ export default class DockedComposer extends Component {
   setupEditor(textManipulation) {
     this.inputElement?.removeEventListener("paste", this.#handlePaste);
 
-    this.inputElement =
-      textManipulation?.textarea ?? textManipulation?.view?.dom ?? null;
+    this.inputElement = textManipulation?.element ?? null;
     if (this.inputElement) {
       this.inputElement.addEventListener("paste", this.#handlePaste);
       this.syncAutoResizeHeight();

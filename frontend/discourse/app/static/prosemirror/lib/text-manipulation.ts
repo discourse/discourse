@@ -159,6 +159,14 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
+  get element(): HTMLElement {
+    return this.view.dom;
+  }
+
+  get value(): string {
+    return this.convertToMarkdown(this.view.state.doc);
+  }
+
   getSelected(): SelectedText {
     const { state } = this.view;
     const { from, to } = state.selection;
@@ -494,6 +502,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       command(this.view.state, this.view.dispatch);
       return true;
     }
+  }
+
+  insertTypedText(text: string): void {
+    this.view.dispatch(this.view.state.tr.insertText(text).scrollIntoView());
   }
 
   insertText(text: string): void {

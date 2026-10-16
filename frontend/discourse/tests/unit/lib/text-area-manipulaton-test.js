@@ -84,7 +84,7 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     manipulation.emojiSelected("disappointed");
 
-    assert.strictEqual(textarea.value, ":disappointed:");
+    assert.strictEqual(textarea.value, ":disappointed: ");
   });
 
   test("emojiSelected - replaces partial term containing Unicode letters", async function (assert) {
@@ -98,7 +98,7 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     manipulation.emojiSelected("smile");
 
-    assert.strictEqual(textarea.value, ":smile:");
+    assert.strictEqual(textarea.value, ":smile: ");
   });
 
   test("emojiSelected - appends emoji when no partial term is present", async function (assert) {

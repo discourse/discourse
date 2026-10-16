@@ -67,29 +67,6 @@ export default {
         !!el?.closest('[contenteditable="true"]')
       );
     };
-    const modifyComposerSelection = (event, type) => {
-      if (!isChatComposer(event.target)) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      appEvents.trigger("chat:modify-selection", event, {
-        type,
-        context: event.target.dataset.chatComposerContext,
-      });
-    };
-
-    const openInsertLinkModal = (event) => {
-      if (!isChatComposer(event.target)) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      appEvents.trigger("chat:open-insert-link-modal", event, {
-        context: event.target.dataset.chatComposerContext,
-      });
-    };
-
     const toggleChatDrawer = (event) => {
       if (isInputSelection(event.target)) {
         return;
@@ -204,66 +181,23 @@ export default {
         global: true,
       });
 
-      api.addKeyboardShortcut(
-        `${PLATFORM_KEY_MODIFIER}+b`,
-        (event) => modifyComposerSelection(event, "bold"),
-        {
+      // the composer's editor binds these keys itself; listed here for the
+      // shortcuts help
+      for (const [key, name] of [
+        ["b", "composer_bold"],
+        ["i", "composer_italic"],
+        ["e", "composer_code"],
+        ["l", "open_insert_link_modal"],
+      ]) {
+        api.addKeyboardShortcut(`${PLATFORM_KEY_MODIFIER}+${key}`, () => {}, {
           global: true,
           help: {
             category: "chat",
-            name: "chat.keyboard_shortcuts.composer_bold",
-            definition: {
-              keys1: ["meta", "b"],
-              keysDelimiter: "plus",
-            },
+            name: `chat.keyboard_shortcuts.${name}`,
+            definition: { keys1: ["meta", key], keysDelimiter: "plus" },
           },
-        }
-      );
-      api.addKeyboardShortcut(
-        `${PLATFORM_KEY_MODIFIER}+i`,
-        (event) => modifyComposerSelection(event, "italic"),
-        {
-          global: true,
-          help: {
-            category: "chat",
-            name: "chat.keyboard_shortcuts.composer_italic",
-            definition: {
-              keys1: ["meta", "i"],
-              keysDelimiter: "plus",
-            },
-          },
-        }
-      );
-      api.addKeyboardShortcut(
-        `${PLATFORM_KEY_MODIFIER}+e`,
-        (event) => modifyComposerSelection(event, "code"),
-        {
-          global: true,
-          help: {
-            category: "chat",
-            name: "chat.keyboard_shortcuts.composer_code",
-            definition: {
-              keys1: ["meta", "e"],
-              keysDelimiter: "plus",
-            },
-          },
-        }
-      );
-      api.addKeyboardShortcut(
-        `${PLATFORM_KEY_MODIFIER}+l`,
-        (event) => openInsertLinkModal(event),
-        {
-          global: true,
-          help: {
-            category: "chat",
-            name: "chat.keyboard_shortcuts.open_insert_link_modal",
-            definition: {
-              keys1: ["meta", "l"],
-              keysDelimiter: "plus",
-            },
-          },
-        }
-      );
+        });
+      }
       api.addKeyboardShortcut(`-`, (event) => toggleChatDrawer(event), {
         global: true,
         help: {

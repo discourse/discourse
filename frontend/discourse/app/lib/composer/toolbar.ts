@@ -195,7 +195,10 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
  */
 export function buildToolbarEvent(
   textManipulation: TextManipulation,
-  { trimLeading, getText }: { trimLeading?: boolean; getText: () => string }
+  {
+    trimLeading,
+    getText = () => textManipulation.value,
+  }: { trimLeading?: boolean; getText?: () => string } = {}
 ): ToolbarEvent {
   const selected = textManipulation.getSelected(trimLeading, {
     lineVal: true,

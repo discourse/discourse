@@ -17,8 +17,8 @@ export default class ChatFormattingToolbar extends ToolbarBase {
 
   /**
    * @param {Object} opts
-   * @param {() => import("discourse/plugins/chat/discourse/lib/rich-editor-interactor").default | import("discourse/plugins/chat/discourse/lib/textarea-interactor").default | undefined} opts.getEditor
-   * @param {() => void} opts.openLinkModal
+   * @param {() => import("discourse/lib/composer/text-manipulation").TextManipulation | null} opts.getEditor
+   * @param {(event: import("discourse/lib/composer/toolbar").ToolbarEvent) => void} opts.openLinkModal
    * @param {string[]} [opts.only] ids of the buttons to include
    */
   constructor({ getEditor, openLinkModal, only, ...opts }) {
@@ -31,24 +31,27 @@ export default class ChatFormattingToolbar extends ToolbarBase {
 
     this.context = {
       get textManipulation() {
-        return getEditor()?.textManipulation;
+        return getEditor();
       },
-      newToolbarEvent: (trimLeading) => {
-        const editor = getEditor();
-        return buildToolbarEvent(editor.textManipulation, {
-          trimLeading,
-          getText: () => editor.value,
-        });
-      },
+      newToolbarEvent: (trimLeading) =>
+        buildToolbarEvent(getEditor(), { trimLeading }),
     };
 
     const buttons = [
       formattingButtons.bold({ group: "fontStyles" }),
-      formattingButtons.italic({ group: "fontStyles" }),
-      formattingButtons.code({ group: "fontStyles" }),
+      formattingButtons.italic({
+        group: "fontStyles",
+        perform: (e) => e.applySurround("_", "_", "italic_text"),
+      }),
+      formattingButtons.code({
+        group: "fontStyles",
+        perform: (e) => e.applySurround("`", "`", "code_text"),
+      }),
       formattingButtons.link({
         group: "fontStyles",
-        perform: () => openLinkModal(),
+        // the channel switcher has mod+k in chat
+        shortcut: "L",
+        perform: openLinkModal,
       }),
       // chat doesn't bind the post composer's quote shortcut
       formattingButtons.blockquote({ group: "blocks", shortcut: undefined }),

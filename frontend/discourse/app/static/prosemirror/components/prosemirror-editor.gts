@@ -71,6 +71,31 @@ import TextManipulation, {
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
+// key names as the textarea editor's keymap spells them, mapped to the
+// spelling extension keymaps use, so bindings for the same key chain
+const KEY_NAMES: Record<string, string> = {
+  shift: "Shift",
+  alt: "Alt",
+  ctrl: "Ctrl",
+  meta: "Meta",
+  mod: "Mod",
+  up: "ArrowUp",
+  down: "ArrowDown",
+  left: "ArrowLeft",
+  right: "ArrowRight",
+  esc: "Escape",
+  escape: "Escape",
+  enter: "Enter",
+  tab: "Tab",
+  space: "Space",
+  backspace: "Backspace",
+  del: "Delete",
+  pageup: "PageUp",
+  pagedown: "PageDown",
+  home: "Home",
+  end: "End",
+};
+
 interface ProsemirrorEditorSignature {
   Args: {
     /** Markdown content displayed in the editor. */
@@ -79,8 +104,11 @@ interface ProsemirrorEditorSignature {
     placeholder?: string;
     /** Whether the editor is read-only. */
     disabled?: boolean;
-    /** Additional keyboard shortcuts keyed by shortcut expression. */
-    keymap?: Record<string, () => boolean | void>;
+    /**
+     * Additional keyboard shortcuts keyed by shortcut expression, spelled as
+     * for the textarea editor. A handler returning false consumes the key.
+     */
+    keymap?: Record<string, (event: KeyboardEvent) => boolean | void>;
     /** Called when the serialized markdown changes. */
     change?: (value: { target: { value: string } }) => void;
     /** Called when the editor receives focus. */
@@ -170,6 +198,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
 
   glimmerNodeViews = trackedArray<RenderableGlimmerNodeView>();
   #lastSerialized?: string;
+  #keyEvent?: KeyboardEvent;
   #destructor?: () => void;
 
   get pluginParams(): PluginParams {
@@ -232,17 +261,23 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = {
-      shift: "Shift",
-      tab: "Tab",
-    };
     const result: Record<string, Command> = {};
-    for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
+    for (const [key, handler] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
         .split("+")
-        .map((word) => replacements[word] ?? word)
+        .map((word) => KEY_NAMES[word] ?? word)
         .join("-");
-      result[pmKey] = () => !(value() ?? false);
+
+      result[pmKey] = () => {
+        const event = this.#keyEvent!;
+        if (handler(event) ?? false) {
+          return false;
+        }
+
+        // a consumed key stays in the editor, as in the textarea editor
+        event.stopPropagation();
+        return true;
+      };
     }
     return result;
   }
@@ -390,6 +425,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         },
       },
       handleKeyDown: (view, event) => {
+        // runs ahead of the keymaps, which don't receive the event
+        this.#keyEvent = event;
+
         // suppress if the autocomplete is open
         return (
           AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
