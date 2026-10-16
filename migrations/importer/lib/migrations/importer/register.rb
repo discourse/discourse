@@ -11,3 +11,9 @@ Migrations::CLI::Registry.register(
   command_class: "Migrations::Importer::CLI::UploadCommand",
   description: "Import media uploads referenced by the IntermediateDB",
 )
+
+Migrations::CLI::Registry.register(
+  name: "customizations",
+  command_class: "Migrations::Importer::CLI::CustomizationsCommand",
+  description: "Transfer site customizations (plan, export, apply)",
+)
