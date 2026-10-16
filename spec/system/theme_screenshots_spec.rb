@@ -169,7 +169,9 @@ describe "Theme screenshots" do
       label_match = line.match(/label:\s*["']([^"']+)["']/)
       label = label_match ? label_match[1] : nil
       (idx - 1).downto(0) do |i|
-        if lines[i] =~ /^\s*(it|scenario|example|specify)\b/
+        # An example header, not a method call on a binding that shares the keyword's name
+        # (`example.scroll_down` must not match).
+        if lines[i] =~ /^\s*(it|scenario|example|specify)(\s*\(|\s+["'{]|\s+do\b)/
           existing = result[i + 1]
           if existing
             existing[:only] = only if existing[:only] # most permissive (nil) wins
