@@ -5,6 +5,7 @@ import { tagName } from "@ember-decorators/component";
 import { eq } from "discourse/truth-helpers";
 import HCaptcha from "../../components/h-captcha";
 import ReCaptcha from "../../components/re-captcha";
+import ReCaptchaV3 from "../../components/re-captcha-v3";
 
 @tagName("")
 export default class CaptchaFieldsConnector extends Component {
@@ -19,9 +20,13 @@ export default class CaptchaFieldsConnector extends Component {
         {{#if (eq this.siteSettings.discourse_captcha_provider "hcaptcha")}}
           <HCaptcha @siteKey={{this.siteSettings.hcaptcha_site_key}} />
         {{else if
-          (eq this.siteSettings.discourse_captcha_provider "recaptcha")
+          (eq this.siteSettings.discourse_captcha_provider "recaptcha_v2")
         }}
-          <ReCaptcha @siteKey={{this.siteSettings.recaptcha_site_key}} />
+          <ReCaptcha @siteKey={{this.siteSettings.recaptcha_v2_site_key}} />
+        {{else if
+          (eq this.siteSettings.discourse_captcha_provider "recaptcha_v3")
+        }}
+          <ReCaptchaV3 @siteKey={{this.siteSettings.recaptcha_v3_site_key}} />
         {{/if}}
       </div>
     </div>
