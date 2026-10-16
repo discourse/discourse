@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class DropDsaNoticeSubmissionIdentity < ActiveRecord::Migration[8.0]
+  DROPPED_COLUMNS = { dsa_notices: %i[submission_id reference] }
+
   def up
-    Migration::ColumnDropper.execute_drop(:dsa_notices, %i[submission_id reference])
+    DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }
   end
 
   def down
