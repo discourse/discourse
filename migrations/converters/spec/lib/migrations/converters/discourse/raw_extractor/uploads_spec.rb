@@ -729,4 +729,101 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("[![image|690x97](#{short})](#{buffer.uploads.first[:placeholder]})")
     end
   end
+
+  # Core's upload protocol rewrites an `upload://` source inside a raw tag the
+  # same way it rewrites an image's destination, so the upload is as real as in
+  # any markdown form and the bytes to replace are the URL itself.
+  describe "uploads inside raw HTML" do
+    let(:short) { "upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png" }
+
+    it "defers a tag inside a paragraph" do
+      result = extract(%{before <img src="#{short}"> after})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads).to contain_exactly(
+        include(upload_id: "2Yjf3WE4KOQ88YUb4fUMubKB9My", original_markdown: short),
+      )
+      expect(result).to eq(%{before <img src="#{buffer.uploads.first[:placeholder]}"> after})
+    end
+
+    it "defers a tag standing on its own line" do
+      result = extract(%{intro\n\n<img src="#{short}">\n\noutro})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(%{intro\n\n<img src="#{buffer.uploads.first[:placeholder]}">\n\noutro})
+    end
+
+    it "defers every tag of a multi-line HTML block" do
+      other = "upload://k9k7D6IBBk6Sg7EuRM59QL72xXn.png"
+      raw = %{<div>\n<img src="#{short}">\n<img src="#{other}">\n</div>}
+
+      result = extract(raw)
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.map { |upload| upload[:original_markdown] }).to eq([short, other])
+      expect(result).to eq(
+        raw.sub(short, buffer.uploads.first[:placeholder]).sub(
+          other,
+          buffer.uploads.last[:placeholder],
+        ),
+      )
+    end
+
+    it "defers a single-quoted source" do
+      result = extract(%{<img src='#{short}'>})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(%{<img src='#{buffer.uploads.first[:placeholder]}'>})
+    end
+
+    it "defers an unquoted source" do
+      result = extract(%{<img src=#{short}>})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(%{<img src=#{buffer.uploads.first[:placeholder]}>})
+    end
+
+    it "defers the tag while a fenced copy of the same URL stays verbatim" do
+      result = extract(%{<img src="#{short}">\n\n```\n#{short}\n```\n})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(
+        %{<img src="#{buffer.uploads.first[:placeholder]}">\n\n```\n#{short}\n```\n},
+      )
+    end
+
+    # Both copies stand in one inline block, so the counts cannot tell them
+    # apart and the substitution check decides which one core reads.
+    it "defers the tag while a code span next to it stays verbatim" do
+      result = extract(%{`#{short}` <img src="#{short}">})
+
+      expect(extractor.engine_refusals).to be_empty
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to eq(%{`#{short}` <img src="#{buffer.uploads.first[:placeholder]}">})
+    end
+
+    # Core rewrites an upload source on an image tag only, so a link in a raw
+    # tag carries nothing an importer could resolve and stays where it is.
+    it "leaves a link in a raw tag alone" do
+      raw = %{<a href="#{short}">file</a>}
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    # The same rewrite matches the `upload://` spelling only, so a full upload
+    # URL in a tag is no more remappable than one in a code span.
+    it "leaves a full upload URL in a raw tag alone" do
+      raw = %{<img src="/uploads/default/original/1X/#{sha1}.png">}
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+  end
 end
