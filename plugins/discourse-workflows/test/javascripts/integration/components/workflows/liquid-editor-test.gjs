@@ -6,7 +6,6 @@ import {
   triggerEvent,
   waitFor,
 } from "@ember/test-helpers";
-import { startCompletion } from "@codemirror/autocomplete";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -136,7 +135,18 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
 
     const view = find(".codemirror-editor").codemirrorView;
     view.dispatch({ selection: { anchor: view.state.doc.length } });
-    startCompletion(view);
+    view.focus();
+    // Plugins cannot import the editor's modules, so open the list the way a
+    // user would.
+    view.contentDOM.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: " ",
+        code: "Space",
+        ctrlKey: true,
+        bubbles: true,
+        cancelable: true,
+      })
+    );
     await waitFor(".cm-completionLabel");
 
     assert
