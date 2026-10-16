@@ -419,7 +419,6 @@ shared_examples "social authentication scenarios" do
 
       it "removes destination_url cookie if present after setting up redirect" do
         mock_facebook_auth
-        visit("/")
 
         category = Fabricate(:category)
 
