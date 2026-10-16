@@ -141,7 +141,7 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("start_posting")).to eq(true)
       expect(UserHistory.exists?(acting_user_id: admin.id, subject: "start_posting")).to eq(false)
 
-      visit_in_app("/new-topic")
+      route_to("/new-topic")
       composer.fill_title("An unrelated community conversation")
       composer.fill_content("This topic was not started from an onboarding suggestion.")
       composer.switch_category(general_category.name)

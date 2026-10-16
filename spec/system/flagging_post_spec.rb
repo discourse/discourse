@@ -30,7 +30,7 @@ describe "Flagging post" do
         topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
       ).to be_present
 
-      visit_in_app "/review/#{other_flag_reviewable.id}"
+      route_to "/review/#{other_flag_reviewable.id}"
 
       expect(review_page).to have_reviewable_with_approved_status(other_flag_reviewable)
     end
@@ -54,7 +54,7 @@ describe "Flagging post" do
         topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
       ).to be_present
 
-      visit_in_app "/review/#{Reviewable.sole.id}"
+      route_to "/review/#{Reviewable.sole.id}"
 
       expect(review_page).to have_reviewable_with_approved_status(Reviewable.sole)
     end

@@ -33,7 +33,7 @@ describe "Search" do
       # read sort order is set to 5
       expect(search_page.sort_order.value).to eq("5")
 
-      visit("/search?q=test%20l")
+      route_to("/search?q=test%20l")
 
       expect(search_page.search_input.value).to eq("test")
       # latest sort order is set to 1
@@ -200,11 +200,11 @@ describe "Search" do
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/search")
+        route_to("/search")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/signup")
+        route_to("/signup")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 

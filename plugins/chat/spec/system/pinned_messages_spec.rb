@@ -120,7 +120,7 @@ RSpec.describe "Chat pinned messages" do
     # Reload while panel is open — pins should stay marked as read
     page.refresh
 
-    chat_page.visit_channel(channel)
+    find(".c-navbar__close-pins-button").click
     expect(page).to have_no_css(".chat-pinned-bar__unread-indicator")
   end
 

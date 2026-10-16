@@ -69,7 +69,7 @@ describe "Viewing reviewable item" do
       expect(classification).to have_selected_rule(rule[:ground])
       expect(classification).to have_selected_category("Illegal or harmful speech")
 
-      review_page.visit_reviewable(reviewable_flagged_post)
+      route_to("/review/#{reviewable_flagged_post.id}")
       classification.select_rule(other_rule[:ground])
       classification.select_category("Other violation of terms and conditions")
       classification.save

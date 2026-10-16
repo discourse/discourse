@@ -265,7 +265,7 @@ RSpec.describe "Topic voting" do
       expect(topic_page).to have_voted
       send_keys(:escape)
 
-      visit_in_app("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
+      route_to("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
 
       topic_page.vote
       expect(topic_page.vote_count).to have_text("1")

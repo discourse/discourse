@@ -35,7 +35,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
       expect(membership.reload.starred).to eq(true)
 
-      visit_in_app("/")
+      route_to("/")
 
       expect(page).to have_css("#sidebar-section-content-chat-starred-channels")
       expect(
@@ -55,7 +55,7 @@ RSpec.describe "Starred channels" do
       find(".c-navbar__star-channel-button").click
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
 
-      visit_in_app("/")
+      route_to("/")
 
       expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{channel_1.id}",
@@ -150,7 +150,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
       expect(membership.reload.starred).to eq(false)
 
-      visit_in_app("/")
+      route_to("/")
 
       expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
       expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
@@ -209,7 +209,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
       expect(membership.reload.starred).to eq(true)
 
-      visit_in_app("/")
+      route_to("/")
 
       expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{dm_channel_1.id}",

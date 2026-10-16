@@ -57,7 +57,6 @@ describe "Horizon theme | High level" do
     # Navigating topic list when high context topic cards are not enabled
     horizon_theme.update_setting(:topic_card_high_context, false)
     horizon_theme.save!
-    page.refresh
     visit "/"
     expect(topic_item.all("td").map { |el| el["class"] }).to eq(
       [

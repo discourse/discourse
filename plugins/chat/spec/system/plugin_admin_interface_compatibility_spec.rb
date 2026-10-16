@@ -20,7 +20,7 @@ RSpec.describe "Plugin admin interface compatibility" do
       expect(page).to have_no_css(".discourse-chat-incoming-webhooks")
     end
 
-    visit_in_app("/admin/plugins/discourse-data-explorer")
+    route_to("/admin/plugins/discourse-data-explorer")
     within(".admin-plugin-config-area") do
       expect(page).to have_css(".discourse-data-explorer-query-list")
       expect(page).to have_no_css(".ai-features")
@@ -28,7 +28,7 @@ RSpec.describe "Plugin admin interface compatibility" do
       expect(page).to have_no_css(".discourse-chat-incoming-webhooks")
     end
 
-    visit_in_app("/admin/plugins/automation")
+    route_to("/admin/plugins/automation")
     within(".admin-plugin-config-area") do
       expect(page).to have_css(".discourse-automations-table")
       expect(page).to have_no_css(".ai-features")
@@ -36,7 +36,7 @@ RSpec.describe "Plugin admin interface compatibility" do
       expect(page).to have_no_css(".discourse-chat-incoming-webhooks")
     end
 
-    visit_in_app("/admin/plugins/chat")
+    route_to("/admin/plugins/chat")
     within(".admin-plugin-config-area") do
       expect(page).to have_css(".discourse-chat-incoming-webhooks")
       expect(page).to have_no_css(".ai-features")

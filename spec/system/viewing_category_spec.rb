@@ -28,7 +28,7 @@ RSpec.describe "Viewing a category" do
       expect(topic_list).to have_topics(count: 1)
       expect(topic_list).to have_topic(child_category_topic)
 
-      category_page.visit(child_category)
+      route_to(child_category.url)
       category_page.click_new
 
       expect(topic_list).to have_topics(count: 1)
@@ -45,7 +45,7 @@ RSpec.describe "Viewing a category" do
 
       expect(topic_list).to have_no_topic(child_category_topic)
 
-      category_page.visit(child_category)
+      route_to(child_category.url)
       category_page.click_new
 
       expect(topic_list).to have_topics(count: 1)

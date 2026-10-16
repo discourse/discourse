@@ -63,7 +63,7 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
-  def visit_in_app(path)
+  def route_to(path)
     error = page.evaluate_async_script(<<~JS, path, Capybara.default_max_wait_time * 1000)
       const [path, timeout, done] = arguments;
       const timer = setTimeout(() => done(`Timeout navigating to ${path}`), timeout);

@@ -53,7 +53,7 @@ RSpec.describe "Sidebar New Topic Button" do
 
       expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
 
-      visit("/c/#{category.slug}/#{category.id}")
+      route_to("/c/#{category.slug}/#{category.id}")
 
       expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
     end
@@ -68,7 +68,7 @@ RSpec.describe "Sidebar New Topic Button" do
       visit("/admin")
       expect(page).to have_no_css(".sidebar-new-topic-button__wrapper")
 
-      visit("/latest")
+      route_to("/latest")
       expect(page).to have_css(".sidebar-new-topic-button__wrapper")
     end
   end

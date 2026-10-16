@@ -55,7 +55,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[User List] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -152,7 +152,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[Staff Action] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -185,7 +185,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[Bookmarks] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -207,7 +207,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[Screened Email] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -245,7 +245,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[Screened Ip] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -278,7 +278,7 @@ RSpec.describe "CSV Exports" do
       click_button "Export"
       dialog.click_ok
 
-      visit_in_app "/u/#{admin.username}/messages"
+      route_to "/u/#{admin.username}/messages"
       click_link "[Screened Url] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract

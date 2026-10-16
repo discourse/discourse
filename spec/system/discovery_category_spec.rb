@@ -15,7 +15,7 @@ describe "Discovery Category Routes" do
     visit "/categories"
     expect(page).to have_css(".category-list")
 
-    visit_in_app "/c/#{category.slug}/subcategories"
+    route_to "/c/#{category.slug}/subcategories"
     expect(page).to have_css(".category-list")
   end
 
@@ -23,10 +23,10 @@ describe "Discovery Category Routes" do
     visit "/c/#{category.slug}"
     expect(page).to have_css(".category-boxes")
 
-    visit_in_app "/c/#{category.slug}/all"
+    route_to "/c/#{category.slug}/all"
     expect(page).to have_css(".category-boxes")
 
-    visit_in_app "/c/#{category.slug}/none"
+    route_to "/c/#{category.slug}/none"
     expect(page).to have_css(".category-boxes")
   end
 end

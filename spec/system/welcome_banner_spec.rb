@@ -87,15 +87,15 @@ describe "Welcome banner" do
       topic = Fabricate(:topic)
       visit "/"
       expect(banner).to be_visible
-      visit_in_app "/latest"
+      route_to "/latest"
       expect(banner).to be_visible
-      visit_in_app "/new"
+      route_to "/new"
       expect(banner).to be_visible
-      visit_in_app "/hot"
+      route_to "/hot"
       expect(banner).to be_visible
-      visit_in_app "/tags"
+      route_to "/tags"
       expect(banner).to be_hidden
-      visit_in_app topic.relative_url
+      route_to topic.relative_url
       expect(banner).to be_hidden
     end
 
@@ -227,10 +227,10 @@ describe "Welcome banner" do
           visit "/"
           expect(banner).to be_visible
 
-          visit_in_app "/u/#{current_user.username}/preferences/emails"
+          route_to "/u/#{current_user.username}/preferences/emails"
           expect(banner).to be_visible
 
-          visit_in_app "/my/messages"
+          route_to "/my/messages"
           expect(banner).to be_visible
         end
 
@@ -254,10 +254,10 @@ describe "Welcome banner" do
           visit "/admin"
           expect(banner).to be_hidden
 
-          visit_in_app "/admin/config/site-admin"
+          route_to "/admin/config/site-admin"
           expect(banner).to be_hidden
 
-          visit_in_app "/admin/customize"
+          route_to "/admin/customize"
           expect(banner).to be_hidden
         end
       end
@@ -269,7 +269,7 @@ describe "Welcome banner" do
         visit "/filter?q=tag%3Ain-progress"
         expect(banner).to be_visible
 
-        visit_in_app "/about"
+        route_to "/about"
         expect(banner).to be_hidden
       end
 
@@ -283,12 +283,12 @@ describe "Welcome banner" do
             if index.zero?
               visit "/#{route}"
             else
-              visit_in_app "/#{route}"
+              route_to "/#{route}"
             end
             expect(banner).to be_visible
           end
 
-        visit_in_app "/about"
+        route_to "/about"
         expect(banner).to be_hidden
       end
 

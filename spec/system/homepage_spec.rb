@@ -26,7 +26,7 @@ describe "Homepage" do
 
     expect(page).to have_css(".navigation-container .latest.active", text: "Latest")
 
-    user_preferences_interface_page.visit(user)
+    route_to("/u/#{user.username}/preferences/interface")
 
     homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
     homepage_picker.expand
@@ -48,7 +48,7 @@ describe "Homepage" do
 
     expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
-    user_preferences_interface_page.visit(user)
+    route_to("/u/#{user.username}/preferences/interface")
 
     homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
     homepage_picker.expand
@@ -145,7 +145,7 @@ describe "Homepage" do
       visit ""
       expect(page).to have_css(".new-home", text: "Hi friends!")
 
-      user_preferences_interface_page.visit(user)
+      route_to("/u/#{user.username}/preferences/interface")
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
@@ -159,7 +159,7 @@ describe "Homepage" do
 
       expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
-      user_preferences_interface_page.visit(user)
+      route_to("/u/#{user.username}/preferences/interface")
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand

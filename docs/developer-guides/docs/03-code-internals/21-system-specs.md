@@ -172,11 +172,11 @@ This works fine in our Ember SPA for the initial navigation and page load. Howev
 page.find(".some-link").click
 ```
 
-If a spec only needs to open another screen, `visit_in_app` uses Ember routing and waits for the app to settle. It requires an already loaded app:
+If a spec only needs to open another screen, `route_to` uses Ember routing and waits for the app to settle. It requires an already loaded app:
 
 ```rb
 visit("/latest")
-visit_in_app("/categories")
+route_to("/categories")
 ```
 
 Close open dialogs and menus through their controls before navigating.

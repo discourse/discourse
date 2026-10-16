@@ -72,7 +72,7 @@ module PageObjects
         in_app: false
       )
         path = channel.url + (message_id ? "/#{message_id}" : "")
-        in_app ? visit_in_app(path) : visit(path)
+        in_app ? route_to(path) : visit(path)
         has_finished_loading?(with_preloaded_channels: with_preloaded_channels) if check
       end
 
@@ -91,7 +91,7 @@ module PageObjects
       end
 
       def visit_thread(thread, in_app: false)
-        in_app ? visit_in_app(thread.url) : visit(thread.url)
+        in_app ? route_to(thread.url) : visit(thread.url)
         has_css?(".chat-thread.--loaded[data-id=\"#{thread.id}\"]")
       end
 

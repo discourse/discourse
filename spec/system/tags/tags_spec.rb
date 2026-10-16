@@ -101,7 +101,7 @@ describe "Tags" do
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
 
       # /c/category
-      category_page.visit(category)
+      route_to(category.url)
       expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")
 
       # /c/category -> /tags/c/category-slug/category-id/tag-slug/tag-id
@@ -112,7 +112,7 @@ describe "Tags" do
       expect(discovery.tag_drop).to have_selected_name("tag-three")
       expect(discovery.topic_list).to have_topic(topic_in_category_with_tag)
 
-      tag_page.visit_tag(tag_one)
+      route_to(tag_one.url)
       # /tag/tag-one topic list filters correctly
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
       expect(discovery.topic_list).to have_topic(topic_with_two_tags)
@@ -128,7 +128,7 @@ describe "Tags" do
       ## PMs with tags
 
       # topic list has topic with non-visible tags (user not allowed)
-      user_private_messages_page.visit(user_tl1)
+      route_to("/u/#{user_tl1.username}/messages")
       expect(topic_list).to have_topic(pm_with_tag)
       expect(topic_list).to have_no_topic_tag(pm_with_tag, "tag-one")
 
@@ -439,7 +439,7 @@ describe "Tags" do
       expect(page).to have_current_path("/tag/#{node_tag.slug}/#{node_tag.id}")
       expect(discovery.topic_list).to have_topic(node_topic)
 
-      visit "/search?q=node&search_type=categories_tags"
+      route_to "/search?q=node&search_type=categories_tags"
 
       expect(page).to have_selector(
         ".fps-tag-item a[href=\"/tag/#{node_tag.slug}/#{node_tag.id}\"]",
