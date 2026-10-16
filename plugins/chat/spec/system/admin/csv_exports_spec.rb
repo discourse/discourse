@@ -22,8 +22,9 @@ RSpec.describe "Admin Chat CSV exports" do
     visit "/admin/plugins/chat"
     click_button I18n.t("js.chat.admin.export_messages.create_export")
     dialog.click_yes
+    dialog.click_ok
 
-    visit "/u/#{current_user.username}/messages"
+    route_to "/u/#{current_user.username}/messages"
     click_link I18n.t(
                  "system_messages.csv_export_succeeded.subject_template",
                  export_title: "Chat Message",

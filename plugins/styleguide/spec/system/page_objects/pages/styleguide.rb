@@ -28,6 +28,10 @@ module PageObjects
         has_css?(".sidebar-sections.styleguide-panel .sidebar-section-link.active", text: text)
       end
 
+      def select_group(group)
+        find("[data-test-styleguide-subnav-link=\"#{group}\"]").click
+      end
+
       COLOR_MODE_MENU = "styleguide-color-mode"
 
       def select_color_mode(mode)

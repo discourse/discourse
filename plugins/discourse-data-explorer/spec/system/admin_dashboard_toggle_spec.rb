@@ -49,7 +49,7 @@ describe "Data Explorer | Add query to admin dashboard" do
     query_runner.click_dashboard_toggle
     expect(query_runner).to have_dashboard_toggle("Remove from dashboard")
 
-    page.visit("/admin")
+    route_to("/admin")
 
     expect(dashboard).to have_card("data_explorer_query:#{query.id}")
   end

@@ -29,7 +29,6 @@ describe "discourse login client auth" do
       before { SiteSetting.auth_skip_create_confirm = false }
 
       it "skips the signup form and creates the account directly" do
-        visit("/")
         signup_form.open.click_social_button("discourse_id")
         expect(page).to have_css(".login-welcome-header")
       end
@@ -39,7 +38,6 @@ describe "discourse login client auth" do
       before { SiteSetting.auth_skip_create_confirm = true }
 
       it "skips the signup form and creates the account directly" do
-        visit("/")
         signup_form.open.click_social_button("discourse_id")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -48,7 +46,6 @@ describe "discourse login client auth" do
         before { SiteSetting.full_name_requirement = "required_at_signup" }
 
         it "shows the signup form when name is not provided by the provider" do
-          visit("/")
           signup_form.open.click_social_button("discourse_id")
           expect(signup_form).to be_open
           expect(page).to have_css("#new-account-name")
@@ -69,7 +66,6 @@ describe "discourse login client auth" do
           end
 
           it "skips the signup form and creates the account directly" do
-            visit("/")
             signup_form.open.click_social_button("discourse_id")
             expect(page).to have_css(".header-dropdown-toggle.current-user")
           end
@@ -84,7 +80,6 @@ describe "discourse login client auth" do
     end
 
     it "logs in user" do
-      visit("/")
       signup_form.open.click_social_button("discourse_id")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end

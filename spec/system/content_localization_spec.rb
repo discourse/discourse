@@ -102,7 +102,7 @@ describe "Content Localization" do
       page.refresh
       expect(preferences_interface_page).to be_automatic_translation_disabled
 
-      topic_page.visit_topic(topic)
+      route_to(topic.url)
       expect(topic_page).to have_topic_title("Life strategies from The Art of War")
       expect(post_1_obj).to have_cooked_content(post_1.raw)
       expect(post_3_obj).to have_cooked_content(post_3.raw)
@@ -120,7 +120,7 @@ describe "Content Localization" do
       expect(preferences_interface_page).to be_automatic_translation_enabled
       expect(preferences_interface_page).to have_no_understood_language("en")
 
-      topic_page.visit_topic(topic)
+      route_to(topic.url)
       expect(topic_page).to have_topic_title("孫子兵法からの人生戦略")
       expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
       expect(post_3_obj).to have_cooked_content(post_3.raw)
@@ -141,7 +141,7 @@ describe "Content Localization" do
       expect(modal).to have_read_only_interface_language("English")
       modal.close
 
-      preferences_interface_page.visit(japanese_user)
+      route_to("/u/#{japanese_user.username}/preferences/interface")
       expect(preferences_interface_page).to have_no_interface_language_section
       expect(preferences_interface_page).to have_understood_language_option("en")
     end
@@ -511,8 +511,6 @@ describe "Content Localization" do
 
       it "shows original content for a dynamically loaded post via the per-post toggle (20+ posts)" do
         sign_in(site_local_user)
-        visit("/")
-
         topic_page.visit_topic(topic)
 
         expect(post_3_obj.post).to have_content("A general is one who ..")

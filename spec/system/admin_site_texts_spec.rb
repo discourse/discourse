@@ -64,8 +64,7 @@ describe "Admin Site Texts Page" do
     )
     I18n.reload!
 
-    site_texts_page.visit
-    site_texts_page.search("skip")
+    site_texts_page.toggle_only_show_overridden
     site_texts_page.toggle_only_show_overridden
     expect(page).to have_css(".site-text", count: 1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
@@ -86,8 +85,7 @@ describe "Admin Site Texts Page" do
     )
     I18n.reload!
 
-    site_texts_page.visit
-    site_texts_page.search("skip")
+    site_texts_page.toggle_only_show_outdated
     site_texts_page.toggle_only_show_outdated
     expect(page).to have_css(".site-text", count: 1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")

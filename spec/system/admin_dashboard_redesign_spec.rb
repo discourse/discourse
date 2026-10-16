@@ -49,7 +49,7 @@ describe "Admin Dashboard Redesign" do
 
     expect(admin_report).to have_current_all_reports_path
 
-    dashboard.visit_with_custom_range(from: "2026-01-01", to: "2026-01-31")
+    route_to("/admin?end_date=2026-01-31&range=custom&start_date=2026-01-01")
     expect(dashboard_reports).to have_default_report
 
     dashboard_reports.open_default_report

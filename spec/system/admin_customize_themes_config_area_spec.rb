@@ -147,8 +147,6 @@ describe "Admin Customize Themes Config Area Page" do
 
       expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(light_src)
 
-      config_area.visit
-
       expect(config_area).to have_no_screenshot_toggle_button(theme)
     end
   end

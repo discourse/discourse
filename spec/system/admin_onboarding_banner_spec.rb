@@ -88,7 +88,7 @@ describe "Admin Onboarding Banner" do
       expect(Topic.last.category_id).to eq(staff_category.id)
 
       logs = PageObjects::Pages::AdminStaffActionLogs.new
-      logs.visit
+      route_to("/admin/logs/staff_action_logs")
       logs.show_details(log)
       expect(page).to have_css(
         ".log-details-modal",

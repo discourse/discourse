@@ -409,7 +409,7 @@ describe "Topic bulk select" do
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/new?subset=replies")
+      route_to("/new?subset=replies")
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])

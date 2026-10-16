@@ -13,7 +13,6 @@ module PageObjects
       end
 
       def create_regular_topic(composer, topic_page)
-        visit("/latest")
         topic_page.open_new_topic
 
         composer.fill_title("Creating a regular topic")
@@ -22,7 +21,6 @@ module PageObjects
       end
 
       def create_livestream_event_topic(composer, topic_page, opts = {})
-        visit("/latest")
         topic_page.open_new_topic
 
         opts = {
@@ -40,7 +38,6 @@ module PageObjects
       end
 
       def create_normal_event_topic(composer, topic_page)
-        visit("/latest")
         topic_page.open_new_topic
 
         composer.fill_title("Creating a normal event topic")
