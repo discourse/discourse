@@ -27,6 +27,10 @@ module JsonApiKit
 
       def refusals = contract.errors.map { Error.new(it, document:) }
 
+      def validation_errors(errors)
+        errors.map { ValidationError.new(it, location: attributes.location_for(it.attribute)) }
+      end
+
       private
 
       attr_reader :document, :resource
