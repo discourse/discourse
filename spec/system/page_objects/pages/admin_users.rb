@@ -4,6 +4,8 @@ module PageObjects
   module Pages
     class AdminUsers < AdminBase
       class UserRow
+        include Playwright::Test::Matchers
+
         attr_reader :element
 
         def initialize(element)
