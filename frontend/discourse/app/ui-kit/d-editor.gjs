@@ -719,6 +719,7 @@ export default class DEditor extends Component {
         destroyUserStatuses();
         return userSearch({
           term,
+          searchContext: "mention",
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
