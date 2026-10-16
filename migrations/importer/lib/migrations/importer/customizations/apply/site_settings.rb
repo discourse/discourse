@@ -11,7 +11,10 @@ module Migrations
             @dry_run = dry_run
           end
 
-          def call(entry)
+          # Settings whose validator reads other settings (e.g. a login provider's
+          # credentials) can fail until those are written, so they are retried
+          # after the rest. A dry run writes nothing and can't validate them.
+          def call(entry, last_try: true)
             name = entry["name"].to_s
             raise SkipItem, "unknown setting on this site" unless ::SiteSetting.has_setting?(name)
             if Plan::SiteFacts.global_setting?(name)
@@ -31,7 +34,15 @@ module Migrations
                 @values.site_setting(name, entry["value"])
               end
 
-            return :unchanged if db_value(name, value) == current_db_value(name)
+            new_value =
+              begin
+                db_value(name, value)
+              rescue ::Discourse::InvalidParameters => e
+                raise RetryLater unless last_try
+                raise PendingDependency, "not validated in a dry run: #{e.message}" if @dry_run
+                raise
+              end
+            return :unchanged if new_value == current_db_value(name)
 
             ::SiteSetting.set_and_log(name, value, ::Discourse.system_user) unless @dry_run
             :changed

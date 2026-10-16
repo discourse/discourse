@@ -39,7 +39,11 @@ get equal tags within one run.
 
 `apply` compares before it writes and only changes what differs, so it is
 safe to run again. It prints one line per item (changed, unchanged, skipped,
-failed) and exits non-zero if anything failed.
+failed) and exits non-zero if anything failed. Site settings that fail
+validation are tried again after the others, because some validators read
+other settings (e.g. enabling a login provider needs its client ID and
+secret). A dry run writes nothing, so it reports those as changed but not
+validated.
 
 ## Plan format
 

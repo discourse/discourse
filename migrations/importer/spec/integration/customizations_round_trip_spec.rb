@@ -320,6 +320,45 @@ RSpec.describe "customizations export and apply", :rails do
     expect(SiteSetting.github_client_secret).to eq(secret_value)
   end
 
+  context "with a setting whose validator reads settings listed after it" do
+    let(:plan) do
+      customizations::Plan.new(
+        "format_version" => 1,
+        "site_settings" =>
+          %w[enable_github_logins github_client_id github_client_secret].map do |name|
+            { "name" => name, "target" => "migrated" }
+          end,
+      )
+    end
+
+    before do
+      SiteSetting.github_client_id = "client"
+      SiteSetting.enable_github_logins = true
+      export!
+      SiteSetting.enable_github_logins = false
+      SiteSetting.github_client_id = ""
+      SiteSetting.github_client_secret = ""
+    end
+
+    it "applies it after the others" do
+      report = apply!("migrated")
+
+      expect(report.failed?).to eq(false), output.string
+      expect(SiteSetting.enable_github_logins).to eq(true)
+      expect(output.string.lines.grep(/site_settings/).last).to include("enable_github_logins")
+    end
+
+    it "doesn't fail it in a dry run" do
+      report = apply!("migrated", dry_run: true)
+
+      expect(report.failed?).to eq(false), output.string
+      entry = report.entries.find { |e| e.label == "enable_github_logins" }
+      expect(entry.status).to eq(:changed)
+      expect(entry.message).to include("not validated in a dry run")
+      expect(SiteSetting.enable_github_logins).to eq(false)
+    end
+  end
+
   it "skips imported records it can't find and secrets it isn't given" do
     export!(include_secrets: false)
     imported_group.destroy!

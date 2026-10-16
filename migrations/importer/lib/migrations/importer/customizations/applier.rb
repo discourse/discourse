@@ -39,7 +39,7 @@ module Migrations
             run_section("themes", label: "theme settings") do |entry|
               @themes.apply_relations(entry)
             end
-            run_section("site_settings") { |entry| @site_settings.call(entry) }
+            run_section("site_settings") { |entry, last_try| @site_settings.call(entry, last_try:) }
             run_section("groups") { |entry| @groups.call(entry) }
             run_section("categories") { |entry| @categories.call(entry) }
             run_section("translation_overrides") { |entry| @translation_overrides.call(entry) }
@@ -71,16 +71,27 @@ module Migrations
           return if entries.nil?
           raise Error, "manifest section #{section} must be a list" unless entries.is_a?(Array)
 
+          retries = []
           entries.each do |entry|
             next unless entry.is_a?(Hash) && entry["target"] == @target
 
-            @report.item(label, Labels.for(section, entry)) do
-              # A savepoint per item: a failed statement must not abort the
-              # surrounding transaction, and an item is never half applied.
-              ::ActiveRecord::Base.transaction(requires_new: true) { yield entry }
-            rescue Apply::PendingDependency => e
-              [:changed, e.message]
-            end
+            apply_item(section, label, entry, last_try: false) { yield entry, false }
+          rescue Apply::RetryLater
+            retries << entry
+          end
+
+          retries.each do |entry|
+            apply_item(section, label, entry, last_try: true) { yield entry, true }
+          end
+        end
+
+        def apply_item(section, label, entry, last_try:)
+          @report.item(label, Labels.for(section, entry)) do
+            # A savepoint per item: a failed statement must not abort the
+            # surrounding transaction, and an item is never half applied.
+            ::ActiveRecord::Base.transaction(requires_new: true) { yield }
+          rescue Apply::PendingDependency => e
+            [:changed, e.message]
           end
         end
       end
