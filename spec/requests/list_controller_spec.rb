@@ -799,6 +799,32 @@ RSpec.describe ListController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
     end
 
+    it "does not allow a topic author to forge RSS items" do
+      attacker = Fabricate(:user, refresh_auto_groups: true)
+      forged_title = "Forged RSS item"
+
+      sign_in(attacker)
+      post "/posts.json",
+           params: {
+             title: "Actual RSS topic title",
+             raw:
+               "[link](https://example.com \"]]></description></item><item><title>#{forged_title}</title><description><![CDATA[\")",
+             category: topic.category_id,
+           }
+
+      expect(response.status).to eq(200)
+
+      sign_out
+      get "/latest.rss"
+
+      document = Nokogiri.XML(response.body) { |config| config.strict }
+      titles = document.xpath("/rss/channel/item/title").map(&:text)
+
+      expect(response.status).to eq(200)
+      expect(titles).to include("Actual RSS topic title")
+      expect(titles).not_to include(forged_title)
+    end
+
     it "renders latest RSS with query params" do
       get "/latest.rss?status=closed"
       expect(response.status).to eq(200)
