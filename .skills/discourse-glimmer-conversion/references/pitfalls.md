@@ -88,6 +88,15 @@ end of the matching section with the commit sha.
   `aliasLevelOptions.firstObject.value` in a classic getter is not a bug. Switch to `[0]`
   while converting but do not report it as a fix (`GroupsFormInteractionFields`; a mutation
   run caught the false claim).
+- **An observer attached after the service set its state never sees that state.**
+  `GlobalNotice` called `logsNoticeService.addObserver("text", ...)` in its constructor. That
+  was the service's first lookup, and the service's `init` had already restored the stored
+  text, so a stored error-rate notice never came back after a reload. When replacing such
+  observers, derive the value in a getter from the service's (computed, so tracked) property
+  instead of copying it on change.
+- **`this.args` in a classic component is `undefined`.** `RagUploader` read
+  `this.args?.allowImages`, so the picker never accepted images. A `this.args` read in a
+  classic file is a bug to note in the report, not a sign that the file is half converted.
 
 ## Lifecycle and DOM
 
@@ -161,6 +170,10 @@ end of the matching section with the commit sha.
 - **`this.send("x")` to a parent controller/route.** Classic components could bubble to
   the route via `send`; Glimmer cannot. Pass the action in as an arg from the template that
   owns the route (`@controller.x`), or use `routeAction`.
+- **A call where a callback belongs.** `.finally(this.set("formSubmitted", false))` ran the
+  `set` immediately, so `WatchedWordForm` never stayed disabled while saving. When rewriting
+  `this.set` into assignments, check that each one passed as an argument sits inside a
+  function.
 
 ## Templates
 
