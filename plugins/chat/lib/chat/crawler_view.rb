@@ -12,7 +12,7 @@ module Chat
     def initialize(channel:, thread: nil, date: nil, page: nil, target_message_id: nil)
       @channel = channel
       @thread = thread
-      @page = [page.to_i, 1].max
+      @page = [page.to_s.to_i, 1].max
       @valid = true
 
       @dated = target_message_id.present? || date.present?
@@ -34,7 +34,13 @@ module Chat
     def messages
       @messages ||=
         page_scope
-          .includes(:user, :revisions, :reactions, thread: { original_message: :user })
+          .includes(
+            :user,
+            :revisions,
+            :reactions,
+            :chat_channel,
+            thread: [:channel, { original_message: :user }],
+          )
           .order(:created_at, :id)
           .offset((page - 1) * PAGE_SIZE)
           .limit(PAGE_SIZE)
@@ -122,8 +128,9 @@ module Chat
     end
 
     def show_thread_link?(message)
-      !thread && channel.threading_enabled? && message.thread&.original_message_id == message.id &&
-        message.thread.replies_count > 0
+      message_thread = message.thread
+      !thread && message_thread&.original_message_id == message.id &&
+        (channel.threading_enabled? || message_thread.force) && message_thread.replies_count > 0
     end
 
     private
@@ -181,7 +188,7 @@ module Chat
 
     def parse_date(value)
       Date.iso8601(value.to_s)
-    rescue Date::Error
+    rescue ArgumentError
       @valid = false
       nil
     end

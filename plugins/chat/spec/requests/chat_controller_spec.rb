@@ -662,6 +662,64 @@ RSpec.describe Chat::ChatController do
       ).to eq(["chat-message-#{reply.id}"])
     end
 
+    it "redirects channel permalinks of thread replies to the thread" do
+      chat_channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_0)
+      reply = Fabricate(:chat_message, chat_channel: chat_channel, thread:)
+
+      get "#{chat_channel.relative_url}/#{reply.id}", headers: crawler_headers
+
+      expect(response).to redirect_to(reply.url)
+      expect(response.status).to eq(301)
+
+      get reply.url, headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(reply.cooked)
+    end
+
+    it "links forced threads when threading is off and 404s other threads" do
+      forced_thread =
+        Fabricate(:chat_thread, channel: chat_channel, original_message: message_0, force: true)
+      Fabricate(:chat_message, chat_channel: chat_channel, thread: forced_thread)
+      forced_thread.update!(replies_count: 1)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).to include(%(href="#{forced_thread.url}"))
+
+      get forced_thread.relative_url, headers: crawler_headers
+      expect(response.status).to eq(200)
+
+      get thread.relative_url, headers: crawler_headers
+      expect(response.status).to eq(404)
+    end
+
+    it "handles malformed pagination params without erroring" do
+      get "#{chat_channel.relative_url}?date=#{"1" * 200}", headers: crawler_headers
+      expect(response.status).to eq(404)
+
+      get "#{chat_channel.relative_url}?page[]=2", headers: crawler_headers
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_0.cooked)
+    end
+
+    it "renders the app shell for signed-in users on the crawler layout" do
+      restricted_channel =
+        Fabricate(
+          :category_channel,
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+      restricted_message = Fabricate(:chat_message, chat_channel: restricted_channel)
+      sign_in(admin)
+
+      get "#{restricted_channel.relative_url}?print=true"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(restricted_message.cooked)
+    end
+
     it "404s for channels anonymous users cannot see" do
       restricted_channel =
         Fabricate(
@@ -733,6 +791,33 @@ RSpec.describe Chat::ChatController do
         message_69.created_at.to_formatted_s(:iso8601),
       )
       expect(response.body).not_to include(restricted_channel.url)
+    end
+
+    it "paginates the directory" do
+      stub_const(Chat::ChatController, :DIRECTORY_PAGE_SIZE, 1) do
+        other_channel =
+          Fabricate(:category_channel, name: "Zebra talk", chatable: Fabricate(:category))
+        chat_channel.update!(name: "Aardvark talk")
+
+        get "/chat", headers: crawler_headers
+
+        expect(response.body).to include(chat_channel.url)
+        expect(response.body).not_to include(other_channel.url)
+        expect(response.body).to include(
+          %(<link rel="next" href="#{Discourse.base_url}/chat?page=2">),
+        )
+
+        get "/chat?page=2", headers: crawler_headers
+
+        expect(response.body).to include(other_channel.url)
+        expect(response.body).to include(%(<link rel="prev" href="#{Discourse.base_url}/chat">))
+        expect(response.body).to include(
+          %(<link rel="canonical" href="#{Discourse.base_url}/chat?page=2" />),
+        )
+
+        get "/chat?page=3", headers: crawler_headers
+        expect(response.status).to eq(404)
+      end
     end
   end
 

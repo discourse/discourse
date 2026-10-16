@@ -7,7 +7,7 @@
     <ul class="chat-crawler__channels" itemscope itemtype="http://schema.org/ItemList">
       <% @crawler_channels.each_with_index do |channel, index| %>
         <li class="chat-crawler__channel" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <meta itemprop="position" content="<%= index + 1 %>">
+          <meta itemprop="position" content="<%= @crawler_directory_offset + index + 1 %>">
           <h2><a href="<%= channel.url %>" itemprop="url"><span itemprop="name"><%= channel.title %></span></a></h2>
           <% if channel.description.present? %>
             <p><%= channel.description %></p>
@@ -26,6 +26,16 @@
         </li>
       <% end %>
     </ul>
+    <% if @crawler_prev_page_url || @crawler_next_page_url %>
+      <div role="navigation" class="chat-crawler__pagination crawler-post">
+        <% if @crawler_prev_page_url %>
+          <span><%= link_to t(:prev_page), @crawler_prev_page_url, rel: "prev" %></span>
+        <% end %>
+        <% if @crawler_next_page_url %>
+          <span><b><%= link_to t(:next_page), @crawler_next_page_url, rel: "next" %></b></span>
+        <% end %>
+      </div>
+    <% end %>
   <% else %>
     <%= t(:crawler_content_hidden) %>
   <% end %>
@@ -33,6 +43,12 @@
 
 <% content_for :head do %>
   <%= raw crawlable_meta_data(title: t("chat.crawler.directory_title")) %>
+  <% if @crawler_prev_page_url %>
+    <link rel="prev" href="<%= @crawler_prev_page_url %>">
+  <% end %>
+  <% if @crawler_next_page_url %>
+    <link rel="next" href="<%= @crawler_next_page_url %>">
+  <% end %>
 <% end %>
 
 <% content_for(:title) { "#{t("chat.crawler.directory_title")} - #{SiteSetting.title}" } %>
