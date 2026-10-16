@@ -392,7 +392,7 @@ module Categories
         end
 
         # Used when serializing the category configuration schema to the client.
-        def metadata(guardian: nil)
+        def metadata(guardian: nil, overridden_site_settings: nil)
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
           result = {
             id: type_id,
@@ -402,7 +402,7 @@ module Categories
             icon:,
             available: available?,
             visible: visible?,
-            configuration_schema: resolved_configuration_schema,
+            configuration_schema: resolved_configuration_schema(overridden_site_settings:),
           }
           if enables_plugin?
             result[:required_plugin] = Categories::TypeRegistry.plugin_display_name(type_id)
@@ -420,13 +420,18 @@ module Categories
 
         private
 
-        def site_setting_overridden?(setting_name)
-          SiteSetting.provider.find(setting_name.to_sym).present?
-        end
-
-        def resolved_configuration_schema
+        def resolved_configuration_schema(overridden_site_settings: nil)
           schema = configuration_schema
           return {} if schema.blank?
+          overridden_site_settings ||=
+            if schema[:site_settings].present?
+              SiteSetting
+                .provider
+                .all
+                .each_with_object({}) { |setting, result| result[setting.name.to_sym] = true }
+            else
+              {}
+            end
 
           entries = {
             general_category_settings: [],
@@ -456,7 +461,7 @@ module Categories
               key: setting_name.to_s,
               default: config[:default],
               current: SiteSetting.public_send(setting_name),
-              overridden: site_setting_overridden?(setting_name),
+              overridden: overridden_site_settings.key?(setting_name.to_sym),
               type: config[:type] || meta[:type],
               label: config[:label] || meta[:humanized_name],
               choices: config[:choices] || meta[:choices],
