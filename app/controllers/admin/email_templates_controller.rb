@@ -14,6 +14,9 @@ class Admin::EmailTemplatesController < Admin::AdminController
         custom_invite_forum_mailer
         custom_invite_mailer
         download_backup_mailer
+        dsa_notifications.flags_agreed_and_post_deleted
+        dsa_notifications.post_hidden
+        dsa_notifications.post_hidden_again
         email_login_code_mailer
         invite_forum_mailer
         invite_mailer

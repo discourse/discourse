@@ -3999,6 +3999,7 @@ en:
     statement: |
       This decision follows our **%{ground}** rule. %{explanation} You can %{contact} if you disagree.
     post_hidden:
+      title: "Post hidden during own moderation"
       preview: "Your post has been hidden."
       subject_template: "Post hidden"
       text_body_template: |
@@ -4014,6 +4015,7 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     post_hidden_again:
+      title: "Post hidden again during own moderation"
       preview: "Your post has been hidden again."
       subject_template: "Post hidden again, staff notified"
       text_body_template: |
@@ -4027,6 +4029,7 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
+      title: "Post removed during own moderation"
       preview: "Your post has been removed."
       subject_template: "Post removed by staff"
       text_body_template: |
