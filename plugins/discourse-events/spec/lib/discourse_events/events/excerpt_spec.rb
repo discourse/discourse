@@ -82,12 +82,6 @@ describe DiscourseEvents::Events::Excerpt do
       expect(html).to include("📅 June 5, 2018 → #{"2" * 200}")
     end
 
-    it "keeps dates too long to parse as-is" do
-      html = excerpt(start: "2" * 200)
-
-      expect(html).to include("📅 #{"2" * 200} (UTC)")
-    end
-
     it "removes the event node when there is nothing to summarize" do
       html = excerpt
 

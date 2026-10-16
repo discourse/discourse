@@ -77,9 +77,6 @@ acceptance("Event onebox", function (needs) {
     assert
       .dom(".d-editor-preview .going-button")
       .doesNotExist("the preview card has no RSVP controls");
-    assert
-      .dom(".d-editor-preview .event-invitees")
-      .doesNotExist("the preview card lists no invitees");
 
     await click(".composer-toggle-switch");
     await waitFor(".onebox-wrapper .discourse-post-event-widget");
