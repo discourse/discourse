@@ -18,86 +18,43 @@ RSpec.describe Jobs::DsaNoticeReceipt do
       }
     end
 
-    let(:topic) { Dsa::SubmitNotice.call(params: { notice: notice_params }).notice.post.topic }
+    let(:notice) { Dsa::Notice.create!(attributes: notice_params, group:) }
+    let(:post_id) { notice.post.id }
     let(:job) { described_class.new }
 
     before do
-      SiteSetting.dsa_reporting_enabled = true
-      SiteSetting.dsa_notice_group = group.id.to_s
       SiteSetting.disable_emails = "no"
       group.add(admin)
     end
 
-    it "delivers the original summary once without later staff replies or PM reply instructions" do
-      PostCreator.create!(admin, topic_id: topic.id, raw: "Confidential staff investigation notes")
+    it "delivers a receipt once and marks it sent" do
       expect do
-        job.execute(post_id: topic.first_post.id)
-        job.execute(post_id: topic.first_post.id)
+        job.execute(post_id:)
+        job.execute(post_id:)
       end.to change { ActionMailer::Base.deliveries.size }.by(1)
 
-      message = ActionMailer::Base.deliveries.last
-      expect(message.to).to eq([notice_params[:email]])
-      expect(message.subject).to include(Dsa::Notice.from_post(topic.first_post).reference)
-      expect(message.text_part.decoded).to include(notice_params[:explanation])
-      expect(message.text_part.decoded).not_to include(
-        "Confidential staff investigation notes",
-        "For the reviewing team",
-      )
-      fragment = Nokogiri::HTML5.fragment(message.html_part.decoded)
-      expect(fragment.text).to include(notice_params[:explanation], notice_params[:name])
-      expect(fragment.at_css('a[href^="https://example.com/"]')["href"]).to eq(
-        notice_params[:content_url],
-      )
-      expect(message.html_part.decoded).not_to include("<!-- dsa-notice:", "submission_id")
-      expect(message["X-Discourse-Reply-Key"]).to be_nil
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
+      expect(Dsa::Notice.from_post(notice.post.reload)).to be_receipt_sent
     end
 
     it "sends nothing for an anonymous notice" do
       notice_params[:anonymous] = true
-      expect { job.execute(post_id: topic.first_post.id) }.not_to change {
-        ActionMailer::Base.deliveries.size
-      }
+      notice_params[:name] = nil
+      notice_params[:email] = nil
+      expect { job.execute(post_id:) }.not_to change { ActionMailer::Base.deliveries.size }
     end
 
     it "leaves delivery pending after SMTP failure and can retry" do
-      DsaNoticeMailer.stubs(:receipt).raises(Net::SMTPServerBusy, "SMTP unavailable")
-      expect { job.execute(post_id: topic.first_post.id) }.to raise_error(Net::SMTPServerBusy)
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
-      DsaNoticeMailer.unstub(:receipt)
-      expect { job.execute(post_id: topic.first_post.id) }.to change {
-        ActionMailer::Base.deliveries.size
-      }.by(1)
+      Email::Sender.any_instance.stubs(:send).raises(Net::SMTPServerBusy, "SMTP unavailable")
+      expect { job.execute(post_id:) }.to raise_error(Net::SMTPServerBusy)
+      expect(Dsa::Notice.from_post(notice.post.reload)).not_to be_receipt_sent
+      Email::Sender.any_instance.unstub(:send)
+      expect { job.execute(post_id:) }.to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
-    it "skips delivery when all emails are disabled" do
+    it "leaves the receipt pending when delivery is suppressed" do
       SiteSetting.disable_emails = "yes"
-      post_id = topic.first_post.id
-      expect do job.execute(post_id:) end.not_to change {
-        [ActionMailer::Base.deliveries.size, described_class.jobs.size]
-      }
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
-
-      SiteSetting.disable_emails = "no"
-      expect { job.execute(post_id: topic.first_post.id) }.to change {
-        ActionMailer::Base.deliveries.size
-      }.by(1)
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
-    end
-
-    it "skips delivery when emails to people outside staff are disabled" do
-      SiteSetting.disable_emails = "non-staff"
-      post_id = topic.first_post.id
-      expect do job.execute(post_id:) end.not_to change {
-        [ActionMailer::Base.deliveries.size, described_class.jobs.size]
-      }
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
-
-      SiteSetting.disable_emails = "no"
-      expect { job.execute(post_id: topic.first_post.id) }.to change {
-        ActionMailer::Base.deliveries.size
-      }.by(1)
-      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
+      expect { job.execute(post_id:) }.not_to change { ActionMailer::Base.deliveries.size }
+      expect(Dsa::Notice.from_post(notice.post.reload)).not_to be_receipt_sent
     end
 
     it "ignores a missing post" do

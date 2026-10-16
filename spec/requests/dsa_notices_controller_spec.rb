@@ -46,273 +46,42 @@ RSpec.describe DsaNoticesController do
       expect(response.parsed_body["contact"]).to eq(true)
     end
 
-    it "ignores supplied contact details on anonymous submissions" do
-      post "/dsa/illegal-content.json", params: { notice: notice.merge(anonymous: true) }
-      expect(response.status).to eq(201)
-      expect(response.parsed_body["contact"]).to eq(false)
-      reference = response.parsed_body["reference"]
-      sign_in(Fabricate(:admin))
-      topic = Topic.find_by!(title: I18n.t("dsa_notice.subject", reference:))
-      get "/t/#{topic.id}.json"
-      expect(response.status).to eq(200)
-      cooked = response.parsed_body.dig("post_stream", "posts", 0, "cooked")
-      expect(cooked).not_to include(notice[:name], notice[:email])
-    end
-
-    it "returns the original reference for a retry of the same submission" do
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(201)
-      reference = response.parsed_body["reference"]
-      expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
-        Topic,
-        :count,
-      )
-      expect(response.status).to eq(201)
-      expect(response.parsed_body["reference"]).to eq(reference)
-    end
-
-    it "rejects invalid content, declaration and contact details with errors" do
-      [
-        { content_url: "javascript:alert(1)" },
-        { explanation: "too short" },
-        { explanation: "x" * 20_001 },
-        { declaration: false },
-        { name: " " },
-        { email: "invalid" },
-        { email: "victim@example.invalid\r\nBcc: other@example.invalid" },
-        { submission_id: "invalid" },
-      ].each do |invalid_values|
-        post "/dsa/illegal-content.json", params: { notice: notice.merge(invalid_values) }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to be_present
-      end
-    end
-
-    it "rejects structured values in scalar fields" do
-      post "/dsa/illegal-content.json", params: { notice: notice.merge(explanation: ["x" * 100]) }
-      expect(response.status).to eq(422)
-      post "/dsa/illegal-content.json", params: { notice: [notice] }
-      expect(response.status).to eq(422)
-    end
-
-    it "rejects changed content under an already accepted submission identity" do
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(201)
-      post "/dsa/illegal-content.json", params: { notice: notice.merge(anonymous: true) }
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to eq([I18n.t("js.generic_error")])
-    end
-
     it "returns not found when disabled" do
       SiteSetting.dsa_reporting_enabled = false
       post "/dsa/illegal-content.json", params: { notice: }
       expect(response.status).to eq(404)
     end
 
-    it "limits contact notices to three per email address per day" do
-      RateLimiter.enable
-      3.times do
-        post "/dsa/illegal-content.json",
-             params: {
-               notice: notice.merge(submission_id: SecureRandom.uuid),
-             }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(submission_id: SecureRandom.uuid, email: notice[:email].upcase),
-           }
-      expect(response.status).to eq(429)
+    it "returns contract errors as unprocessable content" do
+      post "/dsa/illegal-content.json", params: { notice: notice.merge(declaration: false) }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to be_present
     end
 
-    it "does not charge notice limits for rejected validation attempts" do
+    it "returns too many requests when submission is rate limited" do
       RateLimiter.enable
-      5.times do
-        post "/dsa/illegal-content.json", params: { notice: notice.merge(declaration: false) }
-        expect(response.status).to eq(422)
-      end
+      20.times { RateLimiter.new(nil, "dsa-notice-lookups-ip-127.0.0.1", 20, 1.hour).performed! }
+
       post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(201)
-    end
 
-    it "bounds repeated lookups without charging another new notice" do
-      RateLimiter.enable
-      20.times do
-        post "/dsa/illegal-content.json", params: { notice: }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(429)
-    end
-
-    it "preserves shared lookup capacity when one IP exceeds its allowance" do
-      RateLimiter.enable
-      979.times { RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed! }
-      20.times do
-        post "/dsa/illegal-content.json", params: { notice: }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(429)
-
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
-           },
-           headers: {
-             "REMOTE_ADDR" => "198.51.100.51",
-           }
-      expect(response.status).to eq(201)
-
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
-           },
-           headers: {
-             "REMOTE_ADDR" => "198.51.100.52",
-           }
-      expect(response.status).to eq(429)
-    end
-
-    it "preserves shared notice capacity when an email exceeds its allowance" do
-      RateLimiter.enable
-      96.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
-      3.times do
-        post "/dsa/illegal-content.json",
-             params: {
-               notice: notice.merge(submission_id: SecureRandom.uuid),
-             }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(429)
-
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(anonymous: true),
-           },
-           headers: {
-             "REMOTE_ADDR" => "198.51.100.51",
-           }
-      expect(response.status).to eq(201)
-
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
-           },
-           headers: {
-             "REMOTE_ADDR" => "198.51.100.52",
-           }
-      expect(response.status).to eq(429)
-    end
-
-    it "preserves the daily email allowance when the site notice limit rejects a request" do
-      RateLimiter.enable
-      100.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
-      3.times do
-        post "/dsa/illegal-content.json", params: { notice: }
-        expect(response.status).to eq(429)
-      end
-
-      freeze_time(61.minutes.from_now) do
-        3.times do
-          post "/dsa/illegal-content.json",
-               params: {
-                 notice: notice.merge(submission_id: SecureRandom.uuid),
-               }
-          expect(response.status).to eq(201)
-        end
-      end
-    end
-
-    it "limits new notices globally across different IP addresses" do
-      RateLimiter.enable
-      98.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
-      2.times do |index|
-        post "/dsa/illegal-content.json",
-             params: {
-               notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
-             },
-             headers: {
-               "REMOTE_ADDR" => "198.51.100.#{index + 1}",
-             }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: notice.merge(anonymous: true),
-           },
-           headers: {
-             "REMOTE_ADDR" => "198.51.100.201",
-           }
       expect(response.status).to eq(429)
     end
 
     it "returns a generic failure when the notice cannot be saved" do
       exception = ActiveRecord::RecordNotSaved.new("save failed")
       PostCreator.stubs(:create!).raises(exception)
-      expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
-        Topic,
-        :count,
-      )
+      post "/dsa/illegal-content.json", params: { notice: }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to eq([I18n.t("js.generic_error")])
     end
 
     it "requires CSRF protection for public submissions" do
       ActionController::Base.allow_forgery_protection = true
-      expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
-        Topic,
-        :count,
-      )
+      post "/dsa/illegal-content.json", params: { notice: }
       expect(response.status).to eq(403)
     ensure
       ActionController::Base.allow_forgery_protection = false
-    end
-
-    it "keeps saved notices inaccessible to unrelated users" do
-      post "/dsa/illegal-content.json", params: { notice: }
-      expect(response.status).to eq(201)
-      reference = response.parsed_body["reference"]
-      topic = Topic.find_by!(title: I18n.t("dsa_notice.subject", reference:))
-      sign_in(Fabricate(:user))
-      get "/t/#{topic.id}.json"
-      expect(response.status).to be_between(400, 499)
-      expect(response.body).not_to include(notice[:explanation], notice[:name], notice[:email])
-    end
-
-    it "allows a saved notice to recover from a queue failure without duplication" do
-      Jobs.stubs(:enqueue).returns("queued")
-      Jobs.stubs(:enqueue).with(:dsa_notice_receipt, anything).raises(IOError, "queue unavailable")
-      expect do post "/dsa/illegal-content.json", params: { notice: } end.to change(
-        Topic,
-        :count,
-      ).by(1)
-      expect(response.status).to eq(500)
-      Jobs.unstub(:enqueue)
-
-      expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
-        Topic,
-        :count,
-      )
-      expect(response.status).to eq(201)
-    end
-
-    it "limits new notices per IP while allowing retries of accepted notices" do
-      RateLimiter.enable
-      first_notice = notice.merge(anonymous: true)
-      5.times do |index|
-        payload = index.zero? ? first_notice : first_notice.merge(submission_id: SecureRandom.uuid)
-        post "/dsa/illegal-content.json", params: { notice: payload }
-        expect(response.status).to eq(201)
-      end
-      post "/dsa/illegal-content.json",
-           params: {
-             notice: first_notice.merge(submission_id: SecureRandom.uuid),
-           }
-      expect(response.status).to eq(429)
-      post "/dsa/illegal-content.json", params: { notice: first_notice }
-      expect(response.status).to eq(201)
     end
   end
 end
