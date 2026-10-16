@@ -16,11 +16,11 @@ module PageObjects
       end
 
       def has_confirmation?
-        has_css?(".dsa-notice h1", text: "Notice received")
+        has_css?(".dsa-notice h1", text: "Report received")
       end
 
       def has_focused_confirmation?
-        has_css?(".dsa-notice h1:focus", text: "Notice received")
+        has_css?(".dsa-notice h1:focus", text: "Report received")
       end
 
       def reference

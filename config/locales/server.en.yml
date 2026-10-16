@@ -1,24 +1,20 @@
 en:
   dsa_notice:
-    anonymous: "Anonymous, no contact details provided"
-    subject: "Illegal content notice %{reference}"
-    summary: "## Notice %{reference}\n\n**Reported content:** %{content_url}\n\n### Explanation from the reporter\n\n%{explanation}\n\n### Reporter details\n\n%{reporter}\n\n### Declaration\n\nI confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
-    staff_guidance: "---\n\n**For the reviewing team:** Handle this notice in a timely, diligent, and neutral manner. Record your decision and reasons here. Contact the reporter separately by email, if provided, including the outcome and available ways to challenge it. Replies to this PM stay internal. Consider any statement of reasons owed to the affected author."
-    invalid_parameters: "The notice contains invalid values."
+    anonymous: "The reporter submitted anonymously."
+    subject: "Report of potentially illegal content %{reference}"
+    summary: "**Report reference: %{reference}**\n\n**Reported content:** %{content_url}\n\n**Explanation:**\n\n%{explanation}\n\n**Reporter:**\n\n%{reporter}\n\n**Declaration:**\n\nI confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+    staff_guidance: "Review this report promptly, carefully and impartially. Record your decision and reasons here. If the reporter provided an email address, email them the outcome and any available ways to challenge it. Replies to this message stay internal. Consider whether the affected author also needs a statement of reasons."
+    invalid_parameters: "The report contains invalid values."
     invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
     invalid_email: "must be a valid email address"
   dsa_notice_mailer:
-    subject_template: "[%{email_prefix}] Your illegal content notice %{reference}"
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
     text_body_template: |
-      # We have received your notice
+      %{site_title} has received your report.
 
-      Thank you for notifying %{site_title}. Your notice has been forwarded to the team responsible for reviewing reports.
+      Your report reference is %{reference}. Keep it for any correspondence.
 
-      **Notice reference: %{reference}**
-
-      Keep this reference for any correspondence. The team will review your notice and contact you at this email address about the outcome. Receipt does not mean that a decision has been made or that the content has been removed.
-
-      ---
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
 
       %{summary}
   dsa_statements:

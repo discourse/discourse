@@ -1,7 +1,7 @@
 en:
   js:
     dsa_notice:
-      title: "Report illegal content on %{site}"
+      title: "Report potentially illegal content on %{site}"
       content_url: "Exact URL of the content"
       explanation: "Why do you believe this content is illegal?"
       explanation_help: "Describe the facts and why the content may be illegal. You do not need to cite a specific law."
@@ -10,12 +10,12 @@ en:
       email: "Email address"
       declaration_section: "Declaration"
       declaration: "I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
-      submit: "Submit notice"
-      received: "Notice received"
-      received_description: "Your notice has been sent to %{site} for review."
-      reference: "Notice reference:"
-      contact_confirmation: "We will email you a receipt with this reference and a copy of your notice."
-      anonymous_confirmation: "Save this reference. You submitted anonymously, so we cannot email you a receipt or decision."
+      submit: "Submit report"
+      received: "Report received"
+      received_description: "%{site} has received your report for review."
+      reference: "Your report reference is <strong>%{reference}</strong>."
+      contact_confirmation: "We will email you a receipt and a copy of your report. The reviewing team will email you the outcome."
+      anonymous_confirmation: "Save your reference. Because you submitted anonymously, we cannot email you a receipt or the outcome."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Admin registration only"
       approved_domains: "CIMD from approved domains"

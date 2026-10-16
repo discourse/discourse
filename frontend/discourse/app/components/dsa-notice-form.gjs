@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { emailValid } from "discourse/lib/utilities";
+import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
@@ -75,8 +76,12 @@ export default class DsaNoticeForm extends Component {
             site=this.siteSettings.title
           }}</p>
         <p class="dsa-notice__reference">
-          {{i18n "dsa_notice.reference"}}
-          <strong>{{this.result.reference}}</strong>
+          {{trustHTML
+            (i18n
+              "dsa_notice.reference"
+              reference=(escapeExpression this.result.reference)
+            )
+          }}
         </p>
         {{#if this.result.contact}}
           <p>{{i18n "dsa_notice.contact_confirmation"}}</p>

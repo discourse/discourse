@@ -33,7 +33,7 @@ RSpec.describe "Illegal content notices" do
     expect(notice_page.form.field("explanation")).to have_errors("Required")
     expect(notice_page.form.field("name")).to have_errors("Required")
     expect(notice_page.form.field("email")).to have_errors("Required")
-    expect(page).to have_no_content("Notice received")
+    expect(page).to have_no_content("Report received")
 
     notice_page.fill_notice(explanation:)
     notice_page.form.field("name").fill_in("Alex Morgan")
@@ -41,7 +41,7 @@ RSpec.describe "Illegal content notices" do
     notice_page.form.field("declaration").check
     notice_page.form.submit
     expect(notice_page.form.field("email")).to have_errors("Please enter a valid email address")
-    expect(page).to have_no_content("Notice received")
+    expect(page).to have_no_content("Report received")
 
     notice_page.form.field("email").fill_in("alex@example.invalid")
     notice_page.form.submit
@@ -54,7 +54,7 @@ RSpec.describe "Illegal content notices" do
     notice_page.open_group_notice(user: admin, group:, reference:)
     expect(page).to have_content("alex@example.invalid")
     expect(page).to have_content(explanation)
-    expect(page).to have_content("Replies to this PM stay internal.")
+    expect(page).to have_content("Replies to this message stay internal.")
     expect(page).to have_no_content("Forum:")
   end
 
@@ -75,12 +75,12 @@ RSpec.describe "Illegal content notices" do
     notice_page.form.submit
     expect(notice_page).to have_confirmation
     expect(notice_page).to have_focused_confirmation
-    expect(page).to have_content("Save this reference. You submitted anonymously")
+    expect(page).to have_content("Save your reference. Because you submitted anonymously")
     reference = notice_page.reference
 
     sign_in(admin)
     notice_page.open_group_notice(user: admin, group:, reference:)
-    expect(page).to have_content("Anonymous, no contact details provided")
+    expect(page).to have_content("The reporter submitted anonymously.")
     expect(page).to have_no_content("Discard this name")
     expect(page).to have_no_content("discard@example.invalid")
   end
