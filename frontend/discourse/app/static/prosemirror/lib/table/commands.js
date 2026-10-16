@@ -1,12 +1,11 @@
 import { Fragment } from "prosemirror-model";
-import { NodeSelection, TextSelection } from "prosemirror-state";
+import { TextSelection } from "prosemirror-state";
 import {
   cellAround,
   cellCoords,
   cellType,
   copyCell,
   findTable,
-  isCell,
   rowRange,
   tableGrid,
 } from "./grid.js";
@@ -17,22 +16,7 @@ import {
  */
 export function insertTableBreak(state, dispatch) {
   const { selection } = state;
-
-  // A selected cell would otherwise get an empty sibling cell inserted.
-  if (selection instanceof NodeSelection && isCell(selection.node)) {
-    dispatch?.(
-      state.tr.setSelection(TextSelection.create(state.doc, selection.to - 1))
-    );
-    return true;
-  }
-
-  const inlineNode =
-    selection instanceof NodeSelection && selection.node.isInline;
-
-  if (
-    (!(selection instanceof TextSelection) && !inlineNode) ||
-    !cellAround(selection.$from)
-  ) {
+  if (!(selection instanceof TextSelection) || !cellAround(selection.$from)) {
     return false;
   }
 
@@ -41,10 +25,7 @@ export function insertTableBreak(state, dispatch) {
     const hardBreak = state.schema.nodes.hard_break.create();
     const { $from } = selection;
 
-    if (inlineNode) {
-      tr.insert(selection.from, hardBreak);
-      tr.setSelection(TextSelection.create(tr.doc, selection.from + 1));
-    } else if (
+    if (
       selection.empty &&
       $from.nodeBefore?.isText &&
       $from.nodeBefore.text.endsWith("  ")
