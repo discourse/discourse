@@ -7,12 +7,11 @@ ignoreWorkspaceCycles: true
 updateNotifier: false
 strictPeerDependencies: true
 strictDepBuilds: true
-onlyBuiltDependencies:
-- lefthook
-ignoredBuiltDependencies:
-- "@zoom/meetingsdk"
-- core-js
-- rete
+allowBuilds:
+  lefthook: true
+  "@zoom/meetingsdk": false
+  core-js: false
+  rete: false
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
 - "@discourse/*"
