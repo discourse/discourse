@@ -12,6 +12,7 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import { normalizeEmoji } from "pretty-text/emoji";
 import { replacements } from "pretty-text/emoji/data";
+import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
@@ -33,15 +34,10 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
-import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
-import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { and, not, or } from "discourse/truth-helpers";
-import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -85,8 +81,6 @@ export default class ChatComposer extends Component {
 
   formattingToolbar = this.#buildToolbar();
   richEditorExtensions;
-
-  #textareaInteractor;
 
   constructor() {
     super(...arguments);
@@ -155,43 +149,24 @@ export default class ChatComposer extends Component {
     return !this.currentUser || this.args.disabled;
   }
 
-  // A handler returning false consumes the key; true lets the editor apply
-  // its own binding.
-  get richEditorKeymap() {
-    const skip = () =>
-      this.capabilities.isMobileDevice || this.#isAutocompleteDisplayed();
-    const send = () => {
-      if (skip()) {
-        return true;
-      }
-      this.onSend();
-      return false;
-    };
+  get editorComponent() {
+    return this.useRichEditor ? this.richEditorComponent : TextareaEditor;
+  }
 
+  get submitOnEnter() {
+    return (
+      !this.capabilities.isMobileDevice &&
+      this.currentUser?.user_option.send_shortcut !== SEND_SHORTCUT_META_ENTER
+    );
+  }
+
+  // a handler returning false consumes the key, in either editor
+  get keymap() {
     return {
-      // Inside lists, code blocks and the like Enter keeps its structural
-      // meaning (new item, new line); only a plain paragraph sends.
-      Enter: () => {
-        if (this.#isAutocompleteDisplayed() || !this.#inPlainParagraph()) {
-          return true;
-        }
-
-        if (!this.capabilities.isMobileDevice && this.#sendsOnEnter(false)) {
-          this.onSend();
-          return false;
-        }
-
-        this.#insertLineBreak();
-        return false;
-      },
-      "Mod+Enter": send,
-      "Ctrl+Enter": send,
-      "Ctrl+m": () => {
+      "ctrl+m": () => {
         this.toggleEditor();
         return false;
       },
-      ArrowUp: () => skip() || !this.#editOrReplyToLastMessage(false),
-      "Shift+ArrowUp": () => skip() || !this.#editOrReplyToLastMessage(true),
     };
   }
 
@@ -199,51 +174,22 @@ export default class ChatComposer extends Component {
   persistDraft() {}
 
   @action
-  setupAutocomplete(textarea) {
-    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    const apply = (options) =>
-      dAutocomplete.setupAutocomplete(
-        getOwner(this),
-        textarea,
-        autocompleteHandler,
-        {
-          ...options,
-          treatAsTextarea: true,
-          afterComplete: (text, event) => {
-            event.preventDefault();
-            this.editor.syncValue(text);
-            options.afterComplete?.();
-          },
-        }
-      );
+  setupEditor(textManipulation) {
+    const editor = textManipulation.view
+      ? new RichEditorInteractor(getOwner(this), textManipulation)
+      : new TextareaInteractor(getOwner(this), textManipulation);
+    const { element } = editor;
 
-    this.#applyAutocompletes(apply);
-  }
+    // chat's keyboard shortcuts route by this attribute
+    element.dataset.chatComposerContext = this.context;
+    if (element.tagName === "TEXTAREA") {
+      element.rows = 1;
+      element.setAttribute("autocapitalize", "sentences");
+      element.setAttribute("autocorrect", "on");
+    }
 
-  @action
-  setupTextareaInteractor(textarea) {
-    this.#textareaInteractor = new TextareaInteractor(getOwner(this), textarea);
-    this.composer.registerEditor(this.#textareaInteractor);
-    this.#autofocus();
-  }
-
-  @action
-  teardownTextareaInteractor() {
-    this.composer.unregisterEditor(this.#textareaInteractor);
-    this.#textareaInteractor.destroy();
-    this.#textareaInteractor = null;
-  }
-
-  @action
-  setupRichEditor(textManipulation) {
-    const interactor = new RichEditorInteractor(
-      getOwner(this),
-      textManipulation
-    );
-    // chat's keyboard shortcuts route by this attribute, as on the textarea
-    interactor.element.dataset.chatComposerContext = this.context;
-    interactor.element.addEventListener("keydown", this.onRichEditorKeyDown);
-    this.composer.registerEditor(interactor);
+    element.addEventListener("keydown", this.onEditorKeyDown);
+    this.composer.registerEditor(editor);
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
@@ -256,11 +202,9 @@ export default class ChatComposer extends Component {
 
     return () => {
       textManipulation.autocomplete("destroy");
-      interactor.element.removeEventListener(
-        "keydown",
-        this.onRichEditorKeyDown
-      );
-      this.composer.unregisterEditor(interactor);
+      element.removeEventListener("keydown", this.onEditorKeyDown);
+      this.composer.unregisterEditor(editor);
+      editor.destroy?.();
     };
   }
 
@@ -542,19 +486,7 @@ export default class ChatComposer extends Component {
   // Escape needs the DOM event: subclasses stop it from reaching the global
   // shortcut that closes the drawer or thread.
   @action
-  onRichEditorKeyDown(event) {
-    if (
-      event.key === "Escape" &&
-      !event.shiftKey &&
-      !this.capabilities.isMobileDevice &&
-      !this.#isAutocompleteDisplayed()
-    ) {
-      this.handleEscape(event);
-    }
-  }
-
-  @action
-  onKeyDown(event) {
+  onEditorKeyDown(event) {
     if (
       this.capabilities.isMobileDevice ||
       event.altKey ||
@@ -565,31 +497,12 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Escape" && !event.shiftKey) {
-      return this.handleEscape(event);
-    }
-
-    if (event.key === "m" && event.ctrlKey) {
+      this.handleEscape(event);
+    } else if (
+      event.key === "ArrowUp" &&
+      this.#editOrReplyToLastMessage(event.shiftKey)
+    ) {
       event.preventDefault();
-      this.toggleEditor();
-      return;
-    }
-
-    if (event.key === "Enter") {
-      const send =
-        this.#sendsOnEnter(event.shiftKey) || event.ctrlKey || event.metaKey;
-
-      if (!send) {
-        // insert newline
-        return;
-      }
-
-      this.onSend();
-      event.preventDefault();
-      return false;
-    }
-
-    if (event.key === "ArrowUp") {
-      this.#editOrReplyToLastMessage(event.shiftKey);
     }
   }
 
@@ -675,34 +588,6 @@ export default class ChatComposer extends Component {
         this.composer.focus({ ensureAtEnd: true, refreshHeight: true })
       );
     }
-  }
-
-  #inPlainParagraph() {
-    const { view } = this.editor.textManipulation;
-    const { $from } = view.state.selection;
-
-    return (
-      $from.depth === 1 &&
-      $from.parent.type === view.state.schema.nodes.paragraph
-    );
-  }
-
-  // Matches the markdown editor's newline rather than starting a paragraph.
-  #insertLineBreak() {
-    const { view } = this.editor.textManipulation;
-
-    view.dispatch(
-      view.state.tr
-        .replaceSelectionWith(view.state.schema.nodes.hard_break.create())
-        .scrollIntoView()
-    );
-  }
-
-  #sendsOnEnter(shiftKey) {
-    return (
-      this.currentUser.user_option.send_shortcut !== SEND_SHORTCUT_META_ENTER &&
-      !shiftKey
-    );
   }
 
   #editOrReplyToLastMessage(reply) {
@@ -890,44 +775,24 @@ export default class ChatComposer extends Component {
               class="chat-composer__input-container"
               {{on "click" this.focusOrPromptLogin}}
             >
-              {{#if this.useRichEditor}}
-                {{#if this.richEditorComponent}}
-                  <this.richEditorComponent
-                    @change={{this.onInput}}
-                    @class="chat-composer__input"
-                    @disabled={{this.disabled}}
-                    @extensions={{this.richEditorExtensions}}
-                    @focusIn={{this.onTextareaFocusIn}}
-                    @focusOut={{this.onTextareaFocusOut}}
-                    @keymap={{this.richEditorKeymap}}
-                    @onSetup={{this.setupRichEditor}}
-                    @placeholder={{this.placeholder}}
-                    @toggleRichEditor={{this.toggleEditor}}
-                    @trailingParagraph={{false}}
-                    @value={{this.draft.message}}
-                  />
-                {{/if}}
-              {{else}}
-                <DTextarea
-                  autocapitalize="sentences"
-                  autocorrect="on"
-                  class="chat-composer__input"
-                  data-chat-composer-context={{this.context}}
-                  disabled={{this.disabled}}
-                  id={{this.composerId}}
-                  placeholder={{this.placeholder}}
-                  rows={{1}}
-                  type="text"
-                  value={{readonly this.draft.message}}
-                  {{preventScrollOnFocus}}
-                  {{forceScrollingElementPosition}}
-                  {{didInsert this.setupTextareaInteractor}}
-                  {{willDestroy this.teardownTextareaInteractor}}
-                  {{on "input" this.onInput}}
-                  {{on "keydown" this.onKeyDown}}
-                  {{on "focusin" this.onTextareaFocusIn}}
-                  {{on "focusout" this.onTextareaFocusOut}}
-                  {{didInsert this.setupAutocomplete}}
+              {{#if this.editorComponent}}
+                <this.editorComponent
+                  @change={{this.onInput}}
+                  @class="chat-composer__input"
+                  @disabled={{this.disabled}}
+                  @eventPrefix={{null}}
+                  @extensions={{this.richEditorExtensions}}
+                  @focusIn={{this.onTextareaFocusIn}}
+                  @focusOut={{this.onTextareaFocusOut}}
+                  @id={{this.composerId}}
+                  @keymap={{this.keymap}}
+                  @onSetup={{this.setupEditor}}
+                  @onSubmit={{this.onSend}}
+                  @placeholder={{this.placeholder}}
+                  @submitOnEnter={{this.submitOnEnter}}
+                  @toggleRichEditor={{this.toggleEditor}}
+                  @trailingParagraph={{false}}
+                  @value={{this.draft.message}}
                 />
               {{/if}}
             </div>

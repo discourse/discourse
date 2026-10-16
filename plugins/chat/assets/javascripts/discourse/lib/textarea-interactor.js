@@ -4,7 +4,6 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
-import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 
 // Markdown editor counterpart of RichEditorInteractor: the chat composer and
 // its services talk to either through this same surface.
@@ -14,19 +13,13 @@ export default class TextareaInteractor extends EmberObject {
 
   textManipulation;
 
-  constructor(owner, textarea) {
+  constructor(owner, textManipulation) {
     super(...arguments);
     setOwner(this, owner);
-    this.textarea = textarea;
-    this.element = textarea;
+    this.textManipulation = textManipulation;
+    this.textarea = textManipulation.textarea;
+    this.element = this.textarea;
 
-    this.textManipulation = new TextareaTextManipulation(owner, {
-      textarea,
-      // we don't need app events
-      eventPrefix: null,
-    });
-
-    // paste is using old native ember events defined on composer
     this.textarea.addEventListener("paste", this.textManipulation.paste);
     registerDestructor(this, (instance) => instance.teardown());
   }

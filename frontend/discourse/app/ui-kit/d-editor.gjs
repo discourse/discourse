@@ -680,8 +680,10 @@ export default class DEditor extends Component {
             @keymap={{this.keymap}}
             @markdownOptions={{this.markdownOptions}}
             @onSetup={{this.setupEditor}}
+            @onSubmit={{@onSubmit}}
             @placeholder={{@placeholder}}
             @replaceToolbar={{this.replaceToolbar}}
+            @submitOnEnter={{@submitOnEnter}}
             @toggleRichEditor={{this.toggleRichEditor}}
             @topicId={{@topicId}}
             @value={{this.value}}

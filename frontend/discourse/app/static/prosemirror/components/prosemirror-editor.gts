@@ -107,6 +107,13 @@ interface ProsemirrorEditorSignature {
     toggleRichEditor?: () => void;
     /** Markdown cook options from the host editor, exposed to extensions. */
     markdownOptions?: MarkdownOptions;
+    /** Called to submit, on Mod+Enter and, with `submitOnEnter`, on Enter. */
+    onSubmit?: () => void;
+    /**
+     * Whether Enter in a plain paragraph submits. Without it, Enter there adds
+     * a line break; lists, quotes and code keep their own Enter either way.
+     */
+    submitOnEnter?: boolean;
     /** Set to false to stop padding the document with a trailing empty paragraph. */
     trailingParagraph?: boolean;
   };
@@ -240,6 +247,41 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     return result;
   }
 
+  get submitKeymap(): Record<string, Command> {
+    const submit: Command = (state, dispatch) => {
+      if (dispatch) {
+        this.args.onSubmit?.();
+      }
+      return true;
+    };
+
+    return {
+      "Mod-Enter": submit,
+      "Ctrl-Enter": submit,
+      Enter: (state, dispatch) => {
+        const { $from } = state.selection;
+        if (
+          $from.depth !== 1 ||
+          $from.parent.type !== state.schema.nodes.paragraph
+        ) {
+          return false;
+        }
+
+        if (this.args.submitOnEnter) {
+          return submit(state, dispatch);
+        }
+
+        // a line break, like a newline in the textarea editor
+        dispatch?.(
+          state.tr
+            .replaceSelectionWith(state.schema.nodes.hard_break.create())
+            .scrollIntoView()
+        );
+        return true;
+      },
+    };
+  }
+
   @action
   handleAsyncPlugin(plugin: Plugin): void {
     const state = this.view.state.reconfigure({
@@ -254,6 +296,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     const params = this.pluginParams;
 
     const plugins = [
+      // first, so submitting wins over extension keymaps
+      ...(this.args.onSubmit ? [keymap(this.submitKeymap)] : []),
       buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
