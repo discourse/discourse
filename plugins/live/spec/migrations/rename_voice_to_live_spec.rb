@@ -38,6 +38,52 @@ RSpec.describe RenameVoiceToLive do
     ).to be_present
   end
 
+  it "renames the tables' triggers and the functions they call" do
+    DB.exec(<<~SQL)
+      CREATE FUNCTION raise_voice_sessions_readonly() RETURNS trigger AS $$
+      BEGIN RETURN NEW; END
+      $$ LANGUAGE plpgsql;
+      CREATE TRIGGER voice_sessions_readonly BEFORE UPDATE ON voice_sessions
+      FOR EACH ROW EXECUTE FUNCTION raise_voice_sessions_readonly();
+    SQL
+
+    described_class.new.up
+
+    expect(
+      DB.query_single(
+        "SELECT t.tgname, p.proname FROM pg_trigger t JOIN pg_proc p ON p.oid = t.tgfoid WHERE t.tgrelid = 'live_sessions'::regclass AND NOT t.tgisinternal",
+      ),
+    ).to eq(%w[live_sessions_readonly raise_live_sessions_readonly])
+  end
+
+  it "leaves objects and settings of unrelated tables alone" do
+    DB.exec(<<~SQL)
+      CREATE TABLE voice_extras (id serial PRIMARY KEY, total integer CONSTRAINT voice_extras_total_check CHECK (total > 0));
+      CREATE INDEX idx_voice_extras_total ON voice_extras (total);
+      CREATE FUNCTION voice_extras_sum(a integer, b integer) RETURNS integer AS 'SELECT a + b' LANGUAGE sql;
+      INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
+      VALUES ('voice_extras_enabled', #{SiteSettings::TypeSupervisor.types[:bool]}, 't', NOW(), NOW());
+    SQL
+
+    described_class.new.up
+
+    expect(relation_names("voice_extras")).to contain_exactly(
+      "voice_extras",
+      "voice_extras_pkey",
+      "voice_extras_id_seq",
+      "idx_voice_extras_total",
+    )
+    expect(
+      DB.query_single("SELECT conname FROM pg_constraint WHERE conname ~ 'extras_total_check'"),
+    ).to eq(["voice_extras_total_check"])
+    expect(DB.query_single("SELECT proname FROM pg_proc WHERE proname ~ 'extras_sum'")).to eq(
+      ["voice_extras_sum"],
+    )
+    expect(DB.query_single("SELECT name FROM site_settings WHERE name ~ 'extras_enabled'")).to eq(
+      ["voice_extras_enabled"],
+    )
+  end
+
   it "renames site settings without clobbering ones already using the new name" do
     insert_setting = ->(name, value) do
       DB.exec(
