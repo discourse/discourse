@@ -81,7 +81,7 @@ RSpec.describe "Filter review queue by workflow" do
     reviewable = ReviewablePost.pending.find_by!(target: post)
     Fabricate(:reviewable_flagged_post)
 
-    review_index_page.visit
+    route_to("/review")
     review_index_page.expand_filters
     review_index_page.filter_by_type("Workflows").filter_by_reason(workflow_name)
     review_index_page.submit_filters

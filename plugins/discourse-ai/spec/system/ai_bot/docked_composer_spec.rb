@@ -109,7 +109,7 @@ RSpec.describe "AI Bot docked composer" do
     expect(page).to have_css(".ai-bot-docked-composer")
     expect(page).to have_css("body.has-ai-bot-docked-composer")
 
-    topic_page.visit_topic(regular_topic)
+    route_to(regular_topic.url)
 
     expect(page).to have_no_css(".ai-bot-docked-composer")
     expect(page).to have_no_css("body.has-ai-bot-docked-composer")
