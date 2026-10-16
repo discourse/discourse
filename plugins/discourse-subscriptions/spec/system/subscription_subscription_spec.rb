@@ -67,8 +67,7 @@ describe "Subscription products" do
     active_subscription_row =
       admin_subscriptions_page.visit_subscriptions.subscription_row("sub_10z")
     expect(active_subscription_row).to have_text("active")
-    canceled_subscription_row =
-      admin_subscriptions_page.visit_subscriptions.subscription_row("sub_32b")
+    canceled_subscription_row = admin_subscriptions_page.subscription_row("sub_32b")
     expect(canceled_subscription_row).to have_text("canceled")
   end
 

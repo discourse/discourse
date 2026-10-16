@@ -39,7 +39,7 @@ RSpec.describe "Discourse Workflows" do
 
     editor_page.close_node_configurator
 
-    workflows_page.visit_index
+    route_to("/admin/plugins/discourse-workflows")
     expect(workflows_page).to have_workflow("My workflow")
   end
 
@@ -78,7 +78,7 @@ RSpec.describe "Discourse Workflows" do
     editor_page.click_add_node
     editor_page.select_node_type("condition:if")
 
-    workflows_page.visit_index
+    route_to("/admin/plugins/discourse-workflows")
     expect(workflows_page).to have_workflow("My workflow")
   end
 
@@ -227,7 +227,7 @@ RSpec.describe "Discourse Workflows" do
       expect(editor_page).to have_header_tag("urgent")
       expect(billing_workflow.reload.tags.map(&:name)).to eq(%w[billing urgent])
 
-      workflows_page.visit_index
+      route_to("/admin/plugins/discourse-workflows")
       expect(workflows_page).to have_workflow_tag(billing_workflow, "urgent")
     end
   end

@@ -84,7 +84,7 @@ RSpec.describe "List channels | sidebar" do
           ".channel-#{channel_2.id}",
         )
 
-        drawer_page.visit_index
+        chat.open_from_header
         drawer_page.click_channels
 
         expect(drawer_page).to have_channel_at_position(channel_2, 1)

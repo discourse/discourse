@@ -238,7 +238,7 @@ RSpec.describe "Drawer" do
 
       expect(page).to have_content("onlyonce", count: 1)
 
-      chat_page.visit_channel(channel_2)
+      chat_page.visit_channel(channel_2, in_app: true)
 
       expect(page).to have_content("onlyonce", count: 0)
     end

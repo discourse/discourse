@@ -161,7 +161,7 @@ describe "Admin Dashboard Redesign | Search section" do
       "term" => "ruby",
     )
 
-    dashboard.visit
+    route_to("/admin")
     dashboard.select_preset("last_3_months")
 
     expect(dashboard.search).to have_headline(
@@ -301,7 +301,9 @@ describe "Admin Dashboard Redesign | Search section" do
       "term" => "ruby",
     )
 
-    dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
+    route_to(
+      "/admin?#{{ range: "custom", start_date: "2026-04-25", end_date: "2026-04-25" }.to_query}",
+    )
 
     expect(search).to have_headline(
       "The total number of searches has increased in the selected period",

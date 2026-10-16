@@ -88,7 +88,7 @@ describe "Admin Flags Page" do
     )
 
     # update flag
-    admin_flags_page.visit.click_edit_flag("custom_flag1")
+    admin_flags_page.click_edit_flag("custom_flag1")
 
     expect(d_page_header).to be_hidden
 
@@ -99,7 +99,7 @@ describe "Admin Flags Page" do
     admin_flag_form_page.fill_in_name("flag edited").click_save
 
     # delete flag
-    admin_flags_page.visit.click_delete_flag("custom_flag3").confirm_delete
+    admin_flags_page.click_delete_flag("custom_flag3").confirm_delete
 
     expect(admin_flags_page).to have_no_flag("custom_flag3")
 
@@ -180,7 +180,7 @@ describe "Admin Flags Page" do
     admin_flags_page.visit.click_edit_flag("custom_colliding")
     admin_flag_form_page.fill_in_description("edited description").click_save
 
-    admin_flags_page.visit.click_delete_flag("custom_colliding").confirm_delete
+    admin_flags_page.click_delete_flag("custom_colliding").confirm_delete
 
     expect(admin_flags_page).to have_no_flag("custom_colliding")
   end
@@ -196,7 +196,7 @@ describe "Admin Flags Page" do
     expect(admin_flags_page).to have_disabled_item_action("delete")
     admin_flags_page.toggle_flag_menu("notify_moderators")
 
-    admin_flags_page.visit.toggle_flag_menu("off_topic")
+    admin_flags_page.toggle_flag_menu("off_topic")
     expect(admin_flags_page).to have_no_item_action("move-up")
   end
 

@@ -147,7 +147,7 @@ RSpec.describe "Dismissing New" do
 
       expect(topic_list).to have_no_topics
 
-      visit("/new?subset=topics")
+      route_to("/new?subset=topics")
       expect(topic_list).to have_topic(new_topic)
     end
 
@@ -162,7 +162,7 @@ RSpec.describe "Dismissing New" do
 
       expect(topic_list).to have_no_topics
 
-      visit("/new?subset=replies")
+      route_to("/new?subset=replies")
       expect(topic_list).to have_topic(post1.topic)
     end
 
@@ -193,7 +193,7 @@ RSpec.describe "Dismissing New" do
 
         expect(topic_list).to have_no_topics
 
-        visit("/new")
+        route_to("/new")
         expect(topic_list).to have_topic(post1.topic)
       end
 

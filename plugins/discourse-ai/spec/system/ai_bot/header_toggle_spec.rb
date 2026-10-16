@@ -57,7 +57,7 @@ RSpec.describe "AI Bot - Header Toggle" do
     expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     expect(page).to have_current_path("/hot")
 
-    visit "/categories"
+    route_to "/categories"
     expect(page).to have_current_path("/categories")
 
     header.click_bot_button

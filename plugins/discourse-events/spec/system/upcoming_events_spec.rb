@@ -582,7 +582,6 @@ describe "Upcoming Events" do
                 "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
             )
 
-            upcoming_events.visit
             visit("/upcoming-events/week/2025/6/2")
 
             expect(upcoming_events).to have_event_height("This is a short meeting", 47)
@@ -607,7 +606,6 @@ describe "Upcoming Events" do
               raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
             )
 
-            upcoming_events.visit
             visit("/upcoming-events/week/2025/6/2")
 
             expect(upcoming_events).to have_event_height("This is a short meeting", 47)

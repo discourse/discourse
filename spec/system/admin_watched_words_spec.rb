@@ -29,7 +29,7 @@ describe "Admin Watched Words" do
     ww_page.visit
     expect(ww_page).not_to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
 
-    ww_page.visit(action: "replace")
+    route_to("/admin/customize/watched_words/action/replace")
     expect(ww_page).to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
   end
 

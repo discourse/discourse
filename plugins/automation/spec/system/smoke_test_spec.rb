@@ -38,7 +38,7 @@ describe "DiscourseAutomation | smoke test" do
 
       automation = Fabricate(:automation, name: "automation-test")
 
-      visit("/admin/plugins/automation")
+      route_to("/admin/plugins/automation")
       # find the row of "automation test" then click on trash icon
       find(".automations__name", text: "automation-test")
         .find(:xpath, "..")

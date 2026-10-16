@@ -19,7 +19,7 @@ describe "Tags intersection" do
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
-    visit("/")
+    route_to("/")
 
     # Confirm that frontend transitions work as well,
     # even though UI doesn't support that

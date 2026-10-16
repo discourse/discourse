@@ -168,7 +168,7 @@ RSpec.describe "Nested context view" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_pinned_post(root_reply)
 
-      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[2].post_number)
       expect(nested_view).to have_context_view
       expect(nested_view).to have_no_pinned_post(root_reply)
     end

@@ -547,7 +547,7 @@ describe "Post menu" do
       expect(topic_page).to have_no_post_action_button(pm_post2, :read)
 
       # don't show on regular posts
-      topic_page.visit_topic(post.topic)
+      route_to(post.topic.url)
       expect(topic_page).to have_no_post_action_button(post, :read)
       expect(topic_page).to have_no_post_action_button(post2, :read)
     end

@@ -87,15 +87,15 @@ describe "Welcome banner" do
       topic = Fabricate(:topic)
       visit "/"
       expect(banner).to be_visible
-      visit "/latest"
+      route_to "/latest"
       expect(banner).to be_visible
-      visit "/new"
+      route_to "/new"
       expect(banner).to be_visible
-      visit "/hot"
+      route_to "/hot"
       expect(banner).to be_visible
-      visit "/tags"
+      route_to "/tags"
       expect(banner).to be_hidden
-      visit topic.relative_url
+      route_to topic.relative_url
       expect(banner).to be_hidden
     end
 
@@ -227,10 +227,10 @@ describe "Welcome banner" do
           visit "/"
           expect(banner).to be_visible
 
-          visit "/u/#{current_user.username}/preferences/emails"
+          route_to "/u/#{current_user.username}/preferences/emails"
           expect(banner).to be_visible
 
-          visit "/my/messages"
+          route_to "/my/messages"
           expect(banner).to be_visible
         end
 
@@ -254,10 +254,10 @@ describe "Welcome banner" do
           visit "/admin"
           expect(banner).to be_hidden
 
-          visit "/admin/config/site-admin"
+          route_to "/admin/config/site-admin"
           expect(banner).to be_hidden
 
-          visit "/admin/customize"
+          route_to "/admin/customize"
           expect(banner).to be_hidden
         end
       end
@@ -269,7 +269,7 @@ describe "Welcome banner" do
         visit "/filter?q=tag%3Ain-progress"
         expect(banner).to be_visible
 
-        visit "/about"
+        route_to "/about"
         expect(banner).to be_hidden
       end
 
@@ -279,12 +279,16 @@ describe "Welcome banner" do
         SiteSetting
           .top_menu
           .split("|")
-          .each do |route|
-            visit "/#{route}"
+          .each_with_index do |route, index|
+            if index.zero?
+              visit "/#{route}"
+            else
+              route_to "/#{route}"
+            end
             expect(banner).to be_visible
           end
 
-        visit "/about"
+        route_to "/about"
         expect(banner).to be_hidden
       end
 

@@ -33,7 +33,7 @@ describe "Edit Category Tags" do
 
     category_page.save_settings
 
-    visit "/new-topic?category_id=#{category.id}"
+    route_to "/new-topic?category_id=#{category.id}"
     composer.fill_title("Test topic with restricted tags")
 
     tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")

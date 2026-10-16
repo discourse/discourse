@@ -343,7 +343,7 @@ describe "Topic bulk select" do
       sign_in(user)
       visit("/latest")
       topic = topics.third
-      visit("/t/#{topic.slug}/#{topic.id}")
+      route_to("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
 
@@ -361,7 +361,7 @@ describe "Topic bulk select" do
 
       # The bulk close posts a small action, which no longer marks the topic
       # unread, so the watching user does not get a new post notification badge.
-      visit("/latest")
+      route_to("/latest")
       expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
@@ -381,7 +381,7 @@ describe "Topic bulk select" do
       expect(topic_list).to have_closed_status(topics.first)
 
       # Check that the topic now has the message
-      visit("/t/#{topic.slug}/#{topic.id}")
+      route_to("/t/#{topic.slug}/#{topic.id}")
       expect(topic_page).to have_content("None of these are useful")
     end
 
@@ -404,12 +404,12 @@ describe "Topic bulk select" do
 
       # watch topic and add a reply so we have something in /new?subset=replies
       topic = topics.first
-      visit("/t/#{topic.slug}/#{topic.id}")
+      route_to("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/new?subset=replies")
+      route_to("/new?subset=replies")
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])
@@ -463,7 +463,7 @@ describe "Topic bulk select" do
       open_bulk_actions_modal([private_message_1], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/archive")
+      route_to("/u/#{admin.username}/messages/archive")
       expect(page).to have_content(private_message_1.title)
       expect(UserArchivedMessage.exists?(user_id: admin.id, topic_id: private_message_1.id)).to eq(
         true,
@@ -478,7 +478,7 @@ describe "Topic bulk select" do
       open_bulk_actions_modal([private_message_1], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages")
+      route_to("/u/#{admin.username}/messages")
       expect(page).to have_content(private_message_1.title)
     end
 
@@ -489,7 +489,7 @@ describe "Topic bulk select" do
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
+      route_to("/u/#{admin.username}/messages/group/#{group.name}/archive")
       expect(page).to have_content(group_private_message.title)
     end
 
@@ -537,7 +537,7 @@ describe "Topic bulk select" do
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/g/#{group.name}/messages/archive")
+      route_to("/g/#{group.name}/messages/archive")
       expect(page).to have_content(group_private_message.title)
     end
 
@@ -549,7 +549,7 @@ describe "Topic bulk select" do
       open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/group/#{group.name}")
+      route_to("/u/#{admin.username}/messages/group/#{group.name}")
       expect(page).to have_content(group_private_message.title)
     end
 

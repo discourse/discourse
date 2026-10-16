@@ -116,12 +116,12 @@ RSpec.describe "Mentions warnings" do
         expect(page.find(".chat-mention-warnings-list__simple")).to be_present
 
         # Channel 2 doesn't have a draft so it should disappear
-        chat_page.visit_channel(channel_2)
+        chat_page.visit_channel(channel_2, in_app: true)
         expect(page).to have_no_css(".chat-mention-warnings")
 
         # Navigating back to channel 1 will make the mention warnings appear b/c the draft
         # will trigger the @all mention warning again
-        chat_page.visit_channel(channel_1)
+        chat_page.visit_channel(channel_1, in_app: true)
         expect(page).to have_css(".chat-mention-warnings")
         expect(page.find(".chat-mention-warnings-list__simple")).to be_present
       end

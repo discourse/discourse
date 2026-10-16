@@ -281,7 +281,7 @@ describe "Simplified Category Creation" do
       category_page.visit_general(private_category)
       expect(page).to have_css(".group-chooser")
 
-      category_page.visit_new_category
+      route_to("/new-category/setup")
       expect(page).to have_no_css(".group-chooser")
     end
 

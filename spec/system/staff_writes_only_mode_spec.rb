@@ -22,7 +22,7 @@ describe "Staff writes only mode" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
       expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled"))
 
-      page.visit "/new-topic"
+      route_to "/new-topic"
 
       expect(composer).to be_opened
 

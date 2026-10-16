@@ -251,17 +251,17 @@ describe "Creating Invites" do
       create_invite_modal.save_button.click
       create_invite_modal.close
 
-      user_invited_pending_page.visit(user)
+      route_to("/u/#{user.username_lower}/invited/pending")
 
       expect(user_invited_pending_page.latest_invite).to have_group(group)
 
-      group_page.visit(group)
+      route_to("/g/#{group.name}")
       group_page.invite_members
       display_advanced_options
       create_invite_modal.save_button.click
       create_invite_modal.close
 
-      user_invited_pending_page.visit(user)
+      route_to("/u/#{user.username_lower}/invited/pending")
 
       expect(user_invited_pending_page.latest_invite).to have_group(group)
     end

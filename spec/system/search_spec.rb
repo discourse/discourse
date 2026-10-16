@@ -33,7 +33,7 @@ describe "Search" do
       # read sort order is set to 5
       expect(search_page.sort_order.value).to eq("5")
 
-      visit("/search?q=test%20l")
+      route_to("/search?q=test%20l")
 
       expect(search_page.search_input.value).to eq("test")
       # latest sort order is set to 1
@@ -200,11 +200,11 @@ describe "Search" do
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/search")
+        route_to("/search")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
-        visit("/signup")
+        route_to("/signup")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
@@ -322,8 +322,12 @@ describe "Search" do
     it "handles different PM search filters correctly" do
       pm_filters = %w[in:messages in:personal in:personal-direct in:all-pms]
 
-      pm_filters.each do |filter|
-        visit("/search?q=searchable%20#{filter}")
+      pm_filters.each_with_index do |filter, index|
+        if index.zero?
+          visit("/search?q=searchable%20#{filter}")
+        else
+          route_to("/search?q=searchable%20#{filter}")
+        end
         if page.has_css?(".fps-result", minimum: 1)
           expect(page).to have_css(".fps-result .topic-status .d-icon-envelope", count: 0),
           "Expected no PM icons for filter: #{filter}"

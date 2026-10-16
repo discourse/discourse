@@ -374,7 +374,7 @@ RSpec.describe "AI Bot - Homepage" do
       topic_page.visit_topic(pm)
       expect(ai_pm_homepage).to have_new_question_button
 
-      ai_pm_homepage.visit
+      route_to("/discourse-ai/ai-bot/conversations")
       expect(ai_pm_homepage).to have_new_question_button
     end
 
@@ -471,8 +471,7 @@ RSpec.describe "AI Bot - Homepage" do
       header_dropdown.open
       expect(ai_pm_homepage).to have_new_question_button
 
-      topic_page.visit_topic(pm)
-      header_dropdown.open
+      route_to(pm.url)
       ai_pm_homepage.click_new_question_button
 
       # Hamburger sidebar is closed
