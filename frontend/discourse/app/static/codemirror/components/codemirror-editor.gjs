@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { isHTMLSafe } from "@ember/template";
 import {
   autocompletion,
   closeCompletion,
@@ -28,7 +29,7 @@ import {
   placeholder,
   ViewPlugin,
 } from "@codemirror/view";
-import { loadCodemirrorLanguage } from "discourse/lib/codemirror-languages";
+import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import { buildCmParams } from "../build-extensions.ts";
@@ -79,22 +80,20 @@ export default class CodemirrorEditor extends Component {
     return bindings;
   }
 
-  /**
-   * A placeholder is plain text unless the caller opts in, in which case it is
-   * markup the caller is responsible for having sanitised.
-   */
+  /** Markup only when the caller has marked it trusted, otherwise plain text. */
   get #placeholderContent() {
-    if (!this.args.htmlPlaceholder) {
-      return this.args.placeholder;
+    const content = this.args.placeholder;
+    if (!isHTMLSafe(content)) {
+      return content;
     }
 
     const element = document.createElement("div");
-    element.innerHTML = this.args.placeholder;
+    element.innerHTML = content.toString();
     return element;
   }
 
   get #placeholderExtension() {
-    if (!this.args.placeholder) {
+    if (!this.args.placeholder?.toString()) {
       return [];
     }
 
@@ -330,7 +329,7 @@ export default class CodemirrorEditor extends Component {
   @bind
   async updateLanguage() {
     const name = this.args.language;
-    const support = name ? await loadCodemirrorLanguage(name) : null;
+    const support = name ? await loadCodeEditorLanguage(name) : null;
 
     // The editor can be torn down, or the language changed again, while the
     // module is loading.

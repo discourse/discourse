@@ -143,9 +143,13 @@ export default class AdminThemeEditor extends Component {
         "  --mytheme-tertiary-or-highlight: #{dark-light-choose($tertiary, $highlight)};\n" +
         "}";
 
-      return i18n("admin.customize.theme.color_definitions.placeholder", {
-        example: isDocumentRTL() ? `<div dir="ltr">${example}</div>` : example,
-      });
+      return trustHTML(
+        i18n("admin.customize.theme.color_definitions.placeholder", {
+          example: isDocumentRTL()
+            ? `<div dir="ltr">${example}</div>`
+            : example,
+        })
+      );
     }
     return "";
   }
@@ -287,12 +291,11 @@ export default class AdminThemeEditor extends Component {
       </div>
 
       <CodeEditor
-        @htmlPlaceholder={{true}}
         @language={{this.activeSectionMode}}
         @lineWarnings={{this.colorVariableWarnings}}
         @onChange={{fn (mut this.activeSection)}}
+        @onSave={{this.save}}
         @placeholder={{this.placeholder}}
-        @save={{this.save}}
         @value={{this.activeSection}}
       />
     </div>

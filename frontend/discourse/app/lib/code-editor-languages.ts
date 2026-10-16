@@ -5,19 +5,22 @@ import type { Extension } from "@codemirror/state";
 /**
  * Named shortcuts for a code editor's language support.
  *
- * A shortcut resolves to CodeMirror extensions, so it can carry anything a
- * language needs — highlighting, indentation, its own completions — while
+ * A shortcut resolves to editor extensions, so it can carry anything a
+ * language needs (highlighting, indentation, its own completions) while
  * callers stay free to append more through the editor's `extensions` argument.
  *
  * The built-in set loads on demand; plugins add their own with
- * {@link registerCodemirrorLanguage}.
+ * {@link registerCodeEditorLanguage}.
+ *
+ * EXPERIMENTAL: the parameters builders receive expose the underlying editor
+ * library, and may change without warning.
  */
 
 /**
  * What every extension builder receives. Plugins cannot import CodeMirror
  * themselves, so the modules arrive here instead.
  */
-export interface CodemirrorParams {
+export interface CodeEditorParams {
   /** The `@codemirror/autocomplete` module. */
   cmAutocomplete: typeof import("@codemirror/autocomplete");
   /** The `@codemirror/language` module. */
@@ -28,7 +31,11 @@ export interface CodemirrorParams {
   cmView: typeof import("@codemirror/view");
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
-  /** Helpers for building expression editors on top of the base editor. */
+  /**
+   * Helpers for the workflow expression editors.
+   *
+   * @internal Not part of the public contract; it will move out of here.
+   */
   utils: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
 }
 
@@ -36,25 +43,25 @@ export interface CodemirrorParams {
  * Builds the extensions an editor's `extensions` argument adds on top of the
  * language.
  */
-export type CodemirrorExtensionBuilder = (
-  params: CodemirrorParams
+export type CodeEditorExtensionBuilder = (
+  params: CodeEditorParams
 ) => readonly Extension[];
 
 /**
  * Builds a language's extensions. `options` is whatever the editor was given
  * as `languageOptions`, so a language decides its own configuration shape.
  */
-export type CodemirrorLanguageBuilder<Options extends object = object> = (
-  params: CodemirrorParams,
+export type CodeEditorLanguageBuilder<Options extends object = object> = (
+  params: CodeEditorParams,
   options?: Options
 ) => Extension;
 
 /** Resolves to a module whose default export builds the language. */
-export type CodemirrorLanguageLoader = () => Promise<{
-  default: CodemirrorLanguageBuilder;
+export type CodeEditorLanguageLoader = () => Promise<{
+  default: CodeEditorLanguageBuilder;
 }>;
 
-const BUILT_IN: Record<string, CodemirrorLanguageLoader> = {
+const BUILT_IN: Record<string, CodeEditorLanguageLoader> = {
   css: () => import("discourse/static/codemirror/languages/css"),
   html: () => import("discourse/static/codemirror/languages/html"),
   javascript: () => import("discourse/static/codemirror/languages/javascript"),
@@ -64,7 +71,7 @@ const BUILT_IN: Record<string, CodemirrorLanguageLoader> = {
   yaml: () => import("discourse/static/codemirror/languages/yaml"),
 };
 
-const registered = new Map<string, CodemirrorLanguageLoader>();
+const registered = new Map<string, CodeEditorLanguageLoader>();
 
 /**
  * Registers a language shortcut.
@@ -72,16 +79,16 @@ const registered = new Map<string, CodemirrorLanguageLoader>();
  * @param name - identifier passed to an editor's `language` argument
  * @param loader - resolves to a module whose default export builds the extensions
  */
-export function registerCodemirrorLanguage(
+export function registerCodeEditorLanguage(
   name: string,
-  loader: CodemirrorLanguageLoader
+  loader: CodeEditorLanguageLoader
 ) {
   // Taking a name that already resolves is allowed — a plugin may have a
   // better grammar for it — but it is worth saying so, since two plugins
   // claiming one name would otherwise silently come down to load order.
   if (registered.has(name) || BUILT_IN[name]) {
-    warn(`The CodeMirror language "${name}" was already registered.`, {
-      id: "discourse.codemirror-language-override",
+    warn(`The code editor language "${name}" was already registered.`, {
+      id: "discourse.code-editor-language-override",
     });
   }
 
@@ -94,13 +101,13 @@ export function registerCodemirrorLanguage(
  * @returns null when the name is unknown, so an editor can fall back to plain
  *   text
  */
-export async function loadCodemirrorLanguage(
+export async function loadCodeEditorLanguage(
   name: string
-): Promise<CodemirrorLanguageBuilder | null> {
+): Promise<CodeEditorLanguageBuilder | null> {
   const loader = registered.get(name) || BUILT_IN[name];
   if (!loader) {
-    warn(`Unknown CodeMirror language "${name}".`, {
-      id: "discourse.codemirror-language-missing",
+    warn(`Unknown code editor language "${name}".`, {
+      id: "discourse.code-editor-language-missing",
     });
     return null;
   }
@@ -108,10 +115,10 @@ export async function loadCodemirrorLanguage(
   return (await waitForPromise(loader())).default;
 }
 
-export function codemirrorLanguageNames(): string[] {
+export function codeEditorLanguageNames(): string[] {
   return [...new Set([...Object.keys(BUILT_IN), ...registered.keys()])].sort();
 }
 
-export function clearRegisteredCodemirrorLanguages() {
+export function clearRegisteredCodeEditorLanguages() {
   registered.clear();
 }

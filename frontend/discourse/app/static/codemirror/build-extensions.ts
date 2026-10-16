@@ -3,10 +3,10 @@ import * as cmLanguage from "@codemirror/language";
 import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as lezerHighlight from "@lezer/highlight";
-import type { CodemirrorParams } from "discourse/lib/codemirror-languages";
+import type { CodeEditorParams } from "discourse/lib/code-editor-languages";
 import { expressionUtils } from "./expression-utils.js";
 
-export function buildCmParams(): CodemirrorParams {
+export function buildCmParams(): CodeEditorParams {
   return {
     cmAutocomplete,
     cmLanguage,
