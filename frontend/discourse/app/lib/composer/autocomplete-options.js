@@ -18,7 +18,7 @@ import { i18n } from "discourse-i18n";
 
 const EMOJI_TERM_REGEXP = new RegExp(
   `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
-  "gi"
+  "i"
 );
 
 // typed emoticons like `:-p` or `:)` are not emoji searches
@@ -111,7 +111,6 @@ export function emojiAutocompleteOptions({
     key: EmojiAutocompleteResults.TRIGGER_KEY,
 
     onKeyUp: (text, caretPosition) => {
-      EMOJI_TERM_REGEXP.lastIndex = 0;
       const match = EMOJI_TERM_REGEXP.exec(text.substring(0, caretPosition));
       if (match?.[1]) {
         return [match[1]];

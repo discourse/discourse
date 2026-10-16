@@ -25,9 +25,8 @@ export function toggledCompositionMode(user) {
  *
  * @param {import("discourse/models/user").default} user
  * @param {number} mode a `USER_OPTION_COMPOSITION_MODES` value
- * @returns {unknown} the pending save timer, for `cancel`
  */
 export function setCompositionMode(user, mode) {
   user.set("user_option.composition_mode", mode);
-  return discourseDebounce(user, save, user, SAVE_DELAY);
+  discourseDebounce(user, save, user, SAVE_DELAY);
 }

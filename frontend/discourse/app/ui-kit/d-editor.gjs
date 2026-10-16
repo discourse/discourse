@@ -4,7 +4,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel, schedule, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isNone, isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
@@ -333,7 +333,7 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    this._debounceSaveRichEditorPreference = setCompositionMode(
+    setCompositionMode(
       this.currentUser,
       this.isRichEditorEnabled
         ? USER_OPTION_COMPOSITION_MODES.rich
@@ -479,8 +479,6 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
-    cancel(this._debounceSaveRichEditorPreference);
-
     this._cachedCookFunction = null;
   }
 
