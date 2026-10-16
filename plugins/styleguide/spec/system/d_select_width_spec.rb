@@ -32,7 +32,7 @@ describe "UiKit | DSelect overlay widths" do
 
     trigger = width_of("[data-identifier='sg-grouped'][data-trigger]")
     content = width_of("[data-identifier='sg-grouped'][data-content]")
-    panel = width_of("#{combobox.in_panel(".d-combobox__panel")}")
+    panel = width_of("#{combobox.in_panel(".d-select__panel")}")
     viewport = width_of("#{combobox.in_panel(".d-virtual-list")}")
     listbox = width_of("#{combobox.in_panel("[role=listbox]")}")
     option = width_of("#{combobox.option_selector}")

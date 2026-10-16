@@ -113,12 +113,12 @@ module(
         });
 
         await render(<template><Host /></template>);
-        await click(".d-combobox__trigger");
+        await click(".d-select__trigger");
 
         assert.dom("[role='listbox']").exists("the menu is open");
         assert.strictEqual(
           element,
-          find(".d-combobox__trigger"),
+          find(".d-select__trigger"),
           "the element is the trigger, not the panel"
         );
       });
@@ -152,7 +152,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
         .dom("[role='listbox']")
@@ -342,8 +342,8 @@ module(
       await render(
         <template><DSelect @items={{ITEMS}} @variant="button" /></template>
       );
-      await click(".d-combobox__trigger");
-      await fillIn(".d-combobox__filter", "an");
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "an");
 
       assert.true(controls.length > 1, "the list was built more than once");
       assert.strictEqual(
@@ -464,7 +464,7 @@ function updateRow(name, work, { close = true } = {}) {
  */
 async function duringUpdate(gate, clicking, whilePending) {
   try {
-    await waitFor(".d-combobox__pending-icon", { timeout: 2000 });
+    await waitFor(".d-select__pending-icon", { timeout: 2000 });
     await whilePending?.();
   } finally {
     gate.resolve();
@@ -555,17 +555,17 @@ module(
       await click("[role='combobox']");
       await duringUpdate(gate, click(optionWithText("Suggest")), () => {
         assert.true(
-          find(".d-combobox__trigger").lastElementChild.classList.contains(
-            "d-combobox__pending-icon"
+          find(".d-select__trigger").lastElementChild.classList.contains(
+            "d-select__pending-icon"
           ),
           "the spinner takes the caret's place as the trigger's last child"
         );
-        assert.dom(".d-combobox__caret").doesNotExist("the caret is replaced");
+        assert.dom(".d-select__caret").doesNotExist("the caret is replaced");
         assert
-          .dom(".d-combobox__trigger .d-skeleton")
+          .dom(".d-select__trigger .d-skeleton")
           .exists("the value slot shows the loading skeleton");
         assert
-          .dom(".d-combobox__trigger")
+          .dom(".d-select__trigger")
           .hasAttribute("aria-busy", "true", "the trigger region is busy");
         assert
           .dom("input[role='combobox']")
@@ -578,12 +578,10 @@ module(
       assert
         .dom("input[role='combobox']")
         .hasValue("Banana", "the new value shows once the update ends");
-      assert.dom(".d-combobox__caret").exists("the caret is back");
+      assert.dom(".d-select__caret").exists("the caret is back");
+      assert.dom(".d-select__pending-icon").doesNotExist("the spinner is gone");
       assert
-        .dom(".d-combobox__pending-icon")
-        .doesNotExist("the spinner is gone");
-      assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .doesNotHaveAttribute("aria-busy", "the trigger is no longer busy");
       assert
         .dom("input[role='combobox']")
@@ -607,7 +605,7 @@ module(
             "focus stays in the input after the row closes the select"
           );
         assert
-          .dom(".d-combobox__presentation .d-skeleton")
+          .dom(".d-select__presentation .d-skeleton")
           .exists("the skeleton renders even though the input has focus");
       });
 
@@ -638,24 +636,24 @@ module(
           <AsyncUpdateHost @items={{items}} @value={{1}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await duringUpdate(gate, click(optionWithText("Suggest")), () => {
         assert
-          .dom(".d-combobox__trigger")
+          .dom(".d-select__trigger")
           .hasAttribute("aria-busy", "true", "the trigger is busy");
         assert.true(
-          find(".d-combobox__trigger")
+          find(".d-select__trigger")
             .getAttribute("aria-label")
             .includes("Apple"),
           "the accessible name still carries the held value"
         );
         assert
-          .dom(".d-combobox__trigger .d-skeleton")
+          .dom(".d-select__trigger .d-skeleton")
           .exists("the value slot shows the skeleton");
       });
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .includesText("Banana", "the new value shows once the update ends");
     });
 
@@ -676,19 +674,17 @@ module(
           />
         </template>
       );
-      assert.dom(".d-combobox__caret").doesNotExist("no caret to begin with");
+      assert.dom(".d-select__caret").doesNotExist("no caret to begin with");
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await duringUpdate(gate, click(optionWithText("Suggest")), () => {
         assert
-          .dom(".d-combobox__pending-icon")
+          .dom(".d-select__pending-icon")
           .exists("the spinner shows although the caret is hidden");
       });
 
-      assert
-        .dom(".d-combobox__pending-icon")
-        .doesNotExist("the spinner is gone");
-      assert.dom(".d-combobox__caret").doesNotExist("the caret stays hidden");
+      assert.dom(".d-select__pending-icon").doesNotExist("the spinner is gone");
+      assert.dom(".d-select__caret").doesNotExist("the caret stays hidden");
     });
 
     test("an async update turns a multi-select's chips into skeletons", async function (assert) {
@@ -708,10 +704,10 @@ module(
       await click("[role='combobox']");
       await duringUpdate(gate, click(optionWithText("Suggest")), () => {
         assert
-          .dom(".d-combobox__chip .d-skeleton")
+          .dom(".d-select__chip .d-skeleton")
           .exists("the chips show the loading skeleton");
         assert
-          .dom(".d-combobox__chip-list")
+          .dom(".d-select__chip-list")
           .doesNotIncludeText(
             "Apple",
             "the held chips are replaced while pending"
@@ -722,13 +718,13 @@ module(
       });
 
       assert
-        .dom(".d-combobox__chip-list")
+        .dom(".d-select__chip-list")
         .includesText(
           "Cherry pie",
           "the added chip shows once the update ends"
         );
       assert
-        .dom(".d-combobox__chip-list")
+        .dom(".d-select__chip-list")
         .includesText("Apple", "the held chips come back");
     });
 
@@ -746,7 +742,7 @@ module(
         await click("[role='combobox']");
         await duringUpdate(gate, click(optionWithText("Suggest")), () => {
           assert
-            .dom(".d-combobox__trigger .d-skeleton")
+            .dom(".d-select__trigger .d-skeleton")
             .exists(`the empty ${label} select shows the skeleton`);
           assert.strictEqual(
             find("input[role='combobox']").placeholder,
@@ -809,10 +805,10 @@ module(
           `${name} leaves the right placeholder`
         );
         assert
-          .dom(".d-combobox__trigger [role='alert']")
+          .dom(".d-select__trigger [role='alert']")
           .doesNotExist(`${name} shows no inline error in the trigger`);
         assert
-          .dom(".d-combobox__pending-icon")
+          .dom(".d-select__pending-icon")
           .doesNotExist(`${name} ends the pending state`);
       }
     });
@@ -831,7 +827,7 @@ module(
         pending.push(click("[role='combobox']"));
         await waitFor("[role='listbox']");
         assert
-          .dom(".d-combobox__pending-icon")
+          .dom(".d-select__pending-icon")
           .doesNotExist("reopening ends the pending state at once");
         pending.push(click(optionWithText("Cherry pie")));
       });
@@ -865,21 +861,21 @@ module(
           "keydown",
           "Backspace"
         );
-        await waitUntil(() => !find(".d-combobox__pending-icon"));
+        await waitUntil(() => !find(".d-select__pending-icon"));
         assert
-          .dom(".d-combobox__chip .d-skeleton")
+          .dom(".d-select__chip .d-skeleton")
           .doesNotExist("the chips are back at once");
         assert
-          .dom(".d-combobox__chip-list")
+          .dom(".d-select__chip-list")
           .includesText("Apple", "the kept chip shows");
         assert
-          .dom(".d-combobox__chip-list")
+          .dom(".d-select__chip-list")
           .doesNotIncludeText("Banana", "only the removal applied");
       });
       await pressing;
 
       assert
-        .dom(".d-combobox__chip-list")
+        .dom(".d-select__chip-list")
         .doesNotIncludeText("Cherry pie", "the late add never lands");
     });
 
@@ -1078,10 +1074,10 @@ module(
       await click("[role='combobox']");
       await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
         visibility.show = false;
-        await waitUntil(() => !find(".d-combobox__trigger"));
+        await waitUntil(() => !find(".d-select__trigger"));
       });
 
-      assert.dom(".d-combobox__trigger").doesNotExist("the select is gone");
+      assert.dom(".d-select__trigger").doesNotExist("the select is gone");
     });
   }
 );
@@ -1111,7 +1107,7 @@ module(
       assert
         .dom(optionWithText("Banana"))
         .hasClass("x-item-2", "a class can depend on the row's item")
-        .hasClass("d-combobox__option", "the core class stays")
+        .hasClass("d-select__option", "the core class stays")
         .hasClass("--selected", "the core state modifier stays");
     });
 
@@ -1251,16 +1247,16 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__group-header")
+        .dom(".d-select__group-header")
         .exists("a labeled group renders a header");
       assert
-        .dom(".d-combobox__divider")
+        .dom(".d-select__divider")
         .exists("an unlabeled boundary renders a divider");
       assert
-        .dom(".d-combobox__group-header.x-row")
+        .dom(".d-select__group-header.x-row")
         .doesNotExist("headers are not items");
       assert
-        .dom(".d-combobox__divider.x-row")
+        .dom(".d-select__divider.x-row")
         .doesNotExist("dividers are not items");
       assert
         .dom("[role='option'].x-row")
@@ -1367,7 +1363,7 @@ module(
           { count: 4 },
           "the action row and ordinary options get the class"
         );
-      assert.dom(".d-combobox__chip").exists("a held item renders a chip");
+      assert.dom(".d-select__chip").exists("a held item renders a chip");
       assert
         .dom(".x-row")
         .exists({ count: 4 }, "chips and the trigger get no option classes");
@@ -1392,7 +1388,7 @@ module(
       );
       assert.deepEqual(
         [...optionWithText("Banana").classList],
-        ["d-combobox__option"],
+        ["d-select__option"],
         "an empty result leaves only the core class"
       );
     });
@@ -1439,7 +1435,7 @@ module(
       await render(
         <template><DSelect @items={{items}} @variant="button" /></template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.deepEqual(setSizes(), ["2", "2"], "both kept rows say 2");
       assert.strictEqual(
@@ -1474,10 +1470,10 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
-        .dom("ul[role='listbox'] > .d-combobox__group-header")
+        .dom("ul[role='listbox'] > .d-select__group-header")
         .exists("a header leads the list");
       assert.deepEqual(setSizes(), ["2", "2"], "both kept rows say 2");
       assert.strictEqual(
@@ -1501,7 +1497,7 @@ module(
       await render(
         <template><DSelect @items={{items}} @variant="button" /></template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.deepEqual(
         setSizes(),
@@ -1532,7 +1528,7 @@ module(
           <DSelect @debounce={{false}} @load={{load}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.strictEqual(setSizes().length, 15, "fifteen of twenty rows show");
       assert.true(
@@ -1555,7 +1551,7 @@ module(
           <DSelect @items={{items}} @noneLabel="None" @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.deepEqual(setSizes(), ["4", "4", "4", "4"], "four options");
       assert.strictEqual(
@@ -1576,7 +1572,7 @@ module(
           <DSelect @items={{state.items}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert.strictEqual(
         countAnnounced(announce, "results_count", 3),
         1,
@@ -1615,7 +1611,7 @@ module(
           <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert.strictEqual(
         countAnnounced(announce, "results_count", 95),
         1,
@@ -1651,7 +1647,7 @@ module(
         </template>
       );
       probedEngine().setFilter("Pear");
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.deepEqual(setSizes(), ["1"], "the create row sizes its set");
       assert.strictEqual(
@@ -1684,11 +1680,11 @@ module(
           <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       const engine = probedEngine();
 
       const hasFrontier = () =>
-        release && find("ul[role='listbox'] .d-combobox__skeleton");
+        release && find("ul[role='listbox'] .d-select__skeleton");
       for (let i = 0; i < 3; i++) {
         release = undefined;
         assert.true(
@@ -1824,7 +1820,7 @@ function numberedRows(count) {
 module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
   setupRenderingTest(hooks);
 
-  const QUERY = ".d-combobox__trigger [role='combobox']";
+  const QUERY = ".d-select__trigger [role='combobox']";
 
   function optionNames() {
     return [
@@ -1878,7 +1874,7 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
       "the original source was asked for its first page again"
     );
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .includesText("Suggested ten", "the picked suggestion keeps its name");
   });
 
@@ -1929,7 +1925,7 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
         <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
     size = 40;
     probedEngine().control.reload();
     await settled();
@@ -1959,11 +1955,11 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
 
     const picked = click(optionWithText("Suggest tags"));
     await waitUntil(() => release);
-    await waitFor(".d-combobox__listbox--loading .d-combobox__skeleton");
+    await waitFor(".d-select__listbox--loading .d-select__skeleton");
 
     assert
       .dom(
-        "ul[role='listbox']:not(.d-combobox__listbox--loading) .d-combobox__skeleton"
+        "ul[role='listbox']:not(.d-select__listbox--loading) .d-select__skeleton"
       )
       .doesNotExist("a swap is not more rows for the same query");
 
@@ -1984,8 +1980,8 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
         <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
       </template>
     );
-    await click(".d-combobox__trigger");
-    const query = ".d-combobox__filter";
+    await click(".d-select__trigger");
+    const query = ".d-select__filter";
     await triggerKeyEvent(query, "keydown", "ArrowDown");
     assert
       .dom(query)
@@ -2034,7 +2030,7 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
         />
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
     assert
       .dom(".loader-calls")
       .hasText("1", "the transformer writes outside render");
@@ -2078,7 +2074,7 @@ module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
           <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       const viewport = find(".d-virtual-list");
       assert.true(
         document.querySelectorAll("ul[role='listbox'] > [role='option']")

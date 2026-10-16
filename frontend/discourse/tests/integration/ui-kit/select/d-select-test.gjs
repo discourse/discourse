@@ -62,18 +62,18 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     );
 
     const variants = [
-      ["typeahead", ".frame-typeahead", ".d-combobox__input"],
-      ["multi", ".frame-multi", ".d-combobox__chips"],
-      ["button", ".frame-button", ".d-combobox__value"],
-      ["static", ".frame-static", ".d-combobox__value"],
+      ["typeahead", ".frame-typeahead", ".d-select__input"],
+      ["multi", ".frame-multi", ".d-select__chips"],
+      ["button", ".frame-button", ".d-select__value"],
+      ["static", ".frame-static", ".d-select__value"],
     ];
 
     for (const [name, triggerSelector, middleSelector] of variants) {
       const trigger = find(triggerSelector);
-      const caret = find(`${triggerSelector} .d-combobox__caret`);
+      const caret = find(`${triggerSelector} .d-select__caret`);
 
       assert
-        .dom(`${triggerSelector} .d-combobox__caret`)
+        .dom(`${triggerSelector} .d-select__caret`)
         .exists({ count: 1 }, `${name} renders exactly one caret`);
       assert.strictEqual(
         trigger.lastElementChild,
@@ -100,10 +100,10 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     );
 
     const heights = [
-      ".layout-typeahead.d-combobox__trigger",
-      ".layout-button.d-combobox__trigger",
-      ".layout-static.d-combobox__trigger",
-      ".layout-multi.d-combobox__trigger",
+      ".layout-typeahead.d-select__trigger",
+      ".layout-button.d-select__trigger",
+      ".layout-static.d-select__trigger",
+      ".layout-multi.d-select__trigger",
     ].map((selector) => find(selector).getBoundingClientRect().height);
 
     assert.deepEqual(
@@ -113,10 +113,10 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     );
 
     const insets = [
-      [".layout-typeahead.d-combobox__trigger", ".d-combobox__input"],
-      [".layout-button.d-combobox__trigger", ".d-combobox__placeholder"],
-      [".layout-static.d-combobox__trigger", ".d-combobox__placeholder"],
-      [".layout-multi.d-combobox__trigger", ".d-combobox__input"],
+      [".layout-typeahead.d-select__trigger", ".d-select__input"],
+      [".layout-button.d-select__trigger", ".d-select__placeholder"],
+      [".layout-static.d-select__trigger", ".d-select__placeholder"],
+      [".layout-multi.d-select__trigger", ".d-select__input"],
     ].map(([triggerSelector, contentSelector]) => {
       const trigger = find(triggerSelector);
       const content = trigger.querySelector(contentSelector);
@@ -133,18 +133,18 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     );
 
     const typeaheadInput = find(
-      ".layout-typeahead.d-combobox__trigger .d-combobox__input"
+      ".layout-typeahead.d-select__trigger .d-select__input"
     );
     const colors = [
       getComputedStyle(typeaheadInput, "::placeholder").color,
       getComputedStyle(
-        find(".layout-button.d-combobox__trigger .d-combobox__placeholder")
+        find(".layout-button.d-select__trigger .d-select__placeholder")
       ).color,
       getComputedStyle(
-        find(".layout-static.d-combobox__trigger .d-combobox__placeholder")
+        find(".layout-static.d-select__trigger .d-select__placeholder")
       ).color,
       getComputedStyle(
-        find(".layout-multi.d-combobox__trigger .d-combobox__input"),
+        find(".layout-multi.d-select__trigger .d-select__input"),
         "::placeholder"
       ).color,
     ];
@@ -164,10 +164,10 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
         </div>
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
-    const triggerWidth = find(".d-combobox__trigger").getBoundingClientRect()
-      .width;
+    const triggerWidth =
+      find(".d-select__trigger").getBoundingClientRect().width;
 
     const innerContent = find(".fk-d-menu__inner-content");
     assert.strictEqual(
@@ -176,7 +176,7 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
       "the visible dropdown surface fills the trigger width"
     );
     assert.true(
-      find(".d-combobox__panel").getBoundingClientRect().width >=
+      find(".d-select__panel").getBoundingClientRect().width >=
         triggerWidth - 2,
       "the dropdown panel fills the surface within its border"
     );
@@ -190,11 +190,11 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
         </div>
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert.strictEqual(
       find(".fk-d-menu__inner-content").getBoundingClientRect().width,
-      find(".d-combobox__trigger").getBoundingClientRect().width,
+      find(".d-select__trigger").getBoundingClientRect().width,
       "the dropdown is as wide as the trigger, not capped at 400px"
     );
   });
@@ -237,7 +237,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
         "the input owns the placeholder"
       );
     assert
-      .dom(".d-combobox__placeholder")
+      .dom(".d-select__placeholder")
       .doesNotExist("no separate placeholder sits beside the input");
 
     const inputStyle = getComputedStyle(find("[role='combobox']"));
@@ -345,7 +345,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__presentation strong")
+      .dom(".d-select__presentation strong")
       .hasText("First", "the supplied selection block wins");
 
     await click("[role='combobox']");
@@ -366,7 +366,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await fillIn("[role='combobox']", "ban");
     await fillIn("[role='combobox']", "");
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .doesNotExist("hidden while the field is focused");
 
     await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
@@ -379,7 +379,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     await focus(".outside");
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .hasText("Apple", "leaving the field restores the custom resting markup");
   });
 
@@ -392,7 +392,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
 
     // Resting (unfocused): the custom markup shows and the input is empty.
-    assert.dom(".d-combobox__presentation").hasText("Apple");
+    assert.dom(".d-select__presentation").hasText("Apple");
     assert
       .dom("[role='combobox']")
       .hasValue("", "the input is empty while at rest");
@@ -406,7 +406,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .dom("[role='listbox']")
       .doesNotExist("focus alone does not open the menu");
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .doesNotExist("the custom markup is hidden while the field is focused");
     const input = find("[role='combobox']");
     assert.dom(input).hasValue("Apple", "the label fills the input on focus");
@@ -425,7 +425,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     // Moving focus out of the widget restores the custom resting markup.
     await focus(".outside");
-    assert.dom(".d-combobox__presentation").hasText("Apple");
+    assert.dom(".d-select__presentation").hasText("Apple");
   });
 
   test("a resting custom selection is described to assistive tech", async function (assert) {
@@ -441,7 +441,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     // Asserted against the span's real id rather than merely "some description exists", so a
     // dangling reference to a missing element cannot pass.
-    const presentation = find(".d-combobox__presentation");
+    const presentation = find(".d-select__presentation");
     assert
       .dom("[role='combobox']")
       .hasAttribute(
@@ -476,7 +476,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       </template>
     );
 
-    await click(".d-combobox__caret");
+    await click(".d-select__caret");
     assert
       .dom("[role='listbox']")
       .exists("cold: the caret opens a closed panel");
@@ -487,7 +487,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .dom("[role='combobox']")
       .isFocused("Escape leaves focus in the input — the warm state");
 
-    await click(".d-combobox__caret");
+    await click(".d-select__caret");
     assert
       .dom("[role='listbox']")
       .exists("warm: the caret still opens rather than doing nothing");
@@ -514,14 +514,14 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     await click("[role='combobox']");
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .doesNotExist("the editable label shows while the field is active");
 
     // A pointer press on empty space outside the widget ends the interaction and restores the
     // custom markup, even though the browser would otherwise leave focus on the input.
     await triggerEvent(".outside", "pointerdown");
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .hasText("Apple", "clicking outside restores the resting markup");
   });
 
@@ -668,7 +668,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     assert.true(pressOption(), "the typeahead cancels the focus change");
 
     await render(<template><Host @variant="button" /></template>);
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
     assert.false(pressOption(), "the button variant leaves the press alone");
   });
 
@@ -753,10 +753,10 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
   test("clicking anywhere on the trigger (caret/label) opens and focuses the input", async function (assert) {
     await render(<template><Host @value={{1}} /></template>);
-    assert.dom(".d-combobox__presentation").hasText("Apple");
+    assert.dom(".d-select__presentation").hasText("Apple");
 
     // The whole trigger is the open target, not just the narrow input strip.
-    await click(".d-combobox__caret");
+    await click(".d-select__caret");
     assert.dom("[role='listbox']").exists("clicking the caret opens the menu");
     assert.strictEqual(
       document.activeElement.getAttribute("role"),
@@ -772,7 +772,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     // Clicking a non-focusable trigger region (the caret) while open must not blur-close
     // or toggle it shut.
-    await click(".d-combobox__caret");
+    await click(".d-select__caret");
     assert
       .dom("[role='listbox']")
       .exists("stays open after clicking the caret");
@@ -781,7 +781,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
   test("a preset value resolves to its label with no fetch (client source)", async function (assert) {
     await render(<template><Host @value={{2}} /></template>);
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .hasText("Banana", "the saved id resolves from the client list");
   });
 
@@ -797,9 +797,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(<template><Host /></template>);
     await fillIn("[role='combobox']", "zzzz");
 
-    assert
-      .dom(".d-combobox__empty[role='status']")
-      .exists("polite empty status");
+    assert.dom(".d-select__empty[role='status']").exists("polite empty status");
     assert
       .dom("[role='alert']")
       .doesNotExist("counts/empties are announced politely, never assertively");
@@ -836,7 +834,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
 
     await render(<template><Host @variant="button" /></template>);
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert
       .dom("[role='option'].--active")
@@ -1055,12 +1053,12 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(<template><Host /></template>);
 
     await fillIn("[role='combobox']", "zzzz");
-    const emptyNode = find(".d-combobox__empty");
+    const emptyNode = find(".d-select__empty");
 
     await fillIn("[role='combobox']", "yyyy");
 
     assert.strictEqual(
-      find(".d-combobox__empty"),
+      find(".d-select__empty"),
       emptyNode,
       "the empty node is the same element across both queries (no remount to ride on)"
     );
@@ -1104,10 +1102,10 @@ module(
 
       // On mobile the trigger holds no input of its own; tapping the trigger opens the modal.
       assert
-        .dom(".d-combobox__trigger [role='combobox']")
+        .dom(".d-select__trigger [role='combobox']")
         .doesNotExist("no query input in the closed mobile trigger");
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
         .dom(".fk-d-menu-modal [role='combobox']")
@@ -1127,7 +1125,7 @@ module(
       await render(<template><DefaultHost @value={{2}} /></template>);
 
       assert
-        .dom(".d-combobox__presentation")
+        .dom(".d-select__presentation")
         .hasText("Banana", "mobile has the same block-free fallback");
     });
   }
@@ -1140,7 +1138,7 @@ module(
 
     test("opens into a WAI-ARIA combobox + listbox with wired ids", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert.dom("[role='combobox']").exists("the panel filter is a combobox");
       assert
@@ -1168,7 +1166,7 @@ module(
       // The button variant's in-panel filter is the combobox, so its trigger is a
       // role="button" disclosure (not a second combobox), focusable and keyboard-openable.
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .hasAttribute("role", "button", "the trigger is a disclosure button")
         .hasAttribute(
           "aria-haspopup",
@@ -1178,37 +1176,37 @@ module(
         .hasAttribute("tabindex", "0", "the trigger is focusable")
         .hasAttribute("aria-expanded", "false");
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
       assert.dom("[role='listbox']").exists("Enter opens the list");
-      assert.dom(".d-combobox__trigger").hasAttribute("aria-expanded", "true");
+      assert.dom(".d-select__trigger").hasAttribute("aria-expanded", "true");
     });
 
     test("Space and click independently activate the disclosure", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .hasAttribute(
           "role",
           "button",
           "the disclosure role is on the trigger"
         );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", " ");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", " ");
       assert.dom("[role='listbox']").exists("Space opens the disclosure");
 
       await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
       assert.dom("[role='listbox']").doesNotExist("Escape closes it again");
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert.dom("[role='listbox']").exists("click opens the disclosure");
     });
 
     test("filters as you type, and spaces reach the filter", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       await fillIn("[role='combobox']", "ban");
       assert.dom("[role='option']").exists({ count: 1 });
@@ -1220,7 +1218,7 @@ module(
 
     test("keyboard: ArrowDown + Enter selects the highlighted option and closes", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await fillIn("[role='combobox']", "app");
 
       await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
@@ -1228,19 +1226,17 @@ module(
 
       assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
       assert
-        .dom(".d-combobox__value")
+        .dom(".d-select__value")
         .hasText("Apple", "the trigger shows the pick");
     });
 
     test("pointer: clicking an option selects it and closes", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await click("[role='option'][aria-selected='false']");
 
       assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
-      assert
-        .dom(".d-combobox__value")
-        .exists("the trigger shows the selection");
+      assert.dom(".d-select__value").exists("the trigger shows the selection");
     });
 
     test("uses default labels when presentation blocks are omitted", async function (assert) {
@@ -1249,10 +1245,10 @@ module(
       );
 
       assert
-        .dom(".d-combobox__value")
+        .dom(".d-select__value")
         .hasText("Banana", "the button trigger uses the selection fallback");
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert
         .dom("[role='option']")
         .exists({ count: 3 }, "the block-free button renders every option")
@@ -1268,19 +1264,19 @@ module(
         <template><DSelect @items={{ITEMS}} @variant="button" /></template>
       );
 
-      await click(".d-combobox__trigger");
-      await fillIn(".d-combobox__filter", "ban");
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
       assert
         .dom("[role='option']")
         .exists({ count: 1 }, "the query narrows the list while open");
 
-      await triggerKeyEvent(".d-combobox__filter", "keydown", "Escape");
-      await click(".d-combobox__trigger");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      await click(".d-select__trigger");
 
       // Both halves matter: clearing only the visible input would leave the engine still
       // filtering, so the row count is what proves the query itself is gone.
       assert
-        .dom(".d-combobox__filter")
+        .dom(".d-select__filter")
         .hasValue("", "the filter input reopens empty");
       assert
         .dom("[role='option']")
@@ -1302,7 +1298,7 @@ module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
 
     assert.dom("[role='listbox']").exists("the list is open");
     assert
-      .dom(".d-combobox__content")
+      .dom(".d-select__content")
       .hasAttribute(
         "role",
         "none",
@@ -1318,14 +1314,14 @@ module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
   // controller of its own, not which variant produced it.
   test("a typeahead panel does not wrap its listbox in a dialog", async function (assert) {
     await render(<template><Host /></template>);
-    await click(".d-combobox__input");
+    await click(".d-select__input");
 
     assert.dom("[role='listbox']").exists("the list is open");
     assert
-      .dom(".d-combobox__filter")
+      .dom(".d-select__filter")
       .doesNotExist("the query input is in the trigger, not the panel");
     assert
-      .dom(".d-combobox__content")
+      .dom(".d-select__content")
       .hasAttribute(
         "role",
         "none",
@@ -1341,11 +1337,11 @@ module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
   // exactly that. Removing the role there would make the promise false.
   test("a panel with a query input keeps its dialog role", async function (assert) {
     await render(<template><Host @variant="button" /></template>);
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert.dom("[role='listbox']").exists("the list is open");
     assert
-      .dom(".d-combobox__content")
+      .dom(".d-select__content")
       .hasAttribute(
         "role",
         "dialog",
@@ -1363,7 +1359,7 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
     // WAI-ARIA Select-Only Combobox: the focusable trigger IS the combobox, so there is
     // no separate filter input; the role/haspopup/tabindex live on the trigger.
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute("role", "combobox", "the trigger is the combobox")
       .hasAttribute("aria-haspopup", "listbox")
       .hasAttribute("tabindex", "0", "the trigger is focusable")
@@ -1372,14 +1368,14 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
       .dom("input[role='combobox']")
       .doesNotExist("no filter input — the trigger is the combobox");
 
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert.dom("[role='listbox']").exists();
     assert.dom("[role='option']").exists({ count: 3 });
 
     const listboxId = document.querySelector("[role='listbox']").id;
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute("aria-expanded", "true")
       .hasAttribute(
         "aria-controls",
@@ -1389,20 +1385,20 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
 
     await click("[role='option']");
     assert.dom("[role='listbox']").doesNotExist("selecting closes (single)");
-    assert.dom(".d-combobox__value").hasText("Apple");
+    assert.dom(".d-select__value").hasText("Apple");
   });
 
   test("opens from the keyboard and keeps focus on the trigger", async function (assert) {
     await render(<template><Host @variant="static" /></template>);
 
-    await focus(".d-combobox__trigger");
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "ArrowDown");
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
 
     assert.dom("[role='listbox']").exists("ArrowDown opens the list");
     // Select-only combobox: focus stays on the trigger (active-descendant), never moves
     // into the listbox.
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .isFocused("focus stays on the combobox trigger");
     assert
       .dom("[role='option'][tabindex='0']")
@@ -1414,12 +1410,12 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
   test("keyboard opening activates the first option through aria-activedescendant", async function (assert) {
     await render(<template><Host @variant="static" /></template>);
 
-    await focus(".d-combobox__trigger");
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
     const firstOptionId = find("[role='option']").id;
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute(
         "aria-activedescendant",
         firstOptionId,
@@ -1429,11 +1425,11 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
       .dom("[role='option']")
       .hasClass("--active", "the active option has the visual active state");
 
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Escape");
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "ArrowDown");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Escape");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
 
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute(
         "aria-activedescendant",
         find("[role='option']").id,
@@ -1452,11 +1448,11 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
         <DSelect @identifier="test-select" @items={{items}} @variant="static" />
       </template>
     );
-    await focus(".d-combobox__trigger");
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute(
         "aria-activedescendant",
         findAll("[role='option']")[1].id,
@@ -1468,19 +1464,19 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
     await render(<template><Host @variant="static" /></template>);
 
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .hasAttribute("role", "combobox", "the trigger is the select controller")
       .doesNotHaveAttribute(
         "aria-controls",
         "a closed trigger does not reference an unrendered listbox"
       );
 
-    await focus(".d-combobox__trigger");
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
     const listbox = find("[role='listbox']");
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .isFocused("Enter leaves DOM focus on the trigger")
       .hasAttribute(
         "aria-controls",
@@ -1491,20 +1487,20 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
       .dom("[role='option'][tabindex='0']")
       .doesNotExist("listbox options never become tab stops");
 
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Escape");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Escape");
     assert.dom("[role='listbox']").doesNotExist("Escape closes the listbox");
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .isFocused("closing restores focus to the trigger")
       .doesNotHaveAttribute(
         "aria-controls",
         "closing removes the stale listbox reference"
       );
 
-    await triggerKeyEvent(".d-combobox__trigger", "keydown", "ArrowDown");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
     assert.dom("[role='listbox']").exists("ArrowDown reopens the listbox");
     assert
-      .dom(".d-combobox__trigger")
+      .dom(".d-select__trigger")
       .isFocused("ArrowDown also leaves focus on the trigger");
   });
 
@@ -1514,10 +1510,10 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__value")
+      .dom(".d-select__value")
       .hasText("Banana", "the static trigger uses the selection fallback");
 
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
     assert
       .dom("[role='option']")
       .exists({ count: 3 }, "the block-free static select renders every option")
@@ -1537,8 +1533,8 @@ module(
     test("opening moves DOM focus into the modal's roving option list", async function (assert) {
       await render(<template><Host @variant="static" /></template>);
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
       assert
         .dom(".fk-d-menu-modal")
@@ -1565,7 +1561,7 @@ module(
           "the remaining options are not tab stops"
         );
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .isNotFocused("focus is not stranded on the trigger outside the modal")
         .doesNotHaveAttribute(
           "aria-activedescendant",
@@ -1643,7 +1639,7 @@ module(
       await fillIn("[role='combobox']", "ap");
 
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .exists("a short query shows the keep-typing hint")
         .hasText(
           "Keep typing 1 more character…",
@@ -1653,7 +1649,7 @@ module(
         .dom("[role='listbox']")
         .doesNotExist("no list renders below the threshold");
       assert
-        .dom(".d-combobox__skeleton")
+        .dom(".d-select__skeleton")
         .doesNotExist("no loading skeleton flashes below the threshold");
       assert.strictEqual(
         loadCalls,
@@ -1686,7 +1682,7 @@ module(
       await waitFor("[role='listbox']");
 
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .doesNotExist("at the threshold the hint is gone");
       assert
         .dom("[role='listbox']")
@@ -1720,7 +1716,7 @@ module(
         .dom("[role='listbox']")
         .doesNotExist("shrinking below the threshold hides the list");
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .exists("and restores the keep-typing hint");
     });
 
@@ -1741,7 +1737,7 @@ module(
       await waitFor("[role='listbox']");
 
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .doesNotExist("no threshold means no hint");
       assert
         .dom("[role='listbox']")
@@ -1759,13 +1755,13 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
         .dom("[role='listbox']")
         .exists("the client list renders immediately");
       assert
-        .dom(".d-combobox__skeleton")
+        .dom(".d-select__skeleton")
         .doesNotExist("a synchronous source flashes no loading skeleton");
     });
 
@@ -1785,7 +1781,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .exists(
           "an empty query is below the minimum, so the hint shows on open"
         )
@@ -1819,7 +1815,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__presentation")
+        .dom(".d-select__presentation")
         .hasText("Apple", "the selection presentation shows the chosen value");
       assert.strictEqual(
         find("[role='combobox']").placeholder,
@@ -1848,11 +1844,11 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
-      await fillIn(".d-combobox__filter", "ban");
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
 
       assert
-        .dom(".d-combobox__skeleton")
+        .dom(".d-select__skeleton")
         .doesNotExist("an explicit false never enters a loading state");
       assert
         .dom("[role='option']")
@@ -1890,7 +1886,7 @@ module(
         .dom("[role='option'].--create")
         .doesNotExist("the synthetic create item is not built below threshold");
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .hasText(
           "Keep typing 1 more character…",
           "the threshold hint replaces all list items"
@@ -1922,7 +1918,7 @@ module(
         .exists("the synthetic create row replaces the raw empty state")
         .hasText("Create dragonfruit", "the row uses the proposed value");
       assert
-        .dom(".d-combobox__empty")
+        .dom(".d-select__empty")
         .doesNotExist("the final list is not treated as empty");
     });
 
@@ -1935,11 +1931,11 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await fillIn(".fk-d-menu-modal [role='combobox']", "ap");
 
       assert
-        .dom(".fk-d-menu-modal .d-combobox__min-chars[role='status']")
+        .dom(".fk-d-menu-modal .d-select__min-chars[role='status']")
         .hasText(
           "Keep typing 1 more character…",
           "the mobile modal contains the visible status hint"
@@ -1981,7 +1977,7 @@ module(
       await fillIn("[role='combobox']", "ap");
 
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .exists("the keep-typing hint is shown below threshold");
       assert
         .dom("[role='combobox']")
@@ -2007,11 +2003,11 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
-      await fillIn(".d-combobox__filter", "ap");
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ap");
 
       assert
-        .dom(".d-combobox__filter")
+        .dom(".d-select__filter")
         .doesNotHaveAttribute(
           "aria-controls",
           "the panel filter drops its listbox reference below threshold"
@@ -2030,8 +2026,8 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
-      await fillIn(".d-combobox__filter", "ban");
+      await click(".d-select__trigger");
+      await fillIn(".d-select__filter", "ban");
       await waitFor("[role='option']");
 
       assert
@@ -2126,7 +2122,7 @@ module(
         .dom("[role='status'] .custom-empty")
         .exists("the custom empty content stays inside a live-region status");
       assert
-        .dom(".d-combobox__empty")
+        .dom(".d-select__empty")
         .doesNotContainText(
           "No results found",
           "the default no-results text is replaced by the consumer content"
@@ -2167,7 +2163,7 @@ module(
       await fillIn("[role='combobox']", "zzzz");
 
       assert
-        .dom(".d-combobox__empty")
+        .dom(".d-select__empty")
         .exists("the built-in no-results status remains the default");
     });
 
@@ -2213,7 +2209,7 @@ module(
           "bottom-start",
           "the overlay stays below the trigger, so the gap reflects the offset"
         );
-      const trigger = find(".d-combobox__trigger").getBoundingClientRect();
+      const trigger = find(".d-select__trigger").getBoundingClientRect();
       const content = find("[data-placement]").getBoundingClientRect();
       assert.true(
         content.top - trigger.bottom > 40,
@@ -2291,7 +2287,7 @@ module(
 
       await click(".callback-button");
       assert.true(buttonOnShow.calledOnce, "button reports one open");
-      await triggerKeyEvent(".d-combobox__filter", "keydown", "Escape");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
       assert.true(buttonOnClose.calledOnce, "button reports one close");
 
       await click(".callback-static");
@@ -2316,7 +2312,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await waitFor(".async-empty");
 
       assert
@@ -2336,7 +2332,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
         .dom("[role='option']")
@@ -2360,7 +2356,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
         .dom(".fk-d-menu-modal")
@@ -2543,7 +2539,7 @@ module(
         <template><DSelect @items={{ITEMS}} @variant="button" /></template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert
         .dom("[role='option'].--active")
         .doesNotExist("a button select opens with no highlight");
@@ -2554,7 +2550,7 @@ module(
         .exists("arrowing down seeds the highlight");
 
       await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert
         .dom("[role='option'].--active")
         .doesNotExist("reopening does not restore the stale highlight");
@@ -2750,13 +2746,11 @@ module(
       }
 
       await render(<template><MultiDeleteHost /></template>);
-      assert
-        .dom(".d-combobox__chip")
-        .exists({ count: 2 }, "two chips to start");
+      assert.dom(".d-select__chip").exists({ count: 2 }, "two chips to start");
 
       await triggerKeyEvent("[role='combobox']", "keydown", "Delete");
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 2 },
           "Delete (forward-delete) leaves the chips: nothing sits after the caret"
@@ -2764,7 +2758,7 @@ module(
 
       await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 1 },
           "Backspace deletes backward toward the chip before the caret, the token-input convention"

@@ -132,9 +132,9 @@ Paths are relative to the repository root.
   customization (caret and icon, `showFullTitle`, content filtering, row titles, selection labels,
   opening behaviour, notifications `reasonText`) to a supported API. A family joins only once its
   ports are done.
-- **CSS.** DSelect's temporary `.d-combobox` root flips to `.d-select` before wave 1
-  (`app/assets/stylesheets/common/components/d-combobox.scss:1-3`; the `DNativeSelect` rename it
-  waited on has landed). Each family migrates the core and plugin SCSS that targets it. Layout
+- **CSS.** DSelect uses the `.d-select` BEM root
+  (`app/assets/stylesheets/common/components/d-select.scss`), which replaced the temporary
+  `.d-combobox` in wave 0. Each family migrates the core and plugin SCSS that targets it. Layout
   bridging goes in `app/assets/stylesheets/common/upcoming-changes/`.
 - **Enter in modals.** `frontend/discourse/app/ui-kit/d-modal.gts:51-63,465-469` exempts
   `.select-kit` from Enter-to-submit but not `role="combobox"`, so Enter in a `DSelect` inside a

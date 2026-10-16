@@ -89,27 +89,25 @@ module(
         </template>
       );
 
-      assert
-        .dom(".d-combobox__chip")
-        .exists({ count: 2 }, "two chips to start");
+      assert.dom(".d-select__chip").exists({ count: 2 }, "two chips to start");
 
       // The mechanism, asserted directly: the label resolves to the sink rather than to any
       // control inside the trigger. This is what makes the protection structural, so it is what
       // must fail if a labelable element is ever introduced ahead of the sink.
       assert.strictEqual(
         find(".field-label").control,
-        find(".d-combobox__label-sink"),
+        find(".d-select__label-sink"),
         "the label's control is the sink, not a chip's remove button"
       );
 
       await click(".field-text");
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "clicking the label's text removes nothing");
 
       await click(".field-label");
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "nor does clicking the label itself");
     });
 
@@ -118,25 +116,25 @@ module(
     test("Enter on a focused chip still removes it", async function (assert) {
       await render(<template><MultiHost @value={{array 1 2}} /></template>);
 
-      const remove = findAll(".d-combobox__chip-remove")[0];
+      const remove = findAll(".d-select__chip-remove")[0];
       await focus(remove);
       await triggerKeyEvent(remove, "keydown", "Enter");
       await click(remove);
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 1 }, "the keyboard path still removes a chip");
     });
 
     test("shows the placeholder when empty", async function (assert) {
       await render(<template><MultiHost /></template>);
-      assert.dom(".d-combobox__input").hasAttribute("placeholder", "Pick some");
-      assert.dom(".d-combobox__chip").doesNotExist();
+      assert.dom(".d-select__input").hasAttribute("placeholder", "Pick some");
+      assert.dom(".d-select__chip").doesNotExist();
     });
 
     test("selecting adds a chip, keeps the menu open, and keeps the picked row flagged", async function (assert) {
       await render(<template><MultiHost /></template>);
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       assert.dom("[role='option']").exists({ count: 3 });
 
       await click("[role='option']");
@@ -148,7 +146,7 @@ module(
           "true",
           "a multi listbox declares multi-select semantics"
         );
-      assert.dom(".d-combobox__chip").exists({ count: 1 }, "a chip is added");
+      assert.dom(".d-select__chip").exists({ count: 1 }, "a chip is added");
       assert
         .dom("[role='option']")
         .exists({ count: 3 }, "the picked item stays in the list");
@@ -157,23 +155,23 @@ module(
         .exists({ count: 1 }, "the picked row is flagged selected");
       assert
         .dom(
-          "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon"
+          "[role='option'][aria-selected='true'] .d-select__option-selected-icon"
         )
         .exists("the selected row carries a check");
 
       // Clicking the first option again would toggle the now-selected item back
       // off, so pick a still-unselected row to add a second chip.
       await click("[role='option'][aria-selected='false']");
-      assert.dom(".d-combobox__chip").exists({ count: 2 });
+      assert.dom(".d-select__chip").exists({ count: 2 });
     });
 
     test("removing a chip deselects it", async function (assert) {
       await render(<template><MultiHost @value={{array 1 2}} /></template>);
-      assert.dom(".d-combobox__chip").exists({ count: 2 });
+      assert.dom(".d-select__chip").exists({ count: 2 });
 
       // The chip is a span; removal is its inner button, not the chip itself.
-      await click(".d-combobox__chip .d-combobox__chip-remove");
-      assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+      await click(".d-select__chip .d-select__chip-remove");
+      assert.dom(".d-select__chip").exists({ count: 1 }, "one chip removed");
     });
 
     test("each chip is a list item with an inner remove button named for its label", async function (assert) {
@@ -182,13 +180,13 @@ module(
       // The chips are a native labelled <ul>/<li> list (real "Selected items, list, N items"
       // semantics) rather than a role=group of spans; removal is the chip's inner button.
       assert
-        .dom("li.d-combobox__chip")
+        .dom("li.d-select__chip")
         .exists({ count: 1 }, "the chip is a list item, not a button");
       assert
-        .dom("ul.d-combobox__chip-list")
+        .dom("ul.d-select__chip-list")
         .hasAttribute("aria-label", /.+/, "the chips are a labelled list");
 
-      const removeButton = find(".d-combobox__chip .d-combobox__chip-remove");
+      const removeButton = find(".d-select__chip .d-select__chip-remove");
       assert
         .dom(removeButton)
         .hasTagName("button", "removal is a dedicated inner button");
@@ -225,7 +223,7 @@ module(
         </template>
       );
 
-      const labelledby = find(".d-combobox__chip-remove").getAttribute(
+      const labelledby = find(".d-select__chip-remove").getAttribute(
         "aria-labelledby"
       );
       assert.strictEqual(
@@ -248,13 +246,13 @@ module(
       );
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "one fallback chip renders for each selection");
       assert
-        .dom(".d-combobox__chip:first-child")
+        .dom(".d-select__chip:first-child")
         .includesText("Apple", "chips use the selection fallback");
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       assert
         .dom("[role='option']")
         .exists({ count: 3 }, "selected items stay in the list");
@@ -277,11 +275,11 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
 
       assert
         .dom(
-          "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
+          "[role='option'][aria-selected='true'] .d-select__option-selected-icon.d-icon-star"
         )
         .exists("the selected row uses the custom icon, not the default check");
     });
@@ -302,7 +300,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Banana"));
 
       assert.strictEqual(onChange.callCount, 1, "the selection emits once");
@@ -334,7 +332,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__chip .d-combobox__chip-remove");
+      await click(".d-select__chip .d-select__chip-remove");
 
       assert.strictEqual(onChange.callCount, 1, "the deselection emits once");
       const emittedValue = onChange.firstCall.args[0];
@@ -365,7 +363,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Banana"));
 
       assert.strictEqual(onChange.callCount, 1, "the selection emits once");
@@ -394,7 +392,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Banana"));
 
       assert.strictEqual(onChange.callCount, 1, "the selection emits once");
@@ -496,7 +494,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Banana"));
 
       assert.strictEqual(onChange.callCount, 1, "the selection emits once");
@@ -522,7 +520,7 @@ module(
         "the original bound id retains its runtime type"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 2 },
           "the host displays the next value only after accepting onChange"
@@ -545,7 +543,7 @@ module(
           <MultiValueCoercionHost @onChange={{onChange}} @value={{array "1"}} />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Capture facade"));
 
       assert.notStrictEqual(
@@ -610,10 +608,10 @@ module(
       await render(<template><ChipHost /></template>);
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the held values render as chips");
 
-      const remove = findAll(".d-combobox__chip-remove")[0];
+      const remove = findAll(".d-select__chip-remove")[0];
       await focus(remove);
       await triggerKeyEvent(remove, "keydown", "Enter");
 
@@ -627,12 +625,12 @@ module(
     test("Backspace on a chip's remove button does not clear the whole selection", async function (assert) {
       await render(<template><ChipHost /></template>);
 
-      const remove = findAll(".d-combobox__chip-remove")[0];
+      const remove = findAll(".d-select__chip-remove")[0];
       await focus(remove);
       await triggerKeyEvent(remove, "keydown", "Backspace");
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 2 },
           "a key aimed at one chip never empties the selection"
@@ -664,7 +662,7 @@ module(
         .dom("[role='option'][aria-selected='false'] .d-icon-far-square")
         .exists("an unselected row draws an empty box rather than a gap");
       assert
-        .dom("svg.d-combobox__option-selected-icon")
+        .dom("svg.d-select__option-selected-icon")
         .hasAttribute(
           "aria-hidden",
           "true",
@@ -687,7 +685,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__option-selected-icon.--checkbox")
+        .dom(".d-select__option-selected-icon.--checkbox")
         .doesNotExist("a supplied glyph is not replaced by the checkbox pair");
       assert
         .dom("[role='option'][aria-selected='true'] .d-icon-star")
@@ -705,7 +703,7 @@ module(
       { id: 1, name: "Apple" },
       { id: 2, name: "Banana" },
     ];
-    const TRIGGER = ".d-combobox__trigger";
+    const TRIGGER = ".d-select__trigger";
 
     test("an empty mobile multi shows its placeholder", async function (assert) {
       forceMobile();
@@ -723,7 +721,7 @@ module(
       );
 
       assert
-        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .dom(`${TRIGGER} .d-select__placeholder`)
         .hasText("Pick fruit", "the trigger says what to do");
     });
 
@@ -738,7 +736,7 @@ module(
       );
 
       assert
-        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .dom(`${TRIGGER} .d-select__placeholder`)
         .hasText(i18n("d_select.add_placeholder"));
     });
 
@@ -758,7 +756,7 @@ module(
           </template>
         );
 
-        assert.dom(`${TRIGGER} .d-combobox__placeholder`).hasText("Pick fruit");
+        assert.dom(`${TRIGGER} .d-select__placeholder`).hasText("Pick fruit");
       });
     }
 
@@ -777,9 +775,9 @@ module(
         </template>
       );
 
-      assert.dom(".d-combobox__chip").exists("the chip shows");
+      assert.dom(".d-select__chip").exists("the chip shows");
       assert
-        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .dom(`${TRIGGER} .d-select__placeholder`)
         .doesNotExist("and no placeholder sits beside it");
     });
 
@@ -801,7 +799,7 @@ module(
         .dom(`${TRIGGER} [role='combobox']`)
         .hasAttribute("placeholder", "Pick fruit", "the input carries it");
       assert
-        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .dom(`${TRIGGER} .d-select__placeholder`)
         .doesNotExist("with no second copy beside it");
     });
   }

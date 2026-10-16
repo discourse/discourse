@@ -25,12 +25,12 @@ describe "UiKit | DSelect silent source does not probe" do
     # second and third loading placeholders. Note this is a vacuous negative today — nothing in
     # app code renders a sentinel any more — so it is a guard against reintroducing one, not
     # evidence that the current implementation is correct.
-    expect(page).to have_no_css(combobox.in_panel(".d-combobox__sentinel"))
+    expect(page).to have_no_css(combobox.in_panel(".d-select__sentinel"))
     expect(combobox.options.first[:"aria-setsize"]).to eq("4")
 
     # Well past the 3 x 1200ms the probing version would have taken.
     sleep 4
     expect(page).to have_css(combobox.option_selector, count: 4)
-    expect(page).to have_no_css(combobox.in_panel(".d-combobox__skeleton"))
+    expect(page).to have_no_css(combobox.in_panel(".d-select__skeleton"))
   end
 end

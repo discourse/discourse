@@ -42,7 +42,7 @@ describe "UiKit | DSelect trigger parity" do
           "\"[data-identifier='sg-hero-notifications'][data-trigger]\")).fontSize",
       )
     chip_font =
-      page.evaluate_script("getComputedStyle(document.querySelector('.d-combobox__chip')).fontSize")
+      page.evaluate_script("getComputedStyle(document.querySelector('.d-select__chip')).fontSize")
     badge_font =
       page.evaluate_script(
         "getComputedStyle(document.querySelector('.badge-category__wrapper')).fontSize",

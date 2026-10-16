@@ -66,7 +66,7 @@ module(
 
       assert
         .dom(
-          "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
+          "[role='option'][aria-selected='true'] .d-select__option-selected-icon.d-icon-star"
         )
         .exists("the selected row carries the custom icon in single-select");
     });
@@ -78,7 +78,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__option-selected-icon")
+        .dom(".d-select__option-selected-icon")
         .doesNotExist(
           "single-select shows no icon column unless @selectedIcon opts in"
         );
@@ -95,7 +95,7 @@ module(
       await render(<template><DSelect @items={{ITEMS}} /></template>);
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .exists("the trigger shows a caret without @showCaret");
     });
 
@@ -105,7 +105,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .doesNotExist("the caret is hidden when @showCaret is false");
     });
   }
@@ -130,16 +130,16 @@ module(
         </template>
       );
 
-      assert.dom(".d-combobox__clear").exists("the clear control is present");
+      assert.dom(".d-select__clear").exists("the clear control is present");
       assert.strictEqual(
         find(".field-label").control,
-        find(".d-combobox__label-sink"),
+        find(".d-select__label-sink"),
         "the label's control is the sink, not the clear button"
       );
 
       await click(".field-text");
       assert
-        .dom(".d-combobox__value")
+        .dom(".d-select__value")
         .hasText("Apple", "clicking the label's text keeps the selection");
     });
 
@@ -194,7 +194,7 @@ module(
       await click(".field-text");
       assert.strictEqual(
         document.activeElement,
-        find(".d-combobox__input"),
+        find(".d-select__input"),
         "the query input takes focus"
       );
       assert
@@ -216,7 +216,7 @@ module(
       );
 
       await click(".field-text");
-      const input = find(".d-combobox__input");
+      const input = find(".d-select__input");
       assert.strictEqual(input.value, "Apple", "the input shows the selection");
       // Asserted together: an untouched input already reports a collapsed caret at the end,
       // so the selection assertions only mean something once focus has actually landed.
@@ -247,7 +247,7 @@ module(
       await click(".field-text");
       assert.strictEqual(
         document.activeElement,
-        find(".d-combobox__trigger"),
+        find(".d-select__trigger"),
         "the trigger takes focus"
       );
     });
@@ -264,7 +264,7 @@ module(
 
       await click(".field-text");
       assert.false(
-        find(".d-combobox").contains(document.activeElement),
+        find(".d-select").contains(document.activeElement),
         "focus stays outside a locked control"
       );
     });
@@ -275,7 +275,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .exists("the clear control shows while a value is selected")
         .hasAria(
           "label",
@@ -283,10 +283,10 @@ module(
           "single-select names it 'Clear selection'"
         );
 
-      await click(".d-combobox__clear");
+      await click(".d-select__clear");
 
       assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .doesNotExist("clearing removes the value, so the control hides");
       assert
         .dom("[role='listbox']")
@@ -297,7 +297,7 @@ module(
       await render(<template><FrameHost @clearable={{true}} /></template>);
 
       assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .doesNotExist("no clear control while the selection is empty");
     });
 
@@ -309,17 +309,17 @@ module(
       );
 
       assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .hasAttribute(
           "tabindex",
           "-1",
           "the pointer affordance is not a tab stop"
         );
 
-      await click(".d-combobox__clear");
+      await click(".d-select__clear");
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .isFocused("focus returns to the static combobox controller");
     });
 
@@ -334,18 +334,14 @@ module(
         </template>
       );
 
+      assert.dom(".d-select__chip").exists({ count: 2 }, "two chips to start");
       assert
-        .dom(".d-combobox__chip")
-        .exists({ count: 2 }, "two chips to start");
-      assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .hasAria("label", "Clear all", "multi-select names it 'Clear all'");
 
-      await click(".d-combobox__clear");
+      await click(".d-select__clear");
 
-      assert
-        .dom(".d-combobox__chip")
-        .doesNotExist("clearing removes every chip");
+      assert.dom(".d-select__chip").doesNotExist("clearing removes every chip");
     });
 
     test("@clearable clears a static control from the keyboard (Delete)", async function (assert) {
@@ -360,7 +356,7 @@ module(
       await triggerKeyEvent(trigger, "keydown", "Delete");
 
       assert
-        .dom(".d-combobox__value")
+        .dom(".d-select__value")
         .doesNotExist("Delete on the closed control empties the selection");
       assert
         .dom("[role='listbox']")
@@ -392,7 +388,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__leading-icon")
+        .dom(".d-select__leading-icon")
         .exists("the leading icon renders")
         .hasClass("d-icon-tag", "it is the requested glyph");
     });
@@ -409,13 +405,13 @@ module(
       );
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass("d-icon-chevron-down", "closed shows the closed glyph");
 
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass("d-icon-chevron-up", "open swaps to the open glyph");
     });
 
@@ -426,12 +422,12 @@ module(
         </template>
       );
 
-      assert.dom(".d-combobox__caret").hasClass("d-icon-caret-down");
+      assert.dom(".d-select__caret").hasClass("d-icon-caret-down");
 
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass("d-icon-caret-down", "the same glyph stays while open");
     });
 
@@ -447,7 +443,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass(
           "d-icon-angle-down",
           "the missing closed side uses the default"
@@ -456,7 +452,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass("d-icon-chevron-up", "the supplied open side is preserved");
     });
 
@@ -472,7 +468,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass(
           "d-icon-chevron-down",
           "the supplied closed side is preserved"
@@ -481,7 +477,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__caret")
+        .dom(".d-select__caret")
         .hasClass("d-icon-angle-up", "the missing open side uses the default");
     });
 
@@ -499,14 +495,14 @@ module(
         </template>
       );
 
-      for (const trigger of findAll(".d-combobox__trigger")) {
+      for (const trigger of findAll(".d-select__trigger")) {
         assert.true(
-          trigger.lastElementChild?.classList.contains("d-combobox__caret"),
+          trigger.lastElementChild?.classList.contains("d-select__caret"),
           "the caret is the trigger's last element child"
         );
         assert.true(
           trigger.lastElementChild?.previousElementSibling?.classList.contains(
-            "d-combobox__clear"
+            "d-select__clear"
           ),
           "the clear button immediately precedes the caret"
         );
@@ -530,7 +526,7 @@ module(
         .hasAria("disabled", "true", "the control is marked aria-disabled")
         .doesNotHaveAttribute("tabindex", "and dropped from the tab order");
       assert
-        .dom(".d-combobox__clear")
+        .dom(".d-select__clear")
         .doesNotExist("a disabled control offers no clear affordance");
 
       await click("[role='combobox']");
@@ -560,15 +556,15 @@ module(
         </template>
       );
 
-      const removeButton = find(".d-combobox__chip-remove");
+      const removeButton = find(".d-select__chip-remove");
       assert
         .dom(removeButton)
         .isDisabled("the chip remove control is natively disabled");
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the disabled selection remains unchanged");
       assert
         .dom("[role='listbox']")
@@ -611,7 +607,7 @@ module(
 
       const input = find("[role='combobox']");
       assert
-        .dom(".d-combobox__presentation")
+        .dom(".d-select__presentation")
         .hasText("Apple", "the selected value remains readable");
 
       await focus(input);
@@ -624,7 +620,7 @@ module(
         .dom("[role='listbox']")
         .doesNotExist("ArrowDown does not open the readonly select");
       assert
-        .dom(".d-combobox__presentation")
+        .dom(".d-select__presentation")
         .hasText("Apple", "typing does not replace the selected presentation");
     });
 
@@ -651,7 +647,7 @@ module(
         .dom("[role='listbox']")
         .doesNotExist("chip navigation does not open the locked menu");
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the locked selection remains unchanged");
     });
 
@@ -747,7 +743,7 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       .hasAttribute("aria-describedby", "hint")
       .hasAttribute("aria-invalid", "true");
     assert
-      .dom(".typeahead.d-combobox")
+      .dom(".typeahead.d-select")
       .doesNotHaveAttribute(
         "id",
         "and never on the wrapper, which owns no role"
@@ -817,19 +813,17 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__trigger.--icon-only")
+      .dom(".d-select__trigger.--icon-only")
       .exists("the trigger opts into the icon-only layout");
     assert
-      .dom(".d-combobox__leading-icon.d-icon-gear")
+      .dom(".d-select__leading-icon.d-icon-gear")
       .exists("the leading icon renders");
+    assert.dom(".d-select__caret").exists("the caret still renders by default");
     assert
-      .dom(".d-combobox__caret")
-      .exists("the caret still renders by default");
-    assert
-      .dom(".d-combobox__value")
+      .dom(".d-select__value")
       .doesNotExist("the selected value text is suppressed");
     assert
-      .dom(".d-combobox__placeholder")
+      .dom(".d-select__placeholder")
       .doesNotExist("no placeholder text renders either");
   });
 
@@ -846,10 +840,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-combobox__trigger.--icon-only").exists();
-    assert.dom(".d-combobox__leading-icon.d-icon-gear").exists();
-    assert.dom(".d-combobox__value").doesNotExist();
-    assert.dom(".d-combobox__placeholder").doesNotExist();
+    assert.dom(".d-select__trigger.--icon-only").exists();
+    assert.dom(".d-select__leading-icon.d-icon-gear").exists();
+    assert.dom(".d-select__value").doesNotExist();
+    assert.dom(".d-select__placeholder").doesNotExist();
   });
 
   test("the icon-only trigger's accessible name comes from @label", async function (assert) {
@@ -889,7 +883,7 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__trigger.--icon-only")
+      .dom(".d-select__trigger.--icon-only")
       .doesNotExist("an editable typeahead cannot be icon-only");
     assert
       .dom("[role='combobox']")
@@ -911,10 +905,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__trigger.--icon-only")
+      .dom(".d-select__trigger.--icon-only")
       .doesNotExist("a multi-select shows chips, so it is never icon-only");
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 1 }, "the selection chip still renders");
   });
 
@@ -932,10 +926,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__leading-icon")
+      .dom(".d-select__leading-icon")
       .exists({ count: 1 }, "a scalar @icon renders a single leading icon");
     assert
-      .dom(".d-combobox__value")
+      .dom(".d-select__value")
       .hasText("Banana", "the label still renders when not icon-only");
   });
 
@@ -971,14 +965,14 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       </template>
     );
 
-    const trigger = find(".d-combobox__trigger.--icon-only");
+    const trigger = find(".d-select__trigger.--icon-only");
     await click("[role='combobox']");
 
     assert
-      .dom(".d-combobox__panel [role='option']")
+      .dom(".d-select__panel [role='option']")
       .exists("the dropdown renders its options");
     assert.true(
-      find(".d-combobox__panel").offsetWidth > trigger.offsetWidth,
+      find(".d-select__panel").offsetWidth > trigger.offsetWidth,
       "the option panel is wider than the compact icon-only trigger, so labels are not clipped"
     );
   });
@@ -1004,10 +998,10 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       assert
-        .dom("input.d-combobox__filter")
+        .dom("input.d-select__filter")
         .hasAttribute(
           "aria-label",
           "Category",
@@ -1039,7 +1033,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .hasAttribute(
           "aria-label",
           "Category, Banana",
@@ -1060,7 +1054,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .hasAttribute(
           "aria-label",
           "Category",
@@ -1146,11 +1140,11 @@ module(
         <template><Host @value={{2}} @variant="static" /></template>
       );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Backspace");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Backspace");
 
       assert
-        .dom(".d-combobox__placeholder")
+        .dom(".d-select__placeholder")
         .exists("the trigger falls back to its placeholder once cleared");
     });
 
@@ -1159,11 +1153,11 @@ module(
         <template><Host @value={{2}} @variant="button" /></template>
       );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Delete");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Delete");
 
       assert
-        .dom(".d-combobox__placeholder")
+        .dom(".d-select__placeholder")
         .exists("the same gesture works on the disclosure trigger");
     });
 
@@ -1179,8 +1173,8 @@ module(
         <template><Host @value={{2}} @variant="static" /></template>
       );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Backspace");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Backspace");
 
       assert.strictEqual(
         announce.withArgs(i18n("d_select.selection_cleared"), "polite")

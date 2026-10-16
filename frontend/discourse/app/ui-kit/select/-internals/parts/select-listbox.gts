@@ -113,11 +113,11 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
       nothing, in a panel the reader is still waiting on. }}
       <ul
         aria-busy="true"
-        class="d-combobox__listbox d-combobox__listbox--loading"
+        class="d-select__listbox d-select__listbox--loading"
         tabindex="-1"
       >
         {{#each @feedback.skeletonRows key="key" as |row|}}
-          <li class="d-combobox__skeleton" data-key={{row.key}}>
+          <li class="d-select__skeleton" data-key={{row.key}}>
             {{#if @hasLoadingItemBlock}}
               {{yield to="loadingItem"}}
             {{else}}
@@ -137,7 +137,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             aria-busy={{if @engine.serverPending "true" "false"}}
             aria-label={{or @label (i18n "d_select.label")}}
             aria-multiselectable={{if @multiple "true"}}
-            class="d-combobox__listbox"
+            class="d-select__listbox"
             id={{@listboxId}}
             @as="ul"
             @estimateSize={{@listbox.estimateRowSize}}
@@ -230,7 +230,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   {{! A group header: presentational, so it is skipped by roving
                   navigation and carries no option position. }}
                   <li
-                    class="d-combobox__group-header"
+                    class="d-select__group-header"
                     data-option-key={{option.key}}
                     role="presentation"
                     {{row.place row.start row.index}}
@@ -249,7 +249,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                 {{else if option.flags.divider}}
                   <li
                     aria-hidden="true"
-                    class="d-combobox__divider"
+                    class="d-select__divider"
                     role="presentation"
                     {{row.place row.start row.index}}
                     {{row.measure}}
@@ -288,7 +288,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
               posinset, so pending rows never enter the option set. }}
                   <li
                     aria-hidden="true"
-                    class="d-combobox__skeleton"
+                    class="d-select__skeleton"
                     role="presentation"
                     {{row.place row.start row.index}}
                     {{row.measure}}
@@ -309,7 +309,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
           goes through the a11y service because a live region announces unreliably on
           the render that mounts it. }}
             <div
-              class="d-combobox__narrow"
+              class="d-select__narrow"
               role="status"
               {{didInsert @announcer.announceNarrow}}
             >
@@ -330,7 +330,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             a keystroke or reload. That would report an empty result for a query still in
             flight, over rows that still belong to the previous one. }}
           <div
-            class="d-combobox__empty"
+            class="d-select__empty"
             role="status"
             {{didInsert @feedback.recordRowCount 0}}
             {{didInsert @announcer.announceNoResults content.query}}
@@ -356,17 +356,17 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
         would silently drop the alert role and the retry control, leaving the failure
         unannounced and unrecoverable. The reload action is still yielded, so a block
         that wants its own retry control can have one. }}
-      <div class="d-combobox__error" role="alert">
+      <div class="d-select__error" role="alert">
         {{#if @hasErrorBlock}}
           {{yield error @engine.reload to="error"}}
         {{else}}
-          <span class="d-combobox__error-message">
+          <span class="d-select__error-message">
             {{dIcon "triangle-exclamation"}}
             {{i18n "d_select.load_error"}}
           </span>
           {{#if @presenter.retryable}}
             <DButton
-              class="d-combobox__retry btn-flat"
+              class="d-select__retry btn-flat"
               @action={{@engine.reload}}
               @label="d_select.retry"
             />

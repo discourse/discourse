@@ -54,7 +54,7 @@ module(
         "every client row renders, past the retired cap"
       );
       assert
-        .dom(".d-combobox__narrow")
+        .dom(".d-select__narrow")
         .doesNotExist("a fully rendered client list never pins a cap");
       assert
         .dom(options[0])
@@ -121,10 +121,10 @@ module(
         .dom(OPTION_SELECTOR)
         .exists({ count: 200 }, "the server accumulator fills the cap");
       assert
-        .dom(".d-virtual-list + .d-combobox__narrow[role='status']")
+        .dom(".d-virtual-list + .d-select__narrow[role='status']")
         .exists("the filter-to-narrow hint follows the capped list viewport");
       assert
-        .dom("ul[role='listbox'] .d-combobox__narrow")
+        .dom("ul[role='listbox'] .d-select__narrow")
         .doesNotExist("the hint is never an invalid listbox child");
       assert.true(
         announce
@@ -178,7 +178,7 @@ module(
       await openSelect();
 
       assert
-        .dom(".d-combobox__narrow")
+        .dom(".d-select__narrow")
         .exists("the reopened list is still capped, so the hint is on screen");
       assert.strictEqual(
         narrowCalls(),
@@ -262,7 +262,7 @@ module(
         .dom(OPTION_SELECTOR)
         .exists({ count: 210 }, "the whole client list renders");
       assert
-        .dom(".d-combobox__narrow")
+        .dom(".d-select__narrow")
         .doesNotExist("a full client list never shows the narrow hint");
 
       // "Item 42" is a unique substring in a 1..210 list (Item 420-429 do not exist).
@@ -272,7 +272,7 @@ module(
         .dom(OPTION_SELECTOR)
         .exists({ count: 1 }, "the filter narrows the rendered list");
       assert
-        .dom(".d-combobox__narrow")
+        .dom(".d-select__narrow")
         .doesNotExist("filtering a client list never pins a cap");
     });
 
@@ -642,7 +642,7 @@ module(
       await openSelect();
       engine = probedEngine();
       assert
-        .dom("ul[role='listbox'] .d-combobox__skeleton")
+        .dom("ul[role='listbox'] .d-select__skeleton")
         .doesNotExist("a settled list shows no placeholder rows");
 
       engine.revealMore();
@@ -657,16 +657,16 @@ module(
           .dom(OPTION_SELECTOR)
           .exists({ count: 50 }, "the already-loaded rows stay mounted");
         assert
-          .dom("ul[role='listbox'] .d-combobox__skeleton")
+          .dom("ul[role='listbox'] .d-select__skeleton")
           .doesNotExist(
             "a source that answers quickly never flashes a placeholder"
           );
 
         // Only a load slow enough to read as stuck earns visible feedback.
         await waitUntil(() =>
-          document.querySelector("ul[role='listbox'] .d-combobox__skeleton")
+          document.querySelector("ul[role='listbox'] .d-select__skeleton")
         );
-        const skeletons = findAll("ul[role='listbox'] .d-combobox__skeleton");
+        const skeletons = findAll("ul[role='listbox'] .d-select__skeleton");
         assert.true(
           skeletons.length > 0,
           "placeholder rows mark the pending page"
@@ -698,7 +698,7 @@ module(
       }
 
       assert
-        .dom("ul[role='listbox'] .d-combobox__skeleton")
+        .dom("ul[role='listbox'] .d-select__skeleton")
         .doesNotExist("placeholders clear once the page lands");
       assert.dom(OPTION_SELECTOR).exists({ count: 100 }, "the page appended");
     });
@@ -813,10 +813,10 @@ module(
 
       const querying = fillIn("[role='combobox']", "Item 4");
       await waitUntil(() => Boolean(releaseQuery));
-      await waitUntil(() => find(".d-combobox__skeleton"));
+      await waitUntil(() => find(".d-select__skeleton"));
 
       assert
-        .dom(".d-combobox__skeleton")
+        .dom(".d-select__skeleton")
         .exists(
           { count: 4 },
           "the skeleton matches the outgoing row count rather than filling the viewport"
@@ -846,12 +846,12 @@ module(
 
       const querying = fillIn("[role='combobox']", "Item 4");
       await waitUntil(() => Boolean(releaseQuery));
-      await waitUntil(() => find(".d-combobox__skeleton"));
+      await waitUntil(() => find(".d-select__skeleton"));
 
       // Mirroring this one exactly would render a blank panel, which reads as a broken list
       // rather than a loading one — the floor exists for this case alone.
       assert
-        .dom(".d-combobox__skeleton")
+        .dom(".d-select__skeleton")
         .exists(
           { count: 1 },
           "an empty predecessor still gets a visible floor"
@@ -879,9 +879,7 @@ module(
       );
       await openSelect();
 
-      assert
-        .dom(".d-combobox__skeleton")
-        .doesNotExist("settled rows are shown");
+      assert.dom(".d-select__skeleton").doesNotExist("settled rows are shown");
 
       // Un-awaited: settling would block on the held promise, and the whole point is the
       // mid-flight state.
@@ -894,7 +892,7 @@ module(
         .dom("[role='option']")
         .exists("the previous rows are retained before the threshold");
 
-      await waitUntil(() => find(".d-combobox__skeleton"));
+      await waitUntil(() => find(".d-select__skeleton"));
 
       assert
         .dom("[role='option']")
@@ -906,7 +904,7 @@ module(
       await querying;
       await settled();
 
-      assert.dom(".d-combobox__skeleton").doesNotExist("the skeleton clears");
+      assert.dom(".d-select__skeleton").doesNotExist("the skeleton clears");
       assert
         .dom(OPTION_SELECTOR)
         .exists({ count: 7 }, "and the new query's rows replace it");
@@ -1045,10 +1043,10 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
     await render(
       <template><DSelect @load={{load}} @variant="button" /></template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     // Dispatched raw: `fillIn` awaits `settled()`, which would wait out the debounce.
-    const input = find(".d-combobox__filter");
+    const input = find(".d-select__filter");
     input.value = "on";
     input.dispatchEvent(new Event("input", { bubbles: true }));
     await rerender();

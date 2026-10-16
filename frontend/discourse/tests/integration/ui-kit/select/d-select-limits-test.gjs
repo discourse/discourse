@@ -150,7 +150,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Cherry pie"));
 
       assert.strictEqual(
@@ -159,7 +159,7 @@ module(
         "the rejected pointer add emits no onChange"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the rejected pointer add creates no chip");
     });
 
@@ -178,7 +178,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
       await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
       assert
@@ -216,7 +216,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
       await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
       assert
@@ -288,7 +288,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
 
       assert
         .dom("[role='option'][aria-selected='false']")
@@ -331,7 +331,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Run action"));
 
       assert.true(onSelect.calledOnce, "the action callback runs at the cap");
@@ -353,7 +353,7 @@ module(
         "running the action emits no value change"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "running the action leaves the chips unchanged");
     });
 
@@ -376,7 +376,7 @@ module(
       );
 
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 5 },
           "all five pre-seeded values remain rendered as chips"
@@ -406,7 +406,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Apple"));
 
       assert.deepEqual(
@@ -415,7 +415,7 @@ module(
         "deselecting one over-maximum option emits the remaining four values"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 4 },
           "the selected option is removed while still over the cap"
@@ -440,7 +440,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__chip .d-combobox__chip-remove");
+      await click(".d-select__chip .d-select__chip-remove");
 
       assert.deepEqual(
         onChange.firstCall.args[0],
@@ -448,7 +448,7 @@ module(
         "the chip remove button emits the value without the removed item"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 1 },
           "the chip remove button removes one chip at the cap"
@@ -467,7 +467,7 @@ module(
         </template>
       );
       await triggerKeyEvent(
-        ".d-combobox__chip .d-combobox__chip-remove",
+        ".d-select__chip .d-select__chip-remove",
         "keydown",
         "Backspace"
       );
@@ -491,7 +491,7 @@ module(
         </template>
       );
       await triggerKeyEvent(
-        ".d-combobox__chip .d-combobox__chip-remove",
+        ".d-select__chip .d-select__chip-remove",
         "keydown",
         "Delete"
       );
@@ -535,7 +535,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__clear");
+      await click(".d-select__clear");
 
       assert.deepEqual(
         onChange.firstCall.args[0],
@@ -543,7 +543,7 @@ module(
         "clear-all emits an empty multi-select value at the cap"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .doesNotExist("clear-all removes every chip at the cap");
     });
 
@@ -562,10 +562,10 @@ module(
       // A null still renders its own removable chip, so it occupies a slot like any other held
       // value — counting it is what keeps the visible selection from outgrowing the cap.
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the null entry renders a chip of its own");
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       assert
         .dom(optionWithText("Banana"))
         .hasAttribute(
@@ -581,7 +581,7 @@ module(
       );
 
       // The slot is reclaimable, so a null can never wedge the control at its cap.
-      await click(".d-combobox__chip .d-combobox__chip-remove");
+      await click(".d-select__chip .d-select__chip-remove");
       assert.deepEqual(
         onChange.firstCall.args[0],
         [1],
@@ -611,14 +611,14 @@ module(
         </template>
       );
 
-      await click(".zero-maximum .d-combobox__input");
+      await click(".zero-maximum .d-select__input");
       await click(".zero-maximum [role='option'][aria-selected='false']");
       assert.true(
         zeroChange.calledOnce,
         "@maximum={{0}} allows an additional selection"
       );
 
-      await click(".negative-maximum .d-combobox__input");
+      await click(".negative-maximum .d-select__input");
       await click(".negative-maximum [role='option'][aria-selected='false']");
       assert.true(
         negativeChange.calledOnce,
@@ -637,7 +637,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click("[role='option'][aria-selected='true']");
 
       assert.deepEqual(
@@ -646,7 +646,7 @@ module(
         "deselecting the last option emits zero selections below minimum"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .doesNotExist("the final chip is removed below minimum");
     });
 
@@ -662,7 +662,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__clear");
+      await click(".d-select__clear");
 
       assert.deepEqual(
         onChange.firstCall.args[0],
@@ -670,7 +670,7 @@ module(
         "clear-all emits zero selections below minimum"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .doesNotExist("clear-all removes every chip below minimum");
     });
 
@@ -827,7 +827,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click(optionWithText("Capture facade"));
       assert.notStrictEqual(
         selectKit,
@@ -844,7 +844,7 @@ module(
         "the direct engine.select() bridge call emits no onChange at the cap"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the compat bridge cannot add a chip at the cap");
     });
   }
@@ -867,7 +867,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       const controller = find("[role='combobox']");
 
       assert
@@ -886,7 +886,7 @@ module(
         "Enter without deliberate navigation emits no value change"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "Enter without a highlight preserves both chips");
 
       await triggerKeyEvent(controller, "keydown", "ArrowDown");
@@ -905,7 +905,7 @@ module(
         "Enter after deliberate navigation emits one deselection"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 1 },
           "deliberate navigation followed by Enter removes one chip"
@@ -925,7 +925,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       const controller = find("[role='combobox']");
 
       assert
@@ -944,7 +944,7 @@ module(
         "Enter without deliberate static navigation emits no value change"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists({ count: 2 }, "the inert Enter preserves both static chips");
 
       await triggerKeyEvent(controller, "keydown", "ArrowDown");
@@ -963,7 +963,7 @@ module(
         "Enter after deliberate static navigation emits one deselection"
       );
       assert
-        .dom(".d-combobox__chip")
+        .dom(".d-select__chip")
         .exists(
           { count: 1 },
           "deliberate static navigation followed by Enter removes one chip"
@@ -985,7 +985,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       const controller = find("[role='combobox']");
       for (const [key, expected] of [
@@ -1029,7 +1029,7 @@ module(
           />
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       const controller = find("[role='combobox']");
       for (const [key, expected] of [
@@ -1070,7 +1070,7 @@ module(
       await render(
         <template><ReactiveMaximumHost @items={{items}} /></template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
 
       const controller = find("[role='combobox']");
       const listbox = find("[role='listbox']");
@@ -1150,7 +1150,7 @@ module(
           <MultiLimitsHost @maximum={{2}} @value={{array 1}} />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       await click("[role='option']:not([aria-selected='true'])");
 
       assert
@@ -1170,10 +1170,10 @@ module(
           <MultiLimitsHost @maximum={{2}} @value={{array 1 2}} />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
 
-      const panel = find(".d-combobox__panel");
-      const limit = find(".d-combobox__limit");
+      const panel = find(".d-select__panel");
+      const limit = find(".d-select__limit");
       const listbox = find("[role='listbox']");
 
       assert
@@ -1201,10 +1201,10 @@ module(
           <MultiLimitsHost @minimum={{2}} @value={{array 1}} />
         </template>
       );
-      await click(".d-combobox__input");
+      await click(".d-select__input");
 
       assert
-        .dom(".d-combobox__limit")
+        .dom(".d-select__limit")
         .hasAttribute(
           "role",
           "status",
@@ -1230,7 +1230,7 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__limit")
+        .dom(".d-select__limit")
         .doesNotExist(
           "single-select ignores maximum and minimum message state"
         );
@@ -1251,12 +1251,12 @@ module(
       await fillIn("[role='combobox']", "a");
 
       assert
-        .dom(".d-combobox__limit")
+        .dom(".d-select__limit")
         .doesNotExist(
           "the cap message is hidden while the query is below minChars"
         );
       assert
-        .dom(".d-combobox__min-chars")
+        .dom(".d-select__min-chars")
         .hasAttribute(
           "role",
           "status",
@@ -1273,7 +1273,7 @@ module(
 
     test("the :footer hash exposes live limit state below and at the cap", async function (assert) {
       await render(<template><FooterLimitsHost /></template>);
-      await click(".d-combobox__input");
+      await click(".d-select__input");
 
       assert
         .dom(".footer-maximum")

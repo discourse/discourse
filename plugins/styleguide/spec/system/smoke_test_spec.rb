@@ -106,7 +106,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     grouped = PageObjects::Components::UiKit::DSelect.by_identifier("sg-grouped")
     grouped.open
-    expect(page).to have_css(grouped.in_panel(".d-combobox__group-header"), minimum: 2)
+    expect(page).to have_css(grouped.in_panel(".d-select__group-header"), minimum: 2)
     screenshot_marker(label: "styleguide-select-grouped", only: :desktop)
   end
 
@@ -116,7 +116,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     footer = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer")
     footer.open
-    expect(page).to have_css(footer.in_panel(".d-combobox__panel > .d-combobox__footer"))
+    expect(page).to have_css(footer.in_panel(".d-select__panel > .d-select__footer"))
     screenshot_marker(label: "styleguide-select-footer", only: :desktop)
   end
 
@@ -154,7 +154,7 @@ RSpec.describe "Styleguide Smoke Test" do
     combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-error")
     combobox.open_trigger
     expect(page).to have_css(
-      combobox.in_panel(".d-combobox__error .d-icon-triangle-exclamation"),
+      combobox.in_panel(".d-select__error .d-icon-triangle-exclamation"),
       wait: 5,
     )
     screenshot_marker(label: "styleguide-select-error", only: :desktop)
@@ -166,7 +166,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     maximum = PageObjects::Components::UiKit::DSelect.by_identifier("sg-maximum")
     maximum.open
-    expect(page).to have_css(maximum.in_panel(".d-combobox__panel .d-combobox__limit"))
+    expect(page).to have_css(maximum.in_panel(".d-select__panel .d-select__limit"))
     expect(page).to have_css(maximum.in_panel("[role='option'][aria-disabled='true']"))
     screenshot_marker(label: "styleguide-select-maximum", only: :desktop)
   end
@@ -187,7 +187,7 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(styleguide).to have_heading("Select")
 
     expect(page).to have_css(
-      "[data-identifier='sg-icon-only'][data-trigger].--icon-only .d-combobox__leading-icon",
+      "[data-identifier='sg-icon-only'][data-trigger].--icon-only .d-select__leading-icon",
     )
     page.scroll_to(find("[data-identifier='sg-icon-only'][data-trigger]"), align: :center)
     # Open it: the dropdown must size to its own options, not the compact trigger, so labels
@@ -204,7 +204,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # Resting: the :selection block renders the compact avatar + name summary.
     expect(page).to have_css(
-      "[data-identifier='sg-selection'][data-trigger] .d-combobox__presentation .select-examples__avatar",
+      "[data-identifier='sg-selection'][data-trigger] .d-select__presentation .select-examples__avatar",
     )
     page.scroll_to(find("[data-identifier='sg-selection'][data-trigger]"), align: :center)
     screenshot_marker(label: "styleguide-select-selection-resting", only: :desktop)
@@ -214,7 +214,7 @@ RSpec.describe "Styleguide Smoke Test" do
     selection.open_trigger
     expect(page).to have_css(selection.option_selector, text: "Maya Alvarez")
     expect(page).to have_no_css(
-      "[data-identifier='sg-selection'][data-trigger] .d-combobox__presentation",
+      "[data-identifier='sg-selection'][data-trigger] .d-select__presentation",
     )
     screenshot_marker(label: "styleguide-select-selection-open", only: :desktop)
   end
@@ -225,14 +225,14 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # The first example is the default typeahead: the chosen label renders inside the input.
     typeahead = first(".select-examples__control")
-    typeahead.find(".d-combobox__input").click
+    typeahead.find(".d-select__input").click
     find("[role='option']", text: "Draft").click
     expect(typeahead).to have_field(with: "Draft")
 
     label_fully_selected = lambda { page.evaluate_script(<<~JS) }
           (() => {
             const input = document.querySelector(
-              ".select-examples__control .d-combobox__input"
+              ".select-examples__control .d-select__input"
             );
             return (
               document.activeElement === input &&
@@ -246,13 +246,13 @@ RSpec.describe "Styleguide Smoke Test" do
     # Clicking directly on the label text must place the caret there, not select the whole
     # value (the reported bug: a click ends up highlighting the entire label).
     find(".styleguide-contents .d-page-header__title").click # blur to a resting, filled field
-    typeahead.find(".d-combobox__input").click
+    typeahead.find(".d-select__input").click
     expect(page).to have_css("[role='listbox']")
     expect(label_fully_selected.call).to eq(false)
 
     # Clicking the chevron opens via a programmatic focus; it must not select-all either.
     find(".styleguide-contents .d-page-header__title").click
-    typeahead.find(".d-combobox__caret").click
+    typeahead.find(".d-select__caret").click
     expect(page).to have_css("[role='listbox']")
     expect(label_fully_selected.call).to eq(false)
   end

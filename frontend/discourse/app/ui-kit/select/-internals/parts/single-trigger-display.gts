@@ -103,7 +103,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         it there. }}
       {{#unless @editing}}
         {{#if @presenter.isMobileTypeahead}}
-          <span class="d-combobox__presentation">
+          <span class="d-select__presentation">
             {{#if (or @pending @engine.hasValue)}}
               <DAsyncContent
                 @asyncData={{@resolveSelection}}
@@ -135,14 +135,14 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 </:content>
               </DAsyncContent>
             {{else}}
-              <span class="d-combobox__placeholder">
+              <span class="d-select__placeholder">
                 {{or @placeholder (i18n "d_select.placeholder")}}
               </span>
             {{/if}}
           </span>
         {{else if @hasSelectionBlock}}
           {{#if (or @pending (and @engine.hasValue (not @triggerFocused)))}}
-            <span class="d-combobox__presentation" id={{@selectionId}}>
+            <span class="d-select__presentation" id={{@selectionId}}>
               <DAsyncContent
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
@@ -175,7 +175,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         {{else if (or @pending @engine.hasValue)}}
           <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
             <:loading>
-              <span class="d-combobox__presentation">
+              <span class="d-select__presentation">
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
                 {{else}}
@@ -246,7 +246,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             />{{/if}}</:loading>
         <:content as |selected|>
           {{#if selected}}
-            <span class="d-combobox__value">
+            <span class="d-select__value">
               {{#if selected.__unresolved}}
                 {{#if @hasUnresolvedBlock}}
                   {{yield selected to="unresolved"}}
@@ -262,7 +262,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{/if}}
         </:content>
         <:empty>
-          <span class="d-combobox__placeholder">
+          <span class="d-select__placeholder">
             {{or @placeholder (i18n "d_select.placeholder")}}
           </span>
         </:empty>

@@ -384,7 +384,7 @@ export default class DSelect extends Component<DSelectSignature> {
       this.presenter.isStatic && this.presenter.overlayIsModal,
   });
 
-  #listboxId = `d-combobox-listbox-${guidFor(this)}`;
+  #listboxId = `d-select-listbox-${guidFor(this)}`;
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
     super(owner, args);
@@ -437,7 +437,7 @@ export default class DSelect extends Component<DSelectSignature> {
    * would read as an empty combobox while the eye sees a selection.
    */
   get selectionId() {
-    return `d-combobox-selection-${guidFor(this)}`;
+    return `d-select-selection-${guidFor(this)}`;
   }
 
   /**
@@ -568,7 +568,7 @@ export default class DSelect extends Component<DSelectSignature> {
       aria-invalid={{unless this.presenter.isTypeahead (if @invalid "true")}}
       aria-label={{this.presenter.triggerRootLabel}}
       aria-readonly={{this.presenter.triggerRootReadonly}}
-      class="d-combobox"
+      class="d-select"
       data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
       {{! Identity and description follow the combobox role, which lives here only on the
         variants without a query input; the typeahead carries them on its input instead. Applied
@@ -577,10 +577,10 @@ export default class DSelect extends Component<DSelectSignature> {
       role={{this.presenter.triggerRootRole}}
       tabindex={{this.presenter.triggerRootTabIndex}}
       ...attributes
-      {{! The d-combobox__content class floors the overlay min-width in CSS: matchTriggerWidth pins
+      {{! The d-select__content class floors the overlay min-width in CSS: matchTriggerWidth pins
         it to the trigger, which is unusably narrow for a compact icon-only trigger, and the
         min-width floor overrides that (it also gives the windowed option list a real width). }}
-      @contentClass="d-combobox__content"
+      @contentClass="d-select__content"
       @contentRole={{this.presenter.panelContentRole}}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}
@@ -725,7 +725,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
       <:content as |menuArgs|>
         <div
-          class="d-combobox__panel"
+          class="d-select__panel"
           {{didInsert
             this.feedback.trackLoadFeedback
             this.engine.serverPending
@@ -748,7 +748,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 readers treat inconsistently — name it after the field it narrows. }}
               aria-label={{this.presenter.ariaLabelText}}
               autocomplete="off"
-              class="d-combobox__filter"
+              class="d-select__filter"
               placeholder={{this.presenter.searchPlaceholderText}}
               role="combobox"
               @filterAction={{this.onFilterInput}}
@@ -761,7 +761,7 @@ export default class DSelect extends Component<DSelectSignature> {
               function behind an aria-modal). No aria-owns (input + listbox share the modal
               subtree); no blur-close (the modal owns dismissal). }}
             <ComboboxQueryInput
-              class="d-combobox__filter"
+              class="d-select__filter"
               @disabled={{this.presenter.isDisabled}}
               @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
@@ -788,7 +788,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 with no list rendered the hint has nothing to annotate. Announced through the a11y
                 service (a mounted live region speaks unreliably); the node stays role=status. }}
               <div
-                class="d-combobox__limit"
+                class="d-select__limit"
                 role="status"
                 {{didInsert
                   this.announcer.announceLimitOnEntry
@@ -810,7 +810,7 @@ export default class DSelect extends Component<DSelectSignature> {
               rendering the list at all. The hint is announced through the a11y service (see announceMinChars);
               the visible node stays a status region for sighted users. }}
             <div
-              class="d-combobox__min-chars"
+              class="d-select__min-chars"
               role="status"
               {{didInsert
                 this.announcer.announceMinCharsOnEntry
@@ -858,7 +858,7 @@ export default class DSelect extends Component<DSelectSignature> {
               Keyboard-reachable via float-kit's Tab-forward; a desktop focus-out closes the menu. }}
             <div
               aria-label={{i18n "d_select.footer_label"}}
-              class="d-combobox__footer"
+              class="d-select__footer"
               role="group"
               {{on "focusout" this.interaction.handleFooterFocusOut}}
             >

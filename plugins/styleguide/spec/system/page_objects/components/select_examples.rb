@@ -6,7 +6,7 @@ module PageObjects
     #
     # Every lookup that reaches into an open overlay is scoped by the example's `@identifier`
     # rather than by `[role='listbox']` alone: the overlay is portaled out of the example's
-    # wrapper, so an unscoped query reads whichever panel happens to be open. `.d-combobox__filter`
+    # wrapper, so an unscoped query reads whichever panel happens to be open. `.d-select__filter`
     # is the sharpest case — every open `button`/`static` panel renders one.
     class SelectExamples < PageObjects::Components::Base
       REVIEWERS = "[data-test-select-showcase='reviewers']"
@@ -18,9 +18,9 @@ module PageObjects
       end
 
       def has_resolved_reviewers?(count:)
-        has_css?("#{REVIEWERS} .d-combobox__chip", count: count) &&
-          has_css?("#{REVIEWERS} .d-combobox__chip-label", text: "maya") &&
-          has_css?("#{REVIEWERS} .d-combobox__chip-label", text: "Deleted account")
+        has_css?("#{REVIEWERS} .d-select__chip", count: count) &&
+          has_css?("#{REVIEWERS} .d-select__chip-label", text: "maya") &&
+          has_css?("#{REVIEWERS} .d-select__chip-label", text: "Deleted account")
       end
 
       # The chips wrap only because the control is width-constrained; this asserts the wrap by
@@ -30,7 +30,7 @@ module PageObjects
           (() => {
             const chips = [
               ...document.querySelectorAll(
-                "#{REVIEWERS} .d-combobox__chip"
+                "#{REVIEWERS} .d-select__chip"
               ),
             ];
             return new Set(chips.map((chip) => chip.offsetTop)).size > 1;
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def open_reviewers
-        find("#{REVIEWERS} .d-combobox__input").click
+        find("#{REVIEWERS} .d-select__input").click
       end
 
       def has_disabled_reviewer?(name)
@@ -47,17 +47,17 @@ module PageObjects
       end
 
       def create_tag(name)
-        find("#{TAGS} .d-combobox__trigger").click
-        find("#{panel("tags")} .d-combobox__filter").fill_in(with: name)
+        find("#{TAGS} .d-select__trigger").click
+        find("#{panel("tags")} .d-select__filter").fill_in(with: name)
         find("#{panel("tags")} [role='option']", text: "Create “#{name}”").click
       end
 
       def has_selected_tag?(name)
-        has_css?("#{TAGS} .d-combobox__chip-label", text: name)
+        has_css?("#{TAGS} .d-select__chip-label", text: name)
       end
 
       def tag_picker_expanded?
-        find("#{TAGS} .d-combobox__trigger")["aria-expanded"] == "true"
+        find("#{TAGS} .d-select__trigger")["aria-expanded"] == "true"
       end
 
       def close_tag_picker
@@ -107,7 +107,7 @@ module PageObjects
       end
 
       def open_notifications
-        find("#{NOTIFICATIONS} .d-combobox__trigger").click
+        find("#{NOTIFICATIONS} .d-select__trigger").click
       end
 
       def has_notification_icons?
@@ -137,11 +137,11 @@ module PageObjects
       end
 
       def has_no_computed_dividers?
-        has_no_css?("#{panel("content-computed")} .d-combobox__divider")
+        has_no_css?("#{panel("content-computed")} .d-select__divider")
       end
 
       def has_timezone_dividers?(minimum:)
-        has_css?("#{panel("divided")} .d-combobox__divider", minimum: minimum)
+        has_css?("#{panel("divided")} .d-select__divider", minimum: minimum)
       end
 
       # No overlay anywhere on the page. Deliberately document-wide rather than scoped: the point
@@ -151,7 +151,7 @@ module PageObjects
       end
 
       def use_notification_action
-        find("#{NOTIFICATIONS} .d-combobox__trigger").click
+        find("#{NOTIFICATIONS} .d-select__trigger").click
         find(
           "#{panel("notifications")} [role='option']",
           text: "Manage notification settings",
@@ -159,7 +159,7 @@ module PageObjects
       end
 
       def has_notification_selection?(name)
-        has_css?("#{NOTIFICATIONS} .d-combobox__value", text: name)
+        has_css?("#{NOTIFICATIONS} .d-select__value", text: name)
       end
 
       def has_notification_action_count?(count)

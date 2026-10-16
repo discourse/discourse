@@ -41,7 +41,7 @@ describe "UiKit | DSelect page regressions" do
   it "reopens from the caret after the input already has focus" do
     visit "/styleguide/molecules/select?group=selection"
     combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-none")
-    caret = "[data-identifier='sg-none'][data-trigger] .d-combobox__caret"
+    caret = "[data-identifier='sg-none'][data-trigger] .d-select__caret"
 
     combobox.open
     expect(combobox).to have_listbox
@@ -65,7 +65,7 @@ describe "UiKit | DSelect page regressions" do
   it "keeps every seeded chip when the hero tag picker is opened" do
     visit "/styleguide/molecules/select?group=start"
     tags = PageObjects::Components::UiKit::DSelect.by_identifier("sg-hero-tags")
-    caret = "[data-identifier='sg-hero-tags'][data-trigger] .d-combobox__caret"
+    caret = "[data-identifier='sg-hero-tags'][data-trigger] .d-select__caret"
 
     expect(tags.chip_labels).to eq(%w[theming accessibility])
 
@@ -91,19 +91,19 @@ describe "UiKit | DSelect page regressions" do
     populated = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer")
     populated.open
     expect(page).to have_css(populated.option_selector, wait: 10)
-    expect(page).to have_css(populated.in_panel(".d-combobox__footer"))
+    expect(page).to have_css(populated.in_panel(".d-select__footer"))
     populated.press(:escape)
 
     empty = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer-empty")
     empty.open
-    expect(page).to have_css(empty.in_panel(".d-combobox__empty"), wait: 10)
-    expect(page).to have_css(empty.in_panel(".d-combobox__footer"))
+    expect(page).to have_css(empty.in_panel(".d-select__empty"), wait: 10)
+    expect(page).to have_css(empty.in_panel(".d-select__footer"))
     empty.press(:escape)
 
     broken = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer-error")
     broken.open
-    expect(page).to have_css(broken.in_panel(".d-combobox__error"), wait: 10)
-    expect(page).to have_css(broken.in_panel(".d-combobox__footer"))
+    expect(page).to have_css(broken.in_panel(".d-select__error"), wait: 10)
+    expect(page).to have_css(broken.in_panel(".d-select__footer"))
   end
 
   # A selected row was marked only by `font-weight`, which is inherited — so any custom `:item`

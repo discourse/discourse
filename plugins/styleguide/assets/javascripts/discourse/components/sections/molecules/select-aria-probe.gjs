@@ -242,7 +242,7 @@ export default class SelectAriaProbe extends Component {
       document.querySelector("[role=listbox]");
     // The visual cursor. Where it and aria-activedescendant disagree, the two are separate
     // pieces of state that have drifted, which no attribute inspected on its own reveals.
-    const highlighted = document.querySelector(".d-combobox__option.--active");
+    const highlighted = document.querySelector(".d-select__option.--active");
 
     return {
       focused: describeElement(focused),

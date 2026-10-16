@@ -54,7 +54,7 @@ class MultiHost extends Component {
   </template>
 }
 
-const TRIGGER_INPUT = ".d-combobox__trigger [role='combobox']";
+const TRIGGER_INPUT = ".d-select__trigger [role='combobox']";
 
 module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
   setupRenderingTest(hooks);
@@ -104,11 +104,11 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     // autoActivateFirst flips true for multi, so Enter selects the highlighted first
     // match with no explicit navigation — and multi keeps the menu open on select.
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 1 }, "the highlighted match becomes a chip");
     // Assert on the label span, not the whole chip — the chip also contains the
     // remove button's sr-only "Remove" text.
-    assert.dom(".d-combobox__chip-label").hasText("Apple");
+    assert.dom(".d-select__chip-label").hasText("Apple");
     assert.dom("[role='listbox']").exists("multi stays open after a pick");
   });
 
@@ -119,8 +119,8 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await fillIn(TRIGGER_INPUT, "ban");
     await click("[role='option']");
 
-    assert.dom(".d-combobox__chip").exists({ count: 1 }, "a chip is added");
-    assert.dom(".d-combobox__chip-label").hasText("Banana");
+    assert.dom(".d-select__chip").exists({ count: 1 }, "a chip is added");
+    assert.dom(".d-select__chip-label").hasText("Banana");
     assert.dom("[role='listbox']").exists("the menu stays open");
     assert
       .dom("[role='listbox']")
@@ -146,12 +146,12 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     assert.dom(TRIGGER_INPUT).exists("inline input is present");
     await fillIn(TRIGGER_INPUT, "cher");
     // Remove a chip mid-query (its inner × button); the reset must NOT fire on removal.
-    await click(".d-combobox__chip .d-combobox__chip-remove");
+    await click(".d-select__chip .d-select__chip-remove");
 
     assert
       .dom(TRIGGER_INPUT)
       .hasValue("cher", "removing a chip does not wipe the typed query");
-    assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+    assert.dom(".d-select__chip").exists({ count: 1 }, "one chip removed");
   });
 
   test("Backspace on the empty input removes the last chip; not with text; not mid-composition", async function (assert) {
@@ -159,13 +159,13 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
 
     const input = find(TRIGGER_INPUT);
     assert.dom(input).exists("inline input is present");
-    assert.dom(".d-combobox__chip").exists({ count: 2 });
+    assert.dom(".d-select__chip").exists({ count: 2 });
 
     // Empty input + Backspace → remove the last chip.
     input.focus();
     await triggerKeyEvent(input, "keydown", "Backspace");
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists(
         { count: 1 },
         "Backspace on the empty input removes the last chip"
@@ -175,7 +175,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await fillIn(input, "x");
     await triggerKeyEvent(input, "keydown", "Backspace");
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists(
         { count: 1 },
         "Backspace with text in the input does not remove a chip"
@@ -194,7 +194,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     );
     await settled();
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 1 }, "a composing Backspace does not remove a chip");
   });
 
@@ -207,11 +207,11 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(TRIGGER_INPUT, "keydown", "ArrowDown");
     assert.dom("[role='listbox']").exists("the menu is open");
 
-    await click(".d-combobox__chip .d-combobox__chip-remove");
+    await click(".d-select__chip .d-select__chip-remove");
     assert
       .dom("[role='listbox']")
       .exists("removing a chip keeps the menu open");
-    assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+    assert.dom(".d-select__chip").exists({ count: 1 }, "one chip removed");
   });
 
   test("adding announces 'Added <label>' politely with no trailing result count", async function (assert) {
@@ -300,7 +300,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
       );
   });
 
-  const REMOVE = ".d-combobox__chip-remove";
+  const REMOVE = ".d-select__chip-remove";
 
   test("ArrowLeft at the start of the query enters the chip group; chips are not tab stops", async function (assert) {
     await render(<template><MultiHost @value={{array 1 2}} /></template>);
@@ -402,9 +402,9 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(findAll(REMOVE)[1], "keydown", "Backspace");
 
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 2 }, "the focused chip is removed");
-    assert.dom(".d-combobox__chip-label").exists({ count: 2 });
+    assert.dom(".d-select__chip-label").exists({ count: 2 });
     const buttons = findAll(REMOVE);
     assert.strictEqual(
       document.activeElement,
@@ -422,7 +422,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(findAll(REMOVE)[1], "keydown", "Delete");
 
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 1 }, "Delete removes the focused chip");
   });
 
@@ -434,7 +434,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(input, "keydown", "ArrowLeft");
     await triggerKeyEvent(findAll(REMOVE)[0], "keydown", "Backspace");
 
-    assert.dom(".d-combobox__chip").doesNotExist("the last chip is removed");
+    assert.dom(".d-select__chip").doesNotExist("the last chip is removed");
     assert.strictEqual(
       document.activeElement,
       find(TRIGGER_INPUT),
@@ -453,7 +453,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(input, "keydown", "ArrowLeft");
     assert
       .dom(document.activeElement)
-      .hasClass("d-combobox__chip-remove", "focus entered the chips");
+      .hasClass("d-select__chip-remove", "focus entered the chips");
 
     await triggerKeyEvent(findAll(REMOVE)[1], "keydown", "Escape");
 
@@ -463,7 +463,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     assert
       .dom(document.activeElement)
       .hasClass(
-        "d-combobox__chip-remove",
+        "d-select__chip-remove",
         "focus stays on the chip after the menu closes"
       );
   });
@@ -477,7 +477,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     await triggerKeyEvent(input, "keydown", "ArrowLeft");
     assert
       .dom(document.activeElement)
-      .hasClass("d-combobox__chip-remove", "focus is on a chip");
+      .hasClass("d-select__chip-remove", "focus is on a chip");
     assert.dom("[role='listbox']").doesNotExist("the menu is closed");
 
     // ArrowDown is the "go to the options" gesture: it jumps to the input (which owns the
@@ -536,7 +536,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     input.focus();
     await triggerKeyEvent(input, "keydown", "ArrowLeft");
 
-    assert.dom(".d-combobox__chip").doesNotExist("no chips to enter");
+    assert.dom(".d-select__chip").doesNotExist("no chips to enter");
     assert.strictEqual(
       document.activeElement,
       input,

@@ -35,7 +35,7 @@ export default class CustomErrorSelectExample extends Component {
           {{error.message}}
         </span>
         <DButton
-          class="d-combobox__retry btn-flat"
+          class="d-select__retry btn-flat"
           @action={{retry}}
           @label="styleguide.sections.select.content.error_retry"
         />

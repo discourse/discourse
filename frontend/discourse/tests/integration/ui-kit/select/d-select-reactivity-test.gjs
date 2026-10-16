@@ -37,7 +37,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await render(
       <template><DSelect @items={{state.items}} @variant="button" /></template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert.deepEqual(
       optionLabels(),
@@ -66,7 +66,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert.deepEqual(
       optionLabels(),
@@ -94,8 +94,8 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
       </template>
     );
-    await click(".d-combobox__trigger");
-    await fillIn(".d-combobox__filter", "e");
+    await click(".d-select__trigger");
+    await fillIn(".d-select__filter", "e");
 
     assert.deepEqual(
       optionLabels(),
@@ -111,7 +111,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       "the first replacement restarts the list"
     );
 
-    await fillIn(".d-combobox__filter", "el");
+    await fillIn(".d-select__filter", "el");
     state.items = [{ id: 6, name: "Fennel" }];
     await settled();
     assert.deepEqual(
@@ -162,13 +162,13 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .dom(".late-default [role='combobox']")
       .hasValue("Unknown item (2)", "the default trigger starts unresolved");
     assert
-      .dom(".late-custom .d-combobox__presentation")
+      .dom(".late-custom .d-select__presentation")
       .hasText("Unknown item (2)", "an unresolved value bypasses :selection");
     assert
-      .dom(".late-button .d-combobox__value")
+      .dom(".late-button .d-select__value")
       .hasText("Unknown item (2)", "the control selection starts unresolved");
     assert
-      .dom(".late-multi .d-combobox__chip-label")
+      .dom(".late-multi .d-select__chip-label")
       .hasText("Unknown item (2)", "the chip starts unresolved");
 
     state.valueItems = { id: 2, name: "Banana" };
@@ -179,13 +179,13 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .dom(".late-default [role='combobox']")
       .hasValue("Banana", "the default typeahead label resolves late");
     assert
-      .dom(".late-custom .d-combobox__presentation")
+      .dom(".late-custom .d-select__presentation")
       .hasText("Banana", "the yielded typeahead selection resolves late");
     assert
-      .dom(".late-button .d-combobox__value")
+      .dom(".late-button .d-select__value")
       .hasText("Banana", "the control selection resolves late");
     assert
-      .dom(".late-multi .d-combobox__chip-label")
+      .dom(".late-multi .d-select__chip-label")
       .hasText("Banana", "the chip resolves late");
   });
 
@@ -205,14 +205,14 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .hasText("Unknown item (2)", "the mobile trigger starts unresolved");
 
     state.valueItems = { id: 2, name: "Banana" };
     await settled();
 
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .hasText("Banana", "the mobile trigger resolves late valueItems data");
   });
 
@@ -244,10 +244,10 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await settled();
 
     assert
-      .dom(".d-combobox__chip-label")
+      .dom(".d-select__chip-label")
       .hasText("Banana", "the reshaped value renders as a chip after the flip");
 
-    await fillIn(".d-combobox__trigger [role='combobox']", "cher");
+    await fillIn(".d-select__trigger [role='combobox']", "cher");
     await click("[role='option']");
 
     assert.deepEqual(
@@ -256,7 +256,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       "multi selection appends to the current value"
     );
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 2 }, "both selected values render as chips");
     assert.dom("[role='listbox']").exists("multi selection stays open");
   });
@@ -280,7 +280,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await settled();
 
     assert
-      .dom(".d-combobox__min-chars")
+      .dom(".d-select__min-chars")
       .hasText(
         "Keep typing 1 more character…",
         "the current short query is gated by the new minimum"
@@ -377,7 +377,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         />
       </template>
     );
-    await click(".d-combobox__trigger");
+    await click(".d-select__trigger");
 
     assert
       .dom("[role='option']")

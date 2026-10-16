@@ -106,12 +106,12 @@ interface MultiChipsSignature {
 export default class MultiChips extends Component<MultiChipsSignature> {
   /** Stable prefix for the per-chip element ids (label + remove button). */
   get chipIdPrefix(): string {
-    return `d-combobox-chip-${guidFor(this)}`;
+    return `d-select-chip-${guidFor(this)}`;
   }
 
   /** Stable id for the query input's `aria-describedby` chip-navigation hint. */
   get chipHintId(): string {
-    return `d-combobox-chip-hint-${guidFor(this)}`;
+    return `d-select-chip-hint-${guidFor(this)}`;
   }
 
   /**
@@ -228,19 +228,19 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     {{! The chips are a real list (ul/li) so assistive tech announces them as a
       navigable collection; display:contents keeps the items flowing inline with the
       query input, which is a sibling of the list (an input cannot be a child of a ul). }}
-    <div class="d-combobox__chips">
+    <div class="d-select__chips">
       {{! Removal restores focus here, not through the modifier: once the last chip goes this
         list falls back to the query input, which is outside the group. }}
       <ul
         aria-label={{i18n "d_select.selected_items"}}
-        class="d-combobox__chip-list"
+        class="d-select__chip-list"
         {{(if
           @presenter.isDesktopTypeahead
           (modifier
             dRovingFocus
             tabStop=false
             orientation="horizontal"
-            itemSelector=".d-combobox__chip-remove"
+            itemSelector=".d-select__chip-remove"
             restoreLostFocus=false
             onBoundary=this.exitChipsToInput
             onRegisterApi=@onRegisterChipRoving
@@ -250,7 +250,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
         <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
           <:loading>
             {{#each this.chipSkeletons key="key" as |row|}}
-              <li class="d-combobox__chip" data-key={{row.key}}>
+              <li class="d-select__chip" data-key={{row.key}}>
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
                 {{else}}
@@ -261,13 +261,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           </:loading>
           <:content as |chips|>
             {{#each chips key="key" as |chip index|}}
-              <li class="d-combobox__chip">
+              <li class="d-select__chip">
                 {{! Hidden from assistive tech: the remove button's accessible name
                   already carries this label (via aria-labelledby), so exposing the
                   text again would double every chip during item-by-item navigation. }}
                 <span
                   aria-hidden="true"
-                  class="d-combobox__chip-label"
+                  class="d-select__chip-label"
                   id="{{this.chipIdPrefix}}-{{index}}-label"
                 >
                   {{#if chip.item.__unresolved}}
@@ -287,7 +287,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     Backspace or Delete to remove") so it reads as a selected item rather
                     than a bare action. }}
                   aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
-                  class="d-combobox__chip-remove"
+                  class="d-select__chip-remove"
                   disabled={{@presenter.isLocked}}
                   {{! Desktop: never a tab stop — reached by arrow-roving from the input.
                     A static -1 keeps every newly-rendered chip out of the tab order with
@@ -346,7 +346,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       {{else if @presenter.queryPlaceholder}}
         {{! Without an inline query input there is nowhere else to say what to do, so an
           empty selection shows the placeholder here instead. }}
-        <span class="d-combobox__placeholder">
+        <span class="d-select__placeholder">
           {{@presenter.queryPlaceholder}}
         </span>
       {{/if}}

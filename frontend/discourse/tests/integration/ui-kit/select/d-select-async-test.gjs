@@ -170,7 +170,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         "the held value is shown as unknown rather than blanking"
       );
     assert
-      .dom(".d-combobox__trigger [role='alert']")
+      .dom(".d-select__trigger [role='alert']")
       .doesNotExist(
         "a rejected resolve does not flash an error inside the trigger"
       );
@@ -322,17 +322,17 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       </template>
     );
     const typing = fillIn("[role='combobox']", "x");
-    await waitFor(".d-combobox__skeleton");
+    await waitFor(".d-select__skeleton");
 
-    const rows = findAll(".d-combobox__skeleton");
+    const rows = findAll(".d-select__skeleton");
     assert.true(rows.length > 0, "the first load shows placeholder rows");
     assert.strictEqual(
-      findAll(".d-combobox__skeleton .custom-loading-row").length,
+      findAll(".d-select__skeleton .custom-loading-row").length,
       rows.length,
       "every placeholder row renders the block"
     );
     assert
-      .dom(".d-combobox__skeleton .d-skeleton")
+      .dom(".d-select__skeleton .d-skeleton")
       .doesNotExist("the default bar is replaced");
 
     resolveLoad([]);
@@ -356,29 +356,27 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       </template>
     );
 
+    assert.dom(".d-select__chip").exists({ count: 2 }, "one chip per held id");
     assert
-      .dom(".d-combobox__chip")
-      .exists({ count: 2 }, "one chip per held id");
-    assert
-      .dom(".d-combobox__unresolved")
+      .dom(".d-select__unresolved")
       .exists(
         { count: 1 },
         "the id that cannot resolve renders as unavailable"
       );
     assert
-      .dom(".d-combobox__unresolved")
+      .dom(".d-select__unresolved")
       .hasText(
         "Unknown item (2)",
         "the chip says what it is in visible text, keeping ids distinct"
       );
     assert
-      .dom(".d-combobox__unresolved .d-icon")
+      .dom(".d-select__unresolved .d-icon")
       .doesNotExist("no icon stands in for the text");
     assert
-      .dom(".d-combobox__unresolved")
+      .dom(".d-select__unresolved")
       .doesNotHaveAttribute("title", "no tooltip repeats it");
     assert
-      .dom(".d-combobox__unresolved .sr-only")
+      .dom(".d-select__unresolved .sr-only")
       .doesNotExist("no hidden text differs from what is shown");
   });
 
@@ -401,7 +399,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__unresolved")
+      .dom(".d-select__unresolved")
       .hasText("Deleted user", "a named fallback already explains itself");
   });
 
@@ -429,7 +427,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     }
 
     await render(<template><RemoveHost /></template>);
-    await click(".d-combobox__chip-remove");
+    await click(".d-select__chip-remove");
 
     assert
       .dom("#a11y-announcements-polite")
@@ -449,10 +447,10 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__trigger .d-combobox__unresolved")
+      .dom(".d-select__trigger .d-select__unresolved")
       .hasText("Unknown item (7)", "the visible text");
     assert.true(
-      find(".d-combobox__trigger")
+      find(".d-select__trigger")
         .getAttribute("aria-label")
         .endsWith("Unknown item (7)"),
       "the accessible name ends with the same text"
@@ -482,7 +480,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     );
 
     assert
-      .dom(".d-combobox__chip")
+      .dom(".d-select__chip")
       .exists({ count: 2 }, "both selected values render as chips");
     assert.deepEqual(
       resolvedValues,
@@ -607,21 +605,21 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await fillIn("[role='combobox']", "ban");
 
     assert
-      .dom(".d-combobox__error .d-icon-triangle-exclamation")
+      .dom(".d-select__error .d-icon-triangle-exclamation")
       .exists("the first request displays the muted async error state");
     assert
-      .dom(".d-combobox__retry")
+      .dom(".d-select__retry")
       .hasText("Retry", "the error offers a recovery action");
 
-    const retryClick = click(".d-combobox__retry");
-    await waitFor(".d-combobox__skeleton");
+    const retryClick = click(".d-select__retry");
+    await waitFor(".d-select__skeleton");
     assert
-      .dom(".d-combobox__skeleton")
+      .dom(".d-select__skeleton")
       .exists("retry transitions back through the loading state");
     resolveRetry(ITEMS.filter((item) => item.name === "Banana"));
     await retryClick;
 
-    assert.dom(".d-combobox__error").doesNotExist("the error is cleared");
+    assert.dom(".d-select__error").doesNotExist("the error is cleared");
     assert.strictEqual(requestCount, 2, "retry makes one additional request");
     assert.strictEqual(retryFilter, "ban", "retry preserves the current query");
     assert
@@ -641,15 +639,15 @@ module(
       await render(<template><DSelect @load={{load}} /></template>);
       await fillIn("[role='combobox']", "x");
 
-      assert.dom(".d-combobox__error").exists();
+      assert.dom(".d-select__error").exists();
       assert
-        .dom(".d-combobox__error .d-icon-triangle-exclamation")
+        .dom(".d-select__error .d-icon-triangle-exclamation")
         .exists("the error shows a muted icon");
       assert
-        .dom(".d-combobox__error [role='alert']")
+        .dom(".d-select__error [role='alert']")
         .doesNotExist("the heavy alert box is gone");
       assert
-        .dom(".d-combobox__retry.btn-flat")
+        .dom(".d-select__retry.btn-flat")
         .exists("the retry is a low-emphasis button");
     });
 
@@ -660,9 +658,9 @@ module(
       );
       await fillIn("[role='combobox']", "x");
 
-      assert.dom(".d-combobox__error").exists("the error still renders");
+      assert.dom(".d-select__error").exists("the error still renders");
       assert
-        .dom(".d-combobox__retry")
+        .dom(".d-select__retry")
         .doesNotExist("a non-retryable source hides the retry");
     });
 
@@ -695,7 +693,7 @@ module(
         .dom(".custom-error")
         .hasText("boom", "the :error block renders with the error");
       assert
-        .dom(".d-combobox__error .d-icon-triangle-exclamation")
+        .dom(".d-select__error .d-icon-triangle-exclamation")
         .doesNotExist("the default body is replaced by the block");
 
       await click(".custom-retry");
@@ -722,13 +720,13 @@ module(
       await fillIn("[role='combobox']", "x");
 
       assert
-        .dom(".d-combobox__error[role='alert']")
+        .dom(".d-select__error[role='alert']")
         .exists("the component keeps the alert container around the block");
       assert
-        .dom(".d-combobox__error .custom-error")
+        .dom(".d-select__error .custom-error")
         .hasText("Could not load", "the block supplies the contents");
       assert
-        .dom(".d-combobox__error .d-combobox__error-message")
+        .dom(".d-select__error .d-select__error-message")
         .doesNotExist("the default message gives way to the block");
     });
   }
@@ -837,7 +835,7 @@ module(
             .dom(".custom-selection-loading")
             .exists("the block renders while the value resolves");
           assert
-            .dom(".d-combobox__trigger .d-skeleton")
+            .dom(".d-select__trigger .d-skeleton")
             .doesNotExist("the default bar is replaced");
         } finally {
           // Settle the render even when an assertion above throws, so a failure stays in
@@ -973,7 +971,7 @@ module(
           .dom(".custom-selection")
           .doesNotExist(":selection never receives an unresolved item");
         assert
-          .dom(".d-combobox__unresolved")
+          .dom(".d-select__unresolved")
           .hasText("Unknown item (2)", "the built-in label is used");
       });
 
@@ -1025,25 +1023,25 @@ module("Integration | ui-kit | select | DSelect (async)", function () {
             />
           </template>
         );
-        await click(".d-combobox__trigger");
-        const clicking = click(".d-combobox__option");
+        await click(".d-select__trigger");
+        const clicking = click(".d-select__option");
         try {
-          await waitFor(".d-combobox__pending-icon", { timeout: 2000 });
+          await waitFor(".d-select__pending-icon", { timeout: 2000 });
           assert
-            .dom(".d-combobox__trigger .d-skeleton")
+            .dom(".d-select__trigger .d-skeleton")
             .exists("an empty selection still has a loading slot");
           assert
-            .dom(".d-combobox__trigger")
+            .dom(".d-select__trigger")
             .hasAttribute("aria-busy", "true", "the mobile trigger is busy");
           assert
-            .dom(".d-combobox__placeholder")
+            .dom(".d-select__placeholder")
             .doesNotExist("the placeholder is replaced");
         } finally {
           release();
           await clicking;
         }
         assert
-          .dom(".d-combobox__trigger")
+          .dom(".d-select__trigger")
           .doesNotHaveAttribute(
             "aria-busy",
             "the mobile trigger finishes loading"

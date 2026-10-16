@@ -35,7 +35,7 @@ import { i18n } from "discourse-i18n";
  *   not pre-selected
  *   TAGS excludes "architecture"    d_select_showcases_spec: the create-a-tag flow needs it to
  *                                   be genuinely absent
- *   TEAM_MEMBERS spans >= 2 teams   smoke_test_spec: `.d-combobox__group-header` minimum: 2
+ *   TEAM_MEMBERS spans >= 2 teams   smoke_test_spec: `.d-select__group-header` minimum: 2
  */
 
 /** Rejects when `signal` aborts, otherwise resolves after `ms`. */

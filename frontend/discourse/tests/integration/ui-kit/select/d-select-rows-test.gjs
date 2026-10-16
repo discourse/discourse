@@ -70,7 +70,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     await click("[role='combobox']");
 
     assert
-      .dom("li.d-combobox__option.--none[role='option']")
+      .dom("li.d-select__option.--none[role='option']")
       .exists({ count: 1 }, "the none row uses the option DOM contract")
       .hasText("None", "the none row renders the literal label");
     assert.deepEqual(
@@ -87,7 +87,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     );
     await click("[role='combobox']");
 
-    await click("li.d-combobox__option.--none");
+    await click("li.d-select__option.--none");
 
     assert.strictEqual(onChange.callCount, 1, "the pointer pick emits once");
     assert.strictEqual(
@@ -105,7 +105,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
         "the empty trigger shows its placeholder"
       );
     assert
-      .dom(".d-combobox__presentation")
+      .dom(".d-select__presentation")
       .doesNotExist("no selection presentation encodes the none label");
   });
 
@@ -137,7 +137,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     await click("[role='combobox']");
 
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .hasAttribute(
         "aria-selected",
         "true",
@@ -151,7 +151,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     await click("[role='combobox']");
 
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .hasAttribute(
         "aria-selected",
         "false",
@@ -168,7 +168,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     await render(<template><NoneRowHost @onChange={{onChange}} /></template>);
     await click("[role='combobox']");
 
-    await click("li.d-combobox__option.--none");
+    await click("li.d-select__option.--none");
 
     assert.strictEqual(
       onChange.callCount,
@@ -208,7 +208,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
 
     await triggerKeyEvent("[role='combobox']", "keydown", "Home");
 
-    const noneOption = find("li.d-combobox__option.--none");
+    const noneOption = find("li.d-select__option.--none");
     assert
       .dom(noneOption)
       .hasClass("--active", "Home highlights the none row")
@@ -234,19 +234,19 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     await click("[role='combobox']");
 
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .exists("none is available before a query is entered");
 
     await fillIn("[role='combobox']", "zzzz");
 
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .doesNotExist("none is filtered out for a non-empty query");
     assert
       .dom("[role='option']")
       .doesNotExist("the unmatched query has no activatable option");
     assert
-      .dom(".d-combobox__empty[role='status']")
+      .dom(".d-select__empty[role='status']")
       .hasText(
         "No results found",
         "the ordinary no-results state remains visible"
@@ -280,14 +280,14 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     const [singleController, multiController] = findAll("[role='combobox']");
     await click(singleController);
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .exists("noneLabel is active for the single-select control");
     await triggerKeyEvent(singleController, "keydown", "Escape");
 
     await click(multiController);
 
     assert
-      .dom("li.d-combobox__option.--none")
+      .dom("li.d-select__option.--none")
       .doesNotExist("multi-select renders no none row");
     assert
       .dom("[role='option']")
@@ -362,7 +362,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       const controller = find("[role='combobox']");
 
       const rows = findAll("[role='option']");
@@ -408,7 +408,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       const controller = find("[role='combobox']");
 
       assert
@@ -467,7 +467,7 @@ module(
         </template>
       );
 
-      await click(".d-combobox__input");
+      await click(".d-select__input");
       const controller = find("[role='combobox']");
       const actionRow = findAll("[role='option']")[0];
 
@@ -522,13 +522,13 @@ module(
       await click("[role='combobox']");
 
       assert
-        .dom(".d-combobox__divider")
+        .dom(".d-select__divider")
         .exists({ count: 1 }, "one splitter separates the two sections");
       assert
         .dom("[role='option']")
         .exists({ count: 3 }, "a splitter is not an option");
       assert
-        .dom(".d-combobox__divider")
+        .dom(".d-select__divider")
         .hasAttribute(
           "aria-hidden",
           "true",
@@ -559,7 +559,7 @@ module(
         .dom("[role='option']")
         .exists({ count: 2 }, "one option per section matches the query");
       assert
-        .dom(".d-combobox__divider")
+        .dom(".d-select__divider")
         .exists(
           { count: 1 },
           "the boundary is recomputed from the filtered rows, not dropped"
@@ -582,7 +582,7 @@ module(
         .dom("[role='option']")
         .exists({ count: 2 }, "only the fruit section matches");
       assert
-        .dom(".d-combobox__divider")
+        .dom(".d-select__divider")
         .doesNotExist("nothing is left for a rule to separate");
     });
   }

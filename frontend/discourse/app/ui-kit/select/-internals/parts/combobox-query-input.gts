@@ -237,7 +237,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       aria-label={{@label}}
       aria-owns={{this.ownsId}}
       autocomplete="off"
-      class="d-combobox__input"
+      class="d-select__input"
       disabled={{@disabled}}
       placeholder={{@placeholder}}
       readonly={{@readonly}}

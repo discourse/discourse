@@ -830,11 +830,11 @@ module("Integration | ui-kit | DModal", function (hooks) {
         </template>
       );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
       assert
-        .dom(".d-combobox__trigger")
+        .dom(".d-select__trigger")
         .hasAttribute("aria-expanded", "true", "Enter opens the list");
       assert.false(this.actionCalled, "the modal does not submit");
     });
@@ -861,9 +861,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
         </template>
       );
 
-      await focus(".d-combobox__trigger");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "ArrowDown");
-      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+      await focus(".d-select__trigger");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
 
       assert.deepEqual(this.selected, [1], "Enter picks the active option");
       assert.false(this.actionCalled, "the modal does not submit as well");
@@ -891,7 +891,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         </template>
       );
 
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       await fillIn("[role='combobox']", "app");
       await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
       await triggerKeyEvent("[role='combobox']", "keydown", "Enter");

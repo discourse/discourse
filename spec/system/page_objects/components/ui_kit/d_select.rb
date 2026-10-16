@@ -6,7 +6,7 @@ module PageObjects
       # Drives the ui-kit `DSelect` combobox (rendered as a typeahead). Scoped to one
       # instance by its trigger element, so the same page can host several.
       class DSelect < PageObjects::Components::Base
-        # @param root [String] a CSS selector for the instance's `.d-combobox__trigger`.
+        # @param root [String] a CSS selector for the instance's `.d-select__trigger`.
         # @param panel [String, nil] a CSS selector for the instance's overlay. Without it
         #   panel lookups fall back to the whole document, which is only correct when a single
         #   overlay can be open at a time.
@@ -58,7 +58,7 @@ module PageObjects
         end
 
         def input
-          trigger.find(".d-combobox__input")
+          trigger.find(".d-select__input")
         end
 
         def open
@@ -97,15 +97,15 @@ module PageObjects
         end
 
         def chips
-          trigger.all(".d-combobox__chip", minimum: 0)
+          trigger.all(".d-select__chip", minimum: 0)
         end
 
         def chip_labels
-          chips.map { |chip| chip.find(".d-combobox__chip-label").text }
+          chips.map { |chip| chip.find(".d-select__chip-label").text }
         end
 
         def remove_buttons
-          trigger.all(".d-combobox__chip-remove", minimum: 0)
+          trigger.all(".d-select__chip-remove", minimum: 0)
         end
 
         # Opens the overlay, types a filter, and clicks the matching option. The multi
@@ -148,32 +148,32 @@ module PageObjects
         # the very transition being asserted: it passes when the machine is idle and fails under
         # load, which is exactly the shape of an order-dependent flake.
         def input_focused?
-          page.has_css?(owned_focus_selector(".d-combobox__input"))
+          page.has_css?(owned_focus_selector(".d-select__input"))
         end
 
         # The waiting negative. `input_focused?` returning false costs a full timeout and cannot
         # tell "not yet" from "never", so asserting focus is elsewhere needs the absence matcher.
         def input_blurred?
-          page.has_no_css?(owned_focus_selector(".d-combobox__input"))
+          page.has_no_css?(owned_focus_selector(".d-select__input"))
         end
 
         # The label of the chip whose remove button holds focus, or nil when no chip takes focus
         # — the browser-truthful way to assert where roving landed. Waits for the focus move for
         # the same reason as `input_focused?` before reading the label back.
         def focused_chip_label
-          return nil unless page.has_css?(owned_focus_selector(".d-combobox__chip-remove"))
+          return nil unless page.has_css?(owned_focus_selector(".d-select__chip-remove"))
 
           page.evaluate_script(<<~JS)
             (function () {
               const el = document.activeElement;
-              if (!el || !el.classList.contains("d-combobox__chip-remove")) {
+              if (!el || !el.classList.contains("d-select__chip-remove")) {
                 return null;
               }
               if (!#{owned_scopes.to_json}.some((scope) => el.closest(scope))) {
                 return null;
               }
-              const chip = el.closest(".d-combobox__chip");
-              const label = chip && chip.querySelector(".d-combobox__chip-label");
+              const chip = el.closest(".d-select__chip");
+              const label = chip && chip.querySelector(".d-select__chip-label");
               return label ? label.textContent.trim() : null;
             })()
           JS
@@ -186,14 +186,14 @@ module PageObjects
         # The query input for a panel-searchable (`button`) variant, which renders inside the
         # portaled overlay rather than in the trigger. `input` reaches the typeahead's trigger
         # input instead, and finds nothing here: the panel builds its filter from `DFilterInput`
-        # (an `input.filter-input`), not the typeahead's `.d-combobox__input`. The class DSelect
+        # (an `input.filter-input`), not the typeahead's `.d-select__input`. The class DSelect
         # puts on it is what both variants have in common to key on.
         def panel_input
-          find(in_panel(".d-combobox__filter"))
+          find(in_panel(".d-select__filter"))
         end
 
         def panel_input_focused?
-          page.has_css?(owned_focus_selector(".d-combobox__filter"))
+          page.has_css?(owned_focus_selector(".d-select__filter"))
         end
 
         # Whether DOM focus rests anywhere in this instance's overlay, the panel itself included.
@@ -232,11 +232,11 @@ module PageObjects
         # the error state's retry action. Both live in the portaled panel rather than the trigger,
         # so they are only reachable once the panel participates in the tab sequence.
         def footer_control_focused?
-          page.has_css?(in_panel(".d-combobox__footer button:focus"))
+          page.has_css?(in_panel(".d-select__footer button:focus"))
         end
 
         def retry_focused?
-          page.has_css?(in_panel(".d-combobox__retry:focus"))
+          page.has_css?(in_panel(".d-select__retry:focus"))
         end
 
         # Whether DOM focus rests anywhere this instance owns — the trigger subtree or the panel.
@@ -332,7 +332,7 @@ module PageObjects
         # Whether the "keep filtering" hint is showing, i.e. a paginated source stopped at its
         # cap with more results behind it. A client source renders in full and never shows it.
         def narrow_hint?
-          page.has_css?(in_panel(".d-combobox__narrow"), wait: 0)
+          page.has_css?(in_panel(".d-select__narrow"), wait: 0)
         end
 
         # The listbox is windowed by `DVirtualList`: only a slice of rows is mounted, so

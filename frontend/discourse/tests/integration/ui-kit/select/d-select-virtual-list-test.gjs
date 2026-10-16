@@ -100,7 +100,7 @@ module(
           "multiple-selection semantics reach the inner listbox"
         )
         .hasClass(
-          "d-combobox__listbox",
+          "d-select__listbox",
           "the consumer class reaches the inner listbox"
         );
     });
@@ -148,7 +148,7 @@ module(
         await openSelect();
 
         assert
-          .dom(".d-combobox__sentinel")
+          .dom(".d-select__sentinel")
           .doesNotExist("the list has no reveal-sentinel row");
         assert
           .dom(".load-more-sentinel")
@@ -197,10 +197,10 @@ module(
       try {
         engine.revealMore();
         await waitUntil(() => revealRequested);
-        await waitUntil(() => find(".d-combobox__skeleton"));
+        await waitUntil(() => find(".d-select__skeleton"));
 
         const skeletons = findAll(
-          "ul[role='listbox'] > [role='presentation'].d-combobox__skeleton"
+          "ul[role='listbox'] > [role='presentation'].d-select__skeleton"
         );
         const options = findAll("ul[role='listbox'] > [role='option']");
         assert.true(skeletons.length > 0, "the pending page has frontier rows");
@@ -218,9 +218,7 @@ module(
             );
         });
         assert
-          .dom(
-            `${LISTBOX_SELECTOR} > [role='presentation'].d-combobox__skeleton`
-          )
+          .dom(`${LISTBOX_SELECTOR} > [role='presentation'].d-select__skeleton`)
           .exists(
             "the skeleton frontier belongs to the virtual list's inner ul"
           );
@@ -266,19 +264,19 @@ module(
       try {
         engine.revealMore();
         await waitUntil(() => revealRequested);
-        await waitUntil(() => find(".d-combobox__skeleton"));
+        await waitUntil(() => find(".d-select__skeleton"));
 
-        const rows = findAll("ul[role='listbox'] > .d-combobox__skeleton");
+        const rows = findAll("ul[role='listbox'] > .d-select__skeleton");
         assert.true(rows.length > 0, "the pending page has placeholder rows");
         assert.strictEqual(
           findAll(
-            "ul[role='listbox'] > .d-combobox__skeleton .custom-loading-row"
+            "ul[role='listbox'] > .d-select__skeleton .custom-loading-row"
           ).length,
           rows.length,
           "every placeholder row renders the block"
         );
         assert
-          .dom("ul[role='listbox'] .d-combobox__skeleton .d-skeleton")
+          .dom("ul[role='listbox'] .d-select__skeleton .d-skeleton")
           .doesNotExist("the default bar is replaced");
       } finally {
         releaseReveal({
@@ -297,7 +295,7 @@ module(
       await openSelect();
 
       assert
-        .dom("ul[role='listbox'] > .d-combobox__skeleton")
+        .dom("ul[role='listbox'] > .d-select__skeleton")
         .doesNotExist("a synchronous client list has no placeholder rows");
     });
   }
@@ -336,7 +334,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             height: 200px;
             overflow-y: auto;
           }
-          .tall-rows .d-combobox__option {
+          .tall-rows .d-select__option {
             min-height: 60px;
           }
         </style>
@@ -560,7 +558,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
   });
 });
 
-const GROUP_HEADER_SELECTOR = `${LISTBOX_SELECTOR} > .d-combobox__group-header`;
+const GROUP_HEADER_SELECTOR = `${LISTBOX_SELECTOR} > .d-select__group-header`;
 const GROUPED_ITEMS = [
   { id: 1, name: "Carrot", group: "Vegetables" },
   { id: 2, name: "Apple", group: "Fruits" },
@@ -754,7 +752,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     assert
-      .dom(".d-combobox__group-labels")
+      .dom(".d-select__group-labels")
       .doesNotExist("no separate label store renders");
 
     // Grouped order is [Vegetables] Carrot, Pea, [Fruits] Apple, Pear.
@@ -768,7 +766,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       );
       const label = headerId ? document.getElementById(headerId) : null;
       assert.true(
-        !!label?.closest(".d-combobox__group-header"),
+        !!label?.closest(".d-select__group-header"),
         "the description lives on the group's own header row"
       );
       assert.true(
@@ -796,7 +794,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     assert
-      .dom(".d-combobox__group-labels")
+      .dom(".d-select__group-labels")
       .doesNotExist("no separate label store renders");
     assert.deepEqual(
       findAll(`${GROUP_HEADER_SELECTOR} [id]`).map((label) =>
@@ -936,7 +934,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       const headerId = option.getAttribute("aria-describedby");
       const label = headerId ? document.getElementById(headerId) : null;
       assert.true(
-        !!label?.closest(".d-combobox__group-header"),
+        !!label?.closest(".d-select__group-header"),
         "the id-bearing label stays inside the header row"
       );
       assert.true(
@@ -978,7 +976,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     assert
-      .dom(".d-combobox__group-labels")
+      .dom(".d-select__group-labels")
       .doesNotExist("no unwindowed label surface scales with the group count");
     // 120 labeled groups produce 240 rows; the mounted DOM must stay a window.
     assert.true(
@@ -996,7 +994,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     assert
-      .dom(`${LISTBOX_SELECTOR} > .d-combobox__divider`)
+      .dom(`${LISTBOX_SELECTOR} > .d-select__divider`)
       .exists(
         { count: 1 },
         "two groups draw one splitter: boundaries only separate, never lead"
@@ -1040,7 +1038,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       .exists({ count: 1 }, "only the labeled group draws a header")
       .hasText("Vegetables");
     assert
-      .dom(`${LISTBOX_SELECTOR} > .d-combobox__divider`)
+      .dom(`${LISTBOX_SELECTOR} > .d-select__divider`)
       .exists({ count: 1 }, "the unlabeled boundary draws a splitter");
     const described = findAll(OPTION_SELECTOR).filter((option) =>
       option.hasAttribute("aria-describedby")

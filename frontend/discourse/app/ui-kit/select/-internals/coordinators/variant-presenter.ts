@@ -74,7 +74,7 @@ export default class VariantPresenter {
   }
 
   get triggerClass(): string {
-    const classes = ["d-combobox__trigger"];
+    const classes = ["d-select__trigger"];
     if (this.isTypeahead) {
       classes.push("--typeahead");
     }

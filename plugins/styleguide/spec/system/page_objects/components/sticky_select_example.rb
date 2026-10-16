@@ -46,7 +46,7 @@ module PageObjects
       end
 
       def has_selected_topic?(label)
-        has_css?("#{@root} .d-combobox__value", text: label)
+        has_css?("#{@root} .d-select__value", text: label)
       end
     end
   end

@@ -29,14 +29,14 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
     await click("[role='combobox']");
 
     assert
-      .dom(".d-combobox__panel > .d-combobox__footer")
+      .dom(".d-select__panel > .d-select__footer")
       .exists("the footer is a panel child, pinned below the list");
-    assert.dom(".d-combobox__footer").hasAttribute("role", "group");
-    assert.dom(".d-combobox__footer").hasAttribute("aria-label", /.+/);
+    assert.dom(".d-select__footer").hasAttribute("role", "group");
+    assert.dom(".d-select__footer").hasAttribute("aria-label", /.+/);
     assert
-      .dom("[role='listbox'] .d-combobox__footer")
+      .dom("[role='listbox'] .d-select__footer")
       .doesNotExist("the footer is NOT inside the listbox");
-    assert.dom(".d-combobox__footer .test-footer-btn").exists();
+    assert.dom(".d-select__footer .test-footer-btn").exists();
   });
 
   test("the footer's controls are keyboard-reachable focusables inside the popup content", async function (assert) {
@@ -54,7 +54,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
     );
     await click("[role='combobox']");
 
-    const btn = find(".d-combobox__footer .test-footer-btn");
+    const btn = find(".d-select__footer .test-footer-btn");
     assert.true(
       find("[data-content]").contains(btn),
       "the footer control lives inside the popup content region float-kit forwards Tab into"
@@ -252,9 +252,9 @@ module(
           </DSelect>
         </template>
       );
-      await click(".d-combobox__trigger");
+      await click(".d-select__trigger");
       assert
-        .dom(".fk-d-menu-modal .d-combobox__footer")
+        .dom(".fk-d-menu-modal .d-select__footer")
         .exists("the footer renders inside the modal");
 
       const btn1 = find(".fk-d-menu-modal .test-footer-btn");
