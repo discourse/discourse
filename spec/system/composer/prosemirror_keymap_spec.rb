@@ -12,7 +12,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
     composer.type_content("This is bold")
 
-    expect(rich.locator("strong").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("strong").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is bold")],
       useInnerText: true,
     )
@@ -23,7 +23,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "i"])
     composer.type_content("This is italic")
 
-    expect(rich.locator("em").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("em").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is italic")],
       useInnerText: true,
     )
@@ -36,7 +36,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "k"].join("+"),
     )
     expect(hyperlink_modal).to be_open
-    expect(hyperlink_modal.header).to PlaywrightMatchers.contain_text(
+    expect(hyperlink_modal.header).to contain_text(
       browser_text_pattern(I18n.t("js.composer.link_dialog_title")),
       useInnerText: true,
     )
@@ -45,7 +45,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     browser_page.keyboard.type("This is a link")
     browser_page.keyboard.press("Enter")
 
-    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("a").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a link")],
       useInnerText: true,
     )
@@ -60,7 +60,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       ),
     )
 
-    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("ol li").filter(visible: true)).to contain_text(
       [browser_text_pattern("Item 1")],
       useInnerText: true,
     )
@@ -75,7 +75,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       ),
     )
 
-    expect(rich.locator("ul li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("ul li").filter(visible: true)).to contain_text(
       [browser_text_pattern("Item 1")],
       useInnerText: true,
     )
@@ -101,7 +101,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       ),
     )
 
-    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("blockquote").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a blockquote")],
       useInnerText: true,
     )
@@ -117,7 +117,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
         ),
       )
 
-      expect(rich.locator("h#{i}").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("h#{i}").filter(visible: true)).to contain_text(
         [browser_text_pattern("Heading #{i}")],
         useInnerText: true,
       )
@@ -133,7 +133,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
         end
         .locator("h4")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "supports Ctrl + Z and Ctrl + Shift + Z to undo and redo" do
@@ -150,10 +150,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
         end
         .locator("p")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("This is a test")],
-      useInnerText: true,
-    )
+    ).not_to contain_text([browser_text_pattern("This is a test")], useInnerText: true)
 
     browser_page.keyboard.press(
       [(SystemHelpers::PLATFORM_KEY_MODIFIER == :meta ? "Meta" : "Control"), "Shift", "z"].join(
@@ -161,7 +158,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       ),
     )
 
-    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("p").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a test")],
       useInnerText: true,
     )
@@ -176,7 +173,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       ),
     )
 
-    expect(rich.locator("hr").filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("hr").filter(visible: true)).not_to have_count(0)
   end
 
   it "creates hard break when pressing Enter after double space at end of line" do
@@ -186,14 +183,14 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content("Next line")
 
     composer.toggle_rich_editor
-    expect(composer).to have_value("Line with double space\nNext line")
+    expect(composer).to RSpecPredicates.have_value("Line with double space\nNext line")
   end
 
   it "supports Backspace to reset a heading" do
     open_composer
     composer.type_content("# With text")
 
-    expect(rich.locator("h1").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h1").filter(visible: true)).to contain_text(
       [browser_text_pattern("With text")],
       useInnerText: true,
     )
@@ -202,7 +199,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     wait_for_timeout
     browser_page.keyboard.press("Backspace")
 
-    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("p").filter(visible: true)).to contain_text(
       [browser_text_pattern("With text")],
       useInnerText: true,
     )
@@ -215,7 +212,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     wait_for_timeout
     browser_page.keyboard.press("Backspace")
 
-    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("p").filter(visible: true)).to contain_text(
       [browser_text_pattern("code block")],
       useInnerText: true,
     )
@@ -229,11 +226,11 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     browser_page.keyboard.press("Backspace")
 
-    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("ol li").filter(visible: true)).to contain_text(
       [browser_text_pattern("Item 1")],
       useInnerText: true,
     )
-    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("ol li").filter(visible: true)).to contain_text(
       [browser_text_pattern("Item 2Item 3")],
       useInnerText: true,
     )
@@ -252,7 +249,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       rich.locator("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "supports hashtag decoration when backspacing to combine paragraphs" do
@@ -271,7 +268,7 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
       rich.locator("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "supports Ctrl + M to toggle between rich and markdown editors" do
@@ -279,21 +276,21 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
 
     composer.type_content("> This is a test")
 
-    expect(composer).to have_value(nil)
-    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(composer).to RSpecPredicates.have_value(nil)
+    expect(rich.locator("blockquote").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a test")],
       useInnerText: true,
     )
 
     browser_page.keyboard.press(%w[Control m].join("+"))
 
-    expect(composer).to have_value("> This is a test")
+    expect(composer).to RSpecPredicates.have_value("> This is a test")
     expect(composer).to have_no_rich_editor
 
     browser_page.keyboard.press(%w[Control m].join("+"))
 
-    expect(composer).to have_value(nil)
-    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(composer).to RSpecPredicates.have_value(nil)
+    expect(rich.locator("blockquote").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a test")],
       useInnerText: true,
     )
@@ -309,6 +306,8 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.type_content("This is a test")
 
     composer.toggle_rich_editor
-    expect(composer).to have_value("\n![image](https://example.com/image.png)\n\nThis is a test")
+    expect(composer).to RSpecPredicates.have_value(
+      "\n![image](https://example.com/image.png)\n\nThis is a test",
+    )
   end
 end

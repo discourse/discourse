@@ -99,14 +99,8 @@ describe "User notifications" do
 
         notification = user_notifications_page.find_notification(group_mention_notification)
 
-        expect(notification).to PlaywrightMatchers.contain_text(
-          browser_text_pattern(group.name),
-          useInnerText: true,
-        )
-        expect(notification).to PlaywrightMatchers.contain_text(
-          browser_text_pattern(user.name),
-          useInnerText: true,
-        )
+        expect(notification).to contain_text(browser_text_pattern(group.name), useInnerText: true)
+        expect(notification).to contain_text(browser_text_pattern(user.name), useInnerText: true)
       end
 
       context "when user doesn't have a name" do
@@ -122,11 +116,8 @@ describe "User notifications" do
 
           notification = user_notifications_page.find_notification(group_mention_notification)
 
-          expect(notification).to PlaywrightMatchers.contain_text(
-            browser_text_pattern(group.name),
-            useInnerText: true,
-          )
-          expect(notification).to PlaywrightMatchers.contain_text(
+          expect(notification).to contain_text(browser_text_pattern(group.name), useInnerText: true)
+          expect(notification).to contain_text(
             browser_text_pattern(user.username),
             useInnerText: true,
           )

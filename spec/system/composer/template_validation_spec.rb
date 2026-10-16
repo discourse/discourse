@@ -86,10 +86,7 @@ describe "Composer Form Template Validations" do
         )
 
         preview = browser_root.locator(".d-editor-preview").filter(visible: true)
-        expect(preview).to PlaywrightMatchers.contain_text(
-          browser_text_pattern(message),
-          useInnerText: true,
-        )
+        expect(preview).to contain_text(browser_text_pattern(message), useInnerText: true)
       end
     end
   end

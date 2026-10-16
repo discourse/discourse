@@ -11,13 +11,13 @@ module PageObjects
       end
 
       def has_page_title?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{POSTS_PAGE_SELECTOR} .posts-page__title").filter(visible: true),
         )
       end
 
       def has_posts?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator("#{POSTS_PAGE_SELECTOR} .post-list .post-list-item").filter(
             visible: true,
           ),

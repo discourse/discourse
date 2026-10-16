@@ -18,10 +18,9 @@ module PageObjects
 
       def has_reason?(name)
         within_browser(filter_container("review.filters.score_type.title")) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(name)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".select-kit-header").filter(visible: true))
+          contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+            browser_root.locator(".select-kit-header").filter(visible: true),
+          )
         end
       end
 

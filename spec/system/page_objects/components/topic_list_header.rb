@@ -11,9 +11,7 @@ module PageObjects
       end
 
       def has_bulk_select_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".bulk-select").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".bulk-select").filter(visible: true))
       end
 
       def click_bulk_select_button
@@ -21,7 +19,7 @@ module PageObjects
       end
 
       def has_bulk_select_topics_dropdown?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown",
           ).filter(visible: true),
@@ -40,7 +38,7 @@ module PageObjects
       end
 
       def has_bulk_select_modal?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#discourse-modal-title").filter(visible: true),
         )
       end

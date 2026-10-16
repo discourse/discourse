@@ -33,7 +33,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".submit-light-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         color_scheme_settings
           .tap do |parent|
@@ -41,7 +41,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".cancel-light-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       color_scheme_settings.locator(".color-palette-picker").filter(visible: true).click
       color_scheme_settings
@@ -50,9 +50,7 @@ describe "Admin Customize Themes" do
         .click
       color_scheme_settings.locator(".submit-light-edit").filter(visible: true).click
 
-      expect(
-        color_scheme_settings.locator(".setting-value").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(color_scheme_settings.locator(".setting-value").filter(visible: true)).to contain_text(
         browser_text_pattern(color_scheme.name),
         useInnerText: true,
       )
@@ -63,7 +61,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".submit-light-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         color_scheme_settings
           .tap do |parent|
@@ -71,7 +69,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".cancel-light-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       expect(
         browser_root
@@ -92,7 +90,7 @@ describe "Admin Customize Themes" do
             ),
           )
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "allows admins to update the theme's dark color scheme" do
@@ -108,7 +106,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".submit-dark-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         color_scheme_settings
           .tap do |parent|
@@ -116,7 +114,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".cancel-dark-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       color_scheme_settings.locator(".color-palette-picker").filter(visible: true).click
       color_scheme_settings
@@ -125,9 +123,7 @@ describe "Admin Customize Themes" do
         .click
       color_scheme_settings.locator(".submit-dark-edit").filter(visible: true).click
 
-      expect(
-        color_scheme_settings.locator(".setting-value").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(color_scheme_settings.locator(".setting-value").filter(visible: true)).to contain_text(
         browser_text_pattern(color_scheme.name),
         useInnerText: true,
       )
@@ -138,7 +134,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".submit-dark-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         color_scheme_settings
           .tap do |parent|
@@ -146,7 +142,7 @@ describe "Admin Customize Themes" do
           end
           .locator(".cancel-dark-edit")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       expect(
         browser_root
@@ -167,7 +163,7 @@ describe "Admin Customize Themes" do
             ),
           )
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "allows a theme to be deleted" do
@@ -177,7 +173,7 @@ describe "Admin Customize Themes" do
         I18n.t("admin_js.admin.customize.theme.delete_success", theme: theme.name),
       )
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
+      expect(browser_page).to have_url("/admin/config/customize/themes")
       expect(themes_page).to have_no_theme(theme.name)
     end
   end
@@ -191,9 +187,7 @@ describe "Admin Customize Themes" do
         .goto("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".ace_content").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".ace_content").filter(visible: true)).to contain_text(
         browser_text_pattern("console.log('test')"),
         useInnerText: true,
       )
@@ -204,9 +198,7 @@ describe "Admin Customize Themes" do
         .goto("/admin/customize/themes/#{theme.id}/common/js/edit")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".ace_content").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".ace_content").filter(visible: true)).to contain_text(
         browser_text_pattern("// Your code here"),
         useInnerText: true,
       )
@@ -226,9 +218,7 @@ describe "Admin Customize Themes" do
         .goto("/admin/customize/themes/#{theme.id}/common/js/edit")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".ace_content").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".ace_content").filter(visible: true)).to contain_text(
         browser_text_pattern("console.log('second test')"),
         useInnerText: true,
       )
@@ -248,24 +238,12 @@ describe "Admin Customize Themes" do
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
     theme_page.visit(theme)
-    expect(
-      browser_root.locator(".system-theme-info").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".title button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".title button svg").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".edit-code").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("button.upload").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(browser_root.locator(".delete").filter(visible: true)).to PlaywrightMatchers.have_count(
-      0,
-    )
+    expect(browser_root.locator(".system-theme-info").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".title button").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".title button svg").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".edit-code").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator("button.upload").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".delete").filter(visible: true)).to have_count(0)
   end
 
   it "hides unnecessary sections and buttons for system themes" do
@@ -283,21 +261,11 @@ describe "Admin Customize Themes" do
     theme.save!
 
     theme_page.visit(theme)
-    expect(
-      browser_root.locator(".created-by").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".export").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".extra-files").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".theme-settings").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".system-theme-info").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".created-by").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".export").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".extra-files").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".theme-settings").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".system-theme-info").filter(visible: true)).to have_count(0)
 
     # Since we're only testing the one theme, we can stub the system? method
     # for every theme to return true.
@@ -305,21 +273,11 @@ describe "Admin Customize Themes" do
     allow_any_instance_of(Theme).to receive(:system?).and_return(true)
 
     theme_page.visit(theme)
-    expect(
-      browser_root.locator(".system-theme-info").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".created-by").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(browser_root.locator(".export").filter(visible: true)).to PlaywrightMatchers.have_count(
-      0,
-    )
-    expect(
-      browser_root.locator(".extra-files").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".theme-settings").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".system-theme-info").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".created-by").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".export").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".extra-files").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".theme-settings").filter(visible: true)).not_to have_count(0)
   end
 
   it "shows both JS and SCSS extra files with canonical paths" do
@@ -336,11 +294,11 @@ describe "Admin Customize Themes" do
     extra_files = browser_root.locator(".extra-files").filter(visible: true)
     extra_files.locator("summary").filter(visible: true).click
 
-    expect(extra_files).to PlaywrightMatchers.contain_text(
+    expect(extra_files).to contain_text(
       browser_text_pattern("javascripts/discourse/api-initializers/canvas.js"),
       useInnerText: true,
     )
-    expect(extra_files).to PlaywrightMatchers.contain_text(
+    expect(extra_files).to contain_text(
       browser_text_pattern("stylesheets/properties.scss"),
       useInnerText: true,
     )
@@ -391,9 +349,7 @@ describe "Admin Customize Themes" do
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
       theme_translations_picker.select_row_by_value("fr")
 
-      expect(
-        browser_root.locator(".translations").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".translations").filter(visible: true)).not_to have_count(0)
 
       expect(theme_translations_settings_editor.get_input_value).to include("Bonjour!")
 
@@ -427,7 +383,7 @@ describe "Admin Customize Themes" do
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
 
-      expect(theme_translations_picker.component).to PlaywrightMatchers.contain_text("English")
+      expect(theme_translations_picker.component).to contain_text("English")
     end
   end
 
@@ -487,20 +443,18 @@ describe "Admin Customize Themes" do
         expect(dialog).to have_displayed_content(unassigned_warning)
 
         dialog.click_no
-        expect(browser_page).to PlaywrightMatchers.have_url(
-          "/admin/customize/themes/#{component.id}",
-        )
+        expect(browser_page).to have_url("/admin/customize/themes/#{component.id}")
         expect(
           browser_root.locator(".parent-themes-setting .select-kit-header:focus").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         theme_page.click_back_to_components
         expect(dialog).to have_displayed_content(unassigned_warning)
 
         dialog.click_yes
-        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+        expect(browser_page).to have_url("/admin/config/customize/components")
       end
 
       it "doesn't warn after the admin saves an empty theme selection" do
@@ -516,12 +470,12 @@ describe "Admin Customize Themes" do
           .click
         expect(
           browser_root.locator(".parent-themes-setting .setting-controls").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
-        expect(component.reload.parent_themes).to be_empty
+        ).to have_count(0)
+        expect(component.reload.parent_themes).to RSpecPredicates.be_empty
 
         theme_page.click_back_to_components
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+        expect(browser_page).to have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -531,7 +485,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_back_to_components
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+        expect(browser_page).to have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -541,7 +495,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_back_to_components
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+        expect(browser_page).to have_url("/admin/config/customize/components")
         expect(dialog).to be_closed
       end
 
@@ -549,7 +503,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_edit_code
 
-        expect(browser_page).to PlaywrightMatchers.have_url(%r{/#{component.id}/common/scss/edit})
+        expect(browser_page).to have_url(%r{/#{component.id}/common/scss/edit})
         expect(dialog).to be_closed
       end
 
@@ -568,9 +522,7 @@ describe "Admin Customize Themes" do
           expect(dialog).to have_displayed_content(unsaved_warning)
 
           dialog.click_no
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/admin/customize/themes/#{component.id}",
-          )
+          expect(browser_page).to have_url("/admin/customize/themes/#{component.id}")
           expect(theme_page).to have_setting_value("greeting", "howdy")
         end
 
@@ -580,7 +532,7 @@ describe "Admin Customize Themes" do
           expect(dialog).to have_displayed_content(unsaved_warning)
 
           dialog.click_danger
-          expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+          expect(browser_page).to have_url("/admin/config/customize/components")
 
           browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(theme_page).to have_setting_value("greeting", "hello")
@@ -603,7 +555,7 @@ describe "Admin Customize Themes" do
         theme_page.visit(component)
         theme_page.click_delete_button_and_confirm
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
+        expect(browser_page).to have_url("/admin/config/customize/themes")
         expect(dialog).to be_closed
       end
     end
@@ -644,7 +596,7 @@ describe "Admin Customize Themes" do
 
       expect(
         browser_root.locator(".admin-change-theme-source-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root
           .locator(".admin-change-theme-source-modal input.repo-url")
@@ -669,7 +621,7 @@ describe "Admin Customize Themes" do
 
       expect(
         browser_root.locator(".admin-change-theme-source-modal").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(git_theme.reload.remote_theme.remote_url).to eq(new_url)
     end
 
@@ -689,7 +641,7 @@ describe "Admin Customize Themes" do
             ),
           )
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -727,7 +679,7 @@ describe "Admin Customize Themes" do
         browser_root.locator(".setting[data-setting='icon_setting'] .setting-controls__ok").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(theme.reload.settings[:icon_setting].value).to eq("gamepad")
     end
   end
@@ -740,7 +692,7 @@ describe "Admin Customize Themes" do
       end
       theme_page.toggle_theme_site_setting("enable_welcome_banner")
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved")),
         useInnerText: true,
       )
@@ -759,7 +711,7 @@ describe "Admin Customize Themes" do
       theme_page.visit(theme.id)
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
       theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved")),
         useInnerText: true,
       )
@@ -792,12 +744,12 @@ describe "Admin Customize Themes" do
 
       sign_in(other_user)
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
 
       # A sanity check.
       expect(
         browser_root.locator("meta[name=discourse_theme_id][content='#{theme.id}']"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # Wait for the `/client_settings` subscription's first poll to finish.
       try_until_success do
@@ -815,7 +767,9 @@ describe "Admin Customize Themes" do
         theme_page.toggle_theme_site_setting("enable_welcome_banner")
       end
 
-      try_until_success(reason: "Relies on MessageBus updates") { expect(banner).to be_hidden }
+      try_until_success(reason: "Relies on MessageBus updates") do
+        expect(banner).to RSpecPredicates.be_hidden
+      end
     end
   end
 end

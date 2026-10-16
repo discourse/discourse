@@ -6,6 +6,7 @@ module PageObjects
       include SystemHelpers
       include NativeSystemHelpers
       include RSpec::Matchers
+      include Playwright::Test::Matchers
 
       BODY_SELECTOR = ""
       MODAL_SELECTOR = ""
@@ -44,15 +45,11 @@ module PageObjects
       end
 
       def has_footer?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(footer_selector).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(footer_selector).filter(visible: true))
       end
 
       def has_no_footer?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(footer_selector).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(footer_selector).filter(visible: true))
       end
 
       def close
@@ -75,21 +72,17 @@ module PageObjects
       end
 
       def has_displayed_content?(content)
-        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
-          body,
-        )
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(body)
       end
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(full_modal_selector).filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(full_modal_selector).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(full_modal_selector).filter(visible: true))
       end
     end
   end

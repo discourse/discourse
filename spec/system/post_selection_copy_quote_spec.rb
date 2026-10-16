@@ -71,7 +71,7 @@ describe "Post selection | Copy quote" do
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
       expect(
         browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "resets the quote state when the toolbar is hidden" do
@@ -80,12 +80,12 @@ describe "Post selection | Copy quote" do
 
       expect(
         browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       select_text_range(".topic-map__stat-label", 0, 1) # select non cooked content
       topic_page.click_reply_button
 
-      expect(composer).to have_value("")
+      expect(composer).to RSpecPredicates.have_value("")
     end
 
     it "inserts a partial quote when selecting part of post content" do
@@ -94,7 +94,7 @@ describe "Post selection | Copy quote" do
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
 
       browser_root.locator(".quote-button .insert-quote").filter(visible: true).click
-      expect(composer).to have_value(
+      expect(composer).to RSpecPredicates.have_value(
         %([quote="#{post.user.username}, post:1, topic:#{topic.id}"]\nHello worl\n[/quote]\n\n),
       )
     end
@@ -175,7 +175,7 @@ describe "Post selection | Copy quote" do
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
       expect(
         browser_root.locator(topic_page.copy_quote_button_selector).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

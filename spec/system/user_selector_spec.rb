@@ -20,10 +20,11 @@ describe "User selector" do
       within_browser(browser_root.locator(".autocomplete.ac-user").filter(visible: true)) do |el|
         expect(
           el.locator(".selected .avatar[title=someone]").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        expect(
-          el.locator(".selected .username").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(browser_text_pattern("someone"), useInnerText: true)
+        ).not_to have_count(0)
+        expect(el.locator(".selected .username").filter(visible: true)).to contain_text(
+          browser_text_pattern("someone"),
+          useInnerText: true,
+        )
       end
     end
   end
@@ -35,12 +36,11 @@ describe "User selector" do
       browser_root.locator(".d-editor-input").filter(visible: true).press_sequentially("Hello @adm")
 
       within_browser(browser_root.locator(".autocomplete.ac-user").filter(visible: true)) do |el|
-        expect(
-          el.locator(".selected .d-icon-users").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        expect(
-          el.locator(".selected .username").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(browser_text_pattern("admins"), useInnerText: true)
+        expect(el.locator(".selected .d-icon-users").filter(visible: true)).not_to have_count(0)
+        expect(el.locator(".selected .username").filter(visible: true)).to contain_text(
+          browser_text_pattern("admins"),
+          useInnerText: true,
+        )
       end
     end
   end

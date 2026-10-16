@@ -7,7 +7,7 @@ describe "Composer - ProseMirror - Input rules" do
     open_composer
     composer.type_content("> This is a blockquote")
 
-    expect(rich.locator("blockquote").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("blockquote").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a blockquote")],
       useInnerText: true,
     )
@@ -17,7 +17,7 @@ describe "Composer - ProseMirror - Input rules" do
     open_composer
     composer.type_content("1. Item 1\n5. Item 2")
 
-    expect(rich.locator("ol li").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("ol li").filter(visible: true)).to contain_text(
       [browser_text_pattern("Item 1")],
       useInnerText: true,
     )
@@ -39,19 +39,15 @@ describe "Composer - ProseMirror - Input rules" do
     composer.type_content("- Item 2\n")
     composer.type_content("+ Item 3")
 
-    expect(rich.locator("ul ul li").filter(visible: true)).to PlaywrightMatchers.have_count(3)
+    expect(rich.locator("ul ul li").filter(visible: true)).to have_count(3)
   end
 
   it "uses 'tight' lists for both ordered and unordered lists by default" do
     open_composer
     composer.type_content("1. Item 1\n5. Item 2\n\n")
     composer.type_content("* Item 1\n* Item 2")
-    expect(
-      rich.locator("ol[data-tight='true']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      rich.locator("ul[data-tight='true']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("ol[data-tight='true']").filter(visible: true)).not_to have_count(0)
+    expect(rich.locator("ul[data-tight='true']").filter(visible: true)).not_to have_count(0)
   end
 
   it "supports ``` or 4 spaces to create a code block" do
@@ -65,7 +61,7 @@ describe "Composer - ProseMirror - Input rules" do
         .locator("pre code")
         .filter(visible: true)
         .filter(hasText: browser_text_pattern("This is a code block")),
-    ).to PlaywrightMatchers.have_count(2)
+    ).to have_count(2)
   end
 
   it "supports 1-6 #s to create a heading" do
@@ -77,27 +73,27 @@ describe "Composer - ProseMirror - Input rules" do
     composer.type_content("##### Heading 5\n")
     composer.type_content("###### Heading 6\n")
 
-    expect(rich.locator("h1").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h1").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 1")],
       useInnerText: true,
     )
-    expect(rich.locator("h2").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h2").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 2")],
       useInnerText: true,
     )
-    expect(rich.locator("h3").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h3").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 3")],
       useInnerText: true,
     )
-    expect(rich.locator("h4").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h4").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 4")],
       useInnerText: true,
     )
-    expect(rich.locator("h5").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h5").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 5")],
       useInnerText: true,
     )
-    expect(rich.locator("h6").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("h6").filter(visible: true)).to contain_text(
       [browser_text_pattern("Heading 6")],
       useInnerText: true,
     )
@@ -115,11 +111,11 @@ describe "Composer - ProseMirror - Input rules" do
         .locator("em")
         .filter(visible: true)
         .filter(hasText: browser_text_pattern("This is italic")),
-    ).to PlaywrightMatchers.have_count(4)
+    ).to have_count(4)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value(
+    expect(composer).to RSpecPredicates.have_value(
       "*This is italic*\n\nHey *This is italic*\n\n*This is italic*\n\nHey*This is italic*",
     )
   end
@@ -136,11 +132,11 @@ describe "Composer - ProseMirror - Input rules" do
         .locator("strong")
         .filter(visible: true)
         .filter(hasText: browser_text_pattern("This is bold")),
-    ).to PlaywrightMatchers.have_count(4)
+    ).to have_count(4)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value(
+    expect(composer).to RSpecPredicates.have_value(
       "**This is bold**\n\n**This is bold**\n\nHey **This is bold**\n\nHey**This is bold**",
     )
   end
@@ -149,7 +145,7 @@ describe "Composer - ProseMirror - Input rules" do
     open_composer
     composer.type_content("`This is code`")
 
-    expect(rich.locator("code").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("code").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is code")],
       useInnerText: true,
     )
@@ -162,7 +158,7 @@ describe "Composer - ProseMirror - Input rules" do
 
     # Typographer replacements are disabled in the rich editor, so the text is
     # kept verbatim instead of being converted to ±, …, smart quotes, etc.
-    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("p").filter(visible: true)).to contain_text(
       [browser_text_pattern(text)],
       useInnerText: true,
     )
@@ -172,34 +168,32 @@ describe "Composer - ProseMirror - Input rules" do
     open_composer
     composer.type_content("Hey\n---There\n*** Friend\n___ How\n\u2013-are\n\u2014-you")
 
-    expect(rich.locator("hr").filter(visible: true)).to PlaywrightMatchers.have_count(5)
+    expect(rich.locator("hr").filter(visible: true)).to have_count(5)
   end
 
   it "supports <http://example.com> to create an 'autolink'" do
     open_composer
     composer.type_content("<http://example.com>")
 
-    expect(rich.locator("a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("a").filter(visible: true)).to contain_text(
       [browser_text_pattern("http://example.com")],
       useInnerText: true,
     )
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("<http://example.com>")
+    expect(composer).to RSpecPredicates.have_value("<http://example.com>")
   end
 
   it "supports [quote] to create a quote block" do
     open_composer
     composer.type_content("[quote]")
 
-    expect(
-      rich.locator("aside.quote blockquote").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("aside.quote blockquote").filter(visible: true)).not_to have_count(0)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[quote]\n\n[/quote]\n\n")
+    expect(composer).to RSpecPredicates.have_value("[quote]\n\n[/quote]\n\n")
   end
 
   it "supports [quote=\"username\"] to create a quote block with attribution" do
@@ -208,14 +202,12 @@ describe "Composer - ProseMirror - Input rules" do
 
     expect(
       rich.locator("aside.quote[data-username='johndoe'] .title").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("johndoe:")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).to contain_text([browser_text_pattern("johndoe:")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote").filter(visible: true)).not_to have_count(0)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[quote=\"johndoe\"]\n\n[/quote]\n\n")
+    expect(composer).to RSpecPredicates.have_value("[quote=\"johndoe\"]\n\n[/quote]\n\n")
   end
 
   it "supports [quote=\"username, post:1, topic:123\"] to create a quote block with full attribution" do
@@ -226,14 +218,14 @@ describe "Composer - ProseMirror - Input rules" do
       rich.locator(
         "aside.quote[data-username='johndoe'][data-post='1'][data-topic='123'] .title",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("johndoe:")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).to contain_text([browser_text_pattern("johndoe:")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote").filter(visible: true)).not_to have_count(0)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[quote=\"johndoe, post:1, topic:123\"]\n\n[/quote]\n\n")
+    expect(composer).to RSpecPredicates.have_value(
+      "[quote=\"johndoe, post:1, topic:123\"]\n\n[/quote]\n\n",
+    )
   end
 
   it "doesn't trigger quote input rule in the middle of text" do
@@ -247,8 +239,8 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("aside.quote")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich).to PlaywrightMatchers.contain_text(
+    ).to have_count(0)
+    expect(rich).to contain_text(
       browser_text_pattern("This [quote] should not trigger"),
       useInnerText: true,
     )
@@ -270,13 +262,13 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("strong")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich.locator("code").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    ).to have_count(0)
+    expect(rich.locator("code").filter(visible: true)).to contain_text(
       [browser_text_pattern("__code")],
       useInnerText: true,
     )
 
-    expect(rich.locator("code").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("code").filter(visible: true)).to contain_text(
       [browser_text_pattern("not code")],
       useInnerText: true,
     )
@@ -287,10 +279,7 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("code")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("and this, not code")],
-      useInnerText: true,
-    )
+    ).not_to contain_text([browser_text_pattern("and this, not code")], useInnerText: true)
   end
 
   it "does not convert emoji shortcuts when enable_emoji_shortcuts is disabled" do
@@ -306,8 +295,8 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("img.emoji")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich).to PlaywrightMatchers.contain_text(browser_text_pattern(":)"), useInnerText: true)
+    ).to have_count(0)
+    expect(rich).to contain_text(browser_text_pattern(":)"), useInnerText: true)
   end
 
   it "doesn't apply input rules immediately after a single backtick" do
@@ -321,7 +310,7 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("strong")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       rich
         .tap do |parent|
@@ -329,10 +318,10 @@ describe "Composer - ProseMirror - Input rules" do
         end
         .locator("img.emoji")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("\\`\\*\\*not bold\\*\\*\n\n\\`:tada:")
+    expect(composer).to RSpecPredicates.have_value("\\`\\*\\*not bold\\*\\*\n\n\\`:tada:")
   end
 end

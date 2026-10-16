@@ -80,7 +80,7 @@ describe "Admin Color Palettes Config Area Page" do
     create_color_palette_modal.base_dropdown.select_row_by_name("Grey Amber")
     create_color_palette_modal.create_button.click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/config/colors/\d+})
+    expect(browser_page).to have_url(%r{/admin/config/colors/\d+})
   end
 
   it "can create new color palette from custom palette" do
@@ -90,15 +90,13 @@ describe "Admin Color Palettes Config Area Page" do
     create_color_palette_modal.base_dropdown.expand
     expect(
       browser_root.locator(".color-palette-picker-row").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     create_color_palette_modal.base_dropdown.select_row_by_name("A Test Palette")
 
     create_color_palette_modal.create_button.click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/config/colors/\d+})
-    expect(browser_root.locator(".revert").filter(visible: true)).to PlaywrightMatchers.have_count(
-      0,
-    )
+    expect(browser_page).to have_url(%r{/admin/config/colors/\d+})
+    expect(browser_root.locator(".revert").filter(visible: true)).to have_count(0)
   end
 
   describe "filtering" do
@@ -107,7 +105,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(
         browser_root.locator(".d-filter-controls__input").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can filter by text search" do
@@ -122,10 +120,10 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "can filter by type" do
@@ -138,13 +136,13 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         browser_root.locator(".color-palette:not([data-palette-id])").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "shows no results state" do
@@ -154,10 +152,8 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(
         browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("button").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).not_to have_count(0)
+      expect(browser_root.locator("button").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.filter_controls.reset"))],
         useInnerText: true,
       )
@@ -172,13 +168,13 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{user_selectable_palette.id}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-palette-id='#{theme_palette.id}']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "shows user selectable badge" do
@@ -191,7 +187,7 @@ describe "Admin Color Palettes Config Area Page" do
       ) do
         expect(
           browser_root.locator(".theme-card__badge.--selectable").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -210,7 +206,7 @@ describe "Admin Color Palettes Config Area Page" do
               ).or(browser_root.get_by_role("link", name: theme.name)),
             )
             .filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -221,9 +217,7 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
       ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(
-        browser_root.locator(".dropdown-menu").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dropdown-menu").filter(visible: true)).not_to have_count(0)
       browser_root
         .locator(
           "[id=#{I18n.t("admin_js.admin.customize.theme.user_selectable_button_label").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.user_selectable_button_label").to_s.to_json}]",
@@ -242,7 +236,7 @@ describe "Admin Color Palettes Config Area Page" do
       ) do
         expect(
           browser_root.locator(".theme-card__badge.--selectable").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -253,9 +247,7 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
       ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(
-        browser_root.locator(".dropdown-menu").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dropdown-menu").filter(visible: true)).not_to have_count(0)
 
       browser_root
         .locator(
@@ -295,7 +287,7 @@ describe "Admin Color Palettes Config Area Page" do
       ) do
         expect(
           browser_root.locator(".theme-card__badge.--default").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [
             browser_text_pattern(
               I18n.t("admin_js.admin.customize.colors.default_light_badge.text"),
@@ -309,9 +301,7 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
       ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(
-        browser_root.locator(".dropdown-menu").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dropdown-menu").filter(visible: true)).not_to have_count(0)
 
       browser_root
         .locator(
@@ -351,7 +341,7 @@ describe "Admin Color Palettes Config Area Page" do
       ) do
         expect(
           browser_root.locator(".theme-card__badge.--default").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.customize.colors.default_dark_badge.text"))],
           useInnerText: true,
         )
@@ -388,9 +378,7 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
       ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(
-        browser_root.locator(".dropdown-menu").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dropdown-menu").filter(visible: true)).not_to have_count(0)
 
       browser_root
         .locator(
@@ -427,7 +415,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(
         browser_root.locator(".fk-d-default-toast.-success").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "shows toast when admin cannot see live preview" do
@@ -443,9 +431,7 @@ describe "Admin Color Palettes Config Area Page" do
         browser_root.locator("[data-palette-id='#{regular_palette.id}']").filter(visible: true),
       ) { browser_root.locator(".btn-flat").filter(visible: true).click }
 
-      expect(
-        browser_root.locator(".dropdown-menu").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dropdown-menu").filter(visible: true)).not_to have_count(0)
 
       browser_root
         .locator(

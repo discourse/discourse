@@ -6,14 +6,13 @@ module PageObjects
       SELECTOR = ".bookmark-list"
 
       def has_assignee?(topic, assignee)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(assignee.username)],
-          useInnerText: true,
-        ).matches?(bookmark_row(topic).locator(".assigned-to").filter(visible: true))
+        contain_text([browser_text_pattern(assignee.username)], useInnerText: true).matches?(
+          bookmark_row(topic).locator(".assigned-to").filter(visible: true),
+        )
       end
 
       def has_no_assignment?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           bookmark_row(topic)
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)

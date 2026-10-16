@@ -103,9 +103,7 @@ describe "Interface color selector" do
 
     sidebar.click_section_link(category.name)
 
-    expect(
-      browser_root.locator('.category-logo picture source[media="all"]'),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator('.category-logo picture source[media="all"]')).not_to have_count(0)
 
     styles =
       browser_root.locator("#d-styles").evaluate(
@@ -119,9 +117,7 @@ describe "Interface color selector" do
     selector_in_sidebar.expand
     selector_in_sidebar.light_option.click
 
-    expect(
-      browser_root.locator('.category-logo picture source[media="none"]'),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator('.category-logo picture source[media="none"]')).not_to have_count(0)
 
     styles =
       browser_root.locator("#d-styles").evaluate(
@@ -137,7 +133,7 @@ describe "Interface color selector" do
 
     expect(
       browser_root.locator('.category-logo picture source[media="(prefers-color-scheme: dark)"]'),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     styles =
       browser_root.locator("#d-styles").evaluate(
@@ -166,9 +162,7 @@ describe "Interface color selector" do
 
     expect(interface_color_mode).to have_dark_mode_forced
 
-    expect(
-      browser_root.locator('.category-logo picture source[media="all"]'),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator('.category-logo picture source[media="all"]')).not_to have_count(0)
 
     styles =
       browser_root.locator("#d-styles").evaluate(

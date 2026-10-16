@@ -81,19 +81,15 @@ describe "Flagging post" do
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:illegal)
 
-      expect(
-        flag_modal.locator(".illegal .description").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        flag_modal.locator(".flag-confirmation").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(flag_modal.locator(".illegal .description").filter(visible: true)).not_to have_count(0)
+      expect(flag_modal.locator(".flag-confirmation").filter(visible: true)).not_to have_count(0)
 
       flag_modal.fill_message("This looks totally illegal to me.")
       flag_modal.check_confirmation
 
       flag_modal.confirm_flag
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.post.actions.by_you.illegal")),
         useInnerText: true,
       )
@@ -117,7 +113,7 @@ describe "Flagging post" do
 
       flag_modal.confirm_flag
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.post.actions.by_you.notify_user")),
         useInnerText: true,
       )
@@ -147,7 +143,7 @@ describe "Flagging post" do
       flag_modal.check_confirmation
       flag_modal.confirm_flag
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.post.actions.by_you.illegal")),
         useInnerText: true,
       )
@@ -167,7 +163,7 @@ describe "Flagging post" do
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       SiteSetting.allow_all_users_to_flag_illegal_content = true
       topic_page.visit_topic(topic).open_flag_topic_modal
-      expect(flag_modal.body).to PlaywrightMatchers.contain_text(
+      expect(flag_modal.body).to contain_text(
         browser_text_pattern(
           ActionView::Base.full_sanitizer.sanitize(
             I18n.t("js.flagging.review_process_description"),
@@ -194,7 +190,7 @@ describe "Flagging post" do
       topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
-      expect(anonymous_flag_modal.body).to PlaywrightMatchers.contain_text(
+      expect(anonymous_flag_modal.body).to contain_text(
         browser_text_pattern(
           ActionView::Base.full_sanitizer.sanitize(
             I18n.t("js.flagging.review_process_description"),
@@ -202,7 +198,7 @@ describe "Flagging post" do
         ),
         useInnerText: true,
       )
-      expect(anonymous_flag_modal.body).to PlaywrightMatchers.contain_text(
+      expect(anonymous_flag_modal.body).to contain_text(
         browser_text_pattern(
           ActionView::Base.full_sanitizer.sanitize(
             I18n.t(
@@ -218,7 +214,7 @@ describe "Flagging post" do
       topic_page.visit_topic(topic)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
-      expect(anonymous_flag_modal.body).to PlaywrightMatchers.contain_text(
+      expect(anonymous_flag_modal.body).to contain_text(
         browser_text_pattern(
           ActionView::Base.full_sanitizer.sanitize(
             I18n.t(

@@ -15,7 +15,7 @@ describe "Wizard" do
     wizard_page.fill_field("text", "title", "My Test Site")
     wizard_page.select_dropdown_option("default-locale", "en")
     wizard_page.click_jump_in
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(browser_page).to have_url("/")
   end
 
   describe "Setup step" do
@@ -46,7 +46,7 @@ describe "Wizard" do
       wizard_page.fill_field("text", "title", "My Test Site")
       wizard_page.click_jump_in
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
     end
 
     it "prevents submission when title is empty" do
@@ -57,7 +57,7 @@ describe "Wizard" do
       expect(wizard_page).to be_on_step("setup")
       expect(
         browser_root.locator(".wizard-container__field.text-title.invalid").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "prevents submission when title is 'Discourse'" do
@@ -68,7 +68,7 @@ describe "Wizard" do
       expect(wizard_page).to be_on_step("setup")
       expect(
         browser_root.locator(".wizard-container__field.text-title.invalid").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "allows keyboard navigation of radio inputs" do
@@ -89,7 +89,7 @@ describe "Wizard" do
 
       expect(
         radio_field.locator(".wizard-container__radio-choice:focus-within").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_page.evaluate(
           "function(arguments) { return document.activeElement.type }",
@@ -102,7 +102,7 @@ describe "Wizard" do
         radio_field.locator(
           ".wizard-container__radio-choice[data-choice-id='#{choice_id}'].--selected",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "keeps arrow key navigation within same radio group" do
@@ -114,9 +114,7 @@ describe "Wizard" do
       private_radio.click
       private_radio.press("ArrowRight")
 
-      expect(
-        login_required_field.locator("input[type='radio']:focus"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(login_required_field.locator("input[type='radio']:focus")).not_to have_count(0)
     end
   end
 end

@@ -47,7 +47,7 @@ module PageObjects
 
       def has_field_error?(field_name)
         within_browser(FORM_SCOPE) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".form-kit__field[data-name='#{field_name}'].has-error").filter(
               visible: true,
             ),

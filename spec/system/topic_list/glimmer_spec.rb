@@ -13,7 +13,7 @@ describe "glimmer topic list", native_playwright: true do
       Fabricate.times(5, :topic)
       topic_list.visit_latest
 
-      expect(topic_list.topics).to PlaywrightMatchers.have_count(5)
+      expect(topic_list.topics).to have_count(5)
     end
   end
 
@@ -25,10 +25,10 @@ describe "glimmer topic list", native_playwright: true do
 
       topic_list.visit_new
 
-      expect(topic_list.topics).to PlaywrightMatchers.have_count(2)
-      expect(topic_list.all_toggle).to PlaywrightMatchers.be_visible
-      expect(topic_list.topics_toggle).to PlaywrightMatchers.be_visible
-      expect(topic_list.replies_toggle).to PlaywrightMatchers.be_visible
+      expect(topic_list.topics).to have_count(2)
+      expect(topic_list.all_toggle).to be_visible
+      expect(topic_list.topics_toggle).to be_visible
+      expect(topic_list.replies_toggle).to be_visible
     end
   end
 
@@ -44,8 +44,8 @@ describe "glimmer topic list", native_playwright: true do
 
       category_list.visit
 
-      expect(category_list.featured_topic(topic)).to PlaywrightMatchers.be_visible
-      expect(category_list.featured_topic(topic2)).to PlaywrightMatchers.be_visible
+      expect(category_list.featured_topic(topic)).to be_visible
+      expect(category_list.featured_topic(topic2)).to be_visible
     end
   end
 
@@ -57,14 +57,11 @@ describe "glimmer topic list", native_playwright: true do
 
       topic_page.visit(topic1)
 
-      expect(topic_page.suggested_topic(topic2)).to PlaywrightMatchers.be_visible
-      expect(topic_page.new_topic_badge(topic2)).to PlaywrightMatchers.be_visible
+      expect(topic_page.suggested_topic(topic2)).to be_visible
+      expect(topic_page.new_topic_badge(topic2)).to be_visible
 
-      expect(topic_page.suggested_topic(new_reply)).to PlaywrightMatchers.be_visible
-      expect(topic_page.unread_posts_badge(new_reply)).to PlaywrightMatchers.contain_text(
-        "3",
-        useInnerText: true,
-      )
+      expect(topic_page.suggested_topic(new_reply)).to be_visible
+      expect(topic_page.unread_posts_badge(new_reply)).to contain_text("3", useInnerText: true)
     end
   end
 
@@ -77,10 +74,10 @@ describe "glimmer topic list", native_playwright: true do
       new_topic = Fabricate(:post).topic
       TopicTrackingState.publish_new(new_topic)
 
-      expect(topic_list.new_topics_alert).to PlaywrightMatchers.be_visible
+      expect(topic_list.new_topics_alert).to be_visible
       topic_list.new_topics_alert.click
 
-      expect(topic_list.highlighted_topic(new_topic)).to PlaywrightMatchers.be_visible
+      expect(topic_list.highlighted_topic(new_topic)).to be_visible
     end
 
     it "highlights the previous topic after navigation" do
@@ -89,11 +86,11 @@ describe "glimmer topic list", native_playwright: true do
       topic_list.visit_latest
       topic_list.open_topic(topic)
 
-      expect(topic_page.title).to PlaywrightMatchers.contain_text(topic.title)
+      expect(topic_page.title).to contain_text(topic.title)
 
       topic_list.go_back
 
-      expect(topic_list.highlighted_topic(topic)).to PlaywrightMatchers.be_visible
+      expect(topic_list.highlighted_topic(topic)).to be_visible
     end
   end
 
@@ -105,11 +102,11 @@ describe "glimmer topic list", native_playwright: true do
       topic_list.visit_latest
 
       topic_list.bulk_select.click
-      expect(topic_list.topic_checkbox(topics.first)).to PlaywrightMatchers.be_visible
-      expect(topic_list.bulk_actions).to PlaywrightMatchers.have_count(0)
+      expect(topic_list.topic_checkbox(topics.first)).to be_visible
+      expect(topic_list.bulk_actions).to have_count(0)
 
       topic_list.topic_checkbox(topics.first).click
-      expect(topic_list.bulk_actions).to PlaywrightMatchers.be_visible
+      expect(topic_list.bulk_actions).to be_visible
     end
 
     context "when on mobile", mobile: true do
@@ -118,11 +115,11 @@ describe "glimmer topic list", native_playwright: true do
         topic_list.visit_latest
 
         topic_list.bulk_select.click
-        expect(topic_list.topic_checkbox(topics.first)).to PlaywrightMatchers.be_visible
-        expect(topic_list.bulk_actions).to PlaywrightMatchers.have_count(0)
+        expect(topic_list.topic_checkbox(topics.first)).to be_visible
+        expect(topic_list.bulk_actions).to have_count(0)
 
         topic_list.topic_checkbox(topics.first).click
-        expect(topic_list.bulk_actions).to PlaywrightMatchers.be_visible
+        expect(topic_list.bulk_actions).to be_visible
       end
     end
   end
@@ -131,10 +128,10 @@ describe "glimmer topic list", native_playwright: true do
     topic = Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
     topic_list.visit_latest
 
-    expect(topic_list.pinned_icon).to PlaywrightMatchers.be_visible
+    expect(topic_list.pinned_icon).to be_visible
 
     topic_list.click_pin
-    expect(topic_list.unpinned_icon).to PlaywrightMatchers.be_visible
+    expect(topic_list.unpinned_icon).to be_visible
 
     wait_for { TopicUser.exists?(topic:, user:) }
     expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
@@ -148,7 +145,7 @@ describe "glimmer topic list", native_playwright: true do
     Fabricate(:post, topic: visited_topic)
 
     topic_page.visit(visited_topic)
-    expect(topic_page.first_post).to PlaywrightMatchers.be_visible
+    expect(topic_page.first_post).to be_visible
 
     # Visit registration in screen tracking is async. Wait for it before navigating away.
     visited_check_js = <<~JS

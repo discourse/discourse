@@ -3,9 +3,7 @@
 describe "JS Deprecation Handling" do
   it "can successfully print a deprecation message after applying production-mode shims" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("#main-outlet-wrapper").filter(visible: true),
-    ).to PlaywrightMatchers.be_visible
+    expect(browser_root.locator("#main-outlet-wrapper").filter(visible: true)).to be_visible
 
     # Intercept console.warn so we can enumerate calls later
     browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
@@ -37,9 +35,7 @@ describe "JS Deprecation Handling" do
 
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("#site-logo").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#site-logo").filter(visible: true)).not_to have_count(0)
 
     browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       const deprecated = require("discourse/lib/deprecated").default;
@@ -51,15 +47,12 @@ describe "JS Deprecation Handling" do
       browser_root.locator("#global-notice-critical-deprecation--fake-deprecation1").filter(
         visible: true,
       )
-    expect(message).to PlaywrightMatchers.contain_text(
+    expect(message).to contain_text(
       browser_text_pattern("One of your themes or plugins contains code which needs updating"),
       useInnerText: true,
     )
-    expect(message).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("fake.deprecation1"),
-      useInnerText: true,
-    )
-    expect(message).to PlaywrightMatchers.contain_text(
+    expect(message).to contain_text(browser_text_pattern("fake.deprecation1"), useInnerText: true)
+    expect(message).to contain_text(
       browser_text_pattern(SiteSetting.warn_critical_js_deprecations_message),
       useInnerText: true,
     )
@@ -68,15 +61,12 @@ describe "JS Deprecation Handling" do
       browser_root.locator("#global-notice-critical-deprecation--fake-deprecation2").filter(
         visible: true,
       )
-    expect(message).to PlaywrightMatchers.contain_text(
+    expect(message).to contain_text(
       browser_text_pattern("One of your themes or plugins contains code which needs updating"),
       useInnerText: true,
     )
-    expect(message).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("fake.deprecation2"),
-      useInnerText: true,
-    )
-    expect(message).to PlaywrightMatchers.contain_text(
+    expect(message).to contain_text(browser_text_pattern("fake.deprecation2"), useInnerText: true)
+    expect(message).to contain_text(
       browser_text_pattern(SiteSetting.warn_critical_js_deprecations_message),
       useInnerText: true,
     )
@@ -94,9 +84,7 @@ describe "JS Deprecation Handling" do
     SiteSetting.default_theme_id = t.id
 
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("#main-outlet-wrapper").filter(visible: true),
-    ).to PlaywrightMatchers.be_visible
+    expect(browser_root.locator("#main-outlet-wrapper").filter(visible: true)).to be_visible
 
     try_until_success do
       expect(
@@ -134,7 +122,7 @@ describe "JS Deprecation Handling" do
       browser_root.locator("#global-notice-critical-deprecation--fake-deprecation").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "shows warnings for Discourse and Ember deprecations triggered before the handler is set up" do
@@ -173,11 +161,11 @@ describe "JS Deprecation Handling" do
       browser_root.locator("#global-notice-critical-deprecation--fake-deprecation1").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("#global-notice-critical-deprecation--fake-deprecation2").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 end

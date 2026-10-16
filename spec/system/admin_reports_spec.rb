@@ -14,7 +14,7 @@ describe "Admin Reports" do
       browser_page
         .goto("/admin/reports/site_traffic")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/reports/consolidated_page_views")
+      expect(browser_page).to have_url("/admin/reports/consolidated_page_views")
     end
   end
 
@@ -25,7 +25,7 @@ describe "Admin Reports" do
       browser_page
         .goto("/admin/reports/site_traffic")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/reports/site_traffic")
+      expect(browser_page).to have_url("/admin/reports/site_traffic")
     end
   end
 
@@ -40,17 +40,14 @@ describe "Admin Reports" do
     ) do
       expect(
         browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern(I18n.t("reports.signups.title"))],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern(I18n.t("reports.signups.title"))], useInnerText: true)
     end
     expect(
       browser_root.locator(".admin-reports-group__title").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Traffic")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Traffic")], useInnerText: true)
     expect(
       browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
-    ).not_to PlaywrightMatchers.contain_text(
+    ).not_to contain_text(
       [browser_text_pattern(I18n.t("reports.bookmarks.title"))],
       useInnerText: true,
     )
@@ -59,12 +56,8 @@ describe "Admin Reports" do
       .goto("/admin/reports/bookmarks")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".admin-report").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".alert.alert-info").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".admin-report").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".alert.alert-info").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("admin_js.admin.reports.legacy_warning"))],
       useInnerText: true,
     )

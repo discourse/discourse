@@ -38,9 +38,9 @@ describe "Reordering surfaces" do
         dashboard.visit
         dashboard.open_configure_menu
 
-        expect(
-          browser_root.locator(".db-configure__row").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".db-configure__row").filter(visible: true)).not_to have_count(
+          0,
+        )
         screenshot_marker(label: "reorder-configure-menu-#{suffix}")
       end
 
@@ -53,7 +53,7 @@ describe "Reordering surfaces" do
 
         expect(
           browser_root.locator(".manage-reports .manageable-row-list__row").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         screenshot_marker(label: "reorder-manage-reports-#{suffix}")
       end
 
@@ -63,16 +63,16 @@ describe "Reordering surfaces" do
 
         expect(
           browser_root.locator(".compare-groups .manageable-row-list__row").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         screenshot_marker(label: "reorder-compare-groups-#{suffix}")
       end
 
       it "photographs a simple-list setting" do
         settings_page.visit("top_menu")
 
-        expect(
-          browser_root.locator(".value-list .value").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".value-list .value").filter(visible: true)).not_to have_count(
+          0,
+        )
         screenshot_marker(label: "reorder-simple-list-#{suffix}")
       end
 
@@ -80,27 +80,23 @@ describe "Reordering surfaces" do
         SiteSetting.exclude_rel_nofollow_domains = "example.com|discourse.org"
         settings_page.visit("exclude_rel_nofollow_domains")
 
-        expect(
-          browser_root.locator(".value-list .value").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".value-list .value").filter(visible: true)).not_to have_count(
+          0,
+        )
         screenshot_marker(label: "reorder-value-list-#{suffix}")
       end
 
       it "photographs an emoji-list setting" do
         settings_page.visit("default_emoji_reactions")
 
-        expect(
-          browser_root.locator(".value-list").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".value-list").filter(visible: true)).not_to have_count(0)
         screenshot_marker(label: "reorder-emoji-list-#{suffix}")
       end
 
       it "photographs the admin flags table" do
         flags_page.visit
 
-        expect(
-          browser_root.locator(".admin-flag-item").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".admin-flag-item").filter(visible: true)).not_to have_count(0)
         screenshot_marker(label: "reorder-admin-flags-#{suffix}")
       end
 
@@ -109,7 +105,7 @@ describe "Reordering surfaces" do
 
         expect(
           browser_root.locator(".admin-user_field-item").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         screenshot_marker(label: "reorder-user-fields-#{suffix}")
       end
 
@@ -118,7 +114,7 @@ describe "Reordering surfaces" do
 
         expect(
           browser_root.locator(".badge-grouping-item").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         screenshot_marker(label: "reorder-badge-groupings-#{suffix}")
       end
 
@@ -128,14 +124,14 @@ describe "Reordering surfaces" do
 
         expect(
           browser_root.locator(".edit-directory-column").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         screenshot_marker(label: "reorder-directory-columns-#{suffix}")
       end
 
       it "photographs the sidebar section form" do
         browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         sidebar.click_add_section_button
-        expect(section_modal).to be_visible
+        expect(section_modal).to RSpecPredicates.be_visible
 
         section_modal.fill_name("My section")
         section_modal.fill_link("Sidebar Tags", "/tags")

@@ -38,9 +38,7 @@ describe "Theme TypeScript support" do
 
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".ts-theme-proof").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".ts-theme-proof").filter(visible: true)).to contain_text(
       [browser_text_pattern("rgb(0, 128, 0)")],
       useInnerText: true,
     )

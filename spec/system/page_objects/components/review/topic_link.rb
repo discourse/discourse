@@ -8,7 +8,7 @@ module PageObjects
 
         def has_closed_topic_status?
           within_browser(WRAPPER_CSS) do
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(".topic-status [class*='d-icon-lock']").filter(visible: true),
             )
           end
@@ -26,7 +26,7 @@ module PageObjects
                 )
                 .and(browser_root.locator("[href=#{post_url.to_s.to_json}]"))
                 .filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
           end
         end
 
@@ -34,10 +34,7 @@ module PageObjects
           within_browser(WRAPPER_CSS) do
             expect(
               browser_root.locator(".badge-category__name").filter(visible: true),
-            ).to PlaywrightMatchers.contain_text(
-              [browser_text_pattern(category_name)],
-              useInnerText: true,
-            )
+            ).to contain_text([browser_text_pattern(category_name)], useInnerText: true)
           end
         end
 
@@ -53,7 +50,7 @@ module PageObjects
                 )
                 .and(browser_root.locator("[href=#{tag_url.to_s.to_json}]"))
                 .filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
           end
         end
       end

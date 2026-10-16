@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def has_groups?(groups)
-        PlaywrightMatchers.have_count(groups.length, timeout: 5 * 1000).matches?(
+        have_count(groups.length, timeout: 5 * 1000).matches?(
           browser_root.locator(".group-info-name").filter(visible: true),
         ) &&
           browser_root
@@ -26,9 +26,7 @@ module PageObjects
       end
 
       def has_no_groups?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".group-info-name").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".group-info-name").filter(visible: true))
       end
     end
   end

@@ -43,7 +43,7 @@ RSpec.describe "Nested view cloaking" do
         browser_root.locator(
           ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "uncloaks roots when scrolling to them" do
@@ -56,7 +56,7 @@ RSpec.describe "Nested view cloaking" do
         browser_root.locator(
           ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0, timeout: 5 * 1000)
+      ).not_to have_count(0, timeout: 5 * 1000)
 
       browser_page.keyboard.press("Home")
 
@@ -64,7 +64,7 @@ RSpec.describe "Nested view cloaking" do
         browser_root.locator(
           ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "hides children content when root is cloaked" do
@@ -75,12 +75,12 @@ RSpec.describe "Nested view cloaking" do
         browser_root.locator(
           ".nested-view__roots > .nested-post--cloaked .nested-post__article",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         browser_root.locator(
           ".nested-view__roots > .nested-post--cloaked .nested-post-children",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

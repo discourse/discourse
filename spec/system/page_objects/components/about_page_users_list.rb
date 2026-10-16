@@ -10,13 +10,13 @@ module PageObjects
       end
 
       def has_expand_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           container.locator(".about-page-users-list__expand-button").filter(visible: true),
         )
       end
 
       def has_no_expand_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           container
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -27,14 +27,14 @@ module PageObjects
       end
 
       def expandable?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.view_more")),
           useInnerText: true,
         ).matches?(container.locator(".about-page-users-list__expand-button").filter(visible: true))
       end
 
       def collapsible?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.view_less")),
           useInnerText: true,
         ).matches?(container.locator(".about-page-users-list__expand-button").filter(visible: true))

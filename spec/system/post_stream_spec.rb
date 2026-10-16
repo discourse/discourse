@@ -63,39 +63,27 @@ describe "Post stream" do
       topic_page.visit_topic(topic, post_number: 30)
       expect(
         browser_root.locator("[data-post-number='30']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator("#main-container")).to have_count(0)
 
       topic_page.visit_topic(topic, post_number: 1)
       expect(
         browser_root.locator("[data-post-number='1']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_css(
-        "display",
-        "none",
-      )
-      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_css(
-        "visibility",
-        "visible",
-      )
+      ).not_to have_count(0)
+      expect(browser_root.locator("#main-container")).not_to have_count(0)
+      expect(browser_root.locator("#main-container")).not_to have_css("display", "none")
+      expect(browser_root.locator("#main-container")).to have_css("visibility", "visible")
 
       topic_page.visit_topic(topic, post_number: 30)
       expect(
         browser_root.locator("[data-post-number='30']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator("#main-container")).to have_count(0)
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_root.locator("#main-container")).not_to PlaywrightMatchers.have_css(
-        "display",
-        "none",
-      )
-      expect(browser_root.locator("#main-container")).to PlaywrightMatchers.have_css(
-        "visibility",
-        "visible",
-      )
+      expect(browser_root.locator("#main-container")).not_to have_count(0)
+      expect(browser_root.locator("#main-container")).not_to have_css("display", "none")
+      expect(browser_root.locator("#main-container")).to have_css("visibility", "visible")
     end
   end
 
@@ -112,16 +100,14 @@ describe "Post stream" do
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Ensure there are visible posts
-      expect(
-        browser_root.locator(".topic-post").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".topic-post").filter(visible: true)).not_to have_count(0)
 
       post_stream = browser_root.locator(".post-stream").filter(visible: true)
 
       # Ensure the first post is uncloaked
       expect(
         post_stream.locator("> [data-post-number='1']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         post_stream
           .tap do |parent|
@@ -129,13 +115,13 @@ describe "Post stream" do
           end
           .locator("> [data-post-number='1'].post-stream--cloaked")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       # Check that some posts are cloaked (not all posts should be fully rendered at once)
       # The posts that are far from the viewport should have the "post-stream--cloaked" class
-      expect(
-        post_stream.locator(".post-stream--cloaked").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(post_stream.locator(".post-stream--cloaked").filter(visible: true)).not_to have_count(
+        0,
+      )
 
       # Get the number of the last post
       last_post_number = topic.highest_post_number
@@ -152,13 +138,13 @@ describe "Post stream" do
           end
           .locator("> [data-post-number='#{last_post_number}'].post-stream--cloaked")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       # Verify that some posts at the top are now cloaked
       # we can check the first post to see if it's cloaked
       expect(
         post_stream.locator("> [data-post-number='1'].post-stream--cloaked").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "keeps the state of quoted posts after uncloaking them" do
@@ -181,9 +167,7 @@ describe "Post stream" do
       post_stream = browser_root.locator(".post-stream").filter(visible: true)
 
       # Verify the second post is initially visible (uncloaked)
-      expect(
-        post_stream.locator(post2_selector).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(post_stream.locator(post2_selector).filter(visible: true)).not_to have_count(0)
       expect(
         post_stream
           .tap do |parent|
@@ -191,30 +175,24 @@ describe "Post stream" do
           end
           .locator("#{post2_selector}.post-stream--cloaked")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       # Verify the quote starts collapsed
       expect(
         post_stream.locator("#{post2_selector} aside.quote[data-expanded='false']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # Find the blockquote and verify the initial state
       blockquote =
         post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
-      expect(blockquote).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("Hello"),
-        useInnerText: true,
-      )
+      expect(blockquote).to contain_text(browser_text_pattern("Hello"), useInnerText: true)
       expect(
         blockquote.tap do |parent|
           parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
         end,
-      ).not_to PlaywrightMatchers.contain_text(
-        browser_text_pattern(first_post.raw),
-        useInnerText: true,
-      )
+      ).not_to contain_text(browser_text_pattern(first_post.raw), useInnerText: true)
 
       # Expand the quote by clicking the toggle button
       post_stream
@@ -225,15 +203,12 @@ describe "Post stream" do
         post_stream.locator("#{post2_selector} aside.quote[data-expanded='true']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # Verify the expanded quote shows full content
       blockquote =
         post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
-      expect(blockquote).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(first_post.raw),
-        useInnerText: true,
-      )
+      expect(blockquote).to contain_text(browser_text_pattern(first_post.raw), useInnerText: true)
 
       # Scroll to bottom to trigger post cloaking
       browser_page.keyboard.press("End")
@@ -241,7 +216,7 @@ describe "Post stream" do
       # Verify that the second post gets cloaked and the quote is removed
       expect(
         post_stream.locator("#{post2_selector}.post-stream--cloaked").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         post_stream
           .tap do |parent|
@@ -249,15 +224,13 @@ describe "Post stream" do
           end
           .locator("#{post2_selector} aside.quote")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       # Scroll back to top
       browser_page.keyboard.press("Home")
 
       # Verify that the second post becomes visible again
-      expect(
-        post_stream.locator(post2_selector).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(post_stream.locator(post2_selector).filter(visible: true)).not_to have_count(0)
       expect(
         post_stream
           .tap do |parent|
@@ -265,20 +238,17 @@ describe "Post stream" do
           end
           .locator("#{post2_selector}.post-stream--cloaked")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       # Verify that the quote maintains an expanded state after uncloaking
       expect(
         post_stream.locator("#{post2_selector} aside.quote[data-expanded='true']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       blockquote =
         post_stream.locator("#{post2_selector} aside.quote blockquote").filter(visible: true)
-      expect(blockquote).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(first_post.raw),
-        useInnerText: true,
-      )
+      expect(blockquote).to contain_text(browser_text_pattern(first_post.raw), useInnerText: true)
     end
   end
 end

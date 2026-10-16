@@ -10,24 +10,18 @@ module PageObjects
       end
 
       def active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@selector}.active").filter(visible: true),
         )
       end
 
       def inactive?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#{@selector}.active").filter(visible: true),
-        ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(@selector).filter(visible: true),
-          )
+        have_count(0).matches?(browser_root.locator("#{@selector}.active").filter(visible: true)) &&
+          have_count(0).does_not_match?(browser_root.locator(@selector).filter(visible: true))
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(@selector).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(@selector).filter(visible: true))
       end
 
       def has_count?(count)
@@ -40,10 +34,9 @@ module PageObjects
             end
           )
 
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(expected_label)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(@selector).filter(visible: true))
+        contain_text([browser_text_pattern(expected_label)], useInnerText: true).matches?(
+          browser_root.locator(@selector).filter(visible: true),
+        )
       end
 
       def click

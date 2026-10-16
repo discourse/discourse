@@ -12,10 +12,8 @@ module PageObjects
       end
 
       def has_error?
-        expect(
-          browser_root.locator(".alert-error").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        PlaywrightMatchers.contain_text(
+        expect(browser_root.locator(".alert-error").filter(visible: true)).not_to have_count(0)
+        contain_text(
           browser_text_pattern(I18n.t("js.user.activate_account.already_done")),
           useInnerText: true,
         ).matches?(browser_content)

@@ -13,17 +13,15 @@ describe "Private Message" do
     it "redirects away from the private message" do
       browser_page.goto(pm_post.full_url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_root.locator("h1").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("h1").filter(visible: true)).to contain_text(
         [browser_text_pattern(pm_post.topic.title)],
         useInnerText: true,
       )
 
       pm_post.topic.remove_allowed_user(sender, recipient)
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{recipient.username}/messages")
-      expect(
-        browser_root.locator("h1").filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
+      expect(browser_page).to have_url("/u/#{recipient.username}/messages")
+      expect(browser_root.locator("h1").filter(visible: true)).not_to contain_text(
         [browser_text_pattern(pm_post.topic.title)],
         useInnerText: true,
       )
@@ -40,7 +38,7 @@ describe "Private Message" do
       composer.open_composer_actions
       composer.select_action_by_id("create_private_message")
 
-      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+      expect(composer.button_label).to contain_text(
         browser_text_pattern(I18n.t("js.composer.create_pm")),
         useInnerText: true,
       )
@@ -63,7 +61,7 @@ describe "Private Message" do
       # Switch to personal message
       composer.open_composer_actions
       composer.select_action_by_id("create_private_message")
-      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+      expect(composer.button_label).to contain_text(
         browser_text_pattern(I18n.t("js.composer.create_pm")),
         useInnerText: true,
       )
@@ -71,7 +69,7 @@ describe "Private Message" do
       # Switch back to topic
       composer.open_composer_actions
       composer.select_action_by_id("create_topic")
-      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+      expect(composer.button_label).to contain_text(
         browser_text_pattern(I18n.t("js.composer.create_topic")),
         useInnerText: true,
       )

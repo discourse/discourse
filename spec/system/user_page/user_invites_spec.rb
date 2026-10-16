@@ -52,7 +52,7 @@ describe "User invites" do
       user_invite_expired_page.locator(".btn-danger").filter(visible: true).click
       user_invite_expired_page.wait_till_loaded
 
-      expect(user_invite_expired_page).to be_empty
+      expect(user_invite_expired_page).to RSpecPredicates.be_empty
       invites_expired.each { |invite| expect(invite.reload.deleted_at).to be_present }
     end
   end

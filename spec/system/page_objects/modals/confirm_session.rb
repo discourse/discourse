@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def has_forgot_password_email_sent?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".confirm-session .confirm-session__reset-email-sent").filter(
             visible: true,
           ),

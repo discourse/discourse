@@ -407,9 +407,7 @@ describe "Composer Form Templates" do
     cdp.paste
 
     expect(composer).to have_no_in_progress_uploads
-    expect(
-      composer.preview.locator(".image-wrapper").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
   end
 
   it "forms a post when template fields are filled in" do
@@ -427,16 +425,13 @@ describe "Composer Form Templates" do
       browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked p").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Bruce Wayne")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Bruce Wayne")], useInnerText: true)
 
     expect(
       browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked h3").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("What is your full name?")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("What is your full name?")], useInnerText: true)
   end
 
   it "creates a post with an upload field" do
@@ -450,7 +445,7 @@ describe "Composer Form Templates" do
 
     expect(
       browser_root.locator(".d-editor-preview img[alt='logo.png']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
@@ -460,7 +455,7 @@ describe "Composer Form Templates" do
       browser_root.locator(
         "#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "doesn't allow uploading an invalid file type" do
@@ -470,9 +465,7 @@ describe "Composer Form Templates" do
       "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
     ).set_input_files("#{Rails.root.join("spec/fixtures/images/animated.gif")}")
 
-    expect(
-      browser_root.locator("#dialog-holder .dialog-body p"),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator("#dialog-holder .dialog-body p")).to contain_text(
       [
         browser_text_pattern(
           I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
@@ -483,7 +476,7 @@ describe "Composer Form Templates" do
 
     expect(
       browser_root.locator(".form-template-field__uploaded-files").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "creates a post with multiple uploads" do
@@ -507,29 +500,29 @@ describe "Composer Form Templates" do
     composer.fill_form_template_field("input", "Peter Parker}")
     expect(
       browser_root.locator(".form-template-field__uploaded-files li").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(4)
+    ).to have_count(4)
     composer.create
 
     expect(
       browser_root.locator(
         "#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked a.attachment").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked audio").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator(
         "#{topic_page.post_by_number_selector(1)} .cooked .video-placeholder-container",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "overrides uploaded file if allow_multiple false" do
@@ -547,7 +540,7 @@ describe "Composer Form Templates" do
 
     expect(
       browser_root.locator(".form-template-field__uploaded-files li").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(1)
+    ).to have_count(1)
   end
 
   it "shows labels and descriptions when a form template is assigned to the category" do
@@ -572,9 +565,10 @@ describe "Composer Form Templates" do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Peter Parker")
 
-    expect(
-      browser_root.locator(".d-editor-preview").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Peter Parker")], useInnerText: true)
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Peter Parker")],
+      useInnerText: true,
+    )
 
     browser_root
       .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
@@ -597,9 +591,10 @@ describe "Composer Form Templates" do
       .and(browser_root.locator("select"))
       .select_option(label: "Option 1")
 
-    expect(
-      browser_root.locator(".d-editor-preview").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Option 1")], useInnerText: true)
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Option 1")],
+      useInnerText: true,
+    )
 
     browser_root
       .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
@@ -612,30 +607,28 @@ describe "Composer Form Templates" do
       .and(browser_root.locator("select"))
       .select_option(label: "Option 4")
 
-    expect(
-      browser_root.locator(".d-editor-preview").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Option 4")], useInnerText: true)
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Option 4")],
+      useInnerText: true,
+    )
 
     message = "This is a test message!"
     composer.fill_form_template_field("textarea", message)
 
-    expect(
-      browser_root.locator(".d-editor-preview").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern(message)], useInnerText: true)
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern(message)],
+      useInnerText: true,
+    )
 
     browser_root.locator(
       "input[type='file']:not(:disabled)[id=#{"5-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"5-uploader".to_s.to_json}]",
     ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
-    expect(
-      browser_root.locator(".d-editor-preview img").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".d-editor-preview img").filter(visible: true)).not_to have_count(0)
 
     composer_message = "This is **bold** composer content"
     composer.fill_form_template_field("composer", composer_message)
 
-    expect(
-      browser_root.locator(".d-editor-preview").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is bold composer content")],
       useInnerText: true,
     )
@@ -692,15 +685,11 @@ describe "Composer Form Templates" do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
 
-      expect(
-        browser_root.locator("[name='1']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("[name='1']").filter(visible: true)).to contain_text(
         [browser_text_pattern(tag3.name.upcase)],
         useInnerText: true,
       )
-      expect(
-        browser_root.locator("[name='2']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("[name='2']").filter(visible: true)).to contain_text(
         [browser_text_pattern(tag4.name.upcase)],
         useInnerText: true,
       )
@@ -737,7 +726,7 @@ describe "Composer Form Templates" do
           .filter(visible: true)
           .and(browser_root.locator("select"))
           .locator("option:checked"),
-      ).to PlaywrightMatchers.have_text(tag1.description)
+      ).to have_text(tag1.description)
       expect(
         browser_root
           .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
@@ -749,7 +738,7 @@ describe "Composer Form Templates" do
           .filter(visible: true)
           .and(browser_root.locator("select"))
           .locator("option:checked"),
-      ).to PlaywrightMatchers.have_text(tag2.description)
+      ).to have_text(tag2.description)
 
       mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
       expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
@@ -772,7 +761,7 @@ describe "Composer Form Templates" do
           .filter(visible: true)
           .and(browser_root.locator("select"))
           .locator("option:checked"),
-      ).to PlaywrightMatchers.have_text(tag1.description)
+      ).to have_text(tag1.description)
 
       mini_tag_chooser.unselect_by_name(tag1.name)
 
@@ -789,7 +778,7 @@ describe "Composer Form Templates" do
       category_page.visit(category_with_title_placeholder)
       category_page.new_topic_button.click
 
-      expect(browser_root.locator("#reply-title")).to PlaywrightMatchers.have_attribute(
+      expect(browser_root.locator("#reply-title")).to have_attribute(
         "placeholder",
         "Describe your issue briefly",
       )

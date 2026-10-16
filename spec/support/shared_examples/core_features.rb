@@ -21,16 +21,14 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
         login_form.fill_username(active_user.username)
         login_form.fill_password("secure_password")
         login_form.click_login
-        expect(
-          browser_root.locator(".current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".current-user").filter(visible: true)).not_to have_count(0)
       end
 
       it "displays a login button in the header" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(
           browser_root.locator("header .login-button").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -42,27 +40,23 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it "lists latest topics" do
-            expect(
-              browser_root.locator(".topic-list-item").filter(visible: true),
-            ).to PlaywrightMatchers.have_count(4)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(4)
           end
 
           it "lists topics for a category" do
             within_browser(
               browser_root.locator("#sidebar-section-content-categories").filter(visible: true),
             ) { browser_root.get_by_role("link", name: "General", exact: true).click }
-            expect(
-              browser_root.locator(".topic-list-item").filter(visible: true),
-            ).to PlaywrightMatchers.have_count(3)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(3)
           end
 
           it "displays a specific topic" do
             browser_root.get_by_role("link", name: topics.first.title, exact: true).click
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern(topics.first.title),
               useInnerText: true,
             )
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern(topics.first.first_post.raw),
               useInnerText: true,
             )
@@ -78,27 +72,23 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
         if skip_examples.exclude?(:"topics:read")
           it "lists latest topics" do
-            expect(
-              browser_root.locator(".topic-list-item").filter(visible: true),
-            ).to PlaywrightMatchers.have_count(4)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(4)
           end
 
           it "lists topics for a category" do
             within_browser(
               browser_root.locator("#sidebar-section-content-categories").filter(visible: true),
             ) { browser_root.get_by_role("link", name: "General", exact: true).click }
-            expect(
-              browser_root.locator(".topic-list-item").filter(visible: true),
-            ).to PlaywrightMatchers.have_count(3)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(3)
           end
 
           it "displays a specific topic" do
             browser_root.get_by_role("link", name: topics.first.title, exact: true).click
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern(topics.first.title),
               useInnerText: true,
             )
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern(topics.first.first_post.raw),
               useInnerText: true,
             )
@@ -108,7 +98,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
         if skip_examples.exclude?(:"topics:reply")
           it "replies in a topic" do
             browser_root.get_by_role("link", name: topics.first.title, exact: true).click
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern(topics.first.first_post.raw),
               useInnerText: true,
             )
@@ -123,7 +113,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             browser_page.keyboard.type("This is a long enough reply.")
             expect(
               browser_root.locator(".d-editor-preview p").filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
             within_browser(browser_root.locator(".save-or-cancel").filter(visible: true)) do
               browser_root
                 .locator("[id=#{"Reply".to_s.to_json}], [name=#{"Reply".to_s.to_json}]")
@@ -131,7 +121,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
                 .filter(visible: true)
                 .click
             end
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern("This is a long enough reply."),
               useInnerText: true,
             )
@@ -145,7 +135,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             composer.fill_content("This is a long enough sentence.")
             expect(
               browser_root.locator(".d-editor-preview p").filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
             within_browser(browser_root.locator(".save-or-cancel").filter(visible: true)) do
               browser_root
                 .locator(
@@ -155,11 +145,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
                 .filter(visible: true)
                 .click
             end
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern("This is a new topic"),
               useInnerText: true,
             )
-            expect(browser_content).to PlaywrightMatchers.contain_text(
+            expect(browser_content).to contain_text(
               browser_text_pattern("This is a long enough sentence."),
               useInnerText: true,
             )
@@ -195,11 +185,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           browser_page
             .goto("/u/#{user.username}/summary")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern(user.name),
             useInnerText: true,
           )
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern("Activity"),
             useInnerText: true,
           )
@@ -213,11 +203,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           browser_page
             .goto("/u/#{user.username}/summary")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern(user.name),
             useInnerText: true,
           )
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern("Message"),
             useInnerText: true,
           )
@@ -227,11 +217,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           browser_page
             .goto("/u/#{active_user.username}/summary")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern(active_user.name),
             useInnerText: true,
           )
-          expect(browser_content).to PlaywrightMatchers.contain_text(
+          expect(browser_content).to contain_text(
             browser_text_pattern("Preferences"),
             useInnerText: true,
           )
@@ -307,7 +297,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       enabled_plugins = Discourse.plugins.filter(&:enabled?)
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_root.locator("div.discourse-root")).not_to PlaywrightMatchers.have_count(0) # Themes might hide it
+      expect(browser_root.locator("div.discourse-root")).not_to have_count(0) # Themes might hide it
 
       plugin_script_tags =
         browser_root

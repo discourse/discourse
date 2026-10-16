@@ -33,42 +33,30 @@ module PageObjects
       end
 
       def has_category?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(row_selector(category)).filter(visible: true),
         )
       end
 
       def has_no_category?(category)
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(row_selector(category)).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(row_selector(category)).filter(visible: true))
       end
 
       def has_category_details?(category, description:, visibility:, topic_count:)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(category.name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(category_badge_selector(category)).filter(visible: true)) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(description)],
-            useInnerText: true,
-          ).matches?(
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).matches?(
+          browser_root.locator(category_badge_selector(category)).filter(visible: true),
+        ) &&
+          contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
             browser_root.locator(
               "#{row_selector(category)} .admin-category-management-list__description",
             ).filter(visible: true),
           ) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(visibility)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(visibility)], useInnerText: true).matches?(
             browser_root.locator(
               "#{row_selector(category)} .admin-category-management-list__visibility",
             ).filter(visible: true),
           ) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(topic_count.to_s)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(topic_count.to_s)], useInnerText: true).matches?(
             browser_root.locator(
               "#{row_selector(category)} .admin-category-management-list__topic-count",
             ).filter(visible: true),
@@ -76,7 +64,7 @@ module PageObjects
       end
 
       def has_category_icon?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{category_badge_selector(category)} .d-icon-#{category.icon}",
           ).filter(visible: true),
@@ -84,7 +72,7 @@ module PageObjects
       end
 
       def has_category_emoji?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{category_badge_selector(category)} img.emoji[title='#{category.emoji}']",
           ).filter(visible: true),
@@ -92,7 +80,7 @@ module PageObjects
       end
 
       def has_open_settings_link?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{row_selector(category)} .admin-category-management-list__open-settings[href='#{category.slug_url_without_id}/edit/general']",
           ).filter(visible: true),

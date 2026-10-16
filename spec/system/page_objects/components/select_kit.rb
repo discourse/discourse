@@ -18,11 +18,11 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(component)
+        have_count(0).does_not_match?(component)
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(component)
+        have_count(0).matches?(component)
       end
 
       def expanded_component(skip_collapsed_check: false)
@@ -38,13 +38,11 @@ module PageObjects
       end
 
       def expanded?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(".select-kit-body").filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(".select-kit-body").filter(visible: true))
       end
 
       def is_collapsed?
-        PlaywrightMatchers.have_count(0).does_not_match?(component) &&
+        have_count(0).does_not_match?(component) &&
           component.and(browser_page.locator(":not(.is-expanded)")).count != 0
       end
 
@@ -57,25 +55,23 @@ module PageObjects
       end
 
       def has_selected_value?(value)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".select-kit-header[data-value='#{value}']").filter(visible: true),
         )
       end
 
       def has_selected_name?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".select-kit-header[data-name='#{name}']").filter(visible: true),
         )
       end
 
       def has_no_selection?
-        PlaywrightMatchers.have_count(0).matches?(
-          component.locator(".selected-choice").filter(visible: true),
-        )
+        have_count(0).matches?(component.locator(".selected-choice").filter(visible: true))
       end
 
       def has_selected_choice_name?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".selected-choice[data-name='#{name}']").filter(visible: true),
         )
       end
@@ -92,19 +88,19 @@ module PageObjects
       end
 
       def has_option_name?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".select-kit-collection li[data-name='#{name}']").filter(visible: true),
         )
       end
 
       def has_no_option_name?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component.locator(".select-kit-collection li[data-name='#{name}']").filter(visible: true),
         )
       end
 
       def has_option_value?(value)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".select-kit-collection li[data-value='#{value}']").filter(
             visible: true,
           ),
@@ -112,7 +108,7 @@ module PageObjects
       end
 
       def has_no_option_value?(value)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component.locator(".select-kit-collection li[data-value='#{value}']").filter(
             visible: true,
           ),
@@ -136,7 +132,7 @@ module PageObjects
 
       def has_filter?
         expanded_component # auto-expands if collapsed
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-filter .filter-input")
@@ -146,7 +142,7 @@ module PageObjects
 
       def has_no_filter?
         expanded_component
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-filter .filter-input")
@@ -164,9 +160,7 @@ module PageObjects
       end
 
       def wait_for_loaded
-        PlaywrightMatchers.have_count(0).matches?(
-          component.and(browser_page.locator(".is-loading")),
-        )
+        have_count(0).matches?(component.and(browser_page.locator(".is-loading")))
       end
 
       def select_row_by_value(value)
@@ -192,7 +186,7 @@ module PageObjects
 
       def has_selected_row_name?(name)
         expanded_component
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row.is-selected[data-name='#{name}']")
@@ -202,7 +196,7 @@ module PageObjects
 
       def has_disabled_row_name?(name)
         expanded_component
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row.disabled[data-name='#{name}']")
@@ -212,7 +206,7 @@ module PageObjects
 
       def has_no_disabled_row_name?(name)
         expanded_component
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row.disabled[data-name='#{name}']")
@@ -222,10 +216,7 @@ module PageObjects
 
       def has_row_synonym_hint?(name, hint_text)
         expanded_component
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(hint_text)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(hint_text)], useInnerText: true).matches?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row[data-name='#{name}'] .synonym-hint")
@@ -235,7 +226,7 @@ module PageObjects
 
       def has_no_selected_row?
         expanded_component
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row.is-selected")
@@ -245,7 +236,7 @@ module PageObjects
 
       def has_disabled_row_reason?(name)
         expanded_component
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component
             .and(browser_page.locator(".is-expanded"))
             .locator(".select-kit-row.disabled[data-name='#{name}'] .disabled-reason")

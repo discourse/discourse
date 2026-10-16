@@ -19,14 +19,12 @@ describe "Composer using review_media" do
 
     expect(
       browser_root.locator(".d-editor-preview .emoji").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     topic_page.send_reply
 
     expect(topic_page).to have_post_number(2)
-    expect(
-      browser_root.locator(".post-enqueued-modal").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).to have_count(0)
   end
 
   it "flags a post with an image" do
@@ -36,14 +34,10 @@ describe "Composer using review_media" do
       "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
     ).set_input_files(file_from_fixtures("logo.jpg", "images").path)
 
-    expect(
-      browser_root.locator(".d-editor-preview img").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".d-editor-preview img").filter(visible: true)).not_to have_count(0)
 
     topic_page.send_reply
 
-    expect(
-      browser_root.locator(".post-enqueued-modal").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).not_to have_count(0)
   end
 end

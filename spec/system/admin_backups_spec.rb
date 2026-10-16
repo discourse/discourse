@@ -44,7 +44,7 @@ describe "Admin Backups Page" do
   it "can download a backup, which sends an email" do
     backups_page.visit_page
     backups_page.download_backup("b.tar.gz")
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("admin_js.admin.backups.operations.download.alert")),
       useInnerText: true,
     )
@@ -69,19 +69,19 @@ describe "Admin Backups Page" do
     backups_page.expand_backup_row_menu("b.tar.gz")
     expect(
       backups_page.locator(backups_page.row_button_selector("restore")).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "can toggle read-only mode" do
     backups_page.visit_page
     backups_page.toggle_read_only
     dialog.click_yes
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("js.read_only_mode.enabled")),
       useInnerText: true,
     )
     backups_page.toggle_read_only
-    expect(browser_content).not_to PlaywrightMatchers.contain_text(
+    expect(browser_content).not_to contain_text(
       browser_text_pattern(I18n.t("js.read_only_mode.enabled")),
       useInnerText: true,
     )

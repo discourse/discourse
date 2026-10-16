@@ -20,15 +20,13 @@ describe "Admin | Sidebar Navigation" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_section("categories")
     sidebar.click_link_in_section("community", "admin")
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin")
-    expect(sidebar).to be_visible
+    expect(browser_page).to have_url("/admin")
+    expect(sidebar).to RSpecPredicates.be_visible
     expect(sidebar).to have_no_section("categories")
-    expect(
-      browser_root.locator(".admin-main-nav").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".admin-main-nav").filter(visible: true)).to have_count(0)
 
     sidebar.click_back_to_forum
-    expect(browser_page).to PlaywrightMatchers.have_url("/latest")
+    expect(browser_page).to have_url("/latest")
     expect(sidebar).to have_no_section("admin-root")
   end
 
@@ -38,7 +36,7 @@ describe "Admin | Sidebar Navigation" do
     sidebar.click_link_in_section("community", "admin")
 
     sidebar.click_back_to_forum
-    expect(browser_page).to PlaywrightMatchers.have_url("/hot")
+    expect(browser_page).to have_url("/hot")
   end
 
   context "with subfolder" do
@@ -48,7 +46,7 @@ describe "Admin | Sidebar Navigation" do
       browser_page.goto("/discuss/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.click_back_to_forum
-      expect(browser_page).to PlaywrightMatchers.have_url("/discuss/")
+      expect(browser_page).to have_url("/discuss/")
     end
   end
 
@@ -85,15 +83,13 @@ describe "Admin | Sidebar Navigation" do
       sidebar_dropdown.click
       expect(sidebar).to have_section("community")
       sidebar.click_link_in_section("community", "admin")
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin")
+      expect(browser_page).to have_url("/admin")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("community")
-      expect(
-        browser_root.locator(".admin-main-nav").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".admin-main-nav").filter(visible: true)).to have_count(0)
 
       sidebar.click_back_to_forum
-      expect(browser_page).to PlaywrightMatchers.have_url("/latest")
+      expect(browser_page).to have_url("/latest")
 
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
@@ -108,7 +104,7 @@ describe "Admin | Sidebar Navigation" do
         .locator(".sidebar-section-link-content-text")
         .filter(visible: true)
         .nth(UNFILTERED_LINK_COUNT - 1),
-    ).to PlaywrightMatchers.be_attached
+    ).to be_attached
 
     sidebar.toggle_all_sections
     expected_links = [
@@ -122,7 +118,7 @@ describe "Admin | Sidebar Navigation" do
     ]
     expect(
       browser_root.locator(".sidebar-section-link-content-text").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(expected_links.length)
+    ).to have_count(expected_links.length)
     expect(
       browser_root
         .locator(".sidebar-section-link-content-text")
@@ -138,7 +134,7 @@ describe "Admin | Sidebar Navigation" do
         .locator(".sidebar-section-link-content-text")
         .filter(visible: true)
         .nth(UNFILTERED_LINK_COUNT - 1),
-    ).to PlaywrightMatchers.be_attached
+    ).to be_attached
   end
 
   it "highlights the 'Themes and components' link when either the themes, themes components or theme site settings admin page is visited" do
@@ -150,7 +146,7 @@ describe "Admin | Sidebar Navigation" do
       browser_root.locator(
         '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     browser_root
       .locator("[id=#{"Components".to_s.to_json}], [name=#{"Components".to_s.to_json}]")
@@ -158,13 +154,13 @@ describe "Admin | Sidebar Navigation" do
       .filter(visible: true)
       .click
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/components")
+    expect(browser_page).to have_url("/admin/config/customize/components")
 
     expect(
       browser_root.locator(
         '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     browser_root
       .locator(
@@ -174,15 +170,13 @@ describe "Admin | Sidebar Navigation" do
       .filter(visible: true)
       .click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/admin/config/customize/theme-site-settings",
-    )
+    expect(browser_page).to have_url("/admin/config/customize/theme-site-settings")
 
     expect(
       browser_root.locator(
         '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "highlights the 'All site settings' link on the all settings page" do
@@ -194,7 +188,7 @@ describe "Admin | Sidebar Navigation" do
       browser_root.locator(
         '.sidebar-section-link-wrapper[data-list-item-name="admin_all_site_settings"] a.active',
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
@@ -210,9 +204,9 @@ describe "Admin | Sidebar Navigation" do
 
     sidebar.toggle_all_sections
 
-    expect(
-      browser_root.locator(".sidebar-section--collapsed").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".sidebar-section--collapsed").filter(visible: true)).to have_count(
+      0,
+    )
 
     links =
       browser_root

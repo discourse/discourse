@@ -21,9 +21,7 @@ describe "Uploading files in the composer" do
     ).set_input_files([file_path_1, file_path_2])
 
     expect(composer).to have_no_in_progress_uploads
-    expect(
-      composer.preview.locator(".image-wrapper").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(2)
+    expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(2)
   end
 
   it "allows cancelling uploads" do
@@ -47,7 +45,7 @@ describe "Uploading files in the composer" do
           end
           .locator(".image-wrapper")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -70,13 +68,11 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       composer.submit
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#topic-title").filter(visible: true)).to contain_text(
         browser_text_pattern("Video upload test"),
         useInnerText: true,
       )
@@ -96,34 +92,30 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       expect(
         browser_root.locator('.onebox-placeholder-container[style*="background-image"]').filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0, timeout: Capybara.default_max_wait_time * 1000)
+      ).not_to have_count(0, timeout: Capybara.default_max_wait_time * 1000)
 
       composer.submit
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#topic-title").filter(visible: true)).to contain_text(
         browser_text_pattern("Video upload test"),
         useInnerText: true,
       )
 
       selector = topic.post_by_number_selector(1)
 
-      expect(
-        browser_root.locator(selector).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(selector).filter(visible: true)).not_to have_count(0)
       within_browser(selector) do
         expect(
           browser_root.locator(".video-placeholder-container[data-thumbnail-src]").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -146,28 +138,24 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       composer.submit
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#topic-title").filter(visible: true)).to contain_text(
         browser_text_pattern("Zero Width Video Test"),
         useInnerText: true,
       )
 
       selector = topic.post_by_number_selector(1)
 
-      expect(
-        browser_root.locator(selector).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(selector).filter(visible: true)).not_to have_count(0)
       within_browser(selector) do
         expect(
           browser_root.locator(".video-placeholder-container[data-thumbnail-src]").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
       end
     end
 
@@ -193,7 +181,7 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "handles multiple video uploads" do
@@ -210,7 +198,7 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(2)
+      ).to have_count(2)
     end
 
     it "handles thumbnail upload errors gracefully without blocking video upload" do
@@ -235,13 +223,11 @@ describe "Uploading files in the composer" do
       expect(composer).to have_no_in_progress_uploads
       expect(
         composer.preview.locator(".onebox-placeholder-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # Video should still be uploadable/submittable
       composer.submit
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#topic-title").filter(visible: true)).to contain_text(
         browser_text_pattern("Thumbnail Error Test"),
         useInnerText: true,
       )

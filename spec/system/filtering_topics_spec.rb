@@ -56,11 +56,11 @@ describe "Filtering topics" do
       expect(topic_list).to have_topic(closed_topic)
 
       topic_list.visit_topic(closed_topic)
-      expect(browser_page).to PlaywrightMatchers.have_url(closed_topic.url)
+      expect(browser_page).to have_url(closed_topic.url)
 
       browser_page.keyboard.type("gj")
 
-      expect(browser_page).to PlaywrightMatchers.have_url(topic.url)
+      expect(browser_page).to have_url(topic.url)
 
       browser_page.goto("/filter").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_query_filter.fill_in("status:open")
@@ -140,12 +140,12 @@ describe "Filtering topics" do
       expect(topic_list).to have_topic_checkbox(topics.first)
       expect(
         browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       topic_list.click_topic_checkbox(topics.first)
       expect(
         browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     context "when on mobile", mobile: true do
@@ -158,12 +158,12 @@ describe "Filtering topics" do
         expect(topic_list).to have_topic_checkbox(topics.first)
         expect(
           browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
 
         topic_list.click_topic_checkbox(topics.first)
         expect(
           browser_root.locator("button.bulk-select-topics-dropdown-trigger").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end

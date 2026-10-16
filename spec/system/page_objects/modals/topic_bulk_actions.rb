@@ -60,14 +60,14 @@ module PageObjects
       end
 
       def has_pin_stats_text?(text)
-        PlaywrightMatchers.contain_text([text], useInnerText: true).matches?(
+        contain_text([text], useInnerText: true).matches?(
           browser_page.locator("#{MODAL_SELECTOR} .feature-section").filter(visible: true),
         )
       end
 
       def has_no_category_badge?(category)
         within_browser(MODAL_SELECTOR) do
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               PageObjects::Components::CategoryBadge.new.category_selector(category),
             ).filter(visible: true),
@@ -77,12 +77,11 @@ module PageObjects
 
       def has_errors?(text = nil)
         if text
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(browser_root.locator("#{MODAL_SELECTOR}__errors").filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            browser_root.locator("#{MODAL_SELECTOR}__errors").filter(visible: true),
+          )
         else
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("#{MODAL_SELECTOR}__errors").filter(visible: true),
           )
         end

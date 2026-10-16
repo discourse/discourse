@@ -116,14 +116,8 @@ describe "User preferences | Account" do
         name.tap do |parent|
           parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
         end,
-      ).not_to PlaywrightMatchers.contain_text(
-        browser_text_pattern("old pretty name"),
-        useInnerText: true,
-      )
-      expect(name).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("new pretty name"),
-        useInnerText: true,
-      )
+      ).not_to contain_text(browser_text_pattern("old pretty name"), useInnerText: true)
+      expect(name).to contain_text(browser_text_pattern("new pretty name"), useInnerText: true)
 
       icon_classes =
         browser_root
@@ -168,7 +162,7 @@ describe "User preferences | Account" do
           )
           .and(name.locator("[href=#{"https://discord.com".to_s.to_json}]"))
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       name =
         browser_root.locator(
@@ -184,7 +178,7 @@ describe "User preferences | Account" do
           )
           .and(name.locator("[href=#{"https://www.facebook.com".to_s.to_json}]"))
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       name =
         browser_root.locator(
@@ -200,7 +194,7 @@ describe "User preferences | Account" do
           )
           .and(name.locator("[href=#{"https://github.com".to_s.to_json}]"))
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       name =
         browser_root.locator(
@@ -216,7 +210,7 @@ describe "User preferences | Account" do
           )
           .and(name.locator("[href=#{"https://accounts.google.com".to_s.to_json}]"))
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "shows provider names without links when provider_url is not implemented" do
@@ -249,7 +243,7 @@ describe "User preferences | Account" do
           end
           .locator("a")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     ensure
       DiscoursePluginRegistry.reset!
     end

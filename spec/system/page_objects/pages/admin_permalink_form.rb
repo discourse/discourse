@@ -27,10 +27,7 @@ module PageObjects
         form.submit
         expect(
           browser_root.locator(".admin-permalink-item__url").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(
-          0,
-          timeout: (Capybara.default_max_wait_time * 3) * 1000,
-        )
+        ).not_to have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000)
       end
 
       def form

@@ -10,15 +10,11 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def not_visible?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def select_language(locale)

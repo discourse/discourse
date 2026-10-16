@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def has_permission?(permission)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator("[data-permission='#{permission}']").filter(visible: true),
         )
       end
@@ -27,11 +27,11 @@ module PageObjects
         menu = open_permission_menu
 
         within_browser(menu.portal_with_identifier_selector) do
-          PlaywrightMatchers.have_count(permissions.length).matches?(
+          have_count(permissions.length).matches?(
             browser_root.locator(PERMISSION_OPTION_SELECTOR).filter(visible: true),
           ) &&
             permissions.all? do |permission|
-              PlaywrightMatchers.have_count(0).does_not_match?(
+              have_count(0).does_not_match?(
                 browser_root.locator(permission_option_selector(permission)).filter(visible: true),
               )
             end

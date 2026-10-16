@@ -6,19 +6,15 @@ module PageObjects
       WIZARD_SELECTOR = ".design-wizard"
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(WIZARD_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(WIZARD_SELECTOR).filter(visible: true))
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(WIZARD_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(WIZARD_SELECTOR).filter(visible: true))
       end
 
       def has_site_sidebar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".sidebar-sections").filter(visible: true),
         )
       end
@@ -31,7 +27,7 @@ module PageObjects
       end
 
       def has_selected_theme?(theme)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{WIZARD_SELECTOR}__theme-card[data-theme-id='#{theme.id}'] input[type='radio']:checked",
           ).filter(visible: true),
@@ -39,7 +35,7 @@ module PageObjects
       end
 
       def has_no_selected_theme?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{WIZARD_SELECTOR}__theme-card input[type='radio']:checked").filter(
             visible: true,
           ),
@@ -47,7 +43,7 @@ module PageObjects
       end
 
       def has_disabled_next?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{WIZARD_SELECTOR}__next[disabled]").filter(visible: true),
         )
       end
@@ -121,13 +117,11 @@ module PageObjects
       end
 
       def has_palette_preview?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("link[data-scheme-id]"),
-        )
+        have_count(0).does_not_match?(browser_root.locator("link[data-scheme-id]"))
       end
 
       def has_no_palette_preview?
-        PlaywrightMatchers.have_count(0).matches?(browser_root.locator("link[data-scheme-id]"))
+        have_count(0).matches?(browser_root.locator("link[data-scheme-id]"))
       end
 
       def layout_dimensions

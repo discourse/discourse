@@ -44,13 +44,13 @@ module PageObjects
       end
 
       def has_account_details?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".code-login-form__account-details-step").filter(visible: true),
         )
       end
 
       def has_username?(username)
-        PlaywrightMatchers.have_value(username).matches?(
+        have_value(username).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -63,20 +63,16 @@ module PageObjects
       end
 
       def has_error?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".code-login-form__error").filter(visible: true))
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(".code-login-form__error").filter(visible: true),
+        )
       end
 
       def has_pending_approval?
-        PlaywrightMatchers.be_attached.matches?(
-          browser_root.locator(".code-login-form__pending-approval-step"),
-        ) &&
-          PlaywrightMatchers.contain_text(
-            I18n.t("js.code_login.pending_approval_title"),
-            useInnerText: true,
-          ).matches?(browser_root.locator(".login-title"))
+        be_attached.matches?(browser_root.locator(".code-login-form__pending-approval-step")) &&
+          contain_text(I18n.t("js.code_login.pending_approval_title"), useInnerText: true).matches?(
+            browser_root.locator(".login-title"),
+          )
       end
     end
   end

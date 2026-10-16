@@ -52,13 +52,11 @@ module PageObjects
       end
 
       def has_cooked_content?(value)
-        PlaywrightMatchers.contain_text(browser_text_pattern(value), useInnerText: true).matches?(
-          cooked_content,
-        )
+        contain_text(browser_text_pattern(value), useInnerText: true).matches?(cooked_content)
       end
 
       def has_replies?(count: nil)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root
             .locator("#embedded-posts__bottom--#{@post_number}")
             .filter(visible: true)
@@ -68,7 +66,7 @@ module PageObjects
       end
 
       def has_more_replies?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator("#embedded-posts__bottom--#{@post_number}")
             .filter(visible: true)
@@ -78,7 +76,7 @@ module PageObjects
       end
 
       def has_loaded_all_replies?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("#embedded-posts__bottom--#{@post_number}")
             .filter(visible: true)
@@ -91,9 +89,7 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(post_id).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(post_id).filter(visible: true))
       end
 
       def show_parent_posts
@@ -101,7 +97,7 @@ module PageObjects
       end
 
       def has_parent_posts?(count: nil)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root
             .locator("#embedded-posts__top--#{@post_number}")
             .filter(visible: true)
@@ -111,10 +107,7 @@ module PageObjects
       end
 
       def has_no_parent_post_content?(content)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(content),
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text(browser_text_pattern(content), useInnerText: true).does_not_match?(
           browser_root
             .locator("#embedded-posts__top--#{@post_number}")
             .filter(visible: true)

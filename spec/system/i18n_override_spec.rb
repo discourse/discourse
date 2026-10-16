@@ -29,9 +29,7 @@ describe "I18n translation overrides" do
     it "applies translation overrides to module-scope i18n() calls" do
       browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".i18n-test-output").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".i18n-test-output").filter(visible: true)).to contain_text(
         [browser_text_pattern("Overridden at module scope")],
         useInnerText: true,
       )

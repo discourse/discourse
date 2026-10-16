@@ -22,30 +22,26 @@ module PageObjects
       end
 
       def checked?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           label_component.locator(".d-toggle-switch__checkbox[aria-checked=\"true\"]"),
         )
       end
 
       def unchecked?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           label_component.locator(".d-toggle-switch__checkbox[aria-checked=\"false\"]"),
         )
       end
 
       def disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           label_component.locator(".d-toggle-switch__checkbox[disabled]"),
         )
       end
 
       def enabled?
-        PlaywrightMatchers.have_count(0).matches?(
-          label_component.locator(".d-toggle-switch__checkbox[disabled]"),
-        ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            label_component.locator(".d-toggle-switch__checkbox"),
-          )
+        have_count(0).matches?(label_component.locator(".d-toggle-switch__checkbox[disabled]")) &&
+          have_count(0).does_not_match?(label_component.locator(".d-toggle-switch__checkbox"))
       end
     end
   end

@@ -16,7 +16,7 @@ describe "Admin Dashboard Community Health" do
         browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(
           browser_root.locator(".admin-report.consolidated-page-views").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(I18n.t("reports.consolidated_page_views.title"))],
           useInnerText: true,
         )
@@ -30,7 +30,7 @@ describe "Admin Dashboard Community Health" do
         browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(
           browser_root.locator(".admin-report.site-traffic").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(I18n.t("reports.site_traffic.title"))],
           useInnerText: true,
         )

@@ -58,7 +58,7 @@ module PageObjects
       end
 
       def has_private_theme_actions_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(
@@ -74,7 +74,7 @@ module PageObjects
             .and(browser_root.locator(":disabled"))
             .filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root
               .get_by_role("button")
               .and(
@@ -93,7 +93,7 @@ module PageObjects
       end
 
       def has_private_theme_actions_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(
@@ -109,7 +109,7 @@ module PageObjects
             .and(browser_root.locator(":not(:disabled)"))
             .filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root
               .get_by_role("button")
               .and(

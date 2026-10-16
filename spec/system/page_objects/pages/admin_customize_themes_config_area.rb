@@ -30,7 +30,7 @@ module PageObjects
         browser_root.locator(".set-default").filter(visible: true).click
         expect(
           browser_page.locator("meta[name=discourse_theme_id][content='#{theme.id}']"),
-        ).to PlaywrightMatchers.be_attached # wait for reload
+        ).to be_attached # wait for reload
       end
 
       def delete_theme(theme)
@@ -52,14 +52,14 @@ module PageObjects
       def has_badge?(theme, badge, **kwargs)
         target = find_theme_card(theme).locator(".theme-card__badge.#{badge}").filter(visible: true)
         if kwargs[:text]
-          PlaywrightMatchers.contain_text([kwargs[:text]], useInnerText: true).matches?(target)
+          contain_text([kwargs[:text]], useInnerText: true).matches?(target)
         else
-          PlaywrightMatchers.have_count(0).does_not_match?(target)
+          have_count(0).does_not_match?(target)
         end
       end
 
       def has_no_badge?(theme, badge)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           find_theme_card(theme)
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -71,7 +71,7 @@ module PageObjects
 
       def has_disabled_delete_button?(theme)
         open_theme_menu(theme)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".--danger.delete[disabled]").filter(visible: true),
         )
       end
@@ -88,7 +88,7 @@ module PageObjects
       end
 
       def has_theme_cards?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".themes-cards-container > .admin-config-area-card").filter(
             visible: true,
           ),
@@ -96,13 +96,13 @@ module PageObjects
       end
 
       def has_theme_named?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".theme-card.#{name.parameterize}").filter(visible: true),
         )
       end
 
       def has_install_more_themes_card?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.customize.theme.install_more_themes"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".theme-card.--install-more").filter(visible: true))
@@ -130,7 +130,7 @@ module PageObjects
       end
 
       def has_no_theme?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".theme-card.#{name.parameterize}").filter(visible: true),
         )
       end
@@ -164,7 +164,7 @@ module PageObjects
       end
 
       def has_screenshot_toggle_button?(theme)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           find_theme_card(theme).locator(".theme-card-preview__screenshot-toggle").filter(
             visible: true,
           ),
@@ -172,7 +172,7 @@ module PageObjects
       end
 
       def has_no_screenshot_toggle_button?(theme)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           find_theme_card(theme)
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -193,7 +193,7 @@ module PageObjects
 
       def has_screenshot_with_icon?(theme, icon_name)
         find_theme_card(theme).hover
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           find_theme_card(theme).locator(
             ".theme-card-preview__screenshot-toggle .d-icon-#{icon_name}",
           ).filter(visible: true),

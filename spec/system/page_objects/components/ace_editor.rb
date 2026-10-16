@@ -34,9 +34,7 @@ module PageObjects
           content
             .split("\n", -1)
             .map { |line| Regexp.new("^#{Regexp.escape(line).gsub("\\ ", "[ \u00a0]")}$") }
-        PlaywrightMatchers.have_text(lines, useInnerText: true).matches?(
-          editor.locator(".ace_line"),
-        )
+        have_text(lines, useInnerText: true).matches?(editor.locator(".ace_line"))
       end
     end
   end

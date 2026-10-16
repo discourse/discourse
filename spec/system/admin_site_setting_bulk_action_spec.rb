@@ -12,20 +12,20 @@ describe "Admin Site Setting Bulk Action" do
   it "saves multiple site settings" do
     settings_page.visit
 
-    expect(banner).to be_hidden
+    expect(banner).to RSpecPredicates.be_hidden
 
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
 
     banner.click_save
 
-    expect(banner).to be_hidden
+    expect(banner).to RSpecPredicates.be_hidden
     expect(settings_page).to have_overridden_setting("title", value: "The Shell")
     expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
   end
@@ -35,8 +35,8 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("min_password_length", 12)
     settings_page.fill_setting("min_admin_password_length", 13)
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -68,8 +68,8 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("min_password_length", 12)
     settings_page.fill_setting("min_admin_password_length", 13)
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -92,8 +92,8 @@ describe "Admin Site Setting Bulk Action" do
     )
     dialog.click_no
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -104,8 +104,8 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("contact_email", "Ooops")
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -118,8 +118,8 @@ describe "Admin Site Setting Bulk Action" do
     )
     dialog.click_ok
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -131,24 +131,24 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
 
     settings_page.navigate_to_category(:branding)
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
 
     settings_page.navigate_to_category(:required)
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -163,8 +163,8 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to PlaywrightMatchers.contain_text(
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
       browser_text_pattern("You have 2 unsaved changes"),
       useInnerText: true,
     )
@@ -175,13 +175,13 @@ describe "Admin Site Setting Bulk Action" do
       .filter(hasText: browser_text_pattern("Dashboard"))
       .click
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/site_settings/category/required")
+    expect(browser_page).to have_url("/admin/site_settings/category/required")
 
     expect(dialog).to be_open
     expect(dialog).to have_displayed_content("You have 2 unsaved changes")
 
     dialog.click_no
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin")
+    expect(browser_page).to have_url("/admin")
   end
 end

@@ -21,21 +21,13 @@ describe "Admin Users Page" do
     admin_users_page.bulk_select_button.click
 
     admin_users_page.bulk_select_all_button.click
-    expect(
-      admin_users_page.user_row(user_1.id).bulk_select_checkbox,
-    ).to PlaywrightMatchers.be_checked
-    expect(
-      admin_users_page.user_row(user_2.id).bulk_select_checkbox,
-    ).to PlaywrightMatchers.be_checked
-    expect(
-      admin_users_page.user_row(user_3.id).bulk_select_checkbox,
-    ).to PlaywrightMatchers.be_checked
+    expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
+    expect(admin_users_page.user_row(user_2.id).bulk_select_checkbox).to be_checked
+    expect(admin_users_page.user_row(user_3.id).bulk_select_checkbox).to be_checked
     expect(admin_users_page).to have_bulk_actions_dropdown
 
     admin_users_page.bulk_clear_all_button.click
-    expect(
-      admin_users_page.user_row(user_1.id).bulk_select_checkbox,
-    ).not_to PlaywrightMatchers.be_checked
+    expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).not_to be_checked
     expect(admin_users_page).to have_no_bulk_actions_dropdown
   end
 
@@ -138,15 +130,9 @@ describe "Admin Users Page" do
       admin_users_page.search_input.fill("")
 
       expect(admin_users_page).to have_users([user_1.id, user_2.id, user_3.id])
-      expect(
-        admin_users_page.user_row(user_1.id).bulk_select_checkbox,
-      ).to PlaywrightMatchers.be_checked
-      expect(
-        admin_users_page.user_row(user_2.id).bulk_select_checkbox,
-      ).to PlaywrightMatchers.be_checked
-      expect(
-        admin_users_page.user_row(user_3.id).bulk_select_checkbox,
-      ).not_to PlaywrightMatchers.be_checked
+      expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
+      expect(admin_users_page.user_row(user_2.id).bulk_select_checkbox).to be_checked
+      expect(admin_users_page.user_row(user_3.id).bulk_select_checkbox).not_to be_checked
 
       admin_users_page.bulk_actions_dropdown.expand
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
@@ -267,7 +253,7 @@ describe "Admin Users Page" do
       expect(admin_users_page).to have_active_tab("active")
       expect(
         browser_root.locator(".directory-table__cell.username").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(admin_users_page).to have_users(
         [current_user.id, another_admin.id, user_1.id, user_2.id, user_3.id],
       )
@@ -285,9 +271,9 @@ describe "Admin Users Page" do
       user_1.update!(silenced_till: 1.day.from_now)
       admin_users_page.click_tab("silenced")
       expect(admin_users_page).to have_active_tab("silenced")
-      expect(
-        browser_root.locator(".users-list.silenced").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".users-list.silenced").filter(visible: true)).not_to have_count(
+        0,
+      )
       expect(admin_users_page).to have_users([user_1.id])
     end
 
@@ -301,7 +287,7 @@ describe "Admin Users Page" do
     it "redirects to groups page" do
       admin_users_page.visit
       admin_users_page.click_tab("groups")
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/groups")
+      expect(browser_page).to have_url("/admin/groups")
     end
 
     it "redirect to invites page" do
@@ -309,9 +295,7 @@ describe "Admin Users Page" do
       admin_users_page.click_tab("settings")
       admin_users_page.click_send_invites
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/u/#{current_user.username}/invited/pending",
-      )
+      expect(browser_page).to have_url("/u/#{current_user.username}/invited/pending")
     end
 
     it "allows to export users" do
@@ -319,10 +303,8 @@ describe "Admin Users Page" do
       admin_users_page.click_tab("settings")
       admin_users_page.click_export
 
-      expect(
-        browser_root.locator(".dialog-body").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".dialog-body").filter(visible: true)).not_to have_count(0)
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
         useInnerText: true,
       )

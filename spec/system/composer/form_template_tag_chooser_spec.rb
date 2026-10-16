@@ -42,7 +42,7 @@ describe "Composer Form Template" do
       browser_root.locator(".form-template-field__multi-select[name='cat-breed']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     browser_root
       .locator(".form-template-field__multi-select[name='cat-breed']")
@@ -50,15 +50,12 @@ describe "Composer Form Template" do
       .select_option(label: "PERSIAN")
 
     preview = browser_root.locator(".d-editor-preview").filter(visible: true)
-    expect(preview).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("PERSIAN"),
-      useInnerText: true,
-    )
+    expect(preview).to contain_text(browser_text_pattern("PERSIAN"), useInnerText: true)
     expect(
       preview.tap do |parent|
         parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
       end,
-    ).not_to PlaywrightMatchers.contain_text(browser_text_pattern(tag1.id.to_s), useInnerText: true)
+    ).not_to contain_text(browser_text_pattern(tag1.id.to_s), useInnerText: true)
   end
 end
 
@@ -103,7 +100,7 @@ describe "Composer Form Template with uppercase tag names" do
       browser_root.locator(".form-template-field__multi-select[name='priority']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     browser_root
       .locator(".form-template-field__multi-select[name='priority']")
@@ -111,9 +108,6 @@ describe "Composer Form Template with uppercase tag names" do
       .select_option(label: "HIGH")
 
     preview = browser_root.locator(".d-editor-preview").filter(visible: true)
-    expect(preview).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("HIGH"),
-      useInnerText: true,
-    )
+    expect(preview).to contain_text(browser_text_pattern("HIGH"), useInnerText: true)
   end
 end

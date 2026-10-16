@@ -50,12 +50,10 @@ RSpec.describe "Nested view post admin menu" do
   def set_official_notice(raw)
     expect(
       browser_root.locator(".change-post-notice-modal").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     browser_root.locator(".change-post-notice-modal textarea").filter(visible: true).fill(raw)
     browser_root.locator(".change-post-notice-modal .btn-primary").filter(visible: true).click
-    expect(
-      browser_root.locator(".change-post-notice-modal").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".change-post-notice-modal").filter(visible: true)).to have_count(0)
   end
 
   context "as an admin" do
@@ -68,7 +66,7 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator("[data-content][data-identifier='admin-post-menu']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root
         .locator("[data-content][data-identifier='admin-post-menu'] .lock-post")
         .filter(visible: true)
@@ -84,7 +82,7 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator("[data-content][data-identifier='admin-post-menu']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root
         .locator("[data-content][data-identifier='admin-post-menu'] .lock-post")
         .filter(visible: true)
@@ -101,12 +99,12 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator(
           "[data-content][data-identifier='admin-post-menu'] .add-notice",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(
           "[data-content][data-identifier='admin-post-menu'] .toggle-post-type",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "applies staff color and official notice from the OP admin controls" do
@@ -121,7 +119,7 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator(
           "[data-post-number='#{op.post_number}'].moderator .nested-view__op-content.regular > .cooked",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern(op.raw)], useInnerText: true)
+      ).to contain_text([browser_text_pattern(op.raw)], useInnerText: true)
 
       open_admin_menu_for(op)
       browser_root
@@ -134,10 +132,7 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator("[data-post-number='#{op.post_number}'] .post-notice.custom").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Official OP notice")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Official OP notice")], useInnerText: true)
     end
 
     it "renders staff color and official notices on nested replies" do
@@ -150,15 +145,12 @@ RSpec.describe "Nested view post admin menu" do
         browser_root.locator(
           ".nested-post.moderator [data-post-number='#{reply.post_number}'] .nested-post__content.regular > .cooked",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern(reply.raw)], useInnerText: true)
+      ).to contain_text([browser_text_pattern(reply.raw)], useInnerText: true)
       expect(
         browser_root.locator(
           "[data-post-number='#{reply.post_number}'] .post-notice.custom",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Official reply notice")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Official reply notice")], useInnerText: true)
     end
 
     it "opens the change-owner modal when clicking the admin menu item" do
@@ -171,7 +163,7 @@ RSpec.describe "Nested view post admin menu" do
 
       expect(
         browser_root.locator(".change-ownership-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 

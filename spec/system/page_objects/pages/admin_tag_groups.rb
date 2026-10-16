@@ -12,34 +12,33 @@ module PageObjects
       end
 
       def has_tag_group_in_sidebar?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".tag-groups-sidebar li").filter(visible: true),
         )
       end
 
       def has_no_tag_group_in_sidebar?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(".tag-groups-sidebar li").filter(visible: true))
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".tag-groups-sidebar li").filter(visible: true),
+        )
       end
 
       def has_tags_label?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.tagging.groups.tags_label"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".group-tags-list label").filter(visible: true))
       end
 
       def has_parent_tag_label?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.tagging.groups.parent_tag_label"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".parent-tag-section label").filter(visible: true))
       end
 
       def has_visible_permission_label?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.tagging.groups.usable_only_by_groups"))],
           useInnerText: true,
         ).matches?(browser_root.locator("label[for='visible-permission']").filter(visible: true))
@@ -47,7 +46,7 @@ module PageObjects
 
       def has_name?(name)
         within_browser(browser_root.locator(".group-name").filter(visible: true)) do
-          PlaywrightMatchers.have_value(name).matches?(
+          have_value(name).matches?(
             browser_root.locator(
               "input:not(:disabled), textarea:not(:disabled), select:not(:disabled)",
             ).filter(visible: true),
@@ -56,17 +55,13 @@ module PageObjects
       end
 
       def has_tag_in_group?(tag_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(tag_name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".group-tags-list .tag-chooser").filter(visible: true))
+        contain_text([browser_text_pattern(tag_name)], useInnerText: true).matches?(
+          browser_root.locator(".group-tags-list .tag-chooser").filter(visible: true),
+        )
       end
 
       def has_no_tag_in_group?(tag_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(tag_name)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(tag_name)], useInnerText: true).does_not_match?(
           browser_root.locator(".group-tags-list .tag-chooser").filter(visible: true),
         )
       end
@@ -120,10 +115,7 @@ module PageObjects
       end
 
       def has_private_group?(group_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(group_name)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(group_name)], useInnerText: true).matches?(
           browser_root.locator(
             ".group-visibility-option:has(#private-permission) .group-chooser",
           ).filter(visible: true),

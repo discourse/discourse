@@ -45,7 +45,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
                   )
                   .and(browser_root.locator(":not(:disabled)"))
                   .filter(visible: true),
-              ).not_to PlaywrightMatchers.have_count(0)
+              ).not_to have_count(0)
               category_page.new_topic_button.click
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
@@ -66,7 +66,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
                   )
                   .and(browser_root.locator(":not(:disabled)"))
                   .filter(visible: true),
-              ).not_to PlaywrightMatchers.have_count(0)
+              ).not_to have_count(0)
 
               category_page.new_topic_button.click
               select_kit =
@@ -90,7 +90,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
                 )
                 .and(browser_root.locator(":not(:disabled)"))
                 .filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
             browser_root.locator("#create-topic").filter(visible: true).click
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
@@ -119,7 +119,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
                   )
                   .and(browser_root.locator(":not(:disabled)"))
                   .filter(visible: true),
-              ).not_to PlaywrightMatchers.have_count(0)
+              ).not_to have_count(0)
 
               category_page.new_topic_button.click
               select_kit =
@@ -142,7 +142,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
                 )
                 .and(browser_root.locator(":not(:disabled)"))
                 .filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
             browser_root.locator("#create-topic").filter(visible: true).click
 
             select_kit =
@@ -171,7 +171,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
             )
             .and(browser_root.locator(":not(:disabled)"))
             .filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root.locator("#create-topic").filter(visible: true).click
         select_kit = PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")

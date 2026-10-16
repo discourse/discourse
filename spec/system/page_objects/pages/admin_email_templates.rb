@@ -18,10 +18,9 @@ module PageObjects
       end
 
       def has_template?(template_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(template_name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator("td").filter(visible: true))
+        contain_text([browser_text_pattern(template_name)], useInnerText: true).matches?(
+          browser_root.locator("td").filter(visible: true),
+        )
       end
 
       def click_template(template_name)
@@ -50,7 +49,7 @@ module PageObjects
       end
 
       def has_preview_content?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(".d-editor-preview").filter(visible: true),
         )
       end
@@ -90,15 +89,16 @@ module PageObjects
         container =
           browser_root.locator(".email-template .interpolation-keys").filter(visible: true)
         keys.each do |key|
-          expect(
-            container.locator("button").filter(visible: true),
-          ).to PlaywrightMatchers.contain_text([browser_text_pattern(key)], useInnerText: true)
+          expect(container.locator("button").filter(visible: true)).to contain_text(
+            [browser_text_pattern(key)],
+            useInnerText: true,
+          )
         end
         true
       end
 
       def has_no_interpolation_keys?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".email-template .interpolation-keys").filter(visible: true),
         )
       end

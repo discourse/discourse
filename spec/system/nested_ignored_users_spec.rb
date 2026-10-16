@@ -29,7 +29,7 @@ RSpec.describe "Nested view ignored users" do
     nested_view.visit_nested(topic)
 
     expect(nested_view).to have_ignored_placeholder_for(ignored_reply)
-    expect(browser_content).not_to PlaywrightMatchers.contain_text(
+    expect(browser_content).not_to contain_text(
       browser_text_pattern("Secret reply content from an ignored user"),
       useInnerText: true,
     )
@@ -47,7 +47,7 @@ RSpec.describe "Nested view ignored users" do
       browser_root.locator("[data-post-number='#{ignored_reply.post_number}']").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [browser_text_pattern("Secret reply content from an ignored user")],
       useInnerText: true,
     )

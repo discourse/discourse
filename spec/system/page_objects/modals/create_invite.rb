@@ -27,24 +27,21 @@ module PageObjects
 
       def has_copy_button?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(".copy-button").filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator(".copy-button").filter(visible: true))
         end
       end
 
       def has_alert_message?(message)
         within_browser(modal) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(message)],
-            useInnerText: true,
-          ).matches?(browser_root.locator("#modal-alert .invite-link").filter(visible: true))
+          contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+            browser_root.locator("#modal-alert .invite-link").filter(visible: true),
+          )
         end
       end
 
       def has_invite_link_input?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("input.invite-link").filter(visible: true),
           )
         end

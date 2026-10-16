@@ -23,14 +23,12 @@ describe "Review filters" do
           .goto("/review?claimed_by=#{moderator.username}")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(
-          browser_root.locator(".review-item").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(1)
+        expect(browser_root.locator(".review-item").filter(visible: true)).to have_count(1)
         expect(
           browser_root.locator(".review-item[data-reviewable-id='#{flagged_post_1.id}']").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "shows no reviewables when filtering by a user who has not claimed any" do
@@ -40,9 +38,7 @@ describe "Review filters" do
           .goto("/review?claimed_by=#{admin.username}")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(
-          browser_root.locator(".reviewable-item").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".reviewable-item").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -52,7 +48,7 @@ describe "Review filters" do
       it "does not show the claimed by filter" do
         browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         review_index_page.expand_filters
-        expect(browser_content).not_to PlaywrightMatchers.contain_text(
+        expect(browser_content).not_to contain_text(
           browser_text_pattern("Flag claimed by"),
           useInnerText: true,
         )
@@ -75,9 +71,7 @@ describe "Review filters" do
 
     it "allows to filter review claimed by category group moderators" do
       browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator(".review-item").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(3)
+      expect(browser_root.locator(".review-item").filter(visible: true)).to have_count(3)
 
       review_index_page.expand_filters
 
@@ -87,14 +81,12 @@ describe "Review filters" do
 
       review_index_page.submit_filters
 
-      expect(
-        browser_root.locator(".review-item").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(browser_root.locator(".review-item").filter(visible: true)).to have_count(1)
       expect(
         browser_root.locator(".review-item[data-reviewable-id='#{flagged_post_1.id}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

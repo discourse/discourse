@@ -26,9 +26,7 @@ RSpec.describe "Topic route fallback for untracked nested-capable topics" do
 
   it "preserves the post number in the URL after the async category check" do
     browser_page.goto("/about").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("#main-outlet").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#main-outlet").filter(visible: true)).not_to have_count(0)
 
     # Clear the client-side tracking state so the topic misses the
     # synchronous lookup and hits the async fallback path.
@@ -40,17 +38,13 @@ RSpec.describe "Topic route fallback for untracked nested-capable topics" do
 
     expect(
       browser_root.locator("#post_#{reply.post_number}").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}",
-    )
+    ).not_to have_count(0)
+    expect(browser_page).to have_url("/t/#{topic.slug}/#{topic.id}/#{reply.post_number}")
   end
 
   it "loads the flat topic view correctly after the async category check" do
     browser_page.goto("/about").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("#main-outlet").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#main-outlet").filter(visible: true)).not_to have_count(0)
 
     browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       const tts = Discourse.lookup("service:topic-tracking-state");
@@ -58,9 +52,7 @@ RSpec.describe "Topic route fallback for untracked nested-capable topics" do
       require("discourse/lib/url").default.routeTo("/t/#{topic.slug}/#{topic.id}");
     JS
 
-    expect(
-      browser_root.locator("#post_1").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#post_1").filter(visible: true)).not_to have_count(0)
     expect(nested_view).to have_no_nested_view
   end
 end

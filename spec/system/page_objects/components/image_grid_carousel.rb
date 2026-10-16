@@ -8,13 +8,11 @@ module PageObjects
       end
 
       def has_carousel?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(carousel_selector).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(carousel_selector).filter(visible: true))
       end
 
       def has_track?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{carousel_selector} .d-image-carousel__track").filter(
             visible: true,
           ),
@@ -22,7 +20,7 @@ module PageObjects
       end
 
       def has_mode?(mode)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{carousel_selector} .d-image-carousel.d-image-carousel--#{mode}",
           ).filter(visible: true),
@@ -30,7 +28,7 @@ module PageObjects
       end
 
       def has_slides?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator("#{carousel_selector} .d-image-carousel__slide").filter(
             visible: true,
           ),
@@ -38,7 +36,7 @@ module PageObjects
       end
 
       def has_active_slide?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{carousel_selector} .d-image-carousel__slide.is-active").filter(
             visible: true,
           ),
@@ -46,7 +44,7 @@ module PageObjects
       end
 
       def has_active_slide_index?(index)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{carousel_selector} .d-image-carousel__slide[data-index='#{index}'].is-active",
           ).filter(visible: true),

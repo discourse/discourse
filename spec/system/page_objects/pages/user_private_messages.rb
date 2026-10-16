@@ -30,11 +30,11 @@ module PageObjects
       end
 
       def has_unread_icon_in_inbox_dropdown?
-        expect(
-          inbox_dropdown.locator(".d-icon-d-unread").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(inbox_dropdown.locator(".d-icon-d-unread").filter(visible: true)).not_to have_count(
+          0,
+        )
         inbox_dropdown.expand
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           inbox_dropdown
             .option(".dropdown-menu__item", :first)
             .locator(".d-icon-d-unread")

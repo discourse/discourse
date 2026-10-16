@@ -50,7 +50,7 @@ describe "Search" do
       expect(search_page).to have_result_count
 
       click_logo
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
       expect(search_page).to be_not_active
 
       browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
@@ -58,7 +58,7 @@ describe "Search" do
       expect(search_page).to have_search_result
 
       click_logo
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
 
       search_page.click_search_icon
 
@@ -110,9 +110,9 @@ describe "Search" do
 
       search_page.type_in_search("first")
       search_page.click_search_button
-      expect(
-        search_page.locator(".search-container .spinner").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(search_page.locator(".search-container .spinner").filter(visible: true)).to have_count(
+        0,
+      )
 
       search_page.clear_search_input
       search_page.type_in_search("second")
@@ -271,10 +271,7 @@ describe "Search" do
 
     it "allows the user to perform bulk actions on the topic search results" do
       browser_page.goto("/search?q=test").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(topic.title),
-        useInnerText: true,
-      )
+      expect(browser_content).to contain_text(browser_text_pattern(topic.title), useInnerText: true)
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("manage-tags")
@@ -285,23 +282,20 @@ describe "Search" do
         browser_root.locator(
           ".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(browser_text_pattern(tag1.name), useInnerText: true)
+      ).to contain_text(browser_text_pattern(tag1.name), useInnerText: true)
     end
 
     it "allows the user to delete posts in bulk" do
       browser_page
         .goto("/search?q=This%20is%20a%20test%20post")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(post.raw),
-        useInnerText: true,
-      )
+      expect(browser_content).to contain_text(browser_text_pattern(post.raw), useInnerText: true)
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("delete-posts")
       dialog.click_ok
 
-      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      expect(browser_content).not_to contain_text(
         browser_text_pattern(post.raw),
         useInnerText: true,
       )
@@ -312,16 +306,13 @@ describe "Search" do
       browser_page
         .goto("/search?q=This%20is%20a%20test%20post")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(post.raw),
-        useInnerText: true,
-      )
+      expect(browser_content).to contain_text(browser_text_pattern(post.raw), useInnerText: true)
 
       search_page.bulk_select_result_and_open_dropdown(topic)
       topic_list_header.click_bulk_button("delete-topics")
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
-      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      expect(browser_content).not_to contain_text(
         browser_text_pattern(post.raw),
         useInnerText: true,
       )
@@ -364,14 +355,14 @@ describe "Search" do
         browser_page
           .goto("/search?q=searchable%20#{filter}")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        if PlaywrightMatchers.be_attached.matches?(
+        if be_attached.matches?(
              browser_root.locator(".fps-result").filter(visible: true).nth(1 - 1),
            )
           expect(
             browser_root.locator(".fps-result .topic-status .d-icon-envelope").filter(
               visible: true,
             ),
-          ).to PlaywrightMatchers.have_count(0),
+          ).to have_count(0),
           "Expected no PM icons for filter: #{filter}"
         end
       end
@@ -391,7 +382,7 @@ describe "Search" do
           .filter(hasText: browser_text_pattern("PM about searchable things"))
       expect(
         pm_result.locator(".topic-status .d-icon-envelope").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # The regular topic should NOT have the PM envelope icon
       regular_result =
@@ -406,7 +397,7 @@ describe "Search" do
           end
           .locator(".topic-status .d-icon-envelope")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

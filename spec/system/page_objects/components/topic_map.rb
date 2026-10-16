@@ -6,19 +6,15 @@ module PageObjects
       TOPIC_MAP_KLASS = ".topic-map.--op"
 
       def is_visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true))
       end
 
       def is_not_visible?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true))
       end
 
       def has_no_users?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__users-trigger").filter(
             visible: true,
           ),
@@ -26,7 +22,7 @@ module PageObjects
       end
 
       def has_no_likes?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger").filter(
             visible: true,
           ),
@@ -34,7 +30,7 @@ module PageObjects
       end
 
       def has_no_links?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__links-trigger").filter(
             visible: true,
           ),
@@ -102,21 +98,19 @@ module PageObjects
       end
 
       def has_no_avatars_details_in_map?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__users-list").filter(visible: true),
         )
       end
 
       def has_bottom_map?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".topic-map.--bottom").filter(visible: true),
         )
       end
 
       def has_no_bottom_map?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".topic-map.--bottom").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".topic-map.--bottom").filter(visible: true))
       end
     end
   end

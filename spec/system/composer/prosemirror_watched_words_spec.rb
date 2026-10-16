@@ -25,22 +25,19 @@ describe "Composer - ProseMirror - Watched Words" do
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("ETA"),
-        useInnerText: true,
-      )
+      expect(rich).to contain_text(browser_text_pattern("ETA"), useInnerText: true)
       expect(
         rich.tap do |parent|
           parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
         end,
-      ).not_to PlaywrightMatchers.contain_text(
+      ).not_to contain_text(
         browser_text_pattern("Estimated Time of Arrival (ETA)"),
         useInnerText: true,
       )
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("We need to improve the ETA on this")
+      expect(composer).to RSpecPredicates.have_value("We need to improve the ETA on this")
     end
   end
 
@@ -61,14 +58,11 @@ describe "Composer - ProseMirror - Watched Words" do
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("badword"),
-        useInnerText: true,
-      )
+      expect(rich).to contain_text(browser_text_pattern("badword"), useInnerText: true)
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("This is a badword in the post")
+      expect(composer).to RSpecPredicates.have_value("This is a badword in the post")
     end
   end
 end

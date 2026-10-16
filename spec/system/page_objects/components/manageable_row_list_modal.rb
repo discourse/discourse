@@ -13,15 +13,11 @@ module PageObjects
       end
 
       def has_open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(@modal).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(@modal).filter(visible: true))
       end
 
       def has_closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(@modal).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(@modal).filter(visible: true))
       end
 
       def search(query)
@@ -42,11 +38,11 @@ module PageObjects
       end
 
       def has_enabled_rows_in_order?(identifiers)
-        PlaywrightMatchers.have_count(identifiers.size).matches?(
+        have_count(identifiers.size).matches?(
           browser_root.locator("#{@modal} #{ENABLED_ROW}").filter(visible: true),
         ) &&
           identifiers.each_with_index.all? do |identifier, index|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(
                 "#{@modal} #{ENABLED_ROW}:nth-child(#{index + 1})[data-identifier='#{identifier}']",
               ).filter(visible: true),
@@ -55,7 +51,7 @@ module PageObjects
       end
 
       def has_all_row?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'], #{@modal} #{ROW}[data-reorderable-key='#{identifier}']",
           ).filter(visible: true),
@@ -63,7 +59,7 @@ module PageObjects
       end
 
       def has_no_all_row?(identifier)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'], #{@modal} #{ROW}[data-reorderable-key='#{identifier}']",
           ).filter(visible: true),
@@ -76,7 +72,7 @@ module PageObjects
       end
 
       def has_toggle_on?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ENABLED_ROW}[data-identifier='#{identifier}'], #{@modal} #{ENABLED_ROW}[data-reorderable-key='#{identifier}']",
           ).filter(visible: true),
@@ -84,12 +80,12 @@ module PageObjects
       end
 
       def has_toggle_off?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'], #{@modal} #{ROW}[data-reorderable-key='#{identifier}']",
           ).filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               "#{@modal} #{ENABLED_ROW}[data-identifier='#{identifier}'], #{@modal} #{ENABLED_ROW}[data-reorderable-key='#{identifier}']",
             ).filter(visible: true),
@@ -124,7 +120,7 @@ module PageObjects
       end
 
       def has_disabled_move_up?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'] button.manageable-row-list__arrow[disabled] .d-icon-arrow-up",
           ).filter(visible: true),
@@ -132,7 +128,7 @@ module PageObjects
       end
 
       def has_disabled_move_down?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'] button.manageable-row-list__arrow[disabled] .d-icon-arrow-down",
           ).filter(visible: true),
@@ -140,7 +136,7 @@ module PageObjects
       end
 
       def has_enabled_move_up?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'] button.manageable-row-list__arrow:not([disabled]) .d-icon-arrow-up",
           ).filter(visible: true),
@@ -148,7 +144,7 @@ module PageObjects
       end
 
       def has_enabled_move_down?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@modal} #{ROW}[data-identifier='#{identifier}'] button.manageable-row-list__arrow:not([disabled]) .d-icon-arrow-down",
           ).filter(visible: true),
@@ -156,7 +152,7 @@ module PageObjects
       end
 
       def has_drag_controls?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@modal} .manageable-row-list__list.--reorderable").filter(
             visible: true,
           ),
@@ -164,10 +160,10 @@ module PageObjects
       end
 
       def has_no_drag_controls?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@modal} .manageable-row-list__list").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator("#{@modal} .manageable-row-list__list.--reorderable").filter(
               visible: true,
             ),
@@ -205,7 +201,7 @@ module PageObjects
       # Distinct from has_drag_controls?, which asks whether the legacy list is
       # in its reorderable state. This asks whether a row offers a handle.
       def has_reorderable_handles?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@modal} #{ROW} .d-reorderable-list__handle").filter(
             visible: true,
           ),
@@ -213,10 +209,10 @@ module PageObjects
       end
 
       def has_no_reorderable_handles?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@modal} #{ROW}").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator("#{@modal} #{ROW} .d-reorderable-list__handle").filter(
               visible: true,
             ),
@@ -238,7 +234,7 @@ module PageObjects
       end
 
       def has_counter?(count, max)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t(@counter_i18n_key, count:, max:))],
           useInnerText: true,
         ).matches?(

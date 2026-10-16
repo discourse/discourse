@@ -80,10 +80,9 @@ module PageObjects
       end
 
       def has_saved?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(I18n.t("js.saved"))],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".group-manage-save-button span").filter(visible: true))
+        contain_text([browser_text_pattern(I18n.t("js.saved"))], useInnerText: true).matches?(
+          browser_root.locator(".group-manage-save-button span").filter(visible: true),
+        )
       end
 
       def select_default_notification_level(level)

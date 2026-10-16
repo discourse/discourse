@@ -464,10 +464,7 @@ describe "Post menu" do
       end
 
       like_count_button = topic_page.find_post_action_button(unliked_post, :like_count)
-      expect(like_count_button).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(1),
-        useInnerText: true,
-      )
+      expect(like_count_button).to contain_text(browser_text_pattern(1), useInnerText: true)
 
       # toggle the like off
       topic_page.click_post_action_button(unliked_post, :like)
@@ -506,7 +503,7 @@ describe "Post menu" do
 
       # renders the like count when the it's not zero
       like_count_button = topic_page.find_post_action_button(post, :like_count)
-      expect(like_count_button).to PlaywrightMatchers.contain_text(
+      expect(like_count_button).to contain_text(
         browser_text_pattern(post.like_count),
         useInnerText: true,
       )
@@ -556,10 +553,7 @@ describe "Post menu" do
       # when the post has reads > 0
       expect(topic_page).to have_post_action_button(pm_post1, :read)
       read_button = topic_page.find_post_action_button(pm_post1, :read)
-      expect(read_button).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(1),
-        useInnerText: true,
-      )
+      expect(read_button).to contain_text(browser_text_pattern(1), useInnerText: true)
       # don't show when the post has reads = 0
       expect(topic_page).to have_no_post_action_button(pm_post2, :read)
 
@@ -727,7 +721,7 @@ describe "Post menu" do
         wiki_post_reply_button.tap do |parent|
           parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
         end,
-      ).not_to PlaywrightMatchers.contain_text(
+      ).not_to contain_text(
         browser_text_pattern(I18n.t("js.topic.reply.title")),
         useInnerText: true,
       )
@@ -735,7 +729,7 @@ describe "Post menu" do
       # display the reply as a create button for the non-wiki post and the label should be displayed
       non_wiki_post_reply_button = topic_page.find_post_action_button(non_wiki_post, :reply)
       expect(non_wiki_post_reply_button.get_attribute("class").split("\s")).to include("create")
-      expect(non_wiki_post_reply_button).to PlaywrightMatchers.contain_text(
+      expect(non_wiki_post_reply_button).to contain_text(
         browser_text_pattern(I18n.t("js.topic.reply.title")),
         useInnerText: true,
       )
@@ -763,7 +757,7 @@ describe "Post menu" do
 
       expect(
         browser_root.locator(".d-modal.share-topic-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 

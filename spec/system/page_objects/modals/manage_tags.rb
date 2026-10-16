@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def has_replace_row_error?(index: 0, text:)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(
             "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
           ).filter(visible: true),
@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_no_replace_row_error?(index: 0)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
           ).filter(visible: true),
@@ -53,19 +53,19 @@ module PageObjects
       end
 
       def has_disabled_submit?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#bulk-topics-confirm[disabled]").filter(visible: true),
         )
       end
 
       def has_remove_all_notice?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{ROOT_SELECTOR} .manage-tags-form__warning").filter(visible: true),
         )
       end
 
       def has_no_remove_tag_selector?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{ROOT_SELECTOR} [data-name='remove_tags'] .tag-chooser").filter(
             visible: true,
           ),

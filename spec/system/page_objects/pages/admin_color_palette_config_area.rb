@@ -72,7 +72,7 @@ module PageObjects
       end
 
       def has_unsaved_changes_indicator?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"),
           ),
@@ -81,7 +81,7 @@ module PageObjects
       end
 
       def has_no_unsaved_changes_indicator?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"),
           ),

@@ -170,7 +170,7 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     modal = sidebar.click_customize_community_section_button
 
-    expect(modal).to be_visible
+    expect(modal).to RSpecPredicates.be_visible
   end
 
   it "lets administrators edit the section from the header dropdown" do
@@ -184,6 +184,6 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(sidebar_header_dropdown).to have_dropdown_visible
     modal = sidebar_header_dropdown.click_customize_community_section_button
 
-    expect(modal).to be_visible
+    expect(modal).to RSpecPredicates.be_visible
   end
 end

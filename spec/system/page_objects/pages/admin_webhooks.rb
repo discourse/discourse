@@ -11,20 +11,19 @@ module PageObjects
       end
 
       def has_webhook_listed?(url)
-        PlaywrightMatchers.contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
           browser_root.locator(table_selector).filter(visible: true),
         )
       end
 
       def has_no_webhook_listed?(url)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(url)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(table_selector).filter(visible: true))
+        contain_text([browser_text_pattern(url)], useInnerText: true).does_not_match?(
+          browser_root.locator(table_selector).filter(visible: true),
+        )
       end
 
       def has_webhook_details?(url)
-        PlaywrightMatchers.contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
           browser_root.locator(summary_selector).filter(visible: true),
         )
       end

@@ -19,7 +19,7 @@ RSpec.describe "Imported topic embeds" do
     browser_page
       .goto("/embed/comments?#{{ embed_url: embed_url }.to_query}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("embed.loading")),
       useInnerText: true,
     )

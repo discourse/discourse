@@ -22,7 +22,7 @@ describe "Admin Customize Themes Config Area Page" do
     screenshot_marker(label: "admin-themes", only: "desktop")
 
     install_modal = config_area.click_install_button
-    expect(install_modal.popular_options.first).to PlaywrightMatchers.contain_text(
+    expect(install_modal.popular_options.first).to contain_text(
       browser_text_pattern("Graceful"),
       useInnerText: true,
     )
@@ -38,7 +38,7 @@ describe "Admin Customize Themes Config Area Page" do
 
     install_modal.close
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
+    expect(browser_page).to have_url("/admin/config/customize/themes")
   end
 
   it "allows to delete not system and not default theme" do
@@ -81,17 +81,17 @@ describe "Admin Customize Themes Config Area Page" do
       I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new theme"),
     )
 
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/themes/\d+})
+    expect(browser_page).to have_url(%r{/admin/customize/themes/\d+})
   end
 
   it "allows to edit and delete theme" do
     config_area.visit
     config_area.click_edit(theme)
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
+    expect(browser_page).to have_url("/admin/customize/themes/#{theme.id}")
 
     admin_customize_themes_page.click_delete
     admin_customize_themes_page.confirm_delete
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
+    expect(browser_page).to have_url("/admin/config/customize/themes")
   end
 
   it "has new look when edit theme is visited directly and can go back to themes" do
@@ -101,8 +101,8 @@ describe "Admin Customize Themes Config Area Page" do
 
     admin_customize_themes_page.click_back_to_themes
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/customize/themes")
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_page).to have_url("/admin/config/customize/themes")
+    expect(browser_content).to contain_text(
       browser_text_pattern(
         I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
       ),

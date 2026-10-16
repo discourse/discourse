@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def has_selected_level_name?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-trigger][data-identifier='#{identifier}'][data-level-name='#{name}']",
           ).filter(visible: true),
@@ -33,7 +33,7 @@ module PageObjects
       end
 
       def has_selected_level_id?(id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-trigger][data-identifier='#{identifier}'][data-level-id='#{id}']",
           ).filter(visible: true),

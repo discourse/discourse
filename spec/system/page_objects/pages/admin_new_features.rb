@@ -25,19 +25,19 @@ module PageObjects
       end
 
       def has_screenshot?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-new-feature-item__screenshot").filter(visible: true),
         )
       end
 
       def has_no_screenshot?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-new-feature-item__screenshot").filter(visible: true),
         )
       end
 
       def has_toggle_feature_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox",
           ).filter(visible: true),
@@ -45,31 +45,31 @@ module PageObjects
       end
 
       def has_learn_more_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-new-feature-item__learn-more").filter(visible: true),
         )
       end
 
       def has_emoji?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-new-feature-item__new-feature-emoji").filter(visible: true),
         )
       end
 
       def has_no_emoji?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-new-feature-item__new-feature-emoji").filter(visible: true),
         )
       end
 
       def has_date?(date)
-        PlaywrightMatchers.contain_text(browser_text_pattern(date), useInnerText: true).matches?(
+        contain_text(browser_text_pattern(date), useInnerText: true).matches?(
           browser_root.locator(".admin-config-area-card__title").filter(visible: true),
         )
       end
 
       def has_experimental_text?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-new-feature-item__header-experimental").filter(
             visible: true,
           ),
@@ -77,7 +77,7 @@ module PageObjects
       end
 
       def has_no_experimental_text?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-new-feature-item__header-experimental").filter(
             visible: true,
           ),

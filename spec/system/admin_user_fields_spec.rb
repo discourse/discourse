@@ -10,7 +10,7 @@ describe "Admin User Fields" do
 
   it "correctly saves user fields" do
     user_fields_page.visit
-    expect(page_header).to be_visible
+    expect(page_header).to RSpecPredicates.be_visible
     user_fields_page.add_field(name: "Occupation", description: "What you do for work")
 
     expect(user_fields_page).to have_user_field("Occupation")
@@ -32,7 +32,7 @@ describe "Admin User Fields" do
     user_fields_page.visit
     user_fields_page.click_add_field
 
-    expect(page_header).to be_hidden
+    expect(page_header).to RSpecPredicates.be_hidden
 
     form = browser_root.locator(".user-field").filter(visible: true)
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
@@ -48,7 +48,7 @@ describe "Admin User Fields" do
           ).or(form.get_by_label(editable_label, exact: true)),
         )
         .and(form.locator(":disabled")),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
 
     user_fields_page.choose_requirement("optional")
 
@@ -58,14 +58,14 @@ describe "Admin User Fields" do
           "[id=#{editable_label.to_s.to_json}], [name=#{editable_label.to_s.to_json}]",
         ).or(form.get_by_label(editable_label, exact: true)),
       ),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
   end
 
   it "makes sure fields are available on signup when they have to" do
     user_fields_page.visit
     user_fields_page.click_add_field
 
-    expect(page_header).to be_hidden
+    expect(page_header).to RSpecPredicates.be_hidden
 
     form = browser_root.locator(".user-field").filter(visible: true)
     show_on_signup_label = I18n.t("admin_js.admin.user_fields.show_on_signup.title")
@@ -81,7 +81,7 @@ describe "Admin User Fields" do
           ).or(form.get_by_label(show_on_signup_label, exact: true)),
         )
         .and(form.locator(":disabled")),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
 
     user_fields_page.choose_requirement("on_signup")
 
@@ -94,7 +94,7 @@ describe "Admin User Fields" do
           ).or(form.get_by_label(show_on_signup_label, exact: true)),
         )
         .and(form.locator(":disabled")),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
 
     user_fields_page.choose_requirement("optional")
 
@@ -104,7 +104,7 @@ describe "Admin User Fields" do
           "[id=#{show_on_signup_label.to_s.to_json}], [name=#{show_on_signup_label.to_s.to_json}]",
         ).or(form.get_by_label(show_on_signup_label, exact: true)),
       ),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
 
     user_fields_page.unselect_preference("editable")
 
@@ -117,7 +117,7 @@ describe "Admin User Fields" do
           ).or(form.get_by_label(show_on_signup_label, exact: true)),
         )
         .and(form.locator(":disabled")),
-    ).to PlaywrightMatchers.be_checked(checked: true)
+    ).to be_checked(checked: true)
   end
 
   it "requires confirmation when applying required fields retroactively" do
@@ -130,7 +130,7 @@ describe "Admin User Fields" do
     user_fields_page.choose_requirement("for_all_users")
     user_fields_page.form.submit
 
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("admin_js.admin.user_fields.requirement.confirmation")),
       useInnerText: true,
     )
@@ -147,11 +147,11 @@ describe "Admin User Fields" do
 
       form.locator(".user-field-name").filter(visible: true).fill("Favourite Transformer")
 
-      expect(page_header).to be_hidden
+      expect(page_header).to RSpecPredicates.be_hidden
 
       form.locator(".btn-primary").filter(visible: true).click
 
-      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      expect(browser_content).not_to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.user_fields.requirement.confirmation")),
         useInnerText: true,
       )
@@ -167,9 +167,7 @@ describe "Admin User Fields" do
     it "keeps each row's controls anchored to its own row on mobile", mobile: true do
       user_fields_page.visit
 
-      expect(
-        browser_root.locator(".admin-user_field-item").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(2)
+      expect(browser_root.locator(".admin-user_field-item").filter(visible: true)).to have_count(2)
 
       escaped = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           Array.from(document.querySelectorAll(".d-table__cell.--controls")).filter(
@@ -183,9 +181,7 @@ describe "Admin User Fields" do
     it "sizes the drag handle column to the handle" do
       user_fields_page.visit
 
-      expect(
-        browser_root.locator(".admin-user_field-item").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(2)
+      expect(browser_root.locator(".admin-user_field-item").filter(visible: true)).to have_count(2)
 
       width = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           Math.round(

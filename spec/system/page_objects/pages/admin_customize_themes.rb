@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def has_incomplete_installation?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(
@@ -49,7 +49,7 @@ module PageObjects
       end
 
       def has_editor_field_description?(field)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.customize.theme.#{field}.title"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".field-info").filter(visible: true))
@@ -88,13 +88,13 @@ module PageObjects
       end
 
       def has_color_scheme_selector?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".theme-settings__color-scheme").filter(visible: true),
         )
       end
 
       def has_no_color_scheme_selector?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".theme-settings__color-scheme").filter(visible: true),
         )
       end
@@ -110,13 +110,13 @@ module PageObjects
       end
 
       def has_palette_editor_save_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-theme__save-palette-changes").filter(visible: true),
         )
       end
 
       def has_no_palette_editor_save_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-theme__save-palette-changes").filter(visible: true),
         )
       end
@@ -126,37 +126,35 @@ module PageObjects
       end
 
       def has_palette_editor_discard_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-theme__discard-palette-changes").filter(visible: true),
         )
       end
 
       def has_no_palette_editor_discard_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-theme__discard-palette-changes").filter(visible: true),
         )
       end
 
       def has_inactive_themes?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".inactive-indicator").filter(visible: true),
         )
       end
 
       def has_no_inactive_themes?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".inactive-indicator").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".inactive-indicator").filter(visible: true))
       end
 
       def has_select_inactive_mode_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".select-inactive-mode").filter(visible: true),
         )
       end
 
       def has_overridden_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(setting_selector(setting_name, overridden: true)).filter(
             visible: true,
           ),
@@ -164,7 +162,7 @@ module PageObjects
       end
 
       def has_no_overriden_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(setting_selector(setting_name, overridden: true)).filter(
             visible: true,
           ),
@@ -172,10 +170,7 @@ module PageObjects
       end
 
       def has_setting_description?(setting_name, description)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(description)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(description)], useInnerText: true).matches?(
           browser_root.locator("#{setting_selector(setting_name)} .desc").filter(visible: true),
         )
       end
@@ -187,11 +182,11 @@ module PageObjects
             .filter(visible: true)
             .locator(".setting-label")
             .filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(SiteSetting.humanized_name(setting_name))],
           useInnerText: true,
         )
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(SiteSetting.description(setting_name))],
           useInnerText: true,
         ).matches?(
@@ -204,7 +199,7 @@ module PageObjects
       end
 
       def has_overridden_theme_site_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(theme_site_setting_selector(setting_name, overridden: true)).filter(
             visible: true,
           ),
@@ -212,7 +207,7 @@ module PageObjects
       end
 
       def has_no_overridden_theme_site_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(theme_site_setting_selector(setting_name, overridden: true)).filter(
             visible: true,
           ),
@@ -250,13 +245,11 @@ module PageObjects
       end
 
       def has_no_themes_list?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".themes-list-header").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".themes-list-header").filter(visible: true))
       end
 
       def has_back_button_to_themes_page?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [
             browser_text_pattern(
               I18n.t("admin_js.admin.config_areas.themes_and_components.themes.back"),
@@ -275,7 +268,7 @@ module PageObjects
       end
 
       def has_back_button_to_components_page?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [
             browser_text_pattern(
               I18n.t("admin_js.admin.config_areas.themes_and_components.components.back"),
@@ -305,7 +298,7 @@ module PageObjects
       end
 
       def has_setting_value?(setting_name, value)
-        PlaywrightMatchers.have_value(value).matches?(
+        have_value(value).matches?(
           browser_root.locator(
             "#{setting_selector(setting_name)} input.input-setting-string",
           ).filter(visible: true),
@@ -325,9 +318,7 @@ module PageObjects
       end
 
       def has_no_page_header?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".d-page-header").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".d-page-header").filter(visible: true))
       end
 
       def reset_overridden_setting(setting_name)
@@ -354,13 +345,13 @@ module PageObjects
       end
 
       def has_inactive_themes_selected?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".inactive-theme input:checked").filter(visible: true),
         )
       end
 
       def has_themes?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".themes-list-container__item").filter(visible: true),
         )
       end
@@ -424,7 +415,7 @@ module PageObjects
       end
 
       def has_no_search?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".themes-list-search__input").filter(visible: true),
         )
       end
@@ -450,7 +441,7 @@ module PageObjects
       end
 
       def has_reset_button_for_setting?(css_selector)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{css_selector} .setting-controls__undo").filter(visible: true),
         )
       end

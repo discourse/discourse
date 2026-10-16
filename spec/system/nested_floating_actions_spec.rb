@@ -32,7 +32,7 @@ RSpec.describe "Nested view floating actions" do
         browser_root.locator(
           ".nested-view__floating-actions .notifications-tracking-trigger-btn[data-level-id='3']",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can close and reopen a topic via admin menu" do
@@ -40,16 +40,12 @@ RSpec.describe "Nested view floating actions" do
       nested_view.click_admin_close_topic
 
       nested_view.open_admin_menu
-      expect(
-        browser_root.locator(".topic-admin-open").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".topic-admin-open").filter(visible: true)).not_to have_count(0)
       expect(topic.reload).to be_closed
 
       browser_root.locator(".topic-admin-open .btn").filter(visible: true).click
       nested_view.open_admin_menu
-      expect(
-        browser_root.locator(".topic-admin-close").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".topic-admin-close").filter(visible: true)).not_to have_count(0)
       expect(topic.reload).not_to be_closed
     end
 

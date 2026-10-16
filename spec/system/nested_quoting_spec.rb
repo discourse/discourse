@@ -33,9 +33,7 @@ RSpec.describe "Nested view quoting" do
     expect(nested_view).to have_post(root_reply)
 
     select_text_range(nested_post_cooked_selector(root_reply), 0, 5)
-    expect(
-      browser_root.locator(".quote-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".quote-button").filter(visible: true)).not_to have_count(0)
   end
 
   it "inserts a quote into the composer when clicking the quote button" do
@@ -43,9 +41,7 @@ RSpec.describe "Nested view quoting" do
     expect(nested_view).to have_post(root_reply)
 
     select_text_range(nested_post_cooked_selector(root_reply), 0, 7)
-    expect(
-      browser_root.locator(".quote-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".quote-button").filter(visible: true)).not_to have_count(0)
     browser_root.locator(".quote-button .insert-quote").filter(visible: true).click
 
     expect(composer).to be_opened
@@ -59,8 +55,6 @@ RSpec.describe "Nested view quoting" do
     expect(nested_view).to have_op_post
 
     select_text_range(".nested-view__op .cooked p", 0, 8)
-    expect(
-      browser_root.locator(".quote-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".quote-button").filter(visible: true)).not_to have_count(0)
   end
 end

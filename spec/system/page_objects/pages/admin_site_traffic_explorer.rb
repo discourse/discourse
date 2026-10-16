@@ -40,14 +40,14 @@ module PageObjects
       end
 
       def has_page_title?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_exact_text_pattern("Site Traffic Explorer")],
           useInnerText: true,
         ).matches?(browser_root.locator("h1").filter(visible: true))
       end
 
       def has_date_range?(text)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(
@@ -74,25 +74,22 @@ module PageObjects
 
       def has_metric?(label:, value:)
         selector = "[data-test-site-traffic-metric='#{METRIC_KEYS.fetch(label)}']"
-        PlaywrightMatchers.contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
           browser_root.locator(selector).filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(value)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(selector).filter(visible: true))
+          contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
+            browser_root.locator(selector).filter(visible: true),
+          )
       end
 
       def has_series_total?(label:, value:)
-        PlaywrightMatchers.contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
           browser_root.locator("[data-test-traffic-series='#{label}']"),
         )
       end
 
       def has_no_series?(label:)
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("[data-test-traffic-series='#{label}']"),
-        )
+        have_count(0).matches?(browser_root.locator("[data-test-traffic-series='#{label}']"))
       end
 
       def toggle_chart_legend(label:)
@@ -132,27 +129,21 @@ module PageObjects
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(reason)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(selector).filter(visible: true)) &&
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator("#{selector} button").filter(visible: true),
-          )
+        contain_text([browser_exact_text_pattern(reason)], useInnerText: true).matches?(
+          browser_root.locator(selector).filter(visible: true),
+        ) &&
+          have_count(0).matches?(browser_root.locator("#{selector} button").filter(visible: true))
       end
 
       def has_no_partial_data_warning?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-test-site-traffic-partial-warning]").filter(visible: true),
         )
       end
 
       def has_card_tabs?(card:, tabs:)
         tabs.all? do |tab|
-          PlaywrightMatchers.contain_text(
-            [browser_exact_text_pattern(tab)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_exact_text_pattern(tab)], useInnerText: true).matches?(
             browser_root.locator("[data-test-site-traffic-card='#{card}'] [role='tab']").filter(
               visible: true,
             ),
@@ -177,7 +168,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
         ) do
-          PlaywrightMatchers.contain_text(
+          contain_text(
             [browser_text_pattern(/#{Regexp.escape(label)}.*#{Regexp.escape(count)}/m)],
             useInnerText: true,
           ).matches?(browser_root.locator("[data-test-site-traffic-row]").filter(visible: true))
@@ -188,7 +179,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
         ) do
-          unless PlaywrightMatchers.have_count(rows.size).matches?(
+          unless have_count(rows.size).matches?(
                    browser_root.locator("[data-test-site-traffic-row]").filter(visible: true),
                  )
             return false
@@ -225,10 +216,9 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
         ) do
-          PlaywrightMatchers.contain_text(
-            [browser_exact_text_pattern(label)],
-            useInnerText: true,
-          ).matches?(browser_root.locator("a[href='#{href}']").filter(visible: true))
+          contain_text([browser_exact_text_pattern(label)], useInnerText: true).matches?(
+            browser_root.locator("a[href='#{href}']").filter(visible: true),
+          )
         end
       end
 
@@ -278,7 +268,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
         ) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "input[type='checkbox'][aria-label^='Filter by #{label},']:checked",
             ).filter(visible: true),
@@ -290,7 +280,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-test-site-traffic-card='#{card}']").filter(visible: true),
         ) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "input[type='checkbox'][aria-label^='Filter by #{label},']:not(:checked)",
             ).filter(visible: true),
@@ -303,9 +293,7 @@ module PageObjects
         remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
         expected_text = "#{FILTER_LABELS.fetch(dimension)}: #{label}".gsub(/\s+/, "")
 
-        PlaywrightMatchers.have_count(1).matches?(
-          browser_root.locator(selector).filter(visible: true),
-        ) &&
+        have_count(1).matches?(browser_root.locator(selector).filter(visible: true)) &&
           browser_root
             .locator(selector)
             .filter(visible: true)
@@ -313,7 +301,7 @@ module PageObjects
             .strip
             .gsub(/\s+/, "")
             .include?(expected_text) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("#{selector} button[aria-label='#{remove_label}']").filter(
               visible: true,
             ),
@@ -321,7 +309,7 @@ module PageObjects
       end
 
       def has_no_filter_pills?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-test-site-traffic-filter-pill]").filter(visible: true),
         )
       end
@@ -329,9 +317,7 @@ module PageObjects
       def has_grouped_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}'] .fk-d-menu__trigger"
 
-        PlaywrightMatchers.have_count(1).matches?(
-          browser_root.locator(selector).filter(visible: true),
-        ) &&
+        have_count(1).matches?(browser_root.locator(selector).filter(visible: true)) &&
           browser_root
             .locator(selector)
             .filter(visible: true)
@@ -354,11 +340,11 @@ module PageObjects
         row_selector = "[data-test-site-traffic-filter-dropdown-value]"
         value_selector = "#{row_selector} .d-button-label"
 
-        PlaywrightMatchers.have_count(values.length).matches?(
+        have_count(values.length).matches?(
           browser_root.locator(row_selector).filter(visible: true),
         ) &&
           values.all? do |value|
-            PlaywrightMatchers.have_count(1).matches?(
+            have_count(1).matches?(
               browser_root
                 .locator(value_selector)
                 .filter(visible: true)
@@ -368,7 +354,7 @@ module PageObjects
       end
 
       def has_no_filter_dropdown?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-test-site-traffic-filter-dropdown]").filter(visible: true),
         )
       end
@@ -393,16 +379,14 @@ module PageObjects
       def has_apply_filters?(count:)
         selector = "[data-test-site-traffic-apply-filters]"
 
-        PlaywrightMatchers.have_count(1).matches?(
-          browser_root.locator(selector).filter(visible: true),
-        ) &&
-          PlaywrightMatchers.have_count(1).matches?(
+        have_count(1).matches?(browser_root.locator(selector).filter(visible: true)) &&
+          have_count(1).matches?(
             browser_root
               .locator("#{selector} .d-button-label")
               .filter(visible: true)
               .filter(hasText: browser_exact_text_pattern("Apply")),
           ) &&
-          PlaywrightMatchers.have_count(1).matches?(
+          have_count(1).matches?(
             browser_root
               .locator("#{selector} .site-traffic-explorer__filter-apply-pending-count")
               .filter(visible: true)
@@ -411,7 +395,7 @@ module PageObjects
       end
 
       def has_no_apply_filters?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-test-site-traffic-apply-filters]").filter(visible: true),
         )
       end
@@ -487,20 +471,19 @@ module PageObjects
 
       def has_expanded_breakdown?(title:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(selector).filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("#{selector} [data-test-site-traffic-row]").filter(visible: true),
           )
       end
 
       def has_expanded_url_link?(label:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(label)],
-          useInnerText: true,
-        ).matches?(browser_root.locator("#{selector} a[href='#{label}']").filter(visible: true))
+        contain_text([browser_exact_text_pattern(label)], useInnerText: true).matches?(
+          browser_root.locator("#{selector} a[href='#{label}']").filter(visible: true),
+        )
       end
 
       def select_expanded_filter_row(label:)
@@ -544,7 +527,7 @@ module PageObjects
       end
 
       def has_no_expanded_breakdown?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".site-traffic-breakdown-modal[role='dialog']").filter(
             visible: true,
           ),
@@ -552,7 +535,7 @@ module PageObjects
       end
 
       def has_empty_state?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_exact_text_pattern("No matching pageviews")],
           useInnerText: true,
         ).matches?(browser_root.locator("[data-test-site-traffic-empty]").filter(visible: true))

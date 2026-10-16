@@ -15,16 +15,16 @@ describe "Composer - ProseMirror - Links" do
     end
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("button.composer-link-toolbar__edit").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("button.composer-link-toolbar__copy").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("a.composer-link-toolbar__visit").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("example.com")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("example.com")], useInnerText: true)
   end
 
   it "allows editing a link via toolbar" do
@@ -39,7 +39,7 @@ describe "Composer - ProseMirror - Links" do
     # Use Tab to navigate to the toolbar and Enter to activate edit
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     begin
       browser_page.keyboard.press("Tab")
       browser_page.keyboard.press("Enter")
@@ -52,12 +52,9 @@ describe "Composer - ProseMirror - Links" do
     upsert_hyperlink_modal.send_enter_link_text
     expect(
       rich.locator("a[href='https://updated-example.com']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Updated Example")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Updated Example")], useInnerText: true)
     composer.toggle_rich_editor
-    expect(composer).to have_value("[Updated Example](https://updated-example.com)")
+    expect(composer).to RSpecPredicates.have_value("[Updated Example](https://updated-example.com)")
   end
 
   it "escapes URL when editing link via modal" do
@@ -72,7 +69,7 @@ describe "Composer - ProseMirror - Links" do
     # Use Tab to navigate to the toolbar and Enter to activate edit
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     begin
       browser_page.keyboard.press("Tab")
       browser_page.keyboard.press("Enter")
@@ -86,7 +83,7 @@ describe "Composer - ProseMirror - Links" do
       rich.locator("a[href='https://updated-example.com/?query=with%20space']").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Example")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Example")], useInnerText: true)
   end
 
   it "preserves existing percent escapes when inserting a link" do
@@ -98,9 +95,9 @@ describe "Composer - ProseMirror - Links" do
     upsert_hyperlink_modal.click_primary_button
     expect(
       rich.locator("a[href='https://example.com/%20test']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Encoded URL")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Encoded URL")], useInnerText: true)
     composer.toggle_rich_editor
-    expect(composer).to have_value("[Encoded URL](https://example.com/%20test)")
+    expect(composer).to RSpecPredicates.have_value("[Encoded URL](https://example.com/%20test)")
   end
 
   it "handles malformed links gracefully" do
@@ -113,7 +110,7 @@ describe "Composer - ProseMirror - Links" do
     upsert_hyperlink_modal.click_primary_button
     expect(
       rich.locator("a[href='https://example.com/100%25/working%201']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Encoded URL")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Encoded URL")], useInnerText: true)
     begin
       browser_page.keyboard.press("ArrowLeft")
       browser_page.keyboard.press("ArrowLeft")
@@ -127,7 +124,9 @@ describe "Composer - ProseMirror - Links" do
     expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com/100%25/working%201")
     upsert_hyperlink_modal.close
     composer.toggle_rich_editor
-    expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working%201)")
+    expect(composer).to RSpecPredicates.have_value(
+      "[Encoded URL](https://example.com/100%25/working%201)",
+    )
   end
 
   it "allows copying a link URL via toolbar" do
@@ -140,7 +139,7 @@ describe "Composer - ProseMirror - Links" do
       browser_page.keyboard.press("ArrowLeft")
     end
     browser_root.locator("button.composer-link-toolbar__copy").filter(visible: true).click
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("js.composer.link_toolbar.link_copied")),
       useInnerText: true,
     )
@@ -157,13 +156,10 @@ describe "Composer - ProseMirror - Links" do
         end
         .locator("a")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("Manual Link"),
-      useInnerText: true,
-    )
+    ).to have_count(0)
+    expect(rich).to contain_text(browser_text_pattern("Manual Link"), useInnerText: true)
     composer.toggle_rich_editor
-    expect(composer).to have_value("Manual Link")
+    expect(composer).to RSpecPredicates.have_value("Manual Link")
   end
 
   it "doesn't show unlink button for auto-detected links" do
@@ -171,13 +167,13 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("<https://example.com>")
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("button.composer-link-toolbar__unlink").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator("a.composer-link-toolbar__visit").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("")], useInnerText: true)
   end
 
   it "doesn't show unlink button for auto-linkified URLs" do
@@ -185,13 +181,13 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("https://example.com")
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("button.composer-link-toolbar__unlink").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator("a.composer-link-toolbar__visit").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("")], useInnerText: true)
   end
 
   it "shows visit button for valid URLs" do
@@ -201,7 +197,7 @@ describe "Composer - ProseMirror - Links" do
       browser_root.locator("a.composer-link-toolbar__visit[href='https://example.com']").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("example.com")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("example.com")], useInnerText: true)
   end
 
   it "strips base URL from internal links in toolbar display" do
@@ -215,15 +211,12 @@ describe "Composer - ProseMirror - Links" do
     end
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("a.composer-link-toolbar__visit[href='#{internal_link}']").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("/t/some-topic/123")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("/t/some-topic/123")], useInnerText: true)
   end
 
   it "doesn't show visit button for invalid URLs" do
@@ -231,13 +224,13 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Example](not-a-url)")
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("a.composer-link-toolbar__visit").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator(".composer-link-toolbar__divider").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "closes toolbar when cursor moves outside link" do
@@ -245,16 +238,16 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("Text before [Example](https://example.com),")
     browser_page.keyboard.press("ArrowLeft")
     wait_for do
-      PlaywrightMatchers.have_count(0).does_not_match?(
+      have_count(0).does_not_match?(
         browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
       )
     end
     expect(
       browser_root.locator("a.composer-link-toolbar__visit").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("example.com")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("example.com")], useInnerText: true)
     browser_page.keyboard.press("ArrowRight")
     wait_for do
-      PlaywrightMatchers.have_count(0).matches?(
+      have_count(0).matches?(
         browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
       )
     end
@@ -271,7 +264,7 @@ describe "Composer - ProseMirror - Links" do
     # Use Tab to navigate to the toolbar and Enter to activate edit
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     begin
       browser_page.keyboard.press("Tab")
       browser_page.keyboard.press("Enter")
@@ -284,12 +277,14 @@ describe "Composer - ProseMirror - Links" do
     upsert_hyperlink_modal.click_primary_button
     expect(
       rich.locator("a[href='https://updated-party.com']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       rich.locator("a img[title=':tada:'], a img[alt=':tada:']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     composer.toggle_rich_editor
-    expect(composer).to have_value("[Updated :tada: Party](https://updated-party.com)")
+    expect(composer).to RSpecPredicates.have_value(
+      "[Updated :tada: Party](https://updated-party.com)",
+    )
   end
 
   it "preserves bold and italic formatting when editing a link via toolbar" do
@@ -303,7 +298,7 @@ describe "Composer - ProseMirror - Links" do
     # Use Tab to navigate to the toolbar and Enter to activate edit
     expect(
       browser_root.locator("[data-identifier='composer-link-toolbar']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     begin
       browser_page.keyboard.press("Tab")
       browser_page.keyboard.press("Enter")
@@ -316,17 +311,17 @@ describe "Composer - ProseMirror - Links" do
     upsert_hyperlink_modal.click_primary_button
     expect(
       rich.locator("a[href='https://updated-example.com']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(rich.locator("strong a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    ).not_to have_count(0)
+    expect(rich.locator("strong a").filter(visible: true)).to contain_text(
       [browser_text_pattern("bold")],
       useInnerText: true,
     )
-    expect(rich.locator("em a").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("em a").filter(visible: true)).to contain_text(
       [browser_text_pattern("italic")],
       useInnerText: true,
     )
     composer.toggle_rich_editor
-    expect(composer).to have_value(
+    expect(composer).to RSpecPredicates.have_value(
       "[Updated **bold** and *italic* content](https://updated-example.com)",
     )
   end
@@ -350,7 +345,7 @@ describe "Composer - ProseMirror - Links" do
       heading_menu = composer.heading_menu
       heading_menu.expand
       heading_menu.option("[data-name='heading-2']").click
-      expect(rich.locator("h2 strong").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("h2 strong").filter(visible: true)).to contain_text(
         [browser_text_pattern("Example")],
         useInnerText: true,
       )
@@ -362,9 +357,9 @@ describe "Composer - ProseMirror - Links" do
 
       expect(
         rich.locator("h2 strong a[href='https://example.com']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Example")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("Example")], useInnerText: true)
       composer.toggle_rich_editor
-      expect(composer).to have_value("## **[Example](https://example.com)**")
+      expect(composer).to RSpecPredicates.have_value("## **[Example](https://example.com)**")
     end
 
     it "does not leak heading markdown into the resulting link" do
@@ -374,7 +369,7 @@ describe "Composer - ProseMirror - Links" do
       heading_menu = composer.heading_menu
       heading_menu.expand
       heading_menu.option("[data-name='heading-2']").click
-      expect(rich.locator("h2").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("h2").filter(visible: true)).to contain_text(
         [browser_text_pattern("Example")],
         useInnerText: true,
       )
@@ -386,9 +381,9 @@ describe "Composer - ProseMirror - Links" do
 
       expect(
         rich.locator("h2 a[href='https://example.com']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Example")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("Example")], useInnerText: true)
       composer.toggle_rich_editor
-      expect(composer).to have_value("## [Example](https://example.com)")
+      expect(composer).to RSpecPredicates.have_value("## [Example](https://example.com)")
     end
   end
 
@@ -405,7 +400,7 @@ describe "Composer - ProseMirror - Links" do
       upsert_hyperlink_modal.fill_in_link_url("https://example.com")
       upsert_hyperlink_modal.click_primary_button
 
-      expect(composer).to have_value("[`code word`](https://example.com)")
+      expect(composer).to RSpecPredicates.have_value("[`code word`](https://example.com)")
     end
   end
 
@@ -426,10 +421,7 @@ describe "Composer - ProseMirror - Links" do
       expect(logger.logs.map { |log| log[:message] }).not_to include(
         "Maximum call stack size exceeded",
       )
-      expect(rich).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("Modified"),
-        useInnerText: true,
-      )
+      expect(rich).to contain_text(browser_text_pattern("Modified"), useInnerText: true)
     end
   end
 end

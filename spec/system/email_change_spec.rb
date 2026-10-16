@@ -47,9 +47,7 @@ describe "Changing email" do
 
     browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
       useInnerText: true,
     )
@@ -119,9 +117,7 @@ describe "Changing email" do
     # Confirm old email
     browser_page.goto(confirm_old_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
     browser_root.locator(".confirm-old-email .btn-primary").filter(visible: true).click
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.user.change_email.authorizing_old.confirm_success"))],
       useInnerText: true,
     )
@@ -138,9 +134,7 @@ describe "Changing email" do
 
     browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
       useInnerText: true,
     )
@@ -160,9 +154,7 @@ describe "Changing email" do
     # Confirm old email
     browser_page.goto(confirm_old_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
     browser_root.locator(".confirm-old-email .btn-primary").filter(visible: true).click
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.user.change_email.authorizing_old.confirm_success"))],
       useInnerText: true,
     )
@@ -179,9 +171,7 @@ describe "Changing email" do
 
     browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
       useInnerText: true,
     )

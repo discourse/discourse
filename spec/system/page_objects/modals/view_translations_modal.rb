@@ -42,7 +42,7 @@ module PageObjects
       end
 
       def has_post_language?(language)
-        PlaywrightMatchers.have_text(language).matches?(
+        have_text(language).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -62,7 +62,7 @@ module PageObjects
       end
 
       def has_topic_language?(language)
-        PlaywrightMatchers.have_text(language).matches?(
+        have_text(language).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -82,7 +82,7 @@ module PageObjects
       end
 
       def has_language_notice?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.post.localizations.modal.language_notice"))],
           useInnerText: true,
         ).matches?(
@@ -93,10 +93,7 @@ module PageObjects
       end
 
       def has_translation_language?(language)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(language)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(language)], useInnerText: true).matches?(
           browser_root.locator("#{full_modal_selector} .post-translations-modal__locale").filter(
             visible: true,
           ),

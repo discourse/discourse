@@ -54,9 +54,7 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_language_switcher = "anonymous"
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_enabled = true
 
@@ -76,41 +74,29 @@ describe "Content localization language switcher" do
   it "only shows the language switcher if turned on for various types of users (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "none"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "all"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
 
     sign_in(japanese_user)
 
     SiteSetting.content_localization_language_switcher = "none"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "all"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
   end
 
   it "lets anonymous visitors switch language when set_locale_from_cookie is also enabled" do
@@ -127,19 +113,22 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_language_switcher = "all"
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(browser_text_pattern("EN"), useInnerText: true)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("EN"),
+      useInnerText: true,
+    )
 
     language_switcher.select_language("ja")
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(browser_text_pattern("JA"), useInnerText: true)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("JA"),
+      useInnerText: true,
+    )
 
     language_switcher.select_language("es")
-    expect(
-      browser_root.locator(switcher_selector).filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(browser_text_pattern("ES"), useInnerText: true)
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("ES"),
+      useInnerText: true,
+    )
   end
 
   it "shows localized content when switching languages (anon, logged in)" do
@@ -152,9 +141,7 @@ describe "Content localization language switcher" do
 
     expect(topic_list).to have_displayed_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
-      expect(
-        browser_root.locator("#navigation-bar").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
         browser_text_pattern(I18n.t("js.filters.latest.title")),
         useInnerText: true,
       )
@@ -165,9 +152,7 @@ describe "Content localization language switcher" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(topic_list).to have_displayed_content("孫子兵法からの人生戦略")
     I18n.with_locale("ja") do
-      expect(
-        browser_root.locator("#navigation-bar").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
         browser_text_pattern(I18n.t("js.filters.latest.title")),
         useInnerText: true,
       )
@@ -177,9 +162,7 @@ describe "Content localization language switcher" do
 
     expect(topic_list).to have_displayed_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
-      expect(
-        browser_root.locator("#navigation-bar").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
         browser_text_pattern(I18n.t("js.filters.latest.title")),
         useInnerText: true,
       )
@@ -194,13 +177,13 @@ describe "Content localization language switcher" do
 
     expect(
       browser_root.locator("[data-menu-option-id='en'].--selected").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("[data-menu-option-id='ja'].--selected").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator("[data-menu-option-id='es'].--selected").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     switcher.collapse
     language_switcher.select_language("ja")
@@ -208,12 +191,12 @@ describe "Content localization language switcher" do
 
     expect(
       browser_root.locator("[data-menu-option-id='ja'].--selected").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator("[data-menu-option-id='en'].--selected").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator("[data-menu-option-id='es'].--selected").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 end

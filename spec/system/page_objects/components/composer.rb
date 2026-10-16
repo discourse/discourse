@@ -19,15 +19,11 @@ module PageObjects
       end
 
       def has_rich_editor?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(RICH_EDITOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(RICH_EDITOR).filter(visible: true))
       end
 
       def has_no_rich_editor?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(RICH_EDITOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(RICH_EDITOR).filter(visible: true))
       end
 
       def has_no_animated_images?
@@ -46,19 +42,17 @@ module PageObjects
       end
 
       def opened?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id}.open").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("#{@composer_id}.closed"),
-        )
+        have_count(0).does_not_match?(browser_root.locator("#{@composer_id}.closed"))
       end
 
       def minimized?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id}.draft").filter(visible: true),
         )
       end
@@ -106,7 +100,7 @@ module PageObjects
       # resize is observed. Named for what it reads rather than for the height, which
       # would suggest measuring the box.
       def has_applied_height?(height)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("html[style*='--composer-height: #{height}px']"),
         )
       end
@@ -117,7 +111,7 @@ module PageObjects
       end
 
       def has_input_title?(value)
-        PlaywrightMatchers.have_value(
+        have_value(
           (
             if value.is_a?(Regexp)
               Regexp.new(value.source.gsub('\A', "^").gsub('\z', "$"), value.options)
@@ -140,7 +134,7 @@ module PageObjects
       # Methods for when the enable_composer_redesign upcoming change is enabled.
 
       def has_footer_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@composer_id} .composer-footer__toolbar .d-editor-button-bar",
           ).filter(visible: true),
@@ -148,7 +142,7 @@ module PageObjects
       end
 
       def has_title_below_category_row?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .title-and-category ~ .title-input").filter(
             visible: true,
           ),
@@ -156,7 +150,7 @@ module PageObjects
       end
 
       def has_pm_recipients_in_category_row?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .title-and-category .user-selector").filter(
             visible: true,
           ),
@@ -164,7 +158,7 @@ module PageObjects
       end
 
       def has_toggle_toolbar_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .toggle-toolbar").filter(visible: true),
         )
       end
@@ -172,13 +166,13 @@ module PageObjects
       # Methods for when the enable_composer_redesign upcoming change is disabled.
 
       def has_no_footer_toolbar?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{@composer_id} .composer-footer").filter(visible: true),
         )
       end
 
       def has_inline_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{@composer_id} .d-editor-textarea-wrapper .d-editor-button-bar",
           ).filter(visible: true),
@@ -186,7 +180,7 @@ module PageObjects
       end
 
       def has_title_in_category_row?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .title-and-category .title-input").filter(
             visible: true,
           ),
@@ -199,13 +193,13 @@ module PageObjects
       end
 
       def has_visible_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .d-editor-button-bar").filter(visible: true),
         )
       end
 
       def has_no_visible_toolbar?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{@composer_id} .d-editor-button-bar").filter(visible: true),
         )
       end
@@ -259,14 +253,14 @@ module PageObjects
       def has_value?(value)
         within_browser(@composer_id) do
           if value.nil?
-            PlaywrightMatchers.have_count(0).matches?(
+            have_count(0).matches?(
               browser_root
                 .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
                 .and(browser_root.locator(".#{"d-editor-input".to_s.split.join(".")}"))
                 .filter(visible: true),
             )
           else
-            PlaywrightMatchers.have_value(
+            have_value(
               (
                 if value.is_a?(Regexp)
                   Regexp.new(value.source.gsub('\A', "^").gsub('\z', "$"), value.options)
@@ -285,9 +279,7 @@ module PageObjects
       end
 
       def has_popup_content?(content)
-        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
-          composer_popup,
-        )
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(composer_popup)
       end
 
       def has_no_action?(action)
@@ -295,7 +287,7 @@ module PageObjects
       end
 
       def has_no_action_id?(action_id)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".composer-actions-dropdown [data-action-id='#{action_id}']").filter(
             visible: true,
           ),
@@ -316,7 +308,7 @@ module PageObjects
       end
 
       def reply_button_focused?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .btn-primary:focus").filter(visible: true),
         )
       end
@@ -386,21 +378,17 @@ module PageObjects
       end
 
       def has_discard_draft_modal?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".discard-draft-modal").filter(visible: true),
         )
       end
 
       def has_hashtag_autocomplete?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(HASHTAG_MENU).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(HASHTAG_MENU).filter(visible: true))
       end
 
       def has_mention_autocomplete?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(MENTION_MENU).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(MENTION_MENU).filter(visible: true))
       end
 
       def mention_menu_autocomplete_username_list
@@ -415,19 +403,15 @@ module PageObjects
       end
 
       def has_emoji_autocomplete?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true))
       end
 
       def has_no_emoji_autocomplete?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(AUTOCOMPLETE_MENU).filter(visible: true))
       end
 
       def has_emoji_autocomplete_selected?(index)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected").filter(
             visible: true,
           ),
@@ -437,26 +421,25 @@ module PageObjects
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
 
       def has_emoji_suggestion?(emoji)
-        PlaywrightMatchers.contain_text([browser_text_pattern(emoji)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(emoji)], useInnerText: true).matches?(
           browser_root.locator(EMOJI_SUGGESTION_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_emoji_suggestion?(emoji)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(emoji)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(EMOJI_SUGGESTION_SELECTOR).filter(visible: true))
+        contain_text([browser_text_pattern(emoji)], useInnerText: true).does_not_match?(
+          browser_root.locator(EMOJI_SUGGESTION_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_emoji_preview?(emoji)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(emoji_preview_selector(emoji)).filter(visible: true),
         )
       end
 
       def has_no_emoji_preview?(emoji)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(emoji_preview_selector(emoji)).filter(visible: true),
         )
       end
@@ -466,49 +449,47 @@ module PageObjects
       end
 
       def has_no_composer_input?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(composer_input_selector).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(composer_input_selector).filter(visible: true))
       end
 
       def has_composer_input?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(composer_input_selector).filter(visible: true),
         )
       end
 
       def has_composer_preview?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .d-editor-preview-wrapper").filter(visible: true),
         )
       end
 
       def has_no_composer_preview?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{@composer_id} .d-editor-preview-wrapper").filter(visible: true),
         )
       end
 
       def has_composer_preview_toggle?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .toggle-preview").filter(visible: true),
         )
       end
 
       def has_no_composer_preview_toggle?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{@composer_id} .toggle-preview").filter(visible: true),
         )
       end
 
       def has_form_template?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".form-template-form__wrapper").filter(visible: true),
         )
       end
 
       def has_form_template_field?(field)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".form-template-field[data-field-type='#{field}']").filter(
             visible: true,
           ),
@@ -516,7 +497,7 @@ module PageObjects
       end
 
       def has_form_template_field_required_indicator?(field)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
           ).filter(visible: true),
@@ -526,49 +507,47 @@ module PageObjects
       FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
 
       def has_no_form_template_chooser?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(FORM_TEMPLATE_CHOOSER_SELECTOR).filter(visible: true),
         )
       end
 
       def has_form_template_chooser?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(FORM_TEMPLATE_CHOOSER_SELECTOR).filter(visible: true),
         )
       end
 
       def has_form_template_field_error?(error)
-        PlaywrightMatchers.contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
           browser_root.locator(".form-template-field__error"),
         )
       end
 
       def has_no_form_template_field_error?(error)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(error)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(".form-template-field__error"))
+        contain_text([browser_text_pattern(error)], useInnerText: true).does_not_match?(
+          browser_root.locator(".form-template-field__error"),
+        )
       end
 
       def has_form_template_field_label?(label)
-        PlaywrightMatchers.contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
           browser_root.locator(".form-template-field__label").filter(visible: true),
         )
       end
 
       def has_form_template_field_description?(description)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(description)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".form-template-field__description").filter(visible: true))
+        contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
+          browser_root.locator(".form-template-field__description").filter(visible: true),
+        )
       end
 
       def has_post_error?(error)
-        PlaywrightMatchers.contain_text([error]).matches?(browser_page.locator(".popup-tip"))
+        contain_text([error]).matches?(browser_page.locator(".popup-tip"))
       end
 
       def has_no_post_error?(error)
-        PlaywrightMatchers.contain_text([error]).does_not_match?(browser_page.locator(".popup-tip"))
+        contain_text([error]).does_not_match?(browser_page.locator(".popup-tip"))
       end
 
       def composer_input
@@ -624,17 +603,15 @@ module PageObjects
       end
 
       def has_nested_list_item?(text)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(browser_root.locator("#{RICH_EDITOR} li > ul > li").filter(visible: true))
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator("#{RICH_EDITOR} li > ul > li").filter(visible: true),
+        )
       end
 
       def has_top_level_list_item?(text)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(browser_root.locator("#{RICH_EDITOR} > ul > li").filter(visible: true))
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator("#{RICH_EDITOR} > ul > li").filter(visible: true),
+        )
       end
 
       def submit
@@ -650,7 +627,7 @@ module PageObjects
       end
 
       def has_no_in_progress_uploads?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("#{@composer_id}")
             .filter(visible: true)
@@ -663,7 +640,7 @@ module PageObjects
       end
 
       def has_in_progress_uploads?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator("#{@composer_id}")
             .filter(visible: true)
@@ -681,7 +658,7 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator("#{@composer_id}")
             .filter(visible: true)
@@ -691,7 +668,7 @@ module PageObjects
       end
 
       def has_no_rich_editor_active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator("#{@composer_id}")
             .filter(visible: true)
@@ -723,13 +700,13 @@ module PageObjects
       end
 
       def has_toggle_switch?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@composer_id} .composer-toggle-switch").filter(visible: true),
         )
       end
 
       def has_no_toggle_switch?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{@composer_id} .composer-toggle-switch").filter(visible: true),
         )
       end

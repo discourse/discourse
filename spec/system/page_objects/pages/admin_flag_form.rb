@@ -23,12 +23,12 @@ module PageObjects
 
       def click_save
         form.submit
-        expect(
-          browser_root.locator(".admin-config.flags.new").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".admin-config.flags.new").filter(visible: true)).to have_count(
+          0,
+        )
         expect(
           browser_root.locator(".admin-flag-item__name").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       def form

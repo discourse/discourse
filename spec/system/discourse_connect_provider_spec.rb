@@ -27,13 +27,11 @@ describe "Discourse Connect Provider" do
     browser_page
       .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/login")
+    expect(browser_page).to have_url("/login")
 
     login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-    )
+    expect(browser_page).to have_url(/#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/)
   end
 
   it "lets a new account pick a username before returning to the return_sso_url" do
@@ -46,10 +44,8 @@ describe "Discourse Connect Provider" do
     browser_page
       .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/login")
-    expect(
-      browser_root.locator("#login-account-name").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_page).to have_url("/login")
+    expect(browser_root.locator("#login-account-name").filter(visible: true)).not_to have_count(0)
 
     browser_root.locator("#one-time-code-link").filter(visible: true).click
     browser_root
@@ -68,16 +64,14 @@ describe "Discourse Connect Provider" do
     # exists, so the generated placeholder username can be replaced.
     expect(
       browser_root.locator(".code-login-form__signup-details-step").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     browser_root.locator("#code-login-username").filter(visible: true).fill("janedoe")
     expect(
       browser_root.locator(".code-login-form__continue-to-site[disabled]").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     browser_root.locator(".code-login-form__continue-to-site").filter(visible: true).click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-    )
+    expect(browser_page).to have_url(/#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/)
     expect(User.find_by_email(new_email).username).to eq("janedoe")
   end
 
@@ -95,20 +89,16 @@ describe "Discourse Connect Provider" do
       browser_page
         .goto("/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url("/login")
+      expect(browser_page).to have_url("/login")
 
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(
-        browser_root.locator(".second-factor").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
-      )
+      expect(browser_page).to have_url(/#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/)
     end
   end
 end

@@ -12,9 +12,7 @@ RSpec.describe "Viewing group members" do
         .goto("/g/#{group.name}/members")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".group-member").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(3)
+      expect(browser_root.locator(".group-member").filter(visible: true)).to have_count(3)
     end
   end
 
@@ -28,9 +26,6 @@ RSpec.describe "Viewing group members" do
 
     expect(
       browser_root.locator(".directory-table__cell.group-owner").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern(I18n.t("js.groups.members.owner"))],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern(I18n.t("js.groups.members.owner"))], useInnerText: true)
   end
 end

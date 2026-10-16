@@ -18,16 +18,15 @@ module PageObjects
       end
 
       def has_emoji_listed?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(emoji_table_selector).filter(visible: true),
         )
       end
 
       def has_no_emoji_listed?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(emoji_table_selector).filter(visible: true))
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(emoji_table_selector).filter(visible: true),
+        )
       end
 
       def delete_emoji(name)
@@ -46,7 +45,7 @@ module PageObjects
       end
 
       def has_import_preview?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-emoji-import__summary").filter(visible: true),
         )
       end

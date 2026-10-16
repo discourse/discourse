@@ -50,19 +50,15 @@ module PageObjects
       # ── Root view assertions ──────────────────────────────────────
 
       def has_nested_view?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".nested-view").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".nested-view").filter(visible: true))
       end
 
       def has_no_nested_view?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".nested-view").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".nested-view").filter(visible: true))
       end
 
       def has_root_post?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-view__roots [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -70,7 +66,7 @@ module PageObjects
       end
 
       def has_no_root_post?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".nested-view__roots [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -80,44 +76,42 @@ module PageObjects
       # ── Context view assertions ───────────────────────────────────
 
       def has_context_view?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-context-view").filter(visible: true),
         )
       end
 
       def has_no_context_view?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".nested-context-view").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".nested-context-view").filter(visible: true))
       end
 
       def has_context_banner?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.nested_replies.context.banner"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".nested-context-view__banner").filter(visible: true))
       end
 
       def has_no_context_banner?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-context-view__banner").filter(visible: true),
         )
       end
 
       def has_view_full_thread_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-context-view__full-thread").filter(visible: true),
         )
       end
 
       def has_view_parent_context_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-context-view__parent-context").filter(visible: true),
         )
       end
 
       def has_no_view_parent_context_link?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-context-view__parent-context").filter(visible: true),
         )
       end
@@ -125,7 +119,7 @@ module PageObjects
       # ── Post assertions ───────────────────────────────────────────
 
       def has_post_at_depth?(post, depth:)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-post.--depth-#{depth} [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -133,26 +127,26 @@ module PageObjects
       end
 
       def has_post?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
         )
       end
 
       def has_post_text?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(".nested-post__article").filter(visible: true),
         )
       end
 
       def has_no_post?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
         )
       end
 
       def has_continue_thread_for?(post)
         within_browser(post_container(post)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".nested-post__continue-link").filter(visible: true),
           )
         end
@@ -160,14 +154,14 @@ module PageObjects
 
       def has_no_continue_thread_for?(post)
         within_browser(post_container(post)) do
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".nested-post__continue-link").filter(visible: true),
           )
         end
       end
 
       def has_highlighted_post?(post)
-        PlaywrightMatchers.have_count(0, timeout: 5 * 1000).does_not_match?(
+        have_count(0, timeout: 5 * 1000).does_not_match?(
           browser_root.locator(
             ".nested-post--highlighted [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -175,7 +169,7 @@ module PageObjects
       end
 
       def has_reply_button_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .post-action-menu__reply",
           ).filter(visible: true),
@@ -183,7 +177,7 @@ module PageObjects
       end
 
       def has_no_reply_button_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .post-action-menu__reply",
           ).filter(visible: true),
@@ -191,7 +185,7 @@ module PageObjects
       end
 
       def has_like_button_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .post-action-menu__like",
           ).filter(visible: true),
@@ -206,7 +200,7 @@ module PageObjects
       end
 
       def has_replies_toggle_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .nested-post__expand-replies",
           ).filter(visible: true),
@@ -214,7 +208,7 @@ module PageObjects
       end
 
       def has_no_replies_toggle_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .nested-post__expand-replies",
           ).filter(visible: true),
@@ -222,7 +216,7 @@ module PageObjects
       end
 
       def has_load_more_children_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             wrapper_selector(
               post,
@@ -233,7 +227,7 @@ module PageObjects
       end
 
       def has_no_show_replies_button_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] .post-action-menu__show-replies",
           ).filter(visible: true),
@@ -241,22 +235,19 @@ module PageObjects
       end
 
       def has_mobile_focus?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__mobile-focus").filter(visible: true),
         )
       end
 
       def has_no_mobile_focus?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__mobile-focus").filter(visible: true),
         )
       end
 
       def has_mobile_ancestor?(post)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(post.user.username)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(post.user.username)], useInnerText: true).matches?(
           browser_root.locator("[data-test-nested-mobile-ancestor='#{post.post_number}']").filter(
             visible: true,
           ),
@@ -264,7 +255,7 @@ module PageObjects
       end
 
       def has_no_mobile_ancestor?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-test-nested-mobile-ancestor='#{post.post_number}']").filter(
             visible: true,
           ),
@@ -272,7 +263,7 @@ module PageObjects
       end
 
       def has_no_mobile_ancestor_user_card_trigger?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]",
           ).filter(visible: true),
@@ -299,31 +290,31 @@ module PageObjects
       end
 
       def has_depth_line_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(depth_line_selector(post)).filter(visible: true),
         )
       end
 
       def has_no_depth_line_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(depth_line_selector(post)).filter(visible: true),
         )
       end
 
       def has_leaf_depth_line_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(leaf_depth_line_selector(post)).filter(visible: true),
         )
       end
 
       def has_no_leaf_depth_line_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(leaf_depth_line_selector(post)).filter(visible: true),
         )
       end
 
       def has_children_visible_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post-children"),
           ).filter(visible: true),
@@ -331,7 +322,7 @@ module PageObjects
       end
 
       def has_no_children_visible_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post-children"),
           ).filter(visible: true),
@@ -339,7 +330,7 @@ module PageObjects
       end
 
       def has_collapsed_bar_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"),
           ).filter(visible: true),
@@ -347,7 +338,7 @@ module PageObjects
       end
 
       def has_no_collapsed_bar_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"),
           ).filter(visible: true),
@@ -355,7 +346,7 @@ module PageObjects
       end
 
       def has_post_content_visible_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post__article"),
           ).filter(visible: true),
@@ -363,7 +354,7 @@ module PageObjects
       end
 
       def has_no_post_content_visible_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             wrapper_selector(post, "> .nested-post__main > .nested-post__article"),
           ).filter(visible: true),
@@ -371,14 +362,14 @@ module PageObjects
       end
 
       def has_sort_active?(sort)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.nested_replies.sort.#{sort}"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".nested-sort-selector__trigger").filter(visible: true))
       end
 
       def has_root_post_count?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".nested-view__roots > .nested-post").filter(visible: true),
         )
       end
@@ -474,34 +465,29 @@ module PageObjects
       end
 
       def has_op_post?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__op").filter(visible: true),
         )
       end
 
       def has_no_reply_button_on_op?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__op .post-action-menu__reply").filter(visible: true),
         )
       end
 
       def has_topic_title_editor?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".edit-topic-title").filter(visible: true),
         )
       end
 
       def has_no_topic_title_editor?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".edit-topic-title").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".edit-topic-title").filter(visible: true))
       end
 
       def has_topic_title_in_site_header?(topic)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(topic.title)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(topic.title)], useInnerText: true).matches?(
           browser_root.locator(
             "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
           ).filter(visible: true),
@@ -509,10 +495,7 @@ module PageObjects
       end
 
       def has_no_topic_title_in_site_header?(topic)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(topic.title)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(topic.title)], useInnerText: true).does_not_match?(
           browser_root.locator(
             "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
           ).filter(visible: true),
@@ -520,7 +503,7 @@ module PageObjects
       end
 
       def has_topic_map?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-view__op > .nested-view__topic-map .topic-map__contents",
           ).filter(visible: true),
@@ -528,7 +511,7 @@ module PageObjects
       end
 
       def has_no_top_replies_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__op > .nested-view__topic-map .top-replies").filter(
             visible: true,
           ),
@@ -536,7 +519,7 @@ module PageObjects
       end
 
       def has_topic_actions_above_controls?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__topic-actions + .nested-view__controls").filter(
             visible: true,
           ),
@@ -544,19 +527,19 @@ module PageObjects
       end
 
       def has_activity_log_link?
-        PlaywrightMatchers.have_count(0, timeout: 10 * 1000).does_not_match?(
+        have_count(0, timeout: 10 * 1000).does_not_match?(
           browser_root.locator(".nested-view__activity-link").filter(visible: true),
         )
       end
 
       def has_no_activity_log_link?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__activity-link").filter(visible: true),
         )
       end
 
       def has_share_topic_action?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-view__topic-actions #topic-footer-button-share-and-invite",
           ).filter(visible: true),
@@ -564,7 +547,7 @@ module PageObjects
       end
 
       def has_bookmark_topic_action?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__topic-actions .bookmark-menu__trigger").filter(
             visible: true,
           ),
@@ -572,7 +555,7 @@ module PageObjects
       end
 
       def has_flag_topic_action?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__topic-actions #topic-footer-button-flag").filter(
             visible: true,
           ),
@@ -580,13 +563,13 @@ module PageObjects
       end
 
       def has_no_topic_action_reply_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__topic-actions .create").filter(visible: true),
         )
       end
 
       def has_floating_reply_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply",
           ).filter(visible: true),
@@ -594,7 +577,7 @@ module PageObjects
       end
 
       def has_no_floating_reply_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply",
           ).filter(visible: true),
@@ -602,7 +585,7 @@ module PageObjects
       end
 
       def has_floating_actions?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__floating-actions:not(.--hidden)").filter(
             visible: true,
           ),
@@ -610,7 +593,7 @@ module PageObjects
       end
 
       def has_no_floating_actions?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__floating-actions:not(.--hidden)").filter(
             visible: true,
           ),
@@ -618,7 +601,7 @@ module PageObjects
       end
 
       def has_notification_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__floating-actions .topic-notifications-button").filter(
             visible: true,
           ),
@@ -626,7 +609,7 @@ module PageObjects
       end
 
       def has_no_notification_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__floating-actions .topic-notifications-button").filter(
             visible: true,
           ),
@@ -634,7 +617,7 @@ module PageObjects
       end
 
       def has_admin_menu_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__floating-actions .toggle-admin-menu").filter(
             visible: true,
           ),
@@ -642,7 +625,7 @@ module PageObjects
       end
 
       def has_no_admin_menu_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__floating-actions .toggle-admin-menu").filter(
             visible: true,
           ),
@@ -680,7 +663,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
         ) do
-          if PlaywrightMatchers.have_count(0, timeout: 2 * 1000).does_not_match?(
+          if have_count(0, timeout: 2 * 1000).does_not_match?(
                browser_root.locator(".show-more-actions").filter(visible: true),
              )
             browser_root.locator(".show-more-actions").filter(visible: true).click
@@ -937,7 +920,7 @@ module PageObjects
       # ── Deletion/recovery assertions ─────────────────────────────
 
       def has_deleted_placeholder_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted",
           ).filter(visible: true),
@@ -945,7 +928,7 @@ module PageObjects
       end
 
       def has_no_deleted_placeholder_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted",
           ).filter(visible: true),
@@ -953,7 +936,7 @@ module PageObjects
       end
 
       def has_deleted_post_class_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-post--deleted [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -961,7 +944,7 @@ module PageObjects
       end
 
       def has_toggle_deleted_content_button_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] button.toggle-deleted-content",
           ).filter(visible: true),
@@ -969,7 +952,7 @@ module PageObjects
       end
 
       def has_no_toggle_deleted_content_button_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'] button.toggle-deleted-content",
           ).filter(visible: true),
@@ -985,7 +968,7 @@ module PageObjects
       end
 
       def has_deleted_content_visible_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(wrapper_selector(post, ".nested-post__placeholder-reveal")).filter(
             visible: true,
           ),
@@ -993,7 +976,7 @@ module PageObjects
       end
 
       def has_no_deleted_content_visible_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(wrapper_selector(post, ".nested-post__placeholder-reveal")).filter(
             visible: true,
           ),
@@ -1003,7 +986,7 @@ module PageObjects
       # ── Ignored-user placeholder assertions ──────────────────────
 
       def has_ignored_placeholder_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored",
           ).filter(visible: true),
@@ -1011,7 +994,7 @@ module PageObjects
       end
 
       def has_no_ignored_placeholder_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored",
           ).filter(visible: true),
@@ -1034,7 +1017,7 @@ module PageObjects
         within_browser(
           browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
         ) do
-          if PlaywrightMatchers.have_count(0, timeout: 2 * 1000).does_not_match?(
+          if have_count(0, timeout: 2 * 1000).does_not_match?(
                browser_root.locator(".show-more-actions").filter(visible: true),
              )
             browser_root.locator(".show-more-actions").filter(visible: true).click
@@ -1046,7 +1029,7 @@ module PageObjects
 
       def click_post_recover_button(post)
         selector = "[data-post-number='#{post.post_number}']"
-        if PlaywrightMatchers.have_count(0, timeout: 5 * 1000).does_not_match?(
+        if have_count(0, timeout: 5 * 1000).does_not_match?(
              browser_root.locator("#{selector} button.recover").filter(visible: true),
            )
           browser_root.locator("#{selector} button.recover").filter(visible: true).click
@@ -1062,7 +1045,7 @@ module PageObjects
       # ── Pinned post assertions ─────────────────────────────────
 
       def has_pinned_post?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-post--pinned [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -1070,7 +1053,7 @@ module PageObjects
       end
 
       def has_no_pinned_post?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".nested-post--pinned [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -1080,7 +1063,7 @@ module PageObjects
       # ── Load more ───────────────────────────────────────────────
 
       def has_load_more_roots_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__load-more").filter(visible: true),
         )
       end
@@ -1093,19 +1076,19 @@ module PageObjects
       # ── Cloaking ─────────────────────────────────────────────────
 
       def has_cloaked_root?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".nested-view__roots > .nested-post--cloaked").filter(visible: true),
         )
       end
 
       def has_no_cloaked_root?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".nested-view__roots > .nested-post--cloaked").filter(visible: true),
         )
       end
 
       def has_cloaked_root_for?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".nested-post--cloaked [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
@@ -1113,12 +1096,12 @@ module PageObjects
       end
 
       def has_uncloaked_root_for?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".nested-post--cloaked [data-post-number='#{post.post_number}']",
           ).filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
           )
       end
@@ -1126,19 +1109,17 @@ module PageObjects
       # ── Suggested topics ──────────────────────────────────────────
 
       def has_suggested_topics?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#suggested-topics").filter(visible: true),
         )
       end
 
       def has_no_suggested_topics?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#suggested-topics").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#suggested-topics").filter(visible: true))
       end
 
       def has_suggested_topic?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']",
           ).filter(visible: true),

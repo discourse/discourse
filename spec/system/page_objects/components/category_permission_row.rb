@@ -9,12 +9,12 @@ module PageObjects
 
       def has_group_permission?(group_name, permissions = nil)
         if !permissions
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(group_permission_row_selector(group_name)).filter(visible: true),
           )
         else
           permissions.each do |permission|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(
                 "#{group_permission_row_selector(group_name)} .#{permission}-granted",
               ).filter(visible: true),
@@ -24,7 +24,7 @@ module PageObjects
       end
 
       def has_no_group_permission?(group_name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(group_permission_row_selector(group_name)).filter(visible: true),
         )
       end

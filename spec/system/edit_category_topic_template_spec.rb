@@ -16,7 +16,7 @@ describe "Edit category topic template" do
       .locator("#category-topic-title-placeholder")
       .filter(visible: true)
       .fill("Describe your issue briefly")
-    expect(changes_banner).to be_visible
+    expect(changes_banner).to RSpecPredicates.be_visible
     changes_banner.click_save
 
     expect(category.reload.topic_title_placeholder).to eq("Describe your issue briefly")

@@ -27,9 +27,9 @@ describe "Permanently delete" do
       confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
       confirm_modal.click_danger
 
-      expect(
-        browser_root.locator("#post_#{post.post_number}").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#post_#{post.post_number}").filter(visible: true)).to have_count(
+        0,
+      )
       expect(Post.unscoped.exists?(post.id)).to eq(false)
     end
 
@@ -76,7 +76,7 @@ describe "Permanently delete" do
       confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
       confirm_modal.click_danger
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
       expect(Topic.unscoped.exists?(topic.id)).to eq(false)
     end
   end
@@ -120,7 +120,7 @@ describe "Permanently delete" do
         browser_root.locator("#post_#{post_with_revisions.post_number} .post-info.edits").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(PostRevision.exists?(revision_id)).to eq(false)
     end
   end

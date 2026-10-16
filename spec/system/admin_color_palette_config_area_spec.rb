@@ -136,7 +136,7 @@ describe "Admin Color Palette Config Area Page" do
 
     config_area.duplicate_button.click
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/colors/#{max_id + 1}")
+    expect(browser_page).to have_url("/admin/config/colors/#{max_id + 1}")
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(config_area.name_heading.inner_text.strip).to eq(
       I18n.t("admin_js.admin.config_areas.color_palettes.copy_of", name: color_scheme.name),
@@ -154,7 +154,7 @@ describe "Admin Color Palette Config Area Page" do
 
     dialog.click_danger
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/colors")
+    expect(browser_page).to have_url("/admin/config/colors")
 
     expect(ColorScheme.exists?(color_scheme.id)).to eq(false)
   end
@@ -174,7 +174,7 @@ describe "Admin Color Palette Config Area Page" do
 
     expect(
       browser_root.locator("link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]"),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     expect(
       get_rgb_color(browser_root.locator("html").filter(visible: true), "backgroundColor"),
@@ -192,7 +192,7 @@ describe "Admin Color Palette Config Area Page" do
 
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
-    expect(browser_root.locator("link[href=\"#{href}\"]")).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("link[href=\"#{href}\"]")).to have_count(0)
   end
 
   it "can be copied to clipboard" do
@@ -214,7 +214,7 @@ describe "Admin Color Palette Config Area Page" do
     Theme.find_default.update!(color_scheme: color_scheme)
 
     config_area.visit(color_scheme.id)
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(
         I18n.t(
           "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
@@ -223,7 +223,7 @@ describe "Admin Color Palette Config Area Page" do
       ),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(
         I18n.t(
           "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",

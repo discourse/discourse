@@ -15,12 +15,12 @@ RSpec.describe "Keyboard shortcut display" do
 
     expect(
       browser_root.locator(".keyboard-shortcuts-modal .d-shortcut__key").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator(
         ".keyboard-shortcuts-modal .shortcut-key kbd:not(.d-shortcut, .d-shortcut__key)",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     screenshot_marker(label: "shortcut-help-modal")
   end
@@ -57,7 +57,7 @@ RSpec.describe "Keyboard shortcut display" do
       )
     row.hover
 
-    expect(row.locator(".d-shortcut__key")).not_to PlaywrightMatchers.have_count(0)
+    expect(row.locator(".d-shortcut__key")).not_to have_count(0)
     expect(row.get_attribute("aria-keyshortcuts")).to match(/(Command|Ctrl)\+/)
 
     screenshot_marker(label: "shortcut-composer-menu", only: :desktop)
@@ -89,7 +89,7 @@ RSpec.describe "Keyboard shortcut display" do
       browser_root.locator(".sidebar-search__shortcut-hint.d-shortcut .d-shortcut__key").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.have_count(2)
+    ).to have_count(2)
     expect(
       browser_root
         .locator(".sidebar-search__input")

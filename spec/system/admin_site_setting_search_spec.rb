@@ -24,7 +24,7 @@ describe "Admin Site Setting Search" do
     settings_page.toggle_only_show_overridden
     expect(
       browser_root.locator(".admin-detail .row.setting.overridden").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(overridden_setting_count)
+    ).to have_count(overridden_setting_count)
     settings_page.toggle_only_show_overridden
     expect(settings_page).to have_greater_than_n_results(overridden_setting_count)
   end

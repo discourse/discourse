@@ -29,7 +29,7 @@ describe "Reviewables" do
 
         open_agree_and_edit
 
-        expect(composer).to have_value(post.raw)
+        expect(composer).to RSpecPredicates.have_value(post.raw)
         expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
 
         composer.fill_title("A title change that should be discarded")
@@ -54,7 +54,7 @@ describe "Reviewables" do
 
         open_agree_and_edit
 
-        expect(composer).to have_value(post.raw)
+        expect(composer).to RSpecPredicates.have_value(post.raw)
 
         composer.fill_title("A topic title corrected by a moderator")
         composer.fill_content("This post has been edited by a moderator.")
@@ -80,9 +80,7 @@ describe "Reviewables" do
 
         select_kit.select_row_by_value("post-agree_and_suspend")
 
-        expect(
-          review_page.locator("#discourse-modal-title").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(review_page.locator("#discourse-modal-title").filter(visible: true)).to contain_text(
           [browser_text_pattern(I18n.t("js.flagging.take_action_options.suspend.title"))],
           useInnerText: true,
         )
@@ -259,10 +257,7 @@ describe "Reviewables" do
         )
         expect(
           browser_root.locator(".dialog-footer .btn-danger").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern(I18n.t("js.delete"))],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern(I18n.t("js.delete"))], useInnerText: true)
         dialog.click_danger
 
         expect(review_page).to have_no_error_dialog_visible
@@ -286,7 +281,7 @@ describe "Reviewables" do
         try_until_success do
           expect(
             ReviewableClaimedTopic.where(topic_id: queued_post_reviewable.topic_id),
-          ).to be_empty
+          ).to RSpecPredicates.be_empty
         end
       end
 
@@ -425,9 +420,7 @@ describe "Reviewables" do
       SiteSetting.moderator_guide_topic = topic.id
 
       review_page.visit_reviewable(reviewable)
-      expect(
-        review_page.locator("a.review-resources__link").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(review_page.locator("a.review-resources__link").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.review.help.community_moderation_guide"))],
         useInnerText: true,
       )
@@ -439,7 +432,7 @@ describe "Reviewables" do
       review_page.visit_reviewable(reviewable)
       expect(
         review_page.locator("a.review-resources__link").filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
+      ).not_to contain_text(
         [browser_text_pattern(I18n.t("js.review.help.community_moderation_guide"))],
         useInnerText: true,
       )
@@ -469,7 +462,7 @@ describe "Reviewables" do
       expect(title_html).to include("&amp;")
       expect(
         browser_root.locator(".title-text img, .title-text script, .title-text b"),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 

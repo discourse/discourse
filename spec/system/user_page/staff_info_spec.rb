@@ -26,13 +26,10 @@ describe "Viewing user staff info as an admin" do
       user_page.visit(user)
       silencings_counters =
         browser_root.locator(".staff-counters .silencings").filter(visible: true)
-      expect(silencings_counters).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("1"),
-        useInnerText: true,
-      )
+      expect(silencings_counters).to contain_text(browser_text_pattern("1"), useInnerText: true)
 
       user_page.click_staff_info_silencings_link
-      expect(browser_page).to PlaywrightMatchers.have_url(
+      expect(browser_page).to have_url(
         %r{^https?://[^/]+#{Regexp.escape("/admin/logs/staff_action_logs")}(?:\?.*)?$},
       )
 
@@ -60,9 +57,9 @@ describe "Viewing user staff info as an admin" do
 
       user_page.click_staff_info_flags_given_link
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/review})
-      expect(browser_page).to PlaywrightMatchers.have_url(/flagged_by=#{user.username}/)
-      expect(browser_page).to PlaywrightMatchers.have_url(/status=approved/)
+      expect(browser_page).to have_url(%r{/review})
+      expect(browser_page).to have_url(/flagged_by=#{user.username}/)
+      expect(browser_page).to have_url(/status=approved/)
     end
   end
 

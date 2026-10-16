@@ -15,16 +15,14 @@ describe "Admin User Badges Page" do
     badge_row = user_badges_page.visit_page(user).find_badge_row_by_granter(granter)
     expect(
       badge_row.locator("[data-badge-name='#{badge.name}']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     badge_row
       .locator("[id=#{granter.username.to_s.to_json}], [name=#{granter.username.to_s.to_json}]")
       .or(badge_row.get_by_role("link", name: granter.username))
       .filter(visible: true)
       .click
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/admin/users/#{granter.id}/#{granter.username}",
-    )
+    expect(browser_page).to have_url("/admin/users/#{granter.id}/#{granter.username}")
   end
 
   it "shows badges with SQL queries in the grant dropdown" do
@@ -44,6 +42,6 @@ describe "Admin User Badges Page" do
       browser_root.locator(".select-kit-row[data-name='#{badge_with_query.name}']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 end

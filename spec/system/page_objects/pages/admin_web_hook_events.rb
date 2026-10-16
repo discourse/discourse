@@ -35,16 +35,15 @@ module PageObjects
       end
 
       def has_web_hook_event?(id)
-        PlaywrightMatchers.contain_text([browser_text_pattern(id)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(id)], useInnerText: true).matches?(
           browser_root.locator("li .event-id").filter(visible: true),
         )
       end
 
       def has_no_web_hook_event?(id)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(id)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator("li .event-id").filter(visible: true))
+        contain_text([browser_text_pattern(id)], useInnerText: true).does_not_match?(
+          browser_root.locator("li .event-id").filter(visible: true),
+        )
       end
     end
   end

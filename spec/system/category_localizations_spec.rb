@@ -29,9 +29,7 @@ describe "Category Localizations" do
 
   def get_category_dropdown(nth)
     selector = ".category-breadcrumb li:nth-child(#{nth}) .category-drop"
-    expect(
-      browser_root.locator(selector).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(selector).filter(visible: true)).not_to have_count(0)
     PageObjects::Components::SelectKit.new(selector)
   end
 
@@ -79,7 +77,7 @@ describe "Category Localizations" do
         category_without_locale = Fabricate(:category, locale: nil)
         category_page.visit_edit_localizations(category_without_locale)
 
-        expect(form.field("locale")).to have_value(
+        expect(form.field("locale")).to RSpecPredicates.have_value(
           PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
         )
       end
@@ -87,7 +85,7 @@ describe "Category Localizations" do
       it "loads the saved locale correctly" do
         category_page.visit_edit_localizations(category)
 
-        expect(form.field("locale")).to have_value("en")
+        expect(form.field("locale")).to RSpecPredicates.have_value("en")
       end
 
       it "allows setting and persisting the category locale" do
@@ -98,12 +96,12 @@ describe "Category Localizations" do
         category_page.save_settings
 
         browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(form.field("locale")).to have_value("ja")
+        expect(form.field("locale")).to RSpecPredicates.have_value("ja")
 
         form.field("locale").select_none
         category_page.save_settings
         browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(form.field("locale")).to have_value(
+        expect(form.field("locale")).to RSpecPredicates.have_value(
           PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
         )
       end
@@ -176,7 +174,7 @@ describe "Category Localizations" do
             browser_root.locator(
               ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
             ).filter(visible: true),
-          ).to PlaywrightMatchers.have_count(2)
+          ).to have_count(2)
           expect(
             browser_root
               .locator(".form-kit__collection .form-kit__control-select option.--selected")
@@ -198,7 +196,7 @@ describe "Category Localizations" do
             browser_root.locator(
               ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
             ).filter(visible: true),
-          ).to PlaywrightMatchers.have_count(1)
+          ).to have_count(1)
         end
       end
     end
@@ -241,19 +239,19 @@ describe "Category Localizations" do
 
           category_dropdown = get_category_dropdown(1)
           expect(category_dropdown).to have_selected_name("Solicitudes")
-          expect(category_page.category_box(subcat)).to PlaywrightMatchers.contain_text(
+          expect(category_page.category_box(subcat)).to contain_text(
             browser_text_pattern("Subcategoría"),
             useInnerText: true,
           )
-          expect(category_page.category_box(subcat)).to PlaywrightMatchers.contain_text(
+          expect(category_page.category_box(subcat)).to contain_text(
             browser_text_pattern("Una subcategoría de un padre"),
             useInnerText: true,
           )
-          expect(topic_list.topic(cat_topic)).to PlaywrightMatchers.contain_text(
+          expect(topic_list.topic(cat_topic)).to contain_text(
             browser_text_pattern("Solicitudes"),
             useInnerText: true,
           )
-          expect(topic_list.topic(subcat_topic)).to PlaywrightMatchers.contain_text(
+          expect(topic_list.topic(subcat_topic)).to contain_text(
             browser_text_pattern("Subcategoría"),
             useInnerText: true,
           )
@@ -271,7 +269,7 @@ describe "Category Localizations" do
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
 
-          expect(category_list.category_box(category)).to PlaywrightMatchers.contain_text(
+          expect(category_list.category_box(category)).to contain_text(
             browser_text_pattern("Solicitudes"),
             useInnerText: true,
           )
@@ -281,14 +279,14 @@ describe "Category Localizations" do
 
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(sidebar).to have_section_link("Solicitudes")
-          expect(category_page.category_box(subcat)).to PlaywrightMatchers.contain_text(
+          expect(category_page.category_box(subcat)).to contain_text(
             browser_text_pattern("Subcategoría"),
             useInnerText: true,
           )
 
           sidebar.click_topics_button
 
-          expect(topic_list.topic(cat_topic)).to PlaywrightMatchers.contain_text(
+          expect(topic_list.topic(cat_topic)).to contain_text(
             browser_text_pattern("Solicitudes"),
             useInnerText: true,
           )
@@ -301,7 +299,7 @@ describe "Category Localizations" do
 
           category_dropdown = get_category_dropdown(1)
 
-          expect(category_dropdown.component).to PlaywrightMatchers.contain_text(
+          expect(category_dropdown.component).to contain_text(
             I18n.t("js.categories.categories_label", locale: "es"),
           )
           category_dropdown.component.click
@@ -310,10 +308,7 @@ describe "Category Localizations" do
             browser_root.locator(".select-kit-collection div[data-name='Solicitudes']").filter(
               visible: true,
             ),
-          ).to PlaywrightMatchers.contain_text(
-            browser_text_pattern("Solicitudes"),
-            useInnerText: true,
-          )
+          ).to contain_text(browser_text_pattern("Solicitudes"), useInnerText: true)
         end
       end
 

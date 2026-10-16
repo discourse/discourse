@@ -24,7 +24,7 @@ module PageObjects
 
       def has_success_flash_visible?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".alert-success").filter(visible: true),
           )
         end

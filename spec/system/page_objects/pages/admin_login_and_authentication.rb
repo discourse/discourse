@@ -28,13 +28,11 @@ module PageObjects
       end
 
       def expect_page_to_be_active(tab)
-        expect(browser_page).to PlaywrightMatchers.have_url(
-          "/admin/config/login-and-authentication/#{tab}",
-        )
+        expect(browser_page).to have_url("/admin/config/login-and-authentication/#{tab}")
       end
 
       def has_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".row.setting[data-setting=\"#{setting_name}\"]").filter(
             visible: true,
           ),

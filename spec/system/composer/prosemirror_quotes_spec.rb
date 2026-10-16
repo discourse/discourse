@@ -12,16 +12,17 @@ describe "Composer - ProseMirror - Quotes" do
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value(markdown + "\n\nThis is a test")
+    expect(composer).to RSpecPredicates.have_value(markdown + "\n\nThis is a test")
   end
 
   it "lifts the first paragraph out of the quote with Backspace" do
     open_composer
 
     composer.type_content("[quote]Text")
-    expect(
-      rich.locator("aside.quote blockquote p").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Text")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote p").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Text")],
+      useInnerText: true,
+    )
 
     browser_page.keyboard.press((RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home"))
     wait_for_timeout # wait for the caret move
@@ -34,8 +35,8 @@ describe "Composer - ProseMirror - Quotes" do
         end
         .locator("aside.quote")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich.locator("p").filter(visible: true)).to PlaywrightMatchers.contain_text(
+    ).to have_count(0)
+    expect(rich.locator("p").filter(visible: true)).to contain_text(
       [browser_text_pattern("Text")],
       useInnerText: true,
     )
@@ -49,12 +50,14 @@ describe "Composer - ProseMirror - Quotes" do
     browser_page.keyboard.press("Enter")
     composer.type_content("Outside")
 
-    expect(
-      rich.locator("aside.quote blockquote p").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Inside")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote + p").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Outside")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote p").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Inside")],
+      useInnerText: true,
+    )
+    expect(rich.locator("aside.quote + p").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Outside")],
+      useInnerText: true,
+    )
   end
 
   it "converts quotes with mixed content into the correct HTML" do
@@ -72,24 +75,21 @@ describe "Composer - ProseMirror - Quotes" do
       [/quote]
       QUOTE
 
-    expect(
-      rich.locator("aside.quote blockquote p").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("aside.quote blockquote p").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is a quote with a link: ")],
       useInnerText: true,
     )
     expect(
       rich.locator("aside.quote blockquote p a[href='https://example.com']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("https://example.com")],
+    ).to contain_text([browser_text_pattern("https://example.com")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 1")],
       useInnerText: true,
     )
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 1")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 2")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 2")],
+      useInnerText: true,
+    )
   end
 
   it "converts quotes with only a list into the correct HTML" do
@@ -103,12 +103,14 @@ describe "Composer - ProseMirror - Quotes" do
       [/quote]
       QUOTE
 
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 1")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 2")], useInnerText: true)
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 1")],
+      useInnerText: true,
+    )
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 2")],
+      useInnerText: true,
+    )
   end
 
   it "converts quotes that start with a list into the correct HTML" do
@@ -128,21 +130,19 @@ describe "Composer - ProseMirror - Quotes" do
       [/quote]
       QUOTE
 
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 1")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote ul li").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Item 2")], useInnerText: true)
-    expect(
-      rich.locator("aside.quote blockquote p").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 1")],
+      useInnerText: true,
+    )
+    expect(rich.locator("aside.quote blockquote ul li").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Item 2")],
+      useInnerText: true,
+    )
+    expect(rich.locator("aside.quote blockquote p").filter(visible: true)).to contain_text(
       [browser_text_pattern("This is some post-list text.")],
       useInnerText: true,
     )
-    expect(
-      rich.locator("aside.quote blockquote pre code").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(rich.locator("aside.quote blockquote pre code").filter(visible: true)).to contain_text(
       [browser_text_pattern('puts "and some code"')],
       useInnerText: true,
     )

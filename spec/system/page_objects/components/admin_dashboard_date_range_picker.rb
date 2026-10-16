@@ -6,9 +6,7 @@ module PageObjects
       SELECTOR = ".d-date-range-picker"
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def select_preset(label)

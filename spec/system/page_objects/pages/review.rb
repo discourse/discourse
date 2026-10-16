@@ -51,20 +51,20 @@ module PageObjects
       end
 
       def has_reviewable_action_dropdown?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(REVIEWABLE_ACTION_DROPDOWN).filter(visible: true),
         )
       end
 
       def has_no_reviewable_action_dropdown?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(REVIEWABLE_ACTION_DROPDOWN).filter(visible: true),
         )
       end
 
       def has_no_reviewable_actions?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}").filter(
               visible: true,
             ),
@@ -73,16 +73,11 @@ module PageObjects
       end
 
       def has_reviewable_items?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
-          browser_root.locator(".review-item").filter(visible: true),
-        )
+        have_count(count).matches?(browser_root.locator(".review-item").filter(visible: true))
       end
 
       def has_reviewable_with_rejection_reason?(reviewable, rejection_reason)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(rejection_reason)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(rejection_reason)], useInnerText: true).matches?(
           reviewable_by_id(reviewable.id).locator(
             ".reviewable-user-details.reject-reason .value",
           ).filter(visible: true),
@@ -91,9 +86,7 @@ module PageObjects
 
       def has_scrub_button?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(".user-scrub").filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator(".user-scrub").filter(visible: true))
         end
       end
 
@@ -103,10 +96,7 @@ module PageObjects
 
       def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(scrubbed_by)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(scrubbed_by)], useInnerText: true).matches?(
             browser_root.locator(".reviewable-user-details.scrubbed-by .value").filter(
               visible: true,
             ),
@@ -116,10 +106,7 @@ module PageObjects
 
       def has_reviewable_with_scrubbed_reason?(reviewable, scrubbed_reason)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(scrubbed_reason)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(scrubbed_reason)], useInnerText: true).matches?(
             browser_root.locator(".reviewable-user-details.scrubbed-reason .value").filter(
               visible: true,
             ),
@@ -129,10 +116,7 @@ module PageObjects
 
       def has_reviewable_with_scrubbed_at?(reviewable, scrubbed_at)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(scrubbed_at)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(scrubbed_at)], useInnerText: true).matches?(
             browser_root.locator(".reviewable-user-details.scrubbed-at .value").filter(
               visible: true,
             ),
@@ -141,7 +125,7 @@ module PageObjects
       end
 
       def has_no_error_dialog_visible?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("dialog-container .dialog-content").filter(visible: true),
         )
       end
@@ -152,19 +136,17 @@ module PageObjects
       end
 
       def has_information_about_unknown_reviewables_visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".unknown-reviewables").filter(visible: true),
         )
       end
 
       def has_no_information_about_unknown_reviewables_visible?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".unknown-reviewables").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".unknown-reviewables").filter(visible: true))
       end
 
       def has_listing_for_unknown_reviewables_plugin?(reviewable_type, plugin_name)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [
             browser_text_pattern(
               I18n.t(
@@ -179,7 +161,7 @@ module PageObjects
       end
 
       def has_listing_for_unknown_reviewables_unknown_source?(reviewable_type)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [
             browser_text_pattern(
               I18n.t(
@@ -202,19 +184,17 @@ module PageObjects
 
       def has_context_question?(reviewable, text)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".review-item__aside-title").filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            browser_root.locator(".review-item__aside-title").filter(visible: true),
+          )
         end
       end
 
       def has_no_context_question?(reviewable, text)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).does_not_match?(browser_root.locator(".review-item__aside-title").filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).does_not_match?(
+            browser_root.locator(".review-item__aside-title").filter(visible: true),
+          )
         end
       end
 
@@ -227,39 +207,34 @@ module PageObjects
       end
 
       def has_history_items?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
-          browser_root.locator(".timeline-event").filter(visible: true),
-        )
+        have_count(count).matches?(browser_root.locator(".timeline-event").filter(visible: true))
       end
 
       def has_claimed_history_item?(user)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".timeline-event__icon .d-icon-user-plus").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("Claimed by"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("Claimed by"), useInnerText: true).matches?(
+            browser_content,
+          )
       end
 
       def has_unclaimed_history_item?(user)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".timeline-event__icon .d-icon-user-xmark").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("Unclaimed by"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("Unclaimed by"), useInnerText: true).matches?(
+            browser_content,
+          )
       end
 
       def has_created_at_history_item?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".timeline-event__icon .d-icon-pen-to-square").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("Post created by"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("Post created by"), useInnerText: true).matches?(
+            browser_content,
+          )
       end
 
       def click_timeline_tab
@@ -272,7 +247,7 @@ module PageObjects
 
       def has_reviewable_with_status?(reviewable, status)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".review-item__status.--#{status}").filter(visible: true),
           )
         end
@@ -280,7 +255,7 @@ module PageObjects
 
       def has_reviewable_with_approved_status?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".review-item__status.--approved").filter(visible: true),
           )
         end
@@ -288,7 +263,7 @@ module PageObjects
 
       def has_reviewable_with_rejected_status?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".review-item__status.--rejected").filter(visible: true),
           )
         end
@@ -296,16 +271,15 @@ module PageObjects
 
       def has_rejected_item_in_timeline?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("Rejected by"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("Rejected by"), useInnerText: true).matches?(
+            browser_content,
+          )
         end
       end
 
       def has_reviewable_with_pending_status?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".review-item__status.--pending").filter(visible: true),
           )
         end
@@ -313,7 +287,7 @@ module PageObjects
 
       def has_reviewable_with_ignored_status?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".review-item__status.--ignored").filter(visible: true),
           )
         end
@@ -321,20 +295,19 @@ module PageObjects
 
       def has_approved_item_in_timeline?(reviewable)
         within_browser(reviewable_by_id(reviewable.id)) do
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("Approved by"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("Approved by"), useInnerText: true).matches?(
+            browser_content,
+          )
         end
       end
 
       def has_reviewables?(reviewables)
         reviewable_ids = reviewables.map(&:id)
-        PlaywrightMatchers.have_count(reviewables.size).matches?(
+        have_count(reviewables.size).matches?(
           browser_root.locator(".review-item").filter(visible: true),
         ) &&
           reviewable_ids.all? do |id|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(".review-item[data-reviewable-id='#{id}']").filter(
                 visible: true,
               ),
@@ -355,33 +328,25 @@ module PageObjects
       end
 
       def has_ip_lookup_info?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".reviewable-ip-lookup").filter(visible: true),
         )
       end
 
       def has_no_ip_lookup_info?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".reviewable-ip-lookup").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".reviewable-ip-lookup").filter(visible: true))
       end
 
       def has_ip_location?(location)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(location),
-          useInnerText: true,
-        ).matches?(browser_content)
+        contain_text(browser_text_pattern(location), useInnerText: true).matches?(browser_content)
       end
 
       def has_ip_hostname?(hostname)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(hostname),
-          useInnerText: true,
-        ).matches?(browser_content)
+        contain_text(browser_text_pattern(hostname), useInnerText: true).matches?(browser_content)
       end
 
       def has_ip_lookup_modal?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".ip-lookup-other-accounts-modal").filter(visible: true),
         )
       end
@@ -390,15 +355,12 @@ module PageObjects
         within_browser(
           browser_root.locator(".ip-lookup-other-accounts-modal").filter(visible: true),
         ) do
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern(username),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern(username), useInnerText: true).matches?(browser_content)
         end
       end
 
       def has_other_accounts_link?(count:)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(

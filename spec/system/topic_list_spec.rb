@@ -34,9 +34,9 @@ describe "Topic list" do
 
   it "refocusses last clicked topic when going back to topic list" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(discovery.topic_list).to have_topics
 
     # Click a topic
@@ -45,9 +45,9 @@ describe "Topic list" do
 
     # Going back to the topic-list should re-focus
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[5].id)
 
     # Click topic again
@@ -59,9 +59,9 @@ describe "Topic list" do
       .locator(".sidebar-section-link[data-link-name='everything']")
       .filter(visible: true)
       .click
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(nil)
   end
 
@@ -74,9 +74,9 @@ describe "Topic list" do
 
     # Going back to the topic-list should re-focus
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[2].id)
 
     # Visit topic via keyboard using posts map (OP button)
@@ -85,9 +85,9 @@ describe "Topic list" do
 
     # Going back to the topic-list should re-focus
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[4].id)
   end
 
@@ -103,9 +103,9 @@ describe "Topic list" do
 
     # Going back to the topic-list should not re-focus
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(nil)
   end
 
@@ -127,9 +127,9 @@ describe "Topic list" do
 
     # Going back to the topic-list should re-focus
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("body.navigation-topics").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(oldest_topic.id)
   end
 
@@ -178,9 +178,7 @@ describe "Topic list" do
     screenshot_marker(label: "categories")
 
     browser_root.locator("#create-topic").filter(visible: true).click
-    expect(
-      browser_root.locator("#reply-control.open").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#reply-control.open").filter(visible: true)).not_to have_count(0)
     screenshot_marker(label: "composer-new-topic")
   end
 end

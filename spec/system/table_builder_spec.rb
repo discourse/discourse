@@ -63,9 +63,7 @@ describe "Table Builder" do
         browser_root.locator(".toolbar-menu__options-trigger").filter(visible: true).click
         browser_root.locator("button[data-name='toggle-spreadsheet']").filter(visible: true).click
         insert_table_modal.cancel
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "warns about unsaved changes" do
@@ -77,7 +75,7 @@ describe "Table Builder" do
         insert_table_modal.cancel
         expect(
           browser_root.locator(".dialog-container .dialog-content").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -86,9 +84,7 @@ describe "Table Builder" do
     it "prefills the spreadsheet from the post's Markdown table" do
       topic_page.visit_topic(topic)
       topic_page.locator(".btn-edit-table").click
-      expect(
-        browser_root.locator(".insert-table-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
 
       expected_table_content = [
         %w[Toyota Supra 1998],
@@ -106,9 +102,7 @@ describe "Table Builder" do
     it "updates the post with the new table content" do
       topic_page.visit_topic(topic)
       topic_page.locator(".btn-edit-table").click
-      expect(
-        browser_root.locator(".insert-table-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
       insert_table_modal.type_in_cell(1, 1, " GTR")
       insert_table_modal.click_insert_table
 
@@ -126,9 +120,7 @@ describe "Table Builder" do
     it "preserves an empty table header" do
       topic_page.visit_topic(topic2)
       topic_page.locator(".btn-edit-table").click
-      expect(
-        browser_root.locator(".insert-table-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
       insert_table_modal.type_in_cell(0, 0, " updated")
       insert_table_modal.click_insert_table
 
@@ -148,9 +140,9 @@ describe "Table Builder" do
 
         topic_page.visit_topic(topic)
         topic_page.locator(".btn-edit-table").click
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.type_in_cell(1, 1, " GTR")
         insert_table_modal.click_edit_reason
         insert_table_modal.type_edit_reason(edit_reason)
@@ -164,13 +156,11 @@ describe "Table Builder" do
       it "closes the modal when nothing changed" do
         topic_page.visit_topic(topic)
         topic_page.locator(".btn-edit-table").click
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.cancel
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "closes the modal if there are no changes in a table with empty headers" do
@@ -178,22 +168,20 @@ describe "Table Builder" do
         topic_page.locator(".btn-edit-table").click
         insert_table_modal.cancel
 
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "warns about unsaved changes" do
         topic_page.visit_topic(topic)
         topic_page.locator(".btn-edit-table").click
-        expect(
-          browser_root.locator(".insert-table-modal").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.type_in_cell(1, 1, " GTR")
         insert_table_modal.cancel
         expect(
           browser_root.locator(".dialog-container .dialog-content").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -202,12 +190,8 @@ describe "Table Builder" do
       topic_page.locator(".btn-edit-table").click
       insert_table_modal.find_cell(0, 0).wait_for(state: "visible")
       browser_page.keyboard.press(%w[Shift s].join("+"))
-      expect(
-        browser_root.locator(".insert-table-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".share-topic-modal").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".share-topic-modal").filter(visible: true)).to have_count(0)
     end
 
     it "does not show duplicate edit buttons on quoted tables" do
@@ -224,7 +208,7 @@ describe "Table Builder" do
 
       within_browser(
         browser_root.locator("#post_#{quoting_post.post_number}").filter(visible: true),
-      ) { expect(browser_root.locator(".btn-edit-table")).to PlaywrightMatchers.have_count(1) }
+      ) { expect(browser_root.locator(".btn-edit-table")).to have_count(1) }
     end
   end
 end

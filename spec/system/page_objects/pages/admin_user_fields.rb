@@ -39,9 +39,7 @@ module PageObjects
       end
 
       def has_user_field?(name)
-        PlaywrightMatchers.contain_text(browser_text_pattern(name), useInnerText: true).matches?(
-          browser_content,
-        )
+        contain_text(browser_text_pattern(name), useInnerText: true).matches?(browser_content)
       end
     end
   end

@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def has_revert_button_for_color?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(
             ".color-palette-editor__colors-item[data-color-name='#{name}'] .color-palette-editor__revert:not(.--hidden)",
           ).filter(visible: true),
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def has_no_revert_button_for_color?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component.locator(
             ".color-palette-editor__colors-item[data-color-name='#{name}'] .color-palette-editor__revert:not(.--hidden)",
           ).filter(visible: true),

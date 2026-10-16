@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def has_invitee_already_exists_error?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("topic_invite.user_exists")),
           useInnerText: true,
         ).matches?(body.locator(".alert-error").filter(visible: true))
@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def has_successful_invite_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.topic.invite_private.success")),
           useInnerText: true,
         ).matches?(browser_content)

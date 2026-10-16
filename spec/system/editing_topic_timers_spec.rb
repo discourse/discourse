@@ -22,7 +22,7 @@ describe "Editing topic timers" do
     edit_topic_timer_modal.set_relative_time_interval("hours")
     edit_topic_timer_modal.click_save
 
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("This topic will automatically close in 10 hours."),
       useInnerText: true,
     )

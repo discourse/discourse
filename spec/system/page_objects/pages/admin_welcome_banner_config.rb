@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def has_locale_selector?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".translation-selector").filter(visible: true),
         )
       end
@@ -44,7 +44,7 @@ module PageObjects
       end
 
       def has_saved_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("admin_js.admin.config.welcome_banner.saved")),
           useInnerText: true,
         ).matches?(browser_content)

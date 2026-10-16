@@ -18,10 +18,10 @@ describe "Viewing sidebar" do
           .goto("/latest?navigation_menu=sidebar")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(sidebar).to be_visible
-        expect(
-          browser_root.locator(".hamburger-dropdown").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(sidebar).to RSpecPredicates.be_visible
+        expect(browser_root.locator(".hamburger-dropdown").filter(visible: true)).not_to have_count(
+          0,
+        )
       end
     end
 
@@ -38,7 +38,7 @@ describe "Viewing sidebar" do
         header_dropdown = PageObjects::Components::SidebarHeaderDropdown.new
         header_dropdown.click
 
-        expect(header_dropdown).to be_visible
+        expect(header_dropdown).to RSpecPredicates.be_visible
       end
     end
 
@@ -86,35 +86,29 @@ describe "Viewing sidebar" do
 
         browser_root.locator(more_trigger_selector).filter(visible: true).click
 
-        expect(
-          browser_root.locator(more_links_selector).filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(more_links_selector).filter(visible: true)).not_to have_count(0)
 
         expect(
           browser_root.locator("#{more_trigger_selector}[aria-expanded='true']").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root.locator(more_trigger_selector).filter(visible: true).click
 
-        expect(
-          browser_root.locator(more_links_selector).filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(more_links_selector).filter(visible: true)).to have_count(0)
 
         expect(
           browser_root.locator("#{more_trigger_selector}[aria-expanded='false']").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root.locator(more_trigger_selector).filter(visible: true).click
 
         browser_root.locator(".d-header-wrap").filter(visible: true).click
 
-        expect(
-          browser_root.locator(more_links_selector).filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(more_links_selector).filter(visible: true)).to have_count(0)
       end
     end
 
@@ -152,7 +146,7 @@ describe "Viewing sidebar" do
 
         browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(sidebar).to be_visible
+        expect(sidebar).to RSpecPredicates.be_visible
         expect(sidebar).to have_no_tags_section
       end
 
@@ -161,14 +155,14 @@ describe "Viewing sidebar" do
 
         browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(sidebar).to be_visible
+        expect(sidebar).to RSpecPredicates.be_visible
         expect(sidebar).to have_no_tags_section
       end
 
       it "shows top tags when the user has not configured tags" do
         browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(sidebar).to be_visible
+        expect(sidebar).to RSpecPredicates.be_visible
         expect(sidebar).to have_tags_section
         expect(sidebar).to have_tag_section_links([tag3, tag2, tag4, tag5, tag1])
         expect(sidebar).to have_all_tags_section_link
@@ -181,7 +175,7 @@ describe "Viewing sidebar" do
 
         browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(sidebar).to be_visible
+        expect(sidebar).to RSpecPredicates.be_visible
         expect(sidebar).to have_tags_section
         expect(sidebar).to have_tag_section_links([tag1, tag2, tag3])
         expect(sidebar).to have_all_tags_section_link
@@ -252,7 +246,7 @@ describe "Viewing sidebar" do
 
     it "hides the panel header in the main sidebar" do
       browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(sidebar).to be_visible
+      expect(sidebar).to RSpecPredicates.be_visible
       expect(sidebar).to have_no_panel_header
     end
   end

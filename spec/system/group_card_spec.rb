@@ -55,15 +55,13 @@ describe "Group Card" do
       topic_page.visit_topic(topic, post_number: post_with_mention.post_number)
       topic_page.click_mention(post_with_mention, mention)
 
-      expect(
-        browser_root.locator(".card-cloak.--visible").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".card-cloak.--visible").filter(visible: true)).not_to have_count(
+        0,
+      )
 
       browser_root.locator(".card-cloak").filter(visible: true).click
 
-      expect(
-        browser_root.locator(".card-cloak.--visible").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".card-cloak.--visible").filter(visible: true)).to have_count(0)
     end
   end
 end

@@ -8,15 +8,11 @@ describe "Standalone scripts" do
     it "does not flag a supported browser as unsupported" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator("#main-outlet").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#main-outlet").filter(visible: true)).not_to have_count(0)
       expect(
         browser_root.locator("script[data-discourse-entrypoint='js/browser-detect']"),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("script[src*='browser-update']"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator("script[src*='browser-update']")).not_to have_count(0)
 
       expect(
         browser_page.evaluate(
@@ -24,12 +20,8 @@ describe "Standalone scripts" do
           arg: [],
         ),
       ).to eq(false)
-      expect(browser_root.locator(".buorg").filter(visible: true)).to PlaywrightMatchers.have_count(
-        0,
-      )
-      expect(
-        browser_root.locator("body.crawler").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".buorg").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator("body.crawler").filter(visible: true)).to have_count(0)
     end
   end
 
@@ -41,7 +33,7 @@ describe "Standalone scripts" do
 
       expect(
         browser_root.locator("script[data-discourse-entrypoint='js/onpopstate-handler']"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_page.evaluate("function(arguments) { return typeof window.onpopstate }", arg: []),
       ).to eq("function")
@@ -142,7 +134,7 @@ describe "Standalone scripts" do
 
       browser_page.goto("/safe-mode").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      try_until_success { expect(pageview_requests).not_to be_empty }
+      try_until_success { expect(pageview_requests).not_to RSpecPredicates.be_empty }
     end
 
     it "does not send tracking requests when request tracking is disabled in development" do
@@ -182,10 +174,10 @@ describe "Standalone scripts" do
 
       expect(
         browser_root.locator(".published-page-content-body").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("script[data-discourse-entrypoint='js/publish']"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(page_errors).to eq([])
     end
   end
@@ -207,7 +199,7 @@ describe "Standalone scripts" do
 
       expect(
         browser_root.locator("script[data-discourse-entrypoint='js/embed-application']"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       try_until_success do
         expect(
           browser_page.evaluate(

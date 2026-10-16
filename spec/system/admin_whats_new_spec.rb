@@ -53,7 +53,7 @@ describe "Admin What's New Page" do
         .find_section_link("admin_whats_new")
         .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     sidebar.find_section_link("admin_whats_new").click
     expect(
       sidebar
@@ -63,7 +63,7 @@ describe "Admin What's New Page" do
         end
         .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "displays new features with screenshot taking precedence over emoji" do

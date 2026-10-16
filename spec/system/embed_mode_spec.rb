@@ -13,9 +13,7 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("body.embed-mode").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
   end
 
   it "does not apply embed-mode class without the param" do
@@ -23,9 +21,7 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("body.embed-mode").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).to have_count(0)
   end
 
   it "hides suggested topics in embed mode" do
@@ -34,12 +30,8 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("body.embed-mode").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".suggested-topics").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".suggested-topics").filter(visible: true)).to have_count(0)
   end
 
   it "shows the topic navigation widget" do
@@ -47,9 +39,7 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".topic-navigation").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".topic-navigation").filter(visible: true)).not_to have_count(0)
   end
 
   it "loads topic content without JS errors" do
@@ -57,16 +47,12 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("body.embed-mode").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(browser_root.locator("#topic-title .fancy-title")).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#topic-title .fancy-title")).to contain_text(
       [browser_text_pattern(topic.title)],
       useInnerText: true,
     )
-    expect(
-      browser_root.locator("#post_1").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#post_1").filter(visible: true)).not_to have_count(0)
   end
 
   it "shows 'be the first to reply' message for topic with no replies" do
@@ -76,10 +62,10 @@ describe "Embed mode" do
 
     expect(
       browser_root.locator(".embed-topic-footer__first-reply").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator(".embed-topic-footer__first-reply .btn-primary").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "shows powered by discourse badge" do
@@ -90,7 +76,7 @@ describe "Embed mode" do
 
     expect(
       browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "does not show powered by discourse badge when setting is disabled" do
@@ -101,7 +87,7 @@ describe "Embed mode" do
 
     expect(
       browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "does not show embed footer without embed mode" do
@@ -109,9 +95,7 @@ describe "Embed mode" do
       .goto("/t/#{topic.slug}/#{topic.id}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".embed-topic-footer").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".embed-topic-footer").filter(visible: true)).to have_count(0)
   end
 
   context "when logged in" do
@@ -152,9 +136,7 @@ describe "Embed mode" do
           .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(
-          browser_root.locator("#reply-control.open").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator("#reply-control.open").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -177,7 +159,7 @@ describe "Embed mode" do
 
         expect(
           browser_root.locator(".embed-mode-composer .d-editor-input:focus").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "submits a reply through the docked composer" do
@@ -197,9 +179,7 @@ describe "Embed mode" do
           .filter(visible: true)
           .click
 
-        expect(
-          browser_root.locator(".topic-post").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(browser_root.locator(".topic-post").filter(visible: true)).to contain_text(
           [browser_text_pattern("Hello from the docked composer")],
           useInnerText: true,
         )
@@ -218,10 +198,10 @@ describe "Embed mode" do
 
         expect(
           browser_root.locator(".embed-mode-composer__editing").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(
           browser_root.locator("#reply-control.composer-action-edit").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
 
         browser_root
           .locator(".embed-mode-composer .d-editor-input")
@@ -234,13 +214,10 @@ describe "Embed mode" do
 
         expect(
           browser_root.locator(".embed-mode-composer__editing").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
         expect(
           browser_root.locator("#post_#{own_post.post_number}").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Edited content")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Edited content")], useInnerText: true)
       end
 
       context "with many replies" do
@@ -265,7 +242,7 @@ describe "Embed mode" do
           topic_page.click_floating_timeline_button
           expect(
             browser_root.locator(".timeline-fullscreen.show").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         it "shows the topic progress bar at the bottom (not sticky)" do
@@ -276,10 +253,10 @@ describe "Embed mode" do
 
           expect(
             browser_root.locator("#topic-progress-wrapper").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(
             browser_root.locator(".topic-navigation.with-topic-progress").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
       end
 
@@ -290,7 +267,7 @@ describe "Embed mode" do
 
         expect(
           browser_root.locator(".embed-topic-footer__first-reply").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
       end
 
       it "still shows powered by discourse badge" do
@@ -301,7 +278,7 @@ describe "Embed mode" do
 
         expect(
           browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -332,7 +309,7 @@ describe "Embed mode" do
             ).or(browser_root.get_by_role("button", name: I18n.t("js.topic.login_reply"))),
           )
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

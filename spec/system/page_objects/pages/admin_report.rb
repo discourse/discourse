@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def has_back_to_dashboard?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("link")
             .and(
@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def has_no_back_to_dashboard?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .get_by_role("link")
             .and(
@@ -44,7 +44,7 @@ module PageObjects
       end
 
       def has_back_to_all_reports?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("link")
             .and(
@@ -58,7 +58,7 @@ module PageObjects
       end
 
       def has_no_back_to_all_reports?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .get_by_role("link")
             .and(
@@ -89,15 +89,13 @@ module PageObjects
       end
 
       def has_rendered_report?(type)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-report.#{type.tr("_", "-")}").filter(visible: true),
         )
       end
 
       def has_category_filter?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(CATEGORY_FILTER).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(CATEGORY_FILTER).filter(visible: true))
       end
 
       def category_filter
@@ -105,7 +103,7 @@ module PageObjects
       end
 
       def has_selected_category?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
           ).filter(visible: true),
@@ -113,41 +111,35 @@ module PageObjects
       end
 
       def has_group?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".admin-reports-group__title").filter(visible: true),
         )
       end
 
       def has_no_group?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(".admin-reports-group__title").filter(visible: true))
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".admin-reports-group__title").filter(visible: true),
+        )
       end
 
       def has_report?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
         )
       end
 
       def has_no_report?(title)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(title)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).does_not_match?(
           browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
         )
       end
 
       def has_current_all_reports_path?
-        PlaywrightMatchers.have_url("/admin/reports").matches?(browser_page)
+        have_url("/admin/reports").matches?(browser_page)
       end
 
       def has_current_reports_path?(group: nil)
-        PlaywrightMatchers.have_url("/admin/reports#{group ? "?group=#{group}" : ""}").matches?(
-          browser_page,
-        )
+        have_url("/admin/reports#{group ? "?group=#{group}" : ""}").matches?(browser_page)
       end
     end
   end

@@ -33,7 +33,7 @@ describe "discourse login client auth" do
         signup_form.open.click_social_button("discourse_id")
         expect(
           browser_root.locator(".login-welcome-header").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -45,7 +45,7 @@ describe "discourse login client auth" do
         signup_form.open.click_social_button("discourse_id")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       context "when full_name_requirement is required_at_signup" do
@@ -55,9 +55,9 @@ describe "discourse login client auth" do
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           signup_form.open.click_social_button("discourse_id")
           expect(signup_form).to be_open
-          expect(
-            browser_root.locator("#new-account-name").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator("#new-account-name").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
 
         context "when name is provided by the provider" do
@@ -79,7 +79,7 @@ describe "discourse login client auth" do
             signup_form.open.click_social_button("discourse_id")
             expect(
               browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
           end
         end
       end
@@ -96,7 +96,7 @@ describe "discourse login client auth" do
       signup_form.open.click_social_button("discourse_id")
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

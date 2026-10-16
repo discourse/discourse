@@ -20,52 +20,52 @@ module PageObjects
       end
 
       def has_suspend_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".btn-danger.suspend-user").filter(visible: true),
         )
       end
 
       def has_unsuspend_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".btn-danger.unsuspend-user").filter(visible: true),
         )
       end
 
       def has_no_suspend_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".btn-danger.suspend-user").filter(visible: true),
         )
       end
 
       def has_silence_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".btn-danger.silence-user").filter(visible: true),
         )
       end
 
       def has_unsilence_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".btn-danger.unsilence-user").filter(visible: true),
         )
       end
 
       def has_no_silence_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".btn-danger.silence-user").filter(visible: true),
         )
       end
 
       def has_change_trust_level_dropdown_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".change-trust-level-dropdown").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".change-trust-level-dropdown.is-disabled").filter(visible: true),
           )
       end
 
       def has_change_trust_level_dropdown_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".change-trust-level-dropdown.is-disabled").filter(visible: true),
         )
       end
@@ -95,7 +95,7 @@ module PageObjects
       end
 
       def has_approve_success?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.user.approve_success"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".display-row .controls").filter(visible: true))
@@ -110,19 +110,19 @@ module PageObjects
       end
 
       def has_custom_groups_save_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-user__custom-groups .ok").filter(visible: true),
         )
       end
 
       def has_no_custom_groups_save_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-user__custom-groups .ok").filter(visible: true),
         )
       end
 
       def has_custom_group?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".admin-user__custom-groups .formatted-selection").filter(
             visible: true,
           ),
@@ -130,10 +130,7 @@ module PageObjects
       end
 
       def has_no_custom_group?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
           browser_root.locator(".admin-user__custom-groups .formatted-selection").filter(
             visible: true,
           ),
@@ -168,7 +165,7 @@ module PageObjects
               .filter(visible: true)
               .locator(".emoji[alt='white_check_mark']")
               .filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         def disabled?
@@ -178,14 +175,12 @@ module PageObjects
               .filter(visible: true)
               .locator(".emoji[alt='cross_mark']")
               .filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         def has_reason?(reason_key)
           expected_text = I18n.t("js.user.upcoming_changes.why_reasons.#{reason_key}")
-          expect(
-            element.locator(".upcoming-change-reason").filter(visible: true),
-          ).to PlaywrightMatchers.contain_text(
+          expect(element.locator(".upcoming-change-reason").filter(visible: true)).to contain_text(
             browser_text_pattern(expected_text),
             useInnerText: true,
           )
@@ -215,12 +210,12 @@ module PageObjects
               end
               .locator(".upcoming-change-groups")
               .filter(visible: true),
-          ).to PlaywrightMatchers.have_count(0)
+          ).to have_count(0)
         end
       end
 
       def has_upcoming_change?(change_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
           ).filter(visible: true),
@@ -228,7 +223,7 @@ module PageObjects
       end
 
       def has_no_upcoming_change?(change_name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
           ).filter(visible: true),

@@ -68,7 +68,7 @@ describe "Granting Badges" do
           .filter(visible: true)
           .locator(".user-badge-button-somebadge")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "doesn't show badge in post header when `show_badges_in_post_header` site setting is disabled" do
@@ -82,7 +82,7 @@ describe "Granting Badges" do
           end
           .locator(".user-badge-buttons")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

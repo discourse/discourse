@@ -25,7 +25,7 @@ RSpec.describe "Nested view resuming a draft from the user activity page" do
     drafts_page.visit(user)
     browser_root.locator(".resume-draft").filter(visible: true).click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
+    expect(browser_page).to have_url(%r{/t/})
     expect(nested_view).to have_nested_view
     expect(composer).to be_opened
     expect(composer).to have_displayed_content("Resumed nested draft body")

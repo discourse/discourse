@@ -12,19 +12,19 @@ module PageObjects
       SIDEBAR_HAMBURGER_DROPDOWN = ".sidebar-hamburger-dropdown"
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(SIDEBAR_HAMBURGER_DROPDOWN).filter(visible: true),
         )
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(SIDEBAR_HAMBURGER_DROPDOWN).filter(visible: true),
         )
       end
 
       def has_no_keyboard_shortcuts_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-footer-actions-keyboard-shortcuts").filter(visible: true),
         )
       end

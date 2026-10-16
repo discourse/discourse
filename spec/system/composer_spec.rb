@@ -14,12 +14,9 @@ describe "Composer" do
     composer.fill_content("@#{user.username}")
     composer.preview.locator("a.mention").filter(visible: true).click
 
-    expect(browser_root.locator("#user-card")).to PlaywrightMatchers.have_count(1)
-    expect(browser_root.locator("#user-card")).not_to PlaywrightMatchers.have_css("display", "none")
-    expect(browser_root.locator("#user-card")).to PlaywrightMatchers.have_css(
-      "visibility",
-      "visible",
-    )
+    expect(browser_root.locator("#user-card")).to have_count(1)
+    expect(browser_root.locator("#user-card")).not_to have_css("display", "none")
+    expect(browser_root.locator("#user-card")).to have_css("visibility", "visible")
   end
 
   context "in a topic, the autocomplete prioritizes" do

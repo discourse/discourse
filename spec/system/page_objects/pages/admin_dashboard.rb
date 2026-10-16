@@ -9,7 +9,7 @@ module PageObjects
           browser_root.locator(".db-main [data-section-id], .db-main__empty, .nav-pills").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -21,7 +21,7 @@ module PageObjects
           browser_root.locator(".db-main [data-section-id], .db-main__empty, .nav-pills").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -30,23 +30,21 @@ module PageObjects
       end
 
       def has_custom_range?(from:, to:)
-        PlaywrightMatchers.have_url(
-          "/admin?#{custom_range_params(from: from, to: to).to_query}",
-        ).matches?(browser_page)
+        have_url("/admin?#{custom_range_params(from: from, to: to).to_query}").matches?(
+          browser_page,
+        )
       end
 
       def has_admin_notice?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".dashboard-problem").filter(visible: true))
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(".dashboard-problem").filter(visible: true),
+        )
       end
 
       def has_no_admin_notice?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(".dashboard-problem").filter(visible: true))
+        contain_text([browser_text_pattern(message)], useInnerText: true).does_not_match?(
+          browser_root.locator(".dashboard-problem").filter(visible: true),
+        )
       end
 
       def dismiss_notice(message)
@@ -60,35 +58,27 @@ module PageObjects
       end
 
       def has_site_advice?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".db-site-advice").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".db-site-advice").filter(visible: true))
       end
 
       def has_site_advice_at_top?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".db-main > .db-site-advice:first-child").filter(visible: true),
         )
       end
 
       def has_no_site_advice?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".db-site-advice").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".db-site-advice").filter(visible: true))
       end
 
       def has_site_advice_title?(text)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".db-site-advice__header h3").filter(visible: true))
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".db-site-advice__header h3").filter(visible: true),
+        )
       end
 
       def has_site_advice_problem?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
           browser_root.locator(".db-site-advice [data-test-site-advice-problem]").filter(
             visible: true,
           ),
@@ -96,10 +86,7 @@ module PageObjects
       end
 
       def has_no_site_advice_problem?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).does_not_match?(
           browser_root.locator(".db-site-advice [data-test-site-advice-problem]").filter(
             visible: true,
           ),
@@ -107,10 +94,7 @@ module PageObjects
       end
 
       def has_first_site_advice_problem?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
           browser_root.locator(
             ".db-site-advice [data-test-site-advice-problem]:first-child",
           ).filter(visible: true),
@@ -124,14 +108,14 @@ module PageObjects
             .filter(visible: true)
             .filter(hasText: browser_text_pattern(message)),
         ) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("[data-test-site-advice-ignore]").filter(visible: true),
           )
         end
       end
 
       def has_no_ignore_buttons?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".db-site-advice [data-test-site-advice-ignore]").filter(
             visible: true,
           ),
@@ -139,7 +123,7 @@ module PageObjects
       end
 
       def has_site_advice_refresh_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".db-site-advice [data-test-site-advice-refresh]").filter(
             visible: true,
           ),
@@ -165,29 +149,21 @@ module PageObjects
       end
 
       def has_redesigned_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".db-toolbar").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".db-toolbar").filter(visible: true))
       end
 
       def has_active_period?(period)
         if period == "custom"
           browser_page.url.include?("range=custom")
         else
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(preset_label(period))],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(preset_label(period))], useInnerText: true).matches?(
             browser_root.locator(".db-date-range__trigger .d-button-label").filter(visible: true),
           )
         end
       end
 
       def has_custom_label?(text)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(".db-date-range__trigger .d-button-label").filter(visible: true),
         )
       end
@@ -207,13 +183,13 @@ module PageObjects
       end
 
       def has_configure_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true),
         )
       end
 
       def has_no_configure_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true),
         )
       end
@@ -229,9 +205,7 @@ module PageObjects
         end
 
         browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true).click
-        expect(
-          browser_root.locator(".db-configure").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".db-configure").filter(visible: true)).not_to have_count(0)
         self
       end
 
@@ -241,26 +215,24 @@ module PageObjects
         else
           browser_root.locator(".btn[data-identifier='db-configure']").filter(visible: true).click
         end
-        expect(
-          browser_root.locator(".db-configure").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".db-configure").filter(visible: true)).to have_count(0)
         self
       end
 
       def has_section?(id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".db-main [data-section-id='#{id}']").filter(visible: true),
         )
       end
 
       def has_no_section?(id)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".db-main [data-section-id='#{id}']").filter(visible: true),
         )
       end
 
       def has_first_section?(id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".db-main > :first-child[data-section-id='#{id}']").filter(
             visible: true,
           ),
@@ -289,9 +261,7 @@ module PageObjects
       end
 
       def has_empty_state?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".db-main__empty").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".db-main__empty").filter(visible: true))
       end
 
       def toggle_section(id)
@@ -370,7 +340,7 @@ module PageObjects
         end
         expect(
           browser_root.locator(".db-main [data-section-id], .db-main__empty").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 

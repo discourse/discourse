@@ -11,9 +11,7 @@ describe "Search | Shortcuts for variations of search input" do
   def expect_search_shortcut_to_toggle(input_id)
     browser_page.keyboard.type("/")
     expect(search_page).to have_search_menu
-    expect(
-      browser_root.locator("##{input_id}:focus").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("##{input_id}:focus").filter(visible: true)).not_to have_count(0)
     browser_page.keyboard.press("Escape")
     expect(search_page).to have_no_search_menu_visible
   end
@@ -30,14 +28,14 @@ describe "Search | Shortcuts for variations of search input" do
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(welcome_banner).to be_visible
+        expect(welcome_banner).to RSpecPredicates.be_visible
         expect_search_shortcut_to_toggle("welcome-banner-search-input")
       end
 
       context "when welcome banner is not in the viewport" do
         it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(welcome_banner).to be_visible
+          expect(welcome_banner).to RSpecPredicates.be_visible
           fake_scroll_down_long
           expect(search_page).to have_search_field
           expect(welcome_banner).to be_invisible
@@ -46,7 +44,7 @@ describe "Search | Shortcuts for variations of search input" do
 
         it "moves the search menu and focus between the welcome banner and the header search as the user scrolls" do
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(welcome_banner).to be_visible
+          expect(welcome_banner).to RSpecPredicates.be_visible
           welcome_banner.open_search_menu
           expect(welcome_banner).to have_search_menu
 
@@ -54,7 +52,7 @@ describe "Search | Shortcuts for variations of search input" do
           expect(search_page).to have_search_field
           expect(
             browser_root.locator("#header-search-input:focus").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(search_page).to have_header_search_menu
           expect(welcome_banner).to have_no_search_menu
 
@@ -64,14 +62,14 @@ describe "Search | Shortcuts for variations of search input" do
           )
           expect(
             browser_root.locator("#header-search-input:focus").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(welcome_banner).to have_no_search_menu
 
           browser_page.evaluate("([x, y]) => window.scrollTo(x, y)", arg: [0, 0])
           expect(search_page).to have_no_search_field
           expect(
             browser_root.locator("#welcome-banner-search-input:focus").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(welcome_banner).to have_search_menu
         end
       end
@@ -84,7 +82,7 @@ describe "Search | Shortcuts for variations of search input" do
 
       it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(welcome_banner).to be_hidden
+        expect(welcome_banner).to RSpecPredicates.be_hidden
         expect_search_shortcut_to_toggle("header-search-input")
       end
     end
@@ -102,14 +100,14 @@ describe "Search | Shortcuts for variations of search input" do
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(welcome_banner).to be_visible
+        expect(welcome_banner).to RSpecPredicates.be_visible
         expect_search_shortcut_to_toggle("welcome-banner-search-input")
       end
 
       context "when welcome banner is not in the viewport" do
         it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(welcome_banner).to be_visible
+          expect(welcome_banner).to RSpecPredicates.be_visible
           fake_scroll_down_long
           expect(search_page).to have_search_icon
           expect(welcome_banner).to be_invisible
@@ -125,7 +123,7 @@ describe "Search | Shortcuts for variations of search input" do
 
       it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(welcome_banner).to be_hidden
+        expect(welcome_banner).to RSpecPredicates.be_hidden
         expect_search_shortcut_to_toggle("icon-search-input")
       end
 

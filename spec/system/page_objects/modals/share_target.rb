@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def has_preview_text?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           body.locator(".share-target-modal__preview-text").filter(visible: true),
         )
       end

@@ -22,37 +22,37 @@ module PageObjects
       end
 
       def has_action_for_flag?(flag)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".#{flag} .flag-menu-trigger").filter(visible: true),
         )
       end
 
       def has_no_action_for_flag?(flag)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".#{flag} .flag-menu-trigger").filter(visible: true),
         )
       end
 
       def has_disabled_edit_for_flag?(flag)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".#{flag} .admin-flag-item__edit[disabled]").filter(visible: true),
         )
       end
 
       def has_disabled_item_action?(action)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flag-item__#{action}[disabled]").filter(visible: true),
         )
       end
 
       def has_item_action?(action)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flag-item__#{action}").filter(visible: true),
         )
       end
 
       def has_no_item_action?(action)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-flag-item__#{action}").filter(visible: true),
         )
       end
@@ -69,7 +69,7 @@ module PageObjects
       end
 
       def has_add_flag_button_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flags__header-add-flag:not([disabled])").filter(
             visible: true,
           ),
@@ -77,34 +77,31 @@ module PageObjects
       end
 
       def has_add_flag_button_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flags__header-add-flag[disabled]").filter(visible: true),
         )
       end
 
       def has_flag?(flag)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flag-item.#{flag}").filter(visible: true),
         )
       end
 
       def has_no_flag?(flag)
-        PlaywrightMatchers.have_count(
-          0,
-          timeout: (Capybara.default_max_wait_time * 3) * 1000,
-        ).matches?(browser_root.locator(".admin-flag-item.#{flag}").filter(visible: true))
+        have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000).matches?(
+          browser_root.locator(".admin-flag-item.#{flag}").filter(visible: true),
+        )
       end
 
       def has_saved_flag?(key)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-flag-item.#{key}.saved").filter(visible: true),
         )
       end
 
       def has_closed_flag_menu?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".flag-menu-content").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".flag-menu-content").filter(visible: true))
       end
 
       # Methods for when the enable_new_reordering_controls upcoming change is
@@ -147,14 +144,11 @@ module PageObjects
 
       # Waiting, unlike has_flags?, so it can follow a move or a page load.
       def has_flags_in_order?(*flags)
-        PlaywrightMatchers.have_count(flags.size).matches?(
+        have_count(flags.size).matches?(
           browser_root.locator(".admin-flag-item__name").filter(visible: true),
         ) &&
           flags.each_with_index.all? do |flag, index|
-            PlaywrightMatchers.contain_text(
-              [browser_text_pattern(flag)],
-              useInnerText: true,
-            ).matches?(
+            contain_text([browser_text_pattern(flag)], useInnerText: true).matches?(
               browser_root.locator(
                 ".admin-flag-item:nth-child(#{index + 1}) .admin-flag-item__name",
               ).filter(visible: true),
@@ -194,9 +188,10 @@ module PageObjects
 
       def confirm_delete
         browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
-        expect(
-          browser_root.locator(".dialog-body").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000)
+        expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(
+          0,
+          timeout: (Capybara.default_max_wait_time * 3) * 1000,
+        )
         self
       end
 

@@ -20,13 +20,11 @@ module PageObjects
       end
 
       def has_no_form_field?(field)
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#control-#{field}").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#control-#{field}").filter(visible: true))
       end
 
       def has_form_field?(field)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#control-#{field}").filter(visible: true),
         )
       end

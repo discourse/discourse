@@ -3,12 +3,10 @@
 RSpec.describe "Locale choice" do
   it "loads english locale successfully" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("html[lang='en']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("html[lang='en']").filter(visible: true)).not_to have_count(0)
     expect(
       browser_root.locator("#navigation-bar .categories").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [browser_text_pattern(I18n.t("js.filters.categories.title", locale: :en))],
       useInnerText: true,
     )
@@ -23,12 +21,10 @@ RSpec.describe "Locale choice" do
   it "loads french locale successfully" do
     SiteSetting.default_locale = "fr"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("html[lang='fr']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("html[lang='fr']").filter(visible: true)).not_to have_count(0)
     expect(
       browser_root.locator("#navigation-bar .categories").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [browser_text_pattern(I18n.t("js.filters.categories.title", locale: :fr))],
       useInnerText: true,
     )
@@ -43,12 +39,10 @@ RSpec.describe "Locale choice" do
   it "loads polish locale successfully" do
     SiteSetting.default_locale = "pl_PL"
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("html[lang='pl-PL']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("html[lang='pl-PL']").filter(visible: true)).not_to have_count(0)
     expect(
       browser_root.locator("#navigation-bar .categories").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [browser_text_pattern(I18n.t("js.filters.categories.title", locale: :pl_PL))],
       useInnerText: true,
     )

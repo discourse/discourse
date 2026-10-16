@@ -86,7 +86,7 @@ describe "Topic bulk select" do
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("dismiss-new")
 
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("js.topics.none.education.new")),
           useInnerText: true,
         )
@@ -122,7 +122,7 @@ describe "Topic bulk select" do
 
         topic_list_controls.dismiss_new
 
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("js.topics.none.education.new")),
           useInnerText: true,
         )
@@ -305,24 +305,16 @@ describe "Topic bulk select" do
           browser_root.locator(".topic-bulk-actions-modal__errors .badge-category").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern(category_b.name)],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern(category_b.name)], useInnerText: true)
         expect(
           browser_root.locator(".topic-bulk-actions-modal__errors .discourse-tag").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern(restricted_tag.name)],
-          useInnerText: true,
+        ).to contain_text([browser_text_pattern(restricted_tag.name)], useInnerText: true)
+        expect(browser_root.locator("#bulk-topics-close").filter(visible: true)).not_to have_count(
+          0,
         )
-        expect(
-          browser_root.locator("#bulk-topics-close").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        expect(
-          browser_root.locator("#bulk-topics-confirm").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator("#bulk-topics-confirm").filter(visible: true)).to have_count(0)
         expect(topic.reload.tags).to include(restricted_tag)
         expect(topic_2.reload.tags).not_to include(restricted_tag)
       end
@@ -413,9 +405,7 @@ describe "Topic bulk select" do
       sign_in(admin)
       browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator("#site-logo").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#site-logo").filter(visible: true)).not_to have_count(0)
 
       browser_page.keyboard.press(%w[Shift b].join("+"))
       expect(topic_list).to have_bulk_select_enabled
@@ -487,20 +477,20 @@ describe "Topic bulk select" do
       browser_page
         .goto("/u/#{admin.username}/messages")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(private_message_1.title),
         useInnerText: true,
       )
       open_bulk_actions_modal([private_message_1], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.topics.bulk.completed")),
         useInnerText: true,
       )
       browser_page
         .goto("/u/#{admin.username}/messages/archive")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(private_message_1.title),
         useInnerText: true,
       )
@@ -515,20 +505,20 @@ describe "Topic bulk select" do
       browser_page
         .goto("/u/#{admin.username}/messages/archive")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(private_message_1.title),
         useInnerText: true,
       )
       open_bulk_actions_modal([private_message_1], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.topics.bulk.completed")),
         useInnerText: true,
       )
       browser_page
         .goto("/u/#{admin.username}/messages")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(private_message_1.title),
         useInnerText: true,
       )
@@ -539,20 +529,20 @@ describe "Topic bulk select" do
       browser_page
         .goto("/u/#{admin.username}/messages/group/#{group.name}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.topics.bulk.completed")),
         useInnerText: true,
       )
       browser_page
         .goto("/u/#{admin.username}/messages/group/#{group.name}/archive")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
@@ -590,7 +580,7 @@ describe "Topic bulk select" do
         expect(topic_bulk_actions_modal).to be_open
         topic_bulk_actions_modal.click_bulk_topics_confirm
 
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("js.topics.bulk.completed")),
           useInnerText: true,
         )
@@ -606,20 +596,20 @@ describe "Topic bulk select" do
       browser_page
         .goto("/g/#{group.name}/messages/inbox")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.topics.bulk.completed")),
         useInnerText: true,
       )
       browser_page
         .goto("/g/#{group.name}/messages/archive")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
@@ -631,20 +621,20 @@ describe "Topic bulk select" do
       browser_page
         .goto("/u/#{admin.username}/messages/group/#{group.name}/archive")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
       open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.topics.bulk.completed")),
         useInnerText: true,
       )
       browser_page
         .goto("/u/#{admin.username}/messages/group/#{group.name}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(group_private_message.title),
         useInnerText: true,
       )
@@ -715,7 +705,7 @@ describe "Topic bulk select" do
       # By default, the confirm button is disabled
       expect(
         browser_root.locator("#bulk-topics-confirm:disabled").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       topic_bulk_actions_modal.select_notification_level(NotificationLevels.all[:muted])
       topic_bulk_actions_modal.click_bulk_topics_confirm

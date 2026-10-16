@@ -24,14 +24,14 @@ module PageObjects
         # uploaded image.
         # allow up to 10 seconds for the upload to finish in case this is
         # called immediately after selecting an image.
-        PlaywrightMatchers.have_count(0, timeout: 10 * 1000).does_not_match?(
+        have_count(0, timeout: 10 * 1000).does_not_match?(
           @element.locator(".btn-danger").filter(visible: true),
         )
       end
 
       def remove_image
         @element.locator(".btn-danger").filter(visible: true).click
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           @element
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -55,9 +55,7 @@ module PageObjects
       end
 
       def has_lightbox_preview?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".pswp--open").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".pswp--open").filter(visible: true))
       end
     end
   end

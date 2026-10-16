@@ -6,17 +6,17 @@ module PageObjects
   module Modals
     class SidebarEditTags < SidebarEditNavigationModal
       def has_tag_checkboxes?(tags)
-        expect(form).to PlaywrightMatchers.have_text(
+        expect(form).to have_text(
           tags.map { |tag| "#{tag.name} (#{tag.public_topic_count})" }.join("\n"),
           useInnerText: true,
         )
       end
 
       def has_no_tag_checkboxes?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-tags-form .sidebar-tags-form__tag").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
+          contain_text(
             [browser_text_pattern(I18n.t("js.sidebar.tags_form_modal.no_tags"))],
             useInnerText: true,
           ).matches?(

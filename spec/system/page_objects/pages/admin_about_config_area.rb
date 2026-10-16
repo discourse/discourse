@@ -32,7 +32,7 @@ module PageObjects
       end
 
       def has_no_group_listing_section?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-config-area-about__extra-groups-section").filter(
             visible: true,
           ),
@@ -40,7 +40,7 @@ module PageObjects
       end
 
       def has_no_contact_information_section?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-config-area-about__contact-information-section").filter(
             visible: true,
           ),
@@ -48,7 +48,7 @@ module PageObjects
       end
 
       def has_no_your_organization_section?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-config-area-about__your-organization-section").filter(
             visible: true,
           ),
@@ -56,7 +56,7 @@ module PageObjects
       end
 
       def has_language_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".admin-config-area__primary-content > .admin-config-area-about__language-toolbar",
           ).filter(visible: true),
@@ -64,13 +64,13 @@ module PageObjects
       end
 
       def has_no_language_toolbar?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-config-area-about__language-toolbar").filter(visible: true),
         )
       end
 
       def has_locale_description?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern("Only translatable About page fields are shown.")],
           useInnerText: true,
         ).matches?(

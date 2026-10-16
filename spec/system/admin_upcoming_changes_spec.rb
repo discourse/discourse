@@ -142,7 +142,7 @@ describe "Admin upcoming changes" do
             ),
           )
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         upcoming_changes_page.change_item(:enable_upload_debug_mode),
       ).to have_no_depends_on_notice
@@ -185,18 +185,26 @@ describe "Admin upcoming changes" do
   it "can enable and disable an upcoming change using the dropdown" do
     upcoming_changes_page.visit
 
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
 
     # Revisit the page to skip the rate limit
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
 
     expect(SiteSetting.enable_upload_debug_mode).to be_falsey
   end
@@ -222,7 +230,9 @@ describe "Admin upcoming changes" do
     # Test 'no_one' option - should disable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
@@ -232,7 +242,9 @@ describe "Admin upcoming changes" do
     # Test 'everyone' option - should enable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
@@ -246,7 +258,9 @@ describe "Admin upcoming changes" do
         staffGroupName: I18n.t("groups.default_names.staff").titleize,
       },
     )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
 
     upcoming_changes_page.visit
     expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
@@ -269,7 +283,9 @@ describe "Admin upcoming changes" do
       "staff",
       "trust_level_4",
     )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
   end
@@ -343,7 +359,7 @@ describe "Admin upcoming changes" do
           staffGroupName: I18n.t("groups.default_names.staff").titleize,
         },
       )
-      expect(item).to be_enabled
+      expect(item).to RSpecPredicates.be_enabled
       expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
         Group::AUTO_GROUPS[:staff].to_s,
       )
@@ -466,7 +482,7 @@ describe "Admin upcoming changes" do
         .find_section_link("admin_upcoming_changes")
         .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     sidebar.find_section_link("admin_upcoming_changes").click
 
@@ -478,7 +494,7 @@ describe "Admin upcoming changes" do
         end
         .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "does not display a notification dot when there are no new added events" do
@@ -498,7 +514,7 @@ describe "Admin upcoming changes" do
         end
         .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   context "when the staff group name has been localized" do
@@ -519,7 +535,9 @@ describe "Admin upcoming changes" do
           staffGroupName: I18n.t("groups.default_names.staff", locale: SiteSetting.default_locale),
         },
       )
-      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+      expect(
+        upcoming_changes_page.change_item(:enable_upload_debug_mode),
+      ).to RSpecPredicates.be_enabled
       expect(SiteSetting.enable_upload_debug_mode).to be_truthy
       expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
         Group::AUTO_GROUPS[:staff].to_s,
@@ -607,9 +625,7 @@ describe "Admin upcoming changes" do
         old_default: false,
         new_default: true,
       )
-      expect(
-        settings_page.bool_setting_checkbox(:limit_suggested_to_category),
-      ).to PlaywrightMatchers.be_checked
+      expect(settings_page.bool_setting_checkbox(:limit_suggested_to_category)).to be_checked
 
       settings_page.toggle_bool_setting(:limit_suggested_to_category)
 
@@ -634,9 +650,7 @@ describe "Admin upcoming changes" do
         old_default: false,
         new_default: true,
       )
-      expect(
-        settings_page.bool_setting_checkbox(:limit_suggested_to_category),
-      ).not_to PlaywrightMatchers.be_checked
+      expect(settings_page.bool_setting_checkbox(:limit_suggested_to_category)).not_to be_checked
     end
   end
 end

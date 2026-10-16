@@ -4,19 +4,15 @@ module PageObjects
   module Components
     class HomeLogo < PageObjects::Components::Base
       def has_dark_logo_forced?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".title picture source[media=\"all\"]"),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".title picture source[media=\"all\"]"))
       end
 
       def has_light_logo_forced?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".title picture source[media=\"none\"]"),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".title picture source[media=\"none\"]"))
       end
 
       def has_auto_color_mode?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".title picture source[media=\"(prefers-color-scheme: dark)\"]"),
         )
       end

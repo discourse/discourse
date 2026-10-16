@@ -177,13 +177,13 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".sidebar-section-form-modal").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-section-form-modal").filter(visible: true),
         )
       end
@@ -213,19 +213,19 @@ module PageObjects
       end
 
       def has_localization_controls?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".sidebar-section-form__manage-translations").filter(visible: true),
         )
       end
 
       def has_no_localization_controls?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-section-form__manage-translations").filter(visible: true),
         )
       end
 
       def has_locale_option?(locale)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".sidebar-section-translations__language-select option[value='#{locale}']",
           ),
@@ -233,7 +233,7 @@ module PageObjects
       end
 
       def has_no_locale_option?(locale)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".sidebar-section-translations__language-select option[value='#{locale}']",
           ),
@@ -241,35 +241,31 @@ module PageObjects
       end
 
       def has_translation_languages?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".sidebar-section-translations__language").filter(visible: true),
         )
       end
 
       def has_translation_row?(locale, source)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(source)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(translation_row_selector(locale)).filter(visible: true))
+        contain_text([browser_text_pattern(source)], useInnerText: true).matches?(
+          browser_root.locator(translation_row_selector(locale)).filter(visible: true),
+        )
       end
 
       def has_no_translation_row?(locale, source)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(source)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(source)], useInnerText: true).does_not_match?(
           browser_root.locator(translation_row_selector(locale)).filter(visible: true),
         )
       end
 
       def has_translation_language?(locale)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(translation_language_selector(locale)).filter(visible: true),
         )
       end
 
       def has_selected_translation_language?(locale)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{translation_language_selector(locale)} " \
               ".sidebar-section-translations__language-select option[value='#{locale}']:checked",
@@ -278,13 +274,13 @@ module PageObjects
       end
 
       def has_no_translation_language?(locale)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(translation_language_selector(locale)).filter(visible: true),
         )
       end
 
       def has_disabled_translation_locale?(locale, disabled)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           translation_language(locale).locator(
             ".sidebar-section-translations__language-select option[value='#{disabled}'][disabled]",
           ),
@@ -292,20 +288,19 @@ module PageObjects
       end
 
       def has_no_add_language?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-section-translations__add-language").filter(visible: true),
         )
       end
 
       def has_section_links_label?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Section links")],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".sidebar-section-form__links-label").filter(visible: true))
+        contain_text([browser_text_pattern("Section links")], useInnerText: true).matches?(
+          browser_root.locator(".sidebar-section-form__links-label").filter(visible: true),
+        )
       end
 
       def has_section_name?(name)
-        PlaywrightMatchers.have_value(name).matches?(
+        have_value(name).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -318,7 +313,7 @@ module PageObjects
       end
 
       def has_first_link_name?(name)
-        PlaywrightMatchers.have_value(name).matches?(
+        have_value(name).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -394,7 +389,7 @@ module PageObjects
       end
 
       def has_source_language?(locale)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".sidebar-section-form__source-locale-select option[value='#{locale}']:checked",
           ),
@@ -402,7 +397,7 @@ module PageObjects
       end
 
       def has_no_source_language_control?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar-section-form__source-locale").filter(visible: true),
         )
       end

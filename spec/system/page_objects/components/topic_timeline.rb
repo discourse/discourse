@@ -7,16 +7,14 @@ module PageObjects
       SCROLLAREA_SELECTOR = ".timeline-scrollarea"
 
       def has_scroller?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(SCROLLER_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(SCROLLER_SELECTOR).filter(visible: true))
       end
 
       # The timeline's own readout of where the reader is. Distinct from the
       # stream having loaded a post: a cloaked post keeps its `#post_N` id, so
       # `has_post_number?` is satisfied by a placeholder the reader never reached.
       def has_position?(current, total)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_exact_text_pattern("#{current} / #{total}")],
           useInnerText: true,
         ).matches?(
@@ -33,25 +31,21 @@ module PageObjects
       end
 
       def has_dragging_page?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("body.dragging").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator("body.dragging").filter(visible: true))
       end
 
       def has_no_dragging_page?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("body.dragging").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("body.dragging").filter(visible: true))
       end
 
       def has_dragging_scrollarea?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{SCROLLAREA_SELECTOR}.--dragging").filter(visible: true),
         )
       end
 
       def has_no_dragging_scrollarea?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{SCROLLAREA_SELECTOR}.--dragging").filter(visible: true),
         )
       end

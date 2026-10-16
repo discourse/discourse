@@ -10,27 +10,25 @@ module PageObjects
       end
 
       def has_header_title?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".about__header h1").filter(visible: true),
         )
       end
 
       def has_short_description?(content)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(content)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".about__header .short-description").filter(visible: true))
+        contain_text([browser_text_pattern(content)], useInnerText: true).matches?(
+          browser_root.locator(".about__header .short-description").filter(visible: true),
+        )
       end
 
       def has_extended_description?(content)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(content)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".about__left-side").filter(visible: true))
+        contain_text([browser_text_pattern(content)], useInnerText: true).matches?(
+          browser_root.locator(".about__left-side").filter(visible: true),
+        )
       end
 
       def has_banner_image?(upload)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "img.about__banner-img[src=\"#{GlobalPath.full_cdn_url(upload.url)}\"]",
           ).filter(visible: true),
@@ -38,14 +36,12 @@ module PageObjects
       end
 
       def has_no_banner_image?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("img.about__banner-img").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("img.about__banner-img").filter(visible: true))
       end
 
       def has_members_count?(count, formatted_number)
         element = browser_root.locator(".about__stats-item.members span").filter(visible: true)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.member_count", count:, formatted_number:)),
           useInnerText: true,
         ).matches?(element)
@@ -53,7 +49,7 @@ module PageObjects
 
       def has_admins_count?(count, formatted_number)
         element = browser_root.locator(".about__stats-item.admins span").filter(visible: true)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.admin_count", count:, formatted_number:)),
           useInnerText: true,
         ).matches?(element)
@@ -61,47 +57,44 @@ module PageObjects
 
       def has_moderators_count?(count, formatted_number)
         element = browser_root.locator(".about__stats-item.moderators span").filter(visible: true)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.moderator_count", count:, formatted_number:)),
           useInnerText: true,
         ).matches?(element)
       end
 
       def has_group_with_name?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".about__#{name.downcase} h3").filter(visible: true),
         )
       end
 
       def has_no_group_with_name?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(".about__#{name.downcase} h3").filter(visible: true))
-      end
-
-      def has_no_extra_groups?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("--custom-group").filter(visible: true),
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".about__#{name.downcase} h3").filter(visible: true),
         )
       end
 
+      def has_no_extra_groups?
+        have_count(0).matches?(browser_root.locator("--custom-group").filter(visible: true))
+      end
+
       def has_site_created_less_than_1_month_ago?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.site_age.less_than_one_month")),
           useInnerText: true,
         ).matches?(site_age_stat_element)
       end
 
       def has_site_created_in_months_ago?(months)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.site_age.month", count: months)),
           useInnerText: true,
         ).matches?(site_age_stat_element)
       end
 
       def has_site_created_in_years_ago?(years)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.about.site_age.year", count: years)),
           useInnerText: true,
         ).matches?(site_age_stat_element)
@@ -112,27 +105,23 @@ module PageObjects
       end
 
       def has_edit_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".edit-about-page").filter(visible: true),
         )
       end
 
       def has_no_edit_link?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".edit-about-page").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".edit-about-page").filter(visible: true))
       end
 
       def has_traffic_info_footer?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".traffic-info-footer").filter(visible: true),
         )
       end
 
       def has_no_traffic_info_footer?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".traffic-info-footer").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".traffic-info-footer").filter(visible: true))
       end
 
       def site_activities

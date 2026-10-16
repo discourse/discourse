@@ -12,7 +12,7 @@ describe "Admin Site Setting Value Lists" do
         settings_page.visit("top_menu")
         expect(
           browser_root.locator("html.discourse-no-touch").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(settings_page).to have_hidden_reorder_buttons("top_menu")
       end
 
@@ -20,7 +20,7 @@ describe "Admin Site Setting Value Lists" do
         settings_page.visit("default_emoji_reactions")
         expect(
           browser_root.locator("html.discourse-no-touch").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(settings_page).to have_hidden_reorder_buttons("default_emoji_reactions")
       end
     end
@@ -30,7 +30,7 @@ describe "Admin Site Setting Value Lists" do
         settings_page.visit("top_menu")
         expect(
           browser_root.locator("html.discourse-touch").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(settings_page).to have_visible_reorder_buttons("top_menu")
       end
 
@@ -38,7 +38,7 @@ describe "Admin Site Setting Value Lists" do
         settings_page.visit("default_emoji_reactions")
         expect(
           browser_root.locator("html.discourse-touch").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(settings_page).to have_visible_reorder_buttons("default_emoji_reactions")
       end
     end
@@ -58,7 +58,7 @@ describe "Admin Site Setting Value Lists" do
           settings_page.visit("top_menu")
           expect(
             browser_root.locator("html.discourse-no-touch").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("top_menu")
         end
 
@@ -66,7 +66,7 @@ describe "Admin Site Setting Value Lists" do
           settings_page.visit("default_emoji_reactions")
           expect(
             browser_root.locator("html.discourse-no-touch").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
       end
@@ -76,7 +76,7 @@ describe "Admin Site Setting Value Lists" do
           settings_page.visit("top_menu")
           expect(
             browser_root.locator("html.discourse-touch").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("top_menu")
         end
 
@@ -84,7 +84,7 @@ describe "Admin Site Setting Value Lists" do
           settings_page.visit("default_emoji_reactions")
           expect(
             browser_root.locator("html.discourse-touch").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
       end
@@ -131,7 +131,7 @@ describe "Admin Site Setting Value Lists" do
 
           expect(
             browser_root.locator(".d-reorderable-list__move-item:focus").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(
             browser_page.evaluate(
               "function(arguments) { return Math.round(window.scrollY) }",
@@ -152,7 +152,7 @@ describe "Admin Site Setting Value Lists" do
 
         expect(
           browser_root.locator(".d-reorderable-list__move-item:focus").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         background = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           getComputedStyle(document.querySelector(".d-reorderable-list__move-item:focus"))
             .backgroundColor

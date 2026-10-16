@@ -19,7 +19,7 @@ module PageObjects
 
       # Form Template Index
       def has_form_template_table?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("table.form-templates__table").filter(visible: true),
         )
       end
@@ -45,10 +45,7 @@ module PageObjects
       end
 
       def has_no_form_template?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
           browser_root.locator(".form-templates__table tbody tr td").filter(visible: true),
         )
       end
@@ -122,7 +119,7 @@ module PageObjects
       end
 
       def has_no_preview_modal?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".form-template-form-preview-modal").filter(visible: true),
         )
       end

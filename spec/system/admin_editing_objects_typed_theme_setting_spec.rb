@@ -71,13 +71,11 @@ RSpec.describe "Admin editing objects type" do
       admin_objects_theme_setting_editor =
         admin_customize_themes_page.click_edit_objects_setting_button("objects_setting")
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/admin/customize/themes/#{theme.id}/schema/objects_setting",
-      )
+      expect(browser_page).to have_url("/admin/customize/themes/#{theme.id}/schema/objects_setting")
 
       admin_objects_theme_setting_editor.fill_in_field("name", "some new name").save
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
+      expect(browser_page).to have_url("/admin/customize/themes/#{theme.id}")
 
       expect(admin_customize_themes_page).to have_overridden_setting("objects_setting")
 
@@ -108,7 +106,7 @@ RSpec.describe "Admin editing objects type" do
 
       expect(
         browser_root.locator(".schema-setting-editor__errors").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         browser_text_pattern(
           "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
         ),
@@ -135,7 +133,7 @@ RSpec.describe "Admin editing objects type" do
         .type_in_field("ratio", "7.5")
         .save
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/customize/themes/#{theme.id}")
+      expect(browser_page).to have_url("/admin/customize/themes/#{theme.id}")
       expect(theme.reload.settings[:ratios].value).to eq([{ "ratio" => 7.5 }])
     end
 
@@ -193,7 +191,7 @@ RSpec.describe "Admin editing objects type" do
       admin_objects_setting_editor_page.visit_setting("objects_setting")
       admin_objects_setting_editor_page.add_object_in_root.fill_in_field("name", "new section").save
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/site_settings/category/required")
+      expect(browser_page).to have_url("/admin/site_settings/category/required")
       expect(JSON.parse(SiteSetting.objects_setting)).to eq(
         [{ "links" => [], "name" => "new section" }],
       )

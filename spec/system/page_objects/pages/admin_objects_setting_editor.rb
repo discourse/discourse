@@ -22,14 +22,14 @@ module PageObjects
       end
 
       def has_setting_field_description?(field_name, description)
-        expect(input_field_description(field_name)).to PlaywrightMatchers.contain_text(
+        expect(input_field_description(field_name)).to contain_text(
           browser_text_pattern(description),
           useInnerText: true,
         )
       end
 
       def has_setting_field_label?(field_name, label)
-        expect(input_field_label(field_name)).to PlaywrightMatchers.contain_text(
+        expect(input_field_label(field_name)).to contain_text(
           browser_text_pattern(label),
           useInnerText: true,
         )

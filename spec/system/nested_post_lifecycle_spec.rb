@@ -28,7 +28,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern("Original content before editing")],
         useInnerText: true,
       )
@@ -44,10 +44,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Updated content after editing")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Updated content after editing")], useInnerText: true)
       expect(nested_view).to have_nested_view
     end
   end
@@ -60,9 +57,7 @@ RSpec.describe "Nested view post lifecycle" do
       op.rebake!
 
       nested_view.visit_nested(topic)
-      expect(
-        browser_root.locator(".nested-view__op").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".nested-view__op").filter(visible: true)).to contain_text(
         [browser_text_pattern("Original OP content that should be long enough to pass")],
         useInnerText: true,
       )
@@ -74,9 +69,7 @@ RSpec.describe "Nested view post lifecycle" do
       composer.submit
 
       expect(composer).to be_closed
-      expect(
-        browser_root.locator(".nested-view__op").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".nested-view__op").filter(visible: true)).to contain_text(
         [browser_text_pattern("Updated OP content that should also be long enough")],
         useInnerText: true,
       )
@@ -97,10 +90,7 @@ RSpec.describe "Nested view post lifecycle" do
           browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Post that will be deleted")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Post that will be deleted")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -118,10 +108,7 @@ RSpec.describe "Nested view post lifecycle" do
           browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Post that will be deleted")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Post that will be deleted")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -160,10 +147,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Child reply content")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Child reply content")], useInnerText: true)
     end
   end
 
@@ -188,7 +172,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern("Post that was deleted and recovered")],
         useInnerText: true,
       )
@@ -209,10 +193,7 @@ RSpec.describe "Nested view post lifecycle" do
           browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Secret deleted content here")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -226,10 +207,7 @@ RSpec.describe "Nested view post lifecycle" do
         expect(nested_view).to have_deleted_content_visible_for(root_reply)
         expect(
           browser_root.locator(".nested-post__placeholder-reveal").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Secret deleted content here")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
       end
 
       it "hides deleted content when toggled again" do
@@ -238,10 +216,7 @@ RSpec.describe "Nested view post lifecycle" do
           browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
             visible: true,
           ),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Secret deleted content here")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -288,10 +263,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Original child content here")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Original child content here")], useInnerText: true)
 
       nested_view.click_post_edit_button(child_reply)
       expect(composer).to be_opened
@@ -304,10 +276,7 @@ RSpec.describe "Nested view post lifecycle" do
         browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Updated child content here")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Updated child content here")], useInnerText: true)
     end
   end
 end

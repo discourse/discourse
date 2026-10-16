@@ -19,15 +19,11 @@ module PageObjects
       private
 
       def has_light_scheme_with_media?(media)
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("link.light-scheme[media=\"#{media}\"]"),
-        )
+        have_count(0).does_not_match?(browser_root.locator("link.light-scheme[media=\"#{media}\"]"))
       end
 
       def has_dark_scheme_with_media?(media)
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("link.dark-scheme[media=\"#{media}\"]"),
-        )
+        have_count(0).does_not_match?(browser_root.locator("link.dark-scheme[media=\"#{media}\"]"))
       end
     end
   end

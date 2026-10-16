@@ -16,11 +16,11 @@ describe "Simplified Category Creation" do
   describe "Selecting category type when setting up a new category" do
     it "automatically skips category type selection when only one type (discussion) is available" do
       category_page.visit_new_category
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.category.create_with_type", typeName: "discussion")),
         useInnerText: true,
       )
-      expect(browser_page).to PlaywrightMatchers.have_url("/new-category/general")
+      expect(browser_page).to have_url("/new-category/general")
     end
 
     context "when multiple types are available" do
@@ -50,11 +50,11 @@ describe "Simplified Category Creation" do
         expect(category_type_card).to have_type_card("discussion")
 
         category_type_card.find_type_card("discussion").click
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("js.category.create_with_type", typeName: "discussion")),
           useInnerText: true,
         )
-        expect(browser_page).to PlaywrightMatchers.have_url("/new-category/general")
+        expect(browser_page).to have_url("/new-category/general")
       end
     end
   end
@@ -123,7 +123,7 @@ describe "Simplified Category Creation" do
 
       category_page.visit_general(category)
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.category.special_warning")),
         useInnerText: true,
       )
@@ -131,7 +131,7 @@ describe "Simplified Category Creation" do
         browser_root.locator("input.form-kit__control-radio[value='group_restricted']").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       form.field("name").fill_in("Renamed staff")
       category_page.save_settings
@@ -140,11 +140,11 @@ describe "Simplified Category Creation" do
 
       category_page.visit_security(category)
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.category.special_warning")),
         useInnerText: true,
       )
-      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      expect(browser_content).not_to contain_text(
         browser_text_pattern(I18n.t("js.category.permissions.specific_groups_have_access")),
         useInnerText: true,
       )
@@ -168,10 +168,10 @@ describe "Simplified Category Creation" do
 
       expect(
         browser_root.locator(".edit-category-security").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(".edit-category-settings").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "preserves permission types when adding a new access group on general tab" do
@@ -202,7 +202,7 @@ describe "Simplified Category Creation" do
         browser_root.locator(
           "#{category_permission_row.group_permission_row_selector(group.name)} .reply-granted",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "automatically switches to private when selecting a restricted parent" do
@@ -215,9 +215,7 @@ describe "Simplified Category Creation" do
       parent_chooser.expand
       parent_chooser.select_row_by_value(restricted_parent.id)
 
-      expect(
-        browser_root.locator(".group-chooser").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".group-chooser").filter(visible: true)).not_to have_count(0)
     end
 
     it "shows inherited groups when selecting a restricted parent" do
@@ -247,19 +245,17 @@ describe "Simplified Category Creation" do
         browser_root.locator(".description-content.--collapsed.--overflowing").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".toggle-description").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator(".toggle-description").filter(visible: true)).not_to have_count(0)
 
       browser_root.locator(".toggle-description").filter(visible: true).click
 
       expect(
         browser_root.locator(".description-content.--collapsed").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         browser_root.locator(".description-content.--overflowing").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       browser_root.locator(".toggle-description").filter(visible: true).click
 
@@ -267,22 +263,20 @@ describe "Simplified Category Creation" do
         browser_root.locator(".description-content.--collapsed.--overflowing").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "does not show expand toggle for short descriptions" do
       category_with_definition = Fabricate(:category_with_definition)
       category_page.visit_general(category_with_definition)
 
-      expect(
-        browser_root.locator(".description-content").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".toggle-description").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".description-content").filter(visible: true)).not_to have_count(
+        0,
+      )
+      expect(browser_root.locator(".toggle-description").filter(visible: true)).to have_count(0)
       expect(
         browser_root.locator(".description-content.--overflowing").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "opens the composer to edit the category description and updates it after save" do
@@ -302,8 +296,8 @@ describe "Simplified Category Creation" do
         browser_root.locator(".edit-category-description-container .readonly-field").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      ).not_to have_count(0)
+      expect(browser_content).to contain_text(
         browser_text_pattern("Updated category description"),
         useInnerText: true,
       )
@@ -312,13 +306,11 @@ describe "Simplified Category Creation" do
 
     it "does not allow selecting other category types when creating a new category" do
       category_page.visit_new_category
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.category.create_with_type", typeName: "discussion")),
         useInnerText: true,
       )
-      expect(
-        browser_root.locator(".category-type-selector").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".category-type-selector").filter(visible: true)).to have_count(0)
     end
   end
 
@@ -340,14 +332,10 @@ describe "Simplified Category Creation" do
 
     it "resets security settings when navigating from edit to new category" do
       category_page.visit_general(private_category)
-      expect(
-        browser_root.locator(".group-chooser").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".group-chooser").filter(visible: true)).not_to have_count(0)
 
       category_page.visit_new_category
-      expect(
-        browser_root.locator(".group-chooser").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".group-chooser").filter(visible: true)).to have_count(0)
     end
 
     it "removes a group permission" do
@@ -462,7 +450,7 @@ describe "Simplified Category Creation" do
       ).set_input_files(Rails.root.join("spec/fixtures/images/logo.png").to_s)
       expect(
         browser_root.locator("#category-logo-uploader.has-image").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       category_page.save_settings
 
       expect(category.reload.uploaded_logo).to be_present

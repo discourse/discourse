@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def has_plugin_enabled?(plugin)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='true']",
           ).filter(visible: true),
@@ -38,7 +38,7 @@ module PageObjects
       end
 
       def has_plugin_disabled?(plugin)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='false']",
           ).filter(visible: true),

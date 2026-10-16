@@ -6,21 +6,19 @@ module PageObjects
       TOPIC_LIST_ITEM_SELECTOR = ".category-list.with-topics .featured-topic"
 
       def has_category?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("tr[data-category-id='#{category.id}']").filter(visible: true),
         )
       end
 
       def has_topic?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(topic_list_item_class(topic)).filter(visible: true),
         )
       end
 
       def has_no_new_posts_badge?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".new-posts").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".new-posts").filter(visible: true))
       end
 
       def click_category_navigation

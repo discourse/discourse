@@ -19,18 +19,18 @@ module PageObjects
         browser_root
           .locator(".card-content .members.metadata a.card-tiny-avatar")
           .filter(visible: true)
-          .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(expected_count) }
+          .tap { |elements| expect(elements).to have_count(expected_count) }
           .all
       end
 
       def has_join_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(JOIN_BUTTON_SELECTOR).filter(visible: true),
         )
       end
 
       def has_leave_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(LEAVE_BUTTON_SELECTOR).filter(visible: true),
         )
       end

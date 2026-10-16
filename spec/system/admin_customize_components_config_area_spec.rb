@@ -67,14 +67,18 @@ describe "Admin Customize Themes Config Area Page" do
     it "can enable/disable components" do
       config_area.visit
 
-      expect(config_area.component(enabled_component.id).enabled_toggle).to be_checked
+      expect(
+        config_area.component(enabled_component.id).enabled_toggle,
+      ).to RSpecPredicates.be_checked
       expect(config_area.component(disabled_component.id).enabled_toggle).to be_unchecked
 
       config_area.component(enabled_component.id).enabled_toggle.toggle
       config_area.component(disabled_component.id).enabled_toggle.toggle
 
       expect(config_area.component(enabled_component.id).enabled_toggle).to be_unchecked
-      expect(config_area.component(disabled_component.id).enabled_toggle).to be_checked
+      expect(
+        config_area.component(disabled_component.id).enabled_toggle,
+      ).to RSpecPredicates.be_checked
 
       expect(enabled_component.reload.enabled).to eq(false)
       expect(disabled_component.reload.enabled).to eq(true)
@@ -120,9 +124,7 @@ describe "Admin Customize Themes Config Area Page" do
       config_area.visit
 
       config_area.component(enabled_component.id).edit_button.click
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/admin/customize/themes/#{enabled_component.id}",
-      )
+      expect(browser_page).to have_url("/admin/customize/themes/#{enabled_component.id}")
     end
 
     it "displays various metadata for components" do
@@ -365,7 +367,7 @@ describe "Admin Customize Themes Config Area Page" do
       I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new component"),
     )
 
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/components/\d+})
+    expect(browser_page).to have_url(%r{/admin/customize/components/\d+})
   end
 
   it "warns when leaving a newly created component that isn't assigned to any themes" do
@@ -375,7 +377,7 @@ describe "Admin Customize Themes Config Area Page" do
       name: "some new component",
       component: true,
     )
-    expect(browser_page).to PlaywrightMatchers.have_url(%r{/admin/customize/components/\d+})
+    expect(browser_page).to have_url(%r{/admin/customize/components/\d+})
 
     theme_page.click_back_to_components
     expect(dialog).to have_displayed_content(

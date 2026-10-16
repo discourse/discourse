@@ -14,7 +14,7 @@ describe "Welcome banner" do
 
     it "shows for logged in and anonymous users" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       expect(banner).to have_anonymous_title
       sign_in(current_user)
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
@@ -34,7 +34,7 @@ describe "Welcome banner" do
     context "with subheader translations" do
       it "shows subheader for logged in and anonymous members" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(banner).to have_no_subheader
         TranslationOverride.upsert!(
           "en",
@@ -86,17 +86,17 @@ describe "Welcome banner" do
       SiteSetting.remove_override!(:top_menu)
       topic = Fabricate(:topic)
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       browser_page.goto("/hot").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       browser_page.goto("/tags").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_hidden
+      expect(banner).to RSpecPredicates.be_hidden
       browser_page.goto(topic.relative_url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_hidden
+      expect(banner).to RSpecPredicates.be_hidden
     end
 
     context "when using search_field search_experience" do
@@ -113,7 +113,7 @@ describe "Welcome banner" do
 
         sign_in(current_user)
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(search_page).to have_no_search_field
 
         fake_scroll_down_long
@@ -122,7 +122,7 @@ describe "Welcome banner" do
         expect(search_page).to have_search_field
 
         browser_page.evaluate("([x, y]) => window.scrollTo(x, y)", arg: [0, 0])
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(search_page).to have_no_search_field
       end
     end
@@ -137,7 +137,7 @@ describe "Welcome banner" do
 
         sign_in(current_user)
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(search_page).to have_no_search_icon
 
         fake_scroll_down_long
@@ -146,7 +146,7 @@ describe "Welcome banner" do
         expect(search_page).to have_search_icon
 
         browser_page.evaluate("([x, y]) => window.scrollTo(x, y)", arg: [0, 0])
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(search_page).to have_no_search_icon
       end
     end
@@ -160,7 +160,7 @@ describe "Welcome banner" do
       it "shows banner without background image" do
         sign_in(current_user)
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
         expect(banner).to have_no_bg_img
       end
 
@@ -225,52 +225,52 @@ describe "Welcome banner" do
           sign_in(current_user)
 
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_visible
+          expect(banner).to RSpecPredicates.be_visible
 
           browser_page
             .goto("/u/#{current_user.username}/preferences/emails")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_visible
+          expect(banner).to RSpecPredicates.be_visible
 
           browser_page.goto("/my/messages").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_visible
+          expect(banner).to RSpecPredicates.be_visible
         end
 
         it "hides on authentication and admin pages" do
           browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page
             .goto("/invites/#{invite.invite_key}")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page
             .goto("/u/activate-account/#{inactive_user_email_token}")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           sign_in(current_user)
           browser_page
             .goto("/u/password-reset/#{password_reset_email_token}")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page
             .goto("/admin/config/site-admin")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
 
           browser_page
             .goto("/admin/customize")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(banner).to be_hidden
+          expect(banner).to RSpecPredicates.be_hidden
         end
       end
 
@@ -281,10 +281,10 @@ describe "Welcome banner" do
         browser_page
           .goto("/filter?q=tag%3Ain-progress")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
 
         browser_page.goto("/about").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_hidden
+        expect(banner).to RSpecPredicates.be_hidden
       end
 
       it "shows only on top menu pages" do
@@ -295,22 +295,22 @@ describe "Welcome banner" do
           .split("|")
           .each do |route|
             browser_page.goto("/#{route}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-            expect(banner).to be_visible
+            expect(banner).to RSpecPredicates.be_visible
           end
 
         browser_page.goto("/about").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_hidden
+        expect(banner).to RSpecPredicates.be_hidden
       end
 
       it "shows only on the homepage" do
         SiteSetting.welcome_banner_page_visibility = "homepage"
 
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_visible
+        expect(banner).to RSpecPredicates.be_visible
 
         sign_in(current_user)
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(banner).to be_hidden
+        expect(banner).to RSpecPredicates.be_hidden
       end
     end
   end
@@ -322,10 +322,10 @@ describe "Welcome banner" do
 
     it "does not show the welcome banner for logged in and anonymous users" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_hidden
+      expect(banner).to RSpecPredicates.be_hidden
       sign_in(current_user)
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_hidden
+      expect(banner).to RSpecPredicates.be_hidden
     end
   end
 end

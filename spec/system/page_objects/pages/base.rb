@@ -5,6 +5,7 @@ module PageObjects
     class Base
       include NativeSystemHelpers
       include RSpec::Matchers
+      include Playwright::Test::Matchers
       include SystemHelpers
     end
   end

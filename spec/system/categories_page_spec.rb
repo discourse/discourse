@@ -23,15 +23,13 @@ RSpec.describe "Categories Page" do
           ".category-list tr[data-category-id='#{category_with_hashtag.id}'] .category-description",
         ).filter(visible: true),
       ) do
-        expect(
-          browser_root.locator(".hashtag-cooked").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(browser_root.locator(".hashtag-cooked").filter(visible: true)).to contain_text(
           [browser_text_pattern("important")],
           useInnerText: true,
         )
         expect(
           browser_root.locator(".hashtag-cooked .d-icon").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -46,11 +44,11 @@ RSpec.describe "Categories Page" do
         browser_root.locator(".badge-category[data-category-id='#{subcategory.id}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       topics.each do |t|
         expect(
           browser_root.locator(".featured-topic[data-topic-id='#{t.id}']").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern(t.title)], useInnerText: true)
+        ).to contain_text([browser_text_pattern(t.title)], useInnerText: true)
       end
     end
   end

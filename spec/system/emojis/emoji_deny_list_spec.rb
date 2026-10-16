@@ -35,9 +35,9 @@ describe "Emoji deny list" do
       topic_page.visit_topic(topic)
       expect(browser_page.title).to eq("Time for business - Discourse")
       expect(topic_page).to have_topic_title("Time for business")
-      expect(
-        browser_root.locator(".emoji[title=':monkey:']").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".emoji[title=':monkey:']").filter(visible: true)).to have_count(
+        0,
+      )
     end
   end
 
@@ -109,7 +109,7 @@ describe "Emoji deny list" do
           end
           .locator(".emoji[title=':monkey:']")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

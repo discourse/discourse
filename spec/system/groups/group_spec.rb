@@ -39,14 +39,12 @@ describe "Group" do
           .filter(visible: true)
           .fill("The Illuminati")
 
-        expect(
-          browser_root.locator(".tip.good").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".tip.good").filter(visible: true)).not_to have_count(0)
 
         group_form_page.add_automatic_email_domain("illumi.net")
         group_form_page.click_save
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/g/illuminati")
+        expect(browser_page).to have_url("/g/illuminati")
       end
     end
 
@@ -76,9 +74,7 @@ describe "Group" do
           .filter(visible: true)
           .fill("The Illuminati")
 
-        expect(
-          browser_root.locator(".tip.good").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".tip.good").filter(visible: true)).not_to have_count(0)
 
         group_form_page.add_automatic_email_domain("illumi.net")
 
@@ -92,13 +88,13 @@ describe "Group" do
         )
 
         dialog.click_no
-        expect(browser_page).to PlaywrightMatchers.have_url("/g/custom/new")
+        expect(browser_page).to have_url("/g/custom/new")
 
         group_form_page.click_save
         expect(dialog).to be_open
 
         dialog.click_yes
-        expect(browser_page).to PlaywrightMatchers.have_url("/g/illuminati")
+        expect(browser_page).to have_url("/g/illuminati")
       end
     end
   end
@@ -124,7 +120,7 @@ describe "Group" do
 
       expect(
         browser_root.locator(".group-manage-save-button span").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Saved!")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("Saved!")], useInnerText: true)
     end
   end
 
@@ -134,7 +130,7 @@ describe "Group" do
 
       group_page.delete_group
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/g")
+      expect(browser_page).to have_url("/g")
     end
   end
 

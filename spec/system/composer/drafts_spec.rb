@@ -162,15 +162,13 @@ describe "Composer - Drafts" do
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(
-        browser_root.locator(".discard-draft-modal").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".discard-draft-modal").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm_edit"))],
         useInnerText: true,
       )
       expect(
         browser_root.locator(".discard-draft-modal__discard-btn").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern(I18n.t("js.post.cancel_composer.discard_edit"))],
         useInnerText: true,
       )
@@ -186,9 +184,7 @@ describe "Composer - Drafts" do
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(
-        browser_root.locator(".discard-draft-modal").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".discard-draft-modal").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm_edit"))],
         useInnerText: true,
       )
@@ -199,9 +195,7 @@ describe "Composer - Drafts" do
       topic_page.click_post_action_button(post_1, :edit)
 
       expect(composer).to be_opened
-      expect(
-        browser_root.locator(".discard-button").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".discard-button").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.composer.cancel_edit"))],
         useInnerText: true,
       )
@@ -219,15 +213,13 @@ describe "Composer - Drafts" do
       composer.discard
 
       expect(discard_draft_modal).to be_open
-      expect(
-        browser_root.locator(".discard-draft-modal").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".discard-draft-modal").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.post.cancel_composer.confirm"))],
         useInnerText: true,
       )
       expect(
         browser_root.locator(".discard-draft-modal__discard-btn").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern(I18n.t("js.post.cancel_composer.discard"))],
         useInnerText: true,
       )
@@ -237,9 +229,7 @@ describe "Composer - Drafts" do
       browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
-      expect(
-        browser_root.locator(".discard-button").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".discard-button").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.composer.discard"))],
         useInnerText: true,
       )
@@ -326,7 +316,7 @@ describe "Composer - Drafts" do
       topic_page.click_reply_button
 
       expect(composer).to have_displayed_content("edited post content")
-      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+      expect(composer.button_label).to contain_text(
         browser_text_pattern(I18n.t("js.composer.save_edit")),
         useInnerText: true,
       )
@@ -344,7 +334,7 @@ describe "Composer - Drafts" do
       topic_page.click_post_action_button(post_1, :edit)
 
       expect(composer).to have_displayed_content("edited post content")
-      expect(composer.button_label).to PlaywrightMatchers.contain_text(
+      expect(composer.button_label).to contain_text(
         browser_text_pattern(I18n.t("js.composer.save_edit")),
         useInnerText: true,
       )

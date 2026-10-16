@@ -6,49 +6,49 @@ module PageObjects
       MENU_SELECTOR = ".topic-drafts-menu"
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(MENU_SELECTOR + "-trigger").filter(visible: true),
         )
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(MENU_SELECTOR + "-trigger").filter(visible: true),
         )
       end
 
       def enabled?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(MENU_SELECTOR + "-trigger[disabled]").filter(visible: true),
         )
       end
 
       def disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(MENU_SELECTOR + "-trigger[disabled]").filter(visible: true),
         )
       end
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(MENU_SELECTOR + "-content").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(MENU_SELECTOR + "-content").filter(visible: true),
         )
       end
 
       def has_view_all_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(MENU_SELECTOR + "-content .view-all-drafts").filter(visible: true),
         )
       end
 
       def has_no_view_all_link?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(MENU_SELECTOR + "-content .view-all-drafts").filter(visible: true),
         )
       end

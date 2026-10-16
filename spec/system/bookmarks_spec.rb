@@ -33,7 +33,7 @@ describe "Bookmarking posts and topics" do
     visit_topic_and_open_bookmark_menu(post)
 
     expect(bookmark_menu).to be_open
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("js.bookmarks.bookmarked_success")),
       useInnerText: true,
     )
@@ -45,7 +45,7 @@ describe "Bookmarking posts and topics" do
     visit_topic_and_open_bookmark_menu(post)
 
     expect(bookmark_menu).to be_open
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("js.bookmarks.bookmarked_success")),
       useInnerText: true,
     )
@@ -55,7 +55,7 @@ describe "Bookmarking posts and topics" do
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(
       browser_root.locator(".bookmark-menu-content.-expanded").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
@@ -190,9 +190,7 @@ describe "Bookmarking posts and topics" do
       expect(bookmark_menu).to have_post_submenu
       bookmark_menu.click_post_submenu_option("jump")
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        %r{/t/.*#{topic.id}/#{post_2.post_number}},
-      )
+      expect(browser_page).to have_url(%r{/t/.*#{topic.id}/#{post_2.post_number}})
     end
 
     it "deletes a single post bookmark via submenu" do
@@ -237,7 +235,7 @@ describe "Bookmarking posts and topics" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("edit")
       expect(bookmark_modal.name.input_value).to eq("test name")
-      expect(bookmark_modal.existing_reminder_alert).to PlaywrightMatchers.contain_text(
+      expect(bookmark_modal.existing_reminder_alert).to contain_text(
         browser_text_pattern(bookmark_modal.existing_reminder_alert_message(bookmark)),
         useInnerText: true,
       )
@@ -261,7 +259,7 @@ describe "Bookmarking posts and topics" do
     it "can clear the bookmark reminder" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("clear-reminder")
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.bookmarks.reminder_clear_success")),
         useInnerText: true,
       )

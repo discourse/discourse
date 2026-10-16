@@ -20,7 +20,7 @@ module PageObjects
         end
 
         def has_author?(name)
-          PlaywrightMatchers.contain_text(
+          contain_text(
             browser_text_pattern(
               I18n.t(
                 "admin_js.admin.config_areas.themes_and_components.components.by_author",
@@ -34,10 +34,7 @@ module PageObjects
         end
 
         def has_description?(description)
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern(description),
-            useInnerText: true,
-          ).matches?(
+          contain_text(browser_text_pattern(description), useInnerText: true).matches?(
             @element.locator(".admin-config-components__description").filter(visible: true),
           )
         end
@@ -93,13 +90,13 @@ module PageObjects
         end
 
         def pending_update?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             @element.locator(".admin-config-components__update-available").filter(visible: true),
           )
         end
 
         def not_pending_update?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             @element
               .tap do |parent|
                 parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -164,7 +161,7 @@ module PageObjects
       end
 
       def has_no_component?(id)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".admin-config-components__component-row[data-component-id=\"#{id}\"]",
           ).filter(visible: true),
@@ -172,7 +169,7 @@ module PageObjects
       end
 
       def has_component?(id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".admin-config-components__component-row[data-component-id=\"#{id}\"]",
           ).filter(visible: true),
@@ -190,7 +187,7 @@ module PageObjects
       end
 
       def has_no_components?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-config-components__component-row").filter(visible: true),
         )
       end
@@ -200,7 +197,7 @@ module PageObjects
       end
 
       def has_exactly_n_components?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".admin-config-components__component-row").filter(visible: true),
         )
       end
@@ -208,7 +205,7 @@ module PageObjects
       def components_shown
         expect(
           browser_root.locator(".admin-config-components__component-row").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root
           .locator(".admin-config-components__component-row")
@@ -219,31 +216,31 @@ module PageObjects
       end
 
       def has_name_filter_input?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__input").filter(visible: true),
         )
       end
 
       def has_status_selector?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__dropdown").filter(visible: true),
         )
       end
 
       def has_no_name_filter_input?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".d-filter-controls__input").filter(visible: true),
         )
       end
 
       def has_no_status_selector?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".d-filter-controls__dropdown").filter(visible: true),
         )
       end
 
       def has_no_components_installed_text?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t("admin_js.admin.config_areas.themes_and_components.components.no_components"),
           ),
@@ -252,7 +249,7 @@ module PageObjects
       end
 
       def has_no_components_found_text?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t(
               "admin_js.admin.config_areas.themes_and_components.components.no_components_found",

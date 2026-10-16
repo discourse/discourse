@@ -49,15 +49,13 @@ module PageObjects
       end
 
       def has_result_count?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#search-result-count").filter(visible: true),
         )
       end
 
       def has_no_result_count?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#search-result-count").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#search-result-count").filter(visible: true))
       end
 
       def click_search_button
@@ -77,7 +75,7 @@ module PageObjects
           browser_root.locator(is_mobile? ? ".search-container" : ".search-menu-container").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -93,7 +91,7 @@ module PageObjects
       end
 
       def has_search_menu_visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".search-menu .search-menu-panel").filter(visible: true),
         )
       end
@@ -102,13 +100,11 @@ module PageObjects
       # where we show the search results with a quick tip, but the panel
       # itself is not technically "visible" in CSS terms.
       def has_search_menu?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".search-menu .search-menu-panel"),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".search-menu .search-menu-panel"))
       end
 
       def has_no_search_menu_visible?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".search-menu .search-menu-panel").filter(visible: true),
         )
       end
@@ -118,61 +114,55 @@ module PageObjects
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
 
       def has_search_icon?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(SEARCH_ICON_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_search_icon?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SEARCH_ICON_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SEARCH_ICON_SELECTOR).filter(visible: true))
       end
 
       def has_search_field?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(SEARCH_FIELD_SELECTOR).filter(visible: true),
         )
       end
 
       def has_header_search_menu?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{SEARCH_FIELD_SELECTOR} .search-menu-panel"),
         )
       end
 
       def has_no_search_field?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SEARCH_FIELD_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SEARCH_FIELD_SELECTOR).filter(visible: true))
       end
 
       def has_topic_title_for_first_search_result?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".search-menu .results .search-result-topic").filter(visible: true),
         )
       end
 
       def has_search_result?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(SEARCH_RESULT_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_search_result?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SEARCH_RESULT_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SEARCH_RESULT_SELECTOR).filter(visible: true))
       end
 
       def has_warning_message?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".search-results .warning").filter(visible: true),
         )
       end
 
       def has_found_no_results?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".search-menu-container .results .no-results").filter(visible: true),
         )
       end
@@ -184,15 +174,13 @@ module PageObjects
       SEARCH_PAGE_SELECTOR = "body.search-page"
 
       def active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(SEARCH_PAGE_SELECTOR).filter(visible: true),
         )
       end
 
       def not_active?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SEARCH_PAGE_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SEARCH_PAGE_SELECTOR).filter(visible: true))
       end
 
       def browser_search_shortcut

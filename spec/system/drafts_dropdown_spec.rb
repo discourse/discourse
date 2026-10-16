@@ -12,14 +12,14 @@ describe "Drafts dropdown" do
   describe "with no drafts" do
     it "does not display drafts dropdown" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(drafts_dropdown).to be_hidden
+      expect(drafts_dropdown).to RSpecPredicates.be_hidden
     end
 
     it "adds a draft dropdown menu when a draft is available" do
       browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       composer.fill_content("This is a draft")
 
-      expect(drafts_dropdown).to be_visible
+      expect(drafts_dropdown).to RSpecPredicates.be_visible
     end
   end
 
@@ -124,8 +124,8 @@ describe "Drafts dropdown" do
           )
           .and(browser_root.locator(":not(:disabled)"))
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(drafts_dropdown).to be_enabled
+      ).not_to have_count(0)
+      expect(drafts_dropdown).to RSpecPredicates.be_enabled
     end
   end
 end

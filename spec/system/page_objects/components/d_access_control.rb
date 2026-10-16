@@ -24,15 +24,13 @@ module PageObjects
       end
 
       def has_row?(type:, id:)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(row_selector(type:, id:)).filter(visible: true),
         )
       end
 
       def has_no_row?(type:, id:)
-        PlaywrightMatchers.have_count(0).matches?(
-          component.locator(row_selector(type:, id:)).filter(visible: true),
-        )
+        have_count(0).matches?(component.locator(row_selector(type:, id:)).filter(visible: true))
       end
 
       def row(type:, id:)

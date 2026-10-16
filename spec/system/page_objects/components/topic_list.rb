@@ -12,36 +12,34 @@ module PageObjects
 
       def has_topics?(count: nil)
         if count.nil?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
           )
         else
-          PlaywrightMatchers.have_count(count).matches?(
+          have_count(count).matches?(
             browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
           )
         end
       end
 
       def has_no_topics?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(TOPIC_LIST_ITEM_SELECTOR).filter(visible: true))
       end
 
       def has_topic?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(topic_list_item_class(topic)).filter(visible: true),
         )
       end
 
       def has_no_topic?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(topic_list_item_class(topic)).filter(visible: true),
         )
       end
 
       def has_highlighted_topic?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{topic_list_item_class(topic)}[data-test-was-highlighted]").filter(
             visible: true,
           ),
@@ -49,7 +47,7 @@ module PageObjects
       end
 
       def has_topic_checkbox?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}",
           ).filter(visible: true),
@@ -57,7 +55,7 @@ module PageObjects
       end
 
       def has_no_topic_checkbox?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}",
           ).filter(visible: true),
@@ -65,7 +63,7 @@ module PageObjects
       end
 
       def has_bulk_select_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select").filter(
             visible: true,
           ),
@@ -73,37 +71,37 @@ module PageObjects
       end
 
       def has_closed_status?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{topic_list_item_closed(topic)}").filter(visible: true),
         )
       end
 
       def has_unread_badge?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{topic_list_item_unread_badge(topic)}").filter(visible: true),
         )
       end
 
       def has_no_unread_badge?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{topic_list_item_unread_badge(topic)}").filter(visible: true),
         )
       end
 
       def has_new_replies_dot?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{topic_list_item_new_replies_dot(topic)}").filter(visible: true),
         )
       end
 
       def has_no_new_replies_dot?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{topic_list_item_new_replies_dot(topic)}").filter(visible: true),
         )
       end
 
       def has_checkbox_selected_on_row?(n)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked",
           ).filter(visible: true),
@@ -111,7 +109,7 @@ module PageObjects
       end
 
       def has_no_checkbox_selected_on_row?(n)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked",
           ).filter(visible: true),
@@ -203,10 +201,7 @@ module PageObjects
       end
 
       def has_topic_tag?(topic, tag_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(tag_name)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(tag_name)], useInnerText: true).matches?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
           ).filter(visible: true),
@@ -214,10 +209,7 @@ module PageObjects
       end
 
       def has_no_topic_tag?(topic, tag_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(tag_name)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(tag_name)], useInnerText: true).does_not_match?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
           ).filter(visible: true),
@@ -226,7 +218,7 @@ module PageObjects
 
       def has_topic_tags?(topic, tags:)
         tags.all? { |tag| has_topic_tag?(topic, tag.name) } &&
-          PlaywrightMatchers.have_count(tags.size).matches?(
+          have_count(tags.size).matches?(
             browser_root.locator(
               "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
             ).filter(visible: true),
@@ -234,7 +226,7 @@ module PageObjects
       end
 
       def has_no_topic_tags?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
           ).filter(visible: true),
@@ -250,7 +242,7 @@ module PageObjects
       end
 
       def had_new_topics_alert?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".show-more.has-topics").filter(visible: true),
         )
       end
@@ -260,7 +252,7 @@ module PageObjects
       end
 
       def has_pinned_status?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned",
           ).filter(visible: true),
@@ -268,7 +260,7 @@ module PageObjects
       end
 
       def has_no_pinned_status?(topic)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned",
           ).filter(visible: true),

@@ -158,9 +158,10 @@ describe "Content Localization" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       language_switcher.select_language("ja")
-      expect(
-        browser_root.locator(switcher_selector).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(browser_text_pattern("JA"), useInnerText: true)
+      expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+        browser_text_pattern("JA"),
+        useInnerText: true,
+      )
 
       preferences_interface_page.visit(site_local_user)
       expect(preferences_interface_page).to have_removable_understood_language("en")
@@ -209,7 +210,7 @@ describe "Content Localization" do
       sign_in(site_local_user)
 
       topic_page.visit_topic(topic)
-      expect(post_4_obj.post_language).to PlaywrightMatchers.contain_text(
+      expect(post_4_obj.post_language).to contain_text(
         browser_text_pattern("日本語"),
         useInnerText: true,
       )
@@ -222,7 +223,7 @@ describe "Content Localization" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
-      expect(post_3_obj.post).to PlaywrightMatchers.contain_text(
+      expect(post_3_obj.post).to contain_text(
         browser_text_pattern("A general is one who .."),
         useInnerText: true,
       )
@@ -247,13 +248,13 @@ describe "Content Localization" do
         browser_page
           .goto("/t/#{topic.id}?tl=ja")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(topic_page.topic_title).to PlaywrightMatchers.contain_text(
+        expect(topic_page.topic_title).to contain_text(
           browser_text_pattern("孫子兵法からの人生戦略"),
           useInnerText: true,
         )
 
         browser_page.goto("/t/#{topic2.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(topic_page.topic_title).to PlaywrightMatchers.contain_text(
+        expect(topic_page.topic_title).to contain_text(
           browser_text_pattern("織田信長の生涯"),
           useInnerText: true,
         )
@@ -310,13 +311,10 @@ describe "Content Localization" do
         browser_page.goto("/?tl=ja").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(
           browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("日本語で書かれたトピック")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("日本語で書かれたトピック")], useInnerText: true)
         expect(
           browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
-        ).not_to PlaywrightMatchers.contain_text(
+        ).not_to contain_text(
           [browser_text_pattern("A topic written in Japanese")],
           useInnerText: true,
         )
@@ -325,13 +323,10 @@ describe "Content Localization" do
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(
           browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
-          [browser_text_pattern("日本語で書かれたトピック")],
-          useInnerText: true,
-        )
+        ).to contain_text([browser_text_pattern("日本語で書かれたトピック")], useInnerText: true)
         expect(
           browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
-        ).not_to PlaywrightMatchers.contain_text(
+        ).not_to contain_text(
           [browser_text_pattern("A topic written in Japanese")],
           useInnerText: true,
         )
@@ -395,9 +390,7 @@ describe "Content Localization" do
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_no
-        expect(
-          browser_root.locator(".action-title").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(browser_root.locator(".action-title").filter(visible: true)).to contain_text(
           [browser_text_pattern(I18n.t("js.composer.translations.title"))],
           useInnerText: true,
         )
@@ -408,11 +401,9 @@ describe "Content Localization" do
 
         topic_page.visit_topic(topic)
         select_text_range("#{topic_page.post_by_number_selector(post_3.post_number)} .cooked", 0, 5)
-        expect(topic_page.fast_edit_button).to PlaywrightMatchers.be_visible
+        expect(topic_page.fast_edit_button).to be_visible
         topic_page.click_fast_edit_button
-        expect(
-          browser_root.locator("#fast-edit-input").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator("#fast-edit-input").filter(visible: true)).to have_count(0)
         expect(edit_localized_post_dialog).to be_open
       end
 
@@ -441,7 +432,7 @@ describe "Content Localization" do
                 ).or(browser_root.get_by_label("edit-title", exact: true)),
               )
               .filter(visible: true),
-          ).to PlaywrightMatchers.have_value(topic_ja_localization.title)
+          ).to have_value(topic_ja_localization.title)
         end
 
         it "opens a dialog for choosing which title to edit for admins when title is localized" do
@@ -475,7 +466,7 @@ describe "Content Localization" do
                 ).or(browser_root.get_by_label("edit-title", exact: true)),
               )
               .filter(visible: true),
-          ).to PlaywrightMatchers.have_value(topic.title)
+          ).to have_value(topic.title)
 
           # Viewing translation - Save original title change and displayed title should NOT update (still viewing translation)
           browser_root.locator("#edit-title").filter(visible: true).fill("New Original Title")
@@ -497,7 +488,7 @@ describe "Content Localization" do
                 ).or(browser_root.get_by_label("edit-title", exact: true)),
               )
               .filter(visible: true),
-          ).to PlaywrightMatchers.have_value(topic_ja_localization.title)
+          ).to have_value(topic_ja_localization.title)
 
           # Viewing translation - Save translation title change and displayed title should update immediately
           browser_root.locator("#edit-title").filter(visible: true).fill("New Japanese Title")
@@ -541,21 +532,21 @@ describe "Content Localization" do
         topic_list.visit_topic_with_title(topic.title)
 
         post_1_obj.open_post_history
-        expect(post_history_modal.current_locale).to PlaywrightMatchers.contain_text(
+        expect(post_history_modal.current_locale).to contain_text(
           browser_text_pattern("日本語"),
           useInnerText: true,
         )
-        expect(post_history_modal.previous_locale).to PlaywrightMatchers.contain_text(
+        expect(post_history_modal.previous_locale).to contain_text(
           browser_text_pattern(I18n.t("js.post.revisions.locale.no_locale_set")),
           useInnerText: true,
         )
 
         post_history_modal.click_previous_revision
-        expect(post_history_modal.current_locale).to PlaywrightMatchers.contain_text(
+        expect(post_history_modal.current_locale).to contain_text(
           browser_text_pattern(I18n.t("js.post.revisions.locale.locale_removed")),
           useInnerText: true,
         )
-        expect(post_history_modal.previous_locale).to PlaywrightMatchers.contain_text(
+        expect(post_history_modal.previous_locale).to contain_text(
           browser_text_pattern("English"),
           useInnerText: true,
         )
@@ -594,7 +585,7 @@ describe "Content Localization" do
 
         topic_page.visit_topic(topic)
 
-        expect(post_3_obj.post).to PlaywrightMatchers.contain_text(
+        expect(post_3_obj.post).to contain_text(
           browser_text_pattern("A general is one who .."),
           useInnerText: true,
         )
@@ -602,14 +593,12 @@ describe "Content Localization" do
 
         scroll_to_post(21)
 
-        expect(
-          browser_root.locator("#post_21").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator("#post_21").filter(visible: true)).not_to have_count(0)
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
         # the per-post toggle shows the original content for the loaded post
         post_21_obj.toggle_localized_content
-        expect(post_21_obj.post).to PlaywrightMatchers.contain_text(
+        expect(post_21_obj.post).to contain_text(
           browser_text_pattern("日本語コンテンツ 21"),
           useInnerText: true,
         )
@@ -676,16 +665,14 @@ describe "Content Localization" do
         sign_in(japanese_user)
 
         topic_page.visit_topic(shady_topic)
-        expect(browser_page).to PlaywrightMatchers.have_title(
+        expect(browser_page).to have_title(
           Regexp.new(Regexp.escape(shady_topic_ja_localization.fancy_title)),
         )
 
         SiteSetting.content_localization_enabled = false
         browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(browser_page).to PlaywrightMatchers.have_title(
-          Regexp.new(Regexp.escape(shady_topic.title)),
-        )
+        expect(browser_page).to have_title(Regexp.new(Regexp.escape(shady_topic.title)))
       end
     end
 
@@ -797,7 +784,7 @@ describe "Content Localization" do
         topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
         expect(
           browser_root.locator(".title-wrapper .discourse-tag").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern("戦略")], useInnerText: true)
+        ).to contain_text([browser_text_pattern("戦略")], useInnerText: true)
 
         switcher.expand
         switcher.option("[data-menu-option-id='en']").click
@@ -813,7 +800,7 @@ describe "Content Localization" do
         topic_list.visit_topic_with_title("Life strategies from The Art of War")
         expect(
           browser_root.locator(".title-wrapper .discourse-tag").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern("strategy")], useInnerText: true)
+        ).to contain_text([browser_text_pattern("strategy")], useInnerText: true)
       end
 
       it "shows the original tag name consistently when its source language is missing" do
@@ -896,9 +883,9 @@ describe "Content Localization" do
 
         topic_page.click_topic_title_submit_edit
 
-        expect(
-          topic_page.locator("#topic-title .submit-edit").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(topic_page.locator("#topic-title .submit-edit").filter(visible: true)).to have_count(
+          0,
+        )
         topic.reload
         expect(topic.category).to eq(new_category)
         expect(topic.tags).to include(tag, tag2)
@@ -969,9 +956,7 @@ describe "Content Localization" do
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      expect(
-        settings_page.find_setting("content_localization_supported_locales"),
-      ).to PlaywrightMatchers.contain_text(
+      expect(settings_page.find_setting("content_localization_supported_locales")).to contain_text(
         browser_text_pattern("English, Japanese"),
         useInnerText: true,
       )

@@ -10,7 +10,7 @@ module PageObjects
           )
           .filter(visible: true)
           .click
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}.active",
           ).filter(visible: true),
@@ -19,7 +19,7 @@ module PageObjects
 
       def select_default_text_size(size)
         browser_root.locator(".admin-fonts-form__button-option.#{size}").filter(visible: true).click
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-fonts-form__button-option.#{size}.active").filter(
             visible: true,
           ),
@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_no_font?(section, font)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}",
           ).filter(visible: true),
@@ -50,7 +50,7 @@ module PageObjects
       end
 
       def has_form_field?(field)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#control-#{field}").filter(visible: true),
         )
       end

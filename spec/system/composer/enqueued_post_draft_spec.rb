@@ -22,13 +22,11 @@ describe "Composer draft after enqueued post" do
 
       composer.create
 
-      expect(
-        browser_root.locator(".post-enqueued-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       browser_root.locator(".post-enqueued-modal .btn-primary").filter(visible: true).click
-      expect(
-        browser_root.locator(".post-enqueued-modal").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).to have_count(0)
       expect(composer).to be_closed
 
       try_until_success { expect(Draft.where(user: current_user).count).to eq(0) }

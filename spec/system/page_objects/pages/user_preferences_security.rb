@@ -24,9 +24,7 @@ module PageObjects
       def visit_second_factor(user, password)
         click_manage_2fa_authentication.submit_password(password)
 
-        expect(browser_page).to PlaywrightMatchers.have_url(
-          "/u/#{user.username}/preferences/second-factor",
-        )
+        expect(browser_page).to have_url("/u/#{user.username}/preferences/second-factor")
         self
       end
     end

@@ -19,9 +19,7 @@ describe "Topic page" do
 
     browser_root.locator("#toc-h2-testing .anchor").click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      %r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
-    )
+    expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing})
   end
 
   context "with a subfolder setup" do
@@ -34,9 +32,7 @@ describe "Topic page" do
 
       browser_root.locator("#toc-h2-testing .anchor").click
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        %r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
-      )
+      expect(browser_page).to have_url(%r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing})
     end
   end
 
@@ -55,7 +51,7 @@ describe "Topic page" do
 
       expect(
         browser_root.locator(".codeblock-button-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
@@ -76,13 +72,9 @@ describe "Topic page" do
         .goto("/t/#{topic.slug}/#{topic.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".topic-post").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(2)
+      expect(browser_root.locator(".topic-post").filter(visible: true)).to have_count(2)
       browser_root.locator(".post-stream .gap").filter(visible: true).click()
-      expect(
-        browser_root.locator(".topic-post").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(4)
+      expect(browser_root.locator(".topic-post").filter(visible: true)).to have_count(4)
     end
   end
 
@@ -93,21 +85,17 @@ describe "Topic page" do
       .goto("/t/#{topic.slug}/#{topic.id}")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".toggle-admin-menu").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".toggle-admin-menu").filter(visible: true)).not_to have_count(0)
 
     browser_page.keyboard.press(%w[Shift a].join("+"))
 
     expect(
       browser_root.locator(".topic-admin-menu-content").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     browser_page.keyboard.press(%w[Shift a].join("+"))
 
-    expect(
-      browser_root.locator(".topic-admin-menu-content").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".topic-admin-menu-content").filter(visible: true)).to have_count(0)
   end
 
   context "with End keyboard shortcut" do
@@ -122,7 +110,7 @@ describe "Topic page" do
 
       expect(
         browser_root.locator("#post_#{topic.highest_post_number}").filter(visible: true),
-      ).to PlaywrightMatchers.be_visible
+      ).to be_visible
     end
   end
 
@@ -173,23 +161,19 @@ describe "Topic page" do
         .goto("/t/#{topic2.slug}/#{topic2.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_root.locator("h2").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator("h2").filter(visible: true)).to contain_text(
         [browser_text_pattern("Key Takeaways")],
         useInnerText: true,
       )
-      expect(
-        browser_root.locator("blockquote").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".emoji").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("blockquote").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".emoji").filter(visible: true)).not_to have_count(0)
 
       screenshot_marker(label: "topic-rich-content")
 
       browser_page.keyboard.press("End")
       expect(
         browser_root.locator("#post_#{topic2.reload.highest_post_number}").filter(visible: true),
-      ).to PlaywrightMatchers.be_visible
+      ).to be_visible
     end
   end
 

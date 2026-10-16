@@ -26,14 +26,14 @@ describe "Uploading files in the composer to S3" do
           browser_root.locator(".avatar-uploader .avatar-uploader__button[data-uploaded]").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         modal.click_primary_button
         expect(modal).to be_closed
         expect(
           browser_root.locator("#user-avatar-uploads[data-custom-avatar-upload-id]").filter(
             visible: false,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         expect(current_user.reload.uploaded_avatar_id).to eq(
           browser_root
             .locator("#user-avatar-uploads")
@@ -55,12 +55,10 @@ describe "Uploading files in the composer to S3" do
           "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
         ).set_input_files(file_path)
 
-        expect(
-          browser_root.locator("#file-uploading").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
-        expect(
-          composer.preview.locator(".image-wrapper").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+        expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(
+          0,
+        )
       end
     end
   end

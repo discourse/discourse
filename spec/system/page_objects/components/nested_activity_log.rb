@@ -6,31 +6,27 @@ module PageObjects
       MODAL_SELECTOR = ".nested-activity-log-modal"
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(MODAL_SELECTOR).filter(visible: true))
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(MODAL_SELECTOR).filter(visible: true))
       end
 
       def has_item?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(item_selector(post)).filter(visible: true),
         )
       end
 
       def has_item_text?(post, text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(item_selector(post)).filter(visible: true),
         )
       end
 
       def has_item_count?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator("#{MODAL_SELECTOR} .nested-activity-log-modal__item").filter(
             visible: true,
           ),
@@ -38,25 +34,25 @@ module PageObjects
       end
 
       def has_edit_button?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{item_selector(post)} .small-action-edit").filter(visible: true),
         )
       end
 
       def has_no_edit_button?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{item_selector(post)} .small-action-edit").filter(visible: true),
         )
       end
 
       def has_delete_button?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{item_selector(post)} .small-action-delete").filter(visible: true),
         )
       end
 
       def has_recover_button?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{item_selector(post)} .small-action-recover").filter(
             visible: true,
           ),

@@ -58,21 +58,19 @@ module PageObjects
       end
 
       def has_activity_row?(category)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(category.name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true))
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).matches?(
+          browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true),
+        )
       end
 
       def has_no_activity_row?(category)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(category.name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true))
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).does_not_match?(
+          browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true),
+        )
       end
 
       def has_selected_activity_category?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
           ).filter(visible: true),
@@ -80,7 +78,7 @@ module PageObjects
       end
 
       def has_selected_whos_posting_category?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
           ).filter(visible: true),
@@ -88,7 +86,7 @@ module PageObjects
       end
 
       def has_no_selected_whos_posting_category?(category)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
           ).filter(visible: true),
@@ -96,7 +94,7 @@ module PageObjects
       end
 
       def has_activity_row_with_parent?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{ACTIVITY_CATEGORY_CELL} #{parent_then_child_badges(category)}",
           ).filter(visible: true),
@@ -104,7 +102,7 @@ module PageObjects
       end
 
       def has_selected_activity_category_with_parent?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
               "#{parent_then_child_badges(category)}",
@@ -113,7 +111,7 @@ module PageObjects
       end
 
       def has_selected_whos_posting_category_with_parent?(category)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
               "#{parent_then_child_badges(category)}",
@@ -147,29 +145,22 @@ module PageObjects
       end
 
       def has_whos_posting_bar?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(WHOS_POSTING_BAR_LABEL).filter(visible: true),
         )
       end
 
       def has_no_whos_posting_bar?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(WHOS_POSTING_BAR_LABEL).filter(visible: true))
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(WHOS_POSTING_BAR_LABEL).filter(visible: true),
+        )
       end
 
       def has_headline?(title, summary)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(title)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator("#{SECTION} .db-section__subintro h3").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            [browser_exact_text_pattern(summary)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_exact_text_pattern(summary)], useInnerText: true).matches?(
             browser_root.locator("#{SECTION} .db-section__subintro p").filter(visible: true),
           )
       end

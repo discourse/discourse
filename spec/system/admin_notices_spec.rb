@@ -58,7 +58,7 @@ describe "Admin Notices" do
       expect(admin_dashboard).to have_admin_notice(I18n.t("dashboard.problem.test_notice"))
       expect(
         admin_dashboard.locator(".dashboard-problem .btn").filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
+      ).not_to contain_text(
         [browser_text_pattern(I18n.t("admin_js.admin.dashboard.dismiss_notice"))],
         useInnerText: true,
       )

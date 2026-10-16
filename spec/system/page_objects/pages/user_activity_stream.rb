@@ -11,9 +11,7 @@ module PageObjects
       end
 
       def has_items?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
-          browser_root.locator(".user-stream-item").filter(visible: true),
-        )
+        have_count(count).matches?(browser_root.locator(".user-stream-item").filter(visible: true))
       end
 
       def scroll_to_bottom

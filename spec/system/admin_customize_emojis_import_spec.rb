@@ -19,7 +19,7 @@ describe "Admin Emoji Bulk Import" do
 
     emojis_page.confirm_import
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/emoji")
+    expect(browser_page).to have_url("/admin/config/emoji")
     expect(emojis_page).to have_emoji_listed("discourse")
   end
 
@@ -35,7 +35,7 @@ describe "Admin Emoji Bulk Import" do
 
     emojis_page.confirm_import
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/admin/config/emoji")
+    expect(browser_page).to have_url("/admin/config/emoji")
     expect(emojis_page).to have_emoji_listed("discourse")
   end
 end

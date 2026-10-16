@@ -11,10 +11,9 @@ module PageObjects
             I18n.t("js.filters.new.title_with_count", count: count)
           end
 
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".nav-item_new").filter(visible: true))
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".nav-item_new").filter(visible: true),
+        )
       end
 
       def dismiss_new

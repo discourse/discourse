@@ -32,26 +32,24 @@ module PageObjects
       end
 
       def has_destroy_revisions_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           footer.locator("button.destroy-revision").filter(visible: true),
         )
       end
 
       def has_tag_changes?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          body.locator(".-tag-revisions").filter(visible: true),
-        )
+        have_count(0).does_not_match?(body.locator(".-tag-revisions").filter(visible: true))
       end
 
       def has_hidden_diff_notice?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("js.post.revisions.diff_hidden"))],
           useInnerText: true,
         ).matches?(body.locator(".revision__hidden-notice").filter(visible: true))
       end
 
       def has_no_hidden_diff_notice?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           body
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -62,7 +60,7 @@ module PageObjects
       end
 
       def has_body_diff?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           body.locator(".body-diff").filter(visible: true),
         )
       end

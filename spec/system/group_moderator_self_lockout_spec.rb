@@ -58,7 +58,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
       dialog.click_yes
 
-      expect(browser_page).not_to PlaywrightMatchers.have_url(%r{/g/#{group.name}/manage})
+      expect(browser_page).not_to have_url(%r{/g/#{group.name}/manage})
       expect(group.reload.visibility_level).to eq(Group.visibility_levels[:owners])
     end
 

@@ -13,15 +13,13 @@ module PageObjects
         ".d-editor-translation-preview-header__controls button:nth-child(2)"
 
       def has_raw_toggle?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(RAW_TOGGLE_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_raw_toggle?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(RAW_TOGGLE_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(RAW_TOGGLE_SELECTOR).filter(visible: true))
       end
 
       def raw_toggle
@@ -41,27 +39,25 @@ module PageObjects
       end
 
       def original_tab_active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{ORIGINAL_TAB_SELECTOR}.active").filter(visible: true),
         )
       end
 
       def translation_tab_active?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{TRANSLATION_TAB_SELECTOR}.active").filter(visible: true),
         )
       end
 
       def has_raw_markdown_content?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_raw_markdown_content?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true))
       end
 
       def raw_markdown_content
@@ -69,16 +65,14 @@ module PageObjects
       end
 
       def has_rendered_content?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(RENDERED_CONTENT_SELECTOR).filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true))
       end
 
       def has_rendered_preview_image?(alt:)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_page.locator(
             "xpath=" +
               ".//*[contains(concat(' ', normalize-space(@class), ' '), ' d-editor-translation-preview-content ')]" \

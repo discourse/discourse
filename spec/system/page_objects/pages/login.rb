@@ -4,15 +4,11 @@ module PageObjects
   module Pages
     class Login < PageObjects::Pages::Base
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".login-fullpage").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".login-fullpage").filter(visible: true))
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".login-fullpage").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".login-fullpage").filter(visible: true))
       end
 
       def open
@@ -33,9 +29,9 @@ module PageObjects
 
       def click(selector)
         if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
-          expect(
-            browser_root.locator(".d-modal.is-animating").filter(visible: true),
-          ).to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".d-modal.is-animating").filter(visible: true)).to have_count(
+            0,
+          )
         end
         browser_root.locator(selector).filter(visible: true).click
       end
@@ -58,9 +54,9 @@ module PageObjects
 
       def fill_input(selector, text)
         if browser_root.locator("html.mobile-view").filter(visible: true).count != 0
-          expect(
-            browser_root.locator(".d-modal.is-animating").filter(visible: true),
-          ).to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".d-modal.is-animating").filter(visible: true)).to have_count(
+            0,
+          )
         end
         browser_root.locator(selector).filter(visible: true).fill(text)
       end

@@ -15,7 +15,7 @@ module PageObjects
       end
 
       def has_bookmark_after_notification_mode?(value)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#bookmark-after-notification-mode .select-kit-header[data-value=\"#{value}\"]",
           ).filter(visible: true),
@@ -37,7 +37,7 @@ module PageObjects
       end
 
       def has_interface_language_section?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-setting-name='user-locale'] .control-label").filter(
             visible: true,
           ),
@@ -45,7 +45,7 @@ module PageObjects
       end
 
       def has_no_interface_language_section?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-setting-name='user-locale'] .control-label").filter(
             visible: true,
           ),
@@ -53,7 +53,7 @@ module PageObjects
       end
 
       def has_content_languages_section?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "[data-setting-name='user-content-languages'] .control-label",
           ).filter(visible: true),
@@ -61,13 +61,13 @@ module PageObjects
       end
 
       def automatic_translation_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{AUTOMATIC_TRANSLATION_SELECTOR}:checked").filter(visible: true),
         )
       end
 
       def automatic_translation_disabled?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{AUTOMATIC_TRANSLATION_SELECTOR}:checked").filter(visible: true),
         )
       end
@@ -91,7 +91,7 @@ module PageObjects
       def has_removable_understood_language?(locale)
         understood_languages_dropdown.expand
         result =
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#understood-languages-selector button.selected-choice" \
                 "[data-value='#{locale}']:not(:disabled)",
@@ -104,7 +104,7 @@ module PageObjects
       def has_no_understood_language?(locale)
         understood_languages_dropdown.expand
         result =
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               "#understood-languages-selector .selected-choice[data-value='#{locale}']",
             ).filter(visible: true),
@@ -116,7 +116,7 @@ module PageObjects
       def has_understood_language_option?(locale)
         understood_languages_dropdown.expand
         result =
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#understood-languages-selector .select-kit-row[data-value='#{locale}']",
             ).filter(visible: true),
@@ -136,13 +136,13 @@ module PageObjects
       def has_light_scheme_css?(color_scheme)
         expect(
           browser_root.locator("link.light-scheme[data-scheme-id=\"#{color_scheme.id}\"]"),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       def has_dark_scheme_css?(color_scheme)
         expect(
           browser_root.locator("link.dark-scheme[data-scheme-id=\"#{color_scheme.id}\"]"),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       def color_mode_dropdown
@@ -154,7 +154,7 @@ module PageObjects
       end
 
       def has_no_default_palette_and_mode_for_all_devices_checkbox?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".color-scheme-checkbox input[type='checkbox']").filter(
             visible: true,
           ),
@@ -163,9 +163,7 @@ module PageObjects
 
       def save_changes
         browser_root.locator(".save-changes").filter(visible: true).click
-        expect(
-          browser_root.locator(".saved").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".saved").filter(visible: true)).not_to have_count(0)
         self
       end
 

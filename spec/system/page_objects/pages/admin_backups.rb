@@ -9,13 +9,13 @@ module PageObjects
       end
 
       def has_backup_listed?(filename)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(backup_row_selector(filename)).filter(visible: true),
         )
       end
 
       def has_no_backup_listed?(filename)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(backup_row_selector(filename)).filter(visible: true),
         )
       end
@@ -72,19 +72,17 @@ module PageObjects
       end
 
       def has_no_read_only_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-backups__toggle-read-only").filter(visible: true),
         )
       end
 
       def has_no_backup_button?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".admin-backups__start").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".admin-backups__start").filter(visible: true))
       end
 
       def has_no_backup_item_more_menu?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".backup-item-menu-trigger").filter(visible: true),
         )
       end

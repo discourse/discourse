@@ -6,25 +6,21 @@ module PageObjects
       TOOLBAR_SELECTOR = "[data-identifier='composer-onebox-toolbar']"
 
       def has_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def has_no_toolbar?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def has_copy_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("button.composer-onebox-toolbar__copy").filter(visible: true),
         )
       end
 
       def has_remove_preview_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("button.composer-onebox-toolbar__remove-preview").filter(
             visible: true,
           ),
@@ -32,7 +28,7 @@ module PageObjects
       end
 
       def has_visit_link?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("a.composer-onebox-toolbar__visit").filter(visible: true),
         )
       end

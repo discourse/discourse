@@ -4,19 +4,17 @@ module PageObjects
   module Components
     class Dialog < PageObjects::Components::Base
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".dialog-container").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".dialog-container").filter(visible: true))
       end
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".dialog-container").filter(visible: true),
         )
       end
 
       def has_displayed_content?(content)
-        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(
           browser_root.locator(".dialog-container").filter(visible: true),
         )
       end
@@ -36,13 +34,13 @@ module PageObjects
       end
 
       def has_confirm_button_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".dialog-footer .btn-danger[disabled]").filter(visible: true),
         )
       end
 
       def has_no_confirm_button_disabled?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".dialog-footer .btn-danger[disabled]").filter(visible: true),
         )
       end

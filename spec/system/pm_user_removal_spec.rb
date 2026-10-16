@@ -24,9 +24,7 @@ describe "PM user removal" do
       .filter(visible: true)
       .click
 
-    expect(
-      browser_root.locator(".small-action-contents").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".small-action-contents").filter(visible: true)).to contain_text(
       [browser_text_pattern("Removed @#{other_user.username} just now")],
       useInnerText: true,
     )
@@ -46,7 +44,7 @@ describe "PM user removal" do
       .click
     dialog.click_yes
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/u/#{current_user.username}/messages")
+    expect(browser_page).to have_url("/u/#{current_user.username}/messages")
   end
 
   it "removes a group from the PM list" do
@@ -69,9 +67,7 @@ describe "PM user removal" do
       .filter(visible: true)
       .click
 
-    expect(
-      browser_root.locator(".small-action-contents").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".small-action-contents").filter(visible: true)).to contain_text(
       [browser_text_pattern("Removed @#{group.name} just now")],
       useInnerText: true,
     )

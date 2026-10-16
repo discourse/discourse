@@ -24,19 +24,15 @@ module PageObjects
         end
 
         def visible?
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator("#d-sidebar").filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator("#d-sidebar").filter(visible: true))
         end
 
         def not_visible?
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator("#d-sidebar").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator("#d-sidebar").filter(visible: true))
         end
 
         def has_no_customize_community_section_button?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             community_section
               .get_by_role("button")
               .and(
@@ -73,7 +69,7 @@ module PageObjects
 
           expect(
             community_section.locator(".sidebar-more-section-content").filter(visible: true),
-          ).to PlaywrightMatchers.have_count(0)
+          ).to have_count(0)
 
           PageObjects::Modals::SidebarSectionForm.new
         end
@@ -88,7 +84,7 @@ module PageObjects
             .click
           expect(
             community_section.locator(".sidebar-more-section-content").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           self
         end
 
@@ -97,13 +93,13 @@ module PageObjects
         end
 
         def has_panel_header?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".sidebar-panel-header").filter(visible: true),
           )
         end
 
         def has_no_panel_header?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".sidebar-panel-header").filter(visible: true),
           )
         end
@@ -137,21 +133,19 @@ module PageObjects
         end
 
         def has_my_messages_link?(text = my_messages)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(my_messages_link_css).filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            browser_root.locator(my_messages_link_css).filter(visible: true),
+          )
         end
 
         def has_no_my_messages_link?(text = my_messages)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).does_not_match?(browser_root.locator(my_messages_link_css).filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).does_not_match?(
+            browser_root.locator(my_messages_link_css).filter(visible: true),
+          )
         end
 
         def has_my_messages_link_with_unread_icon?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread",
             ).filter(visible: true),
@@ -159,7 +153,7 @@ module PageObjects
         end
 
         def has_my_messages_link_without_unread_icon?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               "#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread",
             ).filter(visible: true),
@@ -167,7 +161,7 @@ module PageObjects
         end
 
         def has_my_messages_link_with_unread_count?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{my_messages_link_css} .sidebar-section-link-content-badge",
             ).filter(visible: true),
@@ -175,7 +169,7 @@ module PageObjects
         end
 
         def has_active_link?(name)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".sidebar-section-link[data-link-name='#{name}'].active").filter(
               visible: true,
             ),
@@ -183,13 +177,13 @@ module PageObjects
         end
 
         def has_no_active_links?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".sidebar-section-link.active").filter(visible: true),
           )
         end
 
         def has_exact_url_match_link?(name)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               ".sidebar-section-link[data-link-name='#{name}'].exact-url-match",
             ).filter(visible: true),
@@ -197,7 +191,7 @@ module PageObjects
         end
 
         def has_no_exact_url_match_link?(name)
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               ".sidebar-section-link[data-link-name='#{name}'].exact-url-match",
             ).filter(visible: true),

@@ -58,11 +58,10 @@ module PageObjects
       end
 
       def has_authorization_form?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Test Application")],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+        contain_text([browser_text_pattern("Test Application")], useInnerText: true).matches?(
+          browser_root.locator(".authorize-api-key h1").filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
             browser_root
               .get_by_role("button")
               .and(
@@ -75,16 +74,16 @@ module PageObjects
       end
 
       def has_payload?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#user-api-key-payload").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("#copy-api-key-btn").filter(visible: true),
           )
       end
 
       def has_copied_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(
@@ -97,7 +96,7 @@ module PageObjects
       end
 
       def has_otp_form?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [
             browser_text_pattern(
               I18n.t("user_api_key.otp_description", application_name: "Test Application"),
@@ -105,7 +104,7 @@ module PageObjects
           ],
           useInnerText: true,
         ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root
               .get_by_role("button")
               .and(
@@ -118,15 +117,11 @@ module PageObjects
       end
 
       def has_no_sidebar?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#d-sidebar").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#d-sidebar").filter(visible: true))
       end
 
       def has_no_powered_by_discourse?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".powered-by-discourse").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".powered-by-discourse").filter(visible: true))
       end
     end
   end

@@ -25,7 +25,7 @@ describe "Admin Onboarding Banner" do
   describe "banner visibility" do
     it "shows the onboarding banner for admin users" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
     end
 
     it "shows all three onboarding steps" do
@@ -38,7 +38,7 @@ describe "Admin Onboarding Banner" do
 
     it "can close the banner prematurely" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
 
       banner.close
 
@@ -73,7 +73,7 @@ describe "Admin Onboarding Banner" do
 
       composer.composer_input.fill("Testing topic selection")
       composer.create
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern("Testing topic selection"),
         useInnerText: true,
       )
@@ -93,15 +93,11 @@ describe "Admin Onboarding Banner" do
       logs = PageObjects::Pages::AdminStaffActionLogs.new
       logs.visit
       logs.show_details(log)
-      expect(
-        browser_root.locator(".log-details-modal").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".log-details-modal").filter(visible: true)).to contain_text(
         [browser_text_pattern("Selected option: What categories should we start with?")],
         useInnerText: true,
       )
-      expect(
-        browser_root.locator(".log-details-modal").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".log-details-modal").filter(visible: true)).to contain_text(
         [browser_text_pattern("Option ID: plan_categories")],
         useInnerText: true,
       )
@@ -118,12 +114,12 @@ describe "Admin Onboarding Banner" do
         expect(composer.category_chooser).to have_selected_name(category.name)
         if option == "write_your_own"
           expect(composer).to have_input_title("")
-          expect(composer).to have_value("")
+          expect(composer).to RSpecPredicates.have_value("")
         else
           expect(composer).to have_input_title(
             I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
           )
-          expect(composer).to have_value(
+          expect(composer).to RSpecPredicates.have_value(
             I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.body"),
           )
         end
@@ -131,7 +127,7 @@ describe "Admin Onboarding Banner" do
         composer.fill_title("A conversation for our community")
         composer.fill_content("A new conversation tailored to our community.")
         composer.create
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern("A new conversation tailored to our community."),
           useInnerText: true,
         )
@@ -159,7 +155,7 @@ describe "Admin Onboarding Banner" do
       composer.fill_content("This topic was not started from an onboarding suggestion.")
       composer.switch_category(general_category.name)
       composer.create
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern("This topic was not started from an onboarding suggestion."),
         useInnerText: true,
       )
@@ -187,7 +183,7 @@ describe "Admin Onboarding Banner" do
         I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.title"),
       )
       composer.create
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(
           I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.body"),
         ),
@@ -258,7 +254,7 @@ describe "Admin Onboarding Banner" do
 
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       expect(design_wizard_panel).to have_site_sidebar
     end
 
@@ -267,7 +263,7 @@ describe "Admin Onboarding Banner" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       browser_page
         .set_viewport_size({ width: 320, height: 740 })
@@ -290,17 +286,15 @@ describe "Admin Onboarding Banner" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
+      expect(browser_page).to have_url("/")
       expect(design_wizard_panel).to have_no_selected_theme
       expect(design_wizard_panel).to have_disabled_next
 
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/?preview_theme_id=#{Theme.horizon_theme.id}",
-      )
-      expect(design_wizard_panel).to be_visible
+      expect(browser_page).to have_url("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
 
@@ -308,7 +302,7 @@ describe "Admin Onboarding Banner" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("default")
@@ -316,7 +310,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.close
 
-      expect(design_wizard_panel).to be_hidden
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
       expect(design_wizard_panel).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
@@ -339,7 +333,7 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
       design_wizard_panel.save
 
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(false))
     end
 
@@ -347,29 +341,23 @@ describe "Admin Onboarding Banner" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.next_step
 
       expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(
-        browser_root.locator(".welcome-banner").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
 
       design_wizard_panel.toggle_welcome_banner
 
       expect(design_wizard_panel).to have_no_welcome_banner_enabled
-      expect(
-        browser_root.locator(".welcome-banner").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).to have_count(0)
 
       design_wizard_panel.close
 
-      expect(design_wizard_panel).to be_hidden
-      expect(
-        browser_root.locator(".welcome-banner").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
       expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
     end
 
@@ -377,15 +365,13 @@ describe "Admin Onboarding Banner" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/?preview_theme_id=#{Theme.horizon_theme.id}",
-      )
-      expect(design_wizard_panel).to be_visible
+      expect(browser_page).to have_url("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("royal")
@@ -398,20 +384,16 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.select_search_experience("search_icon")
 
       expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(
-        browser_root.locator(".welcome-banner").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
       design_wizard_panel.select_welcome_banner_location("below_site_header")
       design_wizard_panel.toggle_welcome_banner
-      expect(
-        browser_root.locator(".welcome-banner").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).to have_count(0)
 
       design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
-      expect(banner).to be_visible
-      expect(design_wizard_panel).to be_hidden
+      expect(banner).to RSpecPredicates.be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
       expect(banner.step_completed?("select_theme")).to eq(true)
 
       expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
@@ -454,7 +436,7 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       design_wizard_panel.next_step
       design_wizard_panel.next_step
       design_wizard_panel.save

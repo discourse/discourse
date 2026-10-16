@@ -19,14 +19,14 @@ describe "Navigating with breadcrumbs" do
   it "can navigate between categories" do
     browser_page.goto("/c/#{category1.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category1.slug}/#{category1.id}")
+    expect(browser_page).to have_url("/c/#{category1.slug}/#{category1.id}")
     expect(discovery.topic_list).to have_topic(c1_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
     expect(discovery.category_drop).to have_selected_value(category1.id)
     discovery.category_drop.select_row_by_value(category2.id)
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category2.slug}/#{category2.id}")
+    expect(browser_page).to have_url("/c/#{category2.slug}/#{category2.id}")
     expect(discovery.topic_list).to have_topic(c2_topic)
     expect(discovery.topic_list).to have_topic(c2_child_topic)
     expect(discovery.topic_list).to have_topics(count: 2)
@@ -56,7 +56,7 @@ describe "Navigating with breadcrumbs" do
 
     it "can filter by tags" do
       browser_page.goto("/c/#{category1.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category1.slug}/#{category1.id}")
+      expect(browser_page).to have_url("/c/#{category1.slug}/#{category1.id}")
       expect(discovery.topic_list).to have_topic(c1_topic)
       expect(discovery.topic_list).to have_topic(c1_topic_tagged)
       expect(discovery.topic_list).to have_topics(count: 2)
@@ -80,7 +80,7 @@ describe "Navigating with breadcrumbs" do
       expect(discovery.tag_drop).to have_selected_name("tags")
       discovery.tag_drop.select_row_by_name(tag.name)
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
+      expect(browser_page).to have_url(
         "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topics(count: 1)
@@ -91,9 +91,7 @@ describe "Navigating with breadcrumbs" do
   describe "initial page loads for no-subcategories" do
     it "shows correct data for /c/" do
       browser_page.goto("/c/#{category3.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/c/#{category3.slug}/#{category3.id}/none",
-      )
+      expect(browser_page).to have_url("/c/#{category3.slug}/#{category3.id}/none")
       expect(discovery.topic_list).to have_topic(c3_topic)
       expect(discovery.topic_list).to have_topics(count: 1)
     end
@@ -106,7 +104,7 @@ describe "Navigating with breadcrumbs" do
       browser_page
         .goto("/tags/c/#{category3.slug}/#{category3.id}/#{tag.name}/#{tag.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(browser_page).to PlaywrightMatchers.have_url(
+      expect(browser_page).to have_url(
         "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topic(c3_topic)

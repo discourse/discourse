@@ -11,7 +11,7 @@ module PageObjects
       end
 
       def has_notify_on_linked_posts_enabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".pref-notify-on-linked-posts input[type='checkbox']:checked",
           ).filter(visible: true),
@@ -19,7 +19,7 @@ module PageObjects
       end
 
       def has_notify_on_linked_posts_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".pref-notify-on-linked-posts input[type='checkbox']:not(:checked)",
           ).filter(visible: true),
@@ -40,9 +40,7 @@ module PageObjects
           .or(browser_root.get_by_role("button", name: "Save Changes"))
           .filter(visible: true)
           .click
-        expect(
-          browser_root.locator(".saved").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".saved").filter(visible: true)).not_to have_count(0)
         self
       end
     end

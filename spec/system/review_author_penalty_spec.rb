@@ -26,10 +26,10 @@ describe "Review queue | author penalty" do
     expect(review_page).to have_reviewable_action_dropdown
     expect(
       browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator(".reviewable-action.post-unsilence-user").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   context "when automated tooling silenced the author for this post" do
@@ -43,21 +43,19 @@ describe "Review queue | author penalty" do
 
       expect(
         browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(
           ".review-item__meta-flagged-user .svg-icon-title[title='This user is silenced.']",
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "records the penalty in the timeline" do
       review_page.visit_reviewable(reviewable)
       review_page.click_timeline_tab
 
-      expect(
-        browser_root.locator(".timeline-event__title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".timeline-event__title").filter(visible: true)).to contain_text(
         [browser_text_pattern("Author silenced automatically")],
         useInnerText: true,
       )
@@ -70,7 +68,7 @@ describe "Review queue | author penalty" do
 
       expect(
         browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(author.reload).not_to be_silenced
       expect(reviewable.reload).to be_pending
     end
@@ -82,10 +80,7 @@ describe "Review queue | author penalty" do
 
       expect(
         browser_root.locator(".fk-d-default-toast__message").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("spammer99 is still silenced.")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("spammer99 is still silenced.")], useInnerText: true)
       expect(author.reload).to be_silenced
     end
 
@@ -99,10 +94,7 @@ describe "Review queue | author penalty" do
       review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
       expect(
         browser_root.locator(".fk-d-default-toast__title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Post deleted.")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Post deleted.")], useInnerText: true)
 
       review_page.select_bundled_action(
         other_reviewable,
@@ -111,14 +103,11 @@ describe "Review queue | author penalty" do
       )
       expect(
         browser_root.locator(".fk-d-default-toast__title").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("Post kept hidden.")],
-        useInnerText: true,
-      )
+      ).to contain_text([browser_text_pattern("Post kept hidden.")], useInnerText: true)
 
-      expect(
-        browser_root.locator(".reviewable-undo-penalty").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(browser_root.locator(".reviewable-undo-penalty").filter(visible: true)).to have_count(
+        1,
+      )
     end
 
     it "offers an undo on that toast" do
@@ -129,7 +118,7 @@ describe "Review queue | author penalty" do
 
       expect(
         browser_root.locator(".fk-d-default-toast__message").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern("spammer99 is no longer silenced.")],
         useInnerText: true,
       )

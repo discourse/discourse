@@ -11,9 +11,7 @@ describe "Uploading files in the composer to S3" do
   describe "secure uploads" do
     def first_post_img(wait: Capybara.default_max_wait_time)
       first_post = topic_page.post_by_number(1, wait: wait)
-      expect(
-        first_post.locator("img[data-base62-sha1]").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(first_post.locator("img[data-base62-sha1]").filter(visible: true)).not_to have_count(0)
       first_post.locator(".cooked").filter(visible: true).locator("img").filter(visible: true).first
     end
 
@@ -39,12 +37,8 @@ describe "Uploading files in the composer to S3" do
         "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
       ).set_input_files(file_path)
 
-      expect(
-        browser_root.locator("#file-uploading").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -66,12 +60,8 @@ describe "Uploading files in the composer to S3" do
         "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
       ).set_input_files(file_path)
 
-      expect(
-        browser_root.locator("#file-uploading").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -92,12 +82,8 @@ describe "Uploading files in the composer to S3" do
         "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
       ).set_input_files(file_path)
 
-      expect(
-        browser_root.locator("#file-uploading").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -117,12 +103,8 @@ describe "Uploading files in the composer to S3" do
         "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
       ).set_input_files(file_path)
 
-      expect(
-        browser_root.locator("#file-uploading").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       Jobs.run_immediately!
       composer.submit
@@ -135,11 +117,11 @@ describe "Uploading files in the composer to S3" do
       # post doesn't work in the test, so we need to rebake here to get the correct result.
       expect(
         browser_root.locator("img[src*='secure-uploads']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       Post.last.rebake!
       expect(
         browser_root.locator("img[src*='secure-uploads']").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0, timeout: 5 * 1000)
+      ).to have_count(0, timeout: 5 * 1000)
       topic = topic_page.current_topic
       expect(topic.first_post.uploads.first.secure).to eq(false)
     end

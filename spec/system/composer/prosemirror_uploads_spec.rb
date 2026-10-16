@@ -15,9 +15,9 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("logo.png", "images").path
       uploads.attach(file_path)
 
-      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-      expect(composer.image_nodes.first).to PlaywrightMatchers.be_visible
-      expect(uploads.transparent_images).to PlaywrightMatchers.have_count(0)
+      expect(composer.in_progress_uploads).to have_count(0)
+      expect(composer.image_nodes.first).to be_visible
+      expect(uploads.transparent_images).to have_count(0)
       composer.wait_for_images_to_stop_animating
 
       composer.type_content(" text after the image")
@@ -30,13 +30,13 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("logo.png", "images").path
       uploads.attach(file_path)
 
-      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-      expect(composer.image_nodes.first).to PlaywrightMatchers.be_visible
+      expect(composer.in_progress_uploads).to have_count(0)
+      expect(composer.image_nodes.first).to be_visible
 
       composer.toggle_rich_editor
-      expect(composer.markdown_editor).not_to PlaywrightMatchers.have_value(/blob:/)
-      expect(composer.markdown_editor).not_to PlaywrightMatchers.have_value(/Uploading:/)
-      expect(composer.markdown_editor).to PlaywrightMatchers.have_value(%r{!\[.*\]\(upload://})
+      expect(composer.markdown_editor).not_to have_value(/blob:/)
+      expect(composer.markdown_editor).not_to have_value(/Uploading:/)
+      expect(composer.markdown_editor).to have_value(%r{!\[.*\]\(upload://})
     end
 
     it "uploads multiple images at once" do
@@ -46,8 +46,8 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       uploads.attach([file_path_1, file_path_2])
 
-      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-      expect(composer.image_nodes).to PlaywrightMatchers.have_count(2)
+      expect(composer.in_progress_uploads).to have_count(0)
+      expect(composer.image_nodes).to have_count(2)
       composer.wait_for_images_to_stop_animating
     end
   end
@@ -61,9 +61,9 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("small.pdf", "pdf").path
       uploads.attach(file_path)
 
-      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-      expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
-      expect(uploads.file_links.first).to PlaywrightMatchers.be_visible
+      expect(composer.in_progress_uploads).to have_count(0)
+      expect(uploads.file_placeholders).to have_count(0)
+      expect(uploads.file_links.first).to be_visible
     end
 
     it "uploads mixed image and non-image files" do
@@ -73,9 +73,9 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path_2 = file_from_fixtures("small.pdf", "pdf").path
       uploads.attach([file_path_1, file_path_2])
 
-      expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-      expect(composer.image_nodes).to PlaywrightMatchers.have_count(1)
-      expect(uploads.file_links.first).to PlaywrightMatchers.be_visible
+      expect(composer.in_progress_uploads).to have_count(0)
+      expect(composer.image_nodes).to have_count(1)
+      expect(uploads.file_links.first).to be_visible
     end
 
     it "shows both placeholders simultaneously during mixed upload" do
@@ -85,9 +85,9 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path_2 = file_from_fixtures("large.pdf", "pdf").path
       slow_upload.during do
         uploads.attach([file_path_1, file_path_2])
-        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
-        expect(uploads.image_placeholders.first).to PlaywrightMatchers.be_visible
-        expect(uploads.file_placeholders.first).to PlaywrightMatchers.be_visible
+        expect(composer.in_progress_uploads).to be_visible
+        expect(uploads.image_placeholders.first).to be_visible
+        expect(uploads.file_placeholders.first).to be_visible
       end
     end
   end
@@ -99,11 +99,11 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("logo.png", "images").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
+        expect(composer.in_progress_uploads).to be_visible
         uploads.cancel_all.click
 
-        expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-        expect(uploads.image_placeholders).to PlaywrightMatchers.have_count(0)
+        expect(composer.in_progress_uploads).to have_count(0)
+        expect(uploads.image_placeholders).to have_count(0)
       end
     end
 
@@ -114,11 +114,11 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("large.pdf", "pdf").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(composer.in_progress_uploads).to PlaywrightMatchers.be_visible
+        expect(composer.in_progress_uploads).to be_visible
         uploads.cancel_all.click
 
-        expect(composer.in_progress_uploads).to PlaywrightMatchers.have_count(0)
-        expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
+        expect(composer.in_progress_uploads).to have_count(0)
+        expect(uploads.file_placeholders).to have_count(0)
       end
     end
 
@@ -129,11 +129,11 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("large.pdf", "pdf").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(uploads.file_placeholders.first).to PlaywrightMatchers.be_visible
+        expect(uploads.file_placeholders.first).to be_visible
 
         uploads.cancel_file.click
 
-        expect(uploads.file_placeholders).to PlaywrightMatchers.have_count(0)
+        expect(uploads.file_placeholders).to have_count(0)
       end
     end
 
@@ -143,11 +143,11 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("logo.png", "images").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(uploads.image_overlay.first).to PlaywrightMatchers.be_visible
+        expect(uploads.image_overlay.first).to be_visible
 
         uploads.cancel_image.click
 
-        expect(uploads.image_placeholders).to PlaywrightMatchers.have_count(0)
+        expect(uploads.image_placeholders).to have_count(0)
       end
     end
   end
@@ -159,7 +159,7 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("logo.png", "images").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(uploads.image_progress.first).to PlaywrightMatchers.be_visible
+        expect(uploads.image_progress.first).to be_visible
       end
     end
 
@@ -170,7 +170,7 @@ describe "Composer - ProseMirror - Uploads", native_playwright: true do
       file_path = file_from_fixtures("large.pdf", "pdf").path
       slow_upload.during do
         uploads.attach(file_path)
-        expect(uploads.file_progress.first).to PlaywrightMatchers.be_visible
+        expect(uploads.file_progress.first).to be_visible
       end
     end
   end

@@ -61,7 +61,7 @@ module PageObjects
       end
 
       def has_enum_value?(setting_name, value, text: nil)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(
             "#{setting_row_selector(setting_name)} select option[value='#{value}']:checked",
           ),
@@ -69,7 +69,7 @@ module PageObjects
       end
 
       def has_setting?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".row.setting[data-setting=\"#{setting_name}\"]").filter(
             visible: true,
           ),
@@ -207,13 +207,13 @@ module PageObjects
       end
 
       def has_search_result?(setting)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("div[data-setting='#{setting}']").filter(visible: true),
         )
       end
 
       def has_n_results?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".admin-detail .row.setting").filter(visible: true),
         )
       end
@@ -221,7 +221,7 @@ module PageObjects
       def has_greater_than_n_results?(count)
         expect(
           browser_root.locator(".admin-detail .row.setting").filter(visible: true).nth(count - 1),
-        ).to PlaywrightMatchers.be_attached
+        ).to be_attached
       end
 
       def error_message(setting_name)
@@ -230,13 +230,10 @@ module PageObjects
       end
 
       def has_theme_warning?(setting_name, theme_name, theme_id)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(theme_name),
-          useInnerText: true,
-        ).matches?(
+        contain_text(browser_text_pattern(theme_name), useInnerText: true).matches?(
           find_setting(setting_name).locator(".setting-theme-warning__text").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             find_setting(setting_name)
               .locator(".setting-theme-warning__text")
               .filter(visible: true)
@@ -252,7 +249,7 @@ module PageObjects
       end
 
       def has_upcoming_change_default_warning?(setting_name, old_default:, new_default:)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             "The default for this setting has changed from #{old_default} to #{new_default}",
           ),
@@ -262,7 +259,7 @@ module PageObjects
             visible: true,
           ),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             find_setting(setting_name)
               .locator(".setting-upcoming-change-warning__text")
               .filter(visible: true)
@@ -280,18 +277,16 @@ module PageObjects
       end
 
       def has_disabled_input?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          find_setting(setting_name).locator("input[disabled]"),
-        )
+        have_count(0).does_not_match?(find_setting(setting_name).locator("input[disabled]"))
       end
 
       def has_visible_reorder_buttons?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{setting_row_selector(setting_name)} .shift-up-value-btn").filter(
             visible: true,
           ),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{setting_row_selector(setting_name)} .shift-down-value-btn",
             ).filter(visible: true),
@@ -299,12 +294,12 @@ module PageObjects
       end
 
       def has_hidden_reorder_buttons?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{setting_row_selector(setting_name)} .shift-up-value-btn").filter(
             visible: false,
           ),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{setting_row_selector(setting_name)} .shift-down-value-btn",
             ).filter(visible: false),
@@ -317,7 +312,7 @@ module PageObjects
       # TODO (ui-kit-reorderable-list-cleanup) fold these over them once the
       # change ships.
       def has_reorder_handle?(setting_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{setting_row_selector(setting_name)} .d-reorderable-list__handle",
           ).filter(visible: true),
@@ -332,7 +327,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator(".d-reorderable-list__move-item").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -345,11 +340,11 @@ module PageObjects
 
       def has_list_values_in_order?(setting_name, values)
         list = "#{setting_row_selector(setting_name)} .values"
-        PlaywrightMatchers.have_count(values.size).matches?(
+        have_count(values.size).matches?(
           browser_root.locator("#{list} .value").filter(visible: true),
         ) &&
           values.each_with_index.all? do |value, index|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(
                 "#{list} .value:nth-child(#{index + 1})[data-reorderable-key='#{value}']",
               ).filter(visible: true),

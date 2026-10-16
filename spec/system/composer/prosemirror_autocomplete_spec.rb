@@ -40,7 +40,7 @@ describe "Composer - ProseMirror - Autocomplete" do
       browser_page.keyboard.press("Enter")
     end
 
-    expect(rich.locator("hr").filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("hr").filter(visible: true)).not_to have_count(0)
 
     begin
       browser_page.keyboard.press("ArrowUp")
@@ -74,7 +74,7 @@ describe "Composer - ProseMirror - Autocomplete" do
     browser_root.locator("img[data-emoji='repeat_single_button']").filter(visible: true).click
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("Why :repeat_single_button: ")
+    expect(composer).to RSpecPredicates.have_value("Why :repeat_single_button: ")
   end
 
   context "with composer messages" do
@@ -112,7 +112,7 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @#{current_user.username} ")
 
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern(current_user.username)],
         useInnerText: true,
       )
@@ -126,14 +126,11 @@ describe "Composer - ProseMirror - Autocomplete" do
           end
           .locator("a.mention")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("@invalid_user")],
-        useInnerText: true,
-      )
+      ).not_to contain_text([browser_text_pattern("@invalid_user")], useInnerText: true)
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value(
+      expect(composer).to RSpecPredicates.have_value(
         "Hey @#{current_user.username} and @invalid_user - how are you?",
       )
     end
@@ -143,7 +140,7 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       expect(composer).to be_opened
 
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern(current_user.username)],
         useInnerText: true,
       )
@@ -154,10 +151,7 @@ describe "Composer - ProseMirror - Autocomplete" do
           end
           .locator("a.mention")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("@unknown")],
-        useInnerText: true,
-      )
+      ).not_to contain_text([browser_text_pattern("@unknown")], useInnerText: true)
     end
 
     it "validates mentions case-insensitively" do
@@ -165,11 +159,11 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
 
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern("testuser_123")],
         useInnerText: true,
       )
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern("TESTUSER_123")],
         useInnerText: true,
       )
@@ -183,10 +177,7 @@ describe "Composer - ProseMirror - Autocomplete" do
           end
           .locator("a.mention")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("@InvalidUser")],
-        useInnerText: true,
-      )
+      ).not_to contain_text([browser_text_pattern("@InvalidUser")], useInnerText: true)
     end
 
     it "validates group mentions case-insensitively" do
@@ -194,11 +185,11 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
 
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern("testgroup_abc")],
         useInnerText: true,
       )
-      expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
         [browser_text_pattern("TESTGROUP_ABC")],
         useInnerText: true,
       )
@@ -212,10 +203,7 @@ describe "Composer - ProseMirror - Autocomplete" do
           end
           .locator("a.mention")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.contain_text(
-        [browser_text_pattern("@InvalidGroup")],
-        useInnerText: true,
-      )
+      ).not_to contain_text([browser_text_pattern("@InvalidGroup")], useInnerText: true)
     end
 
     context "with unicode usernames" do
@@ -240,14 +228,16 @@ describe "Composer - ProseMirror - Autocomplete" do
 
         composer.type_content("Hey @#{unicode_user.username} - how are you?")
 
-        expect(rich.locator("a.mention").filter(visible: true)).to PlaywrightMatchers.contain_text(
+        expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
           [browser_text_pattern(unicode_user.username)],
           useInnerText: true,
         )
 
         composer.toggle_rich_editor
 
-        expect(composer).to have_value("Hey @#{unicode_user.username} - how are you?")
+        expect(composer).to RSpecPredicates.have_value(
+          "Hey @#{unicode_user.username} - how are you?",
+        )
       end
     end
   end
@@ -269,7 +259,7 @@ describe "Composer - ProseMirror - Autocomplete" do
         rich.locator(
           ".hashtag-cooked .hashtag-category-emoji.hashtag-color--category-#{category_with_emoji.id} img.emoji[title='cat']",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "correctly renders category with icon hashtags after selecting from autocomplete" do
@@ -287,10 +277,10 @@ describe "Composer - ProseMirror - Autocomplete" do
         rich.locator(
           ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         rich.locator(".hashtag-cooked svg use[href='#bell']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "correctly renders category with square hashtags after selecting from autocomplete" do
@@ -308,7 +298,7 @@ describe "Composer - ProseMirror - Autocomplete" do
         rich.locator(
           ".hashtag-cooked .hashtag-category-square.hashtag-color--category-#{category_without_icon.id}",
         ).filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "correctly renders tag hashtags after selecting from autocomplete" do
@@ -326,7 +316,7 @@ describe "Composer - ProseMirror - Autocomplete" do
         rich.locator(".hashtag-cooked .d-icon.d-icon-tag.hashtag-color--tag-#{tag.id}").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

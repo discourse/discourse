@@ -12,31 +12,28 @@ module PageObjects
       end
 
       def has_authorization_details?(application_name:, scopes:, username:)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(application_name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(username)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".authorize-api-key__username").filter(visible: true)) &&
+        contain_text([browser_text_pattern(application_name)], useInnerText: true).matches?(
+          browser_root.locator(".authorize-api-key h1").filter(visible: true),
+        ) &&
+          contain_text([browser_text_pattern(username)], useInnerText: true).matches?(
+            browser_root.locator(".authorize-api-key__username").filter(visible: true),
+          ) &&
           scopes.all? do |scope|
-            PlaywrightMatchers.contain_text(
-              [browser_text_pattern(scope)],
-              useInnerText: true,
-            ).matches?(browser_root.locator(".authorize-api-key__scopes li").filter(visible: true))
+            contain_text([browser_text_pattern(scope)], useInnerText: true).matches?(
+              browser_root.locator(".authorize-api-key__scopes li").filter(visible: true),
+            )
           end
       end
 
       def has_write_warning?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("user_api_key.write_scope_warning"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".authorize-api-key__write-warning").filter(visible: true))
       end
 
       def has_unregistered_app_warning?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("user_api_key.device.unregistered_app_warning"))],
           useInnerText: true,
         ).matches?(
@@ -45,10 +42,9 @@ module PageObjects
       end
 
       def has_expiry_notice?(application_name:)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Expires:")],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".authorize-api-key__expiry").filter(visible: true))
+        contain_text([browser_text_pattern("Expires:")], useInnerText: true).matches?(
+          browser_root.locator(".authorize-api-key__expiry").filter(visible: true),
+        )
       end
 
       def enter_code(code)
@@ -97,19 +93,19 @@ module PageObjects
       end
 
       def has_invalid_code_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("user_api_key.device.invalid_code"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".form-kit__errors").filter(visible: true))
       end
 
       def has_completion_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("user_api_key.device.complete"))],
           useInnerText: true,
           timeout: 10 * 1000,
         ).matches?(browser_root.locator(".authorize-api-key h1").filter(visible: true)) &&
-          PlaywrightMatchers.contain_text(
+          contain_text(
             [browser_text_pattern(I18n.t("user_api_key.device.return_to_cli"))],
             useInnerText: true,
           ).matches?(browser_root.locator(".authorize-api-key p").filter(visible: true))

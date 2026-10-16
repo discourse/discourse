@@ -6,15 +6,13 @@ module PageObjects
       class BlockDebug < PageObjects::Components::Base
         # Outlet boundary methods
         def has_outlet_boundary?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-outlet-debug").filter(visible: true),
           )
         end
 
         def has_no_outlet_boundary?
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".block-outlet-debug").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".block-outlet-debug").filter(visible: true))
         end
 
         def hover_outlet_badge(name = nil)
@@ -29,40 +27,35 @@ module PageObjects
         end
 
         def has_outlet_tooltip?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".outlet-info__wrapper").filter(visible: true),
           )
         end
 
         def has_outlet_github_link?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".outlet-info__heading .github-link").filter(visible: true),
           )
         end
 
         def has_outlet_block_count?(count)
           text = count == 1 ? "1 block" : "#{count} blocks"
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".outlet-info__stat").filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            browser_root.locator(".outlet-info__stat").filter(visible: true),
+          )
         end
 
         # Block visual overlay methods
         def has_block_info?(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(selector).filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator(selector).filter(visible: true))
         end
 
         def has_no_block_info?(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(selector).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(selector).filter(visible: true))
         end
 
         def hover_block_badge(block_name = nil)
@@ -77,30 +70,27 @@ module PageObjects
         end
 
         def has_block_tooltip?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-debug-tooltip").filter(visible: true),
           )
         end
 
         def has_block_title?(name)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(name)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".block-debug-tooltip__title").filter(visible: true))
+          contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+            browser_root.locator(".block-debug-tooltip__title").filter(visible: true),
+          )
         end
 
         def has_block_location?(location)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(location)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".block-debug-tooltip__location").filter(visible: true))
+          contain_text([browser_text_pattern(location)], useInnerText: true).matches?(
+            browser_root.locator(".block-debug-tooltip__location").filter(visible: true),
+          )
         end
 
         def has_block_arg?(key:)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern("@#{key}")],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".outlet-args-table__key").filter(visible: true))
+          contain_text([browser_text_pattern("@#{key}")], useInnerText: true).matches?(
+            browser_root.locator(".outlet-args-table__key").filter(visible: true),
+          )
         end
 
         # Ghost block methods
@@ -113,9 +103,7 @@ module PageObjects
                 ".block-debug-ghost"
               end
             )
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(selector).filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator(selector).filter(visible: true))
         end
 
         def has_no_ghost_block?(block_name = nil)
@@ -127,9 +115,7 @@ module PageObjects
                 ".block-debug-ghost"
               end
             )
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(selector).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(selector).filter(visible: true))
         end
 
         def hover_ghost_badge(block_name = nil)
@@ -150,34 +136,33 @@ module PageObjects
         end
 
         def has_ghost_tooltip?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-debug-tooltip.--ghost").filter(visible: true),
           )
         end
 
         def has_conditions?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-debug-conditions").filter(visible: true),
           )
         end
 
         def has_failed_conditions?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-debug-conditions.--failed").filter(visible: true),
           )
         end
 
         def has_passed_conditions?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".block-debug-conditions.--passed").filter(visible: true),
           )
         end
 
         def has_condition_type?(type)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(type)],
-            useInnerText: true,
-          ).matches?(browser_root.locator(".block-debug-condition__type").filter(visible: true))
+          contain_text([browser_text_pattern(type)], useInnerText: true).matches?(
+            browser_root.locator(".block-debug-condition__type").filter(visible: true),
+          )
         end
 
         def condition_types

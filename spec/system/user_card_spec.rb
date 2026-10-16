@@ -27,7 +27,7 @@ describe "User Card" do
 
       mention_anchors.first.click
 
-      expect(user_card).to be_visible
+      expect(user_card).to RSpecPredicates.be_visible
       expect(user_card).to be_showing_user(user.username)
     end
   end
@@ -46,7 +46,7 @@ describe "User Card" do
       topic_page.visit_topic(topic)
       mention_post.locator("a.mention").filter(visible: true).click
 
-      expect(user_card).to be_visible
+      expect(user_card).to RSpecPredicates.be_visible
       expect(user_card.silence_reason_description).to eq("public reason")
     end
   end
@@ -64,7 +64,7 @@ describe "User Card" do
       topic_page.visit_topic(topic)
       topic_page.click_post_author_avatar(first_post_by_another_user)
 
-      expect(user_card).to be_visible
+      expect(user_card).to RSpecPredicates.be_visible
       expect(user_card).to have_filter_button
       expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
     end
@@ -73,7 +73,7 @@ describe "User Card" do
       topic_page.visit_topic(topic)
       topic_page.click_post_author_avatar(topic.posts.first)
 
-      expect(user_card).to be_visible
+      expect(user_card).to RSpecPredicates.be_visible
       expect(user_card).to have_no_filter_button
     end
 

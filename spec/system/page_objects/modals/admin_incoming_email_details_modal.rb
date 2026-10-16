@@ -6,25 +6,19 @@ module PageObjects
       MODAL_SELECTOR = ".admin-incoming-email-modal"
 
       def has_no_error?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-incoming-email-modal__error").filter(visible: true),
         )
       end
 
       def has_error_message?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
           browser_root.locator(".admin-incoming-email-modal__error-message").filter(visible: true),
         )
       end
 
       def has_error_description?(description)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(description)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
           browser_root.locator(".admin-incoming-email-modal__error-description").filter(
             visible: true,
           ),

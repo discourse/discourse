@@ -11,9 +11,7 @@ module PageObjects
       end
 
       def has_user_stream_item?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
-          browser_root.locator(".post-list-item").filter(visible: true),
-        )
+        have_count(count).matches?(browser_root.locator(".post-list-item").filter(visible: true))
       end
 
       def scroll_to_last_item

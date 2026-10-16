@@ -17,7 +17,7 @@ module PageObjects
         end
 
         def has_sidebar_panel?(panel)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               ".sidebar-hamburger-dropdown .sidebar-section-wrapper[data-section-name=\"#{panel_id(panel)}\"]",
             ).filter(visible: true),
@@ -25,7 +25,7 @@ module PageObjects
         end
 
         def has_no_sidebar_panel?(panel)
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               ".sidebar-hamburger-dropdown .sidebar-section-wrapper[data-section-name=\"#{panel_id(panel)}\"]",
             ).filter(visible: true),
@@ -33,19 +33,19 @@ module PageObjects
         end
 
         def has_dropdown_visible?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".sidebar-hamburger-dropdown").filter(visible: true),
           )
         end
 
         def has_no_dropdown_visible?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".sidebar-hamburger-dropdown").filter(visible: true),
           )
         end
 
         def visible?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".hamburger-dropdown.header-dropdown-toggle").filter(
               visible: true,
             ),
@@ -53,7 +53,7 @@ module PageObjects
         end
 
         def not_visible?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".hamburger-dropdown.header-dropdown-toggle").filter(
               visible: true,
             ),
@@ -76,7 +76,7 @@ module PageObjects
 
           expect(
             browser_root.locator(".sidebar-hamburger-dropdown").filter(visible: true),
-          ).to PlaywrightMatchers.have_count(0)
+          ).to have_count(0)
 
           PageObjects::Modals::SidebarSectionForm.new
         end

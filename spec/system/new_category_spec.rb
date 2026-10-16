@@ -32,7 +32,7 @@ describe "New Category" do
 
     category_page.save_settings
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/c/new-category/edit/general")
+    expect(browser_page).to have_url("/c/new-category/edit/general")
 
     category = Category.find_by(name: "New Category")
 

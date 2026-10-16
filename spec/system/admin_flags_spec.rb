@@ -25,7 +25,7 @@ describe "Admin Flags Page" do
       Fabricate(:flag, name: "flag3", description: "custom flag 3", applies_to: %w[Post Topic])
 
     admin_flags_page.visit
-    expect(d_page_header).to be_visible
+    expect(d_page_header).to RSpecPredicates.be_visible
 
     expect(admin_flags_page).to have_flags(
       "Send @%{username} a message",
@@ -59,7 +59,7 @@ describe "Admin Flags Page" do
 
     # create flag
     admin_flags_page.click_add_flag
-    expect(d_page_header).to be_hidden
+    expect(d_page_header).to RSpecPredicates.be_hidden
 
     expect(admin_flag_form_page).to have_displayed_text(
       I18n.t("admin_js.admin.config_areas.flags.form.create_warning"),
@@ -90,7 +90,7 @@ describe "Admin Flags Page" do
     # update flag
     admin_flags_page.visit.click_edit_flag("custom_flag1")
 
-    expect(d_page_header).to be_hidden
+    expect(d_page_header).to RSpecPredicates.be_hidden
 
     expect(admin_flag_form_page).to have_displayed_text(
       I18n.t("admin_js.admin.config_areas.flags.form.edit_warning"),

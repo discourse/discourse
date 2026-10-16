@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def on_step?(step_id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".wizard-container__step.#{step_id}").filter(visible: true),
         )
       end
@@ -86,7 +86,7 @@ class PageObjects::Pages::Wizard::PrivacyStep < PageObjects::Pages::Wizard::Step
   end
 
   def has_selected_choice?(section, choice_id)
-    PlaywrightMatchers.have_count(0).does_not_match?(
+    have_count(0).does_not_match?(
       wizard
         .find_field("radio", section)
         .locator(choice_selector(choice_id) + ".--selected")

@@ -52,17 +52,15 @@ module PageObjects
       end
 
       def has_topic?(topic)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(topic.title),
-          useInnerText: true,
-        ).matches?(browser_content)
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).matches?(
+          browser_content,
+        )
       end
 
       def has_no_topic?(topic)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(topic.title),
-          useInnerText: true,
-        ).does_not_match?(browser_content)
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).does_not_match?(
+          browser_content,
+        )
       end
 
       def bookmark_list

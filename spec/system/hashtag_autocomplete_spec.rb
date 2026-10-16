@@ -25,7 +25,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       browser_root.locator(
         ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(expected_count)
+    ).to have_count(expected_count)
   end
 
   it "searches for categories and tags with # and prioritises categories in the results" do
@@ -34,7 +34,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       browser_root
         .locator(".hashtag-autocomplete__link")
         .filter(visible: true)
-        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .tap { |elements| expect(elements).to have_count(2) }
         .all
     expect(
       hashtag_results.map { |element| element.inner_text.strip }.map { |r| r.gsub("\n", " ") },
@@ -68,12 +68,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       browser_root
         .locator(".hashtag-autocomplete__link")
         .filter(visible: true)
-        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .tap { |elements| expect(elements).to have_count(2) }
         .all
     hashtag_results[0].click
-    expect(
-      browser_root.locator(".hashtag-cooked").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".hashtag-cooked").filter(visible: true)).not_to have_count(0)
     cooked_hashtag = browser_root.locator(".hashtag-cooked").filter(visible: true)
 
     expect(
@@ -106,12 +104,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       browser_root
         .locator(".hashtag-autocomplete__link")
         .filter(visible: true)
-        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .tap { |elements| expect(elements).to have_count(2) }
         .all
     hashtag_results[1].click
-    expect(
-      browser_root.locator(".hashtag-cooked").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".hashtag-cooked").filter(visible: true)).not_to have_count(0)
     cooked_hashtag = browser_root.locator(".hashtag-cooked").filter(visible: true)
 
     expect(
@@ -151,7 +147,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       browser_root
         .locator(".hashtag-cooked")
         .filter(visible: true)
-        .tap { |elements| expect(elements).to PlaywrightMatchers.have_count(2) }
+        .tap { |elements| expect(elements).to have_count(2) }
         .all
 
     expect(
@@ -336,16 +332,15 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     # normal autocomplete works
     topic_page.type_in_composer("#co")
-    expect(
-      browser_root.locator(".hashtag-autocomplete").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".hashtag-autocomplete").filter(visible: true)).not_to have_count(0)
 
     # autocomplete does not trigger within a URL
     topic_page.clear_composer
     topic_page.type_in_composer("discourse.org/#co")
-    expect(
-      browser_root.locator(".hashtag-autocomplete").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0, timeout: 2 * 1000)
+    expect(browser_root.locator(".hashtag-autocomplete").filter(visible: true)).to have_count(
+      0,
+      timeout: 2 * 1000,
+    )
   end
 
   context "when a user cannot access the category for a hashtag cooked in another post" do
@@ -363,7 +358,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
       expect(
         browser_root.locator(".hashtag-cooked .hashtag-category-square").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       generated_css = browser_root.locator("#hashtag-css-generator").text_content
       expect(generated_css).to include(".hashtag-category-square")
       expect(generated_css).not_to include(".hashtag-color--category--#{private_category.id}")

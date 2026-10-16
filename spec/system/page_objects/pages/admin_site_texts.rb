@@ -16,20 +16,19 @@ module PageObjects
       end
 
       def has_translation_key?(key)
-        PlaywrightMatchers.contain_text([browser_text_pattern(key)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(key)], useInnerText: true).matches?(
           browser_root.locator(".site-text-id").filter(visible: true),
         )
       end
 
       def has_highlighted_translation_key?(key)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(key)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".site-text-id .text-highlight").filter(visible: true))
+        contain_text([browser_exact_text_pattern(key)], useInnerText: true).matches?(
+          browser_root.locator(".site-text-id .text-highlight").filter(visible: true),
+        )
       end
 
       def has_translation_value?(value)
-        PlaywrightMatchers.contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(value)], useInnerText: true).matches?(
           browser_root.locator(".site-text-value").filter(visible: true),
         )
       end
@@ -58,15 +57,12 @@ module PageObjects
 
       def has_theme_option?(theme, disabled: false)
         row = ".theme-search .select-kit-row[data-value='#{theme.id}']"
-        unless PlaywrightMatchers.contain_text(
-                 [browser_exact_text_pattern(theme.name)],
-                 useInnerText: true,
-               ).matches?(
+        unless contain_text([browser_exact_text_pattern(theme.name)], useInnerText: true).matches?(
                  browser_root.locator("#{row} .site-text-theme-row__name").filter(visible: true),
                )
           return false
         end
-        unless PlaywrightMatchers.contain_text(
+        unless contain_text(
                  [browser_exact_text_pattern("##{theme.id}")],
                  useInnerText: true,
                ).matches?(
@@ -78,7 +74,7 @@ module PageObjects
         end
 
         if disabled
-          PlaywrightMatchers.contain_text(
+          contain_text(
             [browser_exact_text_pattern(I18n.t("admin_js.admin.site_text.theme_disabled"))],
             useInnerText: true,
           ).matches?(
@@ -87,7 +83,7 @@ module PageObjects
             ),
           )
         else
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator("#{row} .site-text-theme-row__badge.--disabled").filter(
               visible: true,
             ),
@@ -96,13 +92,11 @@ module PageObjects
       end
 
       def has_no_theme_filter?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".theme-search").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".theme-search").filter(visible: true))
       end
 
       def has_selected_theme?(theme)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern("#{theme.name} ##{theme.id}")],
           useInnerText: true,
         ).matches?(
@@ -113,7 +107,7 @@ module PageObjects
       end
 
       def has_all_site_texts_selected?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.site_text.all_themes"))],
           useInnerText: true,
         ).matches?(browser_root.locator(".theme-search .select-kit-header").filter(visible: true))
@@ -159,9 +153,7 @@ module PageObjects
           .filter(visible: true)
           .click
         query = { locale:, theme_id: }.compact.to_query
-        PlaywrightMatchers.have_url("/admin/customize/site_texts/#{key}?#{query}").matches?(
-          browser_page,
-        )
+        have_url("/admin/customize/site_texts/#{key}?#{query}").matches?(browser_page)
       end
 
       def override_translation(value)

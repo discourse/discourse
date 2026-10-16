@@ -4,13 +4,13 @@ module PageObjects
   module Modals
     class PrivateMessageRemoveParticipant < PageObjects::Components::Base
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#dialog-holder .dialog-content").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#dialog-holder .dialog-content").filter(visible: true),
         )
       end

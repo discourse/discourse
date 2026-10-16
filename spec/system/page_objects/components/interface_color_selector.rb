@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def available?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator(container_selector)
             .filter(visible: true)
@@ -24,7 +24,7 @@ module PageObjects
       end
 
       def not_available?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator(container_selector)
             .filter(visible: true)
@@ -39,9 +39,7 @@ module PageObjects
       def expand
         # Ensure the menu is closed before we try to expand it.
         # This prevents flakiness if the menu is still closing from a previous action.
-        expect(
-          browser_root.locator(CONTENT_SELECTOR).filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(CONTENT_SELECTOR).filter(visible: true)).to have_count(0)
 
         browser_root
           .locator(container_selector)
@@ -53,7 +51,7 @@ module PageObjects
       end
 
       def has_light_as_current_mode?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='light']").filter(
             visible: true,
           ),
@@ -61,7 +59,7 @@ module PageObjects
       end
 
       def has_dark_as_current_mode?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='dark']").filter(
             visible: true,
           ),
@@ -69,7 +67,7 @@ module PageObjects
       end
 
       def has_auto_as_current_mode?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='auto']").filter(
             visible: true,
           ),

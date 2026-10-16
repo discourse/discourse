@@ -9,60 +9,36 @@ RSpec.describe "Glimmer Header" do
 
   it "renders basics" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("header.d-header").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("#site-logo").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("header.d-header").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#site-logo").filter(visible: true)).not_to have_count(0)
   end
 
   it "displays sign up button" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("button.sign-up-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("button.login-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("button.sign-up-button").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("button.login-button").filter(visible: true)).not_to have_count(0)
 
     browser_root.locator("button.sign-up-button").filter(visible: true).click
-    expect(
-      browser_root.locator(".signup-fullpage").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".signup-fullpage").filter(visible: true)).not_to have_count(0)
   end
 
   it "displays login button" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("button.sign-up-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("button.login-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("button.sign-up-button").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("button.login-button").filter(visible: true)).not_to have_count(0)
 
     browser_root.locator("button.login-button").filter(visible: true).click
-    expect(
-      browser_root.locator(".login-fullpage").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".login-fullpage").filter(visible: true)).not_to have_count(0)
   end
 
   it "shows login button when login required" do
     SiteSetting.login_required = true
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("button.login-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("button.sign-up-button").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("#search-button").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("button.btn-sidebar-toggle").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("button.login-button").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("button.sign-up-button").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#search-button").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator("button.btn-sidebar-toggle").filter(visible: true)).to have_count(0)
   end
 
   it "renders unread notifications count when user's notifications count is updated" do
@@ -80,7 +56,7 @@ RSpec.describe "Glimmer Header" do
       browser_root.locator(".header-dropdown-toggle.current-user .unread-notifications").filter(
         visible: true,
       ),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("1")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("1")], useInnerText: true)
   end
 
   it "doesn't show pending reviewables count for non-legacy navigation menu" do
@@ -92,20 +68,16 @@ RSpec.describe "Glimmer Header" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(
       browser_root.locator(".hamburger-dropdown .badge-notification").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "closes revamped menu when clicking outside" do
     sign_in(current_user)
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true).click
-    expect(
-      browser_root.locator(".user-menu.revamped").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".user-menu.revamped").filter(visible: true)).not_to have_count(0)
     browser_root.locator("header.d-header").filter(visible: true).click
-    expect(
-      browser_root.locator(".user-menu.revamped").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".user-menu.revamped").filter(visible: true)).to have_count(0)
   end
 
   it "closes menu-panel when keyboard focus leaves it" do
@@ -116,9 +88,7 @@ RSpec.describe "Glimmer Header" do
       .locator("##{header.active_element_id}")
       .filter(visible: true)
       .press(%w[Shift Tab].join("+"))
-    expect(
-      browser_root.locator(".user-menu.revamped").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".user-menu.revamped").filter(visible: true)).to have_count(0)
   end
 
   it "automatically focuses the first link in the hamburger panel" do
@@ -127,9 +97,7 @@ RSpec.describe "Glimmer Header" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     browser_root.locator("#toggle-hamburger-menu").filter(visible: true).click
-    expect(
-      browser_root.locator(".panel-body").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".panel-body").filter(visible: true)).not_to have_count(0)
     first_link = browser_root.locator(".panel-body a").filter(visible: true).first
     first_link_href =
       first_link.evaluate(
@@ -195,21 +163,19 @@ RSpec.describe "Glimmer Header" do
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-reviewables",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     expect(
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-pms",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".d-icon-envelope").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
+    expect(browser_root.locator(".d-icon-envelope").filter(visible: true)).not_to have_count(0)
     expect(
       browser_root
         .locator(".header-dropdown-toggle.current-user .badge-notification.with-icon.new-pms")
@@ -231,17 +197,17 @@ RSpec.describe "Glimmer Header" do
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-reviewables",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-pms",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "shows regular notifications bubble if there are neither new personal messages nor unseen reviewables" do
@@ -260,7 +226,7 @@ RSpec.describe "Glimmer Header" do
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("3")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("3")], useInnerText: true)
     expect(
       browser_root
         .locator(".header-dropdown-toggle.current-user .badge-notification.unread-notifications")
@@ -274,12 +240,12 @@ RSpec.describe "Glimmer Header" do
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-reviewables",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       browser_root.locator(
         ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-pms",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   context "when resetting password" do
@@ -295,15 +261,11 @@ RSpec.describe "Glimmer Header" do
       browser_page
         .goto("/u/password-reset/#{email_token.token}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator("button.login-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("button.sign-up-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("button.login-button").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator("button.sign-up-button").filter(visible: true)).to have_count(0)
       expect(
         browser_root.locator(".search-dropdown #search-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -316,21 +278,13 @@ RSpec.describe "Glimmer Header" do
       sign_in(current_user)
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator("button.login-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("button.sign-up-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("#search-button").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("button.login-button").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator("button.sign-up-button").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator("#search-button").filter(visible: true)).not_to have_count(0)
       expect(
         browser_root.locator("button.btn-sidebar-toggle").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("#current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator("#current-user").filter(visible: true)).not_to have_count(0)
     end
   end
 
@@ -343,12 +297,10 @@ RSpec.describe "Glimmer Header" do
         .goto("/t/#{topic.slug}/#{topic.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Main topic title
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0) # Main topic title
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # header buttons visible when no topic-info in header
+      ).not_to have_count(0) # header buttons visible when no topic-info in header
 
       browser_page.evaluate(
         "function(arguments) { document.querySelector('#post_4').scrollIntoView() }",
@@ -357,18 +309,16 @@ RSpec.describe "Glimmer Header" do
 
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0) # No header buttons
+      ).to have_count(0) # No header buttons
       expect(
         browser_root.locator("header.d-header .title-wrapper .topic-link").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Title is shown in header
+      ).not_to have_count(0) # Title is shown in header
 
       browser_page.evaluate("function(arguments) { window.scrollTo(0, 0) }", arg: [])
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Main topic title
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0) # Main topic title
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # header buttons visible when no topic-info in header
+      ).not_to have_count(0) # header buttons visible when no topic-info in header
     end
 
     it "shows when navigating direct to a later post", mobile: true do
@@ -378,10 +328,10 @@ RSpec.describe "Glimmer Header" do
 
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0) # No header buttons
+      ).to have_count(0) # No header buttons
       expect(
         browser_root.locator("header.d-header .title-wrapper .topic-link").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Title is shown in header
+      ).not_to have_count(0) # Title is shown in header
     end
 
     it "shows when jumping from OP to much later post", mobile: true do
@@ -389,28 +339,24 @@ RSpec.describe "Glimmer Header" do
         .goto("/t/#{topic.slug}/#{topic.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Main topic title
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0) # Main topic title
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # header buttons visible when no topic-info in header
+      ).not_to have_count(0) # header buttons visible when no topic-info in header
 
       browser_page.evaluate(
         "function(arguments) { #{"Discourse.visit('/t/#{topic.slug}/#{topic.id}/21');"} }",
         arg: [],
       )
 
-      expect(
-        browser_root.locator("#post_21").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#post_21").filter(visible: true)).not_to have_count(0)
 
       expect(
         browser_root.locator("header.d-header .auth-buttons .login-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0) # No header buttons
+      ).to have_count(0) # No header buttons
       expect(
         browser_root.locator("header.d-header .title-wrapper .topic-link").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0) # Title is shown in header
+      ).not_to have_count(0) # Title is shown in header
     end
 
     it "shows and hides do-not-disturb icon" do
@@ -419,21 +365,21 @@ RSpec.describe "Glimmer Header" do
 
       expect(
         browser_root.locator(".d-header .do-not-disturb-background").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
 
       try_until_success(reason: "Relies on messagebus updates") do
         expect(
           browser_root.locator(".d-header .do-not-disturb-background").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
 
       expect(
         browser_root.locator(".d-header .do-not-disturb-background").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

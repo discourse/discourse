@@ -42,7 +42,7 @@ describe "Category moderator self-lockout warning" do
       category_page.save_settings
       dialog.click_yes
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/latest")
+      expect(browser_page).to have_url("/latest")
       expect(category.reload.category_groups.map(&:group_id)).to contain_exactly(
         restricted_group.id,
       )

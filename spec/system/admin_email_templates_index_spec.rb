@@ -12,9 +12,7 @@ describe "Admin Email Templates Page" do
 
     email_templates_page.template("user_notifications.account_exists").edit_button.click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/admin/email/templates/user_notifications.account_exists",
-    )
+    expect(browser_page).to have_url("/admin/email/templates/user_notifications.account_exists")
   end
 
   it "navigates to the email template edit page when clicking the template name" do
@@ -22,9 +20,7 @@ describe "Admin Email Templates Page" do
 
     email_templates_page.template("user_notifications.account_exists").name_cell.click
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/admin/email/templates/user_notifications.account_exists",
-    )
+    expect(browser_page).to have_url("/admin/email/templates/user_notifications.account_exists")
   end
 
   describe "filter controls" do

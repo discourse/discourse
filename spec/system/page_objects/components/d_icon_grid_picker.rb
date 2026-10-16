@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_icon?(icon_id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-icon-id='#{icon_id}']").filter(visible: true),
         )
       end
@@ -86,11 +86,11 @@ module PageObjects
       end
 
       def scoped_has_css?(selector)
-        PlaywrightMatchers.have_count(0).does_not_match?(scoped(selector))
+        have_count(0).does_not_match?(scoped(selector))
       end
 
       def scoped_has_no_css?(selector)
-        PlaywrightMatchers.have_count(0).matches?(scoped(selector))
+        have_count(0).matches?(scoped(selector))
       end
     end
   end

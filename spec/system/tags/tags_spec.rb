@@ -77,7 +77,7 @@ describe "Tags" do
       discovery.tag_drop.search(rare_tag.name)
       discovery.tag_drop.select_row_by_name(rare_tag.name)
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
+      expect(browser_page).to have_url(
         "/tags/c/#{category_for_tags.slug}/#{category_for_tags.id}/#{rare_tag.slug}/#{rare_tag.id}",
       )
     end
@@ -97,7 +97,7 @@ describe "Tags" do
 
       # /latest -> /tag/tag-one/id (by clicking tag on topic)
       discovery.topic_list.click_topic_tag(topic_with_one_tag, "tag-one")
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{tag_one.slug}/#{tag_one.id}")
+      expect(browser_page).to have_url("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
 
       # /c/category
@@ -106,7 +106,7 @@ describe "Tags" do
 
       # /c/category -> /tags/c/category-slug/category-id/tag-slug/tag-id
       discovery.tag_drop.select_row_by_name("tag-three")
-      expect(browser_page).to PlaywrightMatchers.have_url(
+      expect(browser_page).to have_url(
         "/tags/c/#{category.slug}/#{category.id}/#{tag_three.slug}/#{tag_three.id}",
       )
       expect(discovery.tag_drop).to have_selected_name("tag-three")
@@ -121,7 +121,7 @@ describe "Tags" do
 
       # -> /tag/tag-one/id to /tag/tag-two/id
       discovery.topic_list.click_topic_tag(topic_with_two_tags, "tag-two")
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{tag_two.slug}/#{tag_two.id}")
+      expect(browser_page).to have_url("/tag/#{tag_two.slug}/#{tag_two.id}")
       expect(discovery.topic_list).to have_topic(topic_with_two_tags)
       expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
 
@@ -140,14 +140,12 @@ describe "Tags" do
 
       # user messages navigate to tag page from user messages
       topic_list.click_topic_tag(pm_with_tag, "tag-one")
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        "/u/#{user_tl2.username}/messages/tags/tag-one",
-      )
+      expect(browser_page).to have_url("/u/#{user_tl2.username}/messages/tags/tag-one")
 
       ## Sidebar
       expect(sidebar).to have_tag_section_links([tag_one, tag_three, tag_two])
       sidebar.click_section_link(tag_one.name)
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{tag_one.slug}/#{tag_one.id}")
+      expect(browser_page).to have_url("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
     end
 
@@ -181,21 +179,21 @@ describe "Tags" do
 
       # select a different tag, navigate, verify new selection
       discovery.tag_drop.select_row_by_name("bulbasaur")
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{bulbasaur.slug}/#{bulbasaur.id}")
+      expect(browser_page).to have_url("/tag/#{bulbasaur.slug}/#{bulbasaur.id}")
 
       discovery.tag_drop.expand
       expect(discovery.tag_drop).to have_selected_row_name("bulbasaur")
 
       # "remove filter" navigates back with no selected tag
       discovery.tag_drop.select_row_by_value("all-tags")
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
 
       discovery.tag_drop.expand
       expect(discovery.tag_drop).to have_no_selected_row
 
       # "no tags" filter shows untagged topics
       discovery.tag_drop.select_row_by_value("no-tags")
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/none")
+      expect(browser_page).to have_url("/tag/none")
 
       discovery.tag_drop.expand
       expect(discovery.tag_drop).to have_no_selected_row
@@ -208,7 +206,7 @@ describe "Tags" do
       discovery.tag_drop.expand
       discovery.tag_drop.select_row_by_value("no-tags")
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/none")
+      expect(browser_page).to have_url("/tag/none")
       expect(discovery.topic_list).to have_topic(topic_with_no_tags)
       expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
       expect(discovery.topic_list).to have_no_topic(topic_with_two_tags)
@@ -290,7 +288,7 @@ describe "Tags" do
 
       browser_page.goto("/new-message").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(composer).to be_opened
-      expect(mini_tag_chooser).to be_hidden
+      expect(mini_tag_chooser).to RSpecPredicates.be_hidden
 
       # PM - creation with tags for TL2 user
       sign_in(user_tl2)
@@ -312,9 +310,7 @@ describe "Tags" do
       composer.submit
 
       # PM - tags shown in topic_view
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
       expect(topic_page.topic_tags).to include("tag-one", "tag-two")
 
       # PM - remove one and add one tag
@@ -346,9 +342,10 @@ describe "Tags" do
 
       # wait for composer to load topic data including tags
       # this ensures originalTags is set from topic.tags
-      expect(
-        browser_root.locator(".mini-tag-chooser").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("tag-one")], useInnerText: true)
+      expect(browser_root.locator(".mini-tag-chooser").filter(visible: true)).to contain_text(
+        [browser_text_pattern("tag-one")],
+        useInnerText: true,
+      )
 
       composer.fill_content("Updated content for draft test")
 
@@ -401,9 +398,10 @@ describe "Tags" do
       browser_root.locator("#post_1 .post-controls .edit").filter(visible: true).click
       expect(composer).to be_opened
 
-      expect(
-        browser_root.locator(".mini-tag-chooser").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("cap")], useInnerText: true)
+      expect(browser_root.locator(".mini-tag-chooser").filter(visible: true)).to contain_text(
+        [browser_text_pattern("cap")],
+        useInnerText: true,
+      )
 
       composer_tag_chooser =
         PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
@@ -448,7 +446,7 @@ describe "Tags" do
         .filter(hasText: browser_text_pattern("node.js"))
         .click
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{node_tag.slug}/#{node_tag.id}")
+      expect(browser_page).to have_url("/tag/#{node_tag.slug}/#{node_tag.id}")
       expect(discovery.topic_list).to have_topic(node_topic)
 
       browser_page
@@ -459,7 +457,7 @@ describe "Tags" do
         browser_root.locator(
           ".fps-tag-item a[href=\"/tag/#{node_tag.slug}/#{node_tag.id}\"]",
         ).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("node.js")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("node.js")], useInnerText: true)
 
       browser_root
         .locator(".fps-tag-item a")
@@ -467,7 +465,7 @@ describe "Tags" do
         .filter(hasText: browser_text_pattern("node.js"))
         .click
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{node_tag.slug}/#{node_tag.id}")
+      expect(browser_page).to have_url("/tag/#{node_tag.slug}/#{node_tag.id}")
     end
   end
 end

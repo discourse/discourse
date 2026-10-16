@@ -20,20 +20,20 @@ describe "User activity posts" do
       .goto("/u/#{user.username_lower}/activity/replies")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".stream-topic-title .title").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(2)
+    expect(browser_root.locator(".stream-topic-title .title").filter(visible: true)).to have_count(
+      2,
+    )
 
     title_element =
       browser_root.locator(".stream-topic-title .title a[href*='/#{topic1.id}/']").filter(
         visible: true,
       )
-    expect(title_element).to PlaywrightMatchers.contain_text(
+    expect(title_element).to contain_text(
       browser_text_pattern("Title with &amp; characters and emoji"),
       useInnerText: true,
     )
     expect(
       title_element.locator("img.emoji[title='wave']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 end

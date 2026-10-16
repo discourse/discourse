@@ -33,7 +33,7 @@ module PageObjects
       end
 
       def has_download_link?
-        PlaywrightMatchers.be_visible.matches?(browser_root.get_by_role("link", name: ".zip"))
+        be_visible.matches?(browser_root.get_by_role("link", name: ".zip"))
       end
 
       private

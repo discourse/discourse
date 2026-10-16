@@ -36,9 +36,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com")
       browser_page.keyboard.press("Enter")
 
-      expect(
-        rich.locator("div.onebox-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("div.onebox-wrapper").filter(visible: true)).not_to have_count(0)
       rich.locator("div.onebox-wrapper").filter(visible: true).click
 
       expect(onebox_toolbar).to have_toolbar
@@ -53,9 +51,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com")
       browser_page.keyboard.press("Enter")
 
-      expect(
-        rich.locator("div.onebox-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("div.onebox-wrapper").filter(visible: true)).not_to have_count(0)
       rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
@@ -66,16 +62,14 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("div.onebox-wrapper")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        rich.locator("a[href='https://example.com']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to have_count(0)
+      expect(rich.locator("a[href='https://example.com']").filter(visible: true)).to contain_text(
         [browser_text_pattern("https://example.com")],
         useInnerText: true,
       )
 
       composer.toggle_rich_editor
-      expect(composer).to have_value("<https://example.com>")
+      expect(composer).to RSpecPredicates.have_value("<https://example.com>")
     end
 
     it "does not re-onebox after removing preview" do
@@ -84,9 +78,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com")
       browser_page.keyboard.press("Enter")
 
-      expect(
-        rich.locator("div.onebox-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("div.onebox-wrapper").filter(visible: true)).not_to have_count(0)
       rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
@@ -97,10 +89,10 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("div.onebox-wrapper")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        rich.locator("a[href='https://example.com']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
+      expect(rich.locator("a[href='https://example.com']").filter(visible: true)).not_to have_count(
+        0,
+      )
 
       # Move cursor away and back — should not re-onebox
       composer.type_content(:enter)
@@ -112,7 +104,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("div.onebox-wrapper")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -124,9 +116,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(
-        rich.locator("a.inline-onebox").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("a.inline-onebox").filter(visible: true)).not_to have_count(0)
       rich.locator("a.inline-onebox").filter(visible: true).click
 
       expect(onebox_toolbar).to have_toolbar
@@ -141,9 +131,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(
-        rich.locator("a.inline-onebox").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(rich.locator("a.inline-onebox").filter(visible: true)).to contain_text(
         [browser_text_pattern("Example Site")],
         useInnerText: true,
       )
@@ -157,10 +145,8 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("a.inline-onebox")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        rich.locator("a[href='https://example.com/x']").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to have_count(0)
+      expect(rich.locator("a[href='https://example.com/x']").filter(visible: true)).to contain_text(
         [browser_text_pattern("https://example.com/x")],
         useInnerText: true,
       )
@@ -174,9 +160,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com")
       browser_page.keyboard.press("Enter")
 
-      expect(
-        rich.locator("div.onebox-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("div.onebox-wrapper").filter(visible: true)).not_to have_count(0)
       rich.locator("div.onebox-wrapper").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
@@ -187,16 +171,14 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("div.onebox-wrapper")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       rich.locator("a[href='https://example.com']").filter(visible: true).click
 
       expect(
         browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true).click
-      expect(
-        rich.locator("div.onebox-wrapper").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("div.onebox-wrapper").filter(visible: true)).not_to have_count(0)
     end
 
     it "re-oneboxes an inline onebox when clicking show preview" do
@@ -206,9 +188,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space)
 
-      expect(
-        rich.locator("a.inline-onebox").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("a.inline-onebox").filter(visible: true)).not_to have_count(0)
       rich.locator("a.inline-onebox").filter(visible: true).click
       onebox_toolbar.click_remove_preview
 
@@ -219,16 +199,14 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
           end
           .locator("a.inline-onebox")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       rich.locator("a[href='https://example.com/x']").filter(visible: true).click
 
       expect(
         browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator("button.composer-link-toolbar__show-preview").filter(visible: true).click
-      expect(
-        rich.locator("a.inline-onebox").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(rich.locator("a.inline-onebox").filter(visible: true)).not_to have_count(0)
     end
   end
 end

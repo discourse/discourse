@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def has_input_text?(text)
-        PlaywrightMatchers.have_value(text).matches?(
+        have_value(text).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(browser_root.locator(".#{"topic-query-filter__filter-term".to_s.split.join(".")}"))

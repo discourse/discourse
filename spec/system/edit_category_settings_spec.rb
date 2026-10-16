@@ -26,7 +26,7 @@ describe "Edit Category Settings" do
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator(".navigation-container .hot.active").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Hot")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("Hot")], useInnerText: true)
     end
   end
 

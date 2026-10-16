@@ -27,7 +27,7 @@ describe "Admin email login in readonly mode" do
         .filter(visible: true)
         .click
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("admin_login.acknowledgement", email: admin.email)),
         useInnerText: true,
       )
@@ -51,8 +51,8 @@ describe "Admin email login in readonly mode" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      ).not_to have_count(0)
+      expect(browser_content).to contain_text(
         browser_text_pattern(admin.username),
         useInnerText: true,
       )

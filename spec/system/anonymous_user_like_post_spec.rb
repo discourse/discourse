@@ -19,7 +19,7 @@ describe "Anonymous user liking a post" do
 
       login_page.fill(username: user.username, password: "supersecurepassword").click_login
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(topic_page).to have_post_action_button(post, :like_count)
       expect(post.reload.like_count).to eq(1)
     end

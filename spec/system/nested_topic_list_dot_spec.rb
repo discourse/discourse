@@ -31,9 +31,7 @@ RSpec.describe "Nested topic-list new-replies dot" do
     expect(topic_list).to have_new_replies_dot(topic)
 
     topic_list.click_topic_title(topic)
-    expect(
-      browser_root.locator(".nested-view").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".nested-view").filter(visible: true)).not_to have_count(0)
 
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(topic_list).to have_no_new_replies_dot(topic)

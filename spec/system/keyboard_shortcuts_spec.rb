@@ -27,9 +27,7 @@ RSpec.describe "Keyboard shortcuts" do
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     browser_page.keyboard.type("?")
-    expect(
-      browser_root.locator(".keyboard-shortcuts-modal").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".keyboard-shortcuts-modal").filter(visible: true)).to have_count(0)
   end
 
   describe "<d>" do
@@ -65,9 +63,7 @@ RSpec.describe "Keyboard shortcuts" do
         it "archives the message" do
           topic_page.visit_topic(topic)
           browser_page.keyboard.type("a")
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/u/#{current_user.username}/messages",
-          )
+          expect(browser_page).to have_url("/u/#{current_user.username}/messages")
           expect(UserArchivedMessage.exists?(topic: topic)).to be true
         end
       end
@@ -78,9 +74,7 @@ RSpec.describe "Keyboard shortcuts" do
         it "moves back the message to inbox" do
           topic_page.visit_topic(topic)
           browser_page.keyboard.type("a")
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/u/#{current_user.username}/messages",
-          )
+          expect(browser_page).to have_url("/u/#{current_user.username}/messages")
           expect(UserArchivedMessage.exists?(topic: topic)).to be false
         end
       end
@@ -92,7 +86,7 @@ RSpec.describe "Keyboard shortcuts" do
       it "doesn't archive the topic" do
         topic_page.visit_topic(topic)
         browser_page.keyboard.type("a")
-        expect(browser_page).to PlaywrightMatchers.have_url("/t/#{topic.slug}/#{topic.id}")
+        expect(browser_page).to have_url("/t/#{topic.slug}/#{topic.id}")
         expect(UserArchivedMessage.exists?(topic: topic)).to be false
       end
     end

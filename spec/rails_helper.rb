@@ -132,6 +132,7 @@ RSpec.configure do |config|
     config.include SystemHelpers, type: :system
     config.include ThemeScreenshotMarker, type: :system
     config.include NativeSystemHelpers, native_playwright: true
+    config.include Playwright::Test::Matchers, native_playwright: true
     config.define_derived_metadata(file_path: %r{/spec/system/}) do |metadata|
       metadata[:native_playwright] = true if ENV["DIRECT_PLAYWRIGHT_ONLY"] == "1"
     end

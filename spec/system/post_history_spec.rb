@@ -34,9 +34,7 @@ describe "Post history with tag changes" do
     sign_in(admin)
     topic_page.visit_topic(topic)
 
-    expect(
-      browser_root.locator(".post-info.edits").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".post-info.edits").filter(visible: true)).not_to have_count(0)
     browser_root.locator(".post-info.edits").filter(visible: true).click
     expect(post_history_modal).to have_tag_changes
     expect(post_history_modal.deleted_tags).to contain_exactly(tag1.name)
@@ -52,9 +50,7 @@ describe "Post history with tag changes" do
     topic_page.click_topic_title_submit_edit
 
     expect(topic_page.topic_tags).to contain_exactly(tag3.name, tag4.name)
-    expect(
-      browser_root.locator(".post-info.edits").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".post-info.edits").filter(visible: true)).not_to have_count(0)
     browser_root.locator(".post-info.edits").filter(visible: true).click
 
     # verify new revision shows correctly (beta, gamma -> gamma, delta)

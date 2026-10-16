@@ -18,13 +18,13 @@ module PageObjects
       end
 
       def has_emoji?(emoji_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(emoji_button_selector(emoji_name)).filter(visible: true),
         )
       end
 
       def has_no_emoji?(emoji_name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(emoji_button_selector(emoji_name)).filter(visible: true),
         )
       end

@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def has_displayed_text?(text)
-        PlaywrightMatchers.contain_text(browser_text_pattern(text), useInnerText: true).matches?(
+        contain_text(browser_text_pattern(text), useInnerText: true).matches?(
           find_item(@setting_name),
         )
       end
@@ -18,13 +18,13 @@ module PageObjects
       end
 
       def exists?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(change_item_selector(@setting_name)).filter(visible: true),
         )
       end
 
       def does_not_exist?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(change_item_selector(@setting_name)).filter(visible: true),
         )
       end
@@ -34,7 +34,7 @@ module PageObjects
       end
 
       def has_status?(status)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           find_item(@setting_name).locator(".upcoming-change__badge.--status-#{status}").filter(
             visible: true,
           ),
@@ -42,7 +42,7 @@ module PageObjects
       end
 
       def has_impact_role?(impact_type)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           find_item(@setting_name).locator(
             ".upcoming-change__badge.--impact-role-#{impact_type}",
           ).filter(visible: true),
@@ -50,22 +50,19 @@ module PageObjects
       end
 
       def has_plugin_name?(plugin_name)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(plugin_name),
-          useInnerText: true,
-        ).matches?(
+        contain_text(browser_text_pattern(plugin_name), useInnerText: true).matches?(
           find_item(@setting_name).locator(".upcoming-change__plugin").filter(visible: true),
         )
       end
 
       def has_permanent_soon_notice?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           find_item(@setting_name).locator(".upcoming-change__status-notice").filter(visible: true),
         )
       end
 
       def has_no_permanent_soon_notice?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           find_item(@setting_name)
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -76,7 +73,7 @@ module PageObjects
       end
 
       def has_depends_on_notice?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           find_item(@setting_name).locator(".upcoming-change__depends-on-notice").filter(
             visible: true,
           ),
@@ -84,7 +81,7 @@ module PageObjects
       end
 
       def has_no_depends_on_notice?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           find_item(@setting_name)
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -134,7 +131,7 @@ module PageObjects
       end
 
       def has_no_group_selector?
-        expect(group_selector).to be_hidden
+        expect(group_selector).to RSpecPredicates.be_hidden
       end
 
       def has_groups?(*group_names)

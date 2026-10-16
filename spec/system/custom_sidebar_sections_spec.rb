@@ -22,10 +22,10 @@ describe "Custom sidebar sections" do
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar.click_add_section_button
 
-      expect(section_modal).to be_visible
+      expect(section_modal).to RSpecPredicates.be_visible
       expect(section_modal).to have_disabled_save
       expect(section_modal).to have_section_links_label
-      expect(sidebar.custom_section_modal_title).to PlaywrightMatchers.contain_text(
+      expect(sidebar.custom_section_modal_title).to contain_text(
         browser_text_pattern("Add custom section"),
         useInnerText: true,
       )
@@ -69,9 +69,9 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to PlaywrightMatchers.contain_text(
+    expect(sidebar.custom_section_modal_title).to contain_text(
       browser_text_pattern("Add custom section"),
       useInnerText: true,
     )
@@ -93,9 +93,9 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to PlaywrightMatchers.contain_text(
+    expect(sidebar.custom_section_modal_title).to contain_text(
       browser_text_pattern("Add custom section"),
       useInnerText: true,
     )
@@ -110,9 +110,9 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to PlaywrightMatchers.contain_text(
+    expect(sidebar.custom_section_modal_title).to contain_text(
       browser_text_pattern("Add custom section"),
       useInnerText: true,
     )
@@ -127,9 +127,9 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to PlaywrightMatchers.contain_text(
+    expect(sidebar.custom_section_modal_title).to contain_text(
       browser_text_pattern("Add custom section"),
       useInnerText: true,
     )
@@ -182,7 +182,7 @@ describe "Custom sidebar sections" do
     sidebar.click_section_link("Home")
     expect(
       browser_root.locator("#navigation-bar .active a[href='/read']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "allows typing in the icon picker filter input" do
@@ -242,9 +242,7 @@ describe "Custom sidebar sections" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("My section")
-    expect(
-      browser_root.locator("#discourse-modal-title").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator("#discourse-modal-title").filter(visible: true)).to contain_text(
       browser_text_pattern("Edit custom section"),
       useInnerText: true,
     )
@@ -322,7 +320,7 @@ describe "Custom sidebar sections" do
 
     expect(
       browser_root.locator(".sidebar-section-form-link .draggable").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   # TODO (ui-kit-reorderable-list-cleanup) fold these over the examples above
@@ -503,7 +501,7 @@ describe "Custom sidebar sections" do
       # rather than anywhere on the row, so a press meant to scroll still scrolls.
       expect(
         browser_root.locator(".sidebar-section-form-link .draggable").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       # Neither path substitutes for the other: the menu behind the handle is the
       # only route without a drag, and the drag is the only route without a
@@ -529,14 +527,12 @@ describe "Custom sidebar sections" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(
-      browser_root.locator("#{rows}[data-drag-source]").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(2)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(2)
     # The row drags as a registered source, so its anchor must not drag too.
     # Checked on the rendered value: the binding only works as a real boolean.
     expect(
       browser_root.locator("#{rows} a[draggable='false']").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(2)
+    ).to have_count(2)
 
     # Dropped below the target row's midpoint: its exact center sits on the
     # boundary the insertion index is measured against.
@@ -553,7 +549,7 @@ describe "Custom sidebar sections" do
       browser_root.locator("#{rows}:first-child [data-link-name='Sidebar Categories']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags"],
     )
@@ -574,9 +570,7 @@ describe "Custom sidebar sections" do
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(
-      browser_root.locator("#{rows}[data-drag-source]").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(2)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(2)
 
     drag_and_hold(
       from: "#{rows}:first-child",
@@ -585,12 +579,12 @@ describe "Custom sidebar sections" do
     ) do
       expect(
         browser_root.locator(".sidebar-link-drop-target:not(.is-arming)").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     expect(
       browser_root.locator(".sidebar-section-form-modal").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(browser_root.locator("input[name='link-name']").filter(visible: true).input_value).to eq(
       "Sidebar Tags",
     )
@@ -600,7 +594,7 @@ describe "Custom sidebar sections" do
 
     expect(
       browser_root.locator("[data-section-name='split-out']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(sidebar.primary_section_links("split-out")).to eq(["Sidebar Tags"])
     expect(sidebar.primary_section_links("my-section")).to eq(["Sidebar Categories"])
   end
@@ -616,15 +610,11 @@ describe "Custom sidebar sections" do
     sidebar.open_on_mobile
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(browser_root.locator(rows).filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator("#{rows}[data-drag-source]").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(rows).filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(0)
     # With no registered drag to make room for, the attribute is left off and
     # the anchor keeps the browser default.
-    expect(
-      browser_root.locator("#{rows} a[draggable]").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#{rows} a[draggable]").filter(visible: true)).to have_count(0)
   end
 
   it "does not allow the user to edit public section" do
@@ -648,13 +638,13 @@ describe "Custom sidebar sections" do
       browser_root.locator(
         ".sidebar-section[data-section-name='public-section'] button.sidebar-section-header-button",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     expect(
       browser_root.locator(
         ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "allows the user to delete custom section" do
@@ -690,7 +680,7 @@ describe "Custom sidebar sections" do
       browser_root.locator(
         ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
       ).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
@@ -728,12 +718,14 @@ describe "Custom sidebar sections" do
     sign_in user
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".sidebar-section-header").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("公開セクション")], useInnerText: true)
-    expect(
-      browser_root.locator(".sidebar-section-link").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("タグ")], useInnerText: true)
+    expect(browser_root.locator(".sidebar-section-header").filter(visible: true)).to contain_text(
+      [browser_text_pattern("公開セクション")],
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".sidebar-section-link").filter(visible: true)).to contain_text(
+      [browser_text_pattern("タグ")],
+      useInnerText: true,
+    )
   end
 
   it "loads source labels when editing localized public custom sections" do
@@ -750,12 +742,14 @@ describe "Custom sidebar sections" do
     sign_in admin
     browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".sidebar-section-header").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("公開セクション")], useInnerText: true)
-    expect(
-      browser_root.locator(".sidebar-section-link").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("タグ")], useInnerText: true)
+    expect(browser_root.locator(".sidebar-section-header").filter(visible: true)).to contain_text(
+      [browser_text_pattern("公開セクション")],
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".sidebar-section-link").filter(visible: true)).to contain_text(
+      [browser_text_pattern("タグ")],
+      useInnerText: true,
+    )
 
     sidebar.edit_custom_section("Public section")
 
@@ -980,7 +974,7 @@ describe "Custom sidebar sections" do
       [%w[fr Documentation]],
     )
     expect(guide.reload.localizations.pluck(:locale, :name)).to eq([["fr", "Guide FR"]])
-    expect(api.reload.localizations).to be_empty
+    expect(api.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "labels a group by its own language when a link has a different source" do
@@ -1071,9 +1065,7 @@ describe "Custom sidebar sections" do
     section_modal.fill_translation("fr", "Docs", "")
     section_modal.save
 
-    expect(
-      browser_root.locator(".dialog-body").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
       [
         browser_text_pattern(
           I18n.t("js.sidebar.sections.custom.localizations.remove_cleared_confirm", count: 1),
@@ -1085,7 +1077,7 @@ describe "Custom sidebar sections" do
     section_modal.confirm_update
 
     expect(section_modal).to be_closed
-    expect(sidebar_section.reload.localizations).to be_empty
+    expect(sidebar_section.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "removes every translation for a language at once" do
@@ -1115,8 +1107,8 @@ describe "Custom sidebar sections" do
     section_modal.confirm_update
 
     expect(section_modal).to be_closed
-    expect(sidebar_section.reload.localizations).to be_empty
-    expect(guide.reload.localizations).to be_empty
+    expect(sidebar_section.reload.localizations).to RSpecPredicates.be_empty
+    expect(guide.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "does not allow duplicate section title translation locales" do
@@ -1171,7 +1163,7 @@ describe "Custom sidebar sections" do
       browser_root.locator(
         ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",
       ).filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "shows anonymous public sections" do
@@ -1207,7 +1199,7 @@ describe "Custom sidebar sections" do
 
     sidebar.click_section_link("Tagged")
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
+    expect(browser_page).to have_url(
       "/tags/c/#{category.slug}/#{category.id}/#{tag.slug}/#{tag.id}?status=closed",
     )
   end
@@ -1220,42 +1212,30 @@ describe "Custom sidebar sections" do
     section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
     section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "https:")
 
-    expect(
-      browser_root.locator(".title.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".title.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Title must be shorter than 30 characters"),
       useInnerText: true,
     )
-    expect(
-      browser_root.locator(".name.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".name.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Name must be shorter than 80 characters"),
       useInnerText: true,
     )
-    expect(
-      browser_root.locator(".value.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".value.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Format is invalid"),
       useInnerText: true,
     )
 
     section_modal.fill_name("")
     section_modal.fill_link("", "")
-    expect(
-      browser_root.locator(".title.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".title.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Title cannot be blank"),
       useInnerText: true,
     )
-    expect(
-      browser_root.locator(".name.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".name.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Name cannot be blank"),
       useInnerText: true,
     )
-    expect(
-      browser_root.locator(".value.warning").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator(".value.warning").filter(visible: true)).to contain_text(
       browser_text_pattern("Link cannot be blank"),
       useInnerText: true,
     )

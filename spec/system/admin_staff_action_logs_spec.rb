@@ -38,27 +38,27 @@ describe "Admin staff action logs" do
       .goto("/admin/logs/staff_action_logs")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     row = staff_action_logs_page.log_row(history_1)
-    expect(row).to PlaywrightMatchers.contain_text(
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
       useInnerText: true,
     )
-    expect(row).to PlaywrightMatchers.contain_text("enforce_second_factor", useInnerText: true)
-    expect(row).to PlaywrightMatchers.contain_text(
+    expect(row).to contain_text("enforce_second_factor", useInnerText: true)
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
       useInnerText: true,
     )
-    expect(row).to PlaywrightMatchers.contain_text(
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"),
       useInnerText: true,
     )
     row = staff_action_logs_page.log_row(history_2)
-    expect(row).to PlaywrightMatchers.contain_text(
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
       useInnerText: true,
     )
     expect(
       row.locator("[data-link-topic-id='#{history_2.topic_id}']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "keeps staff action details as text" do
@@ -86,7 +86,7 @@ describe "Admin staff action logs" do
 
     expect(
       browser_root.locator(".staff-action-logs-filters .filter").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [
         browser_text_pattern(
           I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
@@ -117,7 +117,7 @@ describe "Admin staff action logs" do
 
     expect(
       browser_root.locator(".staff-action-logs-filters .filter").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to contain_text(
       [
         browser_text_pattern(
           I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
@@ -128,12 +128,12 @@ describe "Admin staff action logs" do
 
     expect(
       browser_root.locator(".export-staff-action-logs").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     expect do
       staff_action_logs_page.click_export_button
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
         useInnerText: true,
       )
@@ -149,7 +149,7 @@ describe "Admin staff action logs" do
       .goto("/admin/logs/staff_action_logs")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     staff_action_logs_page.filter_by_action(:toggle_flag)
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern(I18n.t("js.search.no_results")),
       useInnerText: true,
     )
@@ -203,7 +203,7 @@ describe "Admin staff action logs" do
       expect do
         staff_action_logs_page.click_export_button
 
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
           useInnerText: true,
         )

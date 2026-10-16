@@ -504,7 +504,7 @@ describe "Request tracking" do
 
           discovery.topic_list_header.click_sort_by("views")
 
-          expect(browser_page).to PlaywrightMatchers.have_url("/latest?ascending=false&order=views")
+          expect(browser_page).to have_url("/latest?ascending=false&order=views")
           wait_for_beacon_count(2)
         end
 

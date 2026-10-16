@@ -51,9 +51,7 @@ describe "script encoding" do
       # Use the composer to trigger an async chunk load
       browser_root.locator("#create-topic").filter(visible: true).click
       browser_root.locator(".d-editor-input").filter(visible: true).fill("This is a test")
-      expect(
-        browser_root.locator(".d-editor-preview").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
         [browser_text_pattern("This is a test")],
         useInnerText: true,
       )
@@ -86,9 +84,7 @@ describe "script encoding" do
       # Use the composer to trigger an async chunk load
       browser_root.locator("#create-topic").filter(visible: true).click
       browser_root.locator(".d-editor-input").filter(visible: true).fill("This is a test")
-      expect(
-        browser_root.locator(".d-editor-preview").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
         [browser_text_pattern("This is a test")],
         useInnerText: true,
       )

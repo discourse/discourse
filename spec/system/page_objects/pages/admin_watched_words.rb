@@ -20,7 +20,7 @@ module PageObjects
       end
 
       def has_word?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".watched-words-detail .show-words-checkbox").filter(visible: true),
         )
       end
@@ -41,7 +41,7 @@ module PageObjects
       end
 
       def has_error?(error)
-        PlaywrightMatchers.contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
           browser_root.locator(".dialog-container .dialog-body").filter(visible: true),
         )
       end

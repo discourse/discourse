@@ -18,16 +18,12 @@ describe "Admin Site Setting Topic Selector Component" do
 
     settings_page.locator(".topic-chooser > summary").filter(visible: true).click
 
-    expect(
-      settings_page.locator("input.filter-input").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(settings_page.locator("input.filter-input").filter(visible: true)).not_to have_count(0)
 
     settings_page.locator("input.filter-input").filter(visible: true).fill(topic.id.to_s)
     settings_page.locator(".topic-row").filter(visible: true).click
 
-    expect(
-      settings_page.locator(".selected-name").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(settings_page.locator(".selected-name").filter(visible: true)).to contain_text(
       [browser_text_pattern("Moderator guide")],
       useInnerText: true,
     )
@@ -45,9 +41,7 @@ describe "Admin Site Setting Topic Selector Component" do
 
     expect(settings_page).to have_n_results(1)
 
-    expect(
-      settings_page.locator(".selected-name").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(settings_page.locator(".selected-name").filter(visible: true)).to contain_text(
       [browser_text_pattern("Moderator guide")],
       useInnerText: true,
     )

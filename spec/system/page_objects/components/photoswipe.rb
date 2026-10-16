@@ -26,15 +26,11 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def next_button
@@ -62,13 +58,13 @@ module PageObjects
       end
 
       def has_counter?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           component.locator(COUNTER).filter(visible: true),
         )
       end
 
       def has_no_counter?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -79,22 +75,20 @@ module PageObjects
       end
 
       def has_caption_title?(caption)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(caption)],
-          useInnerText: true,
-        ).matches?(component.locator(CAPTION_TITLE).filter(visible: true))
+        contain_text([browser_text_pattern(caption)], useInnerText: true).matches?(
+          component.locator(CAPTION_TITLE).filter(visible: true),
+        )
       end
 
       def has_caption_details?(details)
-        PlaywrightMatchers.have_css("opacity", "1").matches?(component.locator(CAPTION_DETAILS)) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(details)],
-            useInnerText: true,
-          ).matches?(component.locator(CAPTION_DETAILS).filter(visible: true))
+        have_css("opacity", "1").matches?(component.locator(CAPTION_DETAILS)) &&
+          contain_text([browser_text_pattern(details)], useInnerText: true).matches?(
+            component.locator(CAPTION_DETAILS).filter(visible: true),
+          )
       end
 
       def has_no_caption?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -107,17 +101,15 @@ module PageObjects
       def has_no_caption_details?
         component.wait_for(state: "visible")
         details = component.locator(CAPTION_DETAILS)
-        details.count.zero? || PlaywrightMatchers.have_css("opacity", "0").matches?(details)
+        details.count.zero? || have_css("opacity", "0").matches?(details)
       end
 
       def has_next_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(NEXT_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(NEXT_BTN).filter(visible: true))
       end
 
       def has_no_next_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -128,13 +120,11 @@ module PageObjects
       end
 
       def has_prev_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(PREV_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(PREV_BTN).filter(visible: true))
       end
 
       def has_no_prev_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -145,13 +135,11 @@ module PageObjects
       end
 
       def has_download_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(DOWNLOAD_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(DOWNLOAD_BTN).filter(visible: true))
       end
 
       def has_no_download_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -162,13 +150,11 @@ module PageObjects
       end
 
       def has_original_image_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(ORIGINAL_IMAGE_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(ORIGINAL_IMAGE_BTN).filter(visible: true))
       end
 
       def has_no_original_image_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -179,13 +165,11 @@ module PageObjects
       end
 
       def has_image_info_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(IMAGE_INFO_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(IMAGE_INFO_BTN).filter(visible: true))
       end
 
       def has_no_image_info_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -196,13 +180,11 @@ module PageObjects
       end
 
       def has_quote_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          component.locator(QUOTE_BTN).filter(visible: true),
-        )
+        have_count(0).does_not_match?(component.locator(QUOTE_BTN).filter(visible: true))
       end
 
       def has_no_quote_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           component
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -213,19 +195,15 @@ module PageObjects
       end
 
       def has_ui_visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(UI_VISIBLE).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(UI_VISIBLE).filter(visible: true))
       end
 
       def has_no_ui_visible?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(UI_VISIBLE).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(UI_VISIBLE).filter(visible: true))
       end
 
       def has_image_source?(upload)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(ACTIVE_IMG + "[src$='#{upload.url}']").filter(visible: true),
         )
       end

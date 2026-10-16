@@ -21,8 +21,8 @@ describe "Staff writes only mode" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      ).not_to have_count(0)
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.staff_writes_only_mode.enabled")),
         useInnerText: true,
       )
@@ -39,14 +39,8 @@ describe "Staff writes only mode" do
 
       composer.create
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(title),
-        useInnerText: true,
-      )
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(body),
-        useInnerText: true,
-      )
+      expect(browser_content).to contain_text(browser_text_pattern(title), useInnerText: true)
+      expect(browser_content).to contain_text(browser_text_pattern(body), useInnerText: true)
     end
   end
 
@@ -58,33 +52,23 @@ describe "Staff writes only mode" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         browser_root.locator("input#login-account-name").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can view topics but sees staff only mode message when not logged in" do
       browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(topic.title),
-        useInnerText: true,
-      )
-      expect(browser_content).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(post.raw),
-        useInnerText: true,
-      )
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(browser_text_pattern(topic.title), useInnerText: true)
+      expect(browser_content).to contain_text(browser_text_pattern(post.raw), useInnerText: true)
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.staff_writes_only_mode.enabled_anonymous")),
         useInnerText: true,
       )
-      expect(
-        browser_root.locator(".login-button").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".sign-up-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".login-button").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".sign-up-button").filter(visible: true)).to have_count(0)
     end
   end
 end

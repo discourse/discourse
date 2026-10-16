@@ -36,12 +36,12 @@ RSpec.describe "Member upcoming changes" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("body.uc-about-page-extra-groups-show-description").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "only adds a body class for upcoming changes enabled for the user's groups" do
@@ -50,20 +50,20 @@ RSpec.describe "Member upcoming changes" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       group.add(current_user)
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "adds and removes the body class based on MessageBus subscription for client site settings" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       using_browser_session(:admin) do
         sign_in(admin)
@@ -75,7 +75,7 @@ RSpec.describe "Member upcoming changes" do
 
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -89,24 +89,24 @@ RSpec.describe "Member upcoming changes" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         browser_root.locator("body.uc-about-page-extra-groups-show-description").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "does add a body class for upcoming changes enabled for Everyone" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(
         browser_root.locator("body.uc-enable-upload-debug-mode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("body.uc-about-page-extra-groups-show-description").filter(
           visible: true,
         ),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

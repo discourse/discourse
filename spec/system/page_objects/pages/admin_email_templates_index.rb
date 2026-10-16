@@ -41,7 +41,7 @@ module PageObjects
       end
 
       def has_exact_count_templates_shown?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator("tr[data-template-id]").filter(visible: true),
         )
       end

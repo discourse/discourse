@@ -57,21 +57,15 @@ describe "Admin User Page" do
     it "can list accounts with identical IPs" do
       browser_root.locator(".ip-lookup-trigger").filter(visible: true).click
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern("#{I18n.t("js.ip_lookup.other_accounts")}\n3"),
         useInnerText: true,
       )
 
       table = browser_root.locator(".other-accounts table").filter(visible: true)
-      expect(table).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(similar_user.username),
-        useInnerText: true,
-      )
-      expect(table).to PlaywrightMatchers.contain_text(
-        browser_text_pattern(another_mod.username),
-        useInnerText: true,
-      )
-      expect(table).to PlaywrightMatchers.contain_text(
+      expect(table).to contain_text(browser_text_pattern(similar_user.username), useInnerText: true)
+      expect(table).to contain_text(browser_text_pattern(another_mod.username), useInnerText: true)
+      expect(table).to contain_text(
         browser_text_pattern(another_admin.username),
         useInnerText: true,
       )
@@ -83,9 +77,9 @@ describe "Admin User Page" do
     end
 
     it "displays username in the title" do
-      expect(
-        browser_root.locator(".display-row.username").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".display-row.username").filter(visible: true)).not_to have_count(
+        0,
+      )
       expect(browser_page.title).to eq("#{user.username} - Users - Admin - Discourse")
     end
 
@@ -117,7 +111,9 @@ describe "Admin User Page" do
           admin_user_page.visit(user)
           open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to RSpecPredicates.be_enabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_everyone",
           )
@@ -134,7 +130,9 @@ describe "Admin User Page" do
           admin_user_page.visit(user)
           open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to RSpecPredicates.be_disabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_no_one",
           )
@@ -161,7 +159,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
@@ -181,7 +181,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
@@ -196,7 +198,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_disabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "not_in_specific_groups",
             )
@@ -252,15 +256,11 @@ describe "Admin User Page" do
         suspend_user_modal.perform
         expect(suspend_user_modal).to be_closed
 
-        expect(
-          browser_root.locator(".suspension-info").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".suspension-info").filter(visible: true)).not_to have_count(0)
         expect(similar_user.reload).to be_suspended
 
         admin_user_page.click_unsuspend_button
-        expect(
-          browser_root.locator(".suspension-info").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".suspension-info").filter(visible: true)).to have_count(0)
       end
 
       it "displays error when used is already suspended" do
@@ -298,14 +298,10 @@ describe "Admin User Page" do
         silence_user_modal.perform
 
         expect(silence_user_modal).to be_closed
-        expect(
-          browser_root.locator(".silence-info").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".silence-info").filter(visible: true)).not_to have_count(0)
 
         admin_user_page.click_unsilence_button
-        expect(
-          browser_root.locator(".silence-info").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".silence-info").filter(visible: true)).to have_count(0)
       end
     end
   end
@@ -387,7 +383,7 @@ describe "Admin User Page" do
       # ensure the automatic groups are displayed
       expect(
         browser_root.locator(".admin-user__automatic-groups").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(browser_text_pattern("trust_level"), useInnerText: true)
+      ).to contain_text(browser_text_pattern("trust_level"), useInnerText: true)
     end
 
     describe "with user action logs" do

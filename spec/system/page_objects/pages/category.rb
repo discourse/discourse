@@ -117,19 +117,15 @@ module PageObjects
       D_EDITOR_SELECTOR = ".d-editor"
 
       def has_d_editor?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(D_EDITOR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(D_EDITOR_SELECTOR).filter(visible: true))
       end
 
       def has_no_d_editor?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(D_EDITOR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(D_EDITOR_SELECTOR).filter(visible: true))
       end
 
       def has_selected_template?(template_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".select-category-template .select-kit-header[data-name='#{template_name}']",
           ).filter(visible: true),
@@ -189,13 +185,13 @@ module PageObjects
       CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
 
       def has_no_new_topics?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).filter(visible: true),
         )
       end
 
       def has_new_topics?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).filter(visible: true),
         )
       end
@@ -210,7 +206,7 @@ module PageObjects
       end
 
       def has_public_access_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t(
               "js.category.permissions.everyone_full_access",
@@ -222,7 +218,7 @@ module PageObjects
       end
 
       def has_no_public_access_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t(
               "js.category.permissions.everyone_full_access",
@@ -235,26 +231,22 @@ module PageObjects
 
       def has_setting_tab?(tab_name)
         tab_css = ".edit-category-#{tab_name}"
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(tab_css).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(tab_css).filter(visible: true))
       end
 
       def has_no_setting_tab?(tab_name)
         tab_css = ".edit-category-#{tab_name}"
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(tab_css).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(tab_css).filter(visible: true))
       end
 
       def has_changes_banner?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-changes-banner").filter(visible: true),
         )
       end
 
       def has_powered_by_discourse?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".powered-by-discourse").filter(visible: true),
         )
       end
@@ -267,7 +259,7 @@ module PageObjects
       end
 
       def has_category_title?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".category-header h1").filter(visible: true),
         )
       end
@@ -291,14 +283,14 @@ module PageObjects
       end
 
       def has_posting_review_groups_error?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.category.validations.groups_required")),
           useInnerText: true,
         ).matches?(browser_content)
       end
 
       def has_no_posting_review_groups_error?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.category.validations.groups_required")),
           useInnerText: true,
         ).does_not_match?(browser_content)

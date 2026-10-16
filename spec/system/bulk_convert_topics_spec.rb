@@ -30,6 +30,6 @@ describe "Bulk convert PMs to public topics" do
     expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
     expect(pm.reload.archetype).to eq(Archetype.default)
     expect(pm.category_id).to eq(category.id)
-    expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
+    expect(pm.posts.where(post_type: Post.types[:small_action])).to RSpecPredicates.be_empty
   end
 end

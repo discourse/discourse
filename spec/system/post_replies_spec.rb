@@ -81,9 +81,7 @@ describe "Post replies" do
       reply_1_post.edit
       composer.submit
 
-      expect(
-        browser_root.locator(".dialog-body").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(0)
     end
   end
 end

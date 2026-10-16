@@ -11,7 +11,7 @@ module PageObjects
       end
 
       def has_no_avatar_upload_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(AVATAR_UPLOAD_BUTTON_SELECTOR).filter(visible: true),
         )
       end
@@ -19,13 +19,11 @@ module PageObjects
       def has_avatar_options?(*options)
         ordered_options = options.map { |option| ".avatar-choice--#{option}" }.join(" + ")
 
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          body.locator(ordered_options).filter(visible: true),
-        )
+        have_count(0).does_not_match?(body.locator(ordered_options).filter(visible: true))
       end
 
       def has_user_avatar_image_uploaded?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           body.locator(".avatar[src*='uploads/default']").filter(visible: true),
         )
       end
@@ -44,7 +42,7 @@ module PageObjects
         ).set_input_files(file_path)
         selector =
           "#{AVATAR_UPLOAD_BUTTON_SELECTOR}:not([data-avatar-upload-id=#{previous_id.to_s.to_json}])"
-        expect(body.locator(selector).filter(visible: true)).to PlaywrightMatchers.have_attribute(
+        expect(body.locator(selector).filter(visible: true)).to have_attribute(
           "data-avatar-upload-id",
           /\S+/,
         )
@@ -52,7 +50,7 @@ module PageObjects
       end
 
       def has_custom_picture_selected?
-        PlaywrightMatchers.be_checked.matches?(body.locator("#uploaded-avatar"))
+        be_checked.matches?(body.locator("#uploaded-avatar"))
       end
 
       def has_upload_warning_below_choice?

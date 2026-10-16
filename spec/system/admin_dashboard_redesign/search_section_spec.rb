@@ -154,7 +154,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     search.click_trending_term("ruby")
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
+    expect(browser_page).to have_url(
       %r{^https?://[^/]+#{Regexp.escape("/admin/logs/search_logs/term")}(?:\?.*)?$},
     )
     expect(Rack::Utils.parse_query(URI.parse(browser_page.url).query)).to eq(
@@ -174,7 +174,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     dashboard.search.click_content_gap_term("discobot")
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/search?q=discobot")
+    expect(browser_page).to have_url("/search?q=discobot")
   end
 
   it "alerts staff when the no-result rate crosses the threshold",
@@ -296,7 +296,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     search.click_trending_term("ruby")
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
+    expect(browser_page).to have_url(
       %r{^https?://[^/]+#{Regexp.escape("/admin/logs/search_logs/term")}(?:\?.*)?$},
     )
     expect(Rack::Utils.parse_query(URI.parse(browser_page.url).query)).to eq(

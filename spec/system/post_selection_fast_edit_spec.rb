@@ -32,14 +32,14 @@ describe "Post selection | Fast edit" do
     end
 
     it "opens context menu" do
-      expect(topic_page.fast_edit_button).to PlaywrightMatchers.be_visible
+      expect(topic_page.fast_edit_button).to be_visible
     end
 
     context "when clicking the fast edit button" do
       before { topic_page.click_fast_edit_button }
 
       it "opens the fast editor" do
-        expect(topic_page.fast_edit_input).to be_visible
+        expect(topic_page.fast_edit_input).to RSpecPredicates.be_visible
       end
 
       context "when entering some text and clicking the save button" do
@@ -49,9 +49,7 @@ describe "Post selection | Fast edit" do
         end
 
         it "saves changes" do
-          expect(
-            browser_root.locator(css(post)).filter(visible: true),
-          ).to PlaywrightMatchers.contain_text(
+          expect(browser_root.locator(css(post)).filter(visible: true)).to contain_text(
             [browser_text_pattern("Howdy world")],
             useInnerText: true,
           )
@@ -81,9 +79,7 @@ describe "Post selection | Fast edit" do
       fast_editor.fill_content("day")
       fast_editor.save
 
-      expect(
-        browser_root.locator(css(post_2)).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(css(post_2)).filter(visible: true)).to contain_text(
         [browser_text_pattern("It ‘twas a great’ “day”!")],
         useInnerText: true,
       )
@@ -99,9 +95,7 @@ describe "Post selection | Fast edit" do
       fast_editor.fill_content("¿está todo bien?")
       fast_editor.save
 
-      expect(
-        browser_root.locator(css(spanish_post)).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(css(spanish_post)).filter(visible: true)).to contain_text(
         [browser_text_pattern("Hola Juan, ¿está todo bien?")],
         useInnerText: true,
       )
@@ -116,9 +110,10 @@ describe "Post selection | Fast edit" do
       fast_editor.fill_content("今天")
       fast_editor.save
 
-      expect(
-        browser_root.locator(css(chinese_post)).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("今天一个测试")], useInnerText: true)
+      expect(browser_root.locator(css(chinese_post)).filter(visible: true)).to contain_text(
+        [browser_text_pattern("今天一个测试")],
+        useInnerText: true,
+      )
     end
 
     it "saves when text contains emoji" do
@@ -131,9 +126,10 @@ describe "Post selection | Fast edit" do
       fast_editor.save
 
       # NOTE: the emoji isn't picked up by the "text:" selector
-      expect(
-        browser_root.locator(css(post_with_emoji)).filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Good day !")], useInnerText: true)
+      expect(browser_root.locator(css(post_with_emoji)).filter(visible: true)).to contain_text(
+        [browser_text_pattern("Good day !")],
+        useInnerText: true,
+      )
       # So we also check the raw content to ensure it's been saved correctly
       expect(post_with_emoji.reload.raw).to eq "Good day :wave:!"
     end

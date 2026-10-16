@@ -20,41 +20,36 @@ module PageObjects
       end
 
       def has_discourse_id_button?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern("Login with Discourse ID")],
           useInnerText: true,
         ).matches?(browser_root.locator(".finish-installation__discourse-id").filter(visible: true))
       end
 
       def has_no_discourse_id_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".finish-installation__discourse-id").filter(visible: true),
         )
       end
 
       def has_register_button?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern("Register")],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".finish-installation__register").filter(visible: true))
+        contain_text([browser_text_pattern("Register")], useInnerText: true).matches?(
+          browser_root.locator(".finish-installation__register").filter(visible: true),
+        )
       end
 
       def has_no_register_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".finish-installation__register").filter(visible: true),
         )
       end
 
       def has_error_message?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".alert-error").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".alert-error").filter(visible: true))
       end
 
       def has_no_error_message?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".alert-error").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".alert-error").filter(visible: true))
       end
 
       def error_message_text
@@ -67,26 +62,26 @@ module PageObjects
       end
 
       def has_register_form?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("form.wizard-container__fields").filter(visible: true),
         )
       end
 
       def has_no_register_form?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("form.wizard-container__fields").filter(visible: true),
         )
       end
 
       def has_no_emails_message?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("finish_installation.register.no_emails"))],
           useInnerText: true,
         ).matches?(browser_root.locator("p").filter(visible: true))
       end
 
       def has_access_denied?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".not-found-container").filter(visible: true),
         ) || @navigation_response&.status == 403
       end
@@ -119,10 +114,9 @@ module PageObjects
             .filter(hasText: browser_text_pattern("Username"))
         return false if field.get_attribute("class").exclude?("invalid")
         return true if message.nil?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(field.locator(".field-error-description").filter(visible: true))
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          field.locator(".field-error-description").filter(visible: true),
+        )
       end
 
       def has_password_error?(message = nil)
@@ -133,14 +127,13 @@ module PageObjects
             .filter(hasText: browser_text_pattern("Password"))
         return false if field.get_attribute("class").exclude?("invalid")
         return true if message.nil?
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(field.locator(".field-error-description").filter(visible: true))
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          field.locator(".field-error-description").filter(visible: true),
+        )
       end
 
       def has_no_field_errors?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".wizard-container__field.invalid").filter(visible: true),
         )
       end
@@ -150,7 +143,7 @@ module PageObjects
       end
 
       def redirected_to_confirm_email?
-        PlaywrightMatchers.have_url("/finish-installation/confirm-email").matches?(browser_page)
+        have_url("/finish-installation/confirm-email").matches?(browser_page)
       end
 
       private

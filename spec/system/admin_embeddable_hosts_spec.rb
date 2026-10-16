@@ -22,7 +22,7 @@ RSpec.describe "Admin EmbeddableHost Management" do
 
     expect(
       browser_root.locator(".admin-embedding-index__code").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
 
     admin_embedding_page.click_add_host
 
@@ -33,30 +33,24 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_host_form_page.fill_in_post_author(author)
     admin_embedding_host_form_page.click_save
 
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("awesome-discourse-site.local"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("/blog/.*"),
-      useInnerText: true,
-    )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("#{tag.name}"),
-      useInnerText: true,
-    )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(browser_text_pattern("/blog/.*"), useInnerText: true)
+    expect(browser_content).to contain_text(browser_text_pattern("#{tag.name}"), useInnerText: true)
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{category.name}"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{author.username}"),
       useInnerText: true,
     )
 
     expect(
       browser_root.locator(".admin-embedding-index__code").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     admin_embedding_page.click_edit_host
 
@@ -67,23 +61,23 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_host_form_page.fill_in_post_author(author_2)
     admin_embedding_host_form_page.click_save
 
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("updated-example.com"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("/updated-blog/.*"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{tag.name}, #{tag_2.name}"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{category_2.name}"),
       useInnerText: true,
     )
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{author_2.username}"),
       useInnerText: true,
     )
@@ -93,7 +87,7 @@ RSpec.describe "Admin EmbeddableHost Management" do
 
     expect(
       browser_root.locator(".admin-embedding-index__code").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   it "allows admin to toggle full app mode and updates the snippet" do
@@ -123,7 +117,7 @@ RSpec.describe "Admin EmbeddableHost Management" do
     Fabricate(:embeddable_host)
 
     admin_embedding_page.visit
-    expect(browser_content).not_to PlaywrightMatchers.contain_text(
+    expect(browser_content).not_to contain_text(
       browser_text_pattern("#{author.username}"),
       useInnerText: true,
     )
@@ -134,7 +128,7 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_posts_and_topics_page.click_save
 
     admin_embedding_page.click_tab("hosts")
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       browser_text_pattern("#{author.username}"),
       useInnerText: true,
     )

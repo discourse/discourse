@@ -4,13 +4,13 @@ module PageObjects
   module Components
     class Blocks < PageObjects::Components::Base
       def has_block?(name)
-        PlaywrightMatchers.have_count(0, timeout: 5 * 1000).does_not_match?(
+        have_count(0, timeout: 5 * 1000).does_not_match?(
           browser_root.locator(".block-#{name}").filter(visible: true),
         )
       end
 
       def has_no_block?(name)
-        PlaywrightMatchers.have_count(0, timeout: 5 * 1000).matches?(
+        have_count(0, timeout: 5 * 1000).matches?(
           browser_root.locator(".block-#{name}").filter(visible: true),
         )
       end

@@ -16,20 +16,22 @@ describe "Admin Badges Page" do
       badge = Badge.find(Badge::Autobiographer)
       form = badges_page.form
 
-      expect(form.field("enabled")).to be_enabled
-      expect(form.field("badge_type_id")).to be_disabled
-      expect(form.field("badge_type_id")).to have_value(BadgeType::Bronze.to_s)
-      expect(form.field("badge_grouping_id")).to have_value(BadgeGrouping::GettingStarted.to_s)
-      expect(form.field("allow_title")).to be_enabled
+      expect(form.field("enabled")).to RSpecPredicates.be_enabled
+      expect(form.field("badge_type_id")).to RSpecPredicates.be_disabled
+      expect(form.field("badge_type_id")).to RSpecPredicates.have_value(BadgeType::Bronze.to_s)
+      expect(form.field("badge_grouping_id")).to RSpecPredicates.have_value(
+        BadgeGrouping::GettingStarted.to_s,
+      )
+      expect(form.field("allow_title")).to RSpecPredicates.be_enabled
       expect(form.field("allow_title")).to be_unchecked
-      expect(form.field("multiple_grant")).to be_disabled
+      expect(form.field("multiple_grant")).to RSpecPredicates.be_disabled
       expect(form.field("multiple_grant")).to be_unchecked
-      expect(form.field("listable")).to be_disabled
-      expect(form.field("listable")).to be_checked
-      expect(form.field("show_posts")).to be_disabled
+      expect(form.field("listable")).to RSpecPredicates.be_disabled
+      expect(form.field("listable")).to RSpecPredicates.be_checked
+      expect(form.field("show_posts")).to RSpecPredicates.be_disabled
       expect(form.field("show_posts")).to be_unchecked
-      expect(form.field("icon")).to be_enabled
-      expect(form.field("icon")).to have_value("user-pen")
+      expect(form.field("icon")).to RSpecPredicates.be_enabled
+      expect(form.field("icon")).to RSpecPredicates.have_value("user-pen")
       expect(form.container("name")).to have_displayed_content(badge.name.strip)
       expect(form.container("description")).to have_displayed_content(
         Nokogiri::HTML5.fragment(badge.description).text.strip,
@@ -147,7 +149,7 @@ describe "Admin Badges Page" do
       badges_page.delete_badge
       dialog.click_danger
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/admin/badges")
+      expect(browser_page).to have_url("/admin/badges")
     end
   end
 
@@ -161,7 +163,7 @@ describe "Admin Badges Page" do
 
       expect(
         browser_root.locator(".badge-grouping-item").filter(visible: true).nth(6 - 1),
-      ).to PlaywrightMatchers.be_attached
+      ).to be_attached
 
       system_row =
         browser_root
@@ -183,7 +185,7 @@ describe "Admin Badges Page" do
           end
           .locator(".btn .d-icon-pencil")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         system_row
           .tap do |parent|
@@ -191,14 +193,12 @@ describe "Admin Badges Page" do
           end
           .locator(".d-reorderable-list__remove")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
-      expect(
-        custom_row.locator(".btn .d-icon-pencil").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(custom_row.locator(".btn .d-icon-pencil").filter(visible: true)).not_to have_count(0)
       expect(
         custom_row.locator(".d-reorderable-list__remove").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

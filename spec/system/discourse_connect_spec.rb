@@ -12,13 +12,11 @@ describe "Discourse Connect" do
   shared_examples "redirects to SSO" do
     it "redirects to SSO" do
       wait_for do
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("#current-user").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator("#current-user").filter(visible: true))
       end
       expect(
         browser_root.locator("a[data-topic-id='#{private_topic.id}']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
@@ -26,15 +24,13 @@ describe "Discourse Connect" do
     it "shows the homepage" do
       expect(
         browser_root.locator("a[data-topic-id='#{topic.id}']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
   shared_examples "shows the login splash" do
     it "shows the login splash" do
-      expect(
-        browser_root.locator(".login-page").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".login-page").filter(visible: true)).not_to have_count(0)
     end
   end
 
@@ -110,12 +106,12 @@ describe "Discourse Connect" do
           browser_root.locator(".login-button").filter(visible: true).click
 
           wait_for do
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator("#current-user").filter(visible: true),
             )
           end
 
-          expect(browser_page).to PlaywrightMatchers.have_url(private_topic.relative_url)
+          expect(browser_page).to have_url(private_topic.relative_url)
         end
       end
     end

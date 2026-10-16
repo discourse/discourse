@@ -7,10 +7,8 @@ module PageObjects
         path = "/admin/badges"
         path += "/#{badge_id}" if badge_id
         browser_page.goto(path).tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        expect(browser_page).to PlaywrightMatchers.have_url(path)
-        expect(
-          browser_root.locator(".admin-badge-list").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_page).to have_url(path)
+        expect(browser_root.locator(".admin-badge-list").filter(visible: true)).not_to have_count(0)
         self
       end
 
@@ -20,7 +18,7 @@ module PageObjects
       end
 
       def has_badge?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".current-badge-header .badge-display-name").filter(visible: true),
         )
       end
@@ -35,22 +33,19 @@ module PageObjects
       end
 
       def has_badge_in_list?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".admin-badge-list-item .badge-display-name").filter(visible: true),
         )
       end
 
       def has_no_badge_in_list?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
           browser_root.locator(".admin-badge-list-item .badge-display-name").filter(visible: true),
         )
       end
 
       def has_no_badges_found_message?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
         )
       end
@@ -95,7 +90,7 @@ module PageObjects
 
         expect(
           form.field("image_url").locator(".btn-danger").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         self
       end

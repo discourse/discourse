@@ -15,19 +15,17 @@ module PageObjects
       end
 
       def has_tab?(tab_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(tab_selector(tab_name)).filter(visible: true),
         )
       end
 
       def has_no_tab?(tab_name)
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(tab_selector(tab_name)).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(tab_selector(tab_name)).filter(visible: true))
       end
 
       def has_active_tab?(tab_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{tab_selector(tab_name)} .active").filter(visible: true),
         )
       end
@@ -37,15 +35,11 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".d-page-header").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".d-page-header").filter(visible: true))
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".d-page-header").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".d-page-header").filter(visible: true))
       end
 
       private

@@ -8,16 +8,10 @@ module PageObjects
       BADGE_SELECTORS = { "No match" => ".db-pill.--neg", "Poor match" => ".db-pill.--neg" }.freeze
 
       def has_headline?(title, summary)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(title)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator("#{SECTION} .db-section__subintro h3").filter(visible: true),
         ) &&
-          PlaywrightMatchers.contain_text(
-            [browser_exact_text_pattern(summary)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_exact_text_pattern(summary)], useInnerText: true).matches?(
             browser_root.locator("#{SECTION} .db-section__subintro p").filter(visible: true),
           )
       end
@@ -38,7 +32,7 @@ module PageObjects
           improving_delta: improving_delta,
           worsening_delta: worsening_delta,
         ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(
               "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
             ).filter(visible: true),
@@ -46,10 +40,7 @@ module PageObjects
       end
 
       def has_alert_no_result_rate_kpi?(value)
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(value)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(value)], useInnerText: true).matches?(
           browser_root.locator(
             "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
           ).filter(visible: true),
@@ -57,13 +48,11 @@ module PageObjects
       end
 
       def has_no_kpi_deltas?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#{SECTION} .db-delta").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#{SECTION} .db-delta").filter(visible: true))
       end
 
       def has_no_kpis?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{SECTION} .db-section__metric").filter(visible: true),
         )
       end
@@ -106,7 +95,7 @@ module PageObjects
 
       def has_trending_rows?(rows)
         within_block("Trending searches") do
-          unless PlaywrightMatchers.have_count(rows.size).matches?(
+          unless have_count(rows.size).matches?(
                    browser_root.locator("[data-test-search-term-row]").filter(visible: true),
                  )
             next false
@@ -114,11 +103,10 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = "[data-test-search-term-row]:nth-child(#{index + 1})"
-            PlaywrightMatchers.contain_text(
-              [browser_text_pattern(row[:term])],
-              useInnerText: true,
-            ).matches?(browser_root.locator("#{nth} a").filter(visible: true)) &&
-              PlaywrightMatchers.contain_text(
+            contain_text([browser_text_pattern(row[:term])], useInnerText: true).matches?(
+              browser_root.locator("#{nth} a").filter(visible: true),
+            ) &&
+              contain_text(
                 [browser_text_pattern(row[:searches].to_s)],
                 useInnerText: true,
               ).matches?(browser_root.locator(nth).filter(visible: true))
@@ -138,10 +126,7 @@ module PageObjects
 
       def has_no_trending_term?(term)
         within_block("Trending searches") do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(term)],
-            useInnerText: true,
-          ).does_not_match?(
+          contain_text([browser_text_pattern(term)], useInnerText: true).does_not_match?(
             browser_root.locator("[data-test-search-term-row] a").filter(visible: true),
           )
         end
@@ -149,16 +134,13 @@ module PageObjects
 
       def has_trending_empty_state?(message)
         within_block("Trending searches") do
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern(message),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern(message), useInnerText: true).matches?(browser_content)
         end
       end
 
       def has_content_gap_rows?(rows)
         within_block("Content gaps") do
-          unless PlaywrightMatchers.have_count(rows.size).matches?(
+          unless have_count(rows.size).matches?(
                    browser_root.locator("[data-test-search-term-row]").filter(visible: true),
                  )
             next false
@@ -166,18 +148,14 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = "[data-test-search-term-row]:nth-child(#{index + 1})"
-            PlaywrightMatchers.contain_text(
-              [browser_text_pattern(row[:term])],
-              useInnerText: true,
-            ).matches?(browser_root.locator("#{nth} a").filter(visible: true)) &&
-              PlaywrightMatchers.contain_text(
+            contain_text([browser_text_pattern(row[:term])], useInnerText: true).matches?(
+              browser_root.locator("#{nth} a").filter(visible: true),
+            ) &&
+              contain_text(
                 [browser_text_pattern(row[:searches].to_s)],
                 useInnerText: true,
               ).matches?(browser_root.locator(nth).filter(visible: true)) &&
-              PlaywrightMatchers.contain_text(
-                [browser_text_pattern(row[:badge])],
-                useInnerText: true,
-              ).matches?(
+              contain_text([browser_text_pattern(row[:badge])], useInnerText: true).matches?(
                 browser_root.locator("#{nth} #{BADGE_SELECTORS.fetch(row[:badge])}").filter(
                   visible: true,
                 ),
@@ -215,22 +193,15 @@ module PageObjects
 
       def has_content_gaps_empty_state?(message)
         within_block("Content gaps") do
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern(message),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern(message), useInnerText: true).matches?(browser_content)
         end
       end
 
       def has_logging_disabled_notice?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(SECTION).filter(visible: true)) &&
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern("log search queries")],
-            useInnerText: true,
-          ).matches?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(SECTION).filter(visible: true),
+        ) &&
+          contain_text([browser_text_pattern("log search queries")], useInnerText: true).matches?(
             browser_root.locator(
               "#{SECTION} a[href='/admin/site_settings/category/all_results?filter=log%20search%20queries']",
             ).filter(visible: true),
@@ -238,11 +209,10 @@ module PageObjects
       end
 
       def has_moderator_logging_disabled_notice?(message)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(message)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(SECTION).filter(visible: true)) &&
-          PlaywrightMatchers.have_count(0).matches?(
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(SECTION).filter(visible: true),
+        ) &&
+          have_count(0).matches?(
             browser_root.locator("#{SECTION} .db-section__callout a").filter(visible: true),
           )
       end
@@ -250,10 +220,7 @@ module PageObjects
       private
 
       def has_kpi?(type, value, improving_delta:, worsening_delta:)
-        unless PlaywrightMatchers.contain_text(
-                 [browser_exact_text_pattern(value)],
-                 useInnerText: true,
-               ).matches?(
+        unless contain_text([browser_exact_text_pattern(value)], useInnerText: true).matches?(
                  browser_root.locator("#{kpi_selector(type)} .db-section__metric-number").filter(
                    visible: true,
                  ),
@@ -262,17 +229,14 @@ module PageObjects
         end
         if improving_delta.nil? && worsening_delta.nil?
           return(
-            PlaywrightMatchers.have_count(0).matches?(
+            have_count(0).matches?(
               browser_root.locator("#{kpi_selector(type)} .db-delta").filter(visible: true),
             )
           )
         end
 
         modifier, text = improving_delta ? ["--pos", improving_delta] : ["--neg", worsening_delta]
-        PlaywrightMatchers.contain_text(
-          [browser_exact_text_pattern(text)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator("#{kpi_selector(type)} .db-delta.#{modifier}").filter(visible: true),
         )
       end

@@ -14,9 +14,7 @@ module PageObjects
       end
 
       def has_displayed_content?(content)
-        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
-          component,
-        )
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(component)
       end
     end
 
@@ -112,7 +110,7 @@ module PageObjects
       def has_errors?(*messages)
         within_browser(component) do
           messages.all? do |m|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root
                 .locator(".form-kit__errors")
                 .filter(visible: true)
@@ -123,9 +121,7 @@ module PageObjects
       end
 
       def has_no_errors?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".form-kit__errors").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".form-kit__errors").filter(visible: true))
       end
 
       def control_type
@@ -133,13 +129,9 @@ module PageObjects
 
         return type if type != "custom"
 
-        if PlaywrightMatchers.have_count(0).does_not_match?(
-             component.locator(".multi-select").filter(visible: true),
-           )
+        if have_count(0).does_not_match?(component.locator(".multi-select").filter(visible: true))
           "multi-select"
-        elsif PlaywrightMatchers.have_count(0).does_not_match?(
-              component.locator("textarea").filter(visible: true),
-            )
+        elsif have_count(0).does_not_match?(component.locator("textarea").filter(visible: true))
           "textarea"
         else
           raise "Unknown custom control"
@@ -322,7 +314,7 @@ module PageObjects
 
       def has_an_alert?(message)
         within_browser(component) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root
               .locator(".form-kit__alert-message")
               .filter(visible: true)
@@ -348,19 +340,19 @@ module PageObjects
       end
 
       def has_field_with_name?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".form-kit__field[data-name='#{name}']").filter(visible: true),
         )
       end
 
       def has_no_field_with_name?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".form-kit__field[data-name='#{name}']").filter(visible: true),
         )
       end
 
       def has_no_enabled_field_with_name?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".form-kit__field[data-name='#{name}']:not([data-disabled])").filter(
             visible: true,
           ),

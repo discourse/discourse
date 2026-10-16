@@ -44,7 +44,7 @@ describe "Creating Invites" do
 
     cdp.clipboard_has_text?(invite_link)
 
-    expect(create_invite_modal.link_limits_info_paragraph).to PlaywrightMatchers.contain_text(
+    expect(create_invite_modal.link_limits_info_paragraph).to contain_text(
       browser_text_pattern("Link is valid for up to 7 users and expires in 3 days."),
       useInnerText: true,
     )
@@ -66,7 +66,7 @@ describe "Creating Invites" do
   it "has the correct modal title when creating a new invite" do
     visit_invites_page_and_open_modal
 
-    expect(create_invite_modal.header).to PlaywrightMatchers.contain_text(
+    expect(create_invite_modal.header).to contain_text(
       browser_text_pattern(I18n.t("js.user.invited.invite.new_title")),
       useInnerText: true,
     )
@@ -92,7 +92,7 @@ describe "Creating Invites" do
     end
 
     it "has the correct modal title" do
-      expect(create_invite_modal.header).to PlaywrightMatchers.contain_text(
+      expect(create_invite_modal.header).to contain_text(
         browser_text_pattern(I18n.t("js.user.invited.invite.edit_title")),
         useInnerText: true,
       )
@@ -288,9 +288,9 @@ describe "Creating Invites" do
     it "can open the invite modal from the empty state button" do
       browser_root.locator(".empty-state .btn-primary").filter(visible: true).click
 
-      expect(
-        browser_root.locator(".create-invite-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".create-invite-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
     end
   end
 end

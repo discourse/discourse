@@ -9,40 +9,38 @@ module PageObjects
       end
 
       def has_logo?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".omniauth-confirm__logo").filter(visible: true),
         )
       end
 
       def has_card?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".omniauth-confirm__card").filter(visible: true),
         )
       end
 
       def has_title_for_provider?(provider_name)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern("Log in with #{provider_name}")],
           useInnerText: true,
         ).matches?(browser_root.locator(".omniauth-confirm__title").filter(visible: true))
       end
 
       def has_provider_info?(provider_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(provider_name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".omniauth-confirm__provider-name").filter(visible: true))
+        contain_text([browser_text_pattern(provider_name)], useInnerText: true).matches?(
+          browser_root.locator(".omniauth-confirm__provider-name").filter(visible: true),
+        )
       end
 
       def has_site_name_in_footer?(site_name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(site_name)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".omniauth-confirm__footer").filter(visible: true))
+        contain_text([browser_text_pattern(site_name)], useInnerText: true).matches?(
+          browser_root.locator(".omniauth-confirm__footer").filter(visible: true),
+        )
       end
 
       def has_continue_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .get_by_role("button")
             .and(

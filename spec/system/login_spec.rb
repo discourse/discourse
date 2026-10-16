@@ -39,7 +39,7 @@ shared_examples "login scenarios" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can login with redirect" do
@@ -49,14 +49,14 @@ shared_examples "login scenarios" do
         .open_with_redirect("/about")
         .fill(username: "john", password: "supersecurepassword")
         .click_login
-      expect(browser_page).to PlaywrightMatchers.have_url("/about")
+      expect(browser_page).to have_url("/about")
     end
 
     it "can login and activate account" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(
-        browser_root.locator(".not-activated-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       login_form.click(".activation-controls button.resend")
 
       activation_link = wait_for_email_link(user, :activation)
@@ -65,31 +65,31 @@ shared_examples "login scenarios" do
       activate_account.click_activate_account
       activate_account.click_continue
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "redirects to the wizard after activating account" do
       login_form.open.fill(username: "admin", password: "supersecurepassword").click_login
-      expect(
-        browser_root.locator(".not-activated-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       login_form.click(".activation-controls button.resend")
 
       activation_link = wait_for_email_link(admin, :activation)
       browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/wizard})
+      expect(browser_page).to have_url(%r{/wizard})
     end
 
     it "shows error when when activation link is invalid" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(
-        browser_root.locator(".not-activated-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
 
       browser_page
         .goto("/u/activate-account/123abc")
@@ -106,9 +106,7 @@ shared_examples "login scenarios" do
 
       login_form.open.fill(username: user.username, password:).click_login
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         browser_text_pattern(
           I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
         ),
@@ -143,7 +141,7 @@ shared_examples "login scenarios" do
       browser_root.locator(".email-login-form .btn-primary").filter(visible: true).click
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
@@ -154,12 +152,8 @@ shared_examples "login scenarios" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       screenshot_marker(label: "login-required")
-      expect(
-        browser_root.locator(".login-welcome").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".site-logo").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".site-logo").filter(visible: true)).not_to have_count(0)
       expect(browser_page.content).not_to include(topic.title)
       expect(browser_page.content).not_to include(topic2.title)
 
@@ -171,7 +165,7 @@ shared_examples "login scenarios" do
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "redirects to a PM after login" do
@@ -188,13 +182,9 @@ shared_examples "login scenarios" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".private_message").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".private_message").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a route with a query parameters after login and keeps the query parameters" do
@@ -207,16 +197,14 @@ shared_examples "login scenarios" do
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to have_url("/new-topic?category_id=#{category.id}")
     end
 
     it "does not leak category metadata if homepage is /categories" do
       SiteSetting.top_menu = "categories|latest|new|top"
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".login-welcome").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
 
       expect(browser_page.content).not_to include(category.name)
     end
@@ -239,14 +227,10 @@ shared_examples "login scenarios" do
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".private_message").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".private_message").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a public topic when hitting Reply then logging in" do
@@ -260,11 +244,9 @@ shared_examples "login scenarios" do
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
-      expect(
-        browser_root.locator("#topic-title").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a route with a query parameters after login and keeps the query parameters" do
@@ -277,7 +259,7 @@ shared_examples "login scenarios" do
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to have_url("/new-topic?category_id=#{category.id}")
     end
 
     context "with user api key and omniauth" do
@@ -342,13 +324,13 @@ shared_examples "login scenarios" do
 
         expect(
           browser_root.locator(".authorize-api-key__scopes").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "redirects when navigating to login with redirect param" do
         mock_google_auth
         login_form.open_with_redirect("/about")
-        expect(browser_page).to PlaywrightMatchers.have_url("/about")
+        expect(browser_page).to have_url("/about")
       end
     end
   end
@@ -374,8 +356,8 @@ shared_examples "login scenarios" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        expect(browser_content).to PlaywrightMatchers.contain_text(
+        ).not_to have_count(0)
+        expect(browser_content).to contain_text(
           browser_text_pattern(I18n.t("js.user.second_factor.enforced_notice")),
           useInnerText: true,
         )
@@ -385,16 +367,14 @@ shared_examples "login scenarios" do
     it "can login with totp" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(
-        browser_root.locator(".second-factor").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can login with totp and redirect" do
@@ -403,22 +383,18 @@ shared_examples "login scenarios" do
         .fill(username: "john", password: "supersecurepassword")
         .click_login
 
-      expect(
-        browser_root.locator(".second-factor").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/about")
+      expect(browser_page).to have_url("/about")
     end
 
     it "can login with backup code" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(
-        browser_root.locator(".second-factor").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       browser_root.locator(".toggle-second-factor-method").filter(visible: true).click
       browser_root
@@ -429,7 +405,7 @@ shared_examples "login scenarios" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     context "with login link" do
@@ -448,7 +424,7 @@ shared_examples "login scenarios" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "can login with login link and backup code" do
@@ -465,7 +441,7 @@ shared_examples "login scenarios" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -496,15 +472,13 @@ shared_examples "login scenarios" do
       browser_root.locator(".second-factor-token-input").filter(visible: true).fill("123456")
       browser_root.locator(".password-reset .btn-primary").filter(visible: true).click
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern("Invalid authentication code. Each code can only be used once.")],
         useInnerText: true,
       )
       expect(
         browser_root.locator(".second-factor-token-input").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       browser_root.locator(".second-factor-token-input").filter(visible: true).fill(totp)
@@ -514,7 +488,7 @@ shared_examples "login scenarios" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "can reset password with a backup code" do
@@ -534,7 +508,7 @@ shared_examples "login scenarios" do
 
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 end

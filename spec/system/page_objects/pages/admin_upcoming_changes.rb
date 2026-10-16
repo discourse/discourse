@@ -58,14 +58,13 @@ module PageObjects
             locale: locale,
           )
 
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(enabled_for_success_text),
-          useInnerText: true,
-        ).matches?(browser_content)
+        contain_text(browser_text_pattern(enabled_for_success_text), useInnerText: true).matches?(
+          browser_content,
+        )
       end
 
       def has_disabled_success_toast?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("admin_js.admin.upcoming_changes.change_disabled")),
           useInnerText: true,
         ).matches?(browser_content)

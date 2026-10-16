@@ -53,16 +53,13 @@ module PageObjects
       end
 
       def has_snippet_containing?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator(".admin-embedding-index__code code").filter(visible: true),
         )
       end
 
       def has_no_snippet_containing?(text)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(text)],
-          useInnerText: true,
-        ).does_not_match?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).does_not_match?(
           browser_root.locator(".admin-embedding-index__code code").filter(visible: true),
         )
       end
@@ -75,9 +72,10 @@ module PageObjects
 
       def confirm_delete
         browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
-        expect(
-          browser_root.locator(".dialog-body").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000)
+        expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(
+          0,
+          timeout: (Capybara.default_max_wait_time * 3) * 1000,
+        )
         self
       end
     end

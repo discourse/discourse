@@ -98,7 +98,7 @@ describe "Admin Dashboard Configure menu" do
 
         expect(
           browser_root.locator(".d-reorderable-list__handle").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "reorders sections with a real browser drag" do

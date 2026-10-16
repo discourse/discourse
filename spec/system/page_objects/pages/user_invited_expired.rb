@@ -6,13 +6,13 @@ module PageObjects
       def visit(user)
         url = "/u/#{user.username_lower}/invited/expired"
         browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".user-content.--loaded").filter(visible: true),
         )
       end
 
       def wait_till_loaded
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".user-content.--loaded").filter(visible: true),
         )
       end
@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def empty?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".empty-state__container").filter(visible: true),
         )
       end

@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def has_api_key_listed?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(table_selector).filter(visible: true),
         )
       end
@@ -20,7 +20,7 @@ module PageObjects
             .locator(table_selector)
             .filter(visible: true)
             .filter(hasText: browser_text_pattern(name))
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.api_keys.revoked"))],
           useInnerText: true,
         ).matches?(row.locator(badge_selector).filter(visible: true))
@@ -32,7 +32,7 @@ module PageObjects
             .locator(table_selector)
             .filter(visible: true)
             .filter(hasText: browser_text_pattern(name))
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(I18n.t("admin_js.admin.api_keys.revoked"))],
           useInnerText: true,
         ).does_not_match?(
@@ -46,20 +46,19 @@ module PageObjects
       end
 
       def has_no_api_key_listed?(name)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(name)],
-          useInnerText: true,
-        ).does_not_match?(browser_root.locator(table_selector).filter(visible: true))
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(table_selector).filter(visible: true),
+        )
       end
 
       def has_generated_api_key?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".generated-api-key").filter(visible: true),
         )
       end
 
       def has_copy_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".generated-api-key__copy-btn").filter(visible: true),
         )
       end
@@ -144,7 +143,7 @@ module PageObjects
       end
 
       def has_warning_banner?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".generated-api-key-container .alert.alert-warning").filter(
             visible: true,
           ),
@@ -152,13 +151,13 @@ module PageObjects
       end
 
       def has_scopes_displayed?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(scopes_table_selector).filter(visible: true),
         )
       end
 
       def has_scope?(resource:, action:)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(/#{resource}.*#{action}/i)],
           useInnerText: true,
         ).matches?(browser_root.locator("#{scopes_table_selector} tr").filter(visible: true))

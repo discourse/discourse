@@ -6,15 +6,13 @@ module PageObjects
       MODAL_SELECTOR = ".predefined-topic-options-modal"
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{MODAL_SELECTOR}").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#{MODAL_SELECTOR}").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#{MODAL_SELECTOR}").filter(visible: true))
       end
 
       def topic_cards
@@ -41,7 +39,7 @@ module PageObjects
       end
 
       def has_disabled_option?(option)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#{MODAL_SELECTOR} [data-topic-option='#{option}'][disabled]",
           ).filter(visible: true),

@@ -21,9 +21,9 @@ describe "Theme qunit testing" do
   it "lists themes and can run tests by id, name and url" do
     browser_page.goto("/theme-qunit").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator("a[href^='/theme-qunit?id=']").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(1)
+    expect(browser_root.locator("a[href^='/theme-qunit?id=']").filter(visible: true)).to have_count(
+      1,
+    )
 
     browser_root
       .locator("a[href=\"/theme-qunit?id=#{theme_with_test.id}\"]")

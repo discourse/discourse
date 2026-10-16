@@ -27,9 +27,7 @@ module PageObjects
       end
 
       def has_no_avatar_editor?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator("#edit-avatar").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator("#edit-avatar").filter(visible: true))
       end
 
       def has_custom_uploaded_avatar_image?(upload_id)
@@ -55,7 +53,7 @@ module PageObjects
       end
 
       def has_system_avatar_image?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".pref-avatar img.avatar[src*='letter_avatar']").filter(
             visible: true,
           ),

@@ -5,13 +5,13 @@ module PageObjects
       MODAL_SELECTOR = ".discard-draft-modal"
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-modal#{MODAL_SELECTOR}").filter(visible: true),
         )
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".d-modal#{MODAL_SELECTOR}").filter(visible: true),
         )
       end

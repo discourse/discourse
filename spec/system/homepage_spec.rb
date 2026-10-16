@@ -26,7 +26,7 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .latest.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Latest")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Latest")], useInnerText: true)
 
     user_preferences_interface_page.visit(user)
 
@@ -40,7 +40,7 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .hot.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Hot")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Hot")], useInnerText: true)
   end
 
   it "allows users to reset their homepage preference to the site default" do
@@ -52,7 +52,7 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .hot.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Hot")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Hot")], useInnerText: true)
 
     user_preferences_interface_page.visit(user)
 
@@ -66,7 +66,7 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .categories.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Categories")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Categories")], useInnerText: true)
   end
 
   it "defaults to first top_menu item as anonymous homepage when default_homepage is not set" do
@@ -75,7 +75,7 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .categories.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Categories")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Categories")], useInnerText: true)
   end
 
   it "uses default_homepage for both anonymous and logged-in users" do
@@ -84,14 +84,14 @@ describe "Homepage" do
 
     expect(
       browser_root.locator(".navigation-container .categories.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Categories")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Categories")], useInnerText: true)
 
     sign_in user
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(
       browser_root.locator(".navigation-container .categories.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Categories")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Categories")], useInnerText: true)
   end
 
   it "diverges for a user-scoped homepage: logged-in users get it, anon falls back" do
@@ -99,17 +99,17 @@ describe "Homepage" do
     SiteSetting.default_homepage = "bookmarks"
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(browser_page).to have_url("/")
     expect(
       browser_root.locator(".navigation-container .latest.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Latest")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Latest")], useInnerText: true)
 
     sign_in user
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(browser_page).to have_url("/")
     expect(
       browser_root.locator(".navigation-container .bookmarks.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Bookmarks")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Bookmarks")], useInnerText: true)
   end
 
   it "renders an empty state when a user-scoped homepage has no content" do
@@ -119,10 +119,10 @@ describe "Homepage" do
     sign_in user
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
+    expect(browser_page).to have_url("/")
     expect(
       browser_root.locator(".navigation-container .bookmarks.active").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text([browser_text_pattern("Bookmarks")], useInnerText: true)
+    ).to contain_text([browser_text_pattern("Bookmarks")], useInnerText: true)
     expect(discovery.topic_list).to have_no_topics
   end
 
@@ -132,48 +132,34 @@ describe "Homepage" do
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(
-      browser_root.locator(".list-container").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".nav-item_top").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".list-container").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".nav-item_top").filter(visible: true)).to have_count(0)
     expect(
       browser_root.locator(".navigation-container .active").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   shared_examples "a custom homepage" do
     it "shows the custom homepage component" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".new-home").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".new-home").filter(visible: true)).to contain_text(
         [browser_text_pattern("Hi friends!")],
         useInnerText: true,
       )
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".list-container").filter(visible: true)).to have_count(0)
 
       browser_root
         .locator("#sidebar-section-content-community li:first-child")
         .filter(visible: true)
         .click
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".list-container").filter(visible: true)).not_to have_count(0)
 
       click_logo
 
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".list-container").filter(visible: true)).to have_count(0)
       # ensure clicking on logo brings user back to the custom homepage
-      expect(
-        browser_root.locator(".new-home").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".new-home").filter(visible: true)).to contain_text(
         [browser_text_pattern("Hi friends!")],
         useInnerText: true,
       )
@@ -182,12 +168,8 @@ describe "Homepage" do
     it "respects the user's homepage choice" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".new-home").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".list-container").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator(".new-home").filter(visible: true)).to contain_text(
         [browser_text_pattern("Hi friends!")],
         useInnerText: true,
       )
@@ -195,9 +177,7 @@ describe "Homepage" do
       sign_in user
 
       browser_page.goto("").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator(".new-home").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".new-home").filter(visible: true)).to contain_text(
         [browser_text_pattern("Hi friends!")],
         useInnerText: true,
       )
@@ -216,7 +196,7 @@ describe "Homepage" do
 
       expect(
         browser_root.locator(".navigation-container .hot.active").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("Hot")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("Hot")], useInnerText: true)
 
       user_preferences_interface_page.visit(user)
 
@@ -228,10 +208,8 @@ describe "Homepage" do
 
       click_logo
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
-      expect(
-        browser_root.locator(".new-home").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_page).to have_url("/")
+      expect(browser_root.locator(".new-home").filter(visible: true)).to contain_text(
         [browser_text_pattern("Hi friends!")],
         useInnerText: true,
       )
@@ -249,24 +227,16 @@ describe "Homepage" do
       sign_in user
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".alert-info").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".list-container").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator(".alert-info").filter(visible: true)).to have_count(0)
     end
 
     it "shows empty state and notice to admins" do
       sign_in admin
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".list-container").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".alert-info").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".list-container").filter(visible: true)).to have_count(0)
+      expect(browser_root.locator(".alert-info").filter(visible: true)).not_to have_count(0)
     end
 
     context "when the theme adds content to the [custom-homepage] connector" do

@@ -47,8 +47,8 @@ describe "Unified new topic list" do
           new_topic_with_tag,
         ].each { |topic| expect(topic_list).to have_topic(topic) }
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
@@ -65,10 +65,10 @@ describe "Unified new topic list" do
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
 
         tabs_toggle.all_tab.click
 
@@ -86,10 +86,10 @@ describe "Unified new topic list" do
         expect(tabs_toggle.replies_tab).to be_active
         expect(tabs_toggle.topics_tab).to be_inactive
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
 
       it "respects the subset query param and activates the appropriate tab" do
@@ -117,30 +117,30 @@ describe "Unified new topic list" do
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
 
         tabs_toggle.all_tab.click
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
-        expect(browser_page).to PlaywrightMatchers.have_url("/new")
+        expect(browser_page).to have_url("/new")
       end
 
       it "live-updates the counts shown on the tabs" do
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         TopicUser.update_last_read(user, new_reply_in_category.id, 2, 1, 1)
 
-        expect(tabs_toggle.replies_tab).to have_count(2)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(2)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         TopicUser.update_last_read(user, new_topic.id, 1, 1, 1)
 
-        expect(tabs_toggle.replies_tab).to have_count(2)
-        expect(tabs_toggle.topics_tab).to have_count(2)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(2)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
       end
 
       context "when the /new topic list is scoped to a category" do
@@ -156,8 +156,8 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
           tabs_toggle.topics_tab.click
 
@@ -168,12 +168,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/c/#{category.slug}/#{category.id}/l/new?subset=topics",
-          )
+          expect(browser_page).to have_url("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
 
           tabs_toggle.all_tab.click
 
@@ -189,10 +187,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(browser_page).to PlaywrightMatchers.have_url(
+          expect(browser_page).to have_url(
             "/c/#{category.slug}/#{category.id}/l/new?subset=replies",
           )
         end
@@ -222,13 +220,13 @@ describe "Unified new topic list" do
             .goto("/c/#{category.slug}/#{category.id}/l/new")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
 
           TopicUser.update_last_read(user, new_topic_in_category.id, 1, 1, 1)
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
         end
       end
 
@@ -246,8 +244,8 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
           tabs_toggle.topics_tab.click
 
@@ -258,12 +256,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics",
-          )
+          expect(browser_page).to have_url("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
 
           tabs_toggle.all_tab.click
 
@@ -279,12 +275,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(browser_page).to PlaywrightMatchers.have_url(
-            "/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies",
-          )
+          expect(browser_page).to have_url("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
         end
 
         it "respects the subset query param and activates the appropriate tab" do
@@ -312,13 +306,13 @@ describe "Unified new topic list" do
             .goto("/tag/#{tag.slug}/#{tag.id}/l/new")
             .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
 
           TopicUser.update_last_read(user, new_topic_with_tag.id, 1, 1, 1)
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
         end
       end
     end
@@ -349,9 +343,9 @@ describe "Unified new topic list" do
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show replies when on the new topics tab" do
@@ -363,7 +357,7 @@ describe "Unified new topic list" do
         empty_state.click_cta
 
         expect(tabs_toggle.replies_tab).to be_active
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
     end
 
@@ -380,9 +374,9 @@ describe "Unified new topic list" do
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show topics when on the new replies tab" do
@@ -394,7 +388,7 @@ describe "Unified new topic list" do
         empty_state.click_cta
 
         expect(tabs_toggle.topics_tab).to be_active
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
       end
     end
   end
@@ -415,9 +409,9 @@ describe "Unified new topic list" do
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show topics when on the new replies tab" do
@@ -429,7 +423,7 @@ describe "Unified new topic list" do
         empty_state.click_cta
 
         expect(tabs_toggle.topics_tab).to be_active
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
       end
     end
 
@@ -446,9 +440,9 @@ describe "Unified new topic list" do
         browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show replies when on the new topics tab" do
@@ -460,7 +454,7 @@ describe "Unified new topic list" do
         empty_state.click_cta
 
         expect(tabs_toggle.replies_tab).to be_active
-        expect(browser_page).to PlaywrightMatchers.have_url("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
     end
   end

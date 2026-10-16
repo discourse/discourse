@@ -48,7 +48,7 @@ module PageObjects
       end
 
       def has_primary_email?(email)
-        PlaywrightMatchers.contain_text([browser_text_pattern(email)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(email)], useInnerText: true).matches?(
           browser_root.locator(".email-first").filter(visible: true),
         )
       end
@@ -59,7 +59,7 @@ module PageObjects
         within_browser(browser_root.locator(".user-navigation-secondary").filter(visible: true)) do
           links = browser_root.locator(selector)
           links = links.filter(visible: true) if visible
-          PlaywrightMatchers.have_count(0).does_not_match?(links)
+          have_count(0).does_not_match?(links)
         end
       end
     end

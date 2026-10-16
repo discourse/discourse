@@ -25,9 +25,7 @@ module PageObjects
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".badge-groupings-modal").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".badge-groupings-modal").filter(visible: true))
       end
     end
   end

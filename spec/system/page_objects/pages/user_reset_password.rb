@@ -3,33 +3,33 @@ module PageObjects
   module Pages
     class UserResetPassword < PageObjects::Pages::Base
       def has_no_toggle_button_to_second_factor_form?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#security-key .toggle-second-factor-method").filter(visible: true),
         )
       end
 
       def has_no_toggle_button_in_second_factor_form?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#second-factor .toggle-second-factor-method").filter(visible: true),
         )
       end
 
       def has_totp_description?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.login.second_factor_description")),
           useInnerText: true,
         ).matches?(browser_root.locator(".second-factor__description").filter(visible: true))
       end
 
       def has_backup_codes_description?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.login.second_factor_backup_description")),
           useInnerText: true,
         ).matches?(browser_root.locator(".second-factor__description").filter(visible: true))
       end
 
       def has_logged_in_user?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
         )
       end

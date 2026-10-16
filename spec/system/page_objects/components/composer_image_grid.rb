@@ -93,13 +93,13 @@ module PageObjects
       end
 
       def has_add_to_grid_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".composer-image-toolbar__add-to-grid").filter(visible: true),
           ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".composer-image-toolbar__move-outside-grid").filter(
               visible: true,
             ),
@@ -107,27 +107,27 @@ module PageObjects
       end
 
       def has_move_outside_grid_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".composer-image-toolbar__move-outside-grid").filter(
               visible: true,
             ),
           ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".composer-image-toolbar__add-to-grid").filter(visible: true),
           )
       end
 
       def has_images?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           @rich_editor.locator(".composer-image-node img").filter(visible: true),
         )
       end
 
       def has_grid_images?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           @rich_editor.locator(".composer-image-grid .composer-image-node img").filter(
             visible: true,
           ),
@@ -135,13 +135,13 @@ module PageObjects
       end
 
       def has_grids?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           @rich_editor.locator(".composer-image-grid").filter(visible: true),
         )
       end
 
       def has_no_grid_images?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           @rich_editor
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -152,15 +152,15 @@ module PageObjects
       end
 
       def has_single_grid_with_images?(count)
-        PlaywrightMatchers.have_count(1).matches?(
+        have_count(1).matches?(
           @rich_editor.locator(".composer-image-grid").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(count).matches?(
+          have_count(count).matches?(
             @rich_editor.locator(".composer-image-grid .composer-image-node img").filter(
               visible: true,
             ),
           ) &&
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             @rich_editor
               .tap do |parent|
                 parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -171,13 +171,13 @@ module PageObjects
       end
 
       def has_mode_select?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           @rich_editor.locator(".composer-image-gallery__mode-buttons").filter(visible: true),
         )
       end
 
       def has_mode_selects?(count:)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           @rich_editor.locator(".composer-image-gallery__mode-buttons").filter(visible: true),
         )
       end
@@ -191,7 +191,7 @@ module PageObjects
       end
 
       def has_selected_mode?(value)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           @rich_editor.locator(
             ".composer-image-gallery__mode-btn[data-mode='#{value}'].is-active",
           ).filter(visible: true),

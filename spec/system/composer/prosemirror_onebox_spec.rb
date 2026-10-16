@@ -48,15 +48,12 @@ describe "Composer - ProseMirror - Oneboxing" do
 
     expect(
       rich.locator("a.inline-onebox[href='https://example.com/x']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Example Site 1")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Example Site 1")], useInnerText: true)
 
     composer.type_content("in the middle of text")
     composer.toggle_rich_editor
 
-    expect(composer).to have_value(
+    expect(composer).to RSpecPredicates.have_value(
       "Check out this link https://example.com/x in the middle of text",
     )
   end
@@ -71,19 +68,16 @@ describe "Composer - ProseMirror - Oneboxing" do
       rich.locator("div.onebox-wrapper[data-onebox-src='https://example.com']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(rich).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("Example Site 1"),
-      useInnerText: true,
-    )
-    expect(rich).to PlaywrightMatchers.contain_text(
+    ).not_to have_count(0)
+    expect(rich).to contain_text(browser_text_pattern("Example Site 1"), useInnerText: true)
+    expect(rich).to contain_text(
       browser_text_pattern("This is an example site"),
       useInnerText: true,
     )
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("https://example.com")
+    expect(composer).to RSpecPredicates.have_value("https://example.com")
   end
 
   it "creates an inline onebox for links that are part of a paragraph" do
@@ -100,10 +94,8 @@ describe "Composer - ProseMirror - Oneboxing" do
         end
         .locator("div.onebox-wrapper")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(
-      rich.locator("a.inline-onebox").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    ).to have_count(0)
+    expect(rich.locator("a.inline-onebox").filter(visible: true)).to contain_text(
       [browser_text_pattern("Example Site 1")],
       useInnerText: true,
     )
@@ -111,7 +103,7 @@ describe "Composer - ProseMirror - Oneboxing" do
     composer.type_content("more text")
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("Some text https://example.com/x more text")
+    expect(composer).to RSpecPredicates.have_value("Some text https://example.com/x more text")
   end
 
   it "does not create oneboxes inside code blocks" do
@@ -120,7 +112,7 @@ describe "Composer - ProseMirror - Oneboxing" do
     composer.type_content("```")
     cdp.copy_paste("https://example.com")
 
-    expect(rich.locator("pre code").filter(visible: true)).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator("pre code").filter(visible: true)).not_to have_count(0)
     expect(
       rich
         .tap do |parent|
@@ -128,7 +120,7 @@ describe "Composer - ProseMirror - Oneboxing" do
         end
         .locator("div.onebox-wrapper")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       rich
         .tap do |parent|
@@ -136,15 +128,12 @@ describe "Composer - ProseMirror - Oneboxing" do
         end
         .locator("a.inline-onebox")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
-    expect(rich).to PlaywrightMatchers.contain_text(
-      browser_text_pattern("https://example.com"),
-      useInnerText: true,
-    )
+    ).to have_count(0)
+    expect(rich).to contain_text(browser_text_pattern("https://example.com"), useInnerText: true)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("```\nhttps://example.com\n```")
+    expect(composer).to RSpecPredicates.have_value("```\nhttps://example.com\n```")
   end
 
   it "creates oneboxes for mixed content" do
@@ -178,50 +167,37 @@ describe "Composer - ProseMirror - Oneboxing" do
   MARKDOWN
     cdp.copy_paste(markdown)
 
-    expect(rich.locator("a.inline-onebox").filter(visible: true)).to PlaywrightMatchers.have_count(
-      6,
-    )
+    expect(rich.locator("a.inline-onebox").filter(visible: true)).to have_count(6)
     expect(
       rich.locator("a.inline-onebox[href='https://example.com/x']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Example Site 1")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Example Site 1")], useInnerText: true)
     expect(
       rich.locator("a.inline-onebox[href='https://example2.com/x']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Example Site 2")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Example Site 2")], useInnerText: true)
     expect(
       rich.locator("a.inline-onebox[href='https://example3.com/x']").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Example Site 3")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Example Site 3")], useInnerText: true)
 
-    expect(
-      rich.locator("div.onebox-wrapper").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(6)
+    expect(rich.locator("div.onebox-wrapper").filter(visible: true)).to have_count(6)
     expect(
       rich.locator("div.onebox-wrapper[data-onebox-src='https://example.com']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       rich.locator("div.onebox-wrapper[data-onebox-src='https://example2.com']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       rich.locator("div.onebox-wrapper[data-onebox-src='https://example3.com']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value(markdown[0..-2])
+    expect(composer).to RSpecPredicates.have_value(markdown[0..-2])
   end
 
   it "creates inline oneboxes for repeated links in different paste events" do
@@ -238,11 +214,13 @@ describe "Composer - ProseMirror - Oneboxing" do
         .locator("a.inline-onebox[href='https://example.com/x']")
         .filter(visible: true)
         .filter(hasText: browser_text_pattern("Example Site 1")),
-    ).to PlaywrightMatchers.have_count(2)
+    ).to have_count(2)
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
+    expect(composer).to RSpecPredicates.have_value(
+      "Hey https://example.com/x and https://example.com/x",
+    )
   end
 
   it "removes loading decoration when onebox fetch fails" do
@@ -255,9 +233,7 @@ describe "Composer - ProseMirror - Oneboxing" do
     cdp.copy_paste("https://example.com/fail")
     browser_page.keyboard.press("Enter")
 
-    expect(
-      rich.locator(".onebox-loading").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(rich.locator(".onebox-loading").filter(visible: true)).not_to have_count(0)
     expect(
       rich
         .tap do |parent|
@@ -265,10 +241,10 @@ describe "Composer - ProseMirror - Oneboxing" do
         end
         .locator(".onebox-loading")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
     expect(
       rich.locator("a[href='https://example.com/fail']").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(
       rich
         .tap do |parent|
@@ -276,7 +252,7 @@ describe "Composer - ProseMirror - Oneboxing" do
         end
         .locator(".onebox-wrapper")
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).to have_count(0)
   end
 
   context "with watched word links" do
@@ -301,10 +277,7 @@ describe "Composer - ProseMirror - Oneboxing" do
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("discourse"),
-        useInnerText: true,
-      )
+      expect(rich).to contain_text(browser_text_pattern("discourse"), useInnerText: true)
       expect(
         rich
           .tap do |parent|
@@ -312,11 +285,11 @@ describe "Composer - ProseMirror - Oneboxing" do
           end
           .locator("a[href='https://example.com/x']")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Check out discourse for more info")
+      expect(composer).to RSpecPredicates.have_value("Check out discourse for more info")
     end
   end
 end

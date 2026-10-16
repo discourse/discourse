@@ -15,7 +15,7 @@ module PageObjects
 
       class IncomingEmailRow < BaseRow
         def has_subject_link?(subject, href)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             element
               .get_by_role("link")
               .and(
@@ -29,31 +29,27 @@ module PageObjects
         end
 
         def has_from_address?(from_address)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(from_address)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(2)").filter(visible: true))
+          contain_text([browser_text_pattern(from_address)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(2)").filter(visible: true),
+          )
         end
 
         def has_to_address?(to_address)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(to_address)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(3)").filter(visible: true))
+          contain_text([browser_text_pattern(to_address)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(3)").filter(visible: true),
+          )
         end
 
         def has_subject?(subject)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(subject)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(4)").filter(visible: true))
+          contain_text([browser_text_pattern(subject)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(4)").filter(visible: true),
+          )
         end
 
         def has_error?(error)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(error)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(5)").filter(visible: true))
+          contain_text([browser_text_pattern(error)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(5)").filter(visible: true),
+          )
         end
 
         def open_incoming_email
@@ -65,12 +61,11 @@ module PageObjects
       class EmailLogRow < BaseRow
         def has_user?(username)
           if username.present?
-            PlaywrightMatchers.contain_text(
-              [browser_text_pattern(username)],
-              useInnerText: true,
-            ).matches?(element.locator(".email-logs-user").filter(visible: true))
+            contain_text([browser_text_pattern(username)], useInnerText: true).matches?(
+              element.locator(".email-logs-user").filter(visible: true),
+            )
           else
-            PlaywrightMatchers.have_count(0).matches?(
+            have_count(0).matches?(
               element
                 .tap do |parent|
                   parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -82,29 +77,25 @@ module PageObjects
         end
 
         def has_to_address?(to_address)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(to_address)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(3)").filter(visible: true))
+          contain_text([browser_text_pattern(to_address)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(3)").filter(visible: true),
+          )
         end
 
         def has_email_type?(email_type)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(email_type)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(4)").filter(visible: true))
+          contain_text([browser_text_pattern(email_type)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(4)").filter(visible: true),
+          )
         end
       end
 
       class BouncedEmailLogRow < EmailLogRow
         def has_info_button?
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            element.locator(".email-details a").filter(visible: true),
-          )
+          have_count(0).does_not_match?(element.locator(".email-details a").filter(visible: true))
         end
 
         def has_no_info_button?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             element
               .tap do |parent|
                 parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -122,33 +113,29 @@ module PageObjects
 
       class SentEmailLogRow < EmailLogRow
         def has_reply_key?(reply_key)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(reply_key)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(5) .reply-key").filter(visible: true))
+          contain_text([browser_text_pattern(reply_key)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(5) .reply-key").filter(visible: true),
+          )
         end
 
         def has_post_description?(description)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(description)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(6)").filter(visible: true))
+          contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(6)").filter(visible: true),
+          )
         end
 
         def has_smtp_response?(response)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(response)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(6) code").filter(visible: true))
+          contain_text([browser_text_pattern(response)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(6) code").filter(visible: true),
+          )
         end
       end
 
       class SkippedEmailLogRow < EmailLogRow
         def has_skipped_reason?(reason)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(reason)],
-            useInnerText: true,
-          ).matches?(element.locator("td:nth-of-type(5)").filter(visible: true))
+          contain_text([browser_text_pattern(reason)], useInnerText: true).matches?(
+            element.locator("td:nth-of-type(5)").filter(visible: true),
+          )
         end
       end
 

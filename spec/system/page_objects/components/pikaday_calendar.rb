@@ -22,7 +22,7 @@ module PageObjects
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".pika-single:not(.is-hidden)").filter(visible: true),
         )
       end

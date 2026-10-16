@@ -42,7 +42,7 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      expect(form.field("category_setting.nested_replies_default")).to be_checked
+      expect(form.field("category_setting.nested_replies_default")).to RSpecPredicates.be_checked
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe "Nested view category default" do
         .goto("/t/#{topic.slug}/#{topic.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
@@ -67,7 +67,7 @@ RSpec.describe "Nested view category default" do
         .filter(visible: true)
         .click
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
@@ -80,7 +80,7 @@ RSpec.describe "Nested view category default" do
 
       topic_list.visit_topic(topic)
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       try_until_success do
         expect(
@@ -97,9 +97,7 @@ RSpec.describe "Nested view category default" do
         .goto("/t/#{normal_topic.slug}/#{normal_topic.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url(
-        %r{/t/#{normal_topic.slug}/#{normal_topic.id}},
-      )
+      expect(browser_page).to have_url(%r{/t/#{normal_topic.slug}/#{normal_topic.id}})
       expect(nested_view).to have_no_nested_view
     end
   end

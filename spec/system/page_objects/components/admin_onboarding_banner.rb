@@ -18,13 +18,13 @@ module PageObjects
       end
 
       def visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".admin-onboarding-banner").filter(visible: true),
         )
       end
 
       def not_visible?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-onboarding-banner").filter(visible: true),
         )
       end
@@ -38,7 +38,7 @@ module PageObjects
       end
 
       def step_completed?(step_id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "div##{step_id} .onboarding-step__checkbox > svg.--completed",
           ).filter(visible: true),
@@ -46,7 +46,7 @@ module PageObjects
       end
 
       def step_not_completed?(step_id)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "div##{step_id} .onboarding-step__checkbox > svg.--completed",
           ).filter(visible: true),

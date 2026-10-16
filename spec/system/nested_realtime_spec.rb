@@ -30,12 +30,12 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
   describe "new root post by another user" do
     it "shows new replies notification banner and loads posts on click" do
       visit_nested
-      expect(nested_view).to PlaywrightMatchers.be_visible
+      expect(nested_view).to be_visible
       expect(
         browser_page.locator(
           ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
         ),
-      ).to PlaywrightMatchers.have_count(1)
+      ).to have_count(1)
 
       # Create a root post via PostCreator which triggers MessageBus
       PostCreator.create!(
@@ -44,16 +44,15 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
         raw: "A brand new root reply from another user",
       )
 
-      expect(
-        browser_page.locator(".nested-view__new-replies-btn:visible"),
-      ).to PlaywrightMatchers.have_count(1, timeout: 10_000)
+      expect(browser_page.locator(".nested-view__new-replies-btn:visible")).to have_count(
+        1,
+        timeout: 10_000,
+      )
 
       browser_page.locator(".nested-view__new-replies-btn:visible").click
 
-      expect(
-        browser_page.locator(".nested-view__new-replies-btn:visible"),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(browser_page.locator("body")).to PlaywrightMatchers.contain_text(
+      expect(browser_page.locator(".nested-view__new-replies-btn:visible")).to have_count(0)
+      expect(browser_page.locator("body")).to contain_text(
         "A brand new root reply from another user",
         useInnerText: true,
       )
@@ -63,12 +62,12 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
   describe "new child reply by another user" do
     it "shows the new child in the tree" do
       visit_nested
-      expect(nested_view).to PlaywrightMatchers.be_visible
+      expect(nested_view).to be_visible
       expect(
         browser_page.locator(
           ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
         ),
-      ).to PlaywrightMatchers.have_count(1)
+      ).to have_count(1)
 
       new_child =
         PostCreator.create!(
@@ -80,11 +79,7 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
 
       expect(
         browser_page.locator("[data-post-number='#{new_child.post_number}']:visible"),
-      ).to PlaywrightMatchers.contain_text(
-        "A child reply via message bus",
-        useInnerText: true,
-        timeout: 10_000,
-      )
+      ).to contain_text("A child reply via message bus", useInnerText: true, timeout: 10_000)
     end
   end
 
@@ -120,8 +115,8 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
 
     it "ignores stale created events for posts from a different topic" do
       visit_nested
-      expect(nested_view).to PlaywrightMatchers.be_visible
-      expect(browser_page.locator("body")).to PlaywrightMatchers.contain_text(
+      expect(nested_view).to be_visible
+      expect(browser_page.locator("body")).to contain_text(
         "Legitimate child reply",
         useInnerText: true,
       )
@@ -147,7 +142,7 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
         timeout: Capybara.default_max_wait_time * 1000,
       )
 
-      expect(browser_page.locator("body")).not_to PlaywrightMatchers.contain_text(
+      expect(browser_page.locator("body")).not_to contain_text(
         "Wrong topic leaked reply",
         useInnerText: true,
       )
@@ -161,31 +156,29 @@ RSpec.describe "Nested view real-time updates", native_playwright: true do
         browser_page.locator(
           ".nested-view__roots [data-post-number='#{root_reply.post_number}']:visible",
         ),
-      ).to PlaywrightMatchers.have_count(1)
-      expect(
-        browser_page.locator(".nested-view__activity-link:visible"),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(1)
+      expect(browser_page.locator(".nested-view__activity-link:visible")).to have_count(0)
 
       small_action = topic.add_small_action(admin, "closed.enabled")
 
-      expect(
-        browser_page.locator(".nested-view__activity-link:visible"),
-      ).to PlaywrightMatchers.have_count(1, timeout: 10_000)
+      expect(browser_page.locator(".nested-view__activity-link:visible")).to have_count(
+        1,
+        timeout: 10_000,
+      )
       expect(
         browser_page.locator("[data-post-number='#{small_action.post_number}']:visible"),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
 
       browser_page.locator(".nested-view__activity-link:visible").click
-      expect(
-        activity_log.locator("[data-post-id='#{small_action.id}']:visible"),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(activity_log.locator("[data-post-id='#{small_action.id}']:visible")).to have_count(1)
 
       revised = PostRevisor.new(small_action)
       revised.revise!(admin, raw: "Updated through the message bus")
 
-      expect(
-        activity_log.locator("[data-post-id='#{small_action.id}']:visible"),
-      ).to PlaywrightMatchers.contain_text("Updated through the message bus", useInnerText: true)
+      expect(activity_log.locator("[data-post-id='#{small_action.id}']:visible")).to contain_text(
+        "Updated through the message bus",
+        useInnerText: true,
+      )
     end
   end
 end

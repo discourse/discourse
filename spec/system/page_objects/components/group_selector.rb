@@ -11,7 +11,7 @@ module PageObjects
       end
 
       def hidden?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("#{@context}")
             .filter(visible: true)
@@ -42,7 +42,7 @@ module PageObjects
       end
 
       def has_no_selected_groups?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("#{@context} .group-selector")
             .filter(visible: true)
@@ -63,7 +63,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator(".fk-d-menu.d-multi-select-content").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       def add_group(group_name)

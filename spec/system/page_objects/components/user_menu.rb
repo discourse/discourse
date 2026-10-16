@@ -5,9 +5,7 @@ module PageObjects
     class UserMenu < PageObjects::Components::Base
       def open
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true).click
-        expect(
-          browser_root.locator(".user-menu").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".user-menu").filter(visible: true)).not_to have_count(0)
         self
       end
 
@@ -21,7 +19,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator("#quick-access-replies").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -35,7 +33,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator("#quick-access-bookmarks").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -49,7 +47,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator("#quick-access-profile").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -63,7 +61,7 @@ module PageObjects
           .click
         expect(
           browser_root.locator("#quick-access-review-queue").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -79,7 +77,7 @@ module PageObjects
         browser_root.locator("#quick-access-profile .logout .btn").filter(visible: true).click
         expect(
           browser_root.locator(".d-header .login-button").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
         self
       end
 
@@ -163,13 +161,13 @@ module PageObjects
       end
 
       def has_notification_count_of?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".user-menu li.notification").filter(visible: true),
         )
       end
 
       def has_bookmark_count_of?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".user-menu #quick-access-bookmarks li.bookmark").filter(
             visible: true,
           ),

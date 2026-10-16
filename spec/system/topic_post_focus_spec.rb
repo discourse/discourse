@@ -12,7 +12,7 @@ describe "Focusing the target post when opening a topic" do
       browser_root.locator("#post_#{target_post.post_number} .topic-body:focus").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "focuses the post when following a link to it from another topic" do
@@ -25,7 +25,7 @@ describe "Focusing the target post when opening a topic" do
       browser_root.locator("#post_#{target_post.post_number} .topic-body:focus").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "focuses the post when following a link to it within the same topic" do
@@ -39,7 +39,7 @@ describe "Focusing the target post when opening a topic" do
       browser_root.locator("#post_#{target_post.post_number} .topic-body:focus").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "keeps focus on the post when a user tip appears" do
@@ -52,6 +52,6 @@ describe "Focusing the target post when opening a topic" do
       browser_root.locator("#post_#{target_post.post_number} .topic-body:focus").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 end

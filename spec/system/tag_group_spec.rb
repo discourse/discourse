@@ -96,7 +96,7 @@ describe "Tag Groups" do
       expect(tag_groups_page).to have_tag_in_group("new-tag-two")
       expect(
         browser_root.locator(".parent-tag-section .tag-chooser").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("parent-tag")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("parent-tag")], useInnerText: true)
       expect(tag_groups_page).to have_visible_permission_checked
     end
   end

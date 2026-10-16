@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def has_no_value?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           @select_element.locator("option[value='#{NO_VALUE_OPTION}']:checked"),
         )
       end

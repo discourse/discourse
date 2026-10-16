@@ -15,7 +15,7 @@ module PageObjects
       end
 
       def has_hidden_profile?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".user-hide-profile .pref-hide-profile input[type=checkbox]:checked",
           ).filter(visible: true),

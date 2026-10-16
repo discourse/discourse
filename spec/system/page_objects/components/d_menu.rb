@@ -17,16 +17,12 @@ module PageObjects
 
       def expand
         raise "DMenu is already expanded" if is_expanded?
-        component.click.tap do
-          expect(component).to PlaywrightMatchers.have_attribute("aria-expanded", "true")
-        end
+        component.click.tap { expect(component).to have_attribute("aria-expanded", "true") }
       end
 
       def collapse
         raise "DMenu is already collapsed" if is_collapsed?
-        component.click.tap do
-          expect(component).to PlaywrightMatchers.have_attribute("aria-expanded", "false")
-        end
+        component.click.tap { expect(component).to have_attribute("aria-expanded", "false") }
       end
 
       def is_expanded?
@@ -65,19 +61,17 @@ module PageObjects
       def has_option?(selector, text = nil)
         result = option(selector)
         result = result.filter(hasText: text) if text
-        PlaywrightMatchers.have_count(0).does_not_match?(result)
+        have_count(0).does_not_match?(result)
       end
 
       def has_no_option?(selector)
         within_browser(portal_with_identifier_selector, wait_state: "attached") do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(selector).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(selector).filter(visible: true))
         end
       end
 
       def has_value?(value)
-        PlaywrightMatchers.contain_text(value, useInnerText: true).matches?(component)
+        contain_text(value, useInnerText: true).matches?(component)
       end
     end
   end

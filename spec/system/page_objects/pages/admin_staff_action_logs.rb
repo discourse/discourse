@@ -19,19 +19,19 @@ module PageObjects
       end
 
       def has_log_row?(user_history)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(log_row_selector(user_history)).filter(visible: true),
         )
       end
 
       def has_no_log_row?(user_history)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(log_row_selector(user_history)).filter(visible: true),
         )
       end
 
       def has_no_injected_detail_element?(user_history)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#{log_row_selector(user_history)} .details img[onerror]").filter(
             visible: true,
           ),
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def has_details_text?(user_history, text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator("#{log_row_selector(user_history)} .details").filter(visible: true),
         )
       end

@@ -11,7 +11,7 @@ module PageObjects
       end
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".bookmark-menu-content").filter(visible: true),
         )
       end
@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def has_topic_bookmark_button_label?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator("#topic-footer-buttons .bookmark-menu__trigger").filter(
             visible: true,
           ),
@@ -33,7 +33,7 @@ module PageObjects
       end
 
       def has_topic_bookmark_button_title?(title)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#topic-footer-buttons .bookmark-menu__trigger[title='#{title}']",
           ).filter(visible: true),
@@ -41,13 +41,13 @@ module PageObjects
       end
 
       def topic_bookmarks_menu_open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".topic-bookmarks-menu-content").filter(visible: true),
         )
       end
 
       def has_post_bookmark_option?(post_number)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='post-#{post_number}']",
           ).filter(visible: true),
@@ -64,12 +64,12 @@ module PageObjects
       end
 
       def has_post_submenu?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".bookmark-menu__row[data-menu-option-id='jump']").filter(
             visible: true,
           ),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".bookmark-menu__row[data-menu-option-id='delete']").filter(
               visible: true,
             ),
@@ -84,7 +84,7 @@ module PageObjects
       end
 
       def has_bookmark_topic_option?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='bookmark-topic']",
           ).filter(visible: true),
@@ -92,7 +92,7 @@ module PageObjects
       end
 
       def has_clear_all_option?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='clear-all']",
           ).filter(visible: true),
@@ -100,7 +100,7 @@ module PageObjects
       end
 
       def has_edit_topic_bookmark_option?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='edit-topic-bookmark']",
           ).filter(visible: true),
@@ -108,7 +108,7 @@ module PageObjects
       end
 
       def has_delete_topic_bookmark_option?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='delete-topic-bookmark']",
           ).filter(visible: true),

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module PlaywrightMatchers
-  extend Playwright::Test::Matchers
+module RSpecPredicates
+  extend RSpec::Matchers
 end
 
 class SystemBrowserSynchronization
@@ -89,6 +89,8 @@ RSpec.configure do |config|
 end
 
 module NativeSystemHelpers
+  include Playwright::Test::Matchers
+
   BROWSER_KEY_NAMES = {
     control: "Control",
     ctrl: "Control",
@@ -152,9 +154,9 @@ module NativeSystemHelpers
     matcher =
       (
         if exact
-          PlaywrightMatchers.have_text(value, useInnerText: true, timeout: wait * 1000)
+          have_text(value, useInnerText: true, timeout: wait * 1000)
         else
-          PlaywrightMatchers.contain_text(value, useInnerText: true, timeout: wait * 1000)
+          contain_text(value, useInnerText: true, timeout: wait * 1000)
         end
       )
     matcher.matches?(browser_content)
@@ -165,9 +167,9 @@ module NativeSystemHelpers
     matcher =
       (
         if exact
-          PlaywrightMatchers.have_text(value, useInnerText: true, timeout: wait * 1000)
+          have_text(value, useInnerText: true, timeout: wait * 1000)
         else
-          PlaywrightMatchers.contain_text(value, useInnerText: true, timeout: wait * 1000)
+          contain_text(value, useInnerText: true, timeout: wait * 1000)
         end
       )
     matcher.does_not_match?(browser_content)
@@ -178,9 +180,9 @@ module NativeSystemHelpers
     matcher =
       (
         if exact
-          PlaywrightMatchers.have_text(value, useInnerText: true, timeout: wait * 1000)
+          have_text(value, useInnerText: true, timeout: wait * 1000)
         else
-          PlaywrightMatchers.contain_text(value, useInnerText: true, timeout: wait * 1000)
+          contain_text(value, useInnerText: true, timeout: wait * 1000)
         end
       )
     matcher.matches?(browser_content)
@@ -191,9 +193,9 @@ module NativeSystemHelpers
     matcher =
       (
         if exact
-          PlaywrightMatchers.have_text(value, useInnerText: true, timeout: wait * 1000)
+          have_text(value, useInnerText: true, timeout: wait * 1000)
         else
-          PlaywrightMatchers.contain_text(value, useInnerText: true, timeout: wait * 1000)
+          contain_text(value, useInnerText: true, timeout: wait * 1000)
         end
       )
     matcher.does_not_match?(browser_content)
@@ -261,7 +263,7 @@ module NativeSystemHelpers
         ),
       )
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page.locator("body")).to PlaywrightMatchers.contain_text(
+    expect(browser_page.locator("body")).to contain_text(
       "Signed in to #{user.encoded_username} successfully",
     )
   end

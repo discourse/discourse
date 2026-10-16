@@ -31,7 +31,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
   end
 
@@ -48,7 +48,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
   end
 
@@ -66,9 +66,7 @@ RSpec.describe "Nested view replying" do
 
       nested_view.click_floating_reply_button
 
-      expect(
-        browser_root.locator("#login-account-name").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("#login-account-name").filter(visible: true)).not_to have_count(0)
     end
 
     it "opens the composer for a top-level reply" do
@@ -81,7 +79,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_nested_view
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
 
     it "hides when the composer is open and reappears when closed" do

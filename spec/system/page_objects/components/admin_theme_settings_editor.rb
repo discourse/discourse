@@ -4,9 +4,7 @@ module PageObjects
   module Components
     class AdminThemeSettingsEditor < Base
       def opened?
-        expect(
-          browser_root.locator(".ace_editor").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".ace_editor").filter(visible: true)).not_to have_count(0)
         self
       end
 

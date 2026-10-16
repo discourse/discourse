@@ -29,9 +29,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -51,9 +49,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -72,9 +68,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -104,9 +98,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([converted_file_path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload =
         Upload.find_by(original_filename: File.basename(converted_file_path).gsub("png", "jpg"))
@@ -127,9 +119,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path).gsub("png", "webp"))
 
@@ -150,9 +140,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([file.path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(file.path))
 
@@ -184,9 +172,7 @@ describe "Composer image optimization for uploads using media-optimization-worke
       ).set_input_files([apng_path])
 
       expect(composer).to have_no_in_progress_uploads
-      expect(
-        composer.preview.locator(".image-wrapper").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(1)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).to have_count(1)
 
       upload = Upload.find_by(original_filename: File.basename(apng_path))
 

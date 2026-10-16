@@ -29,7 +29,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -49,7 +49,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -63,9 +63,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_no_right_side_column
 
           signup_page.click_create_account
-          expect(
-            browser_root.locator(".account-created").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
     end
@@ -85,7 +85,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -98,9 +98,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_valid_email
           expect(signup_page).to have_no_right_side_column
           signup_page.click_create_account
-          expect(
-            browser_root.locator(".account-created").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
 
@@ -125,7 +125,7 @@ shared_examples "social authentication scenarios" do
           signup_page.click_create_account
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         it "works with a provided name" do
@@ -140,7 +140,7 @@ shared_examples "social authentication scenarios" do
           signup_page.click_create_account
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
       end
     end
@@ -159,9 +159,7 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(
-          browser_root.locator(".account-created").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -174,9 +172,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
           signup_page.click_create_account
-          expect(
-            browser_root.locator(".account-created").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
     end
@@ -196,7 +194,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -216,7 +214,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -236,7 +234,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -262,7 +260,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -279,7 +277,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("google_oauth2")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "shows signup form when no username can be derived" do
@@ -297,7 +295,7 @@ shared_examples "social authentication scenarios" do
               ).or(browser_root.get_by_label("new-account-username", exact: true)),
             )
             .filter(visible: true),
-        ).to PlaywrightMatchers.have_value("")
+        ).to have_value("")
       end
     end
 
@@ -337,7 +335,7 @@ shared_examples "social authentication scenarios" do
           signup_page.click_create_account
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         it "shows the login-required page when auth_immediately is disabled" do
@@ -348,12 +346,8 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to be_open
 
           browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-          expect(
-            browser_root.locator(".login-welcome").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
-          expect(
-            browser_root.locator(".site-logo").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
+          expect(browser_root.locator(".site-logo").filter(visible: true)).not_to have_count(0)
 
           browser_root.locator(".login-welcome .login-button").filter(visible: true).click
           expect(signup_page).to be_open
@@ -367,7 +361,7 @@ shared_examples "social authentication scenarios" do
           signup_page.click_create_account
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         it "automatically redirects when going to /signup" do
@@ -382,7 +376,7 @@ shared_examples "social authentication scenarios" do
           signup_page.click_create_account
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
 
         it "automatically redirects when skipping the signup form" do
@@ -393,7 +387,7 @@ shared_examples "social authentication scenarios" do
           browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(
             browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
         end
       end
 
@@ -423,7 +417,7 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "redirects the user back to the last page they visited" do
@@ -444,8 +438,8 @@ shared_examples "social authentication scenarios" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
-        expect(browser_page).to PlaywrightMatchers.have_url(category.url)
+        ).not_to have_count(0)
+        expect(browser_page).to have_url(category.url)
       end
     end
   end
@@ -469,7 +463,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("facebook")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "removes destination_url cookie if present after setting up redirect" do
@@ -492,7 +486,7 @@ shared_examples "social authentication scenarios" do
         end
 
         signup_page.click_social_button("facebook")
-        expect(browser_page).to PlaywrightMatchers.have_url(category.url)
+        expect(browser_page).to have_url(category.url)
 
         # Ensure the destination_url cookie was removed after being used
         browser_page.then do |pw_page|
@@ -513,9 +507,7 @@ shared_examples "social authentication scenarios" do
           mock_facebook_auth
           signup_page.open.click_social_button("facebook")
 
-          expect(
-            browser_root.locator(".alert-error").filter(visible: true),
-          ).to PlaywrightMatchers.contain_text(
+          expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
             [
               browser_text_pattern(
                 I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
@@ -536,7 +528,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("google_oauth2")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -549,7 +541,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("github")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -568,7 +560,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("twitter")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -581,7 +573,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("discord")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -595,7 +587,7 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("linkedin_oidc")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -608,9 +600,7 @@ shared_examples "social authentication scenarios" do
         .goto("/auth/failure?message=unauthorized")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("login.omniauth_error.unauthorized"))],
         useInnerText: true,
       )
@@ -621,9 +611,7 @@ shared_examples "social authentication scenarios" do
         .goto("/auth/failure?message=request_error")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("login.omniauth_error.request_error"))],
         useInnerText: true,
       )

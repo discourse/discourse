@@ -24,11 +24,11 @@ module PageObjects
       end
 
       def has_columns_in_order?(columns)
-        PlaywrightMatchers.have_count(columns.size).matches?(
+        have_count(columns.size).matches?(
           browser_root.locator(COLUMN_SELECTOR).filter(visible: true),
         ) &&
           columns.each_with_index.all? do |column, index|
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(
                 "#{COLUMN_SELECTOR}:nth-child(#{index + 1})[data-reorderable-key='#{column.id}']",
               ).filter(visible: true),

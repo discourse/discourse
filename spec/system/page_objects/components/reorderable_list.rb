@@ -39,7 +39,7 @@ module PageObjects
       def has_destination?(target)
         open_menu
         result =
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(destination_selector(target)).filter(visible: true),
           )
         close_menu
@@ -49,7 +49,7 @@ module PageObjects
       def has_no_destination?(target)
         open_menu
         result =
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(destination_selector(target)).filter(visible: true),
           )
         close_menu
@@ -57,7 +57,7 @@ module PageObjects
       end
 
       def has_handle?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{@row_selector} #{@handle}").filter(visible: true),
         )
       end

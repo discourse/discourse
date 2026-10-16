@@ -123,8 +123,8 @@ describe "Post translations" do
       topic_page.click_post_action_button(post, :add_translation)
       view_translation_button =
         browser_root.locator(".post-action-menu__view-translation").filter(visible: true)
-      expect(view_translation_button).to PlaywrightMatchers.be_visible
-      expect(view_translation_button).to PlaywrightMatchers.contain_text(
+      expect(view_translation_button).to be_visible
+      expect(view_translation_button).to contain_text(
         browser_text_pattern(I18n.t("js.post.localizations.view", { count: 1 })),
         useInnerText: true,
       )
@@ -133,7 +133,7 @@ describe "Post translations" do
       expect(view_translations_modal).to be_open
       expect(
         browser_root.locator(".post-translations-modal__locale").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(browser_text_pattern("fr"), useInnerText: true)
+      ).to contain_text(browser_text_pattern("fr"), useInnerText: true)
     end
 
     it "lets a user set independent post and topic title languages without closing the modal" do
@@ -299,7 +299,7 @@ describe "Post translations" do
       browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       browser_root.locator("#create-topic").filter(visible: true).click
       expect(
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
           ).filter(visible: true),

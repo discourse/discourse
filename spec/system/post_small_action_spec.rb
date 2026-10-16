@@ -28,12 +28,12 @@ describe "Post small actions" do
     # has highlighting for the regular post
     expect(
       browser_root.locator(".topic-post.regular .highlighted").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     # has highlighting for the small action post
     expect(
       browser_root.locator(".small-action .highlighted").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   it "applies animated gif decorations" do
@@ -54,6 +54,6 @@ describe "Post small actions" do
 
     expect(
       browser_root.locator(".small-action .pausable-animated-image").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0, timeout: 5 * 1000)
+    ).not_to have_count(0, timeout: 5 * 1000)
   end
 end

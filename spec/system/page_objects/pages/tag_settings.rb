@@ -18,15 +18,11 @@ module PageObjects
       end
 
       def has_tag_settings_page?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".tag-settings").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".tag-settings").filter(visible: true))
       end
 
       def has_no_tag_settings_page?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".tag-settings").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".tag-settings").filter(visible: true))
       end
 
       def header
@@ -77,15 +73,13 @@ module PageObjects
       end
 
       def has_localizations?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".form-kit__collection").filter(visible: true),
         )
       end
 
       def has_no_localizations?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".form-kit__collection").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".form-kit__collection").filter(visible: true))
       end
 
       def name_input
@@ -158,7 +152,7 @@ module PageObjects
       end
 
       def has_synonyms_section?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".form-kit__field[data-name='synonyms']").filter(visible: true),
         )
       end

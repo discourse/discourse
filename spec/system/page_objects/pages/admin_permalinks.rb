@@ -30,9 +30,7 @@ module PageObjects
         open_permalink_menu(url)
         browser_root.locator(".admin-permalink-item__delete").filter(visible: true).click
         browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
-        expect(
-          browser_root.locator(".dialog-body").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(0)
         has_closed_permalink_menu?
         self
       end
@@ -47,19 +45,19 @@ module PageObjects
       end
 
       def has_no_permalinks?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".admin-permalink-item__url").filter(visible: true),
         )
       end
 
       def has_no_filter?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".d-filter-controls__input").filter(visible: true),
         )
       end
 
       def has_filter?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__input").filter(visible: true),
         )
       end
@@ -69,7 +67,7 @@ module PageObjects
       end
 
       def has_no_results?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
         )
       end
@@ -80,7 +78,7 @@ module PageObjects
       end
 
       def has_closed_permalink_menu?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".permalink-menu-content").filter(visible: true),
         )
       end

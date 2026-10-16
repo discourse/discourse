@@ -16,7 +16,7 @@ describe "Admin site setting enum" do
         .find_setting("tag_style")
         .locator(".preview .discourse-tag.box")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
 
     settings_page.save_setting("tag_style")
     browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }

@@ -50,7 +50,7 @@ describe "Lightbox | Photoswipe" do
           )
       lightbox_link.click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       expect(lightbox).to have_no_counter
       expect(lightbox).to have_caption_title("first image")
@@ -108,7 +108,7 @@ describe "Lightbox | Photoswipe" do
         .filter(visible: true)
         .click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       expect(lightbox).to have_counter("2 / 2")
       expect(lightbox).to have_caption_title("second image")
@@ -141,7 +141,7 @@ describe "Lightbox | Photoswipe" do
         .filter(visible: true)
         .click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       # text is reversed by CSS, so check for correct property
       expect(lightbox.counter).to have_computed_style(direction: "rtl")
@@ -206,7 +206,7 @@ describe "Lightbox | Photoswipe" do
       topic_page.visit_topic(topic)
       topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true).click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_ui_visible
 
       tap_screen_at(screen_center_x, screen_center_y)
@@ -215,7 +215,7 @@ describe "Lightbox | Photoswipe" do
       tap_screen_at(screen_center_x, screen_center_y)
       expect(lightbox).to have_ui_visible
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_no_caption_details
 
       lightbox.image_info_button.click
@@ -226,11 +226,11 @@ describe "Lightbox | Photoswipe" do
 
       expect(lightbox).to have_no_caption_details
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       tap_screen_at(50, 50)
 
-      expect(lightbox).to be_hidden
+      expect(lightbox).to RSpecPredicates.be_hidden
     end
   end
 
@@ -245,7 +245,7 @@ describe "Lightbox | Photoswipe" do
       lightbox_link = topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true)
 
       lightbox_link.click
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       expect(lightbox_link.get_attribute("data-target-width")).to eq(upload_1.width.to_s)
       expect(lightbox_link.get_attribute("data-target-height")).to eq(upload_1.height.to_s)

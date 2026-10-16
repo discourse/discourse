@@ -18,12 +18,14 @@ describe "Admin Dashboard General Tab" do
     within_browser(
       browser_root.locator(".admin-report.visits .admin-report-counters").filter(visible: true),
     ) do
-      expect(
-        browser_root.locator(".today-count").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("2")], useInnerText: true)
-      expect(
-        browser_root.locator(".yesterday-count").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("1")], useInnerText: true)
+      expect(browser_root.locator(".today-count").filter(visible: true)).to contain_text(
+        [browser_text_pattern("2")],
+        useInnerText: true,
+      )
+      expect(browser_root.locator(".yesterday-count").filter(visible: true)).to contain_text(
+        [browser_text_pattern("1")],
+        useInnerText: true,
+      )
     end
   end
 end

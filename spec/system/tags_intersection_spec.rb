@@ -17,9 +17,7 @@ describe "Tags intersection" do
       .goto("/tags/intersection/sour/tangy?category=fruits")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/tags/intersection/sour/tangy?category=fruits",
-    )
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy?category=fruits")
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
@@ -31,9 +29,7 @@ describe "Tags intersection" do
       require("discourse/lib/url").default.routeTo("/tags/intersection/sour/tangy?category=fruits")
     JS
 
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/tags/intersection/sour/tangy?category=fruits",
-    )
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy?category=fruits")
     expect(discovery.topic_list).to have_topic(the_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
   end
@@ -42,29 +38,29 @@ describe "Tags intersection" do
     browser_page
       .goto("/tags/intersection/sour/tangy/sour")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy")
 
     browser_page
       .goto("/tags/intersection/sour/tangy/sour/sour")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy")
 
     browser_page
       .goto("/tags/intersection/sour/sour")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{tag.slug}/#{tag.id}")
+    expect(browser_page).to have_url("/tag/#{tag.slug}/#{tag.id}")
   end
 
   it "removes duplicates from the additional tags list" do
     browser_page
       .goto("/tags/intersection/sour/tangy/tangy")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy")
 
     browser_page
       .goto("/tags/intersection/sour/tangy/tangy/tangy")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy")
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy")
   end
 
   it "navigates correctly when adding and removing tags from the intersection chooser" do
@@ -76,12 +72,12 @@ describe "Tags intersection" do
     chooser.expand
     chooser.select_row_by_name("sweet")
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/tangy/sweet")
+    expect(browser_page).to have_url("/tags/intersection/sour/tangy/sweet")
     expect(discovery.topic_list).to have_topics(count: 2)
 
     chooser.unselect_by_name("tangy")
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/sour/sweet")
+    expect(browser_page).to have_url("/tags/intersection/sour/sweet")
   end
 
   context "with capitalized tag names" do
@@ -106,7 +102,7 @@ describe "Tags intersection" do
       chooser.expand
       chooser.select_row_by_name("Savory")
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/Spicy/Bitter/Savory")
+      expect(browser_page).to have_url("/tags/intersection/Spicy/Bitter/Savory")
       expect(chooser).to have_selected_names("Spicy", "Bitter", "Savory")
       expect(discovery.topic_list).to have_topics(count: 2)
       expect(discovery.topic_list).to have_topic(cap_tagged_topic)
@@ -114,7 +110,7 @@ describe "Tags intersection" do
 
       chooser.unselect_by_name("Bitter")
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tags/intersection/Spicy/Savory")
+      expect(browser_page).to have_url("/tags/intersection/Spicy/Savory")
       expect(chooser).to have_selected_names("Spicy", "Savory")
       expect(discovery.topic_list).to have_topics(count: 2)
     end
@@ -127,7 +123,7 @@ describe "Tags intersection" do
       chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
       chooser.unselect_by_name("Bitter")
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/tag/#{cap_tag.slug}/#{cap_tag.id}")
+      expect(browser_page).to have_url("/tag/#{cap_tag.slug}/#{cap_tag.id}")
       expect(discovery.topic_list).to have_topic(cap_tagged_topic)
       expect(discovery.topic_list).to have_topic(cap_the_topic)
     end

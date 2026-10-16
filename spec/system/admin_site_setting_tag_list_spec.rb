@@ -48,7 +48,7 @@ RSpec.describe "Admin tag list site setting" do
         .find_setting("digest_suppress_tags")
         .locator(".setting-controls__ok")
         .filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(SiteSetting.digest_suppress_tags).to eq("")
   end
 end

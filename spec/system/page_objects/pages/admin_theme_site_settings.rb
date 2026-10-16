@@ -8,7 +8,7 @@ module PageObjects
           setting_row(setting_name).locator(
             ".admin-theme-site-settings-row__setting .setting-label",
           ).filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(SiteSetting.humanized_name(setting_name))],
           useInnerText: true,
         )
@@ -16,11 +16,11 @@ module PageObjects
           setting_row(setting_name).locator(
             ".admin-theme-site-settings-row__setting .setting-description",
           ).filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        ).to contain_text(
           [browser_text_pattern(SiteSetting.description(setting_name))],
           useInnerText: true,
         )
-        PlaywrightMatchers.contain_text(
+        contain_text(
           [browser_text_pattern(SiteSetting.defaults[setting_name])],
           useInnerText: true,
         ).matches?(
@@ -33,9 +33,9 @@ module PageObjects
       def has_theme_overriding?(setting_name, theme, overrride_value)
         expect(
           setting_row(setting_name).locator(theme_overriding_css(theme)).filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern(theme.name)], useInnerText: true)
+        ).to contain_text([browser_text_pattern(theme.name)], useInnerText: true)
         browser_root.locator(theme_overriding_css(theme)).filter(visible: true).hover
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(
             I18n.t("admin_js.admin.theme_site_settings.overridden_value", value: overrride_value),
           ),

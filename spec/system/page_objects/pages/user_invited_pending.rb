@@ -13,7 +13,7 @@ module PageObjects
 
         def link_type?(key: nil, redemption_count: nil, max_redemption_count: nil)
           if key && redemption_count && max_redemption_count
-            PlaywrightMatchers.contain_text(
+            contain_text(
               browser_text_pattern(
                 I18n.t(
                   "js.user.invited.invited_via_link",
@@ -25,40 +25,35 @@ module PageObjects
               useInnerText: true,
             ).matches?(invite_type_col)
           else
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               invite_type_col.locator(".d-icon-link").filter(visible: true),
             )
           end
         end
 
         def has_description?(text)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(invite_type_col.locator(".invite-description").filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            invite_type_col.locator(".invite-description").filter(visible: true),
+          )
         end
 
         def email_type?(email)
-          PlaywrightMatchers.contain_text(browser_text_pattern(email), useInnerText: true).matches?(
-            invite_type_col,
-          ) &&
-            PlaywrightMatchers.have_count(0).does_not_match?(
+          contain_text(browser_text_pattern(email), useInnerText: true).matches?(invite_type_col) &&
+            have_count(0).does_not_match?(
               invite_type_col.locator(".d-icon-envelope").filter(visible: true),
             )
         end
 
         def has_group?(group)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(group.name)],
-            useInnerText: true,
-          ).matches?(invite_type_col.locator(".invite-extra").filter(visible: true))
+          contain_text([browser_text_pattern(group.name)], useInnerText: true).matches?(
+            invite_type_col.locator(".invite-extra").filter(visible: true),
+          )
         end
 
         def has_topic?(topic)
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(topic.title)],
-            useInnerText: true,
-          ).matches?(invite_type_col.locator(".invite-extra").filter(visible: true))
+          contain_text([browser_text_pattern(topic.title)], useInnerText: true).matches?(
+            invite_type_col.locator(".invite-extra").filter(visible: true),
+          )
         end
 
         def edit_button
@@ -100,7 +95,7 @@ module PageObjects
       def visit(user)
         url = "/u/#{user.username_lower}/invited/pending"
         browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".user-content.--loaded").filter(visible: true),
         )
       end
@@ -110,7 +105,7 @@ module PageObjects
       end
 
       def has_invite_count?(count)
-        PlaywrightMatchers.have_count(count).matches?(
+        have_count(count).matches?(
           browser_root.locator(".user-content .user-invite-list tbody tr").filter(visible: true),
         )
       end

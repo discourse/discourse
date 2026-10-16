@@ -343,7 +343,7 @@ describe "User preferences | Interface" do
         user_preferences_interface_page.visit(user)
         expect(
           browser_root.locator(".interface-color-mode").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "hides the mode selector when theme has identical light and dark schemes" do
@@ -353,18 +353,14 @@ describe "User preferences | Interface" do
         )
 
         user_preferences_interface_page.visit(user)
-        expect(
-          browser_root.locator(".interface-color-mode").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".interface-color-mode").filter(visible: true)).to have_count(0)
       end
 
       it "hides the mode selector when theme has no dark scheme" do
         Theme.find_default.update!(color_scheme_id: color_scheme_light_1, dark_color_scheme_id: nil)
 
         user_preferences_interface_page.visit(user)
-        expect(
-          browser_root.locator(".interface-color-mode").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(browser_root.locator(".interface-color-mode").filter(visible: true)).to have_count(0)
       end
     end
 

@@ -4,13 +4,13 @@ module PageObjects
   module Modals
     class SidebarEditNavigationModal < PageObjects::Modals::Base
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".sidebar__edit-navigation-menu__modal").filter(visible: true),
         )
       end
 
       def has_right_title?(title)
-        PlaywrightMatchers.contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
           browser_root.locator(".sidebar__edit-navigation-menu__modal .d-modal__title-text").filter(
             visible: true,
           ),
@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def has_focus_on_filter_input?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".sidebar__edit-navigation-menu__filter-input-field:focus").filter(
             visible: true,
           ),
@@ -50,7 +50,7 @@ module PageObjects
       end
 
       def has_no_reset_to_defaults_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .get_by_role("button")
             .and(

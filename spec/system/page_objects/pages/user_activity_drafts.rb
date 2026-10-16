@@ -11,37 +11,33 @@ module PageObjects
       end
 
       def has_drafts?(count: 1)
-        PlaywrightMatchers.have_count(count).matches?(
-          browser_root.locator(".post-list-item").filter(visible: true),
-        )
+        have_count(count).matches?(browser_root.locator(".post-list-item").filter(visible: true))
       end
 
       def has_no_drafts?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".post-list__empty-text").filter(visible: true),
         )
       end
 
       def has_bulk_select_checkboxes?
-        PlaywrightMatchers.be_attached.matches?(
+        be_attached.matches?(
           browser_root.locator(".bulk-select-checkbox").filter(visible: true).nth(1 - 1),
         )
       end
 
       def has_no_bulk_select_checkboxes?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".bulk-select-checkbox").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".bulk-select-checkbox").filter(visible: true))
       end
 
       def has_bulk_controls?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".post-list-bulk-controls").filter(visible: true),
         )
       end
 
       def has_no_bulk_controls?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".post-list-bulk-controls").filter(visible: true),
         )
       end
@@ -99,12 +95,11 @@ module PageObjects
 
       def has_selected_count?(count)
         if count == 1
-          PlaywrightMatchers.contain_text(
-            browser_text_pattern("#{count} post selected"),
-            useInnerText: true,
-          ).matches?(browser_content)
+          contain_text(browser_text_pattern("#{count} post selected"), useInnerText: true).matches?(
+            browser_content,
+          )
         else
-          PlaywrightMatchers.contain_text(
+          contain_text(
             browser_text_pattern("#{count} posts selected"),
             useInnerText: true,
           ).matches?(browser_content)
@@ -112,7 +107,7 @@ module PageObjects
       end
 
       def has_draft_selected?(index = 0)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".post-list-item:nth-of-type(#{index + 1}) .post-list-item--selected",
           ).filter(visible: true),
@@ -120,7 +115,7 @@ module PageObjects
       end
 
       def has_no_draft_selected?(index = 0)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".post-list-item:nth-of-type(#{index + 1}) .post-list-item--selected",
           ).filter(visible: true),
@@ -128,7 +123,7 @@ module PageObjects
       end
 
       def has_checkbox_checked?(index = 0)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".post-list-item:nth-of-type(#{index + 1}) .bulk-select-checkbox:checked",
           ).filter(visible: true),
@@ -136,7 +131,7 @@ module PageObjects
       end
 
       def has_checkbox_unchecked?(index = 0)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(
             ".post-list-item:nth-of-type(#{index + 1}) .bulk-select-checkbox:checked",
           ).filter(visible: true),

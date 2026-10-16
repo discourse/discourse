@@ -6,15 +6,11 @@ module PageObjects
       TOOLBAR_SELECTOR = "[data-identifier='composer-preview-toolbar']"
 
       def has_toolbar?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def has_no_toolbar?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def click_show_source
@@ -39,7 +35,7 @@ module PageObjects
       end
 
       def has_focused_control?(class_name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{TOOLBAR_SELECTOR} button.#{class_name}:focus").filter(
             visible: true,
           ),

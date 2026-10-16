@@ -80,7 +80,7 @@ RSpec.describe "Nested view pagination" do
       expect(nested_view).to have_post(root_reply)
       expect(
         browser_root.locator(".nested-post-children__load-more").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       browser_root.locator(".nested-post-children__load-more").filter(visible: true).click
 
@@ -91,7 +91,7 @@ RSpec.describe "Nested view pagination" do
       expect(nested_view).to have_post(child_5)
       expect(
         browser_root.locator(".nested-post-children__load-more").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 
@@ -129,7 +129,7 @@ RSpec.describe "Nested view pagination" do
 
       expect(
         browser_root.locator(".nested-view__roots > .nested-post").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(22, timeout: 5 * 1000)
+      ).to have_count(22, timeout: 5 * 1000)
     end
   end
 end

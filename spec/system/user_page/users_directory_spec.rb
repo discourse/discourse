@@ -13,12 +13,8 @@ describe "Users directory" do
 
       browser_page.goto("/u").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".users-directory").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".spinner").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".users-directory").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".spinner").filter(visible: true)).to have_count(0)
       header_texts =
         browser_root
           .locator(".directory-table__column-header .header-contents")
@@ -45,12 +41,8 @@ describe "Users directory" do
       DirectoryItem.refresh!
       browser_page.goto("/u").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".users-directory").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator(".spinner").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".users-directory").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".spinner").filter(visible: true)).to have_count(0)
       header_texts =
         browser_root
           .locator(".directory-table__column-header .header-contents")

@@ -54,9 +54,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_overridden
-    expect(
-      browser_root.locator(".site-text").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".site-text").filter(visible: true)).to have_count(0)
 
     TranslationOverride.create!(
       locale: "en",
@@ -69,9 +67,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_overridden
-    expect(
-      browser_root.locator(".site-text").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(1)
+    expect(browser_root.locator(".site-text").filter(visible: true)).to have_count(1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
   end
 
@@ -79,9 +75,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_outdated
-    expect(
-      browser_root.locator(".site-text").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".site-text").filter(visible: true)).to have_count(0)
 
     TranslationOverride.create!(
       locale: "en",
@@ -95,9 +89,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.search("skip")
     site_texts_page.toggle_only_show_outdated
-    expect(
-      browser_root.locator(".site-text").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(1)
+    expect(browser_root.locator(".site-text").filter(visible: true)).to have_count(1)
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
   end
 
@@ -166,7 +158,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.select_locale("it")
     site_texts_page.search("resource_intro")
     expect(site_texts_page).to have_translation_value("Esplora le risorse")
-    expect(browser_page).to PlaywrightMatchers.have_url(
+    expect(browser_page).to have_url(
       "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
     )
     browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
@@ -176,7 +168,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
     site_texts_page.override_translation("Le nostre risorse")
     site_texts_page.back_to_results
-    expect(browser_page).to PlaywrightMatchers.have_url(
+    expect(browser_page).to have_url(
       "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
     )
     expect(site_texts_page).to have_translation_value("Le nostre risorse")
@@ -189,18 +181,14 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_value("Esplora le risorse")
     site_texts_page.reset_filters
     expect(site_texts_page).to have_all_site_texts_selected
-    expect(browser_page).to PlaywrightMatchers.have_url(
-      "/admin/customize/site_texts?locale=it&q=resource_intro",
-    )
+    expect(browser_page).to have_url("/admin/customize/site_texts?locale=it&q=resource_intro")
   end
 
   it "can load more results" do
     site_texts_page.visit
     site_texts_page.search("e")
 
-    expect(
-      browser_root.locator(".site-text").filter(visible: true).nth(50 - 1),
-    ).to PlaywrightMatchers.be_attached
+    expect(browser_root.locator(".site-text").filter(visible: true).nth(50 - 1)).to be_attached
     initial_count =
       browser_root
         .locator(".site-text")
@@ -216,6 +204,6 @@ describe "Admin Site Texts Page" do
 
     expect(
       browser_root.locator(".site-text").filter(visible: true).nth((initial_count + 1) - 1),
-    ).to PlaywrightMatchers.be_attached
+    ).to be_attached
   end
 end

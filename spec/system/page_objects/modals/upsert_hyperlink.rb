@@ -28,15 +28,13 @@ module PageObjects
       end
 
       def has_link_text_field?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true),
         )
       end
 
       def has_no_link_text_field?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(LINK_TEXT_SELECTOR).filter(visible: true))
       end
     end
   end

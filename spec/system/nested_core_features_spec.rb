@@ -23,12 +23,10 @@ RSpec.describe "Core features" do
 
     expect(dialog).to be_closed # if it failed to load the page, the dialog will be open with an error message
 
-    expect(
-      browser_root.locator(".admin-api-keys").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".admin-config-area-card").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".admin-api-keys").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".admin-config-area-card").filter(visible: true)).not_to have_count(
+      0,
+    )
   end
 
   it_behaves_like "having working core features"

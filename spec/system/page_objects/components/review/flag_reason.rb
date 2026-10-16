@@ -46,7 +46,7 @@ module PageObjects
               if count > 1
                 expect(
                   flag_reason_element.locator(".review-item__flag-count").filter(visible: true),
-                ).not_to PlaywrightMatchers.have_count(0)
+                ).not_to have_count(0)
               else
                 expect(
                   flag_reason_element
@@ -58,7 +58,7 @@ module PageObjects
                     end
                     .locator(".review-item__flag-count")
                     .filter(visible: true),
-                ).to PlaywrightMatchers.have_count(0)
+                ).to have_count(0)
               end
             end
           end

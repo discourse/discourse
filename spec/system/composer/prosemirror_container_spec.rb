@@ -50,12 +50,10 @@ describe "Composer - ProseMirror - Container" do
         "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
       ).set_input_files(file_path)
       expect(composer).to have_in_progress_uploads
-      expect(composer.editor_toggle_switch).to PlaywrightMatchers.be_disabled
+      expect(composer.editor_toggle_switch).to be_disabled
     end
 
     expect(composer).to have_no_in_progress_uploads
-    expect(
-      rich.locator("img:not(.ProseMirror-separator)").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(1)
+    expect(rich.locator("img:not(.ProseMirror-separator)").filter(visible: true)).to have_count(1)
   end
 end

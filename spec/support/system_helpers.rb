@@ -64,7 +64,7 @@ module SystemHelpers
       )
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_content).to PlaywrightMatchers.contain_text(
+    expect(browser_content).to contain_text(
       "Signed in to #{user.encoded_username} successfully",
       useInnerText: true,
     )
@@ -189,9 +189,7 @@ module SystemHelpers
   end
 
   def select_text_range(selector, start = 0, offset = 5)
-    expect(
-      browser_root.locator(selector).filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(selector).filter(visible: true)).not_to have_count(0)
 
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];

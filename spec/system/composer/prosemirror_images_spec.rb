@@ -10,19 +10,19 @@ describe "Composer - ProseMirror - Images" do
       browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
       expect(
         rich.locator(".composer-image-node img[data-scale='75']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
       expect(
         rich.locator(".composer-image-node img[data-scale='50']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator(".composer-image-toolbar__zoom-in").filter(visible: true).click
       expect(
         rich.locator(".composer-image-node img[data-scale='75']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator(".composer-image-toolbar__zoom-in").filter(visible: true).click
       expect(
         rich.locator(".composer-image-node img[data-scale='100']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "allows removing image via toolbar" do
@@ -37,11 +37,8 @@ describe "Composer - ProseMirror - Images" do
           end
           .locator(".composer-image-node img")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(rich).to PlaywrightMatchers.contain_text(
-        browser_text_pattern("Before"),
-        useInnerText: true,
-      )
+      ).to have_count(0)
+      expect(rich).to contain_text(browser_text_pattern("Before"), useInnerText: true)
     end
 
     it "hides toolbar when clicking outside image" do
@@ -49,11 +46,11 @@ describe "Composer - ProseMirror - Images" do
       paste_and_click_image
       expect(
         browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       rich.locator("p").filter(visible: true).click
       expect(
         browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
 
     it "sets width and height attributes when scaling external images" do
@@ -67,7 +64,7 @@ describe "Composer - ProseMirror - Images" do
           end
           .locator(".composer-image-node img[width]")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         rich
           .tap do |parent|
@@ -75,14 +72,14 @@ describe "Composer - ProseMirror - Images" do
           end
           .locator(".composer-image-node img[height]")
           .filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       browser_root.locator(".composer-image-toolbar__zoom-out").filter(visible: true).click
       expect(
         rich.locator(".composer-image-node img[width]").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         rich.locator(".composer-image-node img[height]").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
@@ -110,12 +107,12 @@ describe "Composer - ProseMirror - Images" do
         browser_root.locator("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       # loaded in a single api call
       initial_request_count =
         browser_page.evaluate("function(arguments) { return window.urlLookupRequests }", arg: [])
@@ -126,12 +123,12 @@ describe "Composer - ProseMirror - Images" do
         browser_root.locator("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']").filter(
           visible: true,
         ),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       # loaded from cache, no new request
       final_request_count =
         browser_page.evaluate("function(arguments) { return window.urlLookupRequests }", arg: [])
@@ -145,10 +142,10 @@ describe "Composer - ProseMirror - Images" do
       paste_and_click_image
       expect(
         browser_root.locator("[data-identifier='composer-image-alt-text']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(".image-alt-text-input__display").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "allows editing alt text by clicking on display" do
@@ -157,10 +154,10 @@ describe "Composer - ProseMirror - Images" do
       browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
       expect(
         browser_root.locator(".image-alt-text-input.--expanded").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(".image-alt-text-input__field").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root
         .locator(".image-alt-text-input__field")
         .filter(visible: true)
@@ -190,13 +187,13 @@ describe "Composer - ProseMirror - Images" do
       paste_and_click_image
       expect(
         browser_root.locator(".image-alt-text-input__display").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("image")], useInnerText: true)
+      ).to contain_text([browser_text_pattern("image")], useInnerText: true)
       browser_root.locator(".image-alt-text-input__display").filter(visible: true).click
       browser_root.locator(".image-alt-text-input__field").filter(visible: true).fill("")
       browser_root.locator(".image-alt-text-input__field").filter(visible: true).press("Enter")
       expect(
         browser_root.locator(".image-alt-text-input__display").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      ).to contain_text(
         [browser_text_pattern(I18n.t("js.composer.image_alt_text.title"))],
         useInnerText: true,
       )
@@ -292,20 +289,20 @@ describe "Composer - ProseMirror - Images" do
 
       click_selected_image
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_no_counter
       expect(lightbox).to have_no_next_button
       expect(lightbox).to have_no_prev_button
 
       lightbox.close_button.click
-      expect(lightbox).to be_hidden
+      expect(lightbox).to RSpecPredicates.be_hidden
 
       expect(
         rich.locator(".composer-image-node img.ProseMirror-selectednode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "opens lightbox with gallery when multiple images are present" do
@@ -324,22 +321,23 @@ describe "Composer - ProseMirror - Images" do
 
       click_selected_image
 
-      expect(lightbox).to be_visible
-      expect(
-        lightbox.locator(".pswp__counter").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text([browser_text_pattern("1 / 2")], useInnerText: true)
+      expect(lightbox).to RSpecPredicates.be_visible
+      expect(lightbox.locator(".pswp__counter").filter(visible: true)).to contain_text(
+        [browser_text_pattern("1 / 2")],
+        useInnerText: true,
+      )
       expect(lightbox).to have_next_button
       expect(lightbox).to have_prev_button
 
       lightbox.close_button.click
-      expect(lightbox).to be_hidden
+      expect(lightbox).to RSpecPredicates.be_hidden
 
       expect(
         rich.locator(".composer-image-node img.ProseMirror-selectednode").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "lets the user dismiss the alt text input by clicking the image without opening the lightbox" do
@@ -356,16 +354,14 @@ describe "Composer - ProseMirror - Images" do
 
       expect(
         browser_root.locator(".image-alt-text-input.--expanded").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
       expect(
         rich.locator(".composer-image-node img").filter(visible: true).get_attribute("alt"),
       ).to eq("described image")
-      expect(browser_root.locator(".pswp").filter(visible: true)).to PlaywrightMatchers.have_count(
-        0,
-      )
+      expect(browser_root.locator(".pswp").filter(visible: true)).to have_count(0)
 
       click_selected_image
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
     end
 
     it "navigates between images using prev/next buttons" do
@@ -374,10 +370,10 @@ describe "Composer - ProseMirror - Images" do
 
       first_image = rich.locator(".composer-image-node img[alt='first']").filter(visible: true)
       first_image.click
-      expect(first_image).to PlaywrightMatchers.have_class(/ProseMirror-selectednode/)
+      expect(first_image).to have_class(/ProseMirror-selectednode/)
       click_selected_image
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_caption_title("first")
 
       lightbox.next_button.click

@@ -137,9 +137,7 @@ describe "Creating invites with roles" do
 
       expect(modal).to have_summary
       cdp.clipboard_has_text?(Invite.last.link)
-      expect(
-        browser_root.locator(".copy-button.ok").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".copy-button.ok").filter(visible: true)).not_to have_count(0)
       screenshot_marker(label: "invite-created", only: :desktop)
 
       invite = Invite.last
@@ -176,7 +174,7 @@ describe "Creating invites with roles" do
       modal.edit_button.click
 
       expect(modal).to have_no_role_toggle
-      expect(modal.save_button).to PlaywrightMatchers.contain_text(
+      expect(modal.save_button).to contain_text(
         browser_text_pattern(I18n.t("js.user.invited.invite_roles.update")),
         useInnerText: true,
       )
@@ -217,12 +215,12 @@ describe "Creating invites with roles" do
     it "shows the previous invite modal" do
       open_invite_modal_for(admin)
 
-      expect(
-        browser_root.locator(".create-invite-modal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".create-invite-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       expect(
         browser_root.locator(".create-invite-with-roles-modal").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
     end
   end
 end

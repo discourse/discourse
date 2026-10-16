@@ -38,14 +38,12 @@ describe "User preferences | Security" do
 
         confirm_session_modal.submit_password(password)
 
-        expect(browser_page).to PlaywrightMatchers.have_url(
-          "/u/#{user.username}/preferences/second-factor",
-        )
+        expect(browser_page).to have_url("/u/#{user.username}/preferences/second-factor")
 
         browser_root.locator(".security-key .new-security-key").filter(visible: true).click
         expect(
           user_preferences_security_page.locator("input#security-key-name").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root
           .locator(".d-modal__body input#security-key-name")
@@ -57,7 +55,7 @@ describe "User preferences | Security" do
           user_preferences_security_page.locator(".security-key .second-factor-item").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         user_menu.sign_out
 
@@ -76,7 +74,7 @@ describe "User preferences | Security" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -95,20 +93,20 @@ describe "User preferences | Security" do
         browser_root.locator(".pref-passkeys__add .btn").filter(visible: true).click
         expect(
           user_preferences_security_page.locator("input#password").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root.locator(".dialog-body input#password").filter(visible: true).fill(password)
         browser_root.locator(".confirm-session .btn-primary").filter(visible: true).click
 
         expect(
           user_preferences_security_page.locator(".rename-passkey__form").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         browser_root.locator(".dialog-close").filter(visible: true).click
 
         expect(
           user_preferences_security_page.locator(".pref-passkeys__rows .row").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         select_kit = PageObjects::Components::SelectKit.new(".passkey-options-dropdown")
         select_kit.expand
@@ -120,7 +118,7 @@ describe "User preferences | Security" do
           user_preferences_security_page.locator(".dialog-footer .btn-danger").filter(
             visible: true,
           ),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         # close the dialog (don't delete the key, we need it to login in the next step)
         browser_root.locator(".dialog-close").filter(visible: true).click
@@ -130,7 +128,7 @@ describe "User preferences | Security" do
         browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
         expect(
           user_preferences_security_page.locator("#remove-password-link").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        ).to have_count(0)
 
         user_menu.sign_out
 
@@ -147,7 +145,7 @@ describe "User preferences | Security" do
 
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
 
         # ensures that we are redirected to the destination_url cookie
         expect(browser_page.url).to include("/hot")
@@ -161,9 +159,7 @@ describe "User preferences | Security" do
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [
           browser_text_pattern(
             "You are required to enable two-factor authentication before accessing this site.",
@@ -174,19 +170,17 @@ describe "User preferences | Security" do
 
       expect(
         browser_root.locator(".user-preferences .totp").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root.locator(".user-preferences .security-key").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       browser_root.locator(".user-preferences .totp .btn.new-totp").filter(visible: true).click
 
       browser_root.locator(".dialog-body input#password").filter(visible: true).fill(password)
       browser_root.locator(".confirm-session .btn-primary").filter(visible: true).click
 
-      expect(
-        browser_root.locator(".qr-code").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".qr-code").filter(visible: true)).not_to have_count(0)
     end
   end
 
@@ -198,13 +192,13 @@ describe "User preferences | Security" do
     it "shows backup codes button after adding first TOTP" do
       user_preferences_security_page.visit(user).visit_second_factor(user, password)
 
-      expect(browser_content).to PlaywrightMatchers.contain_text(
+      expect(browser_content).to contain_text(
         browser_text_pattern(I18n.t("js.user.second_factor_backup.enable_prerequisites")),
         useInnerText: true,
       )
-      expect(
-        browser_root.locator(".new-second-factor-backup").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".new-second-factor-backup").filter(visible: true)).to have_count(
+        0,
+      )
 
       browser_root.locator(".totp .new-totp").filter(visible: true).click
       browser_root.locator(".show-second-factor-key").filter(visible: true).click
@@ -223,8 +217,8 @@ describe "User preferences | Security" do
 
       expect(
         browser_root.locator(".new-second-factor-backup").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
-      expect(browser_content).not_to PlaywrightMatchers.contain_text(
+      ).not_to have_count(0)
+      expect(browser_content).not_to contain_text(
         browser_text_pattern(I18n.t("js.user.second_factor_backup.enable_prerequisites")),
         useInnerText: true,
       )
@@ -246,12 +240,8 @@ describe "User preferences | Security" do
           .goto("/u/#{staged_user.username}/preferences/security")
           .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(
-          browser_root.locator("#change-password-button").filter(visible: true),
-        ).to PlaywrightMatchers.be_disabled
-        expect(
-          browser_root.locator(".instructions").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(browser_root.locator("#change-password-button").filter(visible: true)).to be_disabled
+        expect(browser_root.locator(".instructions").filter(visible: true)).to contain_text(
           [browser_text_pattern(I18n.t("js.user.change_password.staged_user"))],
           useInnerText: true,
         )
@@ -264,10 +254,8 @@ describe "User preferences | Security" do
 
         expect(
           browser_root.locator("#change-password-button").filter(visible: true),
-        ).not_to PlaywrightMatchers.be_disabled
-        expect(
-          browser_root.locator(".instructions").filter(visible: true),
-        ).not_to PlaywrightMatchers.contain_text(
+        ).not_to be_disabled
+        expect(browser_root.locator(".instructions").filter(visible: true)).not_to contain_text(
           [browser_text_pattern(I18n.t("js.user.change_password.staged_user"))],
           useInnerText: true,
         )

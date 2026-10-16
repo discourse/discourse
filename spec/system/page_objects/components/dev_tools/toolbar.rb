@@ -43,13 +43,13 @@ module PageObjects
         end
 
         def has_upcoming_changes_menu?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".upcoming-changes-debug-menu").filter(visible: true),
           )
         end
 
         def has_no_upcoming_changes_menu?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".upcoming-changes-debug-menu").filter(visible: true),
           )
         end
@@ -76,7 +76,7 @@ module PageObjects
         end
 
         def close_blocks_menu
-          if PlaywrightMatchers.have_count(0).does_not_match?(
+          if have_count(0).does_not_match?(
                browser_root.locator(".block-debug-menu").filter(visible: true),
              )
             browser_root.locator(".dev-tools-toolbar .toggle-blocks").filter(visible: true).click
@@ -118,15 +118,13 @@ module PageObjects
         end
 
         def has_toolbar?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".dev-tools-toolbar").filter(visible: true),
           )
         end
 
         def has_no_toolbar?
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".dev-tools-toolbar").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".dev-tools-toolbar").filter(visible: true))
         end
       end
     end

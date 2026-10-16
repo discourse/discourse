@@ -15,7 +15,7 @@ module PageObjects
           browser_root.locator(".category-selector .select-kit-header-wrapper").filter(
             visible: true,
           )
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(categories.map(&:name).join(", ")),
           useInnerText: true,
         ).matches?(category_selector_header)
@@ -24,7 +24,7 @@ module PageObjects
       def has_navigation_menu_tags_preference?(*tags)
         tag_selector_header =
           browser_root.locator(".tag-chooser .select-kit-header-wrapper").filter(visible: true)
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(tags.map(&:name).join(", ")),
           useInnerText: true,
         ).matches?(tag_selector_header)

@@ -19,7 +19,7 @@ describe "Admin Customize Themes default grid" do
     install_modal = config_area.click_install_more_themes
 
     expect(install_modal).to be_open
-    expect(install_modal.popular_options.first).to PlaywrightMatchers.contain_text(
+    expect(install_modal.popular_options.first).to contain_text(
       browser_text_pattern("Graceful"),
       useInnerText: true,
     )

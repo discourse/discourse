@@ -16,7 +16,7 @@ module PageObjects
       end
 
       def has_valid_username?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator(".username-input")
             .filter(visible: true)
@@ -26,7 +26,7 @@ module PageObjects
       end
 
       def has_valid_password?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator(".password-input")
             .filter(visible: true)
@@ -45,13 +45,11 @@ module PageObjects
       end
 
       def has_successful_message?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".invite-success").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".invite-success").filter(visible: true))
       end
 
       def has_email_code_request?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".code-login-form__email-step .code-login-form__continue").filter(
             visible: true,
           ),
@@ -59,7 +57,7 @@ module PageObjects
       end
 
       def has_no_password_field?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
             .and(
@@ -72,19 +70,19 @@ module PageObjects
       end
 
       def has_introduction?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".login-welcome-header").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".invited-by").filter(visible: true),
           ) &&
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".email-message").filter(visible: true),
           )
       end
 
       def has_no_introduction?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".login-welcome-header, .invited-by, .email-message").filter(
             visible: true,
           ),
@@ -92,10 +90,10 @@ module PageObjects
       end
 
       def has_progress_steps?(completed:)
-        PlaywrightMatchers.have_count(3).matches?(
+        have_count(3).matches?(
           browser_root.locator(".signup-progress-bar__segment").filter(visible: true),
         ) &&
-          PlaywrightMatchers.have_count(completed).matches?(
+          have_count(completed).matches?(
             browser_root.locator(".signup-progress-bar__segment.--completed").filter(visible: true),
           )
       end
@@ -108,7 +106,7 @@ module PageObjects
       end
 
       def has_email_code_entry?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".code-login-form__code-step .d-otp-input").filter(visible: true),
         )
       end
@@ -118,7 +116,7 @@ module PageObjects
       end
 
       def has_account_ready_step?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".code-login-form__signup-details-step").filter(visible: true),
         )
       end

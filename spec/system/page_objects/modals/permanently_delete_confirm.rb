@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def has_confirm_button_disabled?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#{footer_selector} .btn-danger[disabled]").filter(visible: true),
         )
       end

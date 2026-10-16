@@ -25,7 +25,7 @@ describe "Discovery list" do
       browser_root.locator("th[data-sort-order='activity'][aria-sort=ascending]").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(nth_topic_id(10)).to eq(newest_topic_id)
 
     browser_root.locator("th[data-sort-order='activity']").filter(visible: true).click
@@ -33,7 +33,7 @@ describe "Discovery list" do
       browser_root.locator("th[data-sort-order='activity'][aria-sort=descending]").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(nth_topic_id(1)).to eq(newest_topic_id)
   end
 
@@ -47,7 +47,7 @@ describe "Discovery list" do
       browser_root.locator("th[data-sort-order='posts'][aria-sort=descending]").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(nth_topic_id(1)).to eq(reply.topic_id.to_s)
 
     browser_root.locator("th[data-sort-order='posts']").filter(visible: true).click
@@ -55,7 +55,7 @@ describe "Discovery list" do
       browser_root.locator("th[data-sort-order='posts'][aria-sort=ascending]").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     expect(nth_topic_id(10)).to eq(reply.topic_id.to_s)
   end
 
@@ -73,7 +73,7 @@ describe "Discovery list" do
       browser_root.locator("button.bulk-select").filter(visible: true).click
       expect(
         browser_root.locator(".topic-list-body .bulk-select").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       browser_root.locator("#navigation-bar .latest > a").filter(visible: true).click
 
@@ -81,10 +81,8 @@ describe "Discovery list" do
       # this action is not available for this user in /latest
       expect(
         browser_root.locator(".topic-list-body .bulk-select").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
-      expect(
-        browser_root.locator("button.bulk-select").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      ).to have_count(0)
+      expect(browser_root.locator("button.bulk-select").filter(visible: true)).to have_count(0)
     end
   end
 
@@ -97,6 +95,6 @@ describe "Discovery list" do
     expect(discovery.topic_list).to have_topics(count: 1)
     discovery.category_drop.select_row_by_value(category.id)
     expect(discovery.topic_list).to have_topics(count: 10)
-    expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category.slug}/#{category.id}")
+    expect(browser_page).to have_url("/c/#{category.slug}/#{category.id}")
   end
 end

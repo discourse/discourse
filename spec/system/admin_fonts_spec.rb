@@ -36,14 +36,14 @@ describe "Admin Fonts Page" do
     it "allows an admin to change default text size and does not update existing users preferences" do
       Jobs.run_immediately!
       fonts_page.visit
-      expect(
-        browser_root.locator("html.text-size-normal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("html.text-size-normal").filter(visible: true)).not_to have_count(
+        0,
+      )
       fonts_page.form.select_default_text_size("larger")
 
       fonts_page.form.submit
       expect(modal).to be_open
-      expect(modal.header).to PlaywrightMatchers.contain_text(
+      expect(modal.header).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.config.fonts.backfill_modal.title")),
         useInnerText: true,
       )
@@ -56,22 +56,22 @@ describe "Admin Fonts Page" do
       )
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator("html.text-size-normal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("html.text-size-normal").filter(visible: true)).not_to have_count(
+        0,
+      )
     end
 
     it "allows an admin to change default text size and updates existing users preferences" do
       Jobs.run_immediately!
       fonts_page.visit
-      expect(
-        browser_root.locator("html.text-size-normal").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("html.text-size-normal").filter(visible: true)).not_to have_count(
+        0,
+      )
       fonts_page.form.select_default_text_size("larger")
 
       fonts_page.form.submit
       expect(modal).to be_open
-      expect(modal.header).to PlaywrightMatchers.contain_text(
+      expect(modal.header).to contain_text(
         browser_text_pattern(I18n.t("admin_js.admin.config.fonts.backfill_modal.title")),
         useInnerText: true,
       )
@@ -80,9 +80,9 @@ describe "Admin Fonts Page" do
       expect(fonts_page.form).to have_saved_successfully
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-      expect(
-        browser_root.locator("html.text-size-larger").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator("html.text-size-larger").filter(visible: true)).not_to have_count(
+        0,
+      )
     end
   end
 end

@@ -15,10 +15,8 @@ describe "Impersonation" do
 
     browser_root.locator(".btn-impersonate").filter(visible: true).click
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
-    expect(
-      browser_root.locator(".impersonation-notice").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_page).to have_url("/")
+    expect(browser_root.locator(".impersonation-notice").filter(visible: true)).to contain_text(
       [browser_text_pattern(I18n.t("js.impersonation.notice", username: user.username))],
       useInnerText: true,
     )
@@ -27,10 +25,8 @@ describe "Impersonation" do
 
     browser_root.locator(".impersonation-notice .btn-danger").filter(visible: true).click
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
-    expect(
-      browser_root.locator(".impersonation-notice").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_page).to have_url("/")
+    expect(browser_root.locator(".impersonation-notice").filter(visible: true)).to have_count(0)
   end
 
   it "shows a helpful error when the user is not found" do

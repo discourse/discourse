@@ -19,7 +19,7 @@ describe "User preferences | Profile" do
       user_preferences_profile_page.fill_bio(with: "I am a human.")
       user_preferences_profile_page.save
 
-      expect(user_preferences_profile_page.cooked_bio).to PlaywrightMatchers.contain_text(
+      expect(user_preferences_profile_page.cooked_bio).to contain_text(
         browser_text_pattern("I am a human."),
         useInnerText: true,
       )
@@ -61,11 +61,9 @@ describe "User preferences | Profile" do
     it "server-side redirects to the profile page to fill up required fields" do
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to have_url("/u/#{user.username}/preferences/profile")
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
         useInnerText: true,
       )
@@ -74,15 +72,13 @@ describe "User preferences | Profile" do
     it "client-side redirects to the profile page to fill up required fields" do
       browser_page.goto("/faq").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/guidelines")
+      expect(browser_page).to have_url("/guidelines")
 
       click_logo
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to have_url("/u/#{user.username}/preferences/profile")
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
         useInnerText: true,
       )
@@ -93,7 +89,7 @@ describe "User preferences | Profile" do
 
       click_logo
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to have_url("/u/#{user.username}/preferences/profile")
     end
 
     it "allows user to fill up required fields" do
@@ -106,13 +102,11 @@ describe "User preferences | Profile" do
       browser_root.locator(".user-field-updated-terms input").filter(visible: true).check
       browser_root.locator(".save-button .btn-primary").filter(visible: true).click
 
-      expect(
-        browser_root.locator(".pref-bio").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".pref-bio").filter(visible: true)).not_to have_count(0)
 
       browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
     end
 
     it "does not allow submitting blank values for required fields" do
@@ -126,9 +120,7 @@ describe "User preferences | Profile" do
 
       dialog.click_yes
 
-      expect(
-        browser_root.locator(".alert-error").filter(visible: true),
-      ).to PlaywrightMatchers.contain_text(
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
         [browser_text_pattern(I18n.t("js.user.preferences.profile.enforced_required_fields"))],
         useInnerText: true,
       )
@@ -137,11 +129,11 @@ describe "User preferences | Profile" do
     it "allows enabling safe-mode" do
       browser_page.goto("/safe-mode").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/safe-mode")
+      expect(browser_page).to have_url("/safe-mode")
 
       browser_root.locator("#btn-enter-safe-mode").filter(visible: true).click
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to have_url("/u/#{user.username}/preferences/profile")
     end
 
     it "redirects back to the original destination after filling required fields" do
@@ -150,7 +142,7 @@ describe "User preferences | Profile" do
         .goto("/new-topic?category_id=#{category.id}")
         .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/#{user.username}/preferences/profile")
+      expect(browser_page).to have_url("/u/#{user.username}/preferences/profile")
 
       browser_root
         .locator(".user-field-favourite-pokemon input")
@@ -159,7 +151,7 @@ describe "User preferences | Profile" do
       browser_root.locator(".user-field-updated-terms input").filter(visible: true).check
       browser_root.locator(".save-button .btn-primary").filter(visible: true).click
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to have_url("/new-topic?category_id=#{category.id}")
     end
   end
 end

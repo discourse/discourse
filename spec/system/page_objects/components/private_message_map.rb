@@ -6,7 +6,7 @@ module PageObjects
       PRIVATE_MESSAGE_MAP_KLASS = ".topic-map__private-message-map"
 
       def is_visible?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(PRIVATE_MESSAGE_MAP_KLASS).filter(visible: true),
         )
       end
@@ -38,7 +38,7 @@ module PageObjects
       end
 
       def has_add_participants_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           controls
             .get_by_role("button")
             .and(controls.locator(".#{"add-participant-btn".to_s.split.join(".")}"))
@@ -47,7 +47,7 @@ module PageObjects
       end
 
       def has_no_add_participants_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           controls
             .tap do |parent|
               parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -81,7 +81,7 @@ module PageObjects
       end
 
       def has_participant_details_for?(user)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root
             .locator("#{PRIVATE_MESSAGE_MAP_KLASS} .participants")
             .filter(visible: true)
@@ -103,7 +103,7 @@ module PageObjects
       end
 
       def has_no_participant_details_for?(user)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root
             .locator("#{PRIVATE_MESSAGE_MAP_KLASS} .participants")
             .filter(visible: true)

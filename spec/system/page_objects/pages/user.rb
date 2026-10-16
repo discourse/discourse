@@ -23,29 +23,29 @@ module PageObjects
       end
 
       def has_warning_messages_path?(user)
-        PlaywrightMatchers.have_url("/u/#{user.username}/messages/warnings").matches?(browser_page)
+        have_url("/u/#{user.username}/messages/warnings").matches?(browser_page)
       end
 
       def has_primary_navigation_item?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(primary_navigation_selector(name)).filter(visible: true),
         )
       end
 
       def has_no_primary_navigation_item?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(primary_navigation_selector(name)).filter(visible: true),
         )
       end
 
       def has_secondary_navigation_item?(name)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(secondary_navigation_selector(name)).filter(visible: true),
         )
       end
 
       def has_no_secondary_navigation_item?(name)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(secondary_navigation_selector(name)).filter(visible: true),
         )
       end
@@ -71,10 +71,9 @@ module PageObjects
       end
 
       def has_staff_counter_flags?(count:)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(count.to_s)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".staff-counters .flags").filter(visible: true))
+        contain_text([browser_text_pattern(count.to_s)], useInnerText: true).matches?(
+          browser_root.locator(".staff-counters .flags").filter(visible: true),
+        )
       end
 
       def click_staff_info_flags_given_link
@@ -83,10 +82,9 @@ module PageObjects
       end
 
       def has_staff_counter_flags_given?(count:)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(count.to_s)],
-          useInnerText: true,
-        ).matches?(browser_root.locator(".staff-counters .helpful-flags").filter(visible: true))
+        contain_text([browser_text_pattern(count.to_s)], useInnerText: true).matches?(
+          browser_root.locator(".staff-counters .helpful-flags").filter(visible: true),
+        )
       end
 
       def expand_info_panel

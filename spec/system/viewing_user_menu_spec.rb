@@ -60,8 +60,8 @@ RSpec.describe "Viewing User Menu" do
         .filter(visible: true)
         .click
 
-      expect(browser_page).to PlaywrightMatchers.have_url(%r{/t/})
-      expect(page_errors).to be_empty
+      expect(browser_page).to have_url(%r{/t/})
+      expect(page_errors).to RSpecPredicates.be_empty
     end
   end
 

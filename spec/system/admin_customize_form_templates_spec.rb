@@ -50,9 +50,7 @@ describe "Admin Customize Form Templates" do
         form_template_page.visit
         form_template_page.click_view_form_template
         form_template_page.locator(".d-modal__footer .btn-primary").filter(visible: true).click
-        expect(browser_page).to PlaywrightMatchers.have_url(
-          "/admin/customize/form-templates/#{form_template.id}",
-        )
+        expect(browser_page).to have_url("/admin/customize/form-templates/#{form_template.id}")
       end
 
       it "deletes the form template from the delete button" do

@@ -15,13 +15,13 @@ module PageObjects
         end
 
         def has_bulk_select_checkbox?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             element.locator(".directory-table__cell-bulk-select").filter(visible: true),
           )
         end
 
         def has_no_bulk_select_checkbox?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             element
               .tap do |parent|
                 parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
@@ -88,7 +88,7 @@ module PageObjects
 
       def has_users?(user_ids)
         user_ids.all? do |id|
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".directory-table__row[data-user-id=\"#{id}\"]").filter(
               visible: true,
             ),
@@ -98,7 +98,7 @@ module PageObjects
 
       def has_no_users?(user_ids)
         user_ids.all? do |id|
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".directory-table__row[data-user-id=\"#{id}\"]").filter(
               visible: true,
             ),
@@ -113,13 +113,13 @@ module PageObjects
       end
 
       def has_bulk_actions_dropdown?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".bulk-select-admin-users-dropdown-trigger").filter(visible: true),
         )
       end
 
       def has_no_bulk_actions_dropdown?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".bulk-select-admin-users-dropdown-trigger").filter(visible: true),
         )
       end
@@ -136,20 +136,20 @@ module PageObjects
       end
 
       def has_none_users?
-        PlaywrightMatchers.contain_text(
+        contain_text(
           browser_text_pattern(I18n.t("js.search.no_results")),
           useInnerText: true,
         ).matches?(browser_content)
       end
 
       def has_no_emails?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".directory-table__column-header--email").filter(visible: true),
         )
       end
 
       def has_emails?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".directory-table__column-header--email").filter(visible: true),
         )
       end

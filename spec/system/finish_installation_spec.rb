@@ -56,7 +56,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(browser_page).to PlaywrightMatchers.have_url("/wizard")
+          expect(browser_page).to have_url("/wizard")
 
           user1 = User.find_by_email("dev1@example.com")
           user2 = User.find_by_email("dev2@example.com")
@@ -91,7 +91,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(browser_page).to PlaywrightMatchers.have_url("/wizard")
+          expect(browser_page).to have_url("/wizard")
         ensure
           reset_omniauth_config(:discourse_id)
         end
@@ -121,7 +121,7 @@ RSpec.describe "Finish Installation" do
               .goto("/discuss/finish-installation")
               .tap { SystemBrowserBootstrap.wait_for(browser_page) }
             finish_installation_page.click_login_with_discourse_id
-            expect(browser_page).to PlaywrightMatchers.have_url("/discuss/wizard")
+            expect(browser_page).to have_url("/discuss/wizard")
           ensure
             reset_omniauth_config(:discourse_id)
           end
@@ -279,7 +279,7 @@ RSpec.describe "Finish Installation" do
         browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         activate_account_page.click_activate_account
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/wizard")
+        expect(browser_page).to have_url("/wizard")
       end
     end
   end

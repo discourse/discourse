@@ -27,7 +27,7 @@ shared_examples "signup scenarios" do
       screenshot_marker(label: "signup")
 
       signup_page.click_create_account
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+      expect(browser_page).to have_url("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to contain_exactly(invite.email)
@@ -40,10 +40,10 @@ shared_examples "signup scenarios" do
       activate_account.click_activate_account
       activate_account.click_continue
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
 
       browser_page
         .goto("/u/john/preferences/security")
@@ -53,7 +53,7 @@ shared_examples "signup scenarios" do
 
       expect(
         browser_root.locator(".user-preferences.second-factor").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
 
     it "redirects to the topic the user was invited to after activating account" do
@@ -77,7 +77,7 @@ shared_examples "signup scenarios" do
 
       activate_account.click_activate_account
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/t/#{topic.slug}/#{topic.id}")
+      expect(browser_page).to have_url("/t/#{topic.slug}/#{topic.id}")
     end
 
     it "redirects to a new-topic after signin and keeps the query" do
@@ -97,7 +97,7 @@ shared_examples "signup scenarios" do
 
       signup_page.click_create_account
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+      expect(browser_page).to have_url("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
@@ -106,7 +106,7 @@ shared_examples "signup scenarios" do
 
       activate_account.click_activate_account
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/c/#{category.id}")
+      expect(browser_page).to have_url("/c/#{category.id}")
       expect(composer).to be_opened
     end
 
@@ -133,7 +133,7 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
       end
 
       it "cannot signup with invalid code" do
@@ -147,9 +147,7 @@ shared_examples "signup scenarios" do
 
         signup_page.click_create_account
         expect(signup_page).to have_displayed_content(I18n.t("login.wrong_invite_code"))
-        expect(
-          signup_page.locator(".account-created").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
+        expect(signup_page.locator(".account-created").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -173,7 +171,7 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
       end
 
       it "cannot signup without filling the custom field" do
@@ -189,12 +187,8 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_displayed_content(
           I18n.t("js.user_fields.required", name: "Occupation"),
         )
-        expect(
-          signup_page.locator(".account-created").filter(visible: true),
-        ).to PlaywrightMatchers.have_count(0)
-        expect(
-          signup_page.locator(".tip.bad").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text(
+        expect(signup_page.locator(".account-created").filter(visible: true)).to have_count(0)
+        expect(signup_page.locator(".tip.bad").filter(visible: true)).to contain_text(
           [browser_text_pattern("Please enter a value for \"Occupation\"")],
           useInnerText: true,
         )
@@ -217,7 +211,7 @@ shared_examples "signup scenarios" do
         signup_page.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
-        expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
 
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         login_page.open
@@ -232,10 +226,10 @@ shared_examples "signup scenarios" do
 
         login_page.click_login
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/")
+        expect(browser_page).to have_url("/")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
 
       it "can login directly when using an auto approved email" do
@@ -249,17 +243,17 @@ shared_examples "signup scenarios" do
 
         signup_page.click_create_account
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
 
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user:).token)
         browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         login_page.open.fill_username("john").fill_password("supersecurepassword").click_login
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/")
+        expect(browser_page).to have_url("/")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
 
@@ -275,7 +269,7 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(browser_page).to PlaywrightMatchers.have_url("/discuss/u/account-created")
+        expect(browser_page).to have_url("/discuss/u/account-created")
 
         mail = ActionMailer::Base.deliveries.first
         expect(mail.to).to contain_exactly(invite.email)
@@ -286,10 +280,10 @@ shared_examples "signup scenarios" do
         activate_account.click_activate_account
         activate_account.click_continue
 
-        expect(browser_page).to PlaywrightMatchers.have_url("/discuss/")
+        expect(browser_page).to have_url("/discuss/")
         expect(
           browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(0)
+        ).not_to have_count(0)
       end
     end
   end
@@ -318,14 +312,10 @@ shared_examples "signup scenarios" do
     it "cannot open the signup page" do
       signup_page.open
       expect(signup_page).to be_closed
-      expect(
-        browser_root.locator(".sign-up-button").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(browser_root.locator(".sign-up-button").filter(visible: true)).to have_count(0)
 
       login_page.open_from_header
-      expect(
-        login_page.locator("#new-account-link").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(login_page.locator("#new-account-link").filter(visible: true)).to have_count(0)
     end
 
     it "can signup with invite link" do
@@ -345,20 +335,20 @@ shared_examples "signup scenarios" do
           .filter(visible: true)
           .locator("#username-validation.good")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       expect(
         browser_root
           .locator(".create-account__password-tip-validation")
           .filter(visible: true)
           .locator("#password-validation.good")
           .filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
       browser_root.locator(".invitation-cta__accept").filter(visible: true).click
 
-      expect(browser_page).to PlaywrightMatchers.have_url("/")
+      expect(browser_page).to have_url("/")
       expect(
         browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
-      ).not_to PlaywrightMatchers.have_count(0)
+      ).not_to have_count(0)
     end
   end
 
@@ -375,20 +365,16 @@ shared_examples "signup scenarios" do
       browser_root.locator(".invited-by .user-info[data-username='#{inviter.username}']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
-    expect(
-      browser_root.locator(".user-field-test").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
+    expect(browser_root.locator(".user-field-test").filter(visible: true)).to have_count(0)
     browser_root.locator(".invitation-cta__sign-in").filter(visible: true).click
-    expect(
-      browser_root.locator("#login-form").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#login-form").filter(visible: true)).not_to have_count(0)
     browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(
       browser_root.locator(".invited-by .user-info[data-username='#{inviter.username}']").filter(
         visible: true,
       ),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
   end
 
   describe "full name field" do
@@ -463,9 +449,7 @@ shared_examples "signup scenarios" do
 
       signup_page.open
 
-      expect(
-        signup_page.locator(".user-field-test").filter(visible: true),
-      ).to PlaywrightMatchers.have_count(0)
+      expect(signup_page.locator(".user-field-test").filter(visible: true)).to have_count(0)
     end
   end
 end

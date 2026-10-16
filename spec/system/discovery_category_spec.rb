@@ -13,36 +13,26 @@ describe "Discovery Category Routes" do
 
   it "uses desktop_category_page style on categories and subcategories page" do
     browser_page.goto("/categories").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(".category-list").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".category-list").filter(visible: true)).not_to have_count(0)
 
     browser_page
       .goto("/c/#{category.slug}/subcategories")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(".category-list").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".category-list").filter(visible: true)).not_to have_count(0)
   end
 
   it "uses subcategory_list_style on category page" do
     browser_page.goto("/c/#{category.slug}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(".category-boxes").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".category-boxes").filter(visible: true)).not_to have_count(0)
 
     browser_page
       .goto("/c/#{category.slug}/all")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(".category-boxes").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".category-boxes").filter(visible: true)).not_to have_count(0)
 
     browser_page
       .goto("/c/#{category.slug}/none")
       .tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator(".category-boxes").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator(".category-boxes").filter(visible: true)).not_to have_count(0)
   end
 end

@@ -37,7 +37,7 @@ module PageObjects
       end
 
       def has_no_results_reset_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__no-results .d-filter-controls__reset").filter(
             visible: true,
           ),
@@ -45,7 +45,7 @@ module PageObjects
       end
 
       def has_disabled_reset_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           component.locator(".d-filter-controls__reset:disabled").filter(visible: true),
         )
       end
@@ -62,7 +62,7 @@ module PageObjects
       end
 
       def has_no_no_results_reset_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".d-filter-controls__no-results .d-filter-controls__reset").filter(
             visible: true,
           ),
@@ -70,7 +70,7 @@ module PageObjects
       end
 
       def has_no_results_message?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
         )
       end
@@ -82,7 +82,7 @@ module PageObjects
       def has_dropdown_value?(text, dropdown_id: nil)
         selector = ".d-filter-controls__dropdown"
         selector += "#{selector}--#{dropdown_id}" if dropdown_id
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           component.locator("#{selector} option:checked"),
         )
       end

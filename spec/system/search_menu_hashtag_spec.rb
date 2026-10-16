@@ -20,7 +20,7 @@ describe "Search menu hashtag autocomplete" do
 
     expect(
       browser_root.locator(".search-menu-assistant-item.tag").filter(visible: true),
-    ).not_to PlaywrightMatchers.have_count(0)
+    ).not_to have_count(0)
     browser_root.locator(".search-menu-assistant-item.tag").filter(visible: true).first.click
 
     expect(
@@ -32,6 +32,6 @@ describe "Search menu hashtag autocomplete" do
           ).or(browser_root.get_by_label("icon-search-input", exact: true)),
         )
         .filter(visible: true),
-    ).to PlaywrightMatchers.have_value("#ux #design")
+    ).to have_value("#ux #design")
   end
 end

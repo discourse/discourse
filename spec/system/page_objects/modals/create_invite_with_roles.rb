@@ -10,15 +10,11 @@ module PageObjects
       end
 
       def open?
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(MODAL_SELECTOR).filter(visible: true))
       end
 
       def closed?
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(MODAL_SELECTOR).filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(MODAL_SELECTOR).filter(visible: true))
       end
 
       def form
@@ -27,7 +23,7 @@ module PageObjects
 
       def has_role_toggle?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".d-segmented-control").filter(visible: true),
           )
         end
@@ -35,9 +31,7 @@ module PageObjects
 
       def has_no_role_toggle?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".d-segmented-control").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".d-segmented-control").filter(visible: true))
         end
       end
 
@@ -96,7 +90,7 @@ module PageObjects
 
       def has_summary?
         within_browser(modal) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".create-invite-with-roles-modal__summary").filter(visible: true),
           )
         end
@@ -104,10 +98,7 @@ module PageObjects
 
       def has_sent_to_message?(email)
         within_browser(modal) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(email)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(email)], useInnerText: true).matches?(
             browser_root.locator(".create-invite-with-roles-modal__sent-to").filter(visible: true),
           )
         end
@@ -115,10 +106,7 @@ module PageObjects
 
       def has_email_sent_confirmation?(email)
         within_browser(modal) do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(email)],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern(email)], useInnerText: true).matches?(
             browser_root.locator(".create-invite-with-roles-modal__email-sent").filter(
               visible: true,
             ),

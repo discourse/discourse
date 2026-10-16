@@ -54,31 +54,31 @@ module PageObjects
       end
 
       def has_topic_title?(text)
-        PlaywrightMatchers.contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
           browser_root.locator("h1 .fancy-title").filter(visible: true),
         )
       end
 
       def has_topic_title_editor?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#topic-title input#edit-title").filter(visible: true),
         )
       end
 
       def has_no_topic_title_editor?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#topic-title input#edit-title").filter(visible: true),
         )
       end
 
       def has_post_content?(post_number:, content:)
-        PlaywrightMatchers.contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(
           browser_root.locator(post_by_number_selector(post_number)).filter(visible: true),
         )
       end
 
       def has_deleted_post?(post)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".topic-post.deleted:has(#post_#{post.post_number})").filter(
             visible: true,
           ),
@@ -86,7 +86,7 @@ module PageObjects
       end
 
       def has_no_deleted_post?(post)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".topic-post.deleted:has(#post_#{post.post_number})").filter(
             visible: true,
           ),
@@ -94,14 +94,12 @@ module PageObjects
       end
 
       def has_post_number?(number)
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator("#post_#{number}").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator("#post_#{number}").filter(visible: true))
       end
 
       def has_replies_expanded?(post)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".embedded-posts").filter(visible: true),
           )
         end
@@ -109,9 +107,7 @@ module PageObjects
 
       def has_replies_collapsed?(post)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".embedded-posts").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".embedded-posts").filter(visible: true))
         end
       end
 
@@ -128,15 +124,13 @@ module PageObjects
 
       def has_no_post_more_actions?(post)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".show-more-actions").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".show-more-actions").filter(visible: true))
         end
       end
 
       def has_post_more_actions?(post)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".show-more-actions").filter(visible: true),
           )
         end
@@ -186,46 +180,38 @@ module PageObjects
       def has_post_action_button?(post, button)
         button_selector = selector_for_post_action_button(button)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
-            browser_root.locator(button_selector).filter(visible: true),
-          )
+          have_count(0).does_not_match?(browser_root.locator(button_selector).filter(visible: true))
         end
       end
 
       def has_no_post_action_button?(post, button)
         button_selector = selector_for_post_action_button(button)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(button_selector).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(button_selector).filter(visible: true))
         end
       end
 
       def has_who_liked_on_post?(post, count: nil)
         if count
           return(
-            PlaywrightMatchers.have_count(count).matches?(
+            have_count(count).matches?(
               browser_root.locator(".users-popup .users-popup__item").filter(visible: true),
             )
           )
         end
 
-        PlaywrightMatchers.have_count(0).does_not_match?(
-          browser_root.locator(".users-popup").filter(visible: true),
-        )
+        have_count(0).does_not_match?(browser_root.locator(".users-popup").filter(visible: true))
       end
 
       def has_no_who_liked_on_post?(post)
-        PlaywrightMatchers.have_count(0).matches?(
-          browser_root.locator(".users-popup").filter(visible: true),
-        )
+        have_count(0).matches?(browser_root.locator(".users-popup").filter(visible: true))
       end
 
       def has_who_read_on_post?(post, count: nil)
         if count
           return(
             within_post(post) do
-              PlaywrightMatchers.have_count(count).matches?(
+              have_count(count).matches?(
                 browser_root.locator(".who-read.--expanded a.trigger-user-card").filter(
                   visible: true,
                 ),
@@ -235,7 +221,7 @@ module PageObjects
         end
 
         within_post(post) do
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(".who-read.--expanded").filter(visible: true),
           )
         end
@@ -243,9 +229,7 @@ module PageObjects
 
       def has_no_who_read_on_post?(post)
         within_post(post) do
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(".who-read.--expanded").filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(".who-read.--expanded").filter(visible: true))
         end
       end
 
@@ -254,7 +238,7 @@ module PageObjects
       end
 
       def has_post_admin_menu?()
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("[data-content][data-identifier='admin-post-menu']").filter(
             visible: true,
           ),
@@ -262,7 +246,7 @@ module PageObjects
       end
 
       def has_no_post_admin_menu?()
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("[data-content][data-identifier='admin-post-menu']").filter(
             visible: true,
           ),
@@ -312,7 +296,7 @@ module PageObjects
       end
 
       def has_editing_localization_indicator?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#topic-title .editing-localization-indicator").filter(
             visible: true,
           ),
@@ -320,7 +304,7 @@ module PageObjects
       end
 
       def has_no_editing_localization_indicator?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#topic-title .editing-localization-indicator").filter(
             visible: true,
           ),
@@ -329,10 +313,7 @@ module PageObjects
 
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern("Edit bookmark")],
-            useInnerText: true,
-          ).matches?(
+          contain_text([browser_text_pattern("Edit bookmark")], useInnerText: true).matches?(
             browser_root.locator(".bookmark-menu-trigger.bookmarked").filter(visible: true),
           )
         end
@@ -340,20 +321,20 @@ module PageObjects
 
       def has_no_bookmarks?(topic)
         within_topic_footer_buttons do
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".bookmark-menu-trigger.bookmarked").filter(visible: true),
           )
         end
       end
 
       def has_topic_status_bookmark?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#topic-title .topic-status.--bookmarked").filter(visible: true),
         )
       end
 
       def has_no_topic_status_bookmark?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#topic-title .topic-status.--bookmarked").filter(visible: true),
         )
       end
@@ -368,13 +349,13 @@ module PageObjects
       end
 
       def has_floating_reply_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".embed-floating-reply-button").filter(visible: true),
         )
       end
 
       def has_no_floating_reply_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".embed-floating-reply-button").filter(visible: true),
         )
       end
@@ -384,25 +365,25 @@ module PageObjects
       end
 
       def has_floating_timeline_button?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".embed-floating-timeline-button").filter(visible: true),
         )
       end
 
       def has_no_floating_timeline_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".embed-floating-timeline-button").filter(visible: true),
         )
       end
 
       def has_docked_composer?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".embed-mode-composer .docked-composer").filter(visible: true),
         )
       end
 
       def has_no_docked_composer?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".embed-mode-composer .docked-composer").filter(visible: true),
         )
       end
@@ -413,7 +394,7 @@ module PageObjects
       end
 
       def has_expanded_composer?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#reply-control.open").filter(visible: true),
         )
       end
@@ -509,10 +490,7 @@ module PageObjects
       end
 
       def has_like_count_for?(post, count)
-        PlaywrightMatchers.contain_text(
-          [browser_text_pattern(count.to_s)],
-          useInnerText: true,
-        ).matches?(
+        contain_text([browser_text_pattern(count.to_s)], useInnerText: true).matches?(
           post_container_for(post).locator(
             ".post-action-menu__like-count, .reactions-counter",
           ).filter(visible: true),
@@ -570,13 +548,13 @@ module PageObjects
       end
 
       def has_read_post?(post)
-        PlaywrightMatchers.have_count(0, timeout: 3 * 1000).does_not_match?(
+        have_count(0, timeout: 3 * 1000).does_not_match?(
           post_by_number(post).locator(".read-state.read"),
         )
       end
 
       def has_suggested_topic?(topic)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             "#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']",
           ).filter(visible: true),
@@ -602,15 +580,13 @@ module PageObjects
       end
 
       def has_no_flag_button?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".post-action-menu__flag.create-flag").filter(visible: true),
         )
       end
 
       def open_flag_topic_modal
-        expect(
-          browser_root.locator(".flag-topic").filter(visible: true),
-        ).not_to PlaywrightMatchers.have_count(
+        expect(browser_root.locator(".flag-topic").filter(visible: true)).not_to have_count(
           0,
           timeout: (Capybara.default_max_wait_time * 3) * 1000,
         )
@@ -622,7 +598,7 @@ module PageObjects
       end
 
       def has_filtered_notice_text?(text)
-        PlaywrightMatchers.contain_text(browser_text_pattern(text), useInnerText: true).matches?(
+        contain_text(browser_text_pattern(text), useInnerText: true).matches?(
           browser_root.locator(".posts-filtered-notice").filter(visible: true),
         )
       end
@@ -638,19 +614,19 @@ module PageObjects
       end
 
       def has_topic_tag?(name)
-        PlaywrightMatchers.contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
           browser_root.locator(".title-wrapper .discourse-tag").filter(visible: true),
         )
       end
 
       def has_content_language_preferences_launcher?
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(".topic-content-language-preferences").filter(visible: true),
         )
       end
 
       def has_no_topic_admin_menu?
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator(".topic-admin-menu-trigger").filter(visible: true),
         )
       end
@@ -710,9 +686,9 @@ module PageObjects
           css_class = ".bookmark.bookmarked#{with_reminder ? ".with-reminder" : ""}"
           target = browser_root.locator(css_class).filter(visible: true)
           if bookmarked
-            PlaywrightMatchers.have_count(0).does_not_match?(target)
+            have_count(0).does_not_match?(target)
           else
-            PlaywrightMatchers.have_count(0).matches?(target)
+            have_count(0).matches?(target)
           end
         end
       end

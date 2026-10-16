@@ -45,10 +45,8 @@ RSpec.describe "Plugin homepages" do
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_page).to PlaywrightMatchers.have_url("/")
-    expect(
-      browser_root.locator("#plugin-public-homepage").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_page).to have_url("/")
+    expect(browser_root.locator("#plugin-public-homepage").filter(visible: true)).to contain_text(
       [browser_text_pattern("Public plugin homepage")],
       useInnerText: true,
     )
@@ -63,21 +61,14 @@ RSpec.describe "Plugin homepages" do
     select_homepage("private-plugin")
 
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_count(0)
-    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_css("display", "none")
-    expect(browser_root.locator("#list-area")).to PlaywrightMatchers.have_css(
-      "visibility",
-      "visible",
-    )
-    expect(
-      browser_root.locator("#plugin-private-homepage").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
+    expect(browser_root.locator("#list-area")).not_to have_count(0)
+    expect(browser_root.locator("#list-area")).not_to have_css("display", "none")
+    expect(browser_root.locator("#list-area")).to have_css("visibility", "visible")
+    expect(browser_root.locator("#plugin-private-homepage").filter(visible: true)).to have_count(0)
 
     sign_in Fabricate(:user)
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
-    expect(
-      browser_root.locator("#plugin-private-homepage").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
+    expect(browser_root.locator("#plugin-private-homepage").filter(visible: true)).to contain_text(
       [browser_text_pattern("Private plugin homepage")],
       useInnerText: true,
     )
@@ -102,24 +93,18 @@ RSpec.describe "Plugin homepages" do
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(
       browser_root.locator("#plugin-alternate-homepage").filter(visible: true),
-    ).to PlaywrightMatchers.contain_text(
-      [browser_text_pattern("Alternate plugin homepage")],
-      useInnerText: true,
-    )
+    ).to contain_text([browser_text_pattern("Alternate plugin homepage")], useInnerText: true)
 
     selected_plugin.enabled = false
     Site.clear_cache
     browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_count(0)
-    expect(browser_root.locator("#list-area")).not_to PlaywrightMatchers.have_css("display", "none")
-    expect(browser_root.locator("#list-area")).to PlaywrightMatchers.have_css(
-      "visibility",
-      "visible",
+    expect(browser_root.locator("#list-area")).not_to have_count(0)
+    expect(browser_root.locator("#list-area")).not_to have_css("display", "none")
+    expect(browser_root.locator("#list-area")).to have_css("visibility", "visible")
+    expect(browser_root.locator("#plugin-alternate-homepage").filter(visible: true)).to have_count(
+      0,
     )
-    expect(
-      browser_root.locator("#plugin-alternate-homepage").filter(visible: true),
-    ).to PlaywrightMatchers.have_count(0)
   end
 
   private

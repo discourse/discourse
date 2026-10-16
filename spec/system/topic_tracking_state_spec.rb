@@ -33,9 +33,10 @@ describe "Topic tracking state" do
       new_topic = publish_new_topic([tag])
 
       try_until_success(reason: "relies on MessageBus updates") do
-        expect(
-          browser_root.locator(".show-more").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern(/1.*new/)], useInnerText: true)
+        expect(browser_root.locator(".show-more").filter(visible: true)).to contain_text(
+          [browser_text_pattern(/1.*new/)],
+          useInnerText: true,
+        )
       end
 
       browser_root.locator(".show-more").filter(visible: true).click
@@ -63,9 +64,10 @@ describe "Topic tracking state" do
       normal_topic = publish_new_topic([])
 
       try_until_success(reason: "relies on MessageBus updates") do
-        expect(
-          browser_root.locator(".show-more").filter(visible: true),
-        ).to PlaywrightMatchers.contain_text([browser_text_pattern(/1.*new/)], useInnerText: true)
+        expect(browser_root.locator(".show-more").filter(visible: true)).to contain_text(
+          [browser_text_pattern(/1.*new/)],
+          useInnerText: true,
+        )
       end
 
       browser_root.locator(".show-more").filter(visible: true).click

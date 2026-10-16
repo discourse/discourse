@@ -4,10 +4,9 @@ module PageObjects
   module Components
     class TopicReplyChoiceDialog < PageObjects::Components::Dialog
       def has_reply_on_original_topic?(topic)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(topic.title),
-          useInnerText: true,
-        ).matches?(browser_root.locator("#{reply_on_original_selector}").filter(visible: true))
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).matches?(
+          browser_root.locator("#{reply_on_original_selector}").filter(visible: true),
+        )
       end
 
       def reply_on_original_selector
@@ -19,10 +18,9 @@ module PageObjects
       end
 
       def has_reply_here_topic?(topic)
-        PlaywrightMatchers.contain_text(
-          browser_text_pattern(topic.title),
-          useInnerText: true,
-        ).matches?(browser_root.locator("#{reply_here_selector}").filter(visible: true))
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).matches?(
+          browser_root.locator("#{reply_here_selector}").filter(visible: true),
+        )
       end
 
       def reply_here_selector

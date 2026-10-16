@@ -189,7 +189,7 @@ describe "Discourse dev tools" do
             .locator(".block-debug-ghost[data-block-name='group']")
             .filter(visible: true)
             .nth(4 - 1),
-        ).to PlaywrightMatchers.be_attached
+        ).to be_attached
 
         # The leaf block should also appear as a ghost
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:nested-ghost-leaf-block")

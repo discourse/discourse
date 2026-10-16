@@ -25,25 +25,25 @@ module PageObjects
       end
 
       def has_active_preset?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#tap_tile_#{identifier}.tap-tile.active").filter(visible: true),
         )
       end
 
       def has_preset?(identifier)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator("#tap_tile_#{identifier}").filter(visible: true),
         )
       end
 
       def has_no_preset?(identifier)
-        PlaywrightMatchers.have_count(0).matches?(
+        have_count(0).matches?(
           browser_root.locator("#tap_tile_#{identifier}").filter(visible: true),
         )
       end
 
       def editing_id?(bookmark_id)
-        PlaywrightMatchers.have_count(0).does_not_match?(
+        have_count(0).does_not_match?(
           browser_root.locator(
             ".bookmark-reminder-modal[data-bookmark-id='#{bookmark_id}']",
           ).filter(visible: true),

@@ -24,26 +24,18 @@ module PageObjects
       def present?(text: nil, visible: true, wait: Capybara.default_max_wait_time)
         target = element(visible: visible)
         if text
-          PlaywrightMatchers.contain_text(
-            [text],
-            useInnerText: true,
-            timeout: wait * 1000,
-          ).matches?(target)
+          contain_text([text], useInnerText: true, timeout: wait * 1000).matches?(target)
         else
-          PlaywrightMatchers.have_count(0, timeout: wait * 1000).does_not_match?(target)
+          have_count(0, timeout: wait * 1000).does_not_match?(target)
         end
       end
 
       def not_present?(text: nil, visible: true, wait: Capybara.default_max_wait_time)
         target = element(visible: visible)
         if text
-          PlaywrightMatchers.contain_text(
-            [text],
-            useInnerText: true,
-            timeout: wait * 1000,
-          ).does_not_match?(target)
+          contain_text([text], useInnerText: true, timeout: wait * 1000).does_not_match?(target)
         else
-          PlaywrightMatchers.have_count(0, timeout: wait * 1000).matches?(target)
+          have_count(0, timeout: wait * 1000).matches?(target)
         end
       end
     end

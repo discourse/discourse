@@ -7,13 +7,13 @@ module PageObjects
         SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
 
         def visible?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator("#d-sidebar.sidebar-container").filter(visible: true),
           )
         end
 
         def hidden?
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator("#d-sidebar.sidebar-container").filter(visible: true),
           )
         end
@@ -54,14 +54,13 @@ module PageObjects
           selector = ".#{SIDEBAR_SECTION_LINK_SELECTOR}"
           selector += "[href='#{href}']" if href.present?
 
-          PlaywrightMatchers.contain_text(
-            [browser_text_pattern(text)],
-            useInnerText: true,
-          ).matches?(community_section.locator(selector).filter(visible: true))
+          contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+            community_section.locator(selector).filter(visible: true),
+          )
         end
 
         def has_one_active_section_link?
-          PlaywrightMatchers.have_count(1).matches?(
+          have_count(1).matches?(
             browser_root.locator(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active").filter(visible: true),
           )
         end
@@ -87,19 +86,19 @@ module PageObjects
         end
 
         def has_section?(name)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(sidebar_section_selector(name)).filter(visible: true),
           )
         end
 
         def has_no_section?(name)
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(sidebar_section_selector(name)).filter(visible: true),
           )
         end
 
         def has_section_expanded?(name)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{sidebar_section_selector(name)}.sidebar-section--expanded",
             ).filter(visible: true),
@@ -107,7 +106,7 @@ module PageObjects
         end
 
         def has_section_collapsed?(name)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(
               "#{sidebar_section_selector(name)}.sidebar-section--collapsed",
             ).filter(visible: true),
@@ -119,7 +118,7 @@ module PageObjects
             .locator(".sidebar__panel-switch-button[data-key='chat']")
             .filter(visible: true)
             .click
-          PlaywrightMatchers.have_count(0).matches?(
+          have_count(0).matches?(
             browser_root.locator(".sidebar__panel-switch-button[data-key='chat']").filter(
               visible: true,
             ),
@@ -135,13 +134,13 @@ module PageObjects
 
         def has_switch_button?(key = nil)
           if key
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(
                 ".sidebar__panel-switch-button[data-key='#{key.parameterize}']",
               ).filter(visible: true),
             )
           else
-            PlaywrightMatchers.have_count(0).does_not_match?(
+            have_count(0).does_not_match?(
               browser_root.locator(".sidebar__panel-switch-button").filter(visible: true),
             )
           end
@@ -149,13 +148,13 @@ module PageObjects
 
         def has_no_switch_button?(key = nil)
           if key
-            PlaywrightMatchers.have_count(0).matches?(
+            have_count(0).matches?(
               browser_root.locator(
                 ".sidebar__panel-switch-button[data-key='#{key.parameterize}']",
               ).filter(visible: true),
             )
           else
-            PlaywrightMatchers.have_count(0).matches?(
+            have_count(0).matches?(
               browser_root.locator(".sidebar__panel-switch-button").filter(visible: true),
             )
           end
@@ -186,9 +185,7 @@ module PageObjects
                 ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]",
               )
               .filter(visible: true)
-              .tap do |elements|
-                expect(elements).to PlaywrightMatchers.have_count(tag_names.length)
-              end
+              .tap { |elements| expect(elements).to have_count(tag_names.length) }
               .all
 
           expect(tag_section_links.map { |element| element.inner_text.strip }).to eq(tag_names)
@@ -224,7 +221,7 @@ module PageObjects
         end
 
         def has_category_section_link?(category)
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root
               .get_by_role("link")
               .and(
@@ -258,13 +255,11 @@ module PageObjects
         end
 
         def has_no_add_section_button?
-          PlaywrightMatchers.have_count(0).matches?(
-            browser_root.locator(add_section_button_css).filter(visible: true),
-          )
+          have_count(0).matches?(browser_root.locator(add_section_button_css).filter(visible: true))
         end
 
         def has_add_section_button?
-          PlaywrightMatchers.have_count(0).does_not_match?(
+          have_count(0).does_not_match?(
             browser_root.locator(add_section_button_css).filter(visible: true),
           )
         end
@@ -283,7 +278,7 @@ module PageObjects
 
           expect(
             browser_root.locator(".d-modal:not(.is-animating)").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
 
           PageObjects::Modals::SidebarEditCategories.new
         end
@@ -302,10 +297,10 @@ module PageObjects
 
           expect(
             browser_root.locator(".d-modal:not(.is-animating)").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
           expect(
             browser_root.locator(".d-modal .sidebar-tags-form").filter(visible: true),
-          ).not_to PlaywrightMatchers.have_count(0)
+          ).not_to have_count(0)
 
           PageObjects::Modals::SidebarEditTags.new
         end
@@ -324,7 +319,7 @@ module PageObjects
             browser_page.then { |pw_page| pw_page.locator(section_selector).hover }
             expect(
               browser_root.locator("button.sidebar-section-header-button").filter(visible: true),
-            ).not_to PlaywrightMatchers.have_count(0)
+            ).not_to have_count(0)
             browser_root
               .locator("#{section_selector} button.sidebar-section-header-button")
               .filter(visible: true)
@@ -340,7 +335,7 @@ module PageObjects
           links = links.and(browser_root.locator("[href=#{href.to_json}]")) if href
           links = links.and(browser_root.locator("[target=#{target.to_json}]")) if target
           links = links.filter(visible: true).filter(hasText: /^\s*#{Regexp.escape(name)}\s*$/)
-          matcher = PlaywrightMatchers.have_count(count)
+          matcher = have_count(count)
           present ? matcher.matches?(links) : matcher.does_not_match?(links)
         end
 
