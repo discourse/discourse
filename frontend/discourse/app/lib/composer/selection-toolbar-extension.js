@@ -1,7 +1,7 @@
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { updatePosition } from "discourse/float-kit/lib/update-position";
 
-const IDENTIFIER = "chat-selection-toolbar";
+const IDENTIFIER = "composer-selection-toolbar";
 
 class SelectionToolbarView {
   #view;
@@ -107,13 +107,15 @@ class SelectionToolbarView {
 }
 
 /**
- * Floats formatting buttons over a text selection, for desktop pointers.
+ * A rich editor extension that floats a toolbar over a non-empty text
+ * selection, outside code and links. Not registered by default: editors opt
+ * in by passing it with their extensions.
  *
  * @param {() => import("discourse/lib/composer/toolbar").ToolbarBase | null} getToolbar
  *   returns null while the toolbar should stay hidden
  * @returns {RichEditorExtension}
  */
-export default function richEditorSelectionToolbar(getToolbar) {
+export default function selectionToolbarExtension(getToolbar) {
   return {
     plugins({ pmState: { Plugin }, getContext }) {
       let toolbarView;

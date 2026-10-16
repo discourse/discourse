@@ -10,40 +10,30 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import {
-  emojiSearch,
-  isSkinTonableEmoji,
-  normalizeEmoji,
-} from "pretty-text/emoji";
-import { replacements, translations } from "pretty-text/emoji/data";
-import { Promise } from "rsvp";
+import { normalizeEmoji } from "pretty-text/emoji";
+import { replacements } from "pretty-text/emoji/data";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import {
-  SEND_SHORTCUT_META_ENTER,
-  USER_OPTION_COMPOSITION_MODES,
-} from "discourse/lib/constants";
-import discourseDebounce from "discourse/lib/debounce";
+  emojiAutocompleteOptions,
+  mentionAutocompleteOptions,
+} from "discourse/lib/composer/autocomplete-options";
+import {
+  setCompositionMode,
+  toggledCompositionMode,
+} from "discourse/lib/composer/composition-mode";
+import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import selectionToolbarExtension from "discourse/lib/composer/selection-toolbar-extension";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import KeyValueStore from "discourse/lib/key-value-store";
-import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
-import { emojiUrlFor } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
-import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
@@ -51,7 +41,7 @@ import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { and, not, or } from "discourse/truth-helpers";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dAutocomplete, { SKIP } from "discourse/ui-kit/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -64,7 +54,6 @@ import ChatFormattingToolbar, {
 } from "discourse/plugins/chat/discourse/lib/chat-formatting-toolbar";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import RichEditorInteractor from "discourse/plugins/chat/discourse/lib/rich-editor-interactor";
-import richEditorSelectionToolbar from "discourse/plugins/chat/discourse/lib/rich-editor-selection-toolbar";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create" with {
   discourseImport: "optional",
@@ -277,9 +266,7 @@ export default class ChatComposer extends Component {
 
   @action
   async toggleEditor() {
-    const preference = this.useRichEditor
-      ? USER_OPTION_COMPOSITION_MODES.markdown
-      : USER_OPTION_COMPOSITION_MODES.rich;
+    const preference = toggledCompositionMode(this.currentUser);
 
     if (!this.useRichEditor) {
       this.composer.awaitEditor();
@@ -290,8 +277,7 @@ export default class ChatComposer extends Component {
     // same render that reads it.
     this.editor?.element.blur();
 
-    this.currentUser.set("user_option.composition_mode", preference);
-    discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
+    setCompositionMode(this.currentUser, preference);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
   }
@@ -662,7 +648,7 @@ export default class ChatComposer extends Component {
       this.richEditorExtensions = [
         ...getExtensions(),
         // the formatting bar already offers the same buttons
-        richEditorSelectionToolbar(() =>
+        selectionToolbarExtension(() =>
           this.showFormattingBar ? null : selectionToolbar
         ),
       ];
@@ -677,15 +663,10 @@ export default class ChatComposer extends Component {
       capabilities: this.capabilities,
       site: this.site,
       only,
-      getTextManipulation: () => this.editor?.textManipulation,
+      getEditor: () => this.editor,
       openLinkModal: () =>
         this.openUpsertLinkModal(null, { context: this.context }),
     });
-  }
-
-  #saveEditorPreference(preference) {
-    this.currentUser.set("user_option.composition_mode", preference);
-    return this.currentUser.save(["composition_mode"]);
   }
 
   #autofocus() {
@@ -771,184 +752,70 @@ export default class ChatComposer extends Component {
 
   #userAutocompleteOptions() {
     return {
-      component: UserAutocompleteResults,
-      key: UserAutocompleteResults.TRIGGER_KEY,
+      ...mentionAutocompleteOptions({
+        owner: getOwner(this),
+        decorateUsers: (users) => {
+          const present = this.chat.presenceChannel.users?.map(
+            (user) => user.username
+          );
+          users.forEach((user) => {
+            if (present?.includes(user.username)) {
+              user.cssClasses = "is-online";
+            }
+          });
+        },
+        onSelect: (result) => {
+          if (result.isUser) {
+            this.#addMentionedUser(cloneJSON(result));
+          }
+        },
+      }),
       width: "100%",
       fixedTextareaPosition: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (obj) => {
-        if (obj.isUser) {
-          this.#addMentionedUser(cloneJSON(obj));
-        }
-        validateSearchResult(obj);
-        return obj.username || obj.name;
-      },
-      dataSource: (term) => {
-        destroyUserStatuses();
-        return userSearch({ term, includeGroups: true }).then((result) => {
-          if (result?.users?.length > 0) {
-            const presentUserNames = this.chat.presenceChannel.users?.map(
-              (item) => item.username
-            );
-            result.users.forEach((user) => {
-              if (presentUserNames.includes(user.username)) {
-                user.cssClasses = "is-online";
-              }
-            });
-            initUserStatusHtml(getOwner(this), result.users);
-          }
-          return result;
-        });
-      },
-      onRender: (options) => {
-        renderUserStatusHtml(options);
-      },
       afterComplete: () => {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: destroyUserStatuses,
     };
   }
 
   #emojiAutocompleteOptions() {
     return {
-      component: EmojiAutocompleteResults,
-      key: EmojiAutocompleteResults.TRIGGER_KEY,
-      afterComplete: () => this.composer.focus(),
+      ...emojiAutocompleteOptions({
+        site: this.site,
+        siteSettings: this.siteSettings,
+        emojiStore: this.emojiStore,
+        context: "chat",
+        openPicker: (term) => this.#openEmojiPicker(term),
+        // quick typing shouldn't trip the autocomplete
+        minLength: 2,
+        ignoreEmoticons: true,
+      }),
       fixedTextareaPosition: true,
-      onKeyUp: (text, cp) => {
-        const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?)$/gi.exec(
-            text.substring(0, cp)
-          );
-
-        if (matches && matches[1]) {
-          return [matches[1]];
-        }
-      },
-      transformComplete: async (v) => {
-        if (v.code) {
-          return `${v.code}:`;
-        } else {
-          const emojiContext = this.editor.emojiTermContext();
-
-          const menuOptions = {
-            identifier: "emoji-picker",
-            groupIdentifier: "emoji-picker",
-            component: EmojiPickerDetached,
-            context: "chat",
-            modalForMobile: true,
-            data: {
-              didSelectEmoji: (emoji) => {
-                this.onSelectEmoji(emoji, emojiContext);
-              },
-              term: v.term,
-              context: "chat",
-            },
-          };
-
-          // Close the keyboard before showing the emoji picker
-          // it avoids a whole range of bugs on iOS
-          await waitForClosedKeyboard(this.site, this.capabilities);
-
-          const virtualElement = virtualElementFromTextRange();
-          this.menuInstance = await this.menu.show(virtualElement, menuOptions);
-          return "";
-        }
-      },
-      dataSource: (term) => {
-        return new Promise((resolve) => {
-          const full = `:${term}`;
-          term = term.toLowerCase();
-
-          // We need to avoid quick emoji autocomplete cause it can interfere with quick
-          // typing, set minimal length to 2
-          let minLength = Math.max(
-            this.siteSettings.emoji_autocomplete_min_chars,
-            2
-          );
-
-          if (term.length < minLength) {
-            return resolve(SKIP);
-          }
-
-          // bypass :-p and other common typed smileys
-          if (
-            !term.match(
-              /[^-\{\}\[\]\(\)\*_\<\>\\\/].*[^-\{\}\[\]\(\)\*_\<\>\\\/]/
-            )
-          ) {
-            return resolve(SKIP);
-          }
-
-          if (term === "") {
-            const favorites = this.emojiStore.favoritesForContext("chat");
-            if (favorites.length > 0) {
-              return resolve(favorites.slice(0, 5));
-            } else {
-              return resolve([
-                "slight_smile",
-                "smile",
-                "wink",
-                "sunny",
-                "blush",
-              ]);
-            }
-          }
-
-          // note this will only work for emojis starting with :
-          // eg: :-)
-          const emojiTranslation = this.site.custom_emoji_translation || {};
-          const allTranslations = Object.assign(
-            {},
-            translations,
-            emojiTranslation
-          );
-          if (allTranslations[full]) {
-            return resolve([allTranslations[full]]);
-          }
-
-          const emojiDenied = this.site.denied_emojis || [];
-          const match = term.match(/^:?(.*?):t([2-6])?$/);
-          if (match) {
-            const name = match[1];
-            const scale = match[2];
-
-            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
-              if (scale) {
-                return resolve([`${name}:t${scale}`]);
-              } else {
-                return resolve([2, 3, 4, 5, 6].map((x) => `${name}:t${x}`));
-              }
-            }
-          }
-
-          loadEmojiSearchAliases().then((searchAliases) => {
-            const options = emojiSearch(term, {
-              maxResults: 5,
-              diversity: this.emojiStore.diversity,
-              exclude: emojiDenied,
-              searchAliases,
-            });
-
-            resolve(options);
-          });
-        })
-          .then((list) => {
-            if (list === SKIP) {
-              return;
-            }
-            return list.map((code) => ({ code, src: emojiUrlFor(code) }));
-          })
-          .then((list) => {
-            if (list?.length) {
-              list.push({ label: i18n("composer.more_emoji"), term });
-            }
-            return list;
-          });
-      },
+      afterComplete: () => this.composer.focus(),
     };
+  }
+
+  async #openEmojiPicker(term) {
+    const emojiContext = this.editor.emojiTermContext();
+
+    // Close the keyboard before showing the emoji picker
+    // it avoids a whole range of bugs on iOS
+    await waitForClosedKeyboard(this.site, this.capabilities);
+
+    this.menuInstance = await this.menu.show(virtualElementFromTextRange(), {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      context: "chat",
+      modalForMobile: true,
+      data: {
+        didSelectEmoji: (emoji) => this.onSelectEmoji(emoji, emojiContext),
+        term,
+        context: "chat",
+      },
+    });
   }
 
   #isAutocompleteDisplayed() {

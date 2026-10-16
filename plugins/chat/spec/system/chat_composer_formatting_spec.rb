@@ -25,7 +25,7 @@ RSpec.describe "Chat composer formatting" do
       channel_page.composer.input.send_keys("ship it now")
       channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
 
-      find(".fk-d-menu[data-identifier='chat-selection-toolbar'] .bold").click
+      find(".fk-d-menu[data-identifier='composer-selection-toolbar'] .bold").click
 
       expect(channel_page.composer).to have_value("ship it **now**")
     end
@@ -37,14 +37,14 @@ RSpec.describe "Chat composer formatting" do
       channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
 
       expect(page).to have_css(".chat-composer__formatting-bar")
-      expect(page).to have_no_css(".fk-d-menu[data-identifier='chat-selection-toolbar']")
+      expect(page).to have_no_css(".fk-d-menu[data-identifier='composer-selection-toolbar']")
     end
 
     it "hides the floating toolbar without a selection" do
       chat_page.visit_channel(channel_1)
       channel_page.composer.input.send_keys("ship it now")
 
-      expect(page).to have_no_css(".fk-d-menu[data-identifier='chat-selection-toolbar']")
+      expect(page).to have_no_css(".fk-d-menu[data-identifier='composer-selection-toolbar']")
     end
   end
 

@@ -6,8 +6,10 @@ import type { CapabilitiesService } from "discourse/services/capabilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 import type {
+  ReplaceTextOptions,
   SelectedText,
   SurroundOptions,
+  TextManipulation,
   ToolbarState,
 } from "./text-manipulation.ts";
 
@@ -45,7 +47,11 @@ export interface ToolbarEvent {
   /** Toggles the editor's text direction. */
   toggleDirection(): void;
   /** Replaces matching text in the editor. */
-  replaceText(oldValue: string, newValue: string): void;
+  replaceText(
+    oldValue: string,
+    newValue: string,
+    options?: ReplaceTextOptions
+  ): void;
   /** Selects a text range. */
   selectText(from: number, length: number): void;
   /** Returns the editor's complete text value. */
@@ -137,7 +143,7 @@ export interface ToolbarButton {
   hiddenByUser?: boolean;
 }
 
-type ToolbarButtonAttrs = Omit<
+export type ToolbarButtonAttrs = Omit<
   Partial<ToolbarButton>,
   "action" | "condition" | "title"
 > & {
@@ -182,6 +188,147 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   // use the Font Awesome icon if the label matches the default
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
+
+/**
+ * Builds the event that toolbar actions receive, bound to an editor's text
+ * manipulation and the selection at the time of the call.
+ */
+export function buildToolbarEvent(
+  textManipulation: TextManipulation,
+  { trimLeading, getText }: { trimLeading?: boolean; getText: () => string }
+): ToolbarEvent {
+  const selected = textManipulation.getSelected(trimLeading, {
+    lineVal: true,
+  });
+
+  return {
+    commands: textManipulation.commands,
+    state: textManipulation.state,
+    selected,
+    selectText: (from, length) =>
+      textManipulation.selectText(from, length, { scroll: false }),
+    applySurround: (head, tail, exampleKey, opts) =>
+      textManipulation.applySurround(selected, head, tail, exampleKey, opts),
+    applyList: (head, exampleKey, opts) =>
+      textManipulation.applyList(selected, head, exampleKey, opts),
+    applyHeading: (level, exampleKey) =>
+      textManipulation.applyHeading(selected, level, exampleKey),
+    formatCode: () => textManipulation.formatCode(),
+    addText: (text) => textManipulation.addText(selected, text),
+    applyLink: (url) => textManipulation.applyLink(url),
+    getText,
+    toggleDirection: () => textManipulation.toggleDirection(),
+    replaceText: (oldVal, newVal, opts) =>
+      textManipulation.replaceText(oldVal, newVal, opts),
+  };
+}
+
+/** Turns the selection into a bulleted list, or toggles an existing one. */
+export function applyBulletList(toolbarEvent: ToolbarEvent): void {
+  if (
+    !toolbarEvent.commands?.toggleBulletList ||
+    !toolbarEvent.commands.toggleBulletList()
+  ) {
+    toolbarEvent.applyList("* ", "list_item");
+  }
+}
+
+/** Turns the selection into a numbered list, or toggles an existing one. */
+export function applyOrderedList(toolbarEvent: ToolbarEvent): void {
+  if (
+    !toolbarEvent.commands?.toggleOrderedList ||
+    !toolbarEvent.commands.toggleOrderedList()
+  ) {
+    toolbarEvent.applyList(
+      (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+      "list_item"
+    );
+  }
+}
+
+/**
+ * Formatting button definitions shared by composer toolbars, so every editor
+ * formats the same way. Each takes overrides such as the group.
+ */
+export const formattingButtons = {
+  bold: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => {
+    const label = getButtonLabel("composer.bold_label", "B");
+    return {
+      id: "bold",
+      icon: label ? null : "bold",
+      label,
+      shortcut: "B",
+      trimLeading: true,
+      perform: (e) => e.applySurround("**", "**", "bold_text"),
+      active: ({ state }) => state.inBold,
+      ...attrs,
+    };
+  },
+
+  italic: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => {
+    const label = getButtonLabel("composer.italic_label", "I");
+    return {
+      id: "italic",
+      icon: label ? null : "italic",
+      label,
+      shortcut: "I",
+      trimLeading: true,
+      perform: (e) => e.applySurround("*", "*", "italic_text"),
+      active: ({ state }) => state.inItalic,
+      ...attrs,
+    };
+  },
+
+  link: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "link",
+    icon: "link",
+    shortcut: "K",
+    trimLeading: true,
+    active: ({ state }) => state.inLink,
+    ...attrs,
+  }),
+
+  blockquote: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "blockquote",
+    icon: "quote-right",
+    shortcut: "Shift+9",
+    perform: (e) =>
+      e.applyList("> ", "blockquote_text", {
+        applyEmptyLines: true,
+        multiline: true,
+      }),
+    active: ({ state }) => state.inBlockquote,
+    ...attrs,
+  }),
+
+  code: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "code",
+    icon: "code",
+    shortcut: "E",
+    trimLeading: true,
+    perform: (e) => e.formatCode(),
+    active: ({ state }) => state.inCode || state.inCodeBlock,
+    ...attrs,
+  }),
+
+  bulletList: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "bullet-list",
+    icon: "list-ul",
+    title: "composer.ulist_title",
+    perform: applyBulletList,
+    active: ({ state }) => state.inBulletList,
+    ...attrs,
+  }),
+
+  orderedList: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "ordered-list",
+    icon: "list-ol",
+    title: "composer.olist_title",
+    perform: applyOrderedList,
+    active: ({ state }) => state.inOrderedList,
+    ...attrs,
+  }),
+};
 
 /**
  * Core buttons a user may remove from the composer toolbar, with the translation
@@ -375,31 +522,8 @@ export default class Toolbar extends ToolbarBase {
       { group: "extras", buttons: [] },
     ];
 
-    const boldLabel = getButtonLabel("composer.bold_label", "B");
-    const boldIcon = boldLabel ? null : "bold";
-    this.addButton({
-      id: "bold",
-      group: "fontStyles",
-      icon: boldIcon,
-      label: boldLabel,
-      shortcut: "B",
-      trimLeading: true,
-      perform: (e) => e.applySurround("**", "**", "bold_text"),
-      active: ({ state }) => state.inBold,
-    });
-
-    const italicLabel = getButtonLabel("composer.italic_label", "I");
-    const italicIcon = italicLabel ? null : "italic";
-    this.addButton({
-      id: "italic",
-      group: "fontStyles",
-      icon: italicIcon,
-      label: italicLabel,
-      shortcut: "I",
-      trimLeading: true,
-      perform: (e) => e.applySurround("*", "*", "italic_text"),
-      active: ({ state }) => state.inItalic,
-    });
+    this.addButton(formattingButtons.bold({ group: "fontStyles" }));
+    this.addButton(formattingButtons.italic({ group: "fontStyles" }));
 
     this.addButton({
       id: "heading",
@@ -501,40 +625,18 @@ export default class Toolbar extends ToolbarBase {
     });
 
     if (opts.showLink) {
-      this.addButton({
-        id: "link",
-        icon: "link",
-        group: "insertions",
-        shortcut: "K",
-        trimLeading: true,
-        sendAction: (event) => this.context.send("showLinkModal", event),
-        active: ({ state }) => state.inLink,
-      });
+      this.addButton(
+        formattingButtons.link({
+          group: "insertions",
+          sendAction: (event) => this.context.send("showLinkModal", event),
+        })
+      );
     }
 
-    this.addButton({
-      id: "blockquote",
-      group: "insertions",
-      icon: "quote-right",
-      shortcut: "Shift+9",
-      perform: (e) =>
-        e.applyList("> ", "blockquote_text", {
-          applyEmptyLines: true,
-          multiline: true,
-        }),
-      active: ({ state }) => state.inBlockquote,
-    });
+    this.addButton(formattingButtons.blockquote({ group: "insertions" }));
 
     if (!this.capabilities.touch) {
-      this.addButton({
-        id: "code",
-        group: "insertions",
-        shortcut: "E",
-        icon: "code",
-        trimLeading: true,
-        perform: (e) => e.formatCode(),
-        active: ({ state }) => state.inCode || state.inCodeBlock,
-      });
+      this.addButton(formattingButtons.code({ group: "insertions" }));
     }
 
     this.addButton({
@@ -580,14 +682,7 @@ export default class Toolbar extends ToolbarBase {
         shortcut: "Shift+8",
         showActiveIcon: true,
         active: ({ state }) => state?.inBulletList,
-        action: (toolbarEvent) => {
-          if (
-            !toolbarEvent.commands?.toggleBulletList ||
-            !toolbarEvent.commands.toggleBulletList()
-          ) {
-            toolbarEvent.applyList("* ", "list_item");
-          }
-        },
+        action: applyBulletList,
       },
       {
         name: "list-ordered",
@@ -596,17 +691,7 @@ export default class Toolbar extends ToolbarBase {
         shortcut: "Shift+7",
         showActiveIcon: true,
         active: ({ state }) => state?.inOrderedList,
-        action: (toolbarEvent) => {
-          if (
-            !toolbarEvent.commands?.toggleOrderedList ||
-            !toolbarEvent.commands.toggleOrderedList()
-          ) {
-            toolbarEvent.applyList(
-              (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-              "list_item"
-            );
-          }
-        },
+        action: applyOrderedList,
       },
       ...customPopupMenuOptions.filter((option) => option.menu === "list"),
     ];

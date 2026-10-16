@@ -204,40 +204,6 @@
   }
 }
 
-.fk-d-menu[data-identifier="chat-selection-toolbar"] {
-  user-select: none;
-  z-index: z("composer", "dropdown");
-
-  .fk-d-menu__inner-content {
-    display: flex;
-    gap: var(--space-1);
-    padding: var(--space-1);
-    background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
-  }
-
-  .toolbar__button {
-    background: transparent;
-    color: var(--primary-high);
-
-    .d-icon {
-      color: currentcolor;
-    }
-
-    &:hover {
-      background: var(--d-hover);
-      color: var(--primary);
-    }
-
-    &.--active {
-      background: var(--d-selected);
-      color: var(--d-selected-text-color);
-    }
-  }
-}
-
 .chat-composer-button.--active {
   color: var(--tertiary);
 
