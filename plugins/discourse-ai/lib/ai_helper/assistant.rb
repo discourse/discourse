@@ -173,8 +173,6 @@ module DiscourseAi
           # for incomplete elements (e.g. a trailing nil while an array is
           # mid-stream).
           helper_response = structured_output&.read_buffered_property(schema_key)
-          helper_response = helper_response.compact if helper_response.is_a?(Array)
-          helper_response = [] if schema_type == "array" && helper_response.nil?
         end
 
         helper_response
@@ -199,7 +197,7 @@ module DiscourseAi
 
         result[:suggestions] = (
           if result[:type] == :list
-            helper_response.flatten.map { |suggestion| sanitize_result(suggestion) }
+            list_suggestions(helper_response)
           else
             sanitized = sanitize_result(helper_response)
             result[:diff] = parse_diff(input, sanitized) if result[:type] == :diff
@@ -429,6 +427,14 @@ module DiscourseAi
 
       def sanitize_result(result)
         result.gsub(SANITIZE_REGEX, "")
+      end
+
+      # The mode's agent may not declare an array response format, and providers
+      # don't always enforce the schema, so the response may not be a list of strings.
+      def list_suggestions(response)
+        return [] if !response.is_a?(Array)
+
+        response.flatten.grep(String).map { |suggestion| sanitize_result(suggestion) }.compact_blank
       end
 
       def publish_update(channel, payload, user, client_id: nil)
