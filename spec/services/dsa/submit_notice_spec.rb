@@ -26,9 +26,11 @@ RSpec.describe Dsa::SubmitNotice do
     it { is_expected.not_to allow_value("invalid").for(:submission_id) }
     it { is_expected.not_to allow_value(false).for(:declaration) }
     it { is_expected.not_to allow_value("javascript:alert(1)").for(:content_url) }
+
     it do
       is_expected.not_to allow_value("https://user:password@example.com/post").for(:content_url)
     end
+
     it { is_expected.not_to allow_value("invalid").for(:email) }
     it { is_expected.not_to allow_value("alex@example.com\r\nBcc: victim@example.com").for(:email) }
 
