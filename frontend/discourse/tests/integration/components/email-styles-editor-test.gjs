@@ -14,19 +14,8 @@ class DialogStub extends Service {
 module("Integration | Component | EmailStylesEditor", function (hooks) {
   setupRenderingTest(hooks);
 
-  let aceSizing;
-
   hooks.beforeEach(function () {
     this.owner.register("service:dialog", DialogStub);
-
-    // ace only finishes its first render inside a sized element
-    aceSizing = document.createElement("style");
-    aceSizing.textContent = ".ace_editor { width: 300px; height: 200px; }";
-    document.head.append(aceSizing);
-  });
-
-  hooks.afterEach(function () {
-    aceSizing.remove();
   });
 
   test("resetting follows the edited field", async function (assert) {
