@@ -760,10 +760,11 @@ export default class TextareaTextManipulation implements TextManipulation {
       }
     } else {
       const numOfRemovedChars = captures[1].length;
+      const space = /^\s/.test(selected.post) ? "" : " ";
       this._insertAt(
         selected.start - numOfRemovedChars,
         selected.end,
-        `${code}: `
+        `${code}:${space}`
       );
     }
   }

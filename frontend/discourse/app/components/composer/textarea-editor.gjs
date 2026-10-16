@@ -9,6 +9,7 @@ import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-e
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 export default class TextareaEditor extends Component {
   @service currentUser;
@@ -56,7 +57,7 @@ export default class TextareaEditor extends Component {
       event.key !== "Enter" ||
       event.isComposing ||
       event.altKey ||
-      document.querySelector(".autocomplete")
+      isAutocompleteOpen()
     ) {
       return;
     }

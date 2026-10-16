@@ -28,6 +28,10 @@ import {
 } from "discourse/lib/composer/composition-mode";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import selectionToolbarExtension from "discourse/lib/composer/selection-toolbar-extension";
+import {
+  buildToolbarEvent,
+  shortcutKeymap,
+} from "discourse/lib/composer/toolbar";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import KeyValueStore from "discourse/lib/key-value-store";
@@ -38,6 +42,7 @@ import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { and, not, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -160,20 +165,14 @@ export default class ChatComposer extends Component {
   // a handler returning false consumes the key, in either editor
   get keymap() {
     const keymap = {
+      ...shortcutKeymap(this.formattingToolbar, () =>
+        buildToolbarEvent(this.editor)
+      ),
       "ctrl+m": () => {
         this.toggleEditor();
         return false;
       },
     };
-
-    for (const [combo, button] of Object.entries(
-      this.formattingToolbar.shortcuts
-    )) {
-      keymap[combo] = () => {
-        button.action();
-        return false;
-      };
-    }
 
     if (!this.capabilities.isMobileDevice) {
       keymap.esc = (event) => {
@@ -210,6 +209,7 @@ export default class ChatComposer extends Component {
 
     element.addEventListener("paste", textManipulation.paste);
     this.composer.registerEditor(textManipulation);
+    this.#refreshTextareaHeight();
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
@@ -348,7 +348,7 @@ export default class ChatComposer extends Component {
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
-    this.editor?.focus();
+    this.composer.focus();
     this.reportReplyingPresence();
 
     // Only persist once uploads settle.
@@ -654,7 +654,7 @@ export default class ChatComposer extends Component {
       modalForMobile: true,
       data: {
         didSelectEmoji: (emoji) => {
-          this.editor.selectText(start, end - start);
+          this.editor.selectText(start, end - start, { scroll: false });
           this.onSelectEmoji(emoji);
         },
         term,
@@ -664,7 +664,7 @@ export default class ChatComposer extends Component {
   }
 
   #isComposingOrCompleting(event) {
-    return event.isComposing || !!document.querySelector(".autocomplete");
+    return event.isComposing || isAutocompleteOpen();
   }
 
   #refreshTextareaHeight() {
@@ -760,6 +760,7 @@ export default class ChatComposer extends Component {
                   @focusOut={{this.onTextareaFocusOut}}
                   @id={{this.composerId}}
                   @keymap={{this.keymap}}
+                  @lineBreakOnEnter={{true}}
                   @onSetup={{this.setupEditor}}
                   @onSubmit={{this.onSend}}
                   @placeholder={{this.placeholder}}

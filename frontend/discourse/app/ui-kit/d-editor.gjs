@@ -22,7 +22,10 @@ import {
   mentionAutocompleteOptions,
 } from "discourse/lib/composer/autocomplete-options";
 import { setCompositionMode } from "discourse/lib/composer/composition-mode";
-import Toolbar, { buildToolbarEvent } from "discourse/lib/composer/toolbar";
+import Toolbar, {
+  buildToolbarEvent,
+  shortcutKeymap,
+} from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
@@ -106,32 +109,10 @@ export default class DEditor extends Component {
   }
 
   get keymap() {
-    const keymap = {};
-
-    // These are defined in lib/composer/toolbar.js via addButton.
-    // It includes shortcuts for top level toolbar buttons, as well
-    // as the toolbar popup menu option shortcuts.
-
     // TODO (martin) Might be nice to automatically add these shortcuts
     // to keyboard-shortcuts-help.gjs at some point (the modal launched with
     // ?)
-    const shortcuts = this.get("toolbar.shortcuts");
-    Object.keys(shortcuts).forEach((sc) => {
-      const button = shortcuts[sc];
-      keymap[sc] = () => {
-        const customAction = shortcuts[sc].shortcutAction;
-
-        const toolbarEvent = this.newToolbarEvent();
-        if (customAction) {
-          if (!button.condition || button.condition(toolbarEvent)) {
-            customAction(toolbarEvent);
-          }
-        } else {
-          button.action(toolbarEvent);
-        }
-        return false;
-      };
-    });
+    const keymap = shortcutKeymap(this.toolbar, () => this.newToolbarEvent());
 
     // This refers to the "special" composer toolbar popup menu which
     // is launched from the (+) button in the toolbar. This menu is customizable

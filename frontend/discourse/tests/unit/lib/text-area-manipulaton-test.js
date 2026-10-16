@@ -101,6 +101,20 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     assert.strictEqual(textarea.value, ":smile: ");
   });
 
+  test("emojiSelected - keeps a single space before following text", async function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+
+    textarea.value = "hi :gri there";
+    textarea.setSelectionRange(7, 7);
+    manipulation.emojiSelected("grinning");
+
+    assert.strictEqual(textarea.value, "hi :grinning: there");
+  });
+
   test("emojiSelected - appends emoji when no partial term is present", async function (assert) {
     const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);

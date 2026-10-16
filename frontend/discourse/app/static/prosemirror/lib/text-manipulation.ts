@@ -447,15 +447,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       index = value.length - match.index;
     }
 
-    this.view.dispatch(
-      this.view.state.tr
-        .replaceRangeWith(
-          from - index,
-          to,
-          this.schema.nodes.emoji.create({ code })
-        )
-        .insertText(" ")
+    const tr = this.view.state.tr.replaceRangeWith(
+      from - index,
+      to,
+      this.schema.nodes.emoji.create({ code })
     );
+    if (!/^\s/.test(tr.selection.$to.nodeAfter?.text ?? "")) {
+      tr.insertText(" ");
+    }
+    this.view.dispatch(tr);
 
     next(() => this.focus());
   }

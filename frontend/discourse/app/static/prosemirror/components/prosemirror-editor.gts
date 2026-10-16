@@ -52,6 +52,7 @@ import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { authorizesOneOrMoreExtensions } from "../../../lib/uploads.js";
 import { buildCommands, buildCustomState } from "../core/commands.js";
@@ -138,10 +139,15 @@ interface ProsemirrorEditorSignature {
     /** Called to submit, on Mod+Enter and, with `submitOnEnter`, on Enter. */
     onSubmit?: () => void;
     /**
-     * Whether Enter in a plain paragraph submits. Without it, Enter there adds
-     * a line break; lists, quotes and code keep their own Enter either way.
+     * Whether Enter in a plain paragraph submits. Lists, quotes and code keep
+     * their own Enter either way.
      */
     submitOnEnter?: boolean;
+    /**
+     * Whether Enter in a plain paragraph that doesn't submit adds a line break
+     * rather than a new paragraph, like a newline in the textarea editor.
+     */
+    lineBreakOnEnter?: boolean;
     /** Set to false to stop padding the document with a trailing empty paragraph. */
     trailingParagraph?: boolean;
   };
@@ -306,7 +312,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           return submit(state, dispatch);
         }
 
-        // a line break, like a newline in the textarea editor
+        if (!this.args.lineBreakOnEnter) {
+          return false;
+        }
+
         dispatch?.(
           state.tr
             .replaceSelectionWith(state.schema.nodes.hard_break.create())
@@ -431,7 +440,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         // suppress if the autocomplete is open
         return (
           AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
-          !!document.querySelector(".autocomplete")
+          isAutocompleteOpen()
         );
       },
     });

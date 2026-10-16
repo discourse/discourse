@@ -190,6 +190,39 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
 }
 
 /**
+ * Key bindings that run a toolbar's button and menu option shortcuts, for an
+ * editor component's `keymap`.
+ *
+ * @param toolbar - The toolbar whose shortcuts are bound.
+ * @param newToolbarEvent - Builds the event a shortcut acts on.
+ */
+export function shortcutKeymap(
+  toolbar: ToolbarBase,
+  newToolbarEvent: () => ToolbarEvent
+): Record<string, () => false> {
+  const keymap: Record<string, () => false> = {};
+
+  for (const [combo, button] of Object.entries(toolbar.shortcuts)) {
+    keymap[combo] = () => {
+      const event = newToolbarEvent();
+
+      if ("shortcutAction" in button && button.shortcutAction) {
+        const condition = button.condition as (event: ToolbarEvent) => boolean;
+        if (condition(event)) {
+          button.shortcutAction(event);
+        }
+      } else {
+        button.action(event);
+      }
+
+      return false;
+    };
+  }
+
+  return keymap;
+}
+
+/**
  * Builds the event that toolbar actions receive, bound to an editor's text
  * manipulation and the selection at the time of the call.
  */
