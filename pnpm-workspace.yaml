@@ -91,7 +91,6 @@ peerDependencyRules:
 overrides:
   "tmp": "^0.2.7"
   "@glint/tsserver-plugin>typescript": "^6.0.3"
-  "eslint-plugin-tsdoc>@typescript-eslint/utils": "^8.62.1"
   "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
   "broccoli-babel-transpiler@8.0.0": "^8.0.2"
 allowedDeprecatedVersions:
