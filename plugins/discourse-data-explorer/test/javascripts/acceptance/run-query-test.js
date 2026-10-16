@@ -44,7 +44,7 @@ acceptance("Run Query", function (needs) {
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
-    query2Tags = ["existing"];
+    query2Tags = ["custom", "existing"];
   });
 
   needs.hooks.afterEach(() => {
@@ -154,7 +154,7 @@ acceptance("Run Query", function (needs) {
             description: "",
             username: "system",
             group_ids: [],
-            tags: ["existing"],
+            tags: ["custom", "existing"],
             last_run_at: "2023-05-04T22:16:23.858Z",
             user_id: 1,
             is_default: false,
@@ -183,6 +183,7 @@ acceptance("Run Query", function (needs) {
           username: "system",
           group_ids: [],
           tags: ["default", "existing"],
+          automatic_tags: ["default"],
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
@@ -203,6 +204,7 @@ acceptance("Run Query", function (needs) {
           username: "system",
           group_ids: [],
           tags: query2Tags,
+          automatic_tags: ["custom"],
           last_run_at: "2023-05-04T22:16:23.858Z",
           hidden: false,
           user_id: 1,
@@ -277,6 +279,7 @@ acceptance("Run Query", function (needs) {
             param_info: [],
             group_ids: [],
             tags: query2Tags,
+            automatic_tags: ["custom"],
             hidden: false,
             user_id: 1,
           },
@@ -297,6 +300,7 @@ acceptance("Run Query", function (needs) {
             param_info: [],
             group_ids: [],
             tags: ["default", "monthly"],
+            automatic_tags: ["default"],
             hidden: false,
             user_id: -1,
             is_default: true,
@@ -501,6 +505,9 @@ acceptance("Run Query", function (needs) {
 
     const tags = selectKit(".query-edit .query-tag-chooser");
     await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag cannot be removed");
     assert.false(
       tags.displayedContent().some((row) => row.name === "default"),
       "the system-only default tag is not offered on user queries"
@@ -523,7 +530,7 @@ acceptance("Run Query", function (needs) {
 
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      ["existing", "Monthly"],
+      ["custom", "existing", "Monthly"],
       "the edited tags are saved"
     );
     assert.strictEqual(
@@ -553,7 +560,7 @@ acceptance("Run Query", function (needs) {
     );
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      [],
+      ["custom"],
       "the removed tag is absent from the request"
     );
 
@@ -563,6 +570,11 @@ acceptance("Run Query", function (needs) {
     assert
       .dom(".query-edit .query-tag-chooser .selected-choice")
       .doesNotExist("the removed tag stays absent after reloading the query");
+
+    await tags.expand();
+    assert
+      .dom(".query-edit .query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag remains");
   });
 
   test("edits additional tags on a default query", async function (assert) {
@@ -573,6 +585,10 @@ acceptance("Run Query", function (needs) {
     assert
       .dom(".query-tag-chooser .tag-choice.disabled")
       .hasText("default", "the default tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "custom"),
+      "the custom tag is not offered on default queries"
+    );
 
     await tags.deselectItemByValue("existing");
     await tags.fillInFilter("Monthly");
