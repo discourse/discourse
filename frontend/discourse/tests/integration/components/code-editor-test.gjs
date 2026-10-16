@@ -17,6 +17,7 @@ import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import I18n from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
@@ -571,13 +572,27 @@ module("Integration | Component | code-editor", function (hooks) {
     );
   });
 
-  test("resizable adds a drag handle", async function (assert) {
+  test("dragging the handle resizes the editor", async function (assert) {
     await render(
-      <template><CodeEditor @resizable={{true}} @value="" /></template>
+      <template>
+        <CodeEditor
+          style="height: 200px"
+          @resizable={{true}}
+          @value="SELECT 1"
+        />
+      </template>
     );
     await waitFor(".cm-editor");
 
-    assert.dom(".code-editor .grippie").exists();
+    const editor = find(".code-editor");
+    const initialHeight = editor.offsetHeight;
+    await dragPointer(find(".code-editor .grippie"), { from: 50, to: 170 });
+
+    assert.strictEqual(
+      editor.offsetHeight,
+      initialHeight + 120,
+      "the editor grows by the distance dragged"
+    );
   });
 
   test("omits the drag handle by default", async function (assert) {

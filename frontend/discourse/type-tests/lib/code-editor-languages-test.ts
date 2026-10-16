@@ -13,7 +13,7 @@ expectTypeOf<CodeEditorParams["cmView"]["EditorView"]>().toEqualTypeOf<
   typeof import("@codemirror/view").EditorView
 >();
 
-// Both kinds of builder produce CodeMirror extensions; a language may return
+// Both kinds of builder produce editor extensions; a language may return
 // a single one, the editor argument has to return a list it can spread.
 expectTypeOf<CodeEditorLanguageBuilder>().returns.toEqualTypeOf<Extension>();
 expectTypeOf<CodeEditorExtensionBuilder>().returns.toEqualTypeOf<

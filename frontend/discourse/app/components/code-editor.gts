@@ -12,14 +12,14 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import { i18n } from "discourse-i18n";
 
-type LineWarning = {
+export type LineWarning = {
   /** The 1-based line to mark. */
   line: number;
   /** Shown when the mark is hovered. */
   message: string;
 };
 
-interface CodeEditorSignature {
+export interface CodeEditorSignature {
   Args: {
     /** The document. */
     value?: string;
@@ -40,8 +40,9 @@ interface CodeEditorSignature {
      * Words to offer, or a source deciding what to offer at the cursor. Offered
      * beside whatever the language completes.
      *
-     * EXPERIMENTAL in its source form, which receives the underlying editor's
-     * types and may change without warning.
+     * EXPERIMENTAL except as a list of plain strings: completion objects and
+     * sources use the underlying editor's types, and may change without
+     * warning.
      */
     completions?: readonly (string | Completion)[] | CompletionSource;
     /**
@@ -132,7 +133,8 @@ type LoadedEditor = ComponentLike<{
  */
 export default class CodeEditor extends Component<CodeEditorSignature> {
   @tracked Editor: LoadedEditor | null = null;
-  @tracked editorElement: HTMLDivElement | null = null;
+
+  #editorElement: HTMLDivElement | null = null;
 
   get isLoading() {
     return !this.Editor;
@@ -155,18 +157,18 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
 
   @action
   registerElement(element: HTMLDivElement) {
-    this.editorElement = element;
+    this.#editorElement = element;
   }
 
   @action
-  measureEditor(): HTMLDivElement | null {
-    return this.editorElement;
+  measureEditor(separator: HTMLElement) {
+    return separator.parentElement;
   }
 
   @action
   handleResize(size: number) {
-    if (this.editorElement) {
-      this.editorElement.style.height = `${size}px`;
+    if (this.#editorElement) {
+      this.#editorElement.style.height = `${size}px`;
     }
   }
 
