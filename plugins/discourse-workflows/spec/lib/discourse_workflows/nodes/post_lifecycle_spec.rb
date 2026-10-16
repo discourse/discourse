@@ -36,7 +36,8 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
   end
 
   describe "#output" do
-    it "returns the post, its topic, and the acting user", :aggregate_failures do
+    it "returns the post, its topic and the acting user as both user and actor",
+       :aggregate_failures do
       output = trigger.output
 
       expect(output[:post]).to include(
@@ -54,6 +55,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
         username: topic.user.username,
       )
       expect(output[:user]).to include(id: actor.id, username: actor.username)
+      expect(output[:actor]).to include(id: actor.id, username: actor.username)
       expect(output).to match_node_output_schema(klass)
     end
 

@@ -59,6 +59,8 @@ if defined?(DiscourseWorkflows)
                       "properties" => Chat::WorkflowChannelSerializer::PROPERTIES,
                     },
                     "user" => DiscourseWorkflows::Schema.nullable_user("Message author"),
+                    "actor" =>
+                      DiscourseWorkflows::Schema.nullable_user("User who sent the message"),
                   },
                 },
               },
@@ -118,6 +120,8 @@ if defined?(DiscourseWorkflows)
           end
 
           def output
+            user = serialize_user(@user)
+
             {
               message: {
                 id: @message.id,
@@ -130,7 +134,8 @@ if defined?(DiscourseWorkflows)
                 url: @message.full_url,
               },
               channel: serialize_channel,
-              user: serialize_user(@user),
+              user:,
+              actor: user,
             }
           end
 
