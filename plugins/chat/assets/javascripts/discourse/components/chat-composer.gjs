@@ -84,10 +84,13 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
 
+  #textareaInteractor;
+
   constructor() {
     super(...arguments);
 
     if (this.useRichEditor) {
+      this.composer.awaitEditor();
       this.#loadRichEditor();
     }
   }
@@ -167,11 +170,11 @@ export default class ChatComposer extends Component {
       // Inside lists, code blocks and the like Enter keeps its structural
       // meaning (new item, new line); only a plain paragraph sends.
       Enter: () => {
-        if (skip() || !this.#inPlainParagraph()) {
+        if (this.#isAutocompleteDisplayed() || !this.#inPlainParagraph()) {
           return true;
         }
 
-        if (this.#sendsOnEnter(false)) {
+        if (!this.capabilities.isMobileDevice && this.#sendsOnEnter(false)) {
           this.onSend();
           return false;
         }
@@ -217,10 +220,16 @@ export default class ChatComposer extends Component {
 
   @action
   setupTextareaInteractor(textarea) {
-    this.composer.registerEditor(
-      new TextareaInteractor(getOwner(this), textarea)
-    );
+    this.#textareaInteractor = new TextareaInteractor(getOwner(this), textarea);
+    this.composer.registerEditor(this.#textareaInteractor);
     this.#autofocus();
+  }
+
+  @action
+  teardownTextareaInteractor() {
+    this.composer.unregisterEditor(this.#textareaInteractor);
+    this.#textareaInteractor.destroy();
+    this.#textareaInteractor = null;
   }
 
   @action
@@ -259,6 +268,7 @@ export default class ChatComposer extends Component {
       : USER_OPTION_COMPOSITION_MODES.rich;
 
     if (!this.useRichEditor) {
+      this.composer.awaitEditor();
       await this.#loadRichEditor();
     }
 
@@ -331,6 +341,7 @@ export default class ChatComposer extends Component {
 
   @action
   teardown() {
+    this.composer.stopAwaitingEditor();
     this.appEvents.off("chat:modify-selection", this, "modifySelection");
     this.appEvents.off(
       "chat:open-insert-link-modal",
@@ -628,7 +639,9 @@ export default class ChatComposer extends Component {
 
   #autofocus() {
     if (this.site.desktopView && this.args.autofocus) {
-      this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
+      next(() =>
+        this.composer.focus({ ensureAtEnd: true, refreshHeight: true })
+      );
     }
   }
 
@@ -984,6 +997,7 @@ export default class ChatComposer extends Component {
                   {{preventScrollOnFocus}}
                   {{forceScrollingElementPosition}}
                   {{didInsert this.setupTextareaInteractor}}
+                  {{willDestroy this.teardownTextareaInteractor}}
                   {{on "input" this.onInput}}
                   {{on "keydown" this.onKeyDown}}
                   {{on "focusin" this.onTextareaFocusIn}}

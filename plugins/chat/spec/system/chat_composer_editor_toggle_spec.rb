@@ -81,6 +81,24 @@ RSpec.describe "Chat composer editor toggle" do
     expect(page).to have_css(".chat-message-text ul li", count: 2)
   end
 
+  it "inserts keys typed before focusing the composer as plain text" do
+    chat_page.visit_channel(channel_1)
+    find("body").send_keys(:escape)
+    find("body").send_keys("-")
+    find("body").send_keys("#")
+
+    expect(channel_page.composer).to have_value("\\-#")
+  end
+
+  it "sends on Enter while text is selected" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("selected text")
+    channel_page.composer.input.send_keys(%i[shift left], %i[shift left])
+    channel_page.composer.enter_shortcut
+
+    expect(channel_page.messages).to have_message(text: "selected text")
+  end
+
   it "sends rich text as markdown" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.fill_in(with: "**bold** text")

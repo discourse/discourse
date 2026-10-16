@@ -97,7 +97,11 @@ class CodeBlockWithLangSelectorNodeView {
     if (hljs) {
       this.appendSelect();
     } else {
-      hljsLoading?.then(() => this.appendSelect());
+      // a failed load is reported by the highlight plugin
+      hljsLoading?.then(
+        () => this.appendSelect(),
+        () => {}
+      );
     }
   }
 
@@ -333,7 +337,12 @@ const extension = {
         },
       }),
     async ({ getContext }) => {
-      hljsLoading ??= ensureHighlightJs(getContext().session.highlightJsPath);
+      hljsLoading ??= ensureHighlightJs(
+        getContext().session.highlightJsPath
+      ).catch((e) => {
+        hljsLoading = null;
+        throw e;
+      });
 
       return highlightPlugin(
         (hljs = await hljsLoading),

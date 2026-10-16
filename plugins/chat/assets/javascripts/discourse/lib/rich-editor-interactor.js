@@ -39,26 +39,29 @@ export default class RichEditorInteractor {
     });
   }
 
-  // Synchronous on purpose: keys typed before the editor had focus arrive
-  // one per call, and a deferred focus lets a later-mounting composer win.
   @bind
   focus(opts = { ensureAtEnd: false, addText: null }) {
     if (this.capabilities.isIpadOS || this.site.mobileView) {
       return;
     }
 
+    // Keys typed before the editor had focus arrive one per call, so they are
+    // inserted right away to keep their order, and as plain text: parsed as
+    // markdown, a lone `-` or `#` would become a list or heading.
     if (opts.addText) {
-      this.textManipulation.addText(
-        this.textManipulation.getSelected(),
-        opts.addText
-      );
+      const { view } = this.textManipulation;
+      view.dispatch(view.state.tr.insertText(opts.addText));
     }
 
-    if (opts.ensureAtEnd) {
-      this.textManipulation.putCursorAtEnd();
-    }
+    // Focusing fires the composer's focus handlers, which must not run inside
+    // the render that mounted the editor.
+    next(() => {
+      if (opts.ensureAtEnd) {
+        this.textManipulation.putCursorAtEnd();
+      }
 
-    this.textManipulation.focus();
+      this.textManipulation.focus();
+    });
   }
 
   @bind

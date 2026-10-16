@@ -29,12 +29,16 @@ const extension: RichEditorExtension = {
         return false;
       }
 
-      const initialDepth = findInlineContainerDepth(selection.$from);
-      if (!dispatch) {
-        return selection.empty ? initialDepth !== null : true;
-      }
-      if (selection.empty && initialDepth === null) {
+      // when neither end touches an inline container, Enter is left to the
+      // host keymap and the base splitBlock, which deletes a selection first
+      if (
+        findInlineContainerDepth(selection.$from) === null &&
+        findInlineContainerDepth(selection.$to) === null
+      ) {
         return false;
+      }
+      if (!dispatch) {
+        return true;
       }
 
       const tr = state.tr;

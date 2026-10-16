@@ -82,6 +82,8 @@
       width: 100%;
       height: auto;
       max-height: 25dvh;
+
+      @include chat-scrollbar;
     }
   }
 
@@ -122,8 +124,10 @@
       white-space: nowrap;
     }
 
+    // the container scrolls; overflow here would scroll on the 1px that
+    // inline code padding pokes out of the line
     &.ProseMirror {
-      overflow-y: auto;
+      overflow: visible;
       max-height: none;
 
       // same block spacing as .chat-cooked, so the message does not shift
