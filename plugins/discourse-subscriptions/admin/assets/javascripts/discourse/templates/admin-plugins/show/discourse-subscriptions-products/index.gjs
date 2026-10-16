@@ -4,7 +4,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "discourse/plugins/discourse-subscriptions/discourse/helpers/format-unix-date";
-import SubscriptionsStripeUnconfigured from "../../../../components/subscriptions-stripe-unconfigured";
+import SubscriptionsStripeUnconfigured from "../../../../components/subscriptions-stripe-unconfigured.gjs";
 
 export default <template>
   {{#if @controller.model.unconfigured}}

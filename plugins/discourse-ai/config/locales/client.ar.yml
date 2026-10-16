@@ -271,6 +271,12 @@ ar:
           upload_ids: "معرِّفات التحميل"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "حدِّد وكيلًا..."
+        classify:
+          text: "النص"
+          upload_ids: "الصور"
+          name: "الاسم"
+          type: "النوع"
+          type_score: "النقاط"
       bot_chats:
         tab_label: "دردشات الروبوت"
       ai_tool_approval:
@@ -1040,7 +1046,6 @@ ar:
           result: "نتيجة الاختبار"
       secrets:
         short_title: "بيانات الاعتماد"
-        description: "إدارة بيانات اعتماد المصادقة المشتركة عبر أنظمة إدارة التعلم، والتضمينات، والأدوات."
         name: "الاسم"
         secret: "القيمة"
         select_secret: "اختيار بيانات اعتماد..."
@@ -1065,6 +1070,16 @@ ar:
         mcp_server_oauth_client_secret: "سر عميل OAuth لخادم MCP"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      decision_models:
+        no_preset: "لا يوجد"
+        display_name: "الاسم"
+        model: "النموذج"
+        provider: "مقدِّم الخدمة"
+        api_key: "بيانات الاعتماد"
+        vision_enabled: "يدعم إدخال الصور"
+        edit: "تعديل"
+        delete: "حذف"
+        test: "تشغيل الاختبار"
       mcp_servers:
         short_title: "خوادم MCP"
         new: "خادم MCP جديد"

@@ -767,6 +767,10 @@ nl:
       title:
         search: "Zoeken naar een bericht"
         placeholder: "typ hier de titel, URL of ID van het bericht"
+    dsa_statements:
+      category: "Categorie"
+      category_prompt: "Kies een categorie"
+      saving: "Opslaan…"
     review:
       show_more: "Meer weergeven"
       show_less: "Minder weergeven"

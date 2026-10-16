@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import guessDateFormat from "./guess-best-date-format";
+import guessDateFormat from "./guess-best-date-format.js";
 
 function _computeCurrentEvent(container, endsAt) {
   const indicator = document.createElement("div");

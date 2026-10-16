@@ -30,6 +30,17 @@ function sameGroups(a, b) {
   return a.length === b.length && a.every((token, index) => token === b[index]);
 }
 
+/**
+ * @typedef {{
+ *   type: string,
+ *   kind: "synthetic" | "group",
+ *   group_id: number | null,
+ *   name: string,
+ *   count: number,
+ *   share: number,
+ *   share_formatted: string
+ * }} MemberTypePosterRow
+ */
 export default class WhosPosting extends Component {
   @service currentUser;
   @service toasts;
@@ -38,6 +49,8 @@ export default class WhosPosting extends Component {
 
   @tracked selectedCategories = [];
   @tracked selectedGroups = [];
+
+  /** @type {{ rows: MemberTypePosterRow[], total: number, category_ids: number[] | null | undefined, groups: string[] } | null} */
   @tracked overridePosters = null;
   @tracked loading = false;
 

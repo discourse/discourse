@@ -39,6 +39,14 @@ class SystemMessage
           I18n.t("system_messages.#{type}.text_body_template", params)
         end
 
+    raw =
+      DsaNotification.append(
+        raw,
+        params[:notification_context],
+        template: "system_messages.#{type}",
+        recipient: @recipient,
+      )
+
     if from_system
       user = Discourse.system_user
     else

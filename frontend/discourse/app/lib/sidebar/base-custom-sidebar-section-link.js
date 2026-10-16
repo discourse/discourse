@@ -27,12 +27,12 @@ export default class BaseCustomSidebarSectionLink {
   get href() {}
 
   /**
-   * @returns {Object} `model` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
+   * @returns {string | number | object | undefined} `model` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
    */
   get model() {}
 
   /**
-   * @returns {Object[]} `models` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
+   * @returns {Array<string | number | object> | undefined} `models` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
    */
   get models() {}
 
@@ -76,7 +76,7 @@ export default class BaseCustomSidebarSectionLink {
   get badgeText() {}
 
   /**
-   * @returns {Object} Arguments to pass to the content component
+   * @returns {Record<string, unknown> | undefined} Arguments to pass to the content component
    */
   get contentComponentArgs() {}
 
@@ -126,7 +126,7 @@ export default class BaseCustomSidebarSectionLink {
   get suffixComponent() {}
 
   /**
-   * @returns {Object} Arguments to pass to the suffix component
+   * @returns {Record<string, unknown> | undefined} Arguments to pass to the suffix component
    */
   get suffixArgs() {}
 

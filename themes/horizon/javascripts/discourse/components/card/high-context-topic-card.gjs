@@ -21,8 +21,8 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
-import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity";
-import { getTopicStatusBadge } from "../../lib/topic-status-badge";
+import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity.js";
+import { getTopicStatusBadge } from "../../lib/topic-status-badge.js";
 
 export default class HighContextTopicCard extends Component {
   @service capabilities;

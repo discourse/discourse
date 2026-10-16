@@ -437,7 +437,7 @@ module Jobs
           category_id: source["category_id"],
           topic_replies: source["topic_replies"].to_i,
           username: source["username"],
-          name: source["name"],
+          name: SiteSetting.enable_names? ? source["name"] : nil,
           avatar_template: source["avatar_template"],
         }
       end

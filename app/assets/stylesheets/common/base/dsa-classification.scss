@@ -63,9 +63,7 @@
   }
 }
 
-.dsa-moderation-action__subheader {
-  font-size: var(--font-0);
-  margin: 0 0 var(--space-5);
-  padding-block-end: var(--space-3);
-  border-block-end: 1px solid var(--primary-low);
+.dsa-moderation-action__heading {
+  font-size: var(--font-up-1);
+  margin-block: 0 1em;
 }

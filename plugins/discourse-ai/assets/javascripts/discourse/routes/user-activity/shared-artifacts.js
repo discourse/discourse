@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import SharedAiArtifacts from "./shared-ai-artifacts";
+import SharedAiArtifacts from "./shared-ai-artifacts.js";
 
 export default class UserActivitySharedArtifacts extends SharedAiArtifacts {
   @service router;

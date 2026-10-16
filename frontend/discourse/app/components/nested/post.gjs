@@ -29,9 +29,9 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import nestedPostUrl from "../../lib/nested-post-url";
-import processNode from "../../lib/process-node";
-import NestedPostChildren from "./post-children";
+import nestedPostUrl from "../../lib/nested-post-url.js";
+import processNode from "../../lib/process-node.js";
+import NestedPostChildren from "./post-children.gjs";
 
 export default class NestedPost extends Component {
   @service appEvents;

@@ -1,8 +1,8 @@
 import { trustHTML } from "@ember/template";
 import DiscourseMarkdownIt from "discourse-markdown-it";
-import loadPluginFeatures from "./features";
-import MentionsParser from "./mentions-parser";
-import buildOptions from "./options";
+import loadPluginFeatures from "./features.js";
+import MentionsParser from "./mentions-parser.js";
+import buildOptions from "./options.js";
 
 export function buildEngine(options, omitFromDefault) {
   return DiscourseMarkdownIt.withCustomFeatures(

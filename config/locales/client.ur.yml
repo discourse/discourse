@@ -878,6 +878,10 @@ ur:
       title:
         search: "پیغام کے لئے تلاش کریں"
         placeholder: "پیغام کا عنوان، یو آر ایل یا آئی ڈی یہاں ٹائپ کریں"
+    dsa_statements:
+      category: "زُمرَہ"
+      category_prompt: "ایک زمرہ منتخب کریں"
+      saving: "محفوظ کیا جا رہا۔۔۔"
     review:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"

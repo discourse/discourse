@@ -228,7 +228,13 @@ module Email
         body << "\n"
         body << @template_args[:unsubscribe_instructions]
       end
-      DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts, @to)
+      body = DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts, @to)
+      DsaNotification.append(
+        body,
+        @opts[:notification_context],
+        template: @opts[:template],
+        recipient: @opts[:recipient_user],
+      )
     end
 
     def build_args

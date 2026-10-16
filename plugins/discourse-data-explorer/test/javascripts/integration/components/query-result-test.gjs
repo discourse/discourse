@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import QueryResult from "../../discourse/components/query-result";
+import QueryResult from "discourse/plugins/discourse-data-explorer/discourse/components/query-result";
 
 function cell(row, col) {
   return `table tbody tr:nth-child(${row}) td:nth-child(${col})`;

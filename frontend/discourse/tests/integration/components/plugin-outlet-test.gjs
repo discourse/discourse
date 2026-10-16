@@ -31,7 +31,7 @@ import { registerTemporaryModule } from "discourse/tests/helpers/temporary-modul
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
-} from "../../helpers/raise-on-deprecation";
+} from "../../helpers/raise-on-deprecation.js";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";

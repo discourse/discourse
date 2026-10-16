@@ -1,8 +1,8 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
-import formatLocalDate from "./format-local-date";
+import formatLocalDate from "./format-local-date.js";
 import createLocalDateNodeView, {
   focusEditButtonPlugin,
-} from "./local-date-node-view";
+} from "./local-date-node-view.js";
 
 function wrapDateRangeSpans(element) {
   const dateSpans = element.querySelectorAll(

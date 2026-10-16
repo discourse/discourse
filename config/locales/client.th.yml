@@ -426,6 +426,8 @@ th:
       title:
         search: "ค้นหาข้อความ"
         placeholder: "ระบุหัวข้อข้อความ หมายเลข หรือ url ที่นี่ "
+    dsa_statements:
+      category: "หมวดหมู่"
     review:
       order_by: "สั่งโดย"
       in_reply_to: "ตอบไปยัง"

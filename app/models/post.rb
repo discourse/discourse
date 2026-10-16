@@ -191,6 +191,33 @@ class Post < ActiveRecord::Base
     @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
   end
 
+  def self.recalculate_like_counts!(post_ids)
+    DB.exec(
+      <<~SQL,
+        UPDATE posts
+        SET like_count = (
+          SELECT COUNT(*)
+          FROM post_actions
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        ),
+        like_score = (
+          SELECT COALESCE(SUM(CASE WHEN users.moderator OR users.admin THEN :staff_like_weight ELSE 1 END), 0)
+          FROM post_actions
+          INNER JOIN users ON users.id = post_actions.user_id
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        )
+        WHERE posts.id IN (:post_ids)
+      SQL
+      post_ids:,
+      like: PostActionType::LIKE_POST_ACTION_ID,
+      staff_like_weight: SiteSetting.staff_like_weight,
+    )
+  end
+
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
@@ -650,7 +677,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, notification_context: nil)
     return if hidden?
 
     reason ||=
@@ -702,6 +729,7 @@ class Post < ActiveRecord::Base
             default: PostActionType.names[post_action_type_id],
           ),
       }
+      options[:notification_context] = notification_context if notification_context
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?

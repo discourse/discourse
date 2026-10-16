@@ -621,6 +621,9 @@ module(
       assert
         .dom(".workflows-execution-detail__step-badge")
         .hasText("Running", "the live step status is visible");
+      assert
+        .dom(".workflows-execution-detail__step-section")
+        .doesNotExist("input and output are not part of progress messages");
     });
   }
 );

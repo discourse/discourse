@@ -15,6 +15,7 @@ describe "Classifying reviewable moderation" do
   before do
     SiteSetting.dsa_reporting_enabled = true
     SiteSetting.dsa_community_rules = [rule].to_json
+    SiteSetting.contact_email = "support@forum.example"
     sign_in(admin)
   end
 
@@ -79,7 +80,7 @@ describe "Classifying reviewable moderation" do
       expect(modal).to have_action_title("#{label} @#{post.user.username}")
       modal.continue
       expect(modal).to have_selected_category(category)
-      modal.confirm("#{label} and delete post")
+      modal.confirm("#{label} and remove post")
 
       expect(modal).to be_closed
       expect(review_page).to have_reviewable_with_approved_status(reviewable)

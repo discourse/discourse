@@ -169,29 +169,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_silenced(user, opts = nil)
-    opts ||= {}
-
-    return unless user_history = opts[:user_history]
-
-    if user.silenced_forever?
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced_forever",
-        locale: user_locale(user),
-        reason: user_history.details,
-        recipient_user: user,
-      )
-    else
-      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced",
-        locale: user_locale(user),
-        reason: user_history.details,
-        silenced_till: I18n.l(silenced_till, format: :long),
-        recipient_user: user,
-      )
-    end
+    build_account_penalty_email(user, opts || {}, :silenced)
   end
 
   def account_deleted(email, reviewable)
@@ -212,29 +190,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_suspended(user, opts = nil)
-    opts ||= {}
-
-    return unless user_history = opts[:user_history]
-
-    if user.suspended_forever?
-      build_email(
-        user.email,
-        template: "user_notifications.account_suspended_forever",
-        locale: user_locale(user),
-        reason: user_history.details,
-        recipient_user: user,
-      )
-    else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
-      build_email(
-        user.email,
-        template: "user_notifications.account_suspended",
-        locale: user_locale(user),
-        reason: user_history.details,
-        suspended_till: I18n.l(suspended_till, format: :long),
-        recipient_user: user,
-      )
-    end
+    build_account_penalty_email(user, opts || {}, :suspended)
   end
 
   def account_exists(user, opts = {})
@@ -969,6 +925,35 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
+
+  def build_account_penalty_email(user, opts, penalty)
+    return unless user_history = opts[:user_history]
+
+    until_date = opts[:notification_context]&.fetch("penalty_until")
+    until_date = until_date ? Time.zone.parse(until_date) : user.public_send("#{penalty}_till")
+    forever = until_date > 100.years.from_now
+    template = "user_notifications.account_#{penalty}#{"_forever" if forever}"
+    values = {
+      template:,
+      locale: user_locale(user),
+      reason: user_history.details,
+      recipient_user: user,
+      notification_context: opts[:notification_context],
+    }
+    unless forever
+      timezone =
+        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      local_date = until_date.in_time_zone(timezone)
+      date = I18n.l(local_date, format: :long)
+      if opts[:notification_context]
+        date =
+          I18n.t("dsa_notifications.date_with_timezone", date:, offset: local_date.formatted_offset)
+      end
+      values[:"#{penalty}_till"] = date
+    end
+    build_email(user.email, values)
+  end
 
   def build_user_email_token_by_template(template, user, email_token)
     build_email(

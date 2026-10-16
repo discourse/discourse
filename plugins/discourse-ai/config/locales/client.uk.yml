@@ -287,6 +287,12 @@ uk:
           upload_ids: "Ідентифікатори завантажень"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Виберіть агента..."
+        classify:
+          text: "Текст"
+          upload_ids: "Зображення"
+          name: "Імʼя"
+          type: "Тип"
+          type_score: "Оцінка"
       bot_chats:
         tab_label: "Чати ботів"
       ai_tool_approval:
@@ -1099,7 +1105,6 @@ uk:
           result: "Результат тесту"
       secrets:
         short_title: "Дані доступу"
-        description: "Керуйте обліковими даними автентифікації, що спільно використовуються в LLM, вбудованих системах та інструментах."
         name: "Імʼя"
         secret: "Значення"
         select_secret: "Виберіть обліковий запис..."
@@ -1124,6 +1129,16 @@ uk:
         mcp_server_oauth_client_secret: "Секрет клієнта OAuth сервера MCP"
         modal:
           title: "Створити нові облікові дані"
+      decision_models:
+        no_preset: "Немає"
+        display_name: "Імʼя"
+        model: "Модель"
+        provider: "Провайдер"
+        api_key: "Облікові дані"
+        vision_enabled: "Підтримує введення зображень"
+        edit: "Редагувати"
+        delete: "Видалити"
+        test: "Запустити тест"
       mcp_servers:
         short_title: "Сервери MCP"
         new: "Новий MCP-сервер"

@@ -1,27 +1,64 @@
 import Service from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 
+/**
+ * @typedef {object} DialogButton
+ * @property {string} label
+ * @property {string} [icon]
+ * @property {string} [class]
+ * @property {() => unknown} [action]
+ */
+
 export default class DialogService extends Service {
   dialogInstance = null;
+
+  /** @type {string | import("@ember/template").TrustedHTML | null | undefined} */
   message = null;
+
+  /** @type {string | null | undefined} */
   title = null;
+
+  /** @type {"dialog-title" | null} */
   titleElementId = null;
+
+  /** @type {string | null | undefined} */
   type = null;
 
+  /** @type {import("@glint/template").ComponentLike<{ Args: { model: unknown } }> | null | undefined} */
   bodyComponent = null;
+
+  /** @type {unknown} */
   bodyComponentModel = null;
 
+  /** @type {string | null | undefined} */
   confirmButtonIcon = null;
+
+  /** @type {string | null} */
   confirmButtonLabel = null;
+
+  /** @type {string | null} */
   confirmButtonClass = null;
   confirmButtonDisabled = false;
+
+  /** @type {string | null} */
   cancelButtonLabel = null;
+
+  /** @type {string | null} */
   cancelButtonClass = null;
+
+  /** @type {boolean | null | undefined} */
   shouldDisplayCancel = null;
 
+  /** @type {(() => void) | null | undefined} */
   didConfirm = null;
+
+  /** @type {(() => void) | null | undefined} */
   didCancel = null;
+
+  /** @type {DialogButton[] | null | undefined} */
   buttons = null;
+
+  /** @type {string | null | undefined} */
   class = null;
   _confirming = false;
 

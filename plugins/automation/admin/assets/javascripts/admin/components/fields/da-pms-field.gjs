@@ -9,9 +9,9 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import DButton from "discourse/ui-kit/d-button";
 import DEditor from "discourse/ui-kit/d-editor";
 import { i18n } from "discourse-i18n";
-import PlaceholdersList from "../placeholders-list";
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
+import PlaceholdersList from "../placeholders-list.gjs";
+import BaseField from "./da-base-field.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class PmsField extends BaseField {
   @service dialog;

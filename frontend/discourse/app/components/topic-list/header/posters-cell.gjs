@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import SortableColumn from "./sortable-column";
+import SortableColumn from "./sortable-column.gjs";
 
 const PostersCell = <template>
   <SortableColumn

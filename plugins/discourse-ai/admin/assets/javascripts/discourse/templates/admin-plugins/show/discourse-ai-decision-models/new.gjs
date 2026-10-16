@@ -1,4 +1,4 @@
-import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form";
+import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form.gjs";
 
 export default <template>
   <section class="admin-detail">

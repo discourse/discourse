@@ -478,6 +478,8 @@ ca:
       title:
         search: "Cerqueu un missatge"
         placeholder: "escriviu aquí el títol, l'URL o l'identificador del missatge"
+    dsa_statements:
+      category: "Categoria"
     review:
       order_by: "Ordena per"
       date_filter: "Publicat entre"

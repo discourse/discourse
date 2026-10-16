@@ -545,6 +545,9 @@ hy:
       title:
         search: "Որոնում անձնական Հաղորդագրություններում"
         placeholder: "Մուտքագրեք հաղորդագրությունների վերնագրերը url կամ id"
+    dsa_statements:
+      category: "Կատեգորիա"
+      saving: "Պահպանվում է…"
     review:
       show_more: "Ցույց տալ ավելին"
       show_less: "Ցույց տալ ավելի քիչ"

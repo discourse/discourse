@@ -5,7 +5,7 @@ import { cancel, later, schedule } from "@ember/runloop";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
-import { forceFocus } from "../lib/dom-utils";
+import { forceFocus } from "../lib/dom-utils.js";
 
 class TopicSkipLinks extends Component {
   #mutationObserver;

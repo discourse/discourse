@@ -3981,6 +3981,24 @@ en:
     one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
+  dsa_notifications:
+    contact_required: "Configure a contact email or contact URL before sending DSA notifications."
+    contact: "ask for a review"
+    post_reference_flag: "We reviewed a report about your [post in %{title}, #%{number}](%{url})."
+    post_reference_review: "We reviewed your [post in %{title}, #%{number}](%{url}) during our own moderation."
+    date_with_timezone: "%{date} (UTC%{offset})"
+    source_flag: "We reviewed your post after someone reported it."
+    source_review: "We found your post during our own moderation."
+    detection_automated: "Automated tools identified your post for review."
+    decisions_automation:
+      AUTOMATED_DECISION_PARTIALLY: "A moderator made this decision with help from automated tools."
+      AUTOMATED_DECISION_FULLY: "This decision was made automatically."
+    post_actions:
+      delete_all: "We have also selected all your posts for removal."
+      edit: "We also edited your post."
+    statement: |
+      This decision follows our **%{ground}** rule. %{explanation} You can %{contact} if you disagree.
+
   system_messages:
     reviewables_reminder:
       subject_template: "There are items in the review queue that need reviewing"
@@ -4664,14 +4682,16 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
-      preview: "Account temporarily placed on hold."
-      subject_template: "Account temporarily on hold"
+      preview: "Your account has been silenced."
+      subject_template: "Your account has been silenced"
+      silenced_until: "Your account has been silenced until %{date} (UTC%{offset})."
+      silenced_indefinitely: "Your account has been silenced until a staff member lifts this restriction."
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
+        %{silence_notice}
 
-        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your most recent posts. We apologize for the inconvenience.
+        You can continue to browse, but cannot reply or create topics while silenced.
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 

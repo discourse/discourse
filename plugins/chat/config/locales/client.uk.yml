@@ -642,6 +642,8 @@ uk:
         original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитату чату скопійовано в буфер обміну"
         default_thread_title: "Нитка"
+        transcript_label: "Транскрипт"
+        transcript_region: "Транскрипція з %{channel}"
       notification_levels:
         never: "Ніколи"
         mention: "Тільки для згадок"

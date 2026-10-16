@@ -7,7 +7,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiSecretEditorForm from "./ai-secret-editor-form";
+import AiSecretEditorForm from "discourse/plugins/discourse-ai/discourse/components/ai-secret-editor-form";
 
 export default class AiSecretsListEditor extends Component {
   @service adminPluginNavManager;

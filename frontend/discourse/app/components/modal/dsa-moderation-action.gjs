@@ -17,11 +17,14 @@ export default class DsaModerationAction extends Component {
   }
 
   @action
-  async submit(data) {
+  async submit(classification) {
+    if (this.saving) {
+      return;
+    }
     this.saving = true;
     this.flash = null;
     try {
-      await this.args.model.perform({ dsa_classification: data });
+      await this.args.model.perform({ dsa_classification: classification });
       this.args.closeModal();
     } catch (error) {
       this.flash = extractError(error);
@@ -39,9 +42,9 @@ export default class DsaModerationAction extends Component {
       @title={{i18n this.titleKey}}
     >
       <:body>
-        <h3 class="dsa-moderation-action__subheader">{{i18n
+        <h2 class="dsa-moderation-action__heading">{{i18n
             "dsa_statements.title"
-          }}</h3>
+          }}</h2>
         <DsaModerationDetails
           @formId="dsa-moderation-action-form"
           @onSubmit={{this.submit}}

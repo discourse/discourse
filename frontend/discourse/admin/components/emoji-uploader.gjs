@@ -51,7 +51,11 @@ export default class EmojiUploader extends Component {
   });
 
   group = "default";
+
+  /** @type {string[] | null} */
   emojiGroups = null;
+
+  /** @type {string[] | null} */
   newEmojiGroups = null;
 
   @computed("name")

@@ -12,7 +12,7 @@ import {
   BlockCondition,
   type ConditionSourceType,
   type ConditionValidateFn,
-} from "./condition";
+} from "./condition.ts";
 
 /**
  * Valid sourceType values for the decorator config.

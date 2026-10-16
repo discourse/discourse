@@ -112,6 +112,9 @@ pl_PL:
             create_ai_embedding: "Utwórz osadzanie AI"
             update_ai_embedding: "Zaktualizuj osadzanie AI"
             delete_ai_embedding: "Usuń osadzanie AI"
+            create_ai_decision_model: "Utwórz model decyzyjny AI"
+            update_ai_decision_model: "Zaktualizuj model decyzyjny AI"
+            delete_ai_decision_model: "Usuń model decyzyjny AI"
             create_ai_secret: "Utwórz sekret AI"
             update_ai_secret: "Zaktualizuj sekret AI"
             delete_ai_secret: "Usuń sekret AI"
@@ -126,10 +129,13 @@ pl_PL:
     discourse_workflows:
       node_unavailable:
         requires_ai: "Wymaga włączenia wtyczki AI"
+        requires_decision_model: "Wymaga modelu decyzyjnego"
       nodes:
         "action:ai_agent": "Agent AI"
+        "action:classify": "Klasyfikuj"
       node_descriptions:
         "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
+        "action:classify": "Zadaj modelowi decyzyjnemu pytania dotyczące każdego elementu"
     discourse_automation:
       scriptables:
         llm_report:
@@ -344,6 +350,24 @@ pl_PL:
           upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Każde przesyłanie musi dotrzeć do modelu, w przeciwnym razie węzeł ulegnie awarii: obrazy wymagają widoczności w agencie i LLM, a dokumenty muszą mieć włączony typ pliku w LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wybierz agenta..."
+        classify:
+          decision_model_id: "Model decyzyjny"
+          text: "Tekst"
+          text_description: "Co model decyzyjny odczytuje dla każdego elementu."
+          upload_ids: "Obrazy"
+          upload_ids_description: "Identyfikatory przesyłania obrazów, które analizuje model decyzyjny, takie jak identyfikatory przesyłania wpisu. Inne przesyłane dane są pomijane. Wymagany jest model decyzyjny, który odczytuje obrazy."
+          questions: "Pytania"
+          questions_description: "Każda odpowiedź jest dodawana do elementu jako klasyfikacja.NAZWA, gdzie NAZWA jest nazwą pytania."
+          add_question: "Dodaj pytanie"
+          name: "Nazwa"
+          type: "Typ"
+          type_yes_no: "Tak/nie"
+          type_choice: "Wybór"
+          type_score: "Wynik"
+          instructions: "Pytanie"
+          choices: "Wybory"
+          levels: "Poziomy"
+          levels_description: "Od najniższego do najwyższego. Odpowiedź ma najbardziej prawdopodobny poziom i punktację ważoną od 0 (pierwszy poziom) w górę."
       bot_chats:
         tab_label: "Czaty botów"
       ai_tool_approval:
@@ -1166,7 +1190,7 @@ pl_PL:
           result: "Wynik testu"
       secrets:
         short_title: "Poświadczenia"
-        description: "Zarządzaj poświadczeniami uwierzytelniania współdzielonymi przez LLM, osadzenia i narzędzia."
+        description: "Zarządzaj danymi uwierzytelniającymi współdzielonymi w ramach programów LLM, osadzeń, modeli decyzyjnych i narzędzi."
         name: "Nazwa"
         secret: "Wartość"
         select_secret: "Wybierz poświadczenie..."
@@ -1189,8 +1213,40 @@ pl_PL:
         tool: "Narzędzie"
         mcp_server: "Serwer MCP"
         mcp_server_oauth_client_secret: "Klucz tajny klienta OAuth serwera MCP"
+        decision_model: "Model decyzyjny"
         modal:
           title: "Utwórz nowe poświadczenie"
+      decision_models:
+        short_title: "Modele decyzyjne"
+        description: "Modele, które odpowiadają na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, szybciej i taniej niż LLM."
+        create_new: "Nowy model decyzyjny"
+        no_decision_models: "Brak jeszcze modeli decyzyjnych"
+        manage: "Zarządzaj modelami decyzyjnymi"
+        back: "Powrót do modeli decyzyjnych"
+        start_from: "Zacznij od"
+        no_preset: "Brak"
+        display_name: "Nazwa"
+        model: "Model"
+        provider: "Dostawca"
+        url: "Adres URL punktu końcowego"
+        api_key: "Poświadczenie"
+        vision_enabled: "Obsługuje wprowadzanie obrazu"
+        custom_headers:
+          title: "Niestandardowe nagłówki"
+          name: "Nazwa nagłówka"
+          value: "Wartość nagłówka"
+          add: "Dodaj nagłówek"
+          remove: "Usuń nagłówek"
+        edit: "Edytuj"
+        delete: "Delete"
+        confirm_delete: "Czy na pewno chcesz usunąć ten model decyzyjny? Przepływy pracy, które go używają, przestaną działać."
+        saved: "Model decyzyjny zapisany"
+        test: "Przeprowadź test"
+        test_success: "Model decyzyjny odpowiedział na pytanie testowe (tak: %{percentage}%)."
+        providers:
+          system_one: "System pierwszy"
+          typesafe: "TypeSafe"
+          open_ai: "Decyzje OpenAI"
       mcp_servers:
         short_title: "Serwery MCP"
         new: "Nowy serwer MCP"

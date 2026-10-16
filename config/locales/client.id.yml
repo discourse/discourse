@@ -434,6 +434,9 @@ id:
       title:
         search: "Cari Pesan"
         placeholder: "ketikkan judul pesan, url atau id di sini"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Menyimpan…"
     review:
       show_more: "Tampilkan lebih banyak"
       show_less: "Tampilkan lebih sedikit"

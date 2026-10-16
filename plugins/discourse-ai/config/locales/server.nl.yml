@@ -917,8 +917,8 @@ nl:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."
         model_test_failed: "Het generen van een testinsluiting van dit model is mislukt. Controleer of het juist is geconfigureerd."
-    secrets:
-      delete_failed_in_use: "Deze aanmeldingsgegevens worden momenteel gebruikt door één of meer LLM's, insluitingen of tools en kunnen niet worden verwijderd."
+    decision_models:
+      secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
     llm_models:
       missing_provider_param: "%{param} mag niet leeg zijn"
       secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"

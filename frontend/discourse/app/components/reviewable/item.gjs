@@ -129,6 +129,7 @@ export default class ReviewableItem extends Component {
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
+  /** @returns {{ activeTab: string, insightsOpened: boolean, updates: Record<string, unknown> | null }} */
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable
@@ -707,6 +708,7 @@ export default class ReviewableItem extends Component {
           await this.modal.show(DsaModerationAction, {
             model: {
               action: performableAction,
+              username: reviewable.target_created_by.username,
               options: this.dsaClassificationOptions,
               perform: performAction,
             },

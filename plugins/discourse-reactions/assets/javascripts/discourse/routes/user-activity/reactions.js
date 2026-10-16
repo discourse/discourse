@@ -2,7 +2,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction, {
   PAGE_SIZE,
-} from "../../models/discourse-reactions-custom-reaction";
+} from "../../models/discourse-reactions-custom-reaction.js";
 
 export default class UserActivityReactions extends DiscourseRoute {
   async model() {

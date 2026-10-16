@@ -695,6 +695,9 @@ pt:
       title:
         search: "Pesquisar por uma Mensagem"
         placeholder: "digite aqui o título da mensagem, url ou id"
+    dsa_statements:
+      category: "Categoria"
+      saving: "Guardando..."
     review:
       show_more: "Mostrar mais"
       show_less: "Mostrar menos"

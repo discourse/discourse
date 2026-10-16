@@ -251,8 +251,8 @@ export default class DEditor extends Component {
    * @property {function} addText - Adds text
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
-   * @property {Object} commands - Available commands
-   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["state"]} state - Current editor state (inWrap, inBold, etc.)
    */
 
   /**

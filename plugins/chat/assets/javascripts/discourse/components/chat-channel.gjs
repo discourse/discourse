@@ -32,20 +32,20 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatChannelEmptyState from "./chat/channel/empty-state";
-import ChatComposerChannel from "./chat/composer/channel";
-import ChatPinnedMessageBar from "./chat/pinned-message-bar";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelFilter from "./chat-channel-filter";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import ChatMentionWarnings from "./chat-mention-warnings";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatNotices from "./chat-notices";
-import ChatSkeleton from "./chat-skeleton";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatChannelEmptyState from "./chat/channel/empty-state.gjs";
+import ChatComposerChannel from "./chat/composer/channel.js";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar.gjs";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelFilter from "./chat-channel-filter.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import ChatMentionWarnings from "./chat-mention-warnings.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatNotices from "./chat-notices.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatChannel extends Component {
   @service capabilities;

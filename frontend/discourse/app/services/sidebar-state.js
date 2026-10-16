@@ -24,6 +24,8 @@ export default class SidebarState extends Service {
   @tracked mode = COMBINED_MODE;
   @tracked filter = "";
   @tracked isForcingSidebar = false;
+
+  /** @type {string | null} */
   @tracked forcingSidebarPanel = null;
 
   panels = panels;

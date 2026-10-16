@@ -47,7 +47,7 @@ import DCookText from "discourse/ui-kit/d-cook-text";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import booleanString from "../helpers/boolean-string";
+import booleanString from "../helpers/boolean-string.js";
 
 export default <template>
   {{#unless @controller.shouldRenderNestedView}}

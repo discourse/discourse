@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import WorkflowVariableList from "./variable-list";
-import VariablesPublishNotice from "./variables-publish-notice";
+import WorkflowVariableList from "./variable-list.gjs";
+import VariablesPublishNotice from "./variables-publish-notice.gjs";
 
 const VARIABLE_TYPE_TO_SITE_SETTING_TYPE = {
   string: { type: "string" },

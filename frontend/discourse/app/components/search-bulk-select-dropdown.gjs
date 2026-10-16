@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 export default class SearchBulkSelectDropdown extends Component {
   @service dialog;
 
+  /** @type {import("discourse/lib/bulk-select-helper").default | null} */
   _bulkSelectHelper = null;
 
   get topics() {
@@ -24,6 +25,7 @@ export default class SearchBulkSelectDropdown extends Component {
     return Array.from(topics.values());
   }
 
+  /** @returns {BulkSelectHelper} */
   get topicBulkSelectHelper() {
     if (!this._bulkSelectHelper) {
       this._bulkSelectHelper = new BulkSelectHelper(this, this.topics);

@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import { eventDateInTimezone } from "./raw-event-helper";
+import { eventDateInTimezone } from "./raw-event-helper.js";
 
 const ORDINALS = ["first", "second", "third", "fourth"];
 

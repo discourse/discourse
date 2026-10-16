@@ -16,6 +16,43 @@ module PageObjects
           self
         end
 
+        def open_execution(execution_id)
+          page.find(".workflows-executions-manager__id", text: "##{execution_id}").click
+          self
+        end
+
+        def click_row(execution_id)
+          page.find(".d-table__row[data-item-id='#{execution_id}']").click
+          self
+        end
+
+        def select_row(execution_id)
+          page.find(
+            ".d-table__row[data-item-id='#{execution_id}'] .workflows-admin-table__checkbox",
+          ).click
+          self
+        end
+
+        def enable_bulk_select
+          page.find(
+            ".workflows-admin-table__toolbar .btn",
+            text: I18n.t("js.discourse_workflows.executions.select"),
+          ).click
+          self
+        end
+
+        def has_delete_selected_button?
+          page.has_css?(
+            ".btn-danger",
+            text: I18n.t("js.discourse_workflows.executions.delete_selected"),
+          )
+        end
+
+        def open_workflow(name)
+          page.find(".d-table__overview-link", text: name).click
+          self
+        end
+
         def has_execution_with_status?(status)
           page.has_css?(".workflows-executions-manager__status.--#{status}")
         end

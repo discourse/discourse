@@ -481,6 +481,9 @@ te:
       title:
         search: "సందేశం కోసం శోధించండి"
         placeholder: "సందేశ శీర్షిక, url లేదా id ను ఇక్కడ టైప్ చేయండి"
+    dsa_statements:
+      category: "వర్గం"
+      saving: "సేవ్ చేయబడుతోంది…"
     review:
       show_more: "మరిన్ని చూపించండి"
       show_less: "తక్కువ చూపించండి"

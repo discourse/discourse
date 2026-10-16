@@ -1846,9 +1846,13 @@ RSpec.describe ReviewablesController do
   describe "#perform" do
     context "when DSA classification is provided" do
       fab!(:admin)
-      fab!(:post)
+      fab!(:flagged_post, :post)
       fab!(:reviewable) do
-        Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+        Fabricate(
+          :reviewable_flagged_post,
+          target: flagged_post,
+          target_created_by: flagged_post.user,
+        )
       end
 
       let(:rule) { { ground: "Be respectful", explanation: "Personal attacks are not allowed." } }
@@ -1862,6 +1866,7 @@ RSpec.describe ReviewablesController do
       before do
         SiteSetting.dsa_reporting_enabled = true
         SiteSetting.dsa_community_rules = [rule].to_json
+        SiteSetting.contact_email = "support@forum.example"
         sign_in(admin)
       end
 
@@ -1873,7 +1878,7 @@ RSpec.describe ReviewablesController do
             }
 
         expect(response).to have_http_status(:ok)
-        expect(post.reload).to be_trashed
+        expect(flagged_post.reload).to be_trashed
         statement = reviewable.dsa_statement_of_records.sole
         expect(statement).to be_ready
         expect(statement.classified_by_id).to eq(admin.id)
@@ -1883,6 +1888,151 @@ RSpec.describe ReviewablesController do
           "category" => classification[:category],
         )
         expect(reviewable.reviewable_notes.sole.content).to include(rule[:ground])
+      end
+
+      %w[agree_and_hide delete_and_agree agree_and_suspend agree_and_silence].each do |action_id|
+        it "delivers existing notifications with the selected rule for #{action_id}" do
+          freeze_time
+          flagger = Fabricate(:user)
+          Fabricate(
+            :post_action,
+            post: flagged_post,
+            user: flagger,
+            post_action_type_id: PostActionType.types[:inappropriate],
+          )
+          deadline = 2.weeks.from_now
+          post_url = flagged_post.full_url
+          action_params = {
+            version: reviewable.version,
+            dsa_classification: classification,
+            reason: rule[:ground],
+            suspend_until: deadline.iso8601,
+            silenced_till: deadline.iso8601,
+            post_action: "delete",
+          }
+
+          put "/review/#{reviewable.id}/perform/#{action_id}.json", params: action_params
+
+          expect(response).to have_http_status(:ok)
+          if action_id.in?(%w[agree_and_suspend agree_and_silence])
+            penalty_attribute = action_id == "agree_and_suspend" ? :suspended_till : :silenced_till
+            flagged_post.user.update!(penalty_attribute => 1000.years.from_now)
+          end
+          Jobs::SendSystemMessage.jobs.each do |job|
+            Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          Jobs::CriticalUserEmail.jobs.each do |job|
+            Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          messages = Post.joins(:topic).where(topics: { archetype: Archetype.private_message }).to_a
+          bodies =
+            messages.map(&:raw) +
+              ActionMailer::Base.deliveries.map { |mail| (mail.text_part || mail).body.decoded }
+          expect(bodies).not_to be_empty
+          expect(bodies).to all(
+            include(rule[:ground], rule[:explanation], "mailto:#{SiteSetting.contact_email}"),
+          )
+          expect(bodies.join).not_to include("We also removed your post")
+          if action_id == "delete_and_agree"
+            expect(messages.sole.raw.scan(flagged_post.raw).size).to eq(1)
+          end
+          if action_id.in?(%w[agree_and_suspend agree_and_silence])
+            email = ActionMailer::Base.deliveries.sole
+            expected_date = I18n.l(deadline.in_time_zone("UTC"), format: :long)
+            expect(email.text_part.body.decoded).to include(expected_date, "(UTC+00:00)", post_url)
+          end
+          if action_id == "agree_and_silence"
+            notice =
+              messages.find do |message|
+                message.topic.title == I18n.t("system_messages.silenced_by_staff.subject_template")
+              end
+            expect(notice.raw).to include(
+              I18n.t(
+                "system_messages.silenced_by_staff.silenced_until",
+                date: I18n.l(deadline, format: :long),
+                offset: "+00:00",
+              ),
+            )
+          end
+        end
+      end
+
+      it "keeps moderation pending when no review contact is configured" do
+        SiteSetting.contact_email = ""
+        SiteSetting.contact_url = ""
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
+
+      it "appends decision details to the customized notification template" do
+        customized_body = "A customized notice about %{url}"
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.text_body_template",
+          customized_body,
+        )
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        flagged_post.update_columns(hidden: false)
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to start_with(customized_body % { url: flagged_post.url })
+        expect(notice.raw).to include(
+          rule[:ground],
+          rule[:explanation],
+          SiteSetting.contact_email,
+          I18n.t("dsa_notifications.source_flag"),
+        )
+      end
+
+      it "discloses automated detection in the delivered notice when used" do
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        Fabricate(
+          :reviewable_score,
+          reviewable:,
+          user: Discourse.system_user,
+          reason: "watched_word",
+        )
+        flagged_post.update_columns(hidden: false)
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(I18n.t("dsa_notifications.detection_automated"))
       end
 
       it "rejects malformed classification, outdated rules and invalid categories before moderation" do
@@ -1900,7 +2050,7 @@ RSpec.describe ReviewablesController do
 
           expect(response).to have_http_status(:bad_request)
           expect(reviewable.reload).to be_pending
-          expect(post.reload).not_to be_trashed
+          expect(flagged_post.reload).not_to be_trashed
           expect(reviewable.dsa_statement_of_records).to be_empty
         end
       end
@@ -1912,8 +2062,42 @@ RSpec.describe ReviewablesController do
             }
 
         expect(response).to have_http_status(:ok)
-        expect(post.reload).to be_trashed
+        expect(flagged_post.reload).to be_trashed
         expect(reviewable.dsa_statement_of_records.sole).to be_pending
+      end
+
+      it "sends the existing community notification unchanged when reporting is disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+        existing_subject = "Our community moderation notice"
+        existing_body = "Please review our community guidelines."
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.flags_agreed_and_post_deleted.subject_template",
+          existing_subject,
+        )
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.flags_agreed_and_post_deleted.text_body_template",
+          existing_body,
+        )
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice =
+          Post.joins(:topic).find_by!(
+            topics: {
+              archetype: Archetype.private_message,
+              title: existing_subject,
+            },
+          )
+        expect(notice.raw).to eq(existing_body)
       end
 
       it "rejects classification when reporting has been disabled" do
@@ -1927,14 +2111,14 @@ RSpec.describe ReviewablesController do
 
         expect(response).to have_http_status(:forbidden)
         expect(reviewable.reload).to be_pending
-        expect(post.reload).not_to be_trashed
+        expect(flagged_post.reload).not_to be_trashed
       end
 
       it "keeps classification restricted to staff even when a category moderator can review" do
         category_moderator = Fabricate(:user)
         group = Fabricate(:group)
         group.add(category_moderator)
-        Fabricate(:category_moderation_group, group: group, category: post.topic.category)
+        Fabricate(:category_moderation_group, group: group, category: flagged_post.topic.category)
         SiteSetting.enable_category_group_moderation = true
         sign_in(category_moderator)
 
@@ -1946,7 +2130,7 @@ RSpec.describe ReviewablesController do
 
         expect(response).to have_http_status(:forbidden)
         expect(reviewable.reload).to be_pending
-        expect(post.reload).not_to be_trashed
+        expect(flagged_post.reload).not_to be_trashed
       end
     end
 

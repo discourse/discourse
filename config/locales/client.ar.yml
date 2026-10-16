@@ -1048,6 +1048,9 @@ ar:
       title:
         search: "البحث عن رسالة"
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
+    dsa_statements:
+      category: "الفئة"
+      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"

@@ -11,8 +11,13 @@ export default class EmbedAuthFlow extends Service {
   @service modal;
   @service siteSettings;
 
+  /** @type {Window | null} */
   _popup = null;
+
+  /** @type {ReturnType<typeof setInterval> | null} */
   _pollTimer = null;
+
+  /** @type {number | null} */
   _pollStartedAt = null;
   _pollInFlight = false;
 

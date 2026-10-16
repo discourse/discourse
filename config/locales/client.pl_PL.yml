@@ -1025,6 +1025,20 @@ pl_PL:
       title:
         search: "Wyszukaj wiadomość"
         placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+    dsa_statements:
+      title: "Klasyfikacja DSA"
+      help_title: "O klasyfikacji DSA"
+      help: "Wybierz regułę społeczności i kategorię uzasadniającą tę decyzję o moderacji. Zostaną one zapisane wraz z uzasadnieniem zgodnie z Ustawą o usługach cyfrowych."
+      rule: "Zasady społeczności"
+      rule_prompt: "Wybierz regułę społeczności"
+      category: "Kategoria"
+      category_prompt: "Wybierz kategorię"
+      pending: "Oczekiwanie na klasyfikację DSA"
+      confirm_title: "Zapisać klasyfikację DSA?"
+      confirm_message: "Sprawdź regułę społeczności i kategorię. Klasyfikacji tej nie można zmienić po zapisaniu."
+      save: "Zapisz klasyfikację"
+      saving: "Zapisywanie…"
+      saved: "Klasyfikacja zapisana"
     review:
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"

@@ -423,6 +423,17 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
+    if args[:dsa_classification] && DsaNotification.supports?(self, action_id)
+      args[:notification_context] = DsaNotification.context(
+        reviewable: self,
+        action_id:,
+        args:,
+        automated_detection: dsa_automated_detection,
+        automated_decision:
+          dsa_automated_decision(performed_by:, decision_automation: args[:decision_automation]),
+      )
+    end
+
     affected_candidate_ids =
       delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
 

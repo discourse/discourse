@@ -9,6 +9,8 @@ export default class AdminPluginsIndexController extends Controller {
   @service session;
 
   queryParams = ["filter"];
+
+  /** @type {string | null} */
   filter = null;
 
   get searchableProps() {

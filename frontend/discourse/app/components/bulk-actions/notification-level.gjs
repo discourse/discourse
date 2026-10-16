@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 
 // Support for changing the notification level of various topics
 export default class NotificationLevel extends Component {
+  /** @type {string | null | undefined} */
   notificationLevelId = null;
 
   @computed("notificationLevelId")

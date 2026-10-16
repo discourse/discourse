@@ -15,7 +15,7 @@ export const WEB_LINK_KINDS = ["urls", "html", "text"];
  * answering `copy` makes the pair incompatible. The browser then refuses the
  * drop outright: no `drop` event, nothing logged.
  *
- * @param {Object} source - The source a drop target reported.
+ * @param {{ type?: string | null }} source - The source a drop target reported.
  * @returns {"move"|"copy"} The effect for this source.
  */
 export function linkDropEffectFor(source) {
@@ -54,7 +54,9 @@ export const WEB_LINK_ADOPTION = {
  * on `native`, because the rest of that source describes an element drag. Both
  * read the same from here on.
  *
- * @param {Object} source - The source a drop target reported.
+ * @template {object} T
+ * @param {T & { native?: import("discourse/lib/-internals/drag-and-drop/external-vocabulary").ExternalDragPayload }} source - The source a drop target reported.
+ * @returns {T | import("discourse/lib/-internals/drag-and-drop/external-vocabulary").ExternalDragPayload}
  */
 export function webLinkPayload(source) {
   return source.native ?? source;
@@ -70,8 +72,8 @@ export function webLinkPayload(source) {
  * reduced to its URLs. What is left here is deciding which candidate to take
  * and what to call it.
  *
- * @param {Object} source - The decorated external drag payload.
- * @returns {Object|undefined} A link ready for the section form.
+ * @param {Pick<import("discourse/lib/-internals/drag-and-drop/external-vocabulary").ExternalDragPayload, "getHTML" | "getURLs" | "getText" | "getStringData"> | null | undefined} source - The decorated external drag payload.
+ * @returns {{ icon: string, name: string, value: string, segment: "primary" } | undefined} A link ready for the section form.
  */
 export function extractDroppedWebLink(source) {
   if (!source) {

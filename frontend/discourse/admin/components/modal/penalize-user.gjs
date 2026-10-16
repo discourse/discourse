@@ -34,13 +34,17 @@ export default class PenalizeUser extends Component {
   @tracked message;
   @tracked readyToDeleteAll = false;
   @tracked classificationStep = false;
-  #classification;
+  @tracked classification;
   #classificationForm;
   #beforeCompleted = false;
 
   constructor() {
     super(...arguments);
-    if (this.postEdit && this.siteSettings.penalty_include_post_message) {
+    if (
+      !this.args.model.dsaClassification &&
+      this.postEdit &&
+      this.siteSettings.penalty_include_post_message
+    ) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
   }
@@ -94,6 +98,22 @@ export default class PenalizeUser extends Component {
     );
   }
 
+  get penaltyParams() {
+    return {
+      reason: this.reason,
+      message: this.message,
+      post_id: this.args.model.postId,
+      post_action: this.postAction,
+      post_edit: this.postEdit,
+      other_user_ids: this.otherUserIds,
+      reviewable_id: this.args.model.reviewableId,
+      dsa_classification: this.classification,
+      ...(this.args.model.penaltyType === "suspend"
+        ? { suspend_until: this.penalizeUntil }
+        : { silenced_till: this.penalizeUntil }),
+    };
+  }
+
   @action
   continueToClassification() {
     if (!this.submitDisabled) {
@@ -118,7 +138,7 @@ export default class PenalizeUser extends Component {
 
   @action
   async submitClassification(data) {
-    this.#classification = data;
+    this.classification = { ...data };
     const rule = this.args.model.dsaClassification.community_rules.find(
       (entry) => entry.id === data.community_rule
     );
@@ -150,16 +170,7 @@ export default class PenalizeUser extends Component {
         this.#beforeCompleted = true;
       }
 
-      const opts = {
-        reason: this.reason,
-        message: this.message,
-        post_id: this.args.model.postId,
-        post_action: this.postAction,
-        post_edit: this.postEdit,
-        other_user_ids: this.otherUserIds,
-        reviewable_id: this.args.model.reviewableId,
-        dsa_classification: this.#classification,
-      };
+      const opts = this.penaltyParams;
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
@@ -196,7 +207,11 @@ export default class PenalizeUser extends Component {
       return false;
     }
 
-    if (!this.confirmClose && (this.reason?.length || this.message?.length)) {
+    if (
+      !this.args.model.dsaClassification &&
+      !this.confirmClose &&
+      (this.reason?.length || this.message?.length)
+    ) {
       this.dialog.confirm({
         message: i18n("admin.user.confirm_cancel_penalty"),
         didConfirm: () => this.args.closeModal({ success: false }),
@@ -336,6 +351,7 @@ export default class PenalizeUser extends Component {
             @action={{this.submitPenalty}}
             @disabled={{this.submitDisabled}}
             @icon="ban"
+            @isLoading={{this.penalizing}}
             @label={{this.buttonLabel}}
           />
           {{#if @model.dsaClassification}}
@@ -350,6 +366,7 @@ export default class PenalizeUser extends Component {
         <DButton
           class="btn-flat d-modal-cancel"
           @action={{this.warnBeforeClosing}}
+          @disabled={{this.penalizing}}
           @label="cancel"
         />
       </:footer>

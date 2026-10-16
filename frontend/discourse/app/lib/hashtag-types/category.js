@@ -2,7 +2,7 @@ import { service } from "@ember/service";
 import categoryStyleType from "discourse/lib/category-style-type";
 import { iconHTML } from "discourse/lib/icon-library";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
-import HashtagTypeBase from "./base";
+import HashtagTypeBase from "./base.js";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
   @service site;

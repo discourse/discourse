@@ -166,6 +166,19 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
+  it "publishes sources with usernames only when names are disabled" do
+    SiteSetting.enable_names = false
+
+    messages =
+      MessageBus.track_publish("/discourse-ai/discoveries") do
+        job.execute(user_id: user.id, query:, request_id:)
+      end
+    sources = messages.flat_map { |message| message.data[:sources] || [] }
+
+    expect(sources).to be_present
+    expect(sources).to all(include(username: source_post.user.username, name: nil))
+  end
+
   it "publishes the complete candidate topic list independently of selected sources" do
     other_post = Fabricate(:post)
     other_candidate =

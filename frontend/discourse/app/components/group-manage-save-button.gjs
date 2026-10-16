@@ -20,6 +20,7 @@ export default class GroupManageSaveButton extends Component {
   @service router;
   @service groupAutomaticMembersDialog;
 
+  /** @type {boolean | null} */
   saving = null;
   disabled = false;
 

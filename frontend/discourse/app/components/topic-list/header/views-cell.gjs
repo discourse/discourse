@@ -1,4 +1,4 @@
-import SortableColumn from "./sortable-column";
+import SortableColumn from "./sortable-column.gjs";
 
 const ViewsCell = <template>
   <SortableColumn

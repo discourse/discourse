@@ -14,8 +14,8 @@ import {
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
-import Item from "./item";
-import TagDrop from "./tag-drop";
+import Item from "./item.gjs";
+import TagDrop from "./tag-drop.js";
 
 const PREV_TEMPLATE_TAG_ID = "template-selected-tag";
 

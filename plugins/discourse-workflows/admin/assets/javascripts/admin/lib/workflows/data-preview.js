@@ -2,9 +2,9 @@ import {
   inputPreviewPort,
   latestRunWithOutput,
   outputForRun,
-} from "./run-data";
-import { fieldsForSchema, schemaFieldsForItems } from "./schema-fields";
-import { outputSchemaForNode } from "./schema-graph";
+} from "./run-data.js";
+import { fieldsForSchema, schemaFieldsForItems } from "./schema-fields.js";
+import { outputSchemaForNode } from "./schema-graph.js";
 
 function declaredFieldsForNodeOutput(
   node,

@@ -636,6 +636,9 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Gemmer…"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"

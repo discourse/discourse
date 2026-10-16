@@ -153,7 +153,14 @@ module ReviewableActionBuilder
         reviewable_id: id,
       )
 
-    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+    service.call(
+      guardian:,
+      params: penalty_params,
+      options: {
+        raise_on_failure: true,
+        notification_context: args[:notification_context],
+      },
+    ) do
       on_success { result = create_result(:success) }
       on_failed_contract { |contract| result.errors = contract.errors }
       on_model_not_found(:user) { raise Discourse::NotFound }

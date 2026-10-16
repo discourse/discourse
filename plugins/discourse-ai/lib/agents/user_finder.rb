@@ -97,10 +97,14 @@ module DiscourseAi
         return users if query.blank?
 
         query_like = "%#{ActiveRecord::Base.sanitize_sql_like(query.downcase)}%"
-        users.where(
-          "users.username_lower LIKE :query OR users.name ILIKE :query",
-          query: query_like,
-        )
+        if SiteSetting.enable_names?
+          users.where(
+            "users.username_lower LIKE :query OR users.name ILIKE :query",
+            query: query_like,
+          )
+        else
+          users.where("users.username_lower LIKE :query", query: query_like)
+        end
       end
 
       def filter_by_status(users)
@@ -160,15 +164,16 @@ module DiscourseAi
       end
 
       def serialize_user(user, real:)
-        {
+        result = {
           id: user.id,
           username: user.username,
-          name: user.name,
           active: user.active,
           staged: user.staged,
           suspended: user.suspended?,
           real: real,
         }
+        result[:name] = user.name if SiteSetting.enable_names?
+        result
       end
     end
   end
