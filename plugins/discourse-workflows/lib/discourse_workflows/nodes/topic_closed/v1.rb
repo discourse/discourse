@@ -15,7 +15,7 @@ module DiscourseWorkflows
         )
 
         def output
-          { topic: topic_data(@topic) }
+          { topic: serialize_topic_list_item(@topic) }
         end
       end
     end

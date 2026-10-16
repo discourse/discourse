@@ -58,7 +58,7 @@ module DiscourseWorkflows
           {
             change: @change,
             post: serialize_post(@post),
-            topic: topic_data(@post.topic),
+            topic: serialize_topic_list_item(@post.topic),
             user: serialize_user(@user),
           }
         end

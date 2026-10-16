@@ -42,7 +42,7 @@ if defined?(DiscourseWorkflows)
 
           def output
             {
-              assignment: assignment_data,
+              assignment: serialize_assignment,
               post: serialize_post(post),
               topic: serialize_record(@assignment.topic, TopicListItemSerializer),
             }
@@ -54,7 +54,7 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def assignment_data
+          def serialize_assignment
             {
               id: @assignment.id,
               target_type: @assignment.target_type,
@@ -63,22 +63,11 @@ if defined?(DiscourseWorkflows)
               topic_assignment: topic_assignment?,
               assigned_to_id: @assignment.assigned_to_id,
               assigned_to_type: @assignment.assigned_to_type,
-              assigned_to: assignee_data(@assignment.assigned_to),
+              assigned_to: serialize_assignee(@assignment.assigned_to),
               assigned_by_user: serialize_record(@assignment.assigned_by_user, BasicUserSerializer),
               note: @assignment.note,
               status: @assignment.status,
             }
-          end
-
-          def assignee_data(assignee)
-            case assignee
-            when ::User
-              { type: "user", user: serialize_record(assignee, BasicUserSerializer), group: {} }
-            when ::Group
-              { type: "group", user: {}, group: serialize_record(assignee, BasicGroupSerializer) }
-            else
-              { type: nil, user: {}, group: {} }
-            end
           end
 
           def post

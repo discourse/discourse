@@ -301,8 +301,8 @@ module DiscourseWorkflows
           topic = post.topic
 
           {
-            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
-            post: post_data(post),
+            topic: serialize_topic(topic, guardian: guardian),
+            post: serialize_topic_post(post),
             post_id: post.id,
             post_number: post.post_number,
           }
@@ -317,12 +317,12 @@ module DiscourseWorkflows
 
           {
             topic:
-              exec_ctx.serialize_topic(
+              serialize_topic(
                 topic,
                 guardian: actor.guardian,
                 custom_field_names: custom_field_names,
               ),
-            post: post_data(topic.first_post),
+            post: serialize_topic_post(topic.first_post),
           }
         end
 
@@ -361,12 +361,12 @@ module DiscourseWorkflows
           topics.map do |topic|
             {
               topic:
-                exec_ctx.serialize_topic(
+                serialize_topic(
                   topic,
                   guardian: actor.guardian,
                   custom_field_names: custom_field_names,
                 ),
-              post: post_data(topic.first_post),
+              post: serialize_topic_post(topic.first_post),
             }
           end
         end
@@ -380,8 +380,8 @@ module DiscourseWorkflows
 
           topic.reload
           {
-            topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
-            post: post_data(topic.first_post),
+            topic: serialize_topic(topic, guardian: actor.guardian),
+            post: serialize_topic_post(topic.first_post),
           }
         end
 
@@ -395,8 +395,8 @@ module DiscourseWorkflows
 
           topic.reload
           {
-            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
-            post: post_data(topic.first_post),
+            topic: serialize_topic(topic, guardian: guardian),
+            post: serialize_topic_post(topic.first_post),
           }
         end
 
@@ -421,8 +421,8 @@ module DiscourseWorkflows
 
           topic.reload
           {
-            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
-            post: post_data(topic.first_post),
+            topic: serialize_topic(topic, guardian: guardian),
+            post: serialize_topic_post(topic.first_post),
           }
         end
 
@@ -440,11 +440,7 @@ module DiscourseWorkflows
 
           {
             topic:
-              exec_ctx.serialize_topic(
-                topic,
-                guardian: guardian,
-                custom_field_names: custom_fields.keys,
-              ),
+              serialize_topic(topic, guardian: guardian, custom_field_names: custom_fields.keys),
           }
         end
 
@@ -457,7 +453,7 @@ module DiscourseWorkflows
           end
         end
 
-        def post_data(post)
+        def serialize_topic_post(post)
           return if post.blank?
 
           serialize_record(post, WebHookPostSerializer)
