@@ -1591,6 +1591,20 @@ RSpec.describe PrettyText do
           expect(md).to include("data-height=\"20\"")
         end
 
+        it "only marks images inside a onebox as onebox images" do
+          html = <<~HTML
+            <aside class="onebox"><div class="onebox-body"><img src="/secure-uploads/original/1X/a.png" class="onebox-avatar-inline"></div></aside>
+            <p><img src="/secure-uploads/original/1X/b.png"></p>
+          HTML
+
+          notices =
+            Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).css(
+              ".secure-upload-notice",
+            )
+
+          expect(notices.map { |notice| notice["data-onebox-type"] }).to eq(["avatar-inline", nil])
+        end
+
         it "keeps a crafted secure upload URL as attribute data" do
           url =
             %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)

@@ -648,7 +648,7 @@ module PrettyText
         height = img["height"]
         onebox_type = nil
 
-        if img.ancestors.css(".onebox-body").any?
+        if img.ancestors(".onebox-body").any?
           if img.classes.include?("onebox-avatar-inline")
             onebox_type = "avatar-inline"
           else
