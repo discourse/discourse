@@ -14,15 +14,7 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef {{
- *   name: string,
- *   id: number | null,
- *   color_scheme_id?: number | null,
- *   dark_color_scheme_id?: number | null,
- *   only_theme_color_schemes?: boolean
- * }} SelectableTheme
- */
+/** @typedef {import("discourse/lib/theme-selector").SelectableTheme} SelectableTheme */
 /**
  * @typedef {{
  *   setting: string,
