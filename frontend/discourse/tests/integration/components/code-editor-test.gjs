@@ -13,6 +13,8 @@ import {
 } from "@ember/test-helpers";
 import { startCompletion } from "@codemirror/autocomplete";
 import { undo } from "@codemirror/commands";
+import { EditorSelection, EditorState } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
@@ -141,6 +143,112 @@ module("Integration | Component | code-editor", function (hooks) {
         capture: true,
       });
     }
+  });
+
+  test("pairs brackets as they are typed", async function (assert) {
+    await render(<template><CodeEditor @value="" /></template>);
+    const view = find(".codemirror-editor").codemirrorView;
+
+    const handled = view.state
+      .facet(EditorView.inputHandler)
+      .some((handler) => handler(view, 0, 0, "(", () => null));
+
+    assert.true(handled, "an input handler takes the bracket");
+    assert.strictEqual(view.state.doc.toString(), "()");
+    assert.strictEqual(
+      view.state.selection.main.head,
+      1,
+      "the cursor sits inside"
+    );
+  });
+
+  test("marks the bracket matching the cursor", async function (assert) {
+    await render(<template><CodeEditor @value="(one)" /></template>);
+    const view = find(".codemirror-editor").codemirrorView;
+
+    view.dispatch({ selection: { anchor: 0 } });
+    await waitFor(".cm-matchingBracket");
+
+    assert.dom(".cm-matchingBracket").exists({ count: 2 });
+  });
+
+  test("highlights other occurrences of the selection", async function (assert) {
+    await render(<template><CodeEditor @value="one two one" /></template>);
+    const view = find(".codemirror-editor").codemirrorView;
+
+    view.dispatch({ selection: { anchor: 0, head: 3 } });
+    await waitFor(".cm-selectionMatch");
+
+    assert.dom(".cm-selectionMatch").hasText("one");
+  });
+
+  test("keeps several cursors at once", async function (assert) {
+    await render(<template><CodeEditor @value="one two" /></template>);
+    const view = find(".codemirror-editor").codemirrorView;
+
+    view.dispatch({
+      selection: EditorSelection.create([
+        EditorSelection.cursor(0),
+        EditorSelection.cursor(4),
+      ]),
+    });
+    view.dispatch(view.state.replaceSelection("x"));
+
+    assert.strictEqual(view.state.doc.toString(), "xone xtwo");
+  });
+
+  test("re-indents a closing brace as it is typed", async function (assert) {
+    const value = "if (a) {\n  b;\n  ";
+    await render(
+      <template>
+        <CodeEditor @language="javascript" @value={{value}} />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+    const view = find(".codemirror-editor").codemirrorView;
+
+    const end = view.state.doc.length;
+    view.dispatch({
+      changes: { from: end, insert: "}" },
+      selection: { anchor: end + 1 },
+      userEvent: "input.type",
+    });
+
+    assert.strictEqual(view.state.doc.toString(), "if (a) {\n  b;\n}");
+  });
+
+  test("folds a block from the gutter", async function (assert) {
+    const value = "if (a) {\n  b;\n}";
+    await render(
+      <template>
+        <CodeEditor @language="javascript" @value={{value}} />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+    await waitFor(".cm-foldGutter [title]");
+
+    assert.dom(".cm-foldGutter").exists("the gutter is there");
+    assert
+      .dom(".cm-gutter:last-of-type")
+      .hasClass("cm-foldGutter", "after the line numbers");
+  });
+
+  test("leaves the bare editor without code editing behaviour", async function (assert) {
+    const Editor = (
+      await import("discourse/static/codemirror/components/codemirror-editor.gjs")
+    ).default;
+    await render(<template><Editor @value="(one)" /></template>);
+    const view = find(".codemirror-editor").codemirrorView;
+
+    view.dispatch({ selection: { anchor: 0 } });
+    await settled();
+
+    assert.dom(".cm-matchingBracket").doesNotExist("no bracket matching");
+    assert.dom(".cm-foldGutter").doesNotExist("no fold gutter");
+    assert.false(
+      view.state.facet(EditorState.allowMultipleSelections),
+      "a single cursor"
+    );
   });
 
   test("finds and replaces text inside the editor", async function (assert) {
