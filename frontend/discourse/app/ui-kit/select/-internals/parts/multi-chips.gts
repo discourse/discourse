@@ -343,6 +343,12 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             {{i18n "d_select.chips_hint"}}
           </span>
         {{/if}}
+      {{else if @presenter.queryPlaceholder}}
+        {{! Without an inline query input there is nowhere else to say what to do, so an
+          empty selection shows the placeholder here instead. }}
+        <span class="d-combobox__placeholder">
+          {{@presenter.queryPlaceholder}}
+        </span>
       {{/if}}
     </div>
   </template>

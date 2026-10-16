@@ -13,6 +13,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -22,6 +23,7 @@ import {
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
 
 class MultiHost extends Component {
   @tracked value = this.args.value ?? [];
@@ -690,6 +692,117 @@ module(
       assert
         .dom("[role='option'][aria-selected='true'] .d-icon-star")
         .exists("the supplied glyph still marks the selection");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect multi placeholder",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const FRUITS = [
+      { id: 1, name: "Apple" },
+      { id: 2, name: "Banana" },
+    ];
+    const TRIGGER = ".d-combobox__trigger";
+
+    test("an empty mobile multi shows its placeholder", async function (assert) {
+      forceMobile();
+      const empty = [];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUITS}}
+            @multiple={{true}}
+            @placeholder="Pick fruit"
+            @value={{empty}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .hasText("Pick fruit", "the trigger says what to do");
+    });
+
+    test("an empty mobile multi falls back to the default text", async function (assert) {
+      forceMobile();
+      const empty = [];
+
+      await render(
+        <template>
+          <DSelect @items={{FRUITS}} @multiple={{true}} @value={{empty}} />
+        </template>
+      );
+
+      assert
+        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .hasText(i18n("d_select.add_placeholder"));
+    });
+
+    for (const variant of ["button", "static"]) {
+      test(`an empty desktop ${variant} multi shows its placeholder`, async function (assert) {
+        const empty = [];
+
+        await render(
+          <template>
+            <DSelect
+              @items={{FRUITS}}
+              @multiple={{true}}
+              @placeholder="Pick fruit"
+              @value={{empty}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+
+        assert.dom(`${TRIGGER} .d-combobox__placeholder`).hasText("Pick fruit");
+      });
+    }
+
+    test("a held value replaces the placeholder", async function (assert) {
+      forceMobile();
+      const held = [1];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUITS}}
+            @multiple={{true}}
+            @placeholder="Pick fruit"
+            @value={{held}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-combobox__chip").exists("the chip shows");
+      assert
+        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .doesNotExist("and no placeholder sits beside it");
+    });
+
+    test("a desktop typeahead keeps it on the input, once", async function (assert) {
+      const empty = [];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUITS}}
+            @multiple={{true}}
+            @placeholder="Pick fruit"
+            @value={{empty}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(`${TRIGGER} [role='combobox']`)
+        .hasAttribute("placeholder", "Pick fruit", "the input carries it");
+      assert
+        .dom(`${TRIGGER} .d-combobox__placeholder`)
+        .doesNotExist("with no second copy beside it");
     });
   }
 );
