@@ -128,14 +128,15 @@ const extension = {
   },
   serializeNode: {
     table(state, node) {
+      // Checked before flushing, so the surrounding blocks stay separated.
+      if (!hasContent(node)) {
+        return;
+      }
+
       state.flushClose(1);
 
       // Normalize table structure
       node = normalizeTable(node);
-
-      if (!node.textContent.trim()) {
-        return;
-      }
 
       const prevInTable = state.inTable;
       state.inTable = true;
@@ -290,6 +291,22 @@ function createBodyRows(tbody, startIndex, maxColumns, schema) {
     bodyRows.push(schema.nodes.table_row.create({}, cells));
   });
   return bodyRows;
+}
+
+/** Line breaks and whitespace alone don't make a table worth keeping. */
+function hasContent(table) {
+  let found = false;
+  table.descendants((node) => {
+    if (found) {
+      return false;
+    }
+    if (node.isText) {
+      found = node.text.trim() !== "";
+    } else if (node.isInline && node.isLeaf) {
+      found = node.type.name !== "hard_break";
+    }
+  });
+  return found;
 }
 
 function normalizeTable(tableNode) {
