@@ -21,6 +21,7 @@ module JsonApiKit
       end
 
       delegate :invalid?, to: :contract
+      delegate :parameters, :locations_for, to: :attributes
 
       def to_h = document
 
@@ -34,6 +35,8 @@ module JsonApiKit
       delegate :glossary, to: :edition
 
       def contract = @contract ||= Contract.new(document, type: glossary.member_type(type))
+
+      def attributes = @attributes ||= Attributes.new(document, glossary:)
     end
   end
 end
