@@ -326,17 +326,18 @@ pl_PL:
           llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
           no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
           uploads_not_sent: "Agent „%{agent}” nie otrzymał wszystkich przesłanych plików"
-          upload_not_found: "Nie znaleziono przesłania %{upload_id}"
-          upload_not_visible: "%{username} nie można zobaczyć przesłania %{upload_id}"
-          agent_cannot_see_images: "Prześlij %{upload_id} to obraz, a agent „%{agent}” ma wyłączoną widoczność"
-          llm_cannot_see_images: "Prześlij %{upload_id} to obraz, a LLM '%{llm}' ma wyłączoną widoczność"
-          llm_cannot_read_documents: "Prześlij %{upload_id} to dokument, a LLM '%{llm}' nie akceptuje żadnych załączników"
-          unsupported_image_format: "Prześlij %{upload_id} nie jest obsługiwanym formatem obrazu (%{formats})"
-          upload_skipped: "Przesłanie %{upload_id} (%{filename}) nie zostało wysłane: %{message}"
       classify:
         errors:
           decision_model_not_found: "Nie znaleziono modelu decyzyjnego o identyfikatorze %{id}"
           classify_failed: "Model decyzyjny '%{decision_model}' nie mógł odpowiedzieć: %{error}"
+      uploads:
+        not_found: "Nie znaleziono przesłania %{upload_id}"
+        not_visible: "%{username} nie można zobaczyć przesłania %{upload_id}"
+        agent_cannot_see_images: "Prześlij %{upload_id} to obraz, a agent „%{agent}” ma wyłączoną widoczność"
+        llm_cannot_see_images: "Prześlij %{upload_id} to obraz, a LLM '%{llm}' ma wyłączoną widoczność"
+        llm_cannot_read_documents: "Prześlij %{upload_id} to dokument, a LLM '%{llm}' nie akceptuje żadnych załączników"
+        unsupported_image_format: "Prześlij %{upload_id} nie jest obsługiwanym formatem obrazu (%{formats})"
+        skipped: "Przesłanie %{upload_id} (%{filename}) nie zostało wysłane: %{message}"
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:

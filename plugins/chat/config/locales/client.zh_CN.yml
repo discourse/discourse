@@ -43,6 +43,7 @@ zh_CN:
         chat_messages:
           other: "%{formatted_number} 条聊天消息"
     chat:
+      homepage_option: "聊天频道"
       edit_category:
         tab_title: "聊天"
         channel: "频道"

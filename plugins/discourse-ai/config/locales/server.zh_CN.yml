@@ -318,13 +318,14 @@ zh_CN:
           llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
           uploads_not_sent: "代理“%{agent}”未收到所有上传内容"
-          upload_not_found: "未找到上传文件 %{upload_id}"
-          upload_not_visible: "%{username} 无法查看上传内容 %{upload_id}"
-          agent_cannot_see_images: "上传 %{upload_id} 是一张图片，而代理 '%{agent}' 的视力已关闭"
-          llm_cannot_see_images: "上传 %{upload_id} 是一张图片，而 LLM '%{llm}' 的视觉功能已禁用"
-          llm_cannot_read_documents: "上传文件 %{upload_id} 是一个文档，而 LLM '%{llm}' 不接受任何附件。"
-          unsupported_image_format: "上传 %{upload_id} 不是受支持的图像格式 (%{formats})"
-          upload_skipped: "上传 %{upload_id} (%{filename}) 未发送： %{message}"
+      uploads:
+        not_found: "未找到上传文件 %{upload_id}"
+        not_visible: "%{username} 无法查看上传内容 %{upload_id}"
+        agent_cannot_see_images: "上传 %{upload_id} 是一张图片，而代理 '%{agent}' 的视力已关闭"
+        llm_cannot_see_images: "上传 %{upload_id} 是一张图片，而 LLM '%{llm}' 的视觉功能已禁用"
+        llm_cannot_read_documents: "上传文件 %{upload_id} 是一个文档，而 LLM '%{llm}' 不接受任何附件。"
+        unsupported_image_format: "上传 %{upload_id} 不是受支持的图像格式 (%{formats})"
+        skipped: "上传 %{upload_id} (%{filename}) 未发送： %{message}"
     tools:
       custom_name: "%{name}（自定义）"
       presets:
