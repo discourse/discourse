@@ -3,7 +3,8 @@
 module Live
   class AgentManager
     SESSION_TTL = 15.minutes
-    PROVIDER_ROOMS_KEY = "live:agent:provider_rooms"
+    # Pre-rename key, kept so in-flight state survives the deploy.
+    PROVIDER_ROOMS_KEY = "voice:agent:provider_rooms"
 
     class AuthorizationError < StandardError
     end
@@ -152,7 +153,8 @@ module Live
       end
 
       def session_key(room_id, user_id)
-        "live:agent:session:#{room_id}:#{user_id}"
+        # Pre-rename key, kept so in-flight state survives the deploy.
+        "voice:agent:session:#{room_id}:#{user_id}"
       end
     end
   end

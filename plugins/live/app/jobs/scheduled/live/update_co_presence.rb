@@ -32,11 +32,12 @@ module Jobs
       private
 
       def each_active_room(&block)
-        pattern = "#{::Live::ParticipantTracker::KEY_NAMESPACE}:*:participants"
+        namespace = ::Live::ParticipantTracker::KEY_NAMESPACE
+        key_pattern = /#{Regexp.escape(namespace)}:(\d+):participants/
         Discourse
           .redis
-          .scan_each(match: pattern) do |key|
-            yield Regexp.last_match(1).to_i if key =~ /live:room:(\d+):participants/
+          .scan_each(match: "#{namespace}:*:participants") do |key|
+            yield Regexp.last_match(1).to_i if key =~ key_pattern
           end
       end
 

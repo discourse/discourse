@@ -28,7 +28,8 @@ module Live
     class Error < StandardError
     end
 
-    KEY_NAMESPACE = "live:room"
+    # Pre-rename key, kept so in-flight state survives the deploy.
+    KEY_NAMESPACE = "voice:room"
     SAFETY_TTL = 1.day.to_i
 
     class << self

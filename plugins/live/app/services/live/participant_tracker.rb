@@ -2,8 +2,9 @@
 
 module Live
   class ParticipantTracker
-    KEY_NAMESPACE = "live:room"
-    RECENTLY_ACTIVE_ROOMS_KEY = "live:recently_active_rooms"
+    # Pre-rename key, kept so in-flight state survives the deploy.
+    KEY_NAMESPACE = "voice:room"
+    RECENTLY_ACTIVE_ROOMS_KEY = "voice:recently_active_rooms"
     SAFETY_TTL = 30.minutes.to_i
     AGENT_PRESENCE_TTL = 3.minutes.to_i
     RoomState =

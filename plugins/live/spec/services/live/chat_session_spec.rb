@@ -290,12 +290,12 @@ RSpec.describe Live::ChatSession do
   describe ".touch!" do
     it "is a no-op when there is no live session" do
       described_class.touch!(room)
-      expect(Discourse.redis.get("live:room:#{room.id}:chat_seen_at")).to be_nil
+      expect(Discourse.redis.get("voice:room:#{room.id}:chat_seen_at")).to be_nil
     end
 
     it "refreshes the session key TTL so a long quiet session isn't dropped" do
       described_class.post_message!(room, user, "hello")
-      thread_key = "live:room:#{room.id}:chat_thread"
+      thread_key = "voice:room:#{room.id}:chat_thread"
 
       Discourse.redis.expire(thread_key, 60)
       described_class.touch!(room)

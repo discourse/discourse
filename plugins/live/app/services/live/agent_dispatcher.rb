@@ -144,7 +144,8 @@ module Live
     private_class_method :save
 
     def self.key(room_id)
-      "live:agent:dispatches:#{room_id}"
+      # Pre-rename key, kept so in-flight state survives the deploy.
+      "voice:agent:dispatches:#{room_id}"
     end
     private_class_method :key
   end

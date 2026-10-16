@@ -56,7 +56,7 @@ RSpec.describe Live::ChatThreadsController do
       it "reports a thread that is still the room's live session as active" do
         mark(thread, room)
         Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        Discourse.redis.set("live:room:#{room.id}:chat_thread", thread.id)
+        Discourse.redis.set("voice:room:#{room.id}:chat_thread", thread.id)
 
         get "/live/chat_threads/#{thread.id}.json"
 
@@ -70,7 +70,7 @@ RSpec.describe Live::ChatThreadsController do
         mark(thread, room)
         newer_thread = Fabricate(:chat_thread, channel: channel)
         Fabricate(:chat_message, chat_channel: channel, thread: newer_thread)
-        Discourse.redis.set("live:room:#{room.id}:chat_thread", newer_thread.id)
+        Discourse.redis.set("voice:room:#{room.id}:chat_thread", newer_thread.id)
 
         get "/live/chat_threads/#{thread.id}.json"
 

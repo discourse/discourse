@@ -8,7 +8,8 @@ module Live
     end
 
     TOKEN_TTL = 10.minutes
-    LAST_WEBHOOK_KEY = "live:livekit:last_webhook_at"
+    # Pre-rename key, kept so in-flight state survives the deploy.
+    LAST_WEBHOOK_KEY = "voice:livekit:last_webhook_at"
     LAST_WEBHOOK_TTL = 7.days
 
     def self.configured?
