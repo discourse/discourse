@@ -46,8 +46,13 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
         username: post.user.username,
         category_id: category.id,
         tags: ["availability"],
+        url: "#{Discourse.base_url}#{post.url}",
       )
-      expect(output[:topic]).to include(id: topic.id, title: topic.title)
+      expect(output[:topic]).to include(
+        id: topic.id,
+        title: topic.title,
+        username: topic.user.username,
+      )
       expect(output[:user]).to include(id: actor.id, username: actor.username)
       expect(output).to match_node_output_schema(klass)
     end

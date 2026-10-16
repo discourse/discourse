@@ -104,6 +104,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result).to include("post_id" => topic.first_post.id, "post_number" => 1)
         expect(result.dig("post", "id")).to eq(topic.first_post.id)
         expect(result.dig("post", "trust_level")).to eq(admin.trust_level)
+        expect(result).to match_node_output_schema(described_class)
       end
 
       it "creates a topic as the system user when actor_username is 'system'" do
@@ -730,24 +731,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 
       it "sets topic custom fields as the configured actor" do
-        result =
-          execute_node(
-            configuration: {
-              "operation" => "set_custom_fields",
-              "topic_id" => topic.id.to_s,
-              "custom_fields" =>
-                custom_field_entries(
-                  { "key" => "foo", "value" => "bar" },
-                  { "key" => "answer", "value" => "42" },
-                ),
-              "actor_username" => admin.username,
-            },
-            item: item,
-          )
+        config = {
+          "operation" => "set_custom_fields",
+          "topic_id" => topic.id.to_s,
+          "custom_fields" =>
+            custom_field_entries(
+              { "key" => "foo", "value" => "bar" },
+              { "key" => "answer", "value" => "42" },
+            ),
+          "actor_username" => admin.username,
+        }
+
+        result = execute_node(configuration: config, item: item)
 
         expect(topic.reload.custom_fields["foo"]).to eq("bar")
         expect(topic.custom_fields["answer"]).to eq("42")
         expect(result["topic"]["custom_fields"]).to eq("foo" => "bar", "answer" => "42")
+        expect(result).to match_node_output_schema(described_class, configuration: config)
       end
 
       it "resolves expressions in custom field values" do

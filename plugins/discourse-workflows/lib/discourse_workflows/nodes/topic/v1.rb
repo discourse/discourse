@@ -9,6 +9,18 @@ module DiscourseWorkflows
         DEFAULT_LIMIT = 30
         CUSTOM_FIELD_OPTIONS_LIMIT = 100
 
+        TOPIC_SCHEMA =
+          Schema.merge(
+            Schema::TOPIC_LIST_ITEM_SCHEMA,
+            Schema.entity_extension(
+              "topic",
+              "custom_fields" => {
+                "type" => "object",
+                "x-optional" => true,
+              },
+            ),
+          )
+
         TOPIC_POST_SCHEMA =
           Schema.entity(
             "post",
@@ -18,7 +30,10 @@ module DiscourseWorkflows
               "like_count",
               "tags",
               "upload_ids",
-            ).merge("category_slug" => { "type" => "string" }),
+              "reply_to_post_id",
+              "reply_to_username",
+              "url",
+            ),
             "WebHookPostSerializer payload",
           )
 
@@ -34,7 +49,19 @@ module DiscourseWorkflows
             run_scope: "per_item",
           },
           output_contracts: [
-            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, TOPIC_POST_SCHEMA) },
+            {
+              variants: [
+                {
+                  schema: TOPIC_SCHEMA,
+                  display_options: {
+                    show: {
+                      operation: ["set_custom_fields"],
+                    },
+                  },
+                },
+              ],
+              schema: Schema.merge(TOPIC_SCHEMA, TOPIC_POST_SCHEMA),
+            },
           ],
           properties: {
             operation: {

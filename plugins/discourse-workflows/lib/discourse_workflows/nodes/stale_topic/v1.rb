@@ -59,7 +59,7 @@ module DiscourseWorkflows
               .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
               .where(closed: false, archived: false, visible: true)
               .where("topics.archetype = ?", Archetype.default)
-              .includes(first_post: :user)
+              .includes(:user, first_post: :user)
 
           if category_ids.present?
             scoped_category_ids =
