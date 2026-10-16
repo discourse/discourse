@@ -70,21 +70,34 @@ RSpec.describe Jobs::DsaNoticeReceipt do
       }.by(1)
     end
 
-    %w[yes non-staff].each do |suppression|
-      it "skips delivery when email suppression is #{suppression}" do
-        SiteSetting.disable_emails = suppression
-        post_id = topic.first_post.id
-        expect do job.execute(post_id:) end.not_to change {
-          [ActionMailer::Base.deliveries.size, described_class.jobs.size]
-        }
-        expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
+    it "skips delivery when all emails are disabled" do
+      SiteSetting.disable_emails = "yes"
+      post_id = topic.first_post.id
+      expect do job.execute(post_id:) end.not_to change {
+        [ActionMailer::Base.deliveries.size, described_class.jobs.size]
+      }
+      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
 
-        SiteSetting.disable_emails = "no"
-        expect { job.execute(post_id: topic.first_post.id) }.to change {
-          ActionMailer::Base.deliveries.size
-        }.by(1)
-        expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
-      end
+      SiteSetting.disable_emails = "no"
+      expect { job.execute(post_id: topic.first_post.id) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1)
+      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
+    end
+
+    it "skips delivery when emails to people outside staff are disabled" do
+      SiteSetting.disable_emails = "non-staff"
+      post_id = topic.first_post.id
+      expect do job.execute(post_id:) end.not_to change {
+        [ActionMailer::Base.deliveries.size, described_class.jobs.size]
+      }
+      expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
+
+      SiteSetting.disable_emails = "no"
+      expect { job.execute(post_id: topic.first_post.id) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1)
+      expect(Dsa::Notice.from_post(topic.first_post.reload)).to be_receipt_sent
     end
 
     it "ignores a missing post" do
