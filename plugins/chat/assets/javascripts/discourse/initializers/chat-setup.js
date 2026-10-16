@@ -21,6 +21,12 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 replaceIcon("d-chat", "comment");
 
+function formattingToggleLabel() {
+  return this.showFormattingBar
+    ? "chat.composer.hide_formatting"
+    : "chat.composer.show_formatting";
+}
+
 class ChatSetupInit {
   @service router;
   @service("chat") chatService;
@@ -152,21 +158,9 @@ class ChatSetupInit {
       api.registerChatComposerButton({
         id: "toggle-formatting",
         icon: "font",
-        title() {
-          return this.showFormattingBar
-            ? "chat.composer.hide_formatting"
-            : "chat.composer.show_formatting";
-        },
-        label() {
-          return this.showFormattingBar
-            ? "chat.composer.hide_formatting"
-            : "chat.composer.show_formatting";
-        },
-        ariaLabel() {
-          return this.showFormattingBar
-            ? "chat.composer.hide_formatting"
-            : "chat.composer.show_formatting";
-        },
+        title: formattingToggleLabel,
+        label: formattingToggleLabel,
+        ariaLabel: formattingToggleLabel,
         classNames() {
           return this.showFormattingBar ? ["--active"] : [];
         },

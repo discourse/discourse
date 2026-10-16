@@ -571,6 +571,7 @@ en:
       composer:
         toggle_toolbar: "Toggle toolbar"
         switch_to_markdown: "Switch to Markdown editor"
+        formatting: "Formatting"
         show_formatting: "Show formatting"
         hide_formatting: "Hide formatting"
         switch_to_rich_text: "Switch to rich text editor"

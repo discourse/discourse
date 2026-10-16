@@ -993,8 +993,12 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if (and this.showFormattingBar (not this.disabled))}}
-          <div class="chat-composer__formatting-bar" role="toolbar">
+        {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__formatting-bar"
+            role="toolbar"
+          >
             <ToolbarButtons @data={{this.formattingToolbar}} />
           </div>
         {{/if}}
