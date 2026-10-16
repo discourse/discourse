@@ -417,6 +417,34 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
         expect(response[:suggestions]).to eq(["The solitary horse", "A horse lost in time"])
       end
+
+      it "keeps only the non-blank string suggestions" do
+        mixed_titles = { output: [["The solitary horse", nil], 1, " ", "A horse lost in time"] }
+
+        response =
+          DiscourseAi::Completions::Llm.with_prepared_responses([mixed_titles]) do
+            assistant.generate_and_send_prompt(mode, english_text, user)
+          end
+
+        expect(response[:suggestions]).to eq(["The solitary horse", "A horse lost in time"])
+      end
+
+      it "returns no suggestions when the title agent replies with text instead of a list" do
+        plain_text_agent =
+          Fabricate(
+            :ai_agent,
+            response_format: nil,
+            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          )
+        SiteSetting.ai_helper_title_suggestions_agent = plain_text_agent.id
+
+        response =
+          DiscourseAi::Completions::Llm.with_prepared_responses(
+            ["1. The solitary horse\n2. A horse lost in time"],
+          ) { assistant.generate_and_send_prompt(mode, english_text, user) }
+
+        expect(response[:suggestions]).to eq([])
+      end
     end
 
     context "when using a prompt that returns a string" do
