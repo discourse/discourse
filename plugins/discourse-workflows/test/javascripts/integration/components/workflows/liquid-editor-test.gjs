@@ -148,6 +148,37 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
       .doesNotIncludeText("name", "the first input's fields stay separate");
   });
 
+  test("typing an opening delimiter closes it once", async function (assert) {
+    const field = { value: "", set() {} };
+
+    await render(<template><LiquidControl @field={{field}} /></template>);
+    await waitFor(".cm-editor");
+    const view = find(".codemirror-editor").codemirrorView;
+
+    // Each keystroke goes through the editor's input handlers, the way typing
+    // does, falling back to a plain insert when none takes it.
+    const type = (text) => {
+      for (const char of text) {
+        const { from, to } = view.state.selection.main;
+        const handled = view.state
+          .facet(view.constructor.inputHandler)
+          .some((handler) => handler(view, from, to, char, () => null));
+        if (!handled) {
+          view.dispatch(view.state.replaceSelection(char));
+        }
+      }
+    };
+
+    type("{{");
+    assert.strictEqual(view.state.doc.toString(), "{{  }}", "output tag");
+
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: "" },
+    });
+    type("{%");
+    assert.strictEqual(view.state.doc.toString(), "{%  %}", "logic tag");
+  });
+
   test("highlights the template's tags and output", async function (assert) {
     const value = "{% for item in items %}{{ item.name }}{% endfor %}";
 
