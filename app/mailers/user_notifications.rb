@@ -933,9 +933,10 @@ class UserNotifications < ActionMailer::Base
     until_date = until_date ? Time.zone.parse(until_date) : user.public_send("#{penalty}_till")
     forever = until_date > 100.years.from_now
     template = "user_notifications.account_#{penalty}#{"_forever" if forever}"
+    locale = user_locale(user)
     values = {
       template:,
-      locale: user_locale(user),
+      locale:,
       reason: user_history.details,
       recipient_user: user,
       notification_context: opts[:notification_context],
@@ -945,10 +946,15 @@ class UserNotifications < ActionMailer::Base
         ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
           ActiveSupport::TimeZone["UTC"]
       local_date = until_date.in_time_zone(timezone)
-      date = I18n.l(local_date, format: :long)
+      date = I18n.l(local_date, format: :long, locale:)
       if opts[:notification_context]
         date =
-          I18n.t("dsa_notifications.date_with_timezone", date:, offset: local_date.formatted_offset)
+          I18n.t(
+            "dsa_notifications.date_with_timezone",
+            date:,
+            offset: local_date.formatted_offset,
+            locale:,
+          )
       end
       values[:"#{penalty}_till"] = date
     end

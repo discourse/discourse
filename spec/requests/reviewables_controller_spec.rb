@@ -1987,6 +1987,42 @@ RSpec.describe ReviewablesController do
         end
       end
 
+      %w[suspend silence].each do |penalty|
+        it "delivers the #{penalty} date and customized wrapper in the recipient language" do
+          SiteSetting.allow_user_locale = true
+          flagged_post.user.update!(locale: "fr")
+          deadline = Time.zone.parse("2026-10-30 06:00:00 UTC")
+          freeze_time(Time.zone.parse("2026-10-16 06:00:00 UTC"))
+          TranslationOverride.upsert!(
+            "fr",
+            "dsa_notifications.date_with_timezone",
+            "%{date} (heure UTC%{offset})",
+          )
+          date_field = penalty == "suspend" ? :suspend_until : :silenced_till
+
+          I18n.with_locale(:en) do
+            put "/review/#{reviewable.id}/perform/agree_and_#{penalty}.json",
+                params: {
+                  :version => reviewable.version,
+                  :dsa_classification => classification,
+                  :reason => rule[:ground],
+                  date_field => deadline.iso8601,
+                  :post_action => "none",
+                }
+            Jobs::CriticalUserEmail.jobs.each do |job|
+              Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+            end
+          end
+
+          expect(response).to have_http_status(:ok)
+          email = ActionMailer::Base.deliveries.sole
+          body = email.text_part.body.decoded
+          expected_date = I18n.l(deadline, format: :long, locale: :fr)
+          expect(body).to start_with("Votre compte sur le forum")
+          expect(body).to include("#{expected_date} (heure UTC+00:00)")
+        end
+      end
+
       it "keeps moderation pending when no review contact is configured" do
         SiteSetting.contact_email = ""
         SiteSetting.contact_url = ""
