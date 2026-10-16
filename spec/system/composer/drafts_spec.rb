@@ -8,6 +8,7 @@ describe "Composer - Drafts" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
+  let(:drafts_dropdown) { PageObjects::Components::DraftsMenu.new }
 
   before { sign_in(current_user) }
 
@@ -302,8 +303,19 @@ describe "Composer - Drafts" do
       expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
     end
 
-    it "lets the user finish their edit after clicking reply" do
+    it "lets the user post a separate reply and still resume their edit" do
       topic_page.click_reply_button
+
+      expect(composer).to have_content("")
+      expect(composer.button_label).to have_no_text(I18n.t("js.composer.save_edit"))
+
+      composer.fill_content("a brand new reply")
+      composer.create
+
+      expect(composer).to be_closed
+      expect(topic_page).to have_post_content(post_number: 4, content: "a brand new reply")
+
+      topic_page.click_post_action_button(post_1, :edit)
 
       expect(composer).to have_content("edited post content")
       expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
@@ -317,17 +329,65 @@ describe "Composer - Drafts" do
       )
     end
 
-    it "shows the user their saved edit when they edit the same post again" do
-      topic_page.click_post_action_button(post_1, :edit)
-
-      expect(composer).to have_content("edited post content")
-      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
-    end
-
-    it "shows the user the original content when they edit a different post" do
+    it "keeps the saved edit when the user edits a different post" do
       topic_page.click_post_action_button(post_2, :edit)
 
       expect(composer).to have_content("another post content")
+
+      composer.fill_content("second edit")
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+      expect(Draft.where(user: current_user).pluck(:draft_key)).to contain_exactly(
+        post_1.edit_draft_key,
+        post_2.edit_draft_key,
+      )
+
+      topic_page.click_post_action_button(post_1, :edit)
+
+      expect(composer).to have_content("edited post content")
+    end
+
+    it "resumes the saved edit from the drafts menu" do
+      visit "/"
+      drafts_dropdown.open
+      drafts_dropdown.find(".topic-drafts-item:first-child").click
+
+      expect(composer).to be_opened
+      expect(composer).to have_content("edited post content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+    end
+  end
+
+  context "with an edit draft saved under the topic key" do
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user, raw: "original post content") }
+
+    it "resumes the edit when clicking reply and clears the draft once saved" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_post_content(post_number: 2, content: "original post content")
+
+      # saved after page load so the topic route doesn't auto-open it
+      Draft.set(
+        current_user,
+        topic.draft_key,
+        0,
+        { action: "edit", postId: post_1.id, reply: "legacy edit content" }.to_json,
+      )
+
+      topic_page.click_reply_button
+
+      expect(composer).to have_content("legacy edit content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+
+      composer.create
+
+      expect(composer).to be_closed
+      expect(topic_page).to have_post_content(
+        post_number: post_1.post_number,
+        content: "legacy edit content",
+      )
+      expect(Draft.where(user: current_user)).to be_empty
     end
   end
 
