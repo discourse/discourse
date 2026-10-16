@@ -3,6 +3,7 @@ import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel, next as nextRunloop, schedule } from "@ember/runloop";
+import { bind } from "discourse/lib/decorators";
 import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
 import LoadFeedbackTracker, {
@@ -310,6 +311,18 @@ export default class WindowedListCoordinator {
       align: "start",
       behavior: "auto",
     });
+  }
+
+  /** Reads the complete option set size, skipping structural and placeholder rows. */
+  @bind
+  setSizeOf(rows: readonly ListRow[]): number {
+    for (const row of rows) {
+      const option = this.optionRow(row);
+      if (option && !option.flags.group && !option.flags.divider) {
+        return option.setSize ?? 0;
+      }
+    }
+    return 0;
   }
 
   /**

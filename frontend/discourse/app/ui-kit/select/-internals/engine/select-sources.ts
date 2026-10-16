@@ -77,6 +77,9 @@ export class SelectState {
   /** Whether the paginated source has no page left to reveal. */
   @tracked serverExhausted = false;
 
+  /** Whether consecutive reveals stopped adding visible options for this query. */
+  @tracked visiblyExhausted = false;
+
   /**
    * Whether the source asserted that what it returned is the whole set — by declaring no
    * more pages, or by staying silent, which the contract treats as the same claim. Kept
@@ -120,6 +123,8 @@ export class SelectState {
 }
 
 export interface SelectSource {
+  /** Records a rendered source's transformed option count. */
+  noteVisible(visible: number, input: number): void;
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
   total(): number | undefined;
   canRevealMore(): boolean;
@@ -149,6 +154,9 @@ export class LocalSource implements SelectSource {
   rows(): SelectItem[] {
     return this.#filtered() as SelectItem[];
   }
+
+  /** Client sources have no paging progress to measure. */
+  noteVisible(): void {}
 
   total(): number {
     return this.#filtered().length;
@@ -204,6 +212,18 @@ export class PagedSource implements SelectSource {
   #serverBarrenPages = 0;
   #serverRequest?: Promise<SelectLoadResult>;
 
+  /** Consecutive measured reveals that added no visible options. */
+  #barrenReveals = 0;
+
+  /** Option count from the latest settled build. */
+  #visible?: number;
+
+  /** Option count when the previous reveal began, if it had been built. */
+  #visibleAtReveal?: number;
+
+  /** Whether settled rows have been built since the previous reveal. */
+  #visibleMeasured = false;
+
   constructor(opts: {
     load: NonNullable<SelectEngineOptions["load"]>;
     state: SelectState;
@@ -228,6 +248,9 @@ export class PagedSource implements SelectSource {
   }
 
   total(): number | undefined {
+    if (this.#state.visiblyExhausted) {
+      return undefined;
+    }
     const { serverComplete, serverLoadedCount, serverTotal, serverTruncated } =
       this.#state;
     return serverComplete && !serverTruncated ? serverLoadedCount : serverTotal;
@@ -237,11 +260,15 @@ export class PagedSource implements SelectSource {
     return (
       !this.pending() &&
       !this.#state.serverExhausted &&
+      !this.#state.visiblyExhausted &&
       this.#state.serverLoadedCount < MAX_RENDERED
     );
   }
 
   atCapWithMore(): boolean {
+    if (this.#state.visiblyExhausted) {
+      return false;
+    }
     const { serverLoadedCount, serverExhausted, serverTotal, serverTruncated } =
       this.#state;
     return (
@@ -284,6 +311,20 @@ export class PagedSource implements SelectSource {
       return false;
     }
 
+    if (
+      this.#visibleMeasured &&
+      this.#visible != null &&
+      this.#visibleAtReveal != null
+    ) {
+      this.#barrenReveals =
+        this.#visible > this.#visibleAtReveal ? 0 : this.#barrenReveals + 1;
+      if (this.#barrenReveals >= 2) {
+        this.#state.visiblyExhausted = true;
+        return false;
+      }
+    }
+    this.#visibleAtReveal = this.#visible;
+    this.#visibleMeasured = false;
     this.#state.reveal++;
     return true;
   }
@@ -292,10 +333,23 @@ export class PagedSource implements SelectSource {
     return this.#serverItems;
   }
 
+  /** Ignores retained rows both during a request and before its new rows reach the list. */
+  noteVisible(visible: number, input: number): void {
+    if (
+      this.#serverRequest ||
+      input !== Math.min(this.#serverItems.length, MAX_RENDERED)
+    ) {
+      return;
+    }
+    this.#visible = visible;
+    this.#visibleMeasured = true;
+  }
+
   reset(): void {
     this.#state.reveal = 0;
     this.#state.serverTotal = undefined;
     this.#state.serverExhausted = false;
+    this.#state.visiblyExhausted = false;
     this.#state.serverComplete = false;
     this.#state.serverTruncated = false;
     this.#state.serverLoadedCount = 0;
@@ -312,6 +366,10 @@ export class PagedSource implements SelectSource {
     this.#serverOffset = 0;
     this.#serverPageSize = undefined;
     this.#serverBarrenPages = 0;
+    this.#barrenReveals = 0;
+    this.#visible = undefined;
+    this.#visibleAtReveal = undefined;
+    this.#visibleMeasured = false;
     this.#serverGeneration++;
     this.#serverRequest = undefined;
   }

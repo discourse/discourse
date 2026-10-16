@@ -20,6 +20,9 @@ export default class ListComposer {
   #getContentContext: () => Record<string, unknown>;
   #applyLegacyContent: (items: SelectItem[]) => SelectItem[];
 
+  /** Records transformed option counts without invalidating the current render. */
+  #noteVisible: (visible: number, input: number) => void;
+
   constructor(opts: {
     options: SelectOptionsView;
     getFilter: () => string;
@@ -30,6 +33,8 @@ export default class ListComposer {
     getTotal: () => number | undefined;
     getContentContext: () => Record<string, unknown>;
     applyLegacyContent: (items: SelectItem[]) => SelectItem[];
+    /** Measures source options before and after content extensions. */
+    noteVisible: (visible: number, input: number) => void;
   }) {
     this.#options = opts.options;
     this.#getFilter = opts.getFilter;
@@ -40,6 +45,7 @@ export default class ListComposer {
     this.#getTotal = opts.getTotal;
     this.#getContentContext = opts.getContentContext;
     this.#applyLegacyContent = opts.applyLegacyContent;
+    this.#noteVisible = opts.noteVisible;
   }
 
   /**
@@ -52,6 +58,7 @@ export default class ListComposer {
    */
   buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
     let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
+    const inputCount = items.filter((item) => !this.#isStructural(item)).length;
 
     items = applyValueTransformer("select-content", items, {
       identifiers: this.#options.identifiers,
@@ -70,6 +77,7 @@ export default class ListComposer {
     const sourceCount = items.filter(
       (item) => !this.#isStructural(item)
     ).length;
+    this.#noteVisible(sourceCount, inputCount);
 
     const createItem = this.#shouldOfferCreate(items)
       ? // `#shouldOfferCreate` already guaranteed a `createItem` is present.
@@ -106,6 +114,7 @@ export default class ListComposer {
       finalItems,
       specialCount,
       sourceCount,
+      inputCount,
       createItem ? 1 : 0
     );
   }
@@ -134,21 +143,26 @@ export default class ListComposer {
     items: SelectItem[],
     specialCount: number,
     sourceCount: number,
+    inputCount: number,
     createCount: number
   ): readonly SelectDescriptor[] {
     const total = this.#getTotal();
     // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
     // declares its total has already answered; withholding it until the last page lands would
-    // report "unknown" about something known.
+    // report "unknown" about something known. Transformers change what the reader can reach, so
+    // their net change adjusts that total, floored at the rows shown.
     //
     // A source that declares no total is sized by what it has loaded, never by `-1`. That sentinel
     // is unusable in practice: no two engines interpret it alike, and its own AAM tells user agents
     // to substitute 1. The loaded rows are the ones the reader can reach anyway, and "there is
     // more" is carried by the announcements that can express it.
     //
-    // The floor keeps a transformer or the legacy bridge, which can add rows absent from a reported
-    // total, from pushing a position past the set.
-    const sourceTotal = Math.max(total ?? sourceCount, sourceCount);
+    // A client source is always sized by the rows shown: under a debounce its total already
+    // counts the next filter while the previous rows are still on screen.
+    const sourceTotal =
+      !this.#options.isAsync || total == null
+        ? sourceCount
+        : Math.max(total + sourceCount - inputCount, sourceCount);
     const setSize = specialCount + sourceTotal + createCount;
 
     // Loaded source rows are a prefix, so their positions hold whatever sizes the set.

@@ -611,6 +611,7 @@ export default class SelectEngine {
       isSelected: (item) => this.isSelected(item),
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
+      noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       applyLegacyContent: (items) => applyLegacySelectKitContent(this, items),
       getContentContext: () => ({
         ...this.#extensionContext(),
@@ -813,6 +814,7 @@ export default class SelectEngine {
    * A reported `total` outranks the count of rows actually navigable, deliberately: the engine
    * cannot tell an honest total whose tail it has not fetched from an inflated one, so it
    * trusts the source. A source that declares 500 and holds 90 therefore reports 500.
+   * Unavailable after consecutive reveals fail to add visible rows for the query.
    */
   get total(): number | undefined {
     return this.#source.total();

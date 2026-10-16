@@ -56,14 +56,20 @@ export default class SelectAnnouncer {
   #getShouldSuppressEntryCount: () => boolean;
   #reannounceActive: () => boolean;
 
-  // Deduping on the message rather than a count keeps a reveal silent whenever it does not
-  // change what the message says — the usual case, since a reported total does not move as
-  // rows mount. A cursor source is the exception: it has no count to report until its last
-  // page declares completeness, so that one reveal legitimately announces.
+  // Deduping on the message rather than a count keeps a change silent whenever it does not
+  // change what the message says.
   //
   // Scoped to the query as well, because the same count for a *different* query is news: a reader
   // who types on and hears nothing has no way to tell a settled search from a dropped keystroke.
   #lastAnnouncedCount: { query: string; message: string } | null = null;
+
+  /**
+   * The query whose paged set already announced a known total. More pages for it can move that
+   * figure as transformers hide or add rows, and each row's `aria-setsize` already carries the new
+   * value, so a reveal stays quiet. A cursor source is the exception: it has no total until its
+   * last page declares completeness, so that one reveal legitimately announces.
+   */
+  #knownTotalQuery: string | null = null;
 
   // A count waiting to learn whether the cursor moved — see `announceCount`. Holds the message,
   // the query it describes, where the cursor sat when it was scheduled, and what was last known,
@@ -109,15 +115,14 @@ export default class SelectAnnouncer {
    * Politely announces the result count to screen readers via the shared `a11y`
    * service (never a per-component live region, never assertive), skipping repeats.
    *
-   * Reports the true total when the source can supply one, not how many rows happen to be
-   * mounted, so a 5000-result query does not announce "50 results". Only a source still
-   * paging under `hasMore` lacks a total; it announces the loaded count until its last page
-   * declares completeness and the real count becomes knowable.
+   * Reports the set size, matching `aria-setsize`, so a transformer that hides or adds rows
+   * changes both together. The source's total only chooses the wording: "results" when it is
+   * known, "results loaded" while a cursor source is still paging.
    */
   @action
   announceCount(
     _element: HTMLElement,
-    [rendered, total, query]: [number, number | undefined, string?]
+    [setSize, total, query]: [number, number | undefined, string?]
   ): void {
     // Mid-load the rows on screen are the previous query's and the total is already cleared,
     // so any count now describes stale rows. Settling re-fires this with the real numbers.
@@ -126,10 +131,16 @@ export default class SelectAnnouncer {
     }
 
     const settledQuery = query ?? "";
+    if (this.#engine.isAsync) {
+      if (this.#knownTotalQuery === settledQuery) {
+        return;
+      }
+      this.#knownTotalQuery = total == null ? null : settledQuery;
+    }
     const message =
       total == null
-        ? i18n("d_select.results_loaded", { count: rendered })
-        : i18n("d_select.results_count", { count: total });
+        ? i18n("d_select.results_loaded", { count: setSize })
+        : i18n("d_select.results_count", { count: setSize });
 
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
@@ -170,6 +181,7 @@ export default class SelectAnnouncer {
     args: [number, number | undefined, string?]
   ): void {
     this.#lastAnnouncedCount = null;
+    this.#knownTotalQuery = null;
 
     if (this.#getShouldSuppressEntryCount()) {
       this.#suppressNextCount = true;

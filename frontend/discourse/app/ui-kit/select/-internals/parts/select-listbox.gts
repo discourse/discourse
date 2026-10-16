@@ -174,7 +174,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             {{didUpdate @feedback.recordRowCount items.length}}
             {{didInsert
               @announcer.announceCountOnEntry
-              items.length
+              (@listbox.setSizeOf items)
               @engine.total
               content.filter
             }}
@@ -183,7 +183,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
           re-runs and a reader typing on hears nothing at all. }}
             {{didUpdate
               @announcer.announceCount
-              items.length
+              (@listbox.setSizeOf items)
               @engine.total
               content.filter
             }}

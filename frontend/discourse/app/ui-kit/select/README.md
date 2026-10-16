@@ -145,6 +145,12 @@ api.registerValueTransformer("select-item-class", ({ value, context }) => {
 });
 ```
 
+Changes from `select-content` are reflected in `aria-setsize` and the announced count. On paged
+sources, the set is the declared total plus the transformers' net change. Two reveals in a row
+that add no visible rows stop paging for that query. The set is then sized by the rows shown,
+and the footer's `total` becomes undefined. Otherwise, footer `total` and `loadedCount` remain
+source counts.
+
 Core keys sit at the top level of the context. Data from outside core lives in two namespaces, so
 a key core adds later never collides with one a customization relies on:
 

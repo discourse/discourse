@@ -1,6 +1,7 @@
 import { trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
 // Mirrors the module-private SERVER cap in select-engine.ts. It is deliberately not
@@ -1121,3 +1122,277 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     });
   });
 });
+
+module(
+  "Unit | ui-kit | SelectEngine | transformer safeguard",
+  function (hooks) {
+    setupTest(hooks);
+
+    function page(offset, length) {
+      return Array.from({ length }, (_, i) => ({
+        id: offset + i + 1,
+        name: `Item ${offset + i + 1}`,
+      }));
+    }
+
+    function hideRows(predicate) {
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.filter((item) => !predicate(item))
+        );
+      });
+    }
+
+    /** Pages until a reveal is refused; false when six reveals all went through. */
+    async function pageUntilRefused(engine) {
+      for (let i = 0; i < 6; i++) {
+        const { revealed } = await settleBuildAndReveal(engine);
+        if (!revealed) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /** Loads, renders the settled rows, then asks for more, as the listbox does. */
+    async function settleBuildAndReveal(engine) {
+      const rows = await engine.loadItems(engine.loadContext);
+      const descriptors = engine.buildItems(rows);
+      return { revealed: engine.revealMore(), descriptors };
+    }
+
+    test("two reveals with no visible growth stop paging", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        hasMore: true,
+      }));
+      hideRows((item) => item.id > 10);
+      const engine = new SelectEngine({ load });
+
+      const results = [];
+      for (let i = 0; i < 6; i++) {
+        const { revealed } = await settleBuildAndReveal(engine);
+        results.push(revealed);
+        if (!revealed) {
+          break;
+        }
+      }
+
+      assert.deepEqual(
+        results,
+        [true, true, false],
+        "the second barren reveal is refused"
+      );
+      assert.strictEqual(calls.length, 3, "three loads, then no more");
+      assert.false(engine.canRevealMore, "paging stays stopped");
+    });
+
+    test("a single barren reveal is tolerated and growth keeps paging", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        hasMore: offset < 40,
+      }));
+      // Every page keeps half its rows, except the second, which loses all of them.
+      hideRows((item) => (item.id > 10 && item.id <= 20) || item.id % 2 === 0);
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 8; i++) {
+        const { revealed } = await settleBuildAndReveal(engine);
+        if (!revealed) {
+          break;
+        }
+      }
+
+      assert.strictEqual(
+        calls.length,
+        5,
+        "paging runs until the source itself is done"
+      );
+    });
+
+    test("a new filter or a reload pages again after the brake trips", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        hasMore: true,
+      }));
+      hideRows((item) => item.id > 10);
+      const engine = new SelectEngine({ load });
+
+      assert.true(await pageUntilRefused(engine), "the brake tripped");
+
+      engine.setFilter("Item");
+      const afterFilter = await settleBuildAndReveal(engine);
+      assert.true(afterFilter.revealed, "a new query can reveal again");
+      assert.strictEqual(
+        calls.at(-1).offset,
+        0,
+        "and it started over from the first page"
+      );
+
+      assert.true(
+        await pageUntilRefused(engine),
+        "the brake trips again for that query"
+      );
+
+      engine.reload();
+      const afterReload = await settleBuildAndReveal(engine);
+      assert.true(afterReload.revealed, "a reload can reveal again");
+    });
+
+    test("a tripped brake sizes the set by the rows shown", async function (assert) {
+      const { load } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        total: 100,
+        hasMore: true,
+      }));
+      hideRows((item) => item.id > 10);
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 6; i++) {
+        const { revealed } = await settleBuildAndReveal(engine);
+        if (!revealed) {
+          break;
+        }
+      }
+      const descriptors = engine.buildItems(
+        await engine.loadItems(engine.loadContext)
+      );
+
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "the declared total no longer describes what can be reached"
+      );
+      assert.strictEqual(descriptors.length, 10, "ten rows are shown");
+      assert.true(
+        descriptors.every((descriptor) => descriptor.setSize === 10),
+        "and the set is exactly those rows"
+      );
+    });
+
+    test("reveals without a build in between never trip the brake", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        hasMore: true,
+      }));
+      hideRows((item) => item.id > 10);
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 5; i++) {
+        await engine.loadItems(engine.loadContext);
+        engine.revealMore();
+      }
+
+      assert.true(
+        calls.length >= 5,
+        `nothing was measured, so nothing stopped paging (${calls.length})`
+      );
+    });
+
+    test("a render of the rows from before a reveal settled is not a measurement", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: page(offset, 10),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      const firstPage = await engine.loadItems(engine.loadContext);
+      engine.buildItems(firstPage);
+      const results = [];
+      for (let i = 0; i < 4; i++) {
+        results.push(engine.revealMore());
+        await engine.loadItems(engine.loadContext);
+        // The list can re-render rows it already had after a request clears and before the new
+        // rows arrive. Such a render shows nothing about the page that just landed.
+        engine.buildItems(firstPage);
+      }
+
+      assert.deepEqual(
+        results,
+        [true, true, true, true],
+        "a growing list is never braked by a stale render"
+      );
+      assert.strictEqual(calls.length, 5, "every reveal loaded a page");
+    });
+
+    test("rows kept on screen during a pending client filter keep their own size", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple red" },
+        { id: 2, name: "Apple green" },
+        { id: 3, name: "Cherry" },
+      ];
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.slice(0, 1)
+        );
+      });
+      const engine = new SelectEngine({ items });
+      engine.setFilter("Apple");
+      const retained = await engine.loadItems(engine.loadContext);
+      engine.setFilter("");
+
+      assert.strictEqual(
+        engine.total,
+        3,
+        "the source already answers the new query"
+      );
+      assert.deepEqual(
+        engine.buildItems(retained).map((row) => row.setSize),
+        [1],
+        "the rows still shown describe their own set"
+      );
+    });
+
+    test("structural rows do not count toward the paged net change", async function (assert) {
+      const engine = new SelectEngine({
+        load: () => ({
+          items: [
+            { id: 1, name: "Apple" },
+            { __header: true, label: "Fruit" },
+            { __divider: true },
+          ],
+          total: 100,
+          hasMore: true,
+        }),
+      });
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) => [
+          ...value,
+          { id: 2, name: "Banana" },
+        ]);
+      });
+      const rows = engine.buildItems(
+        await engine.loadItems(engine.loadContext)
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.setSize != null).map((row) => row.setSize),
+        [101, 101],
+        "only the added option adjusts the declared total"
+      );
+    });
+
+    test("visible growth clears a barren streak", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.filter((item) => item.id === 1 || item.id === 3)
+        );
+      });
+      const engine = new SelectEngine({
+        load: (_filter, { offset }) => ({
+          items: [{ id: offset + 1, name: `Item ${offset + 1}` }],
+          hasMore: true,
+        }),
+      });
+      const reveals = [];
+      for (let i = 0; i < 5; i++) {
+        engine.buildItems(await engine.loadItems(engine.loadContext));
+        reveals.push(engine.revealMore());
+      }
+      assert.deepEqual(
+        reveals,
+        [true, true, true, true, false],
+        "growth separates two barren streaks, each tolerating one reveal"
+      );
+    });
+  }
+);

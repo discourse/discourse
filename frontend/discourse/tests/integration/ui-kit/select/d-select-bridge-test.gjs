@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
@@ -19,13 +20,16 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
+  EngineProbe,
   Host,
   ITEMS,
   MultiLimitsHost,
   optionWithText,
+  probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | ui-kit | select | DSelect (modifySelectKit bridge)",
@@ -1386,6 +1390,327 @@ module(
         [...optionWithText("Banana").classList],
         ["d-combobox__option"],
         "an empty result leaves only the core class"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect transformer safeguard",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    function numbered(count, offset = 0) {
+      return Array.from({ length: count }, (_, i) => ({
+        id: offset + i + 1,
+        name: `Item ${offset + i + 1}`,
+        section: (offset + i) % 2 ? "odd" : "even",
+      }));
+    }
+
+    function spyAnnounce(context) {
+      return sinon.spy(getOwner(context).lookup("service:a11y"), "announce");
+    }
+
+    function countAnnounced(announce, key, count) {
+      return announce.withArgs(i18n(`d_select.${key}`, { count }), "polite")
+        .callCount;
+    }
+
+    function setSizes() {
+      return [
+        ...document.querySelectorAll("ul[role='listbox'] > [role='option']"),
+      ].map((option) => option.getAttribute("aria-setsize"));
+    }
+
+    test("a client list is sized by the rows a transformer keeps", async function (assert) {
+      const announce = spyAnnounce(this);
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.slice(0, 2)
+        );
+      });
+      const items = numbered(5);
+
+      await render(
+        <template><DSelect @items={{items}} @variant="button" /></template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert.deepEqual(setSizes(), ["2", "2"], "both kept rows say 2");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 2),
+        1,
+        "the announced count matches the set size"
+      );
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 5),
+        0,
+        "the source's own count is never announced"
+      );
+    });
+
+    test("a grouped client list is counted from its options, not its headers", async function (assert) {
+      const announce = spyAnnounce(this);
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.slice(0, 2)
+        );
+      });
+      const items = numbered(5);
+      const groupLabel = (key) => (key === "even" ? "Even" : "Odd");
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="section"
+            @groupLabel={{groupLabel}}
+            @items={{items}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert
+        .dom("ul[role='listbox'] > .d-combobox__group-header")
+        .exists("a header leads the list");
+      assert.deepEqual(setSizes(), ["2", "2"], "both kept rows say 2");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 2),
+        1,
+        "the count skips the header to find the set size"
+      );
+    });
+
+    test("rows a transformer adds count toward the set and the announcement", async function (assert) {
+      const announce = spyAnnounce(this);
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) => [
+          ...value,
+          { id: "extra-1", name: "Extra 1" },
+          { id: "extra-2", name: "Extra 2" },
+        ]);
+      });
+      const items = numbered(3);
+
+      await render(
+        <template><DSelect @items={{items}} @variant="button" /></template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert.deepEqual(
+        setSizes(),
+        ["5", "5", "5", "5", "5"],
+        "every row says 5"
+      );
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 5),
+        1,
+        "and so does the announcement"
+      );
+    });
+
+    test("a paged set is the declared total plus the transformer's net change", async function (assert) {
+      const announce = spyAnnounce(this);
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.filter((item) => item.id % 4 !== 0)
+        );
+      });
+      const load = (_filter, { offset = 0 }) => ({
+        items: numbered(20, offset),
+        total: 100,
+      });
+
+      await render(
+        <template>
+          <DSelect @debounce={{false}} @load={{load}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert.strictEqual(setSizes().length, 15, "fifteen of twenty rows show");
+      assert.true(
+        setSizes().every((size) => size === "95"),
+        "the set is 100 less the 5 hidden so far"
+      );
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 95),
+        1,
+        "the announcement says the same"
+      );
+    });
+
+    test("a none row counts in the announcement as it does in the set size", async function (assert) {
+      const announce = spyAnnounce(this);
+      const items = numbered(3);
+
+      await render(
+        <template>
+          <DSelect @items={{items}} @noneLabel="None" @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert.deepEqual(setSizes(), ["4", "4", "4", "4"], "four options");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 4),
+        1,
+        "four results are announced"
+      );
+    });
+
+    test("a client list that changes while open still announces its new count", async function (assert) {
+      const announce = spyAnnounce(this);
+      const state = new (class {
+        @tracked items = numbered(3);
+      })();
+
+      await render(
+        <template>
+          <DSelect @items={{state.items}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 3),
+        1,
+        "opening announces the count"
+      );
+
+      state.items = numbered(5);
+      await settled();
+
+      assert.deepEqual(
+        setSizes(),
+        ["5", "5", "5", "5", "5"],
+        "the rows carry the new size"
+      );
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 5),
+        1,
+        "nothing else reports the change, so the count is announced"
+      );
+    });
+
+    test("paging does not re-announce an estimate that moved", async function (assert) {
+      const announce = spyAnnounce(this);
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.filter((item) => item.id % 4 !== 0)
+        );
+      });
+      const load = (_filter, { offset = 0 }) => ({
+        items: numbered(20, offset),
+        total: 100,
+      });
+
+      await render(
+        <template>
+          <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 95),
+        1,
+        "opening announces the estimate"
+      );
+
+      probedEngine().revealMore();
+      await settled();
+
+      assert.true(
+        setSizes().every((size) => size === "90"),
+        "the rows carry the new estimate"
+      );
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 90),
+        0,
+        "more rows for the same query do not announce a new count"
+      );
+    });
+
+    test("a set holding only the create row announces its one option", async function (assert) {
+      const announce = spyAnnounce(this);
+      const items = [];
+      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      await render(
+        <template>
+          <EngineProbe
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @items={{items}}
+            @variant="button"
+          />
+        </template>
+      );
+      probedEngine().setFilter("Pear");
+      await click(".d-combobox__trigger");
+
+      assert.deepEqual(setSizes(), ["1"], "the create row sizes its set");
+      assert.strictEqual(
+        countAnnounced(announce, "results_count", 1),
+        1,
+        "the announced count includes the create row"
+      );
+    });
+
+    test("slow reveals that grow the list keep paging after the skeletons go", async function (assert) {
+      const items = numbered(100);
+      let release;
+      const load = (_filter, { offset = 0 }) =>
+        offset === 0
+          ? { items: items.slice(0, 10), hasMore: true }
+          : new Promise((resolve) => {
+              release = () =>
+                resolve({
+                  items: items.slice(offset, offset + 10),
+                  hasMore: true,
+                });
+            });
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) =>
+          value.filter((item) => item.id % 2 === 1)
+        );
+      });
+      await render(
+        <template>
+          <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+      const engine = probedEngine();
+
+      const hasFrontier = () =>
+        release && find("ul[role='listbox'] .d-combobox__skeleton");
+      for (let i = 0; i < 3; i++) {
+        release = undefined;
+        assert.true(
+          engine.revealMore(),
+          "a growing list accepts another reveal"
+        );
+        try {
+          await waitUntil(hasFrontier);
+          assert.strictEqual(
+            setSizes().length,
+            (i + 1) * 5,
+            "only settled options show during the request"
+          );
+        } finally {
+          release?.();
+        }
+        await settled();
+        assert.strictEqual(
+          setSizes().length,
+          (i + 2) * 5,
+          "new visible options replace the skeletons"
+        );
+      }
+      assert.true(
+        engine.canRevealMore,
+        "slow visible growth never trips the brake"
       );
     });
   }
