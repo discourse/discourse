@@ -41,6 +41,46 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
       );
   });
 
+  test("offers a recording field once a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").exists();
+  });
+
+  test("offers no recording field before a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2099-07-01T10:00:00Z"),
+        endsAt: moment("2099-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").doesNotExist();
+  });
+
+  test("emits the recording as it is typed", async function (assert) {
+    let state;
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      }),
+      (newState) => (state = newState)
+    );
+
+    await fillIn(".composer-event__recording-input", "https://youtu.be/abc");
+
+    assert.strictEqual(state.recording, "https://youtu.be/abc");
+  });
+
   test("offers no url row for an event that has none", async function (assert) {
     const initialState = stateWith({ location: "Room 5" });
     await renderEditor(initialState);

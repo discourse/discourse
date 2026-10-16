@@ -478,7 +478,7 @@ en:
               one: "%{count} user invited"
               other: "%{count} users invited"
         event:
-          expired: "Expired"
+          expired: "Ended"
           closed: "Closed"
           full: "Full"
           status:
@@ -491,12 +491,24 @@ en:
             private:
               title: "Private"
               description: "A private event can only be joined by invited users."
+      recording:
+        watch: "Watch recording"
+        add: "Add recording link"
+      recording_modal:
+        add_title: "Add recording"
+        edit_title: "Edit recording"
+        label: "Recording link"
+        save: "Save"
+        remove: "Remove recording"
+        edit_reason: "Recording link updated"
+        no_event: "The event could not be found in its post."
       composer:
         name_placeholder: "Event name"
         end_date_placeholder: "End date"
         location_or_url_placeholder: "Add location or URL"
         location_placeholder: "Add location"
         url_placeholder: "Add URL"
+        recording_placeholder: "Add a link to the recording"
         max_attendees_placeholder: "Unlimited attendees"
         max_attendees_display:
           one: "Max %{count} attendee"
@@ -608,6 +620,9 @@ en:
         livestream:
           label: "Livestream"
           checkbox_label: "Embed the URL as a video and open livestream chat for attendees"
+        recording:
+          label: "Recording"
+          placeholder: "Add a link to the recording"
         location:
           label: "Location"
           label_or_url: "Location or URL"
