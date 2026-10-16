@@ -5,6 +5,19 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
   before { enable_current_plugin }
 
+  describe "#finish_visible" do
+    it "drops unclosed stripped blocks, including their dangling tag tails" do
+      expect(tag_stripper << "<thinking>Hidden<res").to be_nil
+      expect(tag_stripper.finish_visible).to eq("")
+      expect(tag_stripper.finish).to eq("<thinking>Hidden<res")
+    end
+
+    it "returns a dangling tag prefix outside stripped blocks" do
+      expect(tag_stripper << "<thinking>Hidden</thinking><res").to be_nil
+      expect(tag_stripper.finish_visible).to eq("<res")
+    end
+  end
+
   it "strips tags correctly in simple cases" do
     result = tag_stripper << "x<thinking>hello</thinki"
     expect(result).to eq("x")

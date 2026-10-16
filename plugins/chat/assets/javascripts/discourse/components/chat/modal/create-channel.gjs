@@ -343,21 +343,23 @@ export default class ChatModalCreateChannel extends Component {
             </field.Control>
           </form.Field>
 
-          <form.Field
-            @name="emoji"
-            @title={{i18n "chat.create_channel.emoji.label"}}
-            @type="emoji"
-            as |field|
-          >
-            <field.Control @context="channel-emoji" />
+          {{#if this.siteSettings.enable_emoji}}
+            <form.Field
+              @name="emoji"
+              @title={{i18n "chat.create_channel.emoji.label"}}
+              @type="emoji"
+              as |field|
+            >
+              <field.Control @context="channel-emoji" />
 
-            <DButton
-              class="btn-flat edit-channel-clear-emoji"
-              @action={{fn field.set null}}
-              @disabled={{not field.value}}
-              @label="chat.create_channel.emoji.reset"
-            />
-          </form.Field>
+              <DButton
+                class="btn-flat edit-channel-clear-emoji"
+                @action={{fn field.set null}}
+                @disabled={{not field.value}}
+                @label="chat.create_channel.emoji.reset"
+              />
+            </form.Field>
+          {{/if}}
 
           {{#if this.autoJoinAvailable}}
             <form.Field

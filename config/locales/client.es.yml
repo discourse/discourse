@@ -286,7 +286,6 @@ es:
       zh_CN:
         name: Chino simplificado
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación n.º %{postNumber}, por @%{username}"
       close: "cerrar"
       twitter: "Compartir en X"
@@ -340,6 +339,12 @@ es:
     skip_to_last_reply: "Saltar a la última respuesta"
     skip_to_top: "Saltar al principio"
     skip_user_nav: "Saltar al contenido del perfil"
+    reorder:
+      remove: "Quitar %{label}"
+      removed: "Eliminado %{label}"
+      move_up: "Mover arriba"
+      move_down: "Mover abajo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_no_smtp: "Todos los correos electrónicos salientes están deshabilitados porque no se ha configurado ningún servidor SMTP. No se pueden enviar correos electrónicos de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
@@ -349,6 +354,7 @@ es:
     notifications_tracking:
       tooltip: "Nivel de notificación: %{level}"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "¡Hola, %{preferred_display_name}!"
@@ -464,9 +470,6 @@ es:
     max_of_count:
       one: "máximo de %{count}"
       other: "máximo de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por periodo"
     related_messages:
@@ -492,18 +495,9 @@ es:
         use_predefined: "Explorar plantillas"
         back: "Atrás"
         icebreakers:
-          fun_facts:
-            title: "¿Cuáles son algunos datos curiosos sobre ti?"
-            body: "¡Hola a todos! Me entusiasma empezar esta nueva comunidad. Para empezar, compartamos algo curioso sobre nosotros. Empiezo yo: ¡me encanta el senderismo y explorar nuevos senderos! ¿Qué hay de interesante sobre vosotros?"
-          coolest_thing_you_have_seen_today:
-            title: "¿Qué es lo más guay que habéis visto hoy?"
-            body: "¿Qué es lo más guay que habéis visto o que os ha pasado hoy? Puede ser cualquier cosa, desde una preciosa puesta de sol hasta un acto de bondad aleatorio. Empiezo yo: ¡he visto a un perro ayudando a una persona mayor a cruzar la calle!"
           introduce_yourself:
             title: "Preséntate"
             body: "¡Os doy la bienvenida a la comunidad! Vamos a conocernos. Presentaos y hablad un poco de vuestros intereses. Empiezo yo: ¡me apasiona la tecnología y me encanta enseñar a los demás!"
-          what_is_your_favorite_food:
-            title: "¿Cuál es vuestra comida favorita?"
-            body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
     design_wizard:
       back: "Atrás"
       next: "Siguiente"
@@ -771,6 +765,10 @@ es:
       title:
         search: "Busca un mensaje"
         placeholder: "escribe el título, URL ID del mensaje aquí"
+    dsa_statements:
+      category: "Categoría"
+      category_prompt: "Elige una categoría"
+      saving: "Guardando…"
     review:
       show_more: "Mostrar más"
       show_less: "Mostrar menos"
@@ -2039,7 +2037,6 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
         logo_small: "Logotipo pequeño del sitio. Usado por defecto."
-        use_custom: "O sube un avatar personalizado:"
       change_profile_background:
         title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
@@ -2621,7 +2618,6 @@ es:
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
-      value_prop: "¿Cansado de recorrer las mismas publicaciones? Si creas una cuenta, siempre volverás al punto donde lo dejaste. Con una cuenta también puedes recibir notificaciones de nuevas respuestas, guardar marcadores y utilizar los «me gusta» para dar las gracias a los demás. Podemos trabajar todos juntos para hacer grande esta comunidad :heart:"
     offline_indicator:
       no_internet: "Sin conexión a Internet."
       refresh_page: "Actualizar página"
@@ -3066,8 +3062,7 @@ es:
       discard: "Descartar"
       draft_saved: "¡Borrador guardado!"
       users_placeholder: "Añadir usuarios o grupos"
-      title_placeholder: "En una frase breve, ¿de qué trata este tema?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué estás editando?"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
@@ -4611,6 +4606,7 @@ es:
       list: "Lista de categorías"
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
+      latest_topics: "Temas recientes"
       description_updated: "Descripción actualizada"
       description_expand: "Mostrar más"
       description_collapse: "Mostrar menos"
@@ -4902,6 +4898,7 @@ es:
       with_category: "%{filter} Foro de %{category}"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "restablecer"
         button:
           label: "Filtrar"
       latest:
@@ -5077,9 +5074,6 @@ es:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Medalla ganada %{count} vez"
-        other: "Medalla ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
       others_count:
         one: "Concedido a otros %{count} vez"
@@ -5114,16 +5108,18 @@ es:
       favorite_max_not_reached: "Marcar esta medalla como favorita"
       favorite_count: "%{count}/%{max} medallas marcadas como favoritas"
     download_calendar:
-      title: "Descargar calendario"
+      title: "Añadir al calendario"
+      calendar: "Calendario"
       save_ics: "Descargar archivo.ics"
       save_google: "Añadir a calendario de Google"
       remember: "No volver a preguntar"
-      remember_explanation: "(puedes cambiar esto en tus preferencias)"
       download: "Descargar"
       default_calendar: "Calendario por defecto"
       default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
+      outlook: "Microsoft Outlook"
+      apple: "Calendario de Apple"
       ics: "ICS"
       default_title: "Evento programado"
     tagging:
@@ -5870,6 +5866,7 @@ es:
             use_preset: "Configurar"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             scopes: "Ámbitos concedidos"
@@ -5877,7 +5874,6 @@ es:
             status: "Estado"
             actions: "Acciones"
           activity:
-            rate_limits: "Límites de velocidad"
             outcome: "Resultado"
             time: "Hora"
             user: "Usuario"
@@ -6464,6 +6460,7 @@ es:
           series:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Más información"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"
@@ -7399,8 +7396,8 @@ es:
           upload: "Subir"
           select_component: "Selecciona un componente…"
           unsaved_changes_alert: "No has guardado los cambios aún, ¿los quieres descartar y seguir adelante?"
-          unsaved_parent_themes: "No has asignado este componente a ningún tema, ¿quieres continuar?"
           discard: "Descartar"
+          leave: "Abandonar"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"
@@ -8508,13 +8505,14 @@ es:
           multiselect: "Selección múltiple"
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
-        search: "Busca el texto que te gustaría editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
+        status:
+          invalid: "No válido"
         title: "Textos del sitio"
         edit: "Editar"
-        revert: "Revertir los cambios"
         revert_confirm: "¿Seguro que quieres revertir los cambios?"
-        go_back: "Volver a la búsqueda"
-        recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"

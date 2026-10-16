@@ -22,38 +22,13 @@ export default class ChatMessageReaction extends Component {
   @service currentUser;
   @service menu;
   @service site;
-  @service siteSettings;
-  @service tooltip;
 
-  registerTooltip = modifier((element) => {
-    if (
-      this.args.disableTooltip ||
-      this.useReactionsUsersPopup ||
-      !this.popoverContent?.length
-    ) {
-      return;
-    }
-
-    const instance = this.tooltip.register(element, {
-      content: this.description,
-      identifier: "chat-message-reaction-tooltip",
-      animated: false,
-      placement: "top",
-      fallbackPlacements: ["bottom"],
-      triggers: this.site.mobileView ? ["hold"] : ["hover"],
-    });
-
-    return () => {
-      instance.destroy();
-    };
-  });
-
-  // With the new reactions popup enabled, hovering (desktop) or long-pressing
-  // (mobile) a reaction opens a users popup centred on that reaction. Each
-  // reaction registers its own popup; the shared `groupIdentifier` ensures only
-  // one is open at a time, so moving to another reaction opens a fresh popup.
+  // Hovering (desktop) or long-pressing (mobile) a reaction opens a users popup
+  // centred on that reaction. Each reaction registers its own popup; the shared
+  // `groupIdentifier` ensures only one is open at a time, so moving to another
+  // reaction opens a fresh popup.
   registerReactionsUsersPopup = modifier((element) => {
-    if (!this.useReactionsUsersPopup) {
+    if (this.args.disableTooltip) {
       return;
     }
 
@@ -127,15 +102,6 @@ export default class ChatMessageReaction extends Component {
   descriptionId = `chat-message-reaction-description-${descriptionSequence++}`;
   #reactionsUsersPopupInstance = null;
   #closeReactionsUsersPopupTimer = null;
-
-  // When the new reactions popup is enabled the reaction opens a users popup, so
-  // the names tooltip is suppressed here.
-  get useReactionsUsersPopup() {
-    return (
-      this.siteSettings.enable_new_chat_reactions_popup &&
-      !this.args.disableTooltip
-    );
-  }
 
   get showCount() {
     return this.args.showCount ?? true;
@@ -239,7 +205,6 @@ export default class ChatMessageReaction extends Component {
         title={{this.emojiString}}
         type="button"
         {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
         {{this.registerReactionsUsersPopup}}
       >
         <img

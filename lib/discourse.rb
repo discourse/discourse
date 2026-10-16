@@ -331,6 +331,11 @@ module Discourse
   class ReadOnly < StandardError
   end
 
+  # Raised when the site is archived (site_archived setting) and a write is
+  # attempted from an action not declared with `allow_when_archived`.
+  class SiteArchived < StandardError
+  end
+
   # Cross site request forgery
   class CSRF < StandardError
   end
@@ -1055,9 +1060,6 @@ module Discourse
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end
-
-    # get rid of rubbish so we don't share it
-    Process.warmup
   end
 
   # Called in web worker processes after fork to apply worker-specific

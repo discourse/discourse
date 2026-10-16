@@ -5,16 +5,22 @@ import { service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { i18n } from "discourse-i18n";
-import AdminStaffActionLogComponent from "../../components/modal/staff-action-log-change";
-import StaffActionLogDetailsModal from "../../components/modal/staff-action-log-details";
+import AdminStaffActionLogComponent from "../../components/modal/staff-action-log-change.gjs";
+import StaffActionLogDetailsModal from "../../components/modal/staff-action-log-details.gjs";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;
   @service store;
 
   queryParams = ["filters", "startDate", "endDate"];
+
+  /** @type {import("discourse/models/result-set").default | (import("@ember/object").default & { loadingMore: boolean }) | null} */
   model = null;
+
+  /** @type {import("@ember/object").default & { action_name?: string, action_id?: number, custom_type?: string, acting_user?: string, target_user?: string, subject?: string } | null} */
   filters = null;
+
+  /** @type {{ id: string, action_id: number, name: string, name_raw: string }[] | null} */
   userHistoryActions = null;
 
   /** @type {moment.Moment | null} */
@@ -23,6 +29,11 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   /** @type {moment.Moment | null} */
   endDate = null;
 
+  @computed("model")
+  get initialModelLoading() {
+    return !this.model?.content;
+  }
+
   @computed("filters.action_name")
   get actionFilter() {
     return this.filters?.action_name
@@ -30,6 +41,7 @@ export default class AdminLogsStaffActionLogsController extends Controller {
       : null;
   }
 
+  /** @returns {boolean | null} */
   @computed("filters")
   get filtersExists() {
     return this.filters && Object.keys(this.filters).length > 0;

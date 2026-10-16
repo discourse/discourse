@@ -315,7 +315,6 @@ ur:
       zh_CN:
         name: چینی آسان
     share:
-      topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "دھاگہ #%{postNumber} بذریعہ @%{username}"
       close: "بند کریں"
       twitter: "X پر شیئر کریں۔"
@@ -370,6 +369,12 @@ ur:
     skip_to_last_reply: "آخری جواب پر جائیں۔"
     skip_to_top: "اوپر جائیں"
     skip_user_nav: "سکپ کریں پروفائل کے مواد کیلیے"
+    reorder:
+      remove: "%{label} ہٹائیں"
+      removed: "%{label} ہٹا دیا گیا"
+      move_up: "اوپر جائیں"
+      move_down: "نیچے جائیں"
+      position: "%{total} میں سے %{position}"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_no_smtp: "تمام باہر جانے والی ای میل غیر فعال ہیں کیونکہ کوئی SMTP سرور ترتیب نہیں دیا گیا۔ کسی بھی قسم کی ای میل نہیں بھیجی جا سکتی۔"
     emails_are_disabled_non_staff: "جانے والی ای میل اراکین جوعملہ میں نہیں، کے لیے غیر فعال کر دی گئی ہیں"
@@ -379,6 +384,7 @@ ur:
     notifications_tracking:
       tooltip: "اطلاع کی سطح: %{level}"
     back_button: "واپس"
+    confirm_button: "تصدیق کریں"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -508,9 +514,6 @@ ur:
     max_of_count:
       one: "زیادہ سے زیادہ %{count}"
       other: "زیادہ سے زیادہ %{count}"
-    character_count:
-      one: "%{count} حرف"
-      other: "%{count} حروف"
     period_chooser:
       aria_label: "مدت کے لحاظ سے فلٹر کریں"
     related_messages:
@@ -552,18 +555,9 @@ ur:
         use_predefined: "سانچے پرکھیں"
         back: "واپس"
         icebreakers:
-          fun_facts:
-            title: "اپنے بارے میں کچھ دلچسپ حقائق درج کریں؟"
-            body: "سب کوآداب! میں اس نئی کمیونٹی کے آغاز پر بہت پرجوش ہوں۔ شروعات کرنے کے لیے، آئیے اپنے بارے میں کچھ دلچسپ شیئر کریں۔ میں پہل کرتا ہوں: مجھے پیدل سفر کرنا اور نئے راستے دریافت کرنا بہت پسند ہے! آپ کے بارے میں دلچسپ بات کیا ہے؟"
-          coolest_thing_you_have_seen_today:
-            title: "آج آپ نے سب سے زبردست چیز دیکھی ہو وہ کیا ہے؟"
-            body: "آج آپ نے سب سے شاندار چیز دیکھی یا کوئی تجربہ ہوا، وہ کیا ہے؟ یہ کسی خوبصورت غروب آفتاب سے لے کر کسی بے لوث نیکی تک کچھ بھی ہو سکتا ہے۔ میں شروع کرتا ہوں: میں نے ایک کتے کو ایک بوڑھے شخص کو سڑک پار کرنے میں مدد کرتے ہوئے دیکھا!"
           introduce_yourself:
             title: "اپنا تعارف کروائیں"
             body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          what_is_your_favorite_food:
-            title: "آپ کا پسندیدہ کھانا کیا ہے؟"
-            body: "فورم کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
       subtitle: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
@@ -884,6 +878,10 @@ ur:
       title:
         search: "پیغام کے لئے تلاش کریں"
         placeholder: "پیغام کا عنوان، یو آر ایل یا آئی ڈی یہاں ٹائپ کریں"
+    dsa_statements:
+      category: "زُمرَہ"
+      category_prompt: "ایک زمرہ منتخب کریں"
+      saving: "محفوظ کیا جا رہا۔۔۔"
     review:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
@@ -2159,7 +2157,6 @@ ur:
         upload_title: "آپنی تصویر اَپ لوڈ کریں"
         image_is_not_a_square: "انتباہ: ہم نے آپ کی تصویر کو کراپ کیا ہے؛ چوڑائی اور اونچائی برابر نہیں تھے۔"
         logo_small: "سائٹ کے چھوٹے لوگو کو طے شدہ طور پر استعمال کیا جاتا ہے۔"
-        use_custom: "یا حسب ضرورت اوتار اپ لوڈ کریں:"
       change_profile_background:
         title: "پروفائل ہیڈر"
         instructions: "پروفائل ہیڈرز درمیان میں ہوں گے اور ان کی طے شدہ چوڑائی 1110px ہوگی۔"
@@ -2770,7 +2767,6 @@ ur:
       hide_forever: "نہیں شکریہ"
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
-      value_prop: "ایک جیسی پوسٹس کو سکرول کر کے تھک گئے ہیں؟ جب آپ ایک اکاؤنٹ بناتے ہیں تو آپ ہمیشہ وہیں واپس آجائیں گے جہاں آپ نے چھوڑا تھا۔ اکاؤنٹ کے ساتھ آپ کو نئے جوابات کے بارے میں بھی مطلع کیا جا سکتا ہے، بُک مارکس کو محفوظ کیا جا سکتا ہے، اور دوسروں کا شکریہ ادا کرنے کے لیے لائکس کا استعمال کیا جا سکتا ہے۔ ہم سب مل کر اس کمیونٹی کو عظیم بنانے کے لیے کام کر سکتے ہیں۔ :heart:"
     offline_indicator:
       no_internet: "انٹرنیٹ کنکشن نہیں۔"
       refresh_page: "صفحہ ریفریش"
@@ -2886,8 +2882,6 @@ ur:
       signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
       user_fields_title: "تقریباً مکمل"
       user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
-      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
-      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
       username_placeholder: "ایک اسم صارف منتخب کریں"
@@ -3301,8 +3295,7 @@ ur:
       cancel_edit: "ترمیم منسوخ کریں"
       draft_saved: "مسودہ محفوظ ہو گیا!"
       users_placeholder: "اراکین یا گروپس شامل"
-      title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
-      title_placeholder_redesign: "عنوان"
+      title_placeholder: "عنوان"
       title_or_link_placeholder: "عنوان کو ٹائپ کریں، یا ایک رابطہ یہاں چسپاں کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
       topic_featured_link_placeholder: "عنوان کے ساتھ دکھایا گیا رابطہ درج کریں۔"
@@ -4980,6 +4973,7 @@ ur:
       list: "زمرہ جات کی فہرست دیکھیں"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
       change_in_category_topic: "تفصیل میں ترمیم کریں"
+      latest_topics: "تازہ ترین ٹاپک"
       description_updated: "تفصیل اپ ڈیٹ ہو گئی"
       description_expand: "مزید دکھائیں"
       description_collapse: "کم دکھائیں"
@@ -5267,6 +5261,7 @@ ur:
       with_category: "%{filter} %{category} ٹاپک"
       filter:
         title: "%{filter}کے لیے فلٹر شدہ نتائج"
+        reset: "ری سیٹ"
         button:
           label: "فِلٹر"
       latest:
@@ -5474,9 +5469,6 @@ ur:
       admin:
         title: "منتظم"
     badges:
-      earned_n_times:
-        one: "یہ تمغہ %{count} دفعہ حاصل کیا"
-        other: "یہ تمغہ %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
       others_count:
         one: "دوسروں کو %{count} دفعہ نوازا"
@@ -5511,16 +5503,18 @@ ur:
       favorite_max_not_reached: "اس تمغہ کو پسندیدہ کے بطور نشان زد کریں"
       favorite_count: "%{max} تمغات کو پسندیدہ کے طور پر %{count}نشان زد کیا گیا"
     download_calendar:
-      title: "کیلنڈر ڈاؤن لوڈ کریں"
+      title: "کیلنڈر میں شامل کریں"
+      calendar: "کیلنڈر"
       save_ics: ".ics فائل ڈاؤن لوڈ کریں"
       save_google: "گوگل کیلنڈر میں شامل کریں"
       remember: "مجھے دوبارہ مت پوچھیں"
-      remember_explanation: "(آپ اس ترجیح کو اپنے رکن کی ترجیحات میں تبدیل کر سکتے ہیں)"
       download: "ڈاؤن لوڈ"
       default_calendar: "ڈیفالٹ کیلنڈر"
       default_calendar_instruction: "تعین کریں کہ تاریخیں محفوظ ہونے پر کون سا کیلنڈر استعمال کیا جائے"
       add_to_calendar: "کیلنڈر میں شامل کریں"
       google: "گوگل کیلنڈر"
+      outlook: "مائیکروسافٹ آؤٹ لک"
+      apple: "ایپل کیلنڈر"
       ics: "ICS"
       default_title: "طے شدہ ایونٹس"
     tagging:
@@ -6212,14 +6206,13 @@ ur:
             block: "بلاک کریں"
             presets:
               custom: "اپنی مرضی کا"
+            automatic: "خود کار طریقے سے"
           authorizations:
             user: "رکن"
             last_used: "آخری بار استعمال ہوا۔"
             status: "حیثیت"
             actions: "عمل"
           activity:
-            errors: "خرابیاں"
-            rate_limits: "حدِ شرح"
             outcome: "نتیجہ"
             time: "وقت"
             user: "رکن"
@@ -6981,6 +6974,7 @@ ur:
             anonymous: "گمنام"
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
+          crawler_learn_more: "مزید جانیں"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
@@ -7877,8 +7871,8 @@ ur:
           upload: "اَپ لوڈ"
           select_component: "ایک جزو منتخب کریں…"
           unsaved_changes_alert: "آپ نے ابھی تک اپنی تبدیلیوں کو محفوظ نہیں کیا ہے، کیا آپ ان کو رد کر کہ آگے جانا چاہتے ہیں؟"
-          unsaved_parent_themes: "آپ نے تھیمز کے لیے جزو تفویض نہیں کیا ہے، کیا آپ آگے بڑھنا چاہتے ہیں؟"
           discard: "منسوخ"
+          leave: "چھوڑ دیں"
           stay: "ادھر رہیں"
           edit_css_html: "کوڈ میں ترمیم کریں"
           edit_css_html_help: "آپ نے ابھی تک کسی کوڈ میں ترمیم نہیں کی۔"
@@ -8826,13 +8820,12 @@ ur:
           multiselect: "کثیر الانتخاب"
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
-        search: "وہ متن تلاش کریں جس میں آپ ترمیم کرنا چاہتے ہیں۔"
+        search_label: "تلاش"
+        theme_disabled: "غیر فعال"
+        filters: "فِلٹر"
         title: "سائٹ کے متون"
         edit: "ترمیم کریں"
-        revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
-        go_back: "واپس سَرچ پر"
-        recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         show_outdated: "صرف پرانا/غلط دکھائیں"
         show_untranslated: "صرف بغیر ترجمہ والی دکھائیں"

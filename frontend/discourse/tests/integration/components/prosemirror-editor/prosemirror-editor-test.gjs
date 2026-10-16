@@ -1,6 +1,7 @@
-import { render, settled } from "@ember/test-helpers";
+import { findAll, render, settled, waitUntil } from "@ember/test-helpers";
 import { cacheShortUploadUrl, resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
+import DMenus from "discourse/float-kit/components/d-menus";
 import {
   clearRichEditorExtensions,
   resetRichEditorExtensions,
@@ -62,7 +63,10 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     };
 
     await render(
-      <template><ProsemirrorEditor @onSetup={{handleSetup}} /></template>
+      <template>
+        <DMenus />
+        <ProsemirrorEditor @onSetup={{handleSetup}} />
+      </template>
     );
 
     const files = [1, 2, 3].map((number) => ({
@@ -86,7 +90,6 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
         { count: 3 },
         "all pending images use generic placeholders inside the grid"
       );
-
     const shortUrls = files.map((file, index) => {
       const shortUrl = `upload://heic-grid-${index}.jpeg`;
       const resolvedUrl = `/images/heic-grid-${index}.jpeg`;
@@ -122,6 +125,84 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     assert
       .dom(".composer-image-grid .composer-image-node")
       .exists({ count: 3 }, "all completed images are in the grid");
+  });
+
+  test("keeps controls available for multiple short grids", async function (assert) {
+    withPluginApi((api) => {
+      api.registerRichEditorExtension(grid);
+      api.registerRichEditorExtension(image);
+    });
+
+    let textManipulation;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+
+    await render(
+      <template>
+        <DMenus />
+        <ProsemirrorEditor @onSetup={{handleSetup}} />
+      </template>
+    );
+
+    const { schema } = textManipulation.view.state;
+    const emptyGrid = () => schema.nodes.grid.createAndFill();
+    const separator = schema.nodes.paragraph.create(
+      null,
+      schema.text("Between grids")
+    );
+    textManipulation.view.dispatch(
+      textManipulation.view.state.tr.replaceWith(
+        0,
+        textManipulation.view.state.doc.content.size,
+        [emptyGrid(), separator, emptyGrid()]
+      )
+    );
+    await settled();
+
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 2 }, "both short grids are rendered");
+    assert
+      .dom('[data-identifier^="composer-image-grid-mode-"]')
+      .exists({ count: 2 }, "each grid keeps its mode toolbar");
+    assert
+      .dom('[data-identifier^="composer-image-grid-remove-"]')
+      .exists({ count: 2 }, "each grid keeps its remove toolbar");
+    assert
+      .dom('[data-identifier^="composer-image-grid-"][role="none"]')
+      .exists({ count: 4 }, "the persistent toolbars are not dialogs");
+
+    const modeMenus = findAll('[data-identifier^="composer-image-grid-mode-"]');
+    const removeMenus = findAll(
+      '[data-identifier^="composer-image-grid-remove-"]'
+    );
+    const controlsDoNotOverlap = (modeMenu) => {
+      const menuId = modeMenu.dataset.identifier.replace(
+        "composer-image-grid-mode-",
+        ""
+      );
+      const removeMenu = removeMenus.find(
+        (menu) =>
+          menu.dataset.identifier === `composer-image-grid-remove-${menuId}`
+      );
+
+      return (
+        modeMenu.getBoundingClientRect().bottom <
+        removeMenu.getBoundingClientRect().top
+      );
+    };
+
+    await waitUntil(() => modeMenus.every(controlsDoNotOverlap), {
+      timeout: 3000,
+    });
+
+    modeMenus.forEach((modeMenu) => {
+      assert.true(
+        controlsDoNotOverlap(modeMenu),
+        "the controls do not overlap in a short grid"
+      );
+    });
   });
 
   test("renders the editor with minimum extensions", async function (assert) {

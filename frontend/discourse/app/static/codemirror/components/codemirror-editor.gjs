@@ -31,14 +31,15 @@ import {
 import { loadCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import { buildCmParams } from "../build-extensions";
-import { defaultHighlighting } from "../highlight-style";
+import { buildCmParams } from "../build-extensions.ts";
+import { defaultHighlighting } from "../highlight-style.js";
 
 // How long after Escape the next Tab moves focus instead of indenting.
 const TAB_FOCUS_WINDOW = 2000;
 const MODIFIER_KEY_CODES = [16, 17, 18, 20, 91, 92, 224, 225];
 
 export default class CodemirrorEditor extends Component {
+  /** @type {import("@codemirror/view").EditorView | null} */
   @tracked view = null;
   #lastValue;
   #suppressChange = false;

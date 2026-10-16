@@ -19,24 +19,20 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders and re-renders content", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML("<h1>Initial</h1>");
-    })();
+    const html = tracked(trustHTML("<h1>Initial</h1>"));
 
-    await render(<template><DDecoratedHtml @html={{state.html}} /></template>);
+    await render(<template><DDecoratedHtml @html={{html.value}} /></template>);
 
     assert.dom("h1").hasText("Initial");
 
-    state.html = trustHTML("<h1>Updated</h1>");
+    html.value = trustHTML("<h1>Updated</h1>");
     await settled();
 
     assert.dom("h1").hasText("Updated");
   });
 
   test("defers replacement until the pressed control receives its click", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML('<button id="target">Initial</button>');
-    })();
+    const html = tracked(trustHTML('<button id="target">Initial</button>'));
     let clicks = 0;
     const decorate = (element, helper) => {
       element.querySelector("button").addEventListener("click", () => clicks++);
@@ -51,7 +47,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       <template>
         <DDecoratedHtml
           @decorate={{decorate}}
-          @html={{state.html}}
+          @html={{html.value}}
           @preservePointerTarget={{true}}
         />
       </template>
@@ -62,7 +58,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       isPrimary: true,
       pointerId: 1,
     });
-    state.html = trustHTML('<button id="target">Updated</button>');
+    html.value = trustHTML('<button id="target">Updated</button>');
     await settled();
     assert.strictEqual(
       find("#target"),
@@ -75,7 +71,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
         "Nested content",
         "nested components survive deferred rendering"
       );
-    state.html = trustHTML('<button id="target">Updated again</button>');
+    html.value = trustHTML('<button id="target">Updated again</button>');
     await settled();
     target.addEventListener("pointerup", (event) => event.stopPropagation());
     target.dispatchEvent(
@@ -95,7 +91,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       .dom("#nested")
       .hasText("Nested content", "nested components render in the replacement");
     for (let i = 0; i < 3; i++) {
-      state.html = trustHTML(`<button id="target">Update ${i}</button>`);
+      html.value = trustHTML(`<button id="target">Update ${i}</button>`);
       await settled();
       assert
         .dom("#nested")
@@ -107,12 +103,10 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   });
 
   test("ignores descendant blur but releases on window blur", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML('<button id="target">Initial</button>');
-    })();
+    const html = tracked(trustHTML('<button id="target">Initial</button>'));
     await render(
       <template>
-        <DDecoratedHtml @html={{state.html}} @preservePointerTarget={{true}} />
+        <DDecoratedHtml @html={{html.value}} @preservePointerTarget={{true}} />
       </template>
     );
     const target = find("#target");
@@ -122,7 +116,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       pointerId: 1,
     });
     target.dispatchEvent(new FocusEvent("blur"));
-    state.html = trustHTML('<button id="target">Updated</button>');
+    html.value = trustHTML('<button id="target">Updated</button>');
     await settled();
     assert.strictEqual(
       find("#target"),
@@ -139,12 +133,10 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   });
 
   test("releases deferred HTML on pointer cancellation", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML('<button id="target">Initial</button>');
-    })();
+    const html = tracked(trustHTML('<button id="target">Initial</button>'));
     await render(
       <template>
-        <DDecoratedHtml @html={{state.html}} @preservePointerTarget={{true}} />
+        <DDecoratedHtml @html={{html.value}} @preservePointerTarget={{true}} />
       </template>
     );
     const target = find("#target");
@@ -153,7 +145,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
       isPrimary: true,
       pointerId: 1,
     });
-    state.html = trustHTML('<button id="target">Updated</button>');
+    html.value = trustHTML('<button id="target">Updated</button>');
     await settled();
     await triggerEvent(target, "pointercancel", { pointerId: 1 });
 
@@ -175,9 +167,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   });
 
   test("can decorate content, including renderGlimmer", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML("<h1>Initial</h1>");
-    })();
+    const html = tracked(trustHTML("<h1>Initial</h1>"));
 
     const decorate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
@@ -191,7 +181,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DDecoratedHtml @decorate={{decorate}} @html={{state.html}} />
+        <DDecoratedHtml @decorate={{decorate}} @html={{html.value}} />
       </template>
     );
 
@@ -201,9 +191,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
   });
 
   test("can decorate content with renderGlimmer using a curried component", async function (assert) {
-    const state = new (class {
-      @tracked html = trustHTML("<h1>Initial</h1>");
-    })();
+    const html = tracked(trustHTML("<h1>Initial</h1>"));
 
     const decorate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
@@ -221,7 +209,7 @@ module("Integration | ui-kit | DDecoratedHtml", function (hooks) {
 
     await render(
       <template>
-        <DDecoratedHtml @decorate={{decorate}} @html={{state.html}} />
+        <DDecoratedHtml @decorate={{decorate}} @html={{html.value}} />
       </template>
     );
 

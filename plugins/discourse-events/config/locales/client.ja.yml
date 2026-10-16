@@ -27,6 +27,11 @@ ja:
               label: トピック ID
     discourse_events:
       title: "イベント"
+      preferences:
+        reminders:
+          preferences:
+            notification: "通知"
+            none: "なし"
       on_holiday: "休暇中"
       disable_holiday: "無効化"
       enable_holiday: "有効化"

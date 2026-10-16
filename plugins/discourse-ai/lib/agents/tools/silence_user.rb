@@ -50,6 +50,10 @@ module DiscourseAi
           true
         end
 
+        def self.mandatory_approval?
+          true
+        end
+
         def self.attribute_to_approver?
           true
         end
@@ -93,6 +97,36 @@ module DiscourseAi
 
         def description_args
           { username: parameters[:username], duration_days: parameters[:duration_days] }
+        end
+
+        def approval_title
+          user = User.find_by_username(parameters[:username])
+          return super if user.blank?
+
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.silence_title", username: user.username)
+        end
+
+        def approval_description_label
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.duration_label")
+        end
+
+        def approval_details
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.user_duration", count: duration_days)
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.silence_question")
+        end
+
+        def approval_parameters
+          return [] if parameters[:message].blank?
+
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.user_message"),
+              value: parameters[:message],
+            },
+          ]
         end
 
         private

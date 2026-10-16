@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class GetDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[sequence data],
@@ -24,6 +25,12 @@ module DiscourseMcp
         draft = Draft.get(user, draft_key, sequence)
 
         return ToolHelpers.text_and_structured(draft_key:, found: false) if draft.blank?
+
+        topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+        if draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
+             (topic_id && Topic.exists?(id: topic_id.to_i, archetype: Archetype.private_message))
+          request_context.ensure_scopes!(Scopes::PRIVATE_MESSAGES_READ)
+        end
 
         parsed = JSON.parse(draft)
         parsed = {} if !parsed.is_a?(Hash)
@@ -58,6 +65,7 @@ module DiscourseMcp
     end
 
     class SaveDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           draft_key: OutputSchema::STRING,
@@ -105,6 +113,7 @@ module DiscourseMcp
     end
 
     class DeleteDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(draft_key: OutputSchema::STRING, deleted: OutputSchema::BOOLEAN)
 

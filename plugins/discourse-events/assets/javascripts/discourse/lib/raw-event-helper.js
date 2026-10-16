@@ -72,6 +72,17 @@ export function livestreamSource(location, url) {
   return location?.trim() ? location : url;
 }
 
+export function eventDateInTimezone(value, timezone) {
+  if (!value) {
+    return null;
+  }
+
+  const eventTimezone = timezone || "UTC";
+  return moment.isMoment(value)
+    ? value.clone().tz(eventTimezone)
+    : moment.tz(value, eventTimezone);
+}
+
 export function allDayTransition({ startsAt, endsAt, timezone, allDay }) {
   if (allDay) {
     const startDate = (startsAt ?? moment.tz(timezone)).format("YYYY-MM-DD");
@@ -212,7 +223,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   params.start = event.allDay
     ? moment(startsAt).format("YYYY-MM-DD")
-    : moment(startsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+    : eventDateInTimezone(startsAt, eventTz).format("YYYY-MM-DD HH:mm");
 
   if (event.isClosed) {
     params.closed = "true";
@@ -279,7 +290,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
   if (endsAt) {
     params.end = event.allDay
       ? moment(endsAt).format("YYYY-MM-DD")
-      : moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+      : eventDateInTimezone(endsAt, eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {

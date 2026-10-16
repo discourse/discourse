@@ -17,6 +17,9 @@ RSpec.describe DiscourseWorkflows::EventListener do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
+  # The in-memory trigger cache outlives the DB rollback and would fire in later specs.
+  after { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
   it "enqueues a job when a matching event fires" do
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -199,6 +202,32 @@ RSpec.describe DiscourseWorkflows::EventListener do
     PostRevisor.new(post).revise!(admin, raw: "Edited by admin")
 
     expect(enqueued_trigger_node_ids).to include("post-edited-trigger")
+  end
+
+  it "skips trust level filtered post edited workflows when the author is deleted" do
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
+    post.update_columns(user_id: nil)
+    create_published_workflow(
+      "post-edited-trigger",
+      "trigger:post_edited",
+      configuration: {
+        "trust_levels" => ["1"],
+      },
+    )
+
+    expect {
+      PostRevisor.new(post.reload).revise!(admin, raw: "Edited by admin")
+    }.not_to raise_error
+    expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
+  end
+
+  it "logs instead of raising when a trigger fails to build" do
+    create_published_workflow("post-edited-trigger", "trigger:post_edited")
+    DiscourseWorkflows::Nodes::PostEdited::V1.stubs(:from_event).raises(StandardError, "boom")
+
+    expect do
+      described_class.handle(DiscourseWorkflows::Nodes::PostEdited::V1, Fabricate(:post))
+    end.not_to raise_error
   end
 
   it "does not enqueue post edited workflows when the revision skips workflows" do

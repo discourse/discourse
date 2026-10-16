@@ -20,11 +20,28 @@ import I18n, { i18n } from "discourse-i18n";
 
 const MAX_CATEGORIES = 10;
 
+/**
+ * @typedef {{
+ *   category_id: number,
+ *   name: string,
+ *   color: string,
+ *   slug: string,
+ *   topics: number,
+ *   posts: number,
+ *   page_views: number,
+ *   share: number,
+ *   share_change: number,
+ *   share_formatted: string,
+ *   share_change_formatted: string
+ * }} CategoryActivityRow
+ */
 export default class ActivityByCategory extends Component {
   @service currentUser;
   @service toasts;
 
   @tracked selectedCategories = [];
+
+  /** @type {{ rows: CategoryActivityRow[], total: number } | null} */
   @tracked overrideActivity = null;
   @tracked loading = false;
   @tracked sortBy = "share";
@@ -205,7 +222,10 @@ export default class ActivityByCategory extends Component {
         <MultipleCategoriesSelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
-          @options={{hash maximum=MAX_CATEGORIES}}
+          @options={{hash
+            maximum=MAX_CATEGORIES
+            showAncestorsInSelectedChoice=true
+          }}
         />
       </div>
 
@@ -336,7 +356,11 @@ export default class ActivityByCategory extends Component {
                 <tr>
                   <td class="db-activity-table__cell-category">
                     {{#if row.category}}
-                      {{dCategoryBadge row.category}}
+                      {{dCategoryBadge
+                        row.category
+                        ancestors=row.category.predecessors
+                        hideParent=true
+                      }}
                     {{else}}
                       <span
                         aria-hidden="true"

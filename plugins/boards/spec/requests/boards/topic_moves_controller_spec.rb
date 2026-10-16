@@ -71,4 +71,21 @@ RSpec.describe Boards::Api::TopicMovesController do
       "assignments",
     )
   end
+
+  describe "#create" do
+    it "rejects moving a topic to an archived board" do
+      board = Fabricate(:boards_board, slug: "archived-board", archived: true)
+      column = Fabricate(:boards_column, board:)
+      sign_in(admin)
+
+      post "/boards/api/boards/#{board.id}/topic-moves.json",
+           params: {
+             topic_id: topic.id,
+             to_column_id: column.id,
+           }
+
+      expect(response.status).to eq(403)
+      expect(board.cards).to be_empty
+    end
+  end
 end

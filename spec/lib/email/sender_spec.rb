@@ -14,6 +14,24 @@ RSpec.describe Email::Sender do
     message.stubs(:deliver!).returns(Net::SMTP::Response.new("250", mock_smtp_transaction_response))
   end
 
+  it "renders recipient-visible tag hashtags as absolute links in HTML while retaining text hashtags" do
+    recipient = Fabricate(:admin)
+    tag = Fabricate(:tag)
+    Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+    body = "Tags: ##{tag.name}::tag"
+
+    [[nil, []], [recipient, [tag.full_url]]].each do |user, expected_urls|
+      message = Mail::Message.new(to: recipient.email, body:)
+      stub_deliver_response(message)
+
+      Email::Sender.new(message, :user_replied, user).send
+
+      links = Nokogiri::HTML5.parse(message.html_part.body.decoded).css("a.hashtag-cooked")
+      expect(links.map { |link| link["href"] }).to eq(expected_urls)
+      expect(message.text_part.body.decoded).to eq(body)
+    end
+  end
+
   context "when disable_emails is enabled" do
     fab!(:user)
     fab!(:moderator)
@@ -714,7 +732,7 @@ RSpec.describe Email::Sender do
             >   3. If you graph these numbers, patterns emerge.
             >
             > Therefore: There are patterns everywhere in nature.
-            
+
             IMAGE #2
             #{UploadMarkdown.new(@secure_image_2).image_markdown}
           MD
@@ -727,7 +745,7 @@ RSpec.describe Email::Sender do
           raw = <<~MD
             IMAGE #3
             #{UploadMarkdown.new(@secure_image_3).image_markdown}
-            
+
             ATTACHMENT
             #{UploadMarkdown.new(@secure_attachment).attachment_markdown}
 

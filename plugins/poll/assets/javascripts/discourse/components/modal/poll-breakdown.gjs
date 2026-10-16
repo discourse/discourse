@@ -1,12 +1,11 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classify } from "@ember/string";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -17,30 +16,25 @@ import { i18n } from "discourse-i18n";
 import PollBreakdownChart from "discourse/plugins/poll/discourse/components/poll-breakdown-chart";
 import PollBreakdownOption from "discourse/plugins/poll/discourse/components/poll-breakdown-option";
 
-@tagName("")
 export default class PollBreakdownModal extends Component {
   @service dialog;
   @service siteSettings;
 
-  model = null;
-  charts = null;
-  groupedBy = null;
-  highlightedOption = null;
-  displayMode = "percentage";
+  @tracked charts = null;
+  @tracked groupedBy = null;
+  @tracked highlightedOption = null;
+  @tracked displayMode = "percentage";
 
-  init() {
-    this.set("groupedBy", this.groupableUserFields[0]?.id);
-
+  constructor() {
+    super(...arguments);
+    this.groupedBy = this.groupableUserFields[0]?.id;
     this.fetchGroupedPollData();
-
-    super.init(...arguments);
   }
 
-  @computed("model.poll.title", "model.post.topic.title")
   get title() {
-    return this.model?.poll?.title
-      ? trustHTML(this.model?.poll?.title)
-      : this.model?.post?.topic?.title;
+    return this.args.model?.poll?.title
+      ? trustHTML(this.args.model?.poll?.title)
+      : this.args.model?.post?.topic?.title;
   }
 
   get groupableUserFields() {
@@ -58,9 +52,8 @@ export default class PollBreakdownModal extends Component {
       });
   }
 
-  @computed("model.poll.options")
   get totalVotes() {
-    return this.model?.poll?.options?.reduce(
+    return this.args.model?.poll?.options?.reduce(
       (sum, option) => sum + option.votes,
       0
     );
@@ -69,8 +62,8 @@ export default class PollBreakdownModal extends Component {
   fetchGroupedPollData() {
     return ajax("/polls/grouped_poll_results.json", {
       data: {
-        post_id: this.model.post.id,
-        poll_name: this.model.poll.name,
+        post_id: this.args.model.post.id,
+        poll_name: this.args.model.poll.name,
         user_field_name: this.groupedBy,
       },
     })
@@ -86,19 +79,19 @@ export default class PollBreakdownModal extends Component {
           return;
         }
 
-        this.set("charts", result.grouped_results);
+        this.charts = result.grouped_results;
       });
   }
 
   @action
   setGrouping(value) {
-    this.set("groupedBy", value);
+    this.groupedBy = value;
     this.fetchGroupedPollData();
   }
 
   @action
   onSelectPanel(panel) {
-    this.set("displayMode", panel.id);
+    this.displayMode = panel.id;
   }
 
   <template>
@@ -134,11 +127,11 @@ export default class PollBreakdownModal extends Component {
 
           <div class="poll-breakdown-total-votes">{{i18n
               "poll.breakdown.votes"
-              count=this.model.poll.voters
+              count=@model.poll.voters
             }}</div>
 
           <ul class="poll-breakdown-options">
-            {{#each this.model.poll.options as |option index|}}
+            {{#each @model.poll.options as |option index|}}
               <PollBreakdownOption
                 @displayMode={{this.displayMode}}
                 @highlightedOption={{this.highlightedOption}}
@@ -146,7 +139,7 @@ export default class PollBreakdownModal extends Component {
                 @onMouseOut={{fn (mut this.highlightedOption) null}}
                 @onMouseOver={{fn (mut this.highlightedOption) index}}
                 @option={{option}}
-                @optionsCount={{this.model.poll.options.length}}
+                @optionsCount={{@model.poll.options.length}}
                 @totalVotes={{this.totalVotes}}
               />
             {{/each}}

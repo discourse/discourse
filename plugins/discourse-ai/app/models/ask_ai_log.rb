@@ -3,6 +3,13 @@
 class AskAiLog < ActiveRecord::Base
   belongs_to :user
 
+  def self.for_reports
+    group_ids = SiteSetting.ai_ask_ai_report_exclude_groups_map
+    return all if group_ids.empty?
+
+    where.not(user_id: GroupUser.where(group_id: group_ids).select(:user_id))
+  end
+
   enum :ask_outcome, { answered: 0, no_answer: 1, failed: 2, cancelled: 3 }, prefix: true
   enum :failure_stage, { rewrite: 0, retrieval: 1, synthesis: 2 }, prefix: true
 end

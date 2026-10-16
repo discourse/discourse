@@ -8,6 +8,8 @@ class EmailLoginCode < ActiveRecord::Base
   MAX_ATTEMPTS = 5
   VALID_FOR = 10.minutes
 
+  enum :purpose, { login: 0, password_reset: 1 }
+
   validates :email, :code_hash, presence: true
 
   scope :active,
@@ -19,15 +21,21 @@ class EmailLoginCode < ActiveRecord::Base
         end
   scope :for_email, ->(email) { where("lower(email) = ?", email.downcase) }
 
-  def self.generate!(email:)
+  def self.generate!(email:, purpose: :login)
     email = email.downcase
 
     code = SecureRandom.random_number(10**CODE_LENGTH).to_s.rjust(CODE_LENGTH, "0")
 
     record = nil
     transaction do
-      where("lower(email) = ?", email).delete_all
-      record = create!(email: email, code_hash: hash_code(code), expires_at: VALID_FOR.from_now)
+      for_email(email).where(purpose: purpose).delete_all
+      record =
+        create!(
+          email: email,
+          purpose: purpose,
+          code_hash: hash_code(code),
+          expires_at: VALID_FOR.from_now,
+        )
     end
 
     record.instance_variable_set(:@code, code)
@@ -90,6 +98,7 @@ end
 #  consumed_at :datetime
 #  email       :string           not null
 #  expires_at  :datetime         not null
+#  purpose     :integer          default("login"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

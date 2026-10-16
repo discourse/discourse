@@ -4,7 +4,7 @@ module DiscourseAi
   module Agents
     class AskAiSynthesis < Agent
       def self.default_enabled
-        true
+        false
       end
 
       def response_format

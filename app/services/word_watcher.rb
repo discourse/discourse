@@ -242,15 +242,17 @@ class WordWatcher
     match_list
   end
 
-  def word_matches_across_all_actions
-    WatchedWord
-      .actions
-      .keys
+  def word_matches_across_actions(actions)
+    actions
       .filter_map { |action| word_matches_for_action?(action, all_matches: true) }
       .flatten
       .compact
       .uniq
       .sort
+  end
+
+  def word_matches_across_all_actions
+    word_matches_across_actions(WatchedWord.actions.keys)
   end
 
   def word_matches?(word, case_sensitive: false)

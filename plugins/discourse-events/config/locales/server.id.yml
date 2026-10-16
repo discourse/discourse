@@ -10,6 +10,9 @@ id:
       labels:
         username: Nama Pengguna
   discourse_events:
+    reminder:
+      additional_guests:
+        other: "  dan %{count} lainnya"
     category_type:
       default_calendar_view:
         day: "Hari"

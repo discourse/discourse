@@ -30,6 +30,11 @@ export default class HashtagAutocompleteResults extends Component {
 
   @tracked isInitialRender = true;
 
+  /**
+   * @param {HashtagAutocompleteResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -48,11 +53,13 @@ export default class HashtagAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;
   }
 
+  /** @param {HashtagAutocompleteResult} result */
   @action
   getResultLabel(result) {
     if (result.model) {

@@ -5,3 +5,26 @@
 # https://translate.discourse.org/
 
 lt:
+  discourse_captcha:
+    configuration_test:
+      v3_success: "Jūsų „reCAPTCHA v3“ raktai veikia. Šio testas surinko - %{score}, tai atitinka registracijos ribą - %{threshold}."
+      v3_low_score: "Jūsų „reCAPTCHA v3“ raktai veikia, bet šis testas surinko - %{score}, tai yra mažiau nei registracijos slenkstis - %{threshold}."
+      success: "Patikrinimas sėkmingas. Jūsų išsaugoti CAPTCHA raktai veikia šioje svetainėje."
+      errors:
+        not_configured: "Pasirinkite CAPTCHA teikėją ir prieš testavimą išsaugokite abu raktus nustatymuose."
+        configuration_changed: "CAPTCHA nustatymai pasikeitė. Atnaujinkite šį puslapį ir bandykite dar kartą."
+        invalid_secret: "CAPTCHA paslaugos teikėjas atmetė slaptąjį raktą. Patikrinkite nustatymuose išsaugotą slaptąjį raktą."
+        key_mismatch: "Svetainės raktas ir slaptasis raktas nesutampa. Patikrinkite, ar abu raktai priklauso tai pačiai konfigūracijai pas jūsų paslaugų teikėją."
+        invalid_response: "CAPTCHA atsakymas buvo neteisingas. Pradėkite naują testą ir bandykite dar kartą."
+        expired: "Užklausos galiojimo laikas baigėsi arba jis jau patvirtintas. Pradėkite naują testą ir atlikite jį dar kartą."
+        unavailable: "Nepavyko susisiekti su CAPTCHA paslaugos teikėju arba gautas netikėtas atsakymas. Bandykite vėliau."
+        verification_failed: "CAPTCHA teikėjas atmetė užklausą. Patikrinkite išsaugotus raktus ir teikėjo konfigūraciją, tada bandykite dar kartą."
+  dashboard:
+    problem:
+      recaptcha_v3_configuration: "Yra problema su jūsų „ReCaptcha v3“ parametrų `site_key` arba `secret_key` konfigūracija"
+  site_settings:
+    recaptcha_v2_site_key: "„ReCaptcha v2“ svetainės raktas iš jūsų <a target='blank' href='https://www.google.com/recaptcha'>„ReCaptcha“</a> paskyros. Naudojamas tik tuomet, kai „captcha“ tiekėjas nustatytas kaip „reCaptcha v2“."
+    recaptcha_v2_secret_key: "„ReCaptcha v2“ slaptasis raktas iš jūsų <a target='blank' href='https://www.google.com/recaptcha'>„ReCaptcha“</a> paskyros. Naudojamas tik tada, kai „captcha“ tiekėjas nustatytas kaip „reCaptcha v2“."
+    recaptcha_v3_site_key: "„ReCaptcha v3“ svetainės raktas iš jūsų <a target='blank' href='https://www.google.com/recaptcha'>„ReCaptcha“</a> paskyros"
+    recaptcha_v3_secret_key: "„ReCaptcha v3“ slaptasis raktas iš jūsų <a target='blank' href='https://www.google.com/recaptcha'>„ReCaptcha“</a> paskyros"
+    recaptcha_v3_score_threshold: "Mažiausias balas, kurį turi pasiekti „reCaptcha v3“ užklausa, kad registracija būtų patvirtinta. Mažesnės reikšmės reiškia lankstesnes sąlygas, o didesnės – stipresnę botų apsaugą."

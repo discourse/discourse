@@ -14,6 +14,11 @@ pt:
             topic_id:
               label: ID do Tópico
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificação"
+            none: "Nenhuma"
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"
       holidays:

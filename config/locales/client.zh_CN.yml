@@ -291,7 +291,6 @@ zh_CN:
       zh_CN:
         name: 简体中文
     share:
-      topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} 发布的帖子 #%{postNumber}"
       close: "关闭"
       twitter: "在 X 上分享"
@@ -346,6 +345,24 @@ zh_CN:
     skip_to_last_reply: "跳转到最后一条回复"
     skip_to_top: "跳转到顶部"
     skip_user_nav: "跳到个人资料内容"
+    reorder:
+      announcement: "将 %{label} 移动到 %{total} 的位置 %{position}"
+      announcement_cross_list: "将 %{label} 移动到 %{list}，位置 %{position} ，共 %{total}。"
+      handle: "重新排序 %{label}"
+      handle_description: "使用方向键在行之间移动。按 Enter 键查看移动选项。"
+      handle_description_drag_only: "拖动即可移动此行。"
+      remove: "移除 %{label}"
+      removed: "移除了 %{label}"
+      move_up: "上移"
+      move_down: "下移"
+      move_to_top: "返回顶部"
+      move_to_bottom: "移至底部"
+      move_to_list: "移至 %{list}"
+      position: "%{position}/%{total}"
+      at_start: "%{label} 已经是第一个"
+      at_end: "%{label} 已经是最后一个了"
+      move_refused: "无法移动 %{label}"
+      add_item: "添加一项"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_no_smtp: "由于未配置 SMTP 服务器，所有外发电子邮件均已禁用。无法发送任何类型的电子邮件。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
@@ -355,6 +372,7 @@ zh_CN:
     notifications_tracking:
       tooltip: "通知级别：%{level}"
     back_button: "返回"
+    confirm_button: "确认"
     welcome_banner:
       header:
         new_members: "欢迎，%{preferred_display_name}！"
@@ -446,6 +464,8 @@ zh_CN:
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
     multiple_errors: "发生多个错误：%{errors}"
+    too_many_requests:
+      other: "您执行此操作的次数过多。请稍等 %{count} 秒后再试。"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -481,8 +501,6 @@ zh_CN:
     every_six_months: "每六个月"
     max_of_count:
       other: "最多 %{count} 个"
-    character_count:
-      other: "%{count} 个字符"
     period_chooser:
       aria_label: "按期间筛选"
     related_messages:
@@ -523,19 +541,20 @@ zh_CN:
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
+        category_unavailable: "该分类不支持发布内容。"
         icebreakers:
-          fun_facts:
-            title: "关于你，有哪些有趣的小事？"
-            body: "大家好！很高兴能加入这个新社区。首先，让我们分享一下自己的趣事。我先来：我喜欢徒步旅行和探索新的路径！你有什么有趣的事情？"
-          coolest_thing_you_have_seen_today:
-            title: "你今天看到的最酷的东西是什么？"
-            body: "你今天看到或经历的最酷的事情是什么？可以是美丽的日落，也可以是偶然的善举。我先说：我看到一只狗在帮助一位老人过马路！"
+          plan_categories:
+            title: "我们应该从哪些类别开始？"
+            body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
+          plan_invites:
+            title: "在正式上线之前，我们应该邀请哪些成员？"
+            body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
-          what_is_your_favorite_food:
-            title: "你最喜欢吃什么？"
-            body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
+          write_your_own:
+            title: "写你自己的"
+            body: "选择一个适合您社区的话题，开启一场讨论。"
     design_wizard:
       title: "自定义您的网站"
       subtitle: "选择颜色、字体以及网站的布局。"
@@ -833,6 +852,10 @@ zh_CN:
       title:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
+    dsa_statements:
+      category: "类别"
+      category_prompt: "选择一个类别"
+      saving: "正在保存…"
     review:
       show_more: "展开"
       show_less: "收起"
@@ -1108,6 +1131,8 @@ zh_CN:
         chars_remaining: "剩余 %{count} 个字符"
         delete_note: "删除此注释"
         delete: "删除"
+        mentions_not_notified:
+          other: "%{usernames} 将不会收到通知，因为他们没有权限访问此可审核内容。"
       topic_label: "话题"
       queued_user: "已加入队列的用户"
       posted_in: "发表于"
@@ -1726,6 +1751,9 @@ zh_CN:
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为高亮显示的文字启用引用回复"
       enable_smart_lists: "在编辑器中编写时启用智能列表"
+      composer_toolbar:
+        title: "编辑器工具栏"
+        instructions: "选择哪些按钮显示在编辑器工具栏中。隐藏的按钮仍然可以使用键盘快捷键。"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
       automatically_translate: "自动翻译以其他语言发布的话题和帖子"
       content_languages:
@@ -2105,10 +2133,12 @@ zh_CN:
         letter_based: "系统分配的个人资料照片"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "上传自定义图片"
+        current_avatar: "当前图片"
+        associated_account: "%{provider} 图片"
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
         logo_small: "网站的小徽标。默认情况下使用。"
-        use_custom: "或上传自定义头像："
+        use_custom: "或者选择另一张图片："
       change_profile_background:
         title: "个人资料标题"
         instructions: "个人资料标题将居中且默认宽度为 1110px。"
@@ -2549,6 +2579,7 @@ zh_CN:
     user_status:
       save: "保存"
       set_custom_status: "设置自定义状态"
+      edit_status: "编辑状态"
       what_are_you_doing: "您在做什么？"
       pause_notifications: "暂停通知"
       remove_status: "移除状态"
@@ -2643,6 +2674,10 @@ zh_CN:
       login_disabled: "网站处于只读模式时登录被禁用。"
       logout_disabled: "网站处于只读模式时退出登录被禁用。"
       signup_disabled: "网站处于只读模式时，注册功能被禁用。"
+    site_archived:
+      enabled: "本网站已进入存档模式。请继续浏览，但回复、点赞及其他操作功能已被禁用。"
+      enabled_anonymous: "本网站已进入存档模式。您可以继续浏览或登录，但回复、点赞和其他操作功能已被禁用。"
+      signup_disabled: "网站处于存档模式时，注册功能将被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
       enabled_anonymous: "本网站目前仅供管理人员访问。请继续浏览，但注册功能暂不可用，且只有管理人员才能登录。"
@@ -2679,7 +2714,7 @@ zh_CN:
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "厌倦了滚动浏览相同的帖子？当您创建帐户后，您将始终回到您离开的地方。使用帐户，您还可以收到新回复通知、保存书签，以及使用“赞”来感谢他人。我们可以共同努力，使这个社区变得更好。:heart:"
+      value_prop: "厌倦了浏览同样的帖子？创建账号后，您就能随时回到上次离开的地方。有了账号，您还可以收到新回复通知、保存书签，以及点赞感谢他人。让我们携手共建更美好的社区。"
     offline_indicator:
       no_internet: "没有网络连接。"
       refresh_page: "刷新页面"
@@ -2743,6 +2778,7 @@ zh_CN:
         approve: "批准"
         login: "登录"
     forgot_password:
+      code_instructions: "如果存在匹配的帐户，我们会向该帐户的电子邮件地址发送验证码。请输入验证码以重置密码。"
       title: "密码重置"
       action: "我忘记密码了"
       invite: "输入您的用户名或电子邮件地址，我们将向您发送密码重置电子邮件。"
@@ -2787,9 +2823,14 @@ zh_CN:
       signup_instructions: "输入您的电子邮件地址即可加入此社区。我们将向您发送验证码，验证通过后您就可以加入了！"
       user_fields_title: "即将完成"
       user_fields_instructions: "只需再填写一些详细信息，即可完成帐户创建。"
-      account_ready_title: "您的帐户已就绪！🎉"
-      account_ready_edit: "选择您的用户名和头像"
+      signup_details_title: "选择您的用户名和头像"
       account_ready_continue: "继续"
+      account_details_title: "完成账户创建"
+      account_details_instructions: "在提交帐户以供审核之前，请选择您在社区中的显示方式。"
+      create_password_optional: "创建密码（可选）"
+      submit_for_approval: "提交审批"
+      pending_approval_title: "您的账户正在等待审核。"
+      pending_approval_instructions: "您的账户必须经工作人员审核通过后才能登录。审核通过后，我们会通过电子邮件通知您。"
       username_label: "用户名"
       username_placeholder: "选择一个用户名"
       regenerate_username: "建议一个随机用户名"
@@ -3257,8 +3298,7 @@ zh_CN:
       cancel_edit: "取消编辑"
       draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
-      title_placeholder: "用一句话概括讨论内容…"
-      title_placeholder_redesign: "标题"
+      title_placeholder: "标题"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
@@ -3643,6 +3683,8 @@ zh_CN:
       full_page_title: "搜索"
       results: "结果"
       no_results: "找不到结果。"
+      results_announcement:
+        other: "“”有 %{count} 个结果"
       no_more_results: "没有找到更多结果。"
       post_format: "#%{post_number}，来自 %{username}"
       results_page: "'%{term}' 的搜索结果"
@@ -4944,6 +4986,8 @@ zh_CN:
       list: "列出类别"
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
+      latest_topics: "最新话题"
+      view_all_topics: "查看所有话题 (%{number})"
       description_updated: "描述已更新"
       description_expand: "展开"
       description_collapse: "收起"
@@ -5231,6 +5275,8 @@ zh_CN:
       with_category: "%{filter}%{category}话题"
       filter:
         title: "%{filter} 的筛选结果"
+        results_for: "搜索结果： %{query}"
+        reset: "重置"
         button:
           label: "筛选"
       latest:
@@ -5458,8 +5504,6 @@ zh_CN:
         search_open: "打开管理员界面的搜索"
         search_full_page: "打开整页管理员搜索"
     badges:
-      earned_n_times:
-        other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
       others_count:
         other: "授予他人 %{count} 次"
@@ -5490,16 +5534,21 @@ zh_CN:
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
     download_calendar:
-      title: "下载日历"
+      title: "添加到日历"
+      calendar: "日历"
       save_ics: "下载 .ics 文件"
       save_google: "添加到 Google 日历"
+      save_outlook: "添加到 Microsoft Outlook"
+      save_apple: "添加到 Apple 日历"
       remember: "不再询问"
-      remember_explanation: "（您可以在用户偏好设置中更改此偏好设置）"
+      remember_explanation: "您稍后可以在个人资料设置中更改此偏好设置。"
       download: "下载"
       default_calendar: "默认日历"
       default_calendar_instruction: "决定保存日期时应使用哪个日历"
       add_to_calendar: "添加到日历"
       google: "Google 日历"
+      outlook: "Microsoft Outlook"
+      apple: "Apple 日历"
       ics: "ICS"
       default_title: "定时活动"
     tagging:
@@ -5901,6 +5950,7 @@ zh_CN:
         forum:
           label: 论坛
       back_to_forum: "返回论坛"
+      back_to_admin: "返回管理员页面"
       filter_links: "筛选链接…"
       clear_filter: "清除筛选器"
       no_results:
@@ -6307,7 +6357,7 @@ zh_CN:
               kind: "类型"
             groups_label: "原语群组"
             all_primitives: "所有原语"
-            group_count: "%{enabled} 中的 %{total} 已启用"
+            group_count: "%{total} 中的 %{enabled} 已启用"
             provider: "提供商"
             kind: "类型"
             scope: "作用域"
@@ -6364,8 +6414,15 @@ zh_CN:
             client_id_description: "此应用程序的标识符。配置客户端时请输入相同的值。"
             redirect_uris: "重定向 URI"
             redirect_uris_description: "用户批准访问后浏览器返回的页面。每行输入一个完整的 URI。"
+            management: "注册更新"
+            manual: "由管理员管理"
+            automatic: "自动"
+            manual_description: "管理员负责管理此客户端的名称和重定向 URI。元数据刷新不会更改这些内容，因此请保持其最新状态。"
+            automatic_description: "名称和重定向 URI 会根据已发布的客户端元数据进行更新。更改其中任何一项都会将两者切换到管理员管理模式。"
             create: "添加客户端"
             created: "已添加 OAuth 客户端。"
+            edit: "编辑 OAuth 客户端"
+            updated: "OAuth客户端已更新。"
             empty: "未注册 OAuth 客户端。"
             no_results: "没有 OAuth 客户端符合此搜索条件。"
             detail_title: "客户端详细信息"
@@ -6387,11 +6444,12 @@ zh_CN:
             empty: "没有 MCP 授权符合此筛选条件。"
           activity:
             title: "活动和诊断"
-            description: "审查隐私最小化协议活动和汇总诊断信息。"
+            description: "查看 MCP 活动。"
             tool_calls: "工具调用"
-            errors: "错误"
-            rate_limits: "速率限值"
+            failed_tool_calls: "工具调用失败"
+            rate_limits: "限速请求"
             p95_latency: "第 95 百分位延迟"
+            no_latency: "—"
             search_placeholder: "按用户、客户端、工具或确切请求 ID 搜索"
             outcome: "成果"
             time: "时间"
@@ -7412,6 +7470,7 @@ zh_CN:
             embedded: "嵌入式页面浏览量"
             crawlers: "抓取工具"
           see_details: "查看详细信息"
+          crawler_learn_more: "了解详情"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"
@@ -8139,6 +8198,14 @@ zh_CN:
           disable:
             title: "禁用只读模式"
             label: "禁用只读模式"
+        site_archived:
+          enable:
+            title: "启用存档模式"
+            label: "启用存档模式"
+            confirm: "您确定要启用归档模式吗？用户仍然可以登录和浏览，但所有写入操作都将被禁用。出于运行只读原因（故障转移、维护）而启用归档模式时，其优先级仍然很高。"
+          disable:
+            title: "禁用存档模式"
+            label: "禁用存档模式"
         logs:
           none: "暂无日志…"
         columns:
@@ -8350,8 +8417,9 @@ zh_CN:
           upload: "上传"
           select_component: "选择一个组件…"
           unsaved_changes_alert: "您尚未保存变更，要舍弃变更并继续吗？"
-          unsaved_parent_themes: "您尚未将组件分配给主题，要继续吗？"
+          unsaved_parent_themes: "您尚未将此组件添加到任何主题中，因此它不会显示在任何地方。您仍然要离开吗？"
           discard: "舍弃"
+          leave: "离开"
           stay: "保留"
           css_html: "自定义代码"
           edit_css_html: "编辑代码"
@@ -8737,6 +8805,7 @@ zh_CN:
           filter_date_time: "筛选日期和时间"
           actions:
             permanently_delete_post_revisions: "永久删除帖子修订"
+            mcp_client_updated: "更新 MCP OAuth 客户端"
             delete_user: "删除用户"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
@@ -9125,6 +9194,10 @@ zh_CN:
           all: "所有用户"
           activated: "已激活"
           not_activated: "未激活"
+        account_type_filter:
+          human: "人类账户"
+          bot: "机器人帐户"
+          all: "所有账户"
         approved: "已批准？"
         titles:
           active: "活跃用户"
@@ -9480,13 +9553,29 @@ zh_CN:
           multiselect: "多选"
       site_text:
         description: "您可以自定义论坛上的任何文本。"
-        search: "搜索您要编辑的文本"
+        search: "搜索文本或翻译键"
+        search_label: "搜索"
+        theme: "主题或组件"
+        all_themes: "所有站点文本"
+        theme_disabled: "已禁用"
+        filters: "筛选器"
+        filters_active:
+          other: "筛选（%{count}）"
+        edit_title: "编辑站点文本"
+        default_text: "默认文本"
+        value_label: "您的文本 · %{language}"
+        invalid_title: "无效的插值占位符"
+        invalid_description: "此文本使用无法识别的占位符。使用下面可用的插值键。"
+        status:
+          customized: "定制"
+          outdated: "过期"
+          invalid: "无效"
         title: "网站文本"
         edit: "编辑"
-        revert: "还原变更"
+        revert: "恢复默认"
         revert_confirm: "确定要还原您的变更吗？"
-        go_back: "返回搜索"
-        recommended: "我们建议自定义以下文本以符合您的需求："
+        go_back: "返回结果"
+        recommended: "建议的自定义文本"
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
         show_untranslated: "只显示未翻译的内容"

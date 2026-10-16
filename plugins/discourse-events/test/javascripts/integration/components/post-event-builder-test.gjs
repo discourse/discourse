@@ -3,8 +3,8 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function eventWith(attrs = {}) {
   return DiscoursePostEventEvent.create({
@@ -141,6 +141,36 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
       updatedEvent.customFields.test1,
       "hello",
       "the custom field value is part of the saved event"
+    );
+  });
+
+  test("editing a local-time event preserves its wall-clock time", async function (assert) {
+    const event = eventWith({
+      starts_at: "2026-09-30T20:15:00",
+      ends_at: "2026-09-30T22:15:00",
+      timezone: "Europe/Madrid",
+      show_local_time: true,
+    });
+
+    let savedDates;
+    await renderAdvanced(event, {
+      onUpdate: (startsAt, endsAt) => {
+        savedDates = { startsAt, endsAt };
+      },
+    });
+
+    await fillIn(`[data-name="description"] textarea`, "Updated description");
+    await click(".btn-primary");
+
+    assert.strictEqual(
+      savedDates.startsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "the start remains anchored to the event timezone"
+    );
+    assert.strictEqual(
+      savedDates.endsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 22:15 +02:00",
+      "the end remains anchored to the event timezone"
     );
   });
 

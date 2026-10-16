@@ -4,7 +4,7 @@ import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as lezerHighlight from "@lezer/highlight";
 import type { CodemirrorParams } from "discourse/lib/codemirror-languages";
-import { expressionUtils } from "./expression-utils";
+import { expressionUtils } from "./expression-utils.js";
 
 export function buildCmParams(): CodemirrorParams {
   return {

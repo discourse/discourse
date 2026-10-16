@@ -13,6 +13,11 @@ et:
             topic_id:
               label: Teema ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Teavitus"
+            none: "Pole"
       disable_holiday: "Lülita välja"
       enable_holiday: "Lülita sisse"
       date: "Kuupäev"

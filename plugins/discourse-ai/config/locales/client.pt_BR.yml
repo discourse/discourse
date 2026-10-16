@@ -22,6 +22,8 @@ pt_BR:
             title: "Perguntar à IA"
         ask_ai:
           title: "Perguntar à IA"
+          reports:
+            retry_questions: "Tentar novamente"
           date: "Data"
           outcomes:
             failed: "Falha"
@@ -222,6 +224,12 @@ pt_BR:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Nota"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -692,7 +700,6 @@ pt_BR:
           result: "Resultado do teste"
       secrets:
         short_title: "Credenciais"
-        description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
         select_secret: "Selecionar uma credencial..."
@@ -714,6 +721,15 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      decision_models:
+        no_preset: "Nenhum"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Excluir"
+        test: "Executar teste"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -968,9 +984,23 @@ pt_BR:
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Padrão"
+          option_on: "Ligado"
+          option_off: "Desligado"
+          apply: "Aplicar"
         expand_view_label: "Expandir visualização"
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
+        share: "Compartilhar"
+        create_link: "Criar link"
+        copied: "Copiou para área de transferência"
+        copy_link: "Copiar link"
+        copy_embed: "Copiar incorporado"
+        new_tab: "Exibir na aba nova"
+        filter_all: "Todas"
+        filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
         llm: "Modelo:"

@@ -7,6 +7,7 @@ import {
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  eventDateInTimezone,
   isLivestreamUrl,
   parseEventAttrs,
   parseEventBlock,
@@ -43,6 +44,44 @@ const LONG_DEFAULT = {
 
 module("Unit | Lib | raw-event-helper", function (hooks) {
   setupTest(hooks);
+
+  test("eventDateInTimezone preserves floating wall-clock times", function (assert) {
+    const date = eventDateInTimezone("2026-09-30T20:15:00", "Europe/Madrid");
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-free event date is parsed in the event timezone"
+    );
+  });
+
+  test("eventDateInTimezone preserves the instant of offset dates", function (assert) {
+    const date = eventDateInTimezone(
+      "2026-09-30T11:15:00-07:00",
+      "Europe/Madrid"
+    );
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-bearing event date is converted to the event timezone"
+    );
+  });
+
+  test("buildParams preserves floating event times", function (assert) {
+    const params = buildParams(
+      "2026-09-30T20:15:00",
+      "2026-09-30T22:15:00",
+      { timezone: "Europe/Madrid", showLocalTime: true },
+      { discourse_post_event_allowed_custom_fields: "" }
+    );
+
+    assert.deepEqual(
+      { start: params.start, end: params.end },
+      { start: "2026-09-30 20:15", end: "2026-09-30 22:15" },
+      "direct BBCode rewrites keep the event's wall-clock range"
+    );
+  });
 
   test("removeEvent", function (assert) {
     assert.strictEqual(

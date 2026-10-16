@@ -6,7 +6,22 @@
 
 ko:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "제목"
+        icon: "아이콘"
+        color: "색상"
+        tag_name: "태그"
+      create_board:
+        name: "그룹명"
+        slug: "강타"
+        tag_names: "태그"
+        category_ids: "카테고리"
     boards:
+      status:
+        all: "모두"
+        open: "열기"
+        archived: "저장됨"
       board:
         remove_card: "제거"
         new_topic: "새 글..."

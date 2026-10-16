@@ -7,8 +7,8 @@ import {
   propertyDescription,
   propertyLabel,
   propertyPlaceholder,
-} from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class BooleanControl extends Component {
   // Derived, not tracked, so a dropped variable flips the mode.
@@ -59,6 +59,7 @@ export default class BooleanControl extends Component {
         @title={{this.label}}
         @tooltip={{this.tooltip}}
         @type="custom"
+        @validate={{@validate}}
         @validation={{this.validation}}
         as |field|
       >

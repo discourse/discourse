@@ -15,10 +15,16 @@ export default class SecondFactorAuthController extends Controller {
   SECURITY_KEY = SECURITY_KEY;
   PASSKEY = PASSKEY;
   queryParams = ["nonce"];
+
+  /** @type {string | null} */
   message = null;
   loadError = false;
   messageIsError = false;
+
+  /** @type {string | null} */
   secondFactorToken = null;
+
+  /** @type {number | null} */
   userSelectedMethod = null;
   isLoading = false;
 

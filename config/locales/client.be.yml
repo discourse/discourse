@@ -311,7 +311,6 @@ be:
       zh_CN:
         name: Кітайская спрошчаная
     share:
-      topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "допіс №%{postNumber} ад карыстальніка @%{username}"
       close: "закрыць"
       twitter: "Абагуліць у X"
@@ -414,11 +413,6 @@ be:
       few: "не больш за %{count}"
       many: "не больш за %{count}"
       other: "не больш за %{count}"
-    character_count:
-      one: "%{count} сімвал"
-      few: "%{count} сімвалы"
-      many: "%{count} сімвалаў"
-      other: "%{count} сімвалаў"
     related_messages:
       title: "Звязаныя паведамленні"
       pill: "Звязаныя паведамленні"
@@ -653,6 +647,9 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
+      saving: "Захаванне…"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"
@@ -1390,8 +1387,7 @@ be:
       reply: "Адказаць"
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
-      title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
-      title_placeholder_redesign: "Загаловак"
+      title_placeholder: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -1742,6 +1738,7 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
+      latest_topics: "Апошнія тэмы"
       description_expand: "Паказаць больш"
       description_collapse: "Паказаць менш"
       already_used: "Гэты колер ужо выкарыстоўваецца іншай катэгорыяй"
@@ -1828,6 +1825,7 @@ be:
     categories_list: "Спіс катэгорый"
     filters:
       filter:
+        reset: "скінуць"
         button:
           label: "Фільтр"
       latest:
@@ -2363,6 +2361,7 @@ be:
           series:
             anonymous: "ананімны"
             crawlers: "Краўлеры пошукавых сістэм"
+          crawler_learn_more: "Даведацца больш"
         reports:
           today: "сёння"
           yesterday: "учора"
@@ -2977,10 +2976,10 @@ be:
           confirm: "пацвярджэнне"
           dropdown: "Выпадаючы спіс"
       site_text:
+        search_label: "Пошук"
+        theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
-        revert: "Вярнуць змяненні"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
-        go_back: "Вярнуцца да пошуку"
         show_overriden: "Паказваць толькі перавызначаны"
       settings:
         show_overriden: "Паказваць толькі перавызначаны"

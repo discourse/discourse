@@ -40,7 +40,6 @@ describe "Voice LiveKit rooms", if: ENV["VOICE_LIVEKIT_TEST_URL"] do
     SiteSetting.voice_mesh_privacy_warning_enabled = false
     SiteSetting.voice_allowed_groups =
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_video_enabled = true
 
     # The policy validator requires url + key + secret to be present first.
     SiteSetting.voice_livekit_url = ENV["VOICE_LIVEKIT_TEST_URL"]

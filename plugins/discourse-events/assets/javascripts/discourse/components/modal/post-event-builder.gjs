@@ -20,8 +20,8 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { MAX_HOSTS } from "../../lib/constants";
-import { recurrenceContext } from "../../lib/event-recurrence";
+import { MAX_HOSTS } from "../../lib/constants.js";
+import { recurrenceContext } from "../../lib/event-recurrence.js";
 import {
   allDayTransition,
   attendanceTransition,
@@ -30,12 +30,13 @@ import {
   customFieldFormName,
   defaultEventState,
   defaultReminderFor,
+  eventDateInTimezone,
   getCustomFieldNames,
   isLivestreamUrl,
   livestreamSource,
   reconcileDefaultReminder,
-} from "../../lib/raw-event-helper";
-import CompactEventEditor from "../compact-event-editor";
+} from "../../lib/raw-event-helper.js";
+import CompactEventEditor from "../compact-event-editor.gjs";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
@@ -639,7 +640,7 @@ export default class PostEventBuilder extends Component {
     if (this.event.allDay) {
       return moment(this.event.startsAt, "YYYY-MM-DD");
     }
-    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+    return eventDateInTimezone(this.event.startsAt, this.event.timezone);
   }
 
   #initEndsAt() {
@@ -649,7 +650,7 @@ export default class PostEventBuilder extends Component {
     if (this.event.allDay) {
       return moment(this.event.endsAt, "YYYY-MM-DD");
     }
-    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+    return eventDateInTimezone(this.event.endsAt, this.event.timezone);
   }
 
   #snapshotFormData() {

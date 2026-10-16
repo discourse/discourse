@@ -38,6 +38,25 @@ module DiscourseMcp
         identifier,
         implementation:,
         output_schema: implementation::OUTPUT_SCHEMA,
+        required_scopes: implementation::REQUIRED_SCOPES,
+        **attributes,
+      )
+    end
+
+    def register_resource_template(registry, identifier, implementation:, **attributes)
+      registry.register_resource_template(
+        identifier,
+        implementation:,
+        required_scopes: implementation::REQUIRED_SCOPES,
+        **attributes,
+      )
+    end
+
+    def register_prompt(registry, identifier, implementation:, **attributes)
+      registry.register_prompt(
+        identifier,
+        implementation:,
+        required_scopes: implementation::REQUIRED_SCOPES,
         **attributes,
       )
     end
@@ -46,8 +65,159 @@ module DiscourseMcp
       registry = DiscourseMcp.registry
       register_read_tools(registry)
       register_write_tools(registry)
+      register_moderation_tools(registry)
+      register_site_setting_tools(registry)
+      register_theme_tools(registry)
+      register_group_tools(registry)
+      register_category_tools(registry)
+      register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_category_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_category",
+        title: "Get category",
+        description: "Reads category details needed for category management.",
+        implementation: Tools::GetCategory,
+        input_schema:
+          object_schema(
+            { category_id: { type: "integer", minimum: 1 } },
+            required: %w[category_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_category",
+        title: "Create category",
+        description: "Creates a category and returns its ID, slug, and name.",
+        implementation: Tools::CreateCategory,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_NAME_LENGTH,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::CreateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_category",
+        title: "Update category",
+        description: "Updates basic details for a category.",
+        implementation: Tools::UpdateCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              slug: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: %w[integer null],
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::UpdateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[category_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_category",
+        title: "Delete category",
+        description: "Deletes an empty category after confirming its current name.",
+        implementation: Tools::DeleteCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[category_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
     end
 
     def register_read_tools(registry)
@@ -58,7 +228,6 @@ module DiscourseMcp
         description:
           "Returns the authenticated Discourse user, granted scopes, and MCP server URI.",
         implementation: Tools::CurrentUser,
-        required_scopes: [DiscourseMcp::INITIAL_SCOPE],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -85,7 +254,6 @@ module DiscourseMcp
             },
             required: %w[query],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -126,7 +294,6 @@ module DiscourseMcp
               },
             },
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -155,7 +322,6 @@ module DiscourseMcp
             },
             required: %w[query],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -212,7 +378,6 @@ module DiscourseMcp
             },
             required: %w[topic_id selection_mode],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -243,7 +408,6 @@ module DiscourseMcp
             },
             required: %w[post_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -258,7 +422,6 @@ module DiscourseMcp
           object_schema(
             { before_post_id: { type: "integer", minimum: 1 }, replies_only: { type: "boolean" } },
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -278,16 +441,15 @@ module DiscourseMcp
               },
               from: {
                 type: "string",
-                pattern: "\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z",
+                pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
               },
               to: {
                 type: "string",
-                pattern: "\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z",
+                pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
               },
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -307,7 +469,7 @@ module DiscourseMcp
               },
               order: {
                 type: "string",
-                pattern: "\\A[a-z0-9_]+\\z",
+                pattern: "^[a-z0-9_]+$",
               },
               ascending: {
                 type: "boolean",
@@ -353,7 +515,6 @@ module DiscourseMcp
             },
             required: %w[period],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -382,7 +543,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -393,7 +553,6 @@ module DiscourseMcp
         implementation: Tools::GetPost,
         input_schema:
           object_schema({ post_id: { type: "integer", minimum: 1 } }, required: %w[post_id]),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -403,7 +562,6 @@ module DiscourseMcp
         description: "Lists recent topics visible to the authenticated user.",
         implementation: Tools::ListTopics,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 50 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -412,7 +570,6 @@ module DiscourseMcp
         title: "List categories",
         description: "Lists the visible category hierarchy.",
         implementation: Tools::ListCategories,
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -422,7 +579,6 @@ module DiscourseMcp
         description: "Lists visible tags ordered by usage.",
         implementation: Tools::ListTags,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 200 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -436,7 +592,6 @@ module DiscourseMcp
             { username: { type: "string", minLength: 1, maxLength: 60 } },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -465,7 +620,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -479,7 +633,6 @@ module DiscourseMcp
             { username: { type: "string", minLength: 1, maxLength: 60 } },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -522,7 +675,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -546,7 +698,6 @@ module DiscourseMcp
             },
             required: %w[draft_key],
           ),
-        required_scopes: %w[mcp:drafts:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -556,7 +707,6 @@ module DiscourseMcp
         description: "Lists the authenticated user's bookmarks.",
         implementation: Tools::ListBookmarks,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -566,7 +716,6 @@ module DiscourseMcp
         description: "Lists the authenticated user's notifications.",
         implementation: Tools::ListNotifications,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -606,7 +755,6 @@ module DiscourseMcp
               },
             },
           ),
-        required_scopes: %w[mcp:private-messages:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -635,7 +783,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:private-messages:read],
         annotations: READ_ONLY,
       )
     end
@@ -678,7 +825,6 @@ module DiscourseMcp
             },
             required: %w[title raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -712,7 +858,6 @@ module DiscourseMcp
             },
             required: %w[topic_id raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -741,7 +886,6 @@ module DiscourseMcp
             },
             required: %w[post_id raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -796,7 +940,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -857,7 +1000,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:profile:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -895,7 +1037,6 @@ module DiscourseMcp
             },
             required: %w[upload_type],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -952,7 +1093,6 @@ module DiscourseMcp
             },
             required: %w[title raw],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -986,7 +1126,6 @@ module DiscourseMcp
             },
             required: %w[topic_id raw],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -1034,7 +1173,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -1049,7 +1187,6 @@ module DiscourseMcp
             { post_id: { type: "integer", minimum: 1 }, deleted: { type: "boolean" } },
             required: %w[post_id deleted],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
@@ -1102,7 +1239,6 @@ module DiscourseMcp
             },
             required: %w[draft_key reply],
           ),
-        required_scopes: %w[mcp:drafts:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -1127,7 +1263,6 @@ module DiscourseMcp
             },
             required: %w[draft_key sequence],
           ),
-        required_scopes: %w[mcp:drafts:write],
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
@@ -1162,44 +1297,1188 @@ module DiscourseMcp
               { properties: { clear: { enum: [false] } }, required: %w[description emoji] },
             ],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
         availability: -> { SiteSetting.enable_user_status },
       )
     end
 
+    def register_moderation_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_review_queue_count",
+        title: "Get review queue count",
+        description:
+          "Returns the number of pending reviewable records visible to the authenticated reviewer.",
+        implementation: Tools::GetReviewQueueCount,
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_list_reviewables",
+        title: "List reviewables",
+        description:
+          "Lists reviewable records visible to the authenticated reviewer, including their current actions.",
+        implementation: Tools::ListReviewables,
+        input_schema:
+          object_schema(
+            {
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              status: {
+                type: "string",
+                enum: Tools::ModerationSupport::STATUSES,
+                default: "pending",
+              },
+              type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              priority: {
+                type: "string",
+                enum: %w[low medium high],
+              },
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              reviewed_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              claimed_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              flagged_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              from_date: {
+                type: "string",
+                format: "date-time",
+              },
+              to_date: {
+                type: "string",
+                format: "date-time",
+              },
+              sort_order: {
+                type: "string",
+                enum: %w[score score_asc created_at created_at_asc],
+              },
+              score_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_list_reviewable_topics",
+        title: "List reviewable topics",
+        description:
+          "Lists topic-level signals from pending reviewables visible to the authenticated reviewer.",
+        implementation: Tools::ListReviewableTopics,
+        input_schema:
+          object_schema(
+            {
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_reviewable",
+        title: "Get reviewable",
+        description:
+          "Returns one visible reviewable with its current version, evidence, and available actions.",
+        implementation: Tools::GetReviewable,
+        input_schema:
+          object_schema(
+            {
+              reviewable_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              include_explanation: {
+                type: "boolean",
+              },
+            },
+            required: %w[reviewable_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_user_moderation_summary",
+        title: "Get user moderation summary",
+        description: "Returns staff-visible moderation counters for a user.",
+        implementation: Tools::GetUserModerationSummary,
+        input_schema:
+          object_schema(
+            { username: { type: "string", minLength: 1, maxLength: 60 } },
+            required: %w[username],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_post_revision",
+        title: "Get post revision",
+        description: "Returns a post revision visible to the authenticated reviewer.",
+        implementation: Tools::GetPostRevision,
+        input_schema:
+          object_schema(
+            {
+              post_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              revision: {
+                oneOf: [{ const: "latest" }, { type: "integer", minimum: 2 }],
+                default: "latest",
+              },
+            },
+            required: %w[post_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_perform_reviewable_action",
+        title: "Perform reviewable action",
+        description:
+          "Performs one currently available action on a visible reviewable after a fresh permission check.",
+        implementation: Tools::PerformReviewableAction,
+        input_schema:
+          object_schema(
+            {
+              reviewable_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              action_id: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              expected_version: {
+                type: "integer",
+                minimum: 0,
+              },
+              additional_fields: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  pattern: "^[a-z0-9_]+$",
+                },
+                additionalProperties: {
+                  oneOf: [
+                    { type: "string", maxLength: 2_000 },
+                    { type: "boolean" },
+                    { type: "integer" },
+                    { type: "number" },
+                  ],
+                },
+              },
+              confirm: {
+                const: true,
+              },
+            },
+            required: %w[reviewable_id action_id confirm],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: false,
+          openWorldHint: true,
+        },
+        risk: :moderation,
+      )
+    end
+
+    def register_site_setting_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_site_settings",
+        title: "List site settings",
+        description:
+          "Lists admin-visible site settings while masking secret and credential-like values.",
+        implementation: Tools::ListSiteSettings,
+        input_schema:
+          object_schema(
+            {
+              categories: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 200,
+                },
+                maxItems: 50,
+              },
+              plugin: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              names: {
+                type: "array",
+                items: {
+                  type: "string",
+                  pattern: "^[a-z0-9_]+$",
+                  maxLength: 200,
+                },
+                maxItems: 100,
+              },
+              overridden_only: {
+                type: "boolean",
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 500,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      setting_value_schema = {
+        oneOf: [
+          { type: "string", maxLength: 20_000 },
+          { type: "number" },
+          { type: "boolean" },
+          {
+            type: "array",
+            items: {
+              oneOf: [{ type: "string", maxLength: 2_000 }, { type: "number" }],
+            },
+            maxItems: 200,
+          },
+        ],
+      }
+      register_tool(
+        registry,
+        "discourse_update_site_setting",
+        title: "Update site setting",
+        description:
+          "Sets or resets one ordinary site setting after a current-value check and explicit confirmation.",
+        implementation: Tools::UpdateSiteSetting,
+        input_schema:
+          object_schema(
+            {
+              setting: {
+                type: "string",
+                pattern: "^[a-z0-9_]+$",
+                maxLength: 200,
+              },
+              operation: {
+                type: "string",
+                enum: %w[set reset_to_default],
+              },
+              value: setting_value_schema,
+              expected_current_value: setting_value_schema,
+              confirm_change: {
+                const: true,
+              },
+              confirm_required_setting: {
+                const: true,
+              },
+            },
+            required: %w[setting operation expected_current_value confirm_change],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: true,
+          openWorldHint: true,
+        },
+        risk: :administration,
+      )
+    end
+
+    def register_theme_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_theme",
+        title: "Get theme",
+        description:
+          "Reads a theme or theme component and its fields. Requires administrator access.",
+        implementation: Tools::GetTheme,
+        input_schema: object_schema({ theme_id: { type: "integer" } }, required: %w[theme_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      theme_field_schema = {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          target: {
+            type: "string",
+            enum: Tools::ThemeSupport::TARGETS,
+          },
+          value: {
+            type: "string",
+            maxLength: 1_000_000,
+          },
+          type: {
+            type: "string",
+            enum: Tools::ThemeSupport::FIELD_TYPES,
+          },
+          type_id: {
+            type: "integer",
+            minimum: 0,
+          },
+          upload_id: {
+            type: "integer",
+            minimum: 1,
+          },
+        },
+        required: %w[name target],
+        additionalProperties: false,
+      }
+      register_tool(
+        registry,
+        "discourse_create_theme",
+        title: "Create theme",
+        description:
+          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+        implementation: Tools::CreateTheme,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              user_selectable: {
+                type: "boolean",
+                default: false,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              component: {
+                type: "boolean",
+                default: false,
+              },
+              default: {
+                type: "boolean",
+                default: false,
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme",
+        title: "Update theme",
+        description:
+          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+        implementation: Tools::UpdateTheme,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              dark_color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              user_selectable: {
+                type: "boolean",
+              },
+              enabled: {
+                type: "boolean",
+              },
+              auto_update: {
+                type: "boolean",
+              },
+              default: {
+                type: "boolean",
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+              child_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                maxItems: 50,
+              },
+              parent_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                },
+                maxItems: 50,
+              },
+            },
+            required: %w[theme_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+    end
+
+    def register_group_tools(registry)
+      group_name = { type: "string", minLength: 1, maxLength: 100 }
+      pagination = {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+        offset: {
+          type: "integer",
+          minimum: 0,
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_list_groups",
+        title: "List groups",
+        description: "Lists groups visible to the authenticated user.",
+        implementation: Tools::ListGroups,
+        input_schema:
+          object_schema(
+            {
+              page: {
+                type: "integer",
+                minimum: 0,
+              },
+              limit: pagination[:limit],
+              order: {
+                type: "string",
+                enum: %w[name user_count],
+              },
+              ascending: {
+                type: "boolean",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              type: {
+                type: "string",
+                enum: %w[my owner public close automatic non_automatic],
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_get_group",
+        title: "Get group",
+        description: "Gets safe details and caller capabilities for one visible group.",
+        implementation: Tools::GetGroup,
+        input_schema: object_schema({ id: { type: "integer", minimum: 1 }, name: group_name }),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_members",
+        title: "List group members",
+        description: "Lists members and owners when the authenticated user may see them.",
+        implementation: Tools::ListGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              order: {
+                type: "string",
+                enum: %w[username last_posted_at last_seen_at added_at],
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_membership_requests",
+        title: "List group membership requests",
+        description: "Lists pending requests for a group the authenticated user may manage.",
+        implementation: Tools::ListGroupMembershipRequests,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      group_id = { type: "integer", minimum: 1 }
+      user_selectors = {
+        usernames: {
+          type: "array",
+          items: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_ids: {
+          type: "array",
+          items: {
+            type: "integer",
+            minimum: 1,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_emails: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "email",
+            minLength: 3,
+            maxLength: 513,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+      }
+      group_settings = {
+        full_name: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        title: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        bio_raw: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_BIO_LENGTH,
+        },
+        visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        members_visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        mentionable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        messageable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        default_notification_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::NOTIFICATION_LEVELS,
+        },
+        public_admission: {
+          type: "boolean",
+        },
+        public_exit: {
+          type: "boolean",
+        },
+        allow_membership_requests: {
+          type: "boolean",
+        },
+        membership_request_template: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_TEMPLATE_LENGTH,
+        },
+        primary_group: {
+          type: "boolean",
+        },
+        publish_read_state: {
+          type: "boolean",
+        },
+        grant_trust_level: {
+          type: %w[integer null],
+          minimum: 0,
+          maximum: 4,
+        },
+        automatic_membership_email_domains: {
+          type: %w[string null],
+          maxLength: 1_000,
+        },
+        flair_icon: {
+          type: %w[string null],
+          maxLength: 100,
+        },
+        flair_bg_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+        flair_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+      }
+      notification_defaults =
+        GroupUpdater::NOTIFICATION_DEFAULT_LEVELS.each_with_object({}) do |level, schema|
+          schema[:"#{level}_category_ids"] = {
+            type: "array",
+            items: {
+              type: "integer",
+              minimum: 1,
+            },
+            maxItems: 100,
+          }
+          schema[:"#{level}_tags"] = {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            maxItems: 100,
+          }
+        end
+
+      register_tool(
+        registry,
+        "discourse_create_group",
+        title: "Create group",
+        description: "Creates a group and returns its ID and name. Requires group creation rights.",
+        implementation: Tools::CreateGroup,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              owner_usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+              usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_group",
+        title: "Update group",
+        description:
+          "Updates the group settings the authenticated user may change. " \
+            "Fields the user cannot change are ignored.",
+        implementation: Tools::UpdateGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              **notification_defaults,
+              update_existing_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_group",
+        title: "Delete group",
+        description:
+          "Deletes a group after confirming its current name. Administrators only. " \
+            "Automatic groups cannot be deleted.",
+        implementation: Tools::DeleteGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_members",
+        title: "Manage group members",
+        description:
+          "Adds or removes members of a group the authenticated user may manage. " \
+            "Provide exactly one of usernames, user_ids, or user_emails. " \
+            "The user_emails selector requires permission to view email addresses.",
+        implementation: Tools::ManageGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembers::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_invite_group_members",
+        title: "Invite group members by email",
+        description:
+          "Adds existing accounts that match an address and invites the rest to the forum " \
+            "with the group preassigned. Requires permission to view email addresses.",
+        implementation: Tools::InviteGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              emails: {
+                type: "array",
+                items: {
+                  type: "string",
+                  format: "email",
+                  minLength: 3,
+                  maxLength: 513,
+                },
+                minItems: 1,
+                maxItems: Tools::InviteGroupMembers::MAX_EMAILS,
+              },
+              skip_email: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id emails],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :external_side_effect,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_owners",
+        title: "Manage group owners",
+        description:
+          "Grants or revokes group ownership. Adding an owner also adds them as a member. " \
+            "Automatic groups cannot be changed.",
+        implementation: Tools::ManageGroupOwners,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupOwners::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_membership",
+        title: "Manage own group membership",
+        description:
+          "Joins a group that allows public admission, leaves a group that allows public exit, " \
+            "or requests membership with a reason.",
+        implementation: Tools::ManageGroupMembership,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembership::ACTIONS,
+              },
+              reason: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::ManageGroupMembership::MAX_REASON_LENGTH,
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :write,
+      )
+      register_tool(
+        registry,
+        "discourse_handle_group_membership_request",
+        title: "Handle group membership request",
+        description:
+          "Approves or denies one pending membership request for a group the authenticated " \
+            "user may manage. Approving adds the requester to the group.",
+        implementation: Tools::HandleGroupMembershipRequest,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::HandleGroupMembershipRequest::ACTIONS,
+              },
+            },
+            required: %w[group_id username action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_posts",
+        title: "List group posts",
+        description: "Lists visible public-topic posts authored by members of a visible group.",
+        implementation: Tools::ListGroupPosts,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              before_post_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              before: {
+                type: "string",
+                format: "date-time",
+              },
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 20,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+    end
+
+    def register_user_administration_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_users",
+        title: "List users",
+        description: "Lists and filters users visible through Discourse's staff user directory.",
+        implementation: Tools::ListUsers,
+        input_schema:
+          object_schema(
+            {
+              query: {
+                type: "string",
+                enum: Tools::ListUsers::QUERIES,
+                default: "active",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 500,
+              },
+              order: {
+                type: "string",
+                enum: Tools::ListUsers::ORDERS,
+              },
+              ascending: {
+                type: "boolean",
+                default: false,
+              },
+              include_emails: {
+                type: "boolean",
+                default: false,
+              },
+              page: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_user",
+        title: "Create user",
+        description:
+          "Creates a user as an administrator. Registrations must be open. Supply the site's invite code if required and required user fields keyed by field ID. Missing-field errors identify the field name and ID.",
+        implementation: Tools::CreateUser,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              email: {
+                type: "string",
+                format: "email",
+                maxLength: 508,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              password: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              invite_code: {
+                type: "string",
+                maxLength: 1000,
+              },
+              user_fields: {
+                type: "object",
+                additionalProperties: false,
+                patternProperties: {
+                  "^[1-9][0-9]*$" => {
+                    oneOf: [
+                      { type: "string", maxLength: 2048 },
+                      { type: "array", maxItems: 2048, items: { type: "string", maxLength: 2048 } },
+                    ],
+                  },
+                },
+              },
+              active: {
+                type: "boolean",
+                default: true,
+              },
+              approved: {
+                type: "boolean",
+                default: true,
+              },
+              upload_id: {
+                type: "integer",
+                minimum: 1,
+              },
+            },
+            required: %w[username email name password],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_user_activation",
+        title: "Manage user activation",
+        description:
+          "Activates, approves, activates and approves, or deactivates an eligible user.",
+        implementation: Tools::ManageUserActivation,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::ManageUserActivation::ACTIONS,
+              },
+              confirm: {
+                const: true,
+              },
+            },
+            required: %w[username action confirm],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: true,
+          openWorldHint: true,
+        },
+        risk: :administration,
+      )
+    end
+
     def register_resources(registry)
-      registry.register_resource_template(
+      register_resource_template(
+        registry,
         "discourse.topic",
         title: "Discourse topic",
         description: "A topic visible to the authenticated user.",
         implementation: Resources::Topic,
         input_schema:
           object_schema(
-            { uri: { type: "string", pattern: "\\Adiscourse://topic/[0-9]+\\z" } },
+            { uri: { type: "string", pattern: "^discourse://topic/[0-9]+$" } },
             required: %w[uri],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_resource_template(
+      register_resource_template(
+        registry,
         "discourse.post",
         title: "Discourse post",
         description: "A post visible to the authenticated user.",
         implementation: Resources::Post,
         input_schema:
           object_schema(
-            { uri: { type: "string", pattern: "\\Adiscourse://post/[0-9]+\\z" } },
+            { uri: { type: "string", pattern: "^discourse://post/[0-9]+$" } },
             required: %w[uri],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
     end
 
     def register_prompts(registry)
-      registry.register_prompt(
+      register_prompt(
+        registry,
         "discourse.research_topic",
         title: "Research discussions",
         description: "Builds a prompt for researching visible Discourse discussions.",
@@ -1209,10 +2488,10 @@ module DiscourseMcp
             { question: { type: "string", minLength: 1, maxLength: 1000 } },
             required: %w[question],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_prompt(
+      register_prompt(
+        registry,
         "discourse.draft_reply",
         title: "Draft a reply",
         description: "Builds a prompt for drafting a grounded reply to a visible topic.",
@@ -1231,7 +2510,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
     end
@@ -1239,12 +2517,15 @@ module DiscourseMcp
 
   module Resources
     class Topic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://topic/").to_i
         topic = ::Topic.find_by(id: id)
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Resource not found"
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
         {
           uri: uri,
           mimeType: "application/json",
@@ -1254,12 +2535,15 @@ module DiscourseMcp
     end
 
     class Post
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://post/").to_i
         post = ::Post.secured(request_context.guardian).find_by(id: id)
         if post.blank? || !request_context.guardian.can_see?(post)
           raise ToolError, "Resource not found"
         end
+        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :read)
         { uri: uri, mimeType: "application/json", text: JSON.generate(ToolHelpers.post_json(post)) }
       end
     end
@@ -1267,6 +2551,8 @@ module DiscourseMcp
 
   module Prompts
     class ResearchTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(arguments:, request_context:)
         {
           description: "Research visible Discourse discussions",
@@ -1285,11 +2571,14 @@ module DiscourseMcp
     end
 
     class DraftReply
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(arguments:, request_context:)
         topic = ::Topic.find_by(id: arguments.fetch("topic_id").to_i)
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Topic not found"
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
         {
           description: "Draft a reply to #{topic.title}",
           messages: [

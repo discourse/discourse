@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function buildEvent(overrides = {}) {
   return DiscoursePostEventEvent.create({
@@ -219,6 +219,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
         "https://ti.to/discourse/meetup",
         "a venue plus a registration page is a legitimate pairing"
       );
+  });
+
+  test("shows a chat icon for events with a channel", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        channel: {
+          id: 2,
+          title: "Product team chat",
+          slug: "product-team-chat",
+          chatable_type: "Category",
+          chatable: { color: "0088cc", read_restricted: false },
+        },
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-chat-channel");
+
+    assert
+      .dom(".event-chat-channel > .d-icon-comment")
+      .exists("shows the chat icon beside the channel link");
   });
 
   test("hides the url row when it carries the zoom livestream", async function (assert) {

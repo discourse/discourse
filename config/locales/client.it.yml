@@ -267,7 +267,6 @@ it:
       zh_CN:
         name: Cinese Semplificato
     share:
-      topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber} di @%{username}"
       close: "chiudi"
       twitter: "Condividi su X"
@@ -315,12 +314,18 @@ it:
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
     skip_user_nav: "Passa al contenuto del profilo"
+    reorder:
+      removed: "Rimosso %{label}"
+      move_up: "Sposta su"
+      move_down: "Sposta giù"
+      position: "%{position} di %{total}"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     back_button: "Indietro"
+    confirm_button: "Conferma"
     welcome_banner:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
@@ -417,9 +422,6 @@ it:
     max_of_count:
       one: "massimo %{count}"
       other: "massimo %{count}"
-    character_count:
-      one: "%{count} carattere"
-      other: "%{count} caratteri"
     period_chooser:
       aria_label: "Filtra per periodo"
     related_messages:
@@ -679,6 +681,10 @@ it:
       title:
         search: "Cerca un messaggio"
         placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
+    dsa_statements:
+      category: "Categoria"
+      category_prompt: "Scegli una categoria"
+      saving: "Salvataggio…"
     review:
       show_more: "Mostra altro"
       show_less: "Mostra meno"
@@ -1855,7 +1861,6 @@ it:
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
         logo_small: "Logo piccolo del sito. Usato come impostazione predefinita."
-        use_custom: "Oppure carica un avatar personalizzato:"
       change_profile_background:
         title: "Intestazione Profilo "
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
@@ -2423,7 +2428,7 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
-      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa community un posto fantastico. :heart:"
+      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa community un posto fantastico."
     offline_indicator:
       no_internet: "Nessuna connessione internet."
       refresh_page: "Aggiorna pagina"
@@ -2834,8 +2839,7 @@ it:
       edit_shared_draft: "Modifica Bozza condivisa"
       discard: "Elimina"
       users_placeholder: "Aggiungi utenti o gruppi"
-      title_placeholder: "In breve, di cosa tratta questa discussione?"
-      title_placeholder_redesign: "Titolo"
+      title_placeholder: "Titolo"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "Perché stai modificando?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
@@ -4187,6 +4191,7 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      latest_topics: "Argomenti più recenti"
       description_expand: "Mostra altro"
       description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
@@ -4445,6 +4450,7 @@ it:
       with_category: "%{filter} %{category} argomenti"
       filter:
         title: "Risultati filtrati per %{filter}"
+        reset: "reimposta"
         button:
           label: "Filtro"
       latest:
@@ -4613,9 +4619,6 @@ it:
       admin:
         title: "Amministrazione"
     badges:
-      earned_n_times:
-        one: "Ha guadagnato questo distintivo %{count} volta"
-        other: "Ha guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnato il %{date}"
       others_count:
         one: "Concesso ad altri %{count} volta"
@@ -4650,11 +4653,11 @@ it:
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     download_calendar:
-      title: "Scarica il calendario"
+      title: "Aggiungi al calendario"
+      calendar: "Calendario"
       save_ics: "Scarica il file.ics"
       save_google: "Aggiungi al calendario di Google"
       remember: "Non chiedermelo più"
-      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
       download: "Scarica"
       default_calendar: "Calendario predefinito"
       default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
@@ -5305,13 +5308,13 @@ it:
             use_preset: "Configura"
             presets:
               custom: "Personalizzato"
+            automatic: "Automatico"
           authorizations:
             user: "Utente"
             last_used: "Ultimo utilizzo"
             status: "Stato"
             actions: "Azioni"
           activity:
-            rate_limits: "Limiti di frequenza"
             outcome: "Esito"
             time: "Ora"
             user: "Utente"
@@ -5835,6 +5838,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"
@@ -6746,8 +6750,8 @@ it:
           upload: "Carica"
           select_component: "Seleziona un componente…"
           unsaved_changes_alert: "Non hai ancora salvato le tue modifiche. Sei sicuro di volerle abbandonare e passare ad altro?"
-          unsaved_parent_themes: "Non hai assegnato il Componente ai Temi, vuoi andare avanti?"
           discard: "Annulla"
+          leave: "Esci"
           stay: "Resta"
           css_html: "Codice personalizzato"
           edit_css_html: "Modifica codice"
@@ -7796,13 +7800,14 @@ it:
           multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
-        search: "Trova il testo che vorresti modificare"
+        search_label: "Cerca"
+        theme_disabled: "Disabilitati"
+        filters: "Filtri"
+        status:
+          invalid: "Non valido"
         title: "Testi del sito"
         edit: "Modifica"
-        revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
-        go_back: "Torna alla Ricerca"
-        recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"

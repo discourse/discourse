@@ -7,7 +7,6 @@ module Jobs
     MAX_FLUSH_SECONDS = 50
 
     def execute(args)
-      return if !SiteSetting.persist_browser_pageview_events
       return if Discourse.pg_readonly_mode?
 
       deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + MAX_FLUSH_SECONDS

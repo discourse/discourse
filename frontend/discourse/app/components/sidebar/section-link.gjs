@@ -13,7 +13,7 @@ import deprecated from "discourse/lib/deprecated";
 import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import SectionLinkPrefix from "./section-link-prefix";
+import SectionLinkPrefix from "./section-link-prefix.gjs";
 
 /**
  * Checks if a given string is a valid color hex code.

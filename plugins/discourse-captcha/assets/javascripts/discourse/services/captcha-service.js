@@ -11,6 +11,7 @@ export default class CaptchaService extends Service {
   @tracked token = null;
   widgetId = null;
   captcha = null;
+  refreshToken = null;
 
   get submitFailed() {
     return this.submitted && this.invalid;
@@ -32,6 +33,6 @@ export default class CaptchaService extends Service {
     this.invalid = true;
     this.submitted = false;
     this.token = null;
-    this.captcha.reset(this.widgetId);
+    this.captcha?.reset(this.widgetId);
   }
 }

@@ -28,6 +28,15 @@ require_relative "lib/discourse_reactions/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::PostReaction::V1,
+        DiscourseWorkflows::Nodes::PostReactionChanged::V1,
+      ]
+    end
+  end
+
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
     app/models/discourse_reactions/reaction_user.rb
@@ -47,7 +56,6 @@ after_initialize do
     lib/discourse_reactions/posts_reaction_loader.rb
     lib/discourse_reactions/topic_view_serializer_extension.rb
     lib/discourse_reactions/topic_view_posts_serializer_extension.rb
-    lib/discourse_reactions/migration_report.rb
     lib/discourse_reactions/post_reactions_query.rb
     app/jobs/regular/discourse_reactions/like_synchronizer.rb
     app/jobs/scheduled/discourse_reactions/scheduled_like_synchronizer.rb
@@ -426,10 +434,10 @@ after_initialize do
     end
   end
 
-  on(:site_setting_changed) do |name, old_value, new_value|
-    if name == :discourse_reactions_excluded_from_like &&
+  on(:site_setting_changed) do |name|
+    if name.in?(%i[discourse_reactions_excluded_from_like discourse_reactions_like_sync_enabled]) &&
          SiteSetting.discourse_reactions_like_sync_enabled
-      ::Jobs.cancel_scheduled_job(Jobs::DiscourseReactions::LikeSynchronizer)
+      ::Jobs.cancel_scheduled_job("DiscourseReactions::LikeSynchronizer")
       ::Jobs.enqueue_at(5.minutes.from_now, Jobs::DiscourseReactions::LikeSynchronizer)
     end
   end
@@ -459,7 +467,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: DiscourseReactions::McpTools::SetReaction::OUTPUT_SCHEMA,
-    required_scopes: %w[discourse-reactions:write],
+    required_scopes: DiscourseReactions::McpTools::SetReaction::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

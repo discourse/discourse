@@ -162,10 +162,8 @@ module(
     });
 
     test("the user selectable switch reflects and toggles its state", async function (assert) {
-      const state = new (class {
-        @tracked userSelectable = false;
-      })();
-      const toggle = () => (state.userSelectable = !state.userSelectable);
+      const userSelectable = tracked(false);
+      const toggle = () => (userSelectable.value = !userSelectable.value);
 
       await render(
         <template>
@@ -178,7 +176,7 @@ module(
             @pairs={{PAIRS}}
             @selectedPairKey="default"
             @selectedPairName="Default"
-            @userSelectable={{state.userSelectable}}
+            @userSelectable={{userSelectable.value}}
           />
         </template>
       );
@@ -188,13 +186,13 @@ module(
 
       await click(SWITCH);
       assert.true(
-        state.userSelectable,
+        userSelectable.value,
         "clicking the switch notifies the caller"
       );
       assert.dom(SWITCH).hasAria("checked", "true", "renders the new state");
 
       await click(SWITCH);
-      assert.false(state.userSelectable, "clicking again toggles back off");
+      assert.false(userSelectable.value, "clicking again toggles back off");
       assert
         .dom(SWITCH)
         .hasAria("checked", "false", "renders the reverted state");
@@ -208,15 +206,13 @@ module(
     setupRenderingTest(hooks);
 
     test("homepage controls expose their selected state", async function (assert) {
-      const state = new (class {
-        @tracked homepage = "latest";
-      })();
+      const homepage = tracked("latest");
 
       await render(
         <template>
           <HomepageSection
             @categoryPageStyle="categories_boxes"
-            @homepage={{state.homepage}}
+            @homepage={{homepage.value}}
             @onSelectCategoryPageStyle={{noop}}
             @onSelectHomepage={{noop}}
             @themeId={{-1}}
@@ -234,7 +230,7 @@ module(
         .dom(".design-wizard__option-row[data-topic-page='new']")
         .hasAria("pressed", "false", "exposes an unselected topic page");
 
-      state.homepage = "categories";
+      homepage.value = "categories";
       await settled();
 
       assert
@@ -256,15 +252,13 @@ module(
     setupRenderingTest(hooks);
 
     test("the location choices only appear once the banner is enabled", async function (assert) {
-      const state = new (class {
-        @tracked enabled = false;
-      })();
-      const toggle = () => (state.enabled = !state.enabled);
+      const enabled = tracked(false);
+      const toggle = () => (enabled.value = !enabled.value);
 
       await render(
         <template>
           <WelcomeBannerSection
-            @enabled={{state.enabled}}
+            @enabled={{enabled.value}}
             @location="above_topic_content"
             @onSelectLocation={{noop}}
             @onToggle={{toggle}}
@@ -280,7 +274,7 @@ module(
 
       await click(SWITCH);
 
-      assert.true(state.enabled, "clicking the switch notifies the caller");
+      assert.true(enabled.value, "clicking the switch notifies the caller");
       assert
         .dom(
           ".design-wizard__option-row[data-welcome-banner-location='above_topic_content']"

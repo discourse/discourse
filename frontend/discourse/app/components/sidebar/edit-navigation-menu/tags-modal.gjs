@@ -13,7 +13,7 @@ import { gt, has, or } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
-import EditNavigationMenuModal from "./modal";
+import EditNavigationMenuModal from "./modal.gjs";
 
 export default class SidebarEditNavigationMenuTagsModal extends Component {
   @service currentUser;

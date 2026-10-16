@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import CategoryCardContents from "discourse/components/category-card-contents";
 import GroupCardContents from "discourse/components/group-card-contents";
 import UserCardContents from "discourse/components/user-card-contents";
 import routeAction from "discourse/helpers/route-action";
 import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
-import PluginOutlet from "./plugin-outlet";
+import PluginOutlet from "./plugin-outlet.gjs";
 
 export default class CardContainer extends Component {
   @service site;
+  @service siteSettings;
   @controller topic;
 
   @action
@@ -47,5 +49,9 @@ export default class CardContainer extends Component {
       @showUser={{this.showUser}}
       @topic={{this.topic.model}}
     />
+
+    {{#if this.siteSettings.enable_category_hashtag_cards}}
+      <CategoryCardContents />
+    {{/if}}
   </template>
 }

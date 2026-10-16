@@ -206,14 +206,26 @@
     border-radius: var(--d-border-radius);
     background: var(--secondary);
 
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     &:focus-visible,
-    &:hover {
+    &:hover:not(:disabled) {
       outline: 2px solid var(--tertiary);
 
       .predefined-topic-options-modal__title {
         color: var(--tertiary);
       }
     }
+  }
+
+  &__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   &__title {

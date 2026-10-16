@@ -2,12 +2,17 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { or } from "discourse/truth-helpers";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import { i18n } from "discourse-i18n";
 
 export default class DAccessControlField extends Component {
   @service site;
   @service dialog;
+
+  get name() {
+    return this.args.name ?? "acl";
+  }
 
   @action
   async validateAccess(name, value, { addError, preventSubmit }) {
@@ -82,10 +87,13 @@ export default class DAccessControlField extends Component {
     <@form.Field
       @description={{@description}}
       @format="max"
-      @name="acl"
+      @name={{this.name}}
+      @onSet={{@onSet}}
+      @showOptional={{@showOptional}}
       @title={{@title}}
       @type="custom"
       @validate={{this.validateAccess}}
+      @validation={{@validation}}
       as |field|
     >
       <field.Control>
@@ -93,7 +101,7 @@ export default class DAccessControlField extends Component {
           @acl={{field.value}}
           @aclTarget={{@aclTarget}}
           @groups={{this.site.groups}}
-          @onChange={{@onChange}}
+          @onChange={{or @onChange field.set}}
           @transformPermissionOptions={{@transformPermissionOptions}}
         />
       </field.Control>

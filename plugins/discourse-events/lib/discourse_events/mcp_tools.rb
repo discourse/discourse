@@ -3,6 +3,7 @@
 module DiscourseEvents
   module McpTools
     class ListEvents
+      REQUIRED_SCOPES = %w[discourse-calendar:read].freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           events: {

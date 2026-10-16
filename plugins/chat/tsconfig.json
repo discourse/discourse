@@ -7,8 +7,22 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/chat/*": ["./assets/javascripts/*"],
-      "discourse/plugins/chat/admin/*": ["./admin/assets/javascripts/admin/*"]
+      "discourse/plugins/chat/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./admin/assets/javascripts/*",
+        "./admin/assets/javascripts/*.gjs",
+        "./admin/assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
+      ],
+      "discourse/plugins/chat/admin/*": [
+        "./admin/assets/javascripts/admin/*",
+        "./admin/assets/javascripts/admin/*.gjs",
+        "./admin/assets/javascripts/admin/*.gts"
+      ]
     }
   }
 }

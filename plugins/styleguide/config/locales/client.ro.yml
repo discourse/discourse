@@ -36,6 +36,11 @@ ro:
             delete: "Șterge"
         multi_select:
           title: "Selectare multiplă"
+        reorderable_list:
+          policies_pinned: "Fixat"
+          policies_required: "Necesare"
+          table_field: "Câmp"
+          table_type: "Tip"
         font_scale:
           title: "Sistem corpuri de literă"
         colors:

@@ -1,6 +1,10 @@
 import { run } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import {
+  isRateLimitError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -28,13 +32,21 @@ export default class ScreenTrack extends Service {
 
   _ajaxFailures = 0;
   _consolidatedTimings = [];
+
+  /** @type {number | null} */
   _lastTick = null;
+
+  /** @type {number | null} */
   _lastScrolled = null;
   _lastFlush = 0;
   _timings = new Map();
   _totalTimings = new Map();
   _topicTime = 0;
+
+  /** @type {number[] | null} */
   _onscreen = null;
+
+  /** @type {number[] | null} */
   _readOnscreen = null;
   _readPosts = new Set();
   _inProgress = false;
@@ -208,14 +220,21 @@ export default class ScreenTrack extends Service {
       this.appEvents.trigger("topic:timings-sent", data);
     } catch (e) {
       if (e.jqXHR && ALLOWED_AJAX_FAILURES.includes(e.jqXHR.status)) {
-        const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
-        this._ajaxFailures += 1;
+        let delay;
 
-        if (delay) {
-          this._blockSendingToServerTill = Date.now() + delay;
-          // we did not send to the server, got to re-queue it
-          this.consolidateTimings(timings, topicTime, topicId);
+        if (isRateLimitError(e)) {
+          delay = rateLimitWaitSeconds(e) * 1000;
+        } else {
+          delay =
+            AJAX_FAILURE_DELAYS[
+              Math.min(this._ajaxFailures, AJAX_FAILURE_DELAYS.length - 1)
+            ];
+          this._ajaxFailures += 1;
         }
+
+        this._blockSendingToServerTill = Date.now() + delay;
+        // we did not send to the server, got to re-queue it
+        this.consolidateTimings(timings, topicTime, topicId);
       }
 
       if (window.console && window.console.warn && e.jqXHR) {

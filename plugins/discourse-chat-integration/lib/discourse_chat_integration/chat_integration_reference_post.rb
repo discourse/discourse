@@ -78,7 +78,10 @@ module DiscourseChatIntegration
     def raw
       if @raw.nil? && @kind == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
         tag_list_to_raw = ->(tag_list) do
-          tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
+          HashtagAutocompleteService
+            .new(user.guardian)
+            .hashtags_for("tag", tag_list.sort)
+            .join(", ")
         end
 
         added_tags = @context["added_tags"]

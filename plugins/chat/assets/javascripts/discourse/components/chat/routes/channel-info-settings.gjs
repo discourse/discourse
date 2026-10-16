@@ -635,7 +635,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   @onLeave={{this.onLeaveChannel}}
                   @options={{hash
                     joinClass="btn-primary"
-                    leaveClass="btn-danger"
+                    leaveClass="btn-default"
                     joinIcon="right-to-bracket"
                     leaveIcon="right-from-bracket"
                     leaveDestructive=true

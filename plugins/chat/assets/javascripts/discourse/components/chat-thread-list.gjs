@@ -145,7 +145,7 @@ export default class ChatThreadList extends Component {
 
   @bind
   loadThreads() {
-    this.threadsCollection.load({ limit: 10 });
+    this.threadsCollection.load({ limit: 10 }).catch(() => {});
   }
 
   @bind

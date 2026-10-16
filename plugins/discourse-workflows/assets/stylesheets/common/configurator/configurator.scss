@@ -465,3 +465,26 @@
     }
   }
 }
+
+.workflows-access-control {
+  &__input-row {
+    align-items: flex-start;
+    gap: var(--space-12);
+    padding-block: var(--space-3);
+  }
+
+  &__groups {
+    flex: 1 1 0;
+    min-width: 0;
+
+    input {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  &__permission {
+    flex: 0 0 auto;
+    text-align: end;
+  }
+}

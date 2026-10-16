@@ -32,6 +32,52 @@ RSpec.describe Chat::Api::SearchController do
         end
       end
 
+      context "when chat search is disabled" do
+        fab!(:indexed_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "searchable chat message")
+        end
+
+        before do
+          SiteSetting.chat_search_enabled = true
+          SearchIndexer.enable
+          SearchIndexer.index(indexed_message)
+        end
+
+        after { SearchIndexer.disable }
+
+        it "blocks global and channel-scoped searches" do
+          get "/chat/api/search.json", params: { query: "searchable chat message" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(indexed_message.message)
+
+          get "/chat/api/search.json",
+              params: {
+                query: "searchable chat message",
+                channel_id: channel.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(indexed_message.message)
+
+          SiteSetting.chat_search_enabled = false
+
+          get "/chat/api/search.json", params: { query: "searchable chat message" }
+
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(indexed_message.message)
+
+          get "/chat/api/search.json",
+              params: {
+                query: "searchable chat message",
+                channel_id: channel.id,
+              }
+
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(indexed_message.message)
+        end
+      end
+
       context "when query is missing" do
         it "returns a 400" do
           get "/chat/api/search.json", params: {}

@@ -36,6 +36,8 @@ ja:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "イベントリマインダー"
   site_settings:
     map_events_to_color: "各タグまたはカテゴリに色を割り当てる。"
     map_events_title: "カテゴリごとに '今後のイベント' の 'イベント' を上書きします。"
@@ -65,6 +67,10 @@ ja:
     sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
     calendar_first_day_of_week: "カレンダーに表示する週の最初の曜日を設定します。オプションは、土曜日、日曜日、または月曜日です。"
   discourse_events:
+    reminder:
+      guest: "- %{name}"
+      additional_guests:
+        other: "  および他 %{count} 人"
     category_type:
       default_calendar_view:
         day: "日"

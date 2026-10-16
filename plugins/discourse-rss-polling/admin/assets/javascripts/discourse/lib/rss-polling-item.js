@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings.js";
 
 async function setFeedEnabled(feed, enabled, toasts) {
   await RssPollingFeedSettings.setEnabled(feed, enabled);

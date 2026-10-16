@@ -1,5 +1,10 @@
 # Optional LiveKit SFU support
 
+For the scoped extension that lets administrators authorize external bot accounts,
+see [External agent participation](./agent-participation.md). That design preserves
+the human presence path described here and adds provider-maintained presence only
+for authorized agent sessions.
+
 This is the "SFU integration (future, separate effort)" scoped out of
 [video-screenshare.md](./video-screenshare.md). It is written to be executed by
 a coding agent, PR by PR (§9). Line references are against plugin commit

@@ -81,6 +81,7 @@ export default <template>
             @context="signup"
             @initialEmail={{@controller.accountEmail}}
             @onStepChange={{@controller.updateCodeSignupStep}}
+            @signupContext={{@controller.signupContext}}
           />
           {{#if
             (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)

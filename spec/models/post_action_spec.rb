@@ -437,6 +437,13 @@ RSpec.describe PostAction do
       expect(post.topic.like_count).to eq(0)
     end
 
+    it "only counts likes in like_score" do
+      PostActionCreator.off_topic(moderator, post)
+      PostActionCreator.like(codinghorror, post)
+
+      expect(post.reload.like_score).to eq(1)
+    end
+
     it "changes given_likes only when likes are added or removed" do
       freeze_time
 

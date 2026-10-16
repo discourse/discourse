@@ -57,11 +57,7 @@ class Upload < ActiveRecord::Base
     )
   end
 
-  after_destroy do
-    User.where(uploaded_avatar_id: id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: id).update_all(custom_upload_id: nil)
-  end
+  after_destroy { UserAvatar.remove_upload(id) }
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
@@ -306,15 +302,19 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            ImageMagick.identify(
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              operation: :upload_svg_dimensions,
-              read: [path],
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%w %h",
+                "MSVG:#{path}",
+                operation: :upload_svg_dimensions,
+                read: [path],
+                timeout: MAX_IDENTIFY_SECONDS,
+              ).split(" ")
+            end
           rescue StandardError
             [0, 0]
           end
@@ -378,8 +378,8 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg" ||
-      (GlobalSetting.enable_vips_image_processing && extension == "ico")
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") ||
+      %w[svg ico].include?(extension)
 
     if color.nil?
       local_path ||=
@@ -444,7 +444,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
+  def target_jpeg_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
         ImageMagick.identify(

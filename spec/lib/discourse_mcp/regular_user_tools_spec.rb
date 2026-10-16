@@ -27,7 +27,13 @@ describe DiscourseMcp::Tools do
             "query" => "regular parity search needle",
             "max_results" => 1,
           },
-          request_context: request_context(user),
+          request_context:
+            instance_double(
+              DiscourseMcp::RequestContext,
+              user:,
+              guardian: user.guardian,
+              has_scopes?: true,
+            ),
         ).fetch(:structuredContent)
 
       expect(result[:results].sole).to eq(
@@ -214,11 +220,13 @@ describe DiscourseMcp::Tools do
             Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
         )
       hidden_bookmark = Fabricate(:bookmark, user:, bookmarkable: private_post)
+      context = request_context(user)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(false)
 
       result =
-        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
-          :structuredContent,
-        )
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
 
       bookmark_ids = result.fetch(:bookmarks).pluck(:id)
       expect(bookmark_ids).to include(visible_bookmark.id)
@@ -227,17 +235,87 @@ describe DiscourseMcp::Tools do
   end
 
   describe DiscourseMcp::Tools::ListNotifications do
+    it "hides reviewable mentions after moderator access is revoked" do
+      SiteSetting.enable_mentions = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result.fetch(:notifications).size).to eq(1)
+
+      reviewable.update!(reviewable_by_moderator: false)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result.fetch(:notifications)).to be_empty
+    end
+
+    it "lists reviewable mentions only for tokens with the moderation scope" do
+      SiteSetting.enable_mentions = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable: reviewable, user: admin, content: "@#{moderator.username}")
+      topic_notification = Fabricate(:notification, user: moderator)
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::MODERATION_READ,
+      ).and_return(false)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      expect(result.fetch(:notifications).pluck(:id)).to contain_exactly(topic_notification.id)
+    end
+
+    it "hides mentions on private message reviewables from tokens without the private messages scope" do
+      SiteSetting.enable_mentions = true
+      private_message_reviewable, trashed_private_message_reviewable =
+        Array.new(2) do
+          private_message_post = Fabricate(:private_message_post)
+          Fabricate(
+            :reviewable_flagged_post,
+            target: private_message_post,
+            topic: private_message_post.topic,
+          )
+        end
+      trashed_private_message_reviewable.topic.trash!
+      topic_reviewable = Fabricate(:reviewable_flagged_post)
+      other_admin = Fabricate(:admin)
+      [
+        private_message_reviewable,
+        trashed_private_message_reviewable,
+        topic_reviewable,
+      ].each do |reviewable|
+        ReviewableNote.create!(reviewable:, user: admin, content: "@#{other_admin.username}")
+      end
+      context = request_context(other_admin)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(false)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      expect(
+        result.fetch(:notifications).map { |notification| notification[:data][:reviewable_id] },
+      ).to contain_exactly(topic_reviewable.id)
+    end
+
     it "lists only the caller's notifications from visible topics" do
       visible_notification = Fabricate(:notification, user:)
       Fabricate(:notification, user: other_user)
       private_topic =
         Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       hidden_notification = Fabricate(:notification, user:, topic: private_topic)
+      context = request_context(user)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(true)
 
       result =
-        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
-          :structuredContent,
-        )
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
 
       notification_ids = result.fetch(:notifications).pluck(:id)
       expect(notification_ids).to include(visible_notification.id)
@@ -756,6 +834,16 @@ describe DiscourseMcp::CorePrimitives do
       DiscourseMcp.registry.all(:tool).reject(&:output_schema).map(&:identifier)
 
     expect(tools_without_output_schema).to be_empty
+  end
+
+  it "registers every primitive with the scopes declared by its implementation" do
+    primitives_with_different_scopes =
+      DiscourseMcp.registry.all.reject do |primitive|
+        primitive.implementation.const_defined?(:REQUIRED_SCOPES, false) &&
+          primitive.required_scopes == primitive.implementation::REQUIRED_SCOPES
+      end
+
+    expect(primitives_with_different_scopes.map(&:identifier)).to be_empty
   end
 
   it "registers the compatible regular-user tool names" do

@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class ListPrivateMessages
+      REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
       MAILBOXES = %w[inbox sent archive unread new].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -140,6 +141,7 @@ module DiscourseMcp
     end
 
     class ReadPrivateMessage
+      REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -212,6 +214,7 @@ module DiscourseMcp
     end
 
     class CreatePrivateMessage
+      REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -268,6 +271,7 @@ module DiscourseMcp
     end
 
     class ReplyPrivateMessage
+      REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -302,6 +306,7 @@ module DiscourseMcp
     end
 
     class InviteToPrivateMessage
+      REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[group notifications_requested user participant_added outcome_confirmed],

@@ -14,7 +14,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import formatCurrency from "../helpers/format-currency";
+import formatCurrency from "../helpers/format-currency.js";
 
 const SIDEBAR_BODY_CLASS = "subscription-campaign-sidebar";
 

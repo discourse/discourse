@@ -16,6 +16,13 @@ module Voice
         SiteSetting.voice_livekit_api_secret.present?
     end
 
+    def self.cloud?
+      uri = URI.parse(SiteSetting.voice_livekit_url)
+      uri.scheme == "wss" && uri.host&.end_with?(".livekit.cloud")
+    rescue URI::InvalidURIError
+      false
+    end
+
     def self.available_for?(room)
       return false unless configured?
 
@@ -60,25 +67,27 @@ module Voice
       raw.present? ? Time.at(raw.to_f) : nil
     end
 
-    # The track sources a publisher may send, matching the room's
-    # capabilities. Lowercase is the access-token grant spelling; RoomService
-    # permission updates use the same names uppercased (the proto enum).
-    def self.publish_sources(room, can_publish)
+    # The track sources a publisher may send. Camera and screen sharing are
+    # granted independently, so a user allowed only one of them gets a token
+    # the SFU will refuse the other on. Lowercase is the access-token grant
+    # spelling; RoomService permission updates use the same names uppercased
+    # (the proto enum).
+    def self.publish_sources(room, can_publish, guardian)
       return [] unless can_publish
 
       sources = ["microphone"]
-      sources.concat(%w[camera screen_share screen_share_audio]) if room.video_allowed?
+      sources << "camera" if guardian.can_publish_video_in_voice_room?(room)
+      if guardian.can_screen_share_in_voice_room?(room)
+        sources.concat(%w[screen_share screen_share_audio])
+      end
       sources
     end
 
-    # Least-privilege HS256 JWT: a leaked token can only join this one room,
-    # as this one user, for TOKEN_TTL. Guardian remains the sole authority —
-    # callers only mint for users who passed `ensure_can_join_voice_room!`.
     def self.mint_token(user:, room:, guardian:)
       raise MintError, "LiveKit is not fully configured" unless configured?
 
       can_publish = guardian.can_speak_in_voice_room?(room)
-      sources = publish_sources(room, can_publish)
+      sources = publish_sources(room, can_publish, guardian)
 
       payload = {
         iss: SiteSetting.voice_livekit_api_key,

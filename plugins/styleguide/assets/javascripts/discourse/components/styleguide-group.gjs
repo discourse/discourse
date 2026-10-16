@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { warn } from "@ember/debug";
-import StyleguideExample from "./styleguide-example";
+import StyleguideExample from "./styleguide-example.gjs";
 
 // Group ids are only unique within one manifest, so two sets of groups on a page could both
 // hold a "start". A per-instance number keeps the heading ids distinct, which `aria-labelledby`

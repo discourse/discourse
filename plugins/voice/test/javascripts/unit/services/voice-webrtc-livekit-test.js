@@ -192,9 +192,18 @@ function buildFakeSdk() {
     },
   };
 
+  class VideoPreset {
+    constructor(width, height, maxBitrate, maxFramerate) {
+      this.width = width;
+      this.height = height;
+      this.encoding = { maxBitrate, maxFramerate };
+    }
+  }
+
   class FakeLivekitRoom {
     static instances = [];
     static connectErrors = [];
+    static publishDelayMs = 0;
 
     options;
     connectCalls = [];
@@ -211,6 +220,9 @@ function buildFakeSdk() {
         published: [],
         unpublishCalls: [],
         async publishTrack(track, publishOptions) {
+          if (FakeLivekitRoom.publishDelayMs) {
+            await wait(FakeLivekitRoom.publishDelayMs);
+          }
           const publication = {
             source: publishOptions?.source,
             options: publishOptions,
@@ -272,6 +284,7 @@ function buildFakeSdk() {
       DisconnectReason,
       Track,
       VideoQuality,
+      VideoPreset,
       isBrowserSupported: () => true,
     },
     FakeLivekitRoom,
@@ -491,7 +504,6 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     this.keyValueStore.remove(this.cameraPreferenceKey);
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.siteSettings.voice_auto_status_enabled = true;
-    this.siteSettings.voice_video_enabled = true;
     this.siteSettings.voice_video_max_publishers = 4;
     localStorage.removeItem("voice:noise-suppression");
     localStorage.removeItem("voice:noise-suppression-mode");
@@ -508,6 +520,8 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       name: "Voice",
       room_type: "open",
       video_enabled: true,
+      video_allowed: true,
+      screen_share_allowed: true,
       membership: { role_name: "participant" },
       active_participants: [
         { id: this.currentUser.id, role: "participant" },
@@ -790,6 +804,234 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     );
   });
 
+  test("agent audio waits for authorization and follows roster role changes", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const track = {
+      kind: "audio",
+      mediaStreamTrack: createFakeTrack("agent-mic"),
+      mediaStream: null,
+    };
+    const publication = {
+      source: "microphone",
+      track,
+      setSubscribed(value) {
+        if (!value) {
+          this.track = null;
+          lkRoom.emit("trackUnsubscribed", track, this, { identity: "-1400" });
+        } else if (!this.track) {
+          Promise.resolve().then(() => {
+            this.track = track;
+            lkRoom.emit("trackSubscribed", track, this, { identity: "-1400" });
+          });
+        }
+      },
+    };
+    lkRoom.remoteParticipants.set("-1400", {
+      identity: "-1400",
+      trackPublications: new Map([["mic", publication]]),
+    });
+    lkRoom.emit("trackSubscribed", track, publication, { identity: "-1400" });
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "unknown agents cannot play audio"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "roster admission recovers an already subscribed track"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "participant", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "listener agents cannot play audio even in open rooms"
+    );
+    assert.strictEqual(
+      publication.track,
+      null,
+      "demotion unsubscribes the microphone"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "promotion restores the agent track"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [{ id: this.currentUser.id }],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "exclusion removes agent audio"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "readmission subscribes to the retained microphone publication"
+    );
+  });
+
+  test("dashboard agent audio follows the server identity mapping and moderation", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const track = {
+      kind: "audio",
+      mediaStreamTrack: createFakeTrack("agent-mic"),
+      mediaStream: null,
+    };
+    const publication = {
+      source: "microphone",
+      track,
+      setSubscribed(value) {
+        if (!value) {
+          this.track = null;
+          lkRoom.emit("trackUnsubscribed", track, this, {
+            identity: "agent-dashboard",
+          });
+        } else if (!this.track) {
+          Promise.resolve().then(() => {
+            this.track = track;
+            lkRoom.emit("trackSubscribed", track, this, {
+              identity: "agent-dashboard",
+            });
+          });
+        }
+      },
+    };
+    lkRoom.remoteParticipants.set("agent-dashboard", {
+      identity: "agent-dashboard",
+      trackPublications: new Map([["mic", publication]]),
+    });
+    lkRoom.emit("trackSubscribed", track, publication, {
+      identity: "agent-dashboard",
+    });
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "unknown agents cannot play audio"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "roster admission recovers an already subscribed track"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "participant",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "listener agents cannot play audio even in open rooms"
+    );
+    assert.strictEqual(
+      publication.track,
+      null,
+      "demotion unsubscribes the microphone"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "promotion restores the agent track"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [{ id: this.currentUser.id }],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "exclusion removes agent audio"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "readmission subscribes to the retained microphone publication"
+    );
+  });
+
   test("a participant expelled from the roster loses their media", async function (assert) {
     await this.subject.join(this.room);
     await wait(50);
@@ -1009,17 +1251,18 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
     await this.subject.join(this.room);
     this.subject.setWatching(1, true);
-    await waitUntil(() =>
-      this.stateRequests.some(({ video }) => video === "true")
-    );
 
+    // The camera state is broadcast before the track is published, so wait
+    // on the publication itself.
     const lkRoom = this.FakeLivekitRoom.instances[0];
-    const publication = lkRoom.localParticipant.published.find(
-      ({ track }) => track.mediaStreamTrack === this.cameraTrack
-    );
+    const cameraPublication = () =>
+      lkRoom.localParticipant.published.find(
+        ({ track }) => track.mediaStreamTrack === this.cameraTrack
+      );
+    await waitUntil(cameraPublication);
 
     assert.notStrictEqual(
-      publication,
+      cameraPublication(),
       undefined,
       "publishes the remembered camera track"
     );
@@ -1044,14 +1287,26 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       this.cameraTrack,
       "publishes the camera track"
     );
-    assert.deepEqual(
+    assert.propEqual(
       publication.options,
       {
         source: "camera",
         simulcast: true,
         videoEncoding: { maxBitrate: 1_200_000, maxFramerate: 24 },
+        videoSimulcastLayers: [
+          {
+            width: 640,
+            height: 360,
+            encoding: { maxBitrate: 400_000, maxFramerate: 15 },
+          },
+          {
+            width: 853,
+            height: 480,
+            encoding: { maxBitrate: 700_000, maxFramerate: 24 },
+          },
+        ],
       },
-      "publishes with simulcast and the camera encoding preset"
+      "publishes simulcast layers from the camera encoding ladder"
     );
     assert.deepEqual(
       this.stateRequests.at(-1),
@@ -1084,6 +1339,32 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       FakeRTCPeerConnection.created,
       0,
       "video never creates mesh peer connections"
+    );
+  });
+
+  test("a roster update during a camera publish does not publish it twice", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    this.FakeLivekitRoom.publishDelayMs = 30;
+    const toggled = this.subject.toggleCamera();
+    await wait(5);
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id, role: "participant", is_video_on: true },
+      ],
+    });
+    await toggled;
+    await wait(80);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    assert.strictEqual(
+      lkRoom.localParticipant.published.filter(
+        ({ source }) => source === "camera"
+      ).length,
+      1,
+      "publishes the camera exactly once"
     );
   });
 
@@ -1260,8 +1541,8 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
     assert.deepEqual(
       cameraPublication.qualityCalls,
-      [1],
-      "cameras subscribe at the MEDIUM layer in small rooms"
+      [2],
+      "cameras subscribe at the HIGH layer in small rooms"
     );
     assert.deepEqual(
       screenPublication.qualityCalls,
@@ -1269,11 +1550,30 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       "screenshares subscribe at the HIGH layer"
     );
 
-    const participants = [{ id: this.currentUser.id, role: "participant" }];
-    for (let id = 2; id <= 8; id++) {
-      participants.push({ id, role: "participant", is_video_on: true });
-    }
-    this.rooms.emit(1, { type: "participants", participants });
+    const participantsWithCameras = (count) => {
+      const participants = [{ id: this.currentUser.id, role: "participant" }];
+      for (let id = 2; id < count + 2; id++) {
+        participants.push({ id, role: "participant", is_video_on: true });
+      }
+      return participants;
+    };
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: participantsWithCameras(4),
+    });
+    await wait(20);
+
+    assert.strictEqual(
+      cameraPublication.qualityCalls.at(-1),
+      1,
+      "more than three publishers drops cameras to the MEDIUM layer"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: participantsWithCameras(7),
+    });
     await wait(20);
 
     assert.strictEqual(

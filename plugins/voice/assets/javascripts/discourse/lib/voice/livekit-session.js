@@ -9,10 +9,11 @@ import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 // (or the module-level test override), which is what makes it unit-testable.
 import {
   cameraEncodingFor,
+  cameraSimulcastLayersFor,
   screenEncodingFor,
   voiceBitrateFor,
-} from "./video-quality";
-import { voiceAssetAppUrl } from "./voice-assets";
+} from "./video-quality.js";
+import { voiceAssetAppUrl } from "./voice-assets.js";
 
 // The SDK bundle sits in the plugin's public dir, which static asset CDNs
 // never receive. Anchor to the page URL because this compiled chunk may
@@ -63,9 +64,12 @@ function wait(ms) {
 // Content audio: higher Opus ceiling than the speech default so screen audio
 // doesn't sound underwater.
 const SCREEN_AUDIO_BITRATE = 128_000;
-// Camera subscriptions drop to the LOW simulcast layer above this many
-// active video publishers — the same threshold the mesh bitrate ladder uses.
+// Camera subscriptions step down simulcast layers at the same publisher
+// counts where the mesh ladder steps down its rungs.
+const MEDIUM_LAYER_PUBLISHER_THRESHOLD = 3;
 const LOW_LAYER_PUBLISHER_THRESHOLD = 6;
+// Fallback when the capture track doesn't report its dimensions.
+const DEFAULT_CAMERA_DIMENSIONS = { width: 1280, height: 720 };
 
 export default class LivekitRoomSession {
   // Cheap pre-load check so obviously unsupported browsers fail with a
@@ -102,6 +106,8 @@ export default class LivekitRoomSession {
   #watchingVideo = false;
   #closed = false;
   #reconnecting = false;
+  #agentIdentities = new Map();
+  #videoSyncQueue = Promise.resolve();
 
   constructor({
     roomId,
@@ -226,15 +232,25 @@ export default class LivekitRoomSession {
   // Brings the video and screen-audio publications in line with the local
   // capture state. The mesh equivalent gates per watching peer; on the SFU
   // media is published once and receive gating moves to the subscriber side.
-  async syncLocalVideo(videoTrack, screenAudioTrack, kind) {
-    if (!this.#room) {
-      return;
-    }
+  //
+  // Serialized: roster updates re-sync while a publish is still in flight,
+  // and an overlapping call would see no publication yet and publish the
+  // same capture track a second time.
+  syncLocalVideo(videoTrack, screenAudioTrack, kind) {
+    const run = async () => {
+      if (!this.#room) {
+        return;
+      }
 
-    await this.#syncVideoPublication(videoTrack ?? null, kind ?? null);
-    await this.#syncScreenAudioPublication(
-      videoTrack ? (screenAudioTrack ?? null) : null
-    );
+      await this.#syncVideoPublication(videoTrack ?? null, kind ?? null);
+      await this.#syncScreenAudioPublication(
+        videoTrack ? (screenAudioTrack ?? null) : null
+      );
+    };
+
+    const result = this.#videoSyncQueue.then(run, run);
+    this.#videoSyncQueue = result.catch(() => {});
+    return result;
   }
 
   // Receive gating for the watching state: non-watchers unsubscribe from
@@ -293,7 +309,9 @@ export default class LivekitRoomSession {
   // The SFU doesn't consult the plugin's roster, so a participant expelled
   // from it can still hold live subscriptions; drop them explicitly.
   dropParticipant(userId) {
-    const participant = this.#room?.remoteParticipants?.get(String(userId));
+    const participant = this.#room?.remoteParticipants?.get(
+      this.#agentIdentities.get(userId) ?? String(userId)
+    );
 
     participant?.trackPublications?.forEach((publication) => {
       try {
@@ -302,6 +320,55 @@ export default class LivekitRoomSession {
         // Already unsubscribed or tearing down.
       }
     });
+  }
+
+  restoreParticipant(userId) {
+    const participant = this.#room?.remoteParticipants?.get(
+      this.#agentIdentities.get(userId) ?? String(userId)
+    );
+    participant?.trackPublications?.forEach((publication) => {
+      if (this.#isWatchGatedSource(publication.source)) {
+        this.#applyDesiredSubscription(publication);
+      } else {
+        try {
+          publication.setSubscribed(true);
+        } catch {
+          // The publication is tearing down.
+        }
+      }
+      if (
+        !publication.track ||
+        (this.#isWatchGatedSource(publication.source) && !this.#watchingVideo)
+      ) {
+        return;
+      }
+      const track = publication.track;
+      const streams =
+        publication.source === this.#sdk.Track.Source.ScreenShareAudio
+          ? []
+          : [track.mediaStream ?? new MediaStream()];
+      this.#onTrack(this.#roomId, userId, track.mediaStreamTrack, streams);
+    });
+  }
+
+  syncAgentIdentities(participants) {
+    const next = new Map(
+      participants
+        .filter(
+          (participant) => participant.id < 0 && participant.livekit_identity
+        )
+        .map((participant) => [
+          Number(participant.id),
+          participant.livekit_identity,
+        ])
+    );
+    for (const [userId, identity] of this.#agentIdentities) {
+      if (next.get(userId) !== identity) {
+        this.dropParticipant(userId);
+        this.#onParticipantGone(this.#roomId, userId);
+      }
+    }
+    this.#agentIdentities = next;
   }
 
   // Terminal-disconnect recovery: up to three attempts, each awaiting a
@@ -404,6 +471,10 @@ export default class LivekitRoomSession {
             source: Track.Source.Camera,
             simulcast: true,
             videoEncoding: livekitEncoding,
+            videoSimulcastLayers: this.#cameraSimulcastLayers(
+              track,
+              tiers.camera
+            ),
           };
 
     try {
@@ -418,6 +489,25 @@ export default class LivekitRoomSession {
         error
       );
     }
+  }
+
+  // Without explicit layers the SDK falls back to its 180p/360p presets with
+  // low bitrate caps, which is what most subscribers would end up watching.
+  // Lower layers mirror the mesh ladder's lower rungs instead.
+  #cameraSimulcastLayers(track, tier) {
+    const settings = track.getSettings?.() ?? {};
+    const width = settings.width || DEFAULT_CAMERA_DIMENSIONS.width;
+    const height = settings.height || DEFAULT_CAMERA_DIMENSIONS.height;
+
+    return cameraSimulcastLayersFor(tier).map(
+      (layer) =>
+        new this.#sdk.VideoPreset(
+          Math.round(width / layer.scaleResolutionDownBy),
+          Math.round(height / layer.scaleResolutionDownBy),
+          layer.maxBitrate,
+          layer.maxFramerate
+        )
+    );
   }
 
   async #syncScreenAudioPublication(track) {
@@ -490,7 +580,8 @@ export default class LivekitRoomSession {
 
   // With adaptiveStream off the SDK would leave every subscription on the
   // HIGH simulcast layer, regressing downlink vs the mesh ladder in big
-  // rooms; pick layers explicitly instead.
+  // rooms; pick layers explicitly instead, stepping down where the mesh
+  // ladder does.
   #applySubscriberQuality(publication) {
     const { Track, VideoQuality } = this.#sdk;
 
@@ -499,10 +590,13 @@ export default class LivekitRoomSession {
       quality = VideoQuality.HIGH;
     } else if (publication?.source === Track.Source.Camera) {
       const publisherCount = this.#getVideoPublisherCount?.() ?? 0;
-      quality =
-        publisherCount > LOW_LAYER_PUBLISHER_THRESHOLD
-          ? VideoQuality.LOW
-          : VideoQuality.MEDIUM;
+      if (publisherCount > LOW_LAYER_PUBLISHER_THRESHOLD) {
+        quality = VideoQuality.LOW;
+      } else if (publisherCount > MEDIUM_LAYER_PUBLISHER_THRESHOLD) {
+        quality = VideoQuality.MEDIUM;
+      } else {
+        quality = VideoQuality.HIGH;
+      }
     } else {
       return;
     }
@@ -515,10 +609,17 @@ export default class LivekitRoomSession {
   }
 
   #userIdFrom(participant) {
-    // LiveKit identity is String(user.id); registry keys must be numeric so
-    // remoteStreamFor(roomId, userId) matches roster participant ids.
-    const userId = Number(participant?.identity);
-    if (!Number.isFinite(userId) || userId <= 0) {
+    const identity = String(participant?.identity ?? "");
+    for (const [botId, agentIdentity] of this.#agentIdentities) {
+      if (identity === agentIdentity) {
+        return botId;
+      }
+    }
+    const userId = Number(identity);
+    if (!/^-?[1-9]\d*$/.test(identity) || !Number.isSafeInteger(userId)) {
+      return null;
+    }
+    if (this.#agentIdentities.has(userId)) {
       return null;
     }
     return userId === this.#currentUserId ? null : userId;

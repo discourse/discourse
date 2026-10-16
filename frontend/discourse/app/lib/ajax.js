@@ -244,9 +244,7 @@ export function ajax() {
     !Session.currentProp("csrfToken")
   ) {
     promise = new Promise((resolve, reject) => {
-      ajaxObj = updateCsrfToken().then(() => {
-        performAjax(resolve, reject);
-      });
+      updateCsrfToken().then(() => performAjax(resolve, reject), reject);
     });
   } else {
     promise = new Promise(performAjax);

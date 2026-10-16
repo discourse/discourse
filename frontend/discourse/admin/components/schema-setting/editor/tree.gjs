@@ -29,7 +29,6 @@ export default <template>
         @object={{object}}
         @onChildClick={{@onChildClick}}
         @onClick={{fn @updateIndex index}}
-        @registerInputFieldObserver={{@registerInputFieldObserver}}
         @schema={{@schema}}
       />
     {{/each}}

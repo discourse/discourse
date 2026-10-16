@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class ReadTopicPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       SELECTION_KEYS = {
         "latest" => %w[limit replies_only],
         "earliest" => %w[limit replies_only],
@@ -25,6 +26,7 @@ module DiscourseMcp
         if topic.blank? || !guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         selection_mode = arguments.fetch("selection_mode")
         limit = arguments.fetch("limit", 20)
@@ -137,6 +139,7 @@ module DiscourseMcp
     end
 
     class GetPostReplies
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       DIRECT_REPLIES_LIMIT = 20
       MODES = %w[reply_ids direct_replies reply_history].freeze
       OUTPUT_SCHEMA =
@@ -151,7 +154,7 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
-        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), guardian)
+        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context)
         mode = arguments.fetch("mode", "reply_ids")
         if MODES.exclude?(mode)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_reply_mode")
@@ -253,6 +256,7 @@ module DiscourseMcp
     end
 
     class ListLatestPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -297,6 +301,7 @@ module DiscourseMcp
     end
 
     class GetTopicViewStats
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -309,6 +314,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         from = arguments["from"] ? parse_date(arguments["from"]) : 30.days.ago.to_date
         to = arguments["to"] ? parse_date(arguments["to"]) : Date.current
@@ -343,6 +349,7 @@ module DiscourseMcp
     end
 
     class GetTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -365,12 +372,17 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         limit = arguments.fetch("post_limit", 5)
         start_post_number = arguments.fetch("start_post_number", 1)
         posts =
-          Post
-            .secured(request_context.guardian)
+          request_context
+            .guardian
+            .filter_hidden_posts(
+              Post.secured(request_context.guardian).joins(:topic),
+              category: topic.category,
+            )
             .where(topic_id: topic.id)
             .where(post_number: start_post_number..)
             .order(:post_number)
@@ -394,6 +406,7 @@ module DiscourseMcp
     end
 
     class GetPost
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[accepted_answer topic_accepted_answer],
@@ -410,7 +423,7 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
-        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context.guardian)
+        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context)
         result =
           ToolHelpers.evidence_post_json(post, include_raw: true).slice(
             :id,
@@ -429,6 +442,7 @@ module DiscourseMcp
     end
 
     class ListTopics
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -446,6 +460,7 @@ module DiscourseMcp
     end
 
     class ListCategories
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(categories: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -466,6 +481,7 @@ module DiscourseMcp
     end
 
     class ListTags
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(tags: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)

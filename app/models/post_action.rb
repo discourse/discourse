@@ -226,26 +226,14 @@ class PostAction < ActiveRecord::Base
   def update_counters
     # Update denormalized counts
     column = "#{post_action_type_key}_count"
-    count = PostAction.where(post_id: post_id).where(post_action_type_id: post_action_type_id).count
 
     # We probably want to refactor this method to something cleaner.
     case post_action_type_key
     when :like
-      # 'like_score' is weighted higher for staff accounts
-      score =
-        PostAction
-          .joins(:user)
-          .where(post_id: post_id)
-          .sum(
-            "CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END",
-          )
-      Post.where(id: post_id).update_all [
-                     "like_count = :count, like_score = :score",
-                     count: count,
-                     score: score,
-                   ]
+      Post.recalculate_like_counts!([post_id])
     else
       if ActiveRecord::Base.connection.column_exists?(:posts, column)
+        count = PostAction.where(post_id:, post_action_type_id:).count
         Post.where(id: post_id).update_all ["#{column} = ?", count]
       end
     end
@@ -261,7 +249,7 @@ class PostAction < ActiveRecord::Base
       )
     end
 
-    Topic.find_by(id: topic_id)&.update_action_counts if column == "like_count"
+    Topic.recalculate_like_counts!([topic_id]) if column == "like_count"
   end
 end
 

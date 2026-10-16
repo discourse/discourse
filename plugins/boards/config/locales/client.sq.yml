@@ -6,7 +6,19 @@
 
 sq:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titulli"
+        icon: "Ikonë"
+        color: "Ngjyra"
+      create_board:
+        name: "Emri"
+        tag_names: "Etiketat"
+        category_ids: "Categories"
     boards:
+      status:
+        all: "Të gjitha"
+        open: "Fillo"
       board:
         remove_card: "Hiq"
         title: "Titulli"

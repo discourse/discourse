@@ -6,7 +6,7 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DataExplorerChart from "../../discourse/components/data-explorer-chart";
+import DataExplorerChart from "discourse/plugins/discourse-data-explorer/discourse/components/data-explorer-chart";
 
 const AfterRender = <template>
   <div {{didInsert (fn schedule "afterRender" @run)}}></div>
@@ -116,13 +116,9 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
   });
 
   test("re-rendering before the chart library loads creates a single chart", async function (assert) {
-    class State {
-      @tracked labels = ["a", "b"];
-    }
-
-    const state = new State();
+    const labels = tracked(["a", "b"]);
     const datasets = [{ label: "count", values: [1, 2] }];
-    const relabel = () => (state.labels = ["c", "d"]);
+    const relabel = () => (labels.value = ["c", "d"]);
     const Chart = await loadChartJS();
 
     await render(
@@ -130,7 +126,7 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
         <DataExplorerChart
           @chartType="bar"
           @datasets={{datasets}}
-          @labels={{state.labels}}
+          @labels={{labels.value}}
           @stacked={{false}}
         />
         <AfterRender @run={{relabel}} />
@@ -153,20 +149,16 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
   });
 
   test("does not build a chart when destroyed before the chart library loads", async function (assert) {
-    class State {
-      @tracked shown = true;
-    }
-
-    const state = new State();
+    const shown = tracked(true);
     const datasets = [{ label: "count", values: [1, 2] }];
     const labels = ["a", "b"];
-    const hide = () => (state.shown = false);
+    const hide = () => (shown.value = false);
     const Chart = await loadChartJS();
     const before = Object.keys(Chart.instances).length;
 
     await render(
       <template>
-        {{#if state.shown}}
+        {{#if shown.value}}
           <DataExplorerChart
             @chartType="bar"
             @datasets={{datasets}}

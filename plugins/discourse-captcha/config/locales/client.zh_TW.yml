@@ -7,6 +7,8 @@
 zh_TW:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "測試"
       missing_token: "請完成 CAPTCHA 驗證。"
       verification_failed: "CAPTCHA 驗證失敗，請再試一次。"
       placeholder: 預留位置

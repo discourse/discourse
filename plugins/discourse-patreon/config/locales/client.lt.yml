@@ -19,4 +19,4 @@ lt:
       delete: 'Pašalinti'
       save: 'Saugoti'
       field:
-        email: "Epaštas"
+        email: "El. paštas"

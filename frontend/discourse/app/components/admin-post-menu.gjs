@@ -12,6 +12,17 @@ export default class AdminPostMenu extends Component {
   @service currentUser;
   @service siteSettings;
   @service adminPostMenuButtons;
+  @service router;
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.args.close);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeWillChange", this.args.close);
+  }
 
   get reviewUrl() {
     return `/review?topic_id=${this.args.data.post.id}&status=all`;

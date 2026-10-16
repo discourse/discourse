@@ -7,9 +7,9 @@ import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
-import ApiPanels from "./api-panels";
-import Footer from "./footer";
-import Sections from "./sections";
+import ApiPanels from "./api-panels.gjs";
+import Footer from "./footer.gjs";
+import Sections from "./sections.gjs";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
@@ -74,6 +74,7 @@ export default class SidebarHamburgerDropdown extends Component {
                   <ApiPanels
                     @collapsableSections={{this.collapsableSections}}
                     @currentUser={{this.currentUser}}
+                    @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{/if}}
                 <PluginOutlet @name="after-sidebar-sections" />

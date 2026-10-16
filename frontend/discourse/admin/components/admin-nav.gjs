@@ -1,16 +1,11 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+const AdminNav = <template>
+  <div class="admin-controls">
+    <nav>
+      <ul class="nav nav-pills">
+        {{yield}}
+      </ul>
+    </nav>
+  </div>
+</template>;
 
-@tagName("")
-export default class AdminNav extends Component {
-  <template>
-    <div class="admin-controls">
-      <nav>
-        <ul class="nav nav-pills">
-          {{yield}}
-        </ul>
-      </nav>
-    </div>
-  </template>
-}
+export default AdminNav;

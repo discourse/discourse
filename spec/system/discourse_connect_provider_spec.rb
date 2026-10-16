@@ -56,7 +56,7 @@ describe "Discourse Connect Provider" do
 
     # The handoff waits here rather than redirecting as soon as the session
     # exists, so the generated placeholder username can be replaced.
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     find("#code-login-username").fill_in(with: "janedoe")
     expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
     find(".code-login-form__continue-to-site").click

@@ -11,6 +11,11 @@ bg:
         context_menu:
           actions:
             delete: "Изтрий"
+        reorderable_list:
+          policies_pinned: "Закована"
+          policies_required: "Задъжителни"
+          table_type: "Тип"
+          cross_list_primary: "Основен"
         colors:
           title: "Цветове"
         icons:

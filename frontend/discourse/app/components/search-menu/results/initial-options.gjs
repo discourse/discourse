@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import Assistant from "./assistant";
+import Assistant from "./assistant.gjs";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,

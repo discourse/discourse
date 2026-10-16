@@ -8,6 +8,7 @@ export default class GroupsNewController extends Controller {
   @service site;
   @service groupAutomaticMembersDialog;
 
+  /** @type {boolean | null} */
   saving = null;
 
   @computed("model.ownerUsernames")

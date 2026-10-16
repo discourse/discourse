@@ -27,7 +27,8 @@ RSpec.describe OneboxController do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
     sign_in(current_user)
   end
 
@@ -46,5 +47,29 @@ RSpec.describe OneboxController do
     expect(response.status).to eq(200)
     expect(response.body).to include(public_channel.name)
     expect(response.body).not_to include(private_original_message.message)
+  end
+
+  it "does not onebox a public channel message for a user excluded from chat" do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+    restricted_message =
+      Fabricate(
+        :chat_message,
+        chat_channel: public_channel,
+        message: "restricted chat message content",
+      )
+
+    get "/chat/api/channels"
+
+    expect(response.status).to eq(403)
+    expect(response.parsed_body["errors"]).to be_present
+
+    get "/onebox.json",
+        params: {
+          url: "#{Discourse.base_url}/chat/c/-/#{public_channel.id}/#{restricted_message.id}",
+          refresh: "true",
+        }
+
+    expect(response.status).to eq(200)
+    expect(response.body).not_to include(restricted_message.message)
   end
 end
