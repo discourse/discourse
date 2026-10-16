@@ -35,10 +35,22 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
         described_class.sync!(query:, names: 11.times.map { |index| "tag-#{index}" })
       }.to raise_error(
         ActiveRecord::RecordInvalid,
-        "Validation failed: A query can have at most 10 tags.",
+        "Validation failed: A query can have at most 10 tags, not counting automatic tags.",
       )
 
       expect(query.tags).to be_empty
+    end
+
+    it "doesn't count automatic tags toward the limit" do
+      names = 10.times.map { |index| "tag-#{index}" }
+      bundled_query = DiscourseDataExplorer::Query.find(-1)
+      bundled_query.save!
+
+      described_class.sync!(query:, names: ["custom", *names])
+      described_class.sync!(query: bundled_query, names: ["default", "users", *names])
+
+      expect(query.tags.size).to eq(10)
+      expect(bundled_query.tags.size).to eq(10)
     end
 
     it "reserves the default tag for system queries" do
