@@ -2,6 +2,7 @@
 
 RSpec.describe "CSV Exports" do
   fab!(:admin)
+  let(:dialog) { PageObjects::Components::Dialog.new }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
   let(:time_format) { "%Y-%m-%d %H:%M:%S UTC" }
 
@@ -52,8 +53,9 @@ RSpec.describe "CSV Exports" do
     it "exports data" do
       visit "admin/users/list/active"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[User List] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -148,8 +150,9 @@ RSpec.describe "CSV Exports" do
     it "exports data" do
       visit "admin/logs/staff_action_logs"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[Staff Action] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -180,8 +183,9 @@ RSpec.describe "CSV Exports" do
     it "exports the Bookmarks report" do
       visit "admin/reports/bookmarks"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[Bookmarks] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -201,8 +205,9 @@ RSpec.describe "CSV Exports" do
     it "exports data" do
       visit "admin/logs/screened_emails"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[Screened Email] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -238,8 +243,9 @@ RSpec.describe "CSV Exports" do
     it "exports data" do
       visit "admin/logs/screened_ip_addresses"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[Screened Ip] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
@@ -270,8 +276,9 @@ RSpec.describe "CSV Exports" do
     it "exports data" do
       visit "admin/logs/screened_urls"
       click_button "Export"
+      dialog.click_ok
 
-      visit "/u/#{admin.username}/messages"
+      visit_in_app "/u/#{admin.username}/messages"
       click_link "[Screened Url] Data export complete"
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract

@@ -87,15 +87,15 @@ describe "Welcome banner" do
       topic = Fabricate(:topic)
       visit "/"
       expect(banner).to be_visible
-      visit "/latest"
+      visit_in_app "/latest"
       expect(banner).to be_visible
-      visit "/new"
+      visit_in_app "/new"
       expect(banner).to be_visible
-      visit "/hot"
+      visit_in_app "/hot"
       expect(banner).to be_visible
-      visit "/tags"
+      visit_in_app "/tags"
       expect(banner).to be_hidden
-      visit topic.relative_url
+      visit_in_app topic.relative_url
       expect(banner).to be_hidden
     end
 
@@ -227,10 +227,10 @@ describe "Welcome banner" do
           visit "/"
           expect(banner).to be_visible
 
-          visit "/u/#{current_user.username}/preferences/emails"
+          visit_in_app "/u/#{current_user.username}/preferences/emails"
           expect(banner).to be_visible
 
-          visit "/my/messages"
+          visit_in_app "/my/messages"
           expect(banner).to be_visible
         end
 
@@ -254,10 +254,10 @@ describe "Welcome banner" do
           visit "/admin"
           expect(banner).to be_hidden
 
-          visit "/admin/config/site-admin"
+          visit_in_app "/admin/config/site-admin"
           expect(banner).to be_hidden
 
-          visit "/admin/customize"
+          visit_in_app "/admin/customize"
           expect(banner).to be_hidden
         end
       end
@@ -269,7 +269,7 @@ describe "Welcome banner" do
         visit "/filter?q=tag%3Ain-progress"
         expect(banner).to be_visible
 
-        visit "/about"
+        visit_in_app "/about"
         expect(banner).to be_hidden
       end
 
@@ -279,12 +279,16 @@ describe "Welcome banner" do
         SiteSetting
           .top_menu
           .split("|")
-          .each do |route|
-            visit "/#{route}"
+          .each_with_index do |route, index|
+            if index.zero?
+              visit "/#{route}"
+            else
+              visit_in_app "/#{route}"
+            end
             expect(banner).to be_visible
           end
 
-        visit "/about"
+        visit_in_app "/about"
         expect(banner).to be_hidden
       end
 

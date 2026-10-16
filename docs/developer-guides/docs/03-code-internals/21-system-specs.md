@@ -172,6 +172,17 @@ This works fine in our Ember SPA for the initial navigation and page load. Howev
 page.find(".some-link").click
 ```
 
+If a spec only needs to open another screen, `visit_in_app` uses Ember routing and waits for the app to settle. It requires an already loaded app:
+
+```rb
+visit("/latest")
+visit_in_app("/categories")
+```
+
+Close open dialogs and menus through their controls before navigating.
+
+Keep full visits after changing users, themes or server data that the app only loads during startup. Keep refreshes that verify saved state survives a reload.
+
 ### Avoiding direct assertions against database records
 
 Asserting directly against database records within system specs may lead to inconsistent test results if you don't appropriately wait for the backend updates to synchronize with the frontend.

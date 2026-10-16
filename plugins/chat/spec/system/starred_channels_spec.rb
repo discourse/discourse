@@ -26,7 +26,7 @@ RSpec.describe "Starred channels" do
 
       expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
 
-      chat_page.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1, in_app: true)
 
       membership = channel_1.membership_for(current_user)
 
@@ -35,7 +35,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
       expect(membership.reload.starred).to eq(true)
 
-      visit("/")
+      visit_in_app("/")
 
       expect(page).to have_css("#sidebar-section-content-chat-starred-channels")
       expect(
@@ -50,12 +50,12 @@ RSpec.describe "Starred channels" do
         ".channel-#{channel_1.id}",
       )
 
-      chat_page.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1, in_app: true)
 
       find(".c-navbar__star-channel-button").click
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
 
-      visit("/")
+      visit_in_app("/")
 
       expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{channel_1.id}",
@@ -140,7 +140,7 @@ RSpec.describe "Starred channels" do
         ".channel-#{channel_1.id}",
       )
 
-      chat_page.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1, in_app: true)
 
       membership = channel_1.membership_for(current_user)
 
@@ -150,7 +150,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
       expect(membership.reload.starred).to eq(false)
 
-      visit("/")
+      visit_in_app("/")
 
       expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
       expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
@@ -200,7 +200,7 @@ RSpec.describe "Starred channels" do
     it "shows the starred DM channel in the Starred Channels section" do
       visit("/")
 
-      chat_page.visit_channel(dm_channel_1)
+      chat_page.visit_channel(dm_channel_1, in_app: true)
 
       membership = dm_channel_1.membership_for(current_user)
 
@@ -209,7 +209,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
       expect(membership.reload.starred).to eq(true)
 
-      visit("/")
+      visit_in_app("/")
 
       expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{dm_channel_1.id}",

@@ -289,7 +289,7 @@ describe "Category Localizations" do
             switcher.option("[data-menu-option-id='es']").click
             expect(sidebar).to have_section_link("Solicitudes")
 
-            category_page.visit(category)
+            visit_in_app(category.relative_url)
             category_page.click_edit_category
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(

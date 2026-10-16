@@ -52,7 +52,7 @@ RSpec.describe "Categories Page" do
       expect(category_selector).to have_selected_name(category.name)
       expect(subcategory_selector).to have_selected_name(subcategory.name)
 
-      category_page.visit_general(category, subcategory)
+      category_page.click_edit_category
       category_page.back_to_category
       expect(category_selector).to have_selected_name(category.name)
       expect(subcategory_selector).to have_selected_name(subcategory.name)

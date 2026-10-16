@@ -40,7 +40,7 @@ describe "Admin Reports" do
       text: I18n.t("reports.bookmarks.title"),
     )
 
-    visit "/admin/reports/bookmarks"
+    visit_in_app "/admin/reports/bookmarks"
 
     expect(page).to have_css(".admin-report")
     expect(page).to have_css(

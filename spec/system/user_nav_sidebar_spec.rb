@@ -40,10 +40,10 @@ RSpec.describe "User nav sidebar" do
     visit("/u/alice/activity")
     expect(page).to have_css(panel)
 
-    visit("/u/alice/preferences/account")
+    visit_in_app("/u/alice/preferences/account")
     expect(page).to have_css(panel)
 
-    visit("/latest")
+    visit_in_app("/latest")
 
     expect(page).to have_no_css(panel)
     expect(page).to have_css("#d-sidebar .sidebar-section-wrapper")
@@ -146,7 +146,7 @@ RSpec.describe "User nav sidebar" do
     expect(page).to have_css(".user-navigation-secondary .navigation-controls")
     expect(page).to have_no_css(".user-navigation-secondary .messages-nav a")
 
-    visit("/u/alice/messages/group/cats")
+    visit_in_app("/u/alice/messages/group/cats")
 
     within(section("messages")) do
       expect(page).to have_link("Latest")
@@ -173,7 +173,7 @@ RSpec.describe "User nav sidebar" do
     expect(page).to have_css(link_suffix("messages-new"))
 
     # The count belongs in the suffix, not folded into the label.
-    visit("/u/alice/activity")
+    visit_in_app("/u/alice/activity")
     expect(page).to have_link("Drafts")
     expect(page).to have_css(link_suffix("activity-drafts"))
 
@@ -183,7 +183,7 @@ RSpec.describe "User nav sidebar" do
     expect(page).to have_css(link_badge("messages-new"), text: "1")
     expect(page).to have_no_css(link_suffix("messages-new"))
 
-    visit("/u/alice/activity")
+    visit_in_app("/u/alice/activity")
     expect(page).to have_link("Drafts")
     expect(page).to have_css(link_badge("activity-drafts"), text: "1")
   end

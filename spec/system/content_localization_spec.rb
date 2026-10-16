@@ -383,7 +383,7 @@ describe "Content Localization" do
           topic_page.click_topic_edit_title
           expect(topic_page).to have_no_topic_title_editor
 
-          topic_page.visit_topic(topic)
+          visit_in_app(topic.relative_url)
 
           topic_page.click_topic_edit_title
           expect(topic_page).to have_topic_title_editor
@@ -403,7 +403,7 @@ describe "Content Localization" do
 
           topic_page.click_topic_title_cancel_edit
 
-          topic_page.visit_topic(topic)
+          visit_in_app(topic.relative_url)
           original_translated_title = topic_ja_localization.fancy_title
           expect(topic_page).to have_topic_title(original_translated_title)
           topic_page.click_topic_edit_title
