@@ -57,16 +57,17 @@ export function loadOneboxes(
   }
 
   if (Object.keys(inlineOneboxes).length > 0) {
-    _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId);
+    _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId, onLoad);
   }
 
   return Object.keys(oneboxes).length + Object.keys(inlineOneboxes).length;
 }
 
-function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
+function _loadInlineOneboxes(inline, ajax, topicId, categoryId, onLoad) {
   applyInlineOneboxes(inline, ajax, {
     categoryId: topicId,
     topicId: categoryId,
+    onLoad,
   });
 }
 

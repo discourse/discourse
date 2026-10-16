@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Onebox", function (needs) {
@@ -53,6 +54,27 @@ This is another test <a href=\"http://www.example.com/has-title.html\" class=\"i
     await fillIn(".d-editor-input", "http://www.example.com/has-title.html");
 
     assert.dom(".d-editor-preview aside.onebox.decorated").exists();
+  });
+
+  test("keeps inline onebox titles that load after a onebox", async function (assert) {
+    pretender.get(
+      "/inline-onebox",
+      () => [
+        200,
+        { "Content-Type": "application/html" },
+        '{"inline-oneboxes":[{"url":"http://www.example.com/late-title.html","title":"A late title"}]}',
+      ],
+      500
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(
+      ".d-editor-input",
+      "http://www.example.com/no-title.html\n\nSee http://www.example.com/late-title.html"
+    );
+
+    assert.dom(".d-editor-preview .inline-onebox").hasText("A late title");
   });
 });
 
