@@ -91,7 +91,7 @@ module DiscourseDataExplorer
     def self.validate_names!(query:, names:)
       errors = ActiveModel::Errors.new(query)
       automatic_names = Query.automatic_tag_names(query.id)
-      validate_names(names | automatic_names, errors)
+      validate_names(names - automatic_names, errors)
       (names & (Query::RESERVED_TAGS - automatic_names)).each do |name|
         errors.add(:base, I18n.t("discourse_data_explorer.errors.#{name}_tag_reserved"))
       end
