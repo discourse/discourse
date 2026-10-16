@@ -11,24 +11,12 @@ overrides:
   broccoli-babel-transpiler@8.0.0: ^8.0.2
 
 patchedDependencies:
-  '@warp-drive/legacy@5.9.0-alpha.15':
-    hash: de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f
-    path: patches/@warp-drive__legacy@5.9.0-alpha.15.patch
-  babel-plugin-debug-macros@0.3.4:
-    hash: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
-    path: patches/babel-plugin-debug-macros@0.3.4.patch
-  ember-source@7.3.0:
-    hash: aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201
-    path: patches/ember-source@7.3.0.patch
-  http-proxy@1.18.1:
-    hash: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
-    path: patches/http-proxy@1.18.1.patch
-  licensee:
-    hash: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
-    path: patches/licensee.patch
-  pikaday:
-    hash: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
-    path: patches/pikaday.patch
+  '@warp-drive/legacy@5.9.0-alpha.15': de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f
+  babel-plugin-debug-macros@0.3.4: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
+  ember-source@7.3.0: aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201
+  http-proxy@1.18.1: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
+  licensee: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
+  pikaday: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
 
 importers:
 
