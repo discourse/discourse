@@ -17,7 +17,8 @@ class DsaNotification
     rule = args.fetch(:dsa_classification).fetch(:community_rule)
     penalty_until = nil
     if action_id.to_s.in?(%w[agree_and_suspend agree_and_silence])
-      penalty_until = Time.zone.parse((args[:suspend_until] || args[:silenced_till]).to_s)
+      penalty_field = action_id.to_s == "agree_and_suspend" ? :suspend_until : :silenced_till
+      penalty_until = Time.zone.parse(args[penalty_field].to_s)
       raise Discourse::InvalidParameters.new(:penalty_until) unless penalty_until&.future?
     end
 
@@ -62,7 +63,7 @@ class DsaNotification
       details << I18n.t(
         "dsa_notifications.post_reference_#{context.fetch("source")}",
         locale:,
-        title: context.fetch("topic_title"),
+        title: context.fetch("topic_title").gsub(/[\\\[\]<>]/) { |character| "\\#{character}" },
         number: context.fetch("post_number"),
         url: context.fetch("post_url"),
       )

@@ -1900,14 +1900,14 @@ RSpec.describe ReviewablesController do
             user: flagger,
             post_action_type_id: PostActionType.types[:inappropriate],
           )
-          deadline = 2.weeks.from_now
+          deadline = 2.weeks.from_now.change(usec: 0)
           post_url = flagged_post.full_url
           action_params = {
             version: reviewable.version,
             dsa_classification: classification,
             reason: rule[:ground],
-            suspend_until: deadline.iso8601,
-            silenced_till: deadline.iso8601,
+            suspend_until: (action_id == "agree_and_suspend" ? deadline : 3.days.from_now).iso8601,
+            silenced_till: (action_id == "agree_and_silence" ? deadline : 3.days.from_now).iso8601,
             post_action: "delete",
           }
 
@@ -1916,6 +1916,7 @@ RSpec.describe ReviewablesController do
           expect(response).to have_http_status(:ok)
           if action_id.in?(%w[agree_and_suspend agree_and_silence])
             penalty_attribute = action_id == "agree_and_suspend" ? :suspended_till : :silenced_till
+            expect(flagged_post.user.reload.public_send(penalty_attribute)).to eq(deadline)
             flagged_post.user.update!(penalty_attribute => 1000.years.from_now)
           end
           Jobs::SendSystemMessage.jobs.each do |job|
@@ -1954,6 +1955,35 @@ RSpec.describe ReviewablesController do
               ),
             )
           end
+        end
+      end
+
+      it "keeps the post reference intact when the topic title contains Markdown link syntax" do
+        title = "Notice ](https://example.org) [rest"
+        flagged_post.topic.update!(title:)
+        post_url = flagged_post.full_url
+
+        put "/review/#{reviewable.id}/perform/agree_and_silence.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              reason: rule[:ground],
+              silenced_till: 2.weeks.from_now.iso8601,
+              post_action: "none",
+            }
+        Jobs::CriticalUserEmail.jobs.each do |job|
+          Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        email = ActionMailer::Base.deliveries.sole
+        [notice.cooked, email.html_part.body.decoded].each do |html|
+          links = Nokogiri::HTML5.fragment(html).css("a")
+          reference = links.find { |link| link.text.include?("post in") }
+          expect(reference["href"]).to eq(post_url)
+          expect(reference.text).to eq("post in #{title}, ##{flagged_post.post_number}")
+          expect(links.map { |link| link["href"] }).not_to include("https://example.org")
         end
       end
 
