@@ -2041,6 +2041,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.raw).to include(expected_message)
       expect(last_post.user_id).to eq(bot_user.id)
     end
+
+    context "when whispering in a public topic" do
+      fab!(:topic_post) { Fabricate(:post, user: user) }
+
+      def last_reply
+        topic_post.topic.reload.posts.order(:post_number).last
+      end
+
+      it "whispers the credit limit error" do
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: Fabricate(:seeded_model),
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:),
+        )
+
+        playground.reply_to(topic_post, whisper: true)
+
+        expect(last_reply.raw).to include(
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+            reset_time: allocation.formatted_reset_time,
+          ),
+        )
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when the history changes while replying" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          playground.reply_to(topic_post, whisper: true) do
+            topic_post.update_columns(raw: "Edited while replying")
+          end
+        end
+
+        expect(last_reply.raw).to include("Triage done", "history_changed")
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when an unexpected error interrupts it" do
+        allow_any_instance_of(DiscourseAi::Completions::HistorySnapshot).to receive(
+          :stamp!,
+        ).and_raise(StandardError, "boom")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          expect { playground.reply_to(topic_post, whisper: true) }.to raise_error(
+            StandardError,
+            "boom",
+          )
+        end
+
+        expect(last_reply.raw).to include("Triage done", "boom")
+        expect(last_reply).to be_whisper
+      end
+    end
   end
 
   describe "#canceling a completions" do
