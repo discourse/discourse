@@ -24,36 +24,32 @@ export default class BestTopics extends Component {
   }
 
   <template>
-    {{#if @report.data.length}}
-      <div class="rewind-report-page --best-topics">
-        <h2 class="rewind-report-title">
-          {{this.titleText}}
-        </h2>
-        <div class="rewind-report-container">
-          <div class="rewind-card">
-            {{#each @report.data as |topic idx|}}
-              <div
-                class={{dConcatClass "best-topics__topic" (this.rankClass idx)}}
-              >
-                <span class="best-topics --rank"></span>
-                <span class="best-topics --rank"></span>
-                <h2 class="best-topics__header">{{dReplaceEmoji
-                    topic.title
-                  }}</h2>
-                <span class="best-topics__excerpt">
-                  {{dReplaceEmoji (trustHTML topic.excerpt)}}
-                </span>
+    <div class="rewind-report-page --best-topics">
+      <h2 class="rewind-report-title">
+        {{this.titleText}}
+      </h2>
+      <div class="rewind-report-container">
+        <div class="rewind-card">
+          {{#each @report.data as |topic idx|}}
+            <div
+              class={{dConcatClass "best-topics__topic" (this.rankClass idx)}}
+            >
+              <span class="best-topics --rank"></span>
+              <span class="best-topics --rank"></span>
+              <h2 class="best-topics__header">{{dReplaceEmoji topic.title}}</h2>
+              <span class="best-topics__excerpt">
+                {{dReplaceEmoji (trustHTML topic.excerpt)}}
+              </span>
 
-                <div class="best-topics__metadata">
-                  <a href={{getURL (concat "/t/-/" topic.topic_id)}}>
-                    {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
-                  </a>
-                </div>
+              <div class="best-topics__metadata">
+                <a href={{getURL (concat "/t/-/" topic.topic_id)}}>
+                  {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
+                </a>
               </div>
-            {{/each}}
-          </div>
+            </div>
+          {{/each}}
         </div>
       </div>
-    {{/if}}
+    </div>
   </template>
 }

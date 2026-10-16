@@ -8,7 +8,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n, { i18n } from "discourse-i18n";
-import { CORE_TOOLS } from "./tools";
+import { CORE_TOOLS } from "./tools.ts";
 
 export default class Toolbar extends Component {
   @tracked activeDragOffset: number | null = null;

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::UnlistTopic do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
 
@@ -17,6 +17,25 @@ RSpec.describe DiscourseAi::Agents::Tools::UnlistTopic do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews both directions with the topic title and explicit states" do
+    target = topic
+    target.update!(visible: true)
+    action_tool = tool(topic_id: target.id, unlisted: true, reason: "Testing")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(action_tool.approval_title))
+    expect(title.at_css("a").text).to eq(target.title)
+    expect(title.at_css("a")["href"]).to eq(target.url)
+    expect(action_tool.approval_changes).to eq(
+      [{ label: "Changing visibility:", before: "Listed", after: "Unlisted" }],
+    )
+    expect(action_tool.approval_parameters).to be_empty
+    expect(target.reload.visible).to eq(true)
+
+    target.update!(visible: false)
+    expect(tool(topic_id: target.id, unlisted: false, reason: "Testing").approval_changes).to eq(
+      [{ label: "Changing visibility:", before: "Unlisted", after: "Listed" }],
+    )
+  end
 
   it "unlists the topic when unlisted is true" do
     result = tool(topic_id: topic.id, unlisted: true, reason: "Needs cleanup").invoke

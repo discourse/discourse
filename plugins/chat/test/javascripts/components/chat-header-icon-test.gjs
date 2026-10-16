@@ -44,15 +44,11 @@ module("Component | ChatHeaderIcon", function (hooks) {
   });
 
   test("mobile", async function (assert) {
-    const testState = new (class {
-      @tracked isActive = false;
-    })();
+    const isActive = tracked(false);
 
     forceMobile();
 
-    await render(
-      <template><Icon @isActive={{testState.isActive}} /></template>
-    );
+    await render(<template><Icon @isActive={{isActive.value}} /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -63,7 +59,7 @@ module("Component | ChatHeaderIcon", function (hooks) {
       .dom(".d-icon-d-chat")
       .exists("chat icon is rendered if chat is inactive");
 
-    testState.isActive = true;
+    isActive.value = true;
     await settled();
     assert
       .dom(".d-icon-d-chat")

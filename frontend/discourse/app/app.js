@@ -1,16 +1,16 @@
-import "./global-compat";
-import "./setup-deprecation-workflow";
-import "./array-shim";
+import "./global-compat.js";
+import "./setup-deprecation-workflow.js";
+import "./array-shim.js";
 import "decorator-transforms/globals";
-import "./loader-shims";
-import "./ui-kit-shims";
-import "./module-shims";
-import "./discourse-common-loader-shims";
+import "./loader-shims.js";
+import "./ui-kit-shims.js";
+import "./module-shims.js";
+import "./discourse-common-loader-shims.js";
 import "@warp-drive/ember/install";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";
-import { defineModules } from "./lib/loader-shim";
+import { defineModules } from "./lib/loader-shim.js";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();

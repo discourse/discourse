@@ -4,7 +4,14 @@
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../../Gemfile", __dir__)
 
 require "bundler"
-Bundler.setup(:default, :migrations)
+
+# a standalone install (BUNDLE_ONLY=migrations, see README) has no gems from
+# the default group; commands that boot Rails don't work there
+if (only_groups = ENV["BUNDLE_ONLY"])
+  Bundler.setup(*only_groups.split(/[\s:,]+/).map(&:to_sym))
+else
+  Bundler.setup(:default, :migrations)
+end
 
 require "colored2"
 

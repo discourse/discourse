@@ -54,6 +54,8 @@
         </div>
       <% end %>
 
+      <%= build_plugin_html 'server:topic-show-before-posts', topic_view: @topic_view %>
+
       <% if main_entity_schema %>
         <div <%= main_entity_schema %>>
           <%= build_plugin_html 'server:topic-main-entity-meta-crawler' %>
@@ -87,7 +89,7 @@
                   small_action_href = post_custom_fields["action_code_path"] || ""
                   if post.action_code
                 %>
-                  <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
+                  <%= t("js.action_codes.#{post.action_code}", when: "", who: ERB::Util.html_escape(who_username), href: small_action_href).html_safe %>
                 <% end %>
               </span>
 

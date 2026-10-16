@@ -4,6 +4,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 @disableImplicitInjections
 export default class AdminSiteTextIndexRoute extends Route {
   queryParams = {
+    themeId: { replace: true },
     q: { replace: true },
     overridden: { replace: true },
     outdated: { replace: true },

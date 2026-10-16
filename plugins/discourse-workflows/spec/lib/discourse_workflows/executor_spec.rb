@@ -544,6 +544,100 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(code_2_step["input"].first["pairedItem"]).to eq("item" => 0)
     end
 
+    context "with items failed one by one" do
+      let(:upstream_failure_too) { true }
+      let(:per_item_node_class) do
+        upstream_failure_too = self.upstream_failure_too
+
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "action:per_item_failure_test", version: "1.0")
+
+          define_method(:execute) do |exec_ctx|
+            upstream_failure = { "json" => { "id" => 1 }, "error" => { "message" => "Upstream" } }
+            failed =
+              exec_ctx.guard_item({ "json" => { "id" => 2 } }, 0) do
+                raise DiscourseWorkflows::NodeError, "Boom"
+              end
+            [upstream_failure_too ? [upstream_failure, failed] : [failed]]
+          end
+        end
+      end
+
+      before do
+        DiscoursePluginRegistry.register_discourse_workflows_node(
+          per_item_node_class,
+          Plugin::Instance.new,
+        )
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after { unregister_workflow_nodes(per_item_node_class) }
+
+      it "routes only the items the node failed through the error output", :aggregate_failures do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "per-item-1",
+                   "action:per_item_failure_test",
+                   configuration: {
+                     "onError" => "continueErrorOutput",
+                   }
+            g.node "success-1", "action:code", configuration: { "code" => "return $input.all();" }
+            g.node "error-1", "action:code", configuration: { "code" => "return $input.all();" }
+            g.connect "trigger-1", "per-item-1"
+            g.connect "per-item-1", "success-1"
+            g.connect "per-item-1", "error-1", output: 1
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(execution.status).to eq("success")
+        success_input = execution.execution_data.find_step(node_id: "success-1")["input"]
+        error_input = execution.execution_data.find_step(node_id: "error-1")["input"]
+        expect(success_input).to contain_exactly(
+          include("json" => { "id" => 1 }, "error" => { "message" => "Upstream" }),
+        )
+        expect(error_input).to contain_exactly(
+          include("json" => { "id" => 2 }, "error" => include("message" => "Boom")),
+        )
+        expect(error_input.first).not_to have_key(DiscourseWorkflows::Item::FAILED_KEY)
+      end
+
+      context "when every item fails" do
+        let(:upstream_failure_too) { false }
+
+        it "does not add an always-output item to the success output", :aggregate_failures do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:topic_closed"
+              g.node "per-item-1",
+                     "action:per_item_failure_test",
+                     configuration: {
+                       "onError" => "continueErrorOutput",
+                       "alwaysOutputData" => true,
+                     }
+              g.node "success-1", "action:code", configuration: { "code" => "return $input.all();" }
+              g.node "error-1", "action:code", configuration: { "code" => "return $input.all();" }
+              g.connect "trigger-1", "per-item-1"
+              g.connect "per-item-1", "success-1"
+              g.connect "per-item-1", "error-1", output: 1
+            end
+          workflow =
+            Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+          execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+          expect(execution.status).to eq("success")
+          expect(execution.execution_data.find_step(node_id: "success-1")).to be_nil
+          expect(
+            execution.execution_data.find_step(node_id: "error-1")["input"],
+          ).to contain_exactly(include("json" => { "id" => 2 }))
+        end
+      end
+    end
+
     it "truncates long error messages" do
       graph =
         build_workflow_graph do |g|
@@ -640,6 +734,9 @@ RSpec.describe DiscourseWorkflows::Executor do
         second_execution = described_class.new(workflow, "trigger-1", trigger_data).run
         expect(second_execution.status).to eq("rate_limited")
         expect(second_execution.trigger_data).to eq("rate_limited" => true)
+        expect(second_execution.error).to eq(
+          I18n.t("discourse_workflows.errors.rate_limited.per_workflow", count: 1),
+        )
       end
 
       it "updates an existing execution when limits are exceeded" do
@@ -667,6 +764,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         existing_execution.reload
         expect(existing_execution.status).to eq("rate_limited")
         expect(existing_execution.trigger_data).to eq("rate_limited" => true)
+        expect(existing_execution.error).to be_present
       end
     end
 
@@ -941,6 +1039,122 @@ RSpec.describe DiscourseWorkflows::Executor do
           )
           expect(execution.execution_data.find_step(node_id: "code-1")).to be_nil
         end
+      end
+    end
+
+    context "with $workflow_vars" do
+      def build_workflow_vars_workflow
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" =>
+                       "return { json: { priority: $workflow_vars.priority, region: $vars.region } };",
+                   }
+            g.chain "trigger-1", "code-1"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+      end
+
+      def resolved_priority(execution)
+        execution.execution_data.find_step(node_id: "code-1")["output"].first.dig(
+          "json",
+          "priority",
+        )
+      end
+
+      def resolved_region(execution)
+        execution.execution_data.find_step(node_id: "code-1")["output"].first.dig("json", "region")
+      end
+
+      it "resolves $workflow_vars.<key> to the variable's live value" do
+        workflow = build_workflow_vars_workflow
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $workflow_vars.<key> to the published version's embedded value even after the live variable is deleted" do
+        workflow = build_workflow_vars_workflow
+        variable =
+          Fabricate(
+            :discourse_workflows_workflow_variable,
+            workflow: workflow,
+            key: "priority",
+            variable_type: "string",
+            value: "urgent",
+          )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+        variable.destroy!
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $workflow_vars.<key> and $vars.<key> independently in the same expression" do
+        workflow = build_workflow_vars_workflow
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        Fabricate(:discourse_workflows_variable, key: "region", value: "emea")
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+        expect(resolved_region(execution)).to eq("emea")
+      end
+
+      it "resolves $workflow_vars.<key> after a wait/resume cycle" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" => "return { json: { priority: $workflow_vars.priority } };",
+                   }
+            g.chain "trigger-1", "wait-1", "code-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+        expect(execution.status).to eq("waiting")
+
+        claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+        resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => {} }])
+
+        expect(resolved_priority(resumed)).to eq("urgent")
       end
     end
   end

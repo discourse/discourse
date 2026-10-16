@@ -5,6 +5,14 @@ export default {
   name: "setup-subscriptions",
   initialize(container) {
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("profile", {
+        name: "billing",
+        route: "user.billing",
+        label: "discourse_subscriptions.navigation.billing",
+        icon: "far-credit-card",
+        displayed: ({ currentUser, user }) => currentUser?.id === user?.id,
+      });
+
       const siteSettings = container.lookup("service:site-settings");
       const isNavLinkEnabled =
         siteSettings.discourse_subscriptions_extra_nav_subscribe;

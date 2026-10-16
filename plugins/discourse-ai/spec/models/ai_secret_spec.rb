@@ -94,6 +94,12 @@ RSpec.describe AiSecret do
       expect(ai_secret.in_use?).to eq(true)
     end
 
+    it "returns true when used by a decision_model" do
+      Fabricate(:decision_model, ai_secret: ai_secret)
+
+      expect(ai_secret.in_use?).to eq(true)
+    end
+
     it "returns true when used by an mcp server" do
       Fabricate(:ai_mcp_server, ai_secret: ai_secret)
 
@@ -156,6 +162,14 @@ RSpec.describe AiSecret do
 
       expect(tool_usage).to be_present
       expect(tool_usage[:name]).to include("Weather Tool")
+    end
+
+    it "lists decision_models using this secret" do
+      decision_model = Fabricate(:decision_model, display_name: "Jev", ai_secret: ai_secret)
+
+      expect(ai_secret.used_by).to contain_exactly(
+        { type: "decision_model", name: "Jev", id: decision_model.id },
+      )
     end
 
     it "lists mcp servers using this secret" do

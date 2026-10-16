@@ -351,4 +351,54 @@ module("Voice | Unit | Lib | subtitles", function (hooks) {
     assert.strictEqual(job.userId, 9);
     assert.strictEqual(job.pcm.byteLength, 8000 * 4);
   });
+
+  test("the worker is initialized with the chosen model's URL", async function (assert) {
+    this.manager.setEnabled(true, { modelBaseUrl: "https://models/ultra" });
+    await this.manager.attach(1, 42, createFakeStream("s1"));
+
+    const init = FakeWorker.instances[0].messages.find(
+      (message) => message.type === "init"
+    );
+    assert.strictEqual(init.config.modelBaseUrl, "https://models/ultra");
+    assert.true(
+      init.config.ortWasmBinaryUrl.endsWith(
+        "stt/ort/ort-wasm-simd-threaded.asyncify.wasm"
+      )
+    );
+  });
+
+  test("switching models replaces the worker and keeps the taps", async function (assert) {
+    this.manager.setEnabled(true, { modelBaseUrl: "https://models/ultra" });
+    await this.manager.attach(1, 42, createFakeStream("s1"));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    this.manager.setEnabled(true, { modelBaseUrl: "https://models/redux" });
+
+    assert.true(FakeWorker.instances[0].terminated, "old worker terminated");
+    assert.strictEqual(FakeWorker.instances.length, 2, "new worker started");
+    assert.strictEqual(
+      FakeWorker.instances[1].messages[0].config.modelBaseUrl,
+      "https://models/redux"
+    );
+    assert.false(FakeVad.instances[0].destroyed, "the tap survives");
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    FakeVad.instances[0].speak();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    assert.strictEqual(FakeWorker.instances[1].jobs.length, 1);
+    assert.strictEqual(this.captions.length, 1, "captions keep flowing");
+  });
+
+  test("switching models without taps defers the new worker", async function (assert) {
+    this.manager.setEnabled(true, { modelBaseUrl: "https://models/ultra" });
+    await this.manager.attach(1, 42, createFakeStream("s1"));
+    this.manager.detachRoom(1);
+
+    this.manager.setEnabled(true, { modelBaseUrl: "https://models/redux" });
+
+    assert.true(FakeWorker.instances[0].terminated);
+    assert.strictEqual(FakeWorker.instances.length, 1, "nothing to transcribe");
+    assert.false(this.manager.loading);
+  });
 });

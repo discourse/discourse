@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::ActivityCalendar do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:other_user, :user)
 
@@ -13,24 +12,27 @@ RSpec.describe DiscourseRewind::Action::ActivityCalendar do
   fab!(:post_6) { Fabricate(:post, user: user, created_at: Date.new(2022, 02, 27)) }
 
   fab!(:user_visit_1) do
-    UserVisit.create!(
-      user_id: user.id,
+    Fabricate(
+      :user_visit,
+      user: user,
       visited_at: Date.new(2021, 3, 10),
       posts_read: 5,
       time_read: 120,
     )
   end
   fab!(:user_visit_2) do
-    UserVisit.create!(
-      user_id: user.id,
+    Fabricate(
+      :user_visit,
+      user: user,
       visited_at: Date.new(2021, 4, 18),
       posts_read: 12,
       time_read: 1200,
     )
   end
   fab!(:user_visit_3) do
-    UserVisit.create!(
-      user_id: other_user.id,
+    Fabricate(
+      :user_visit,
+      user: other_user,
       visited_at: Date.new(2021, 7, 24),
       posts_read: 12,
       time_read: 1200,

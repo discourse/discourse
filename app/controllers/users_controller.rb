@@ -610,8 +610,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def render_available_true
-    render(json: { available: true })
+  def render_available_true(username = nil)
+    result = { available: true }
+    result[:avatar_template] = User.default_template(username) if username
+    render json: result
   end
 
   def changing_case_of_own_username(target_user, username)
@@ -645,11 +647,14 @@ class UsersController < ApplicationController
     target_user = user_from_params_or_current_user
 
     # The special case where someone is changing the case of their own username
-    return render_available_true if changing_case_of_own_username(target_user, username)
+    return render_available_true(username) if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
-    email = params[:email] || target_user.try(:email)
-    render json: checker.check_username(username, email)
+    email = target_user&.email
+    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
+    result = checker.check_username(username, email)
+    result[:avatar_template] = User.default_template(username) if result[:available]
+    render json: result
   end
 
   def generate_random_username
@@ -708,7 +713,13 @@ class UsersController < ApplicationController
   end
 
   def user_from_params_or_current_user
-    params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+    return current_user if !params[:for_user_id]
+    return User.find(params[:for_user_id]) if current_user&.admin?
+
+    if current_user&.id == params[:for_user_id].to_i
+      guardian.ensure_can_edit_username!(current_user)
+    end
+    current_user
   end
 
   def create
@@ -723,7 +734,9 @@ class UsersController < ApplicationController
     if SiteSetting.enable_discourse_connect && !is_api?
       return fail_with("login.new_registrations_disabled_discourse_connect")
     end
-    return fail_with("login.new_registrations_disabled") unless SiteSetting.allow_new_registrations
+    if error = UserCreator.registration_error(invite_code: params[:invite_code])
+      return fail_with(error)
+    end
 
     if params[:password] && params[:password].length > User.max_password_length
       return fail_with("login.password_too_long")
@@ -739,11 +752,6 @@ class UsersController < ApplicationController
     end
 
     return fail_with("login.email_too_long") if params[:email].length > 254 + 1 + 253
-
-    if SiteSetting.require_invite_code &&
-         SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
-      return fail_with("login.wrong_invite_code")
-    end
 
     if clashing_with_existing_route?(params[:username]) ||
          User.reserved_username?(params[:username])
@@ -775,22 +783,8 @@ class UsersController < ApplicationController
       ReviewableUser.set_approved_fields!(user, current_user)
     end
 
-    # Handle custom fields
-    user_fields = UserField.all
-    if user_fields.present?
-      fields = user.custom_fields
-
-      user_fields.each do |f|
-        field_val = clean_custom_field_values(f)
-        field_val = nil if field_val == "false"
-        if field_val.blank?
-          return fail_with("login.missing_user_field") if f.required?
-        else
-          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length]
-        end
-      end
-
-      user.custom_fields = fields
+    if error = UserCreator.assign_signup_fields(user) { |field| clean_custom_field_values(field) }
+      return fail_with(error)
     end
 
     # Handle associated accounts
@@ -1397,53 +1391,37 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
-
   def pick_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    if SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar
+    type = params[:type].presence || "system"
+    unless guardian.can_pick_avatar_source?(user, type)
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    type = params[:type]
-
-    if type == "gravatar" && !SiteSetting.gravatar_enabled?
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
-    return render json: failed_json, status: :unprocessable_entity if invalid_type
-
-    if type.blank? || type == "system"
-      upload_id = nil
-    elsif !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map) &&
-          !user.is_system_user?
-      return render json: failed_json, status: :unprocessable_entity
+    case type
+    when "associated_account"
+      picked = user.user_avatar&.pick_associated_account(params[:associated_account_id])
+      return render json: failed_json, status: :unprocessable_entity unless picked
+    when "system"
+      user.pick_avatar!(nil)
     else
       upload_id = params[:upload_id]
+      if type == "current" && upload_id.to_i != user.uploaded_avatar_id
+        return render json: failed_json, status: :unprocessable_entity
+      end
+
       upload = Upload.find_by(id: upload_id)
 
       return render_json_error I18n.t("avatar.missing") if upload.nil?
 
-      # old safeguard
-      user.create_user_avatar unless user.user_avatar
+      guardian.ensure_can_pick_avatar!(user.user_avatar || user.build_user_avatar, upload)
 
-      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-      if type == "gravatar"
-        user.user_avatar.gravatar_upload_id = upload_id
-      else
-        user.user_avatar.custom_upload_id = upload_id
-      end
+      user.pick_avatar!(upload_id, type: type.to_sym)
     end
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?
-
-    user.uploaded_avatar_id = upload_id
-    user.save!
-    user.user_avatar.save!
 
     render json: success_json
   end
@@ -1452,39 +1430,29 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    unless guardian.can_edit_avatar?(user)
+      return render json: failed_json, status: :unprocessable_entity
+    end
+
     url = params[:url]
 
-    return render json: failed_json, status: :unprocessable_entity if url.blank?
-
-    if SiteSetting.selectable_avatars_mode == "disabled"
+    if url.blank? || SiteSetting.selectable_avatars_mode == "disabled" ||
+         SiteSetting.selectable_avatars.blank?
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    if SiteSetting.selectable_avatars.blank?
+    upload = Upload.get_from_url(url)
+    unless upload && SiteSetting.selectable_avatars.include?(upload)
       return render json: failed_json, status: :unprocessable_entity
     end
-
-    unless upload = Upload.get_from_url(url)
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    if SiteSetting.selectable_avatars.exclude?(upload)
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    user.uploaded_avatar_id = upload.id
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?
 
-    user.save!
-
-    avatar = user.user_avatar || user.create_user_avatar
-    avatar.custom_upload_id = upload.id
-    avatar.save!
+    user.pick_avatar!(upload.id)
 
     render json: {
              avatar_template: user.avatar_template,
-             custom_avatar_template: user.avatar_template,
+             custom_avatar_template: user.custom_avatar_template,
              uploaded_avatar_id: upload.id,
            }
   end
@@ -2205,19 +2173,7 @@ class UsersController < ApplicationController
   end
 
   def clean_custom_field_values(field)
-    field_values = params.dig(:user_fields, field.id.to_s)
-
-    return field_values if field_values.nil? || field_values.empty?
-
-    if field.field_type == "dropdown"
-      field.user_field_options.find_by_value(field_values)&.value
-    elsif field.field_type == "multiselect"
-      field_values = Array.wrap(field_values)
-      bad_values = field_values - field.user_field_options.map(&:value)
-      field_values - bad_values
-    else
-      field_values
-    end
+    UserCreator.clean_custom_field_values(field, params.dig(:user_fields, field.id.to_s))
   end
 
   def password_reset_find_user(token, committing_change:)
@@ -2292,9 +2248,12 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted.concat(
+      UserUpdater::OPTION_ATTR - %i[understood_languages hidden_composer_toolbar_buttons],
+    )
     permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
     permitted << { understood_languages: [] }
+    permitted << { hidden_composer_toolbar_buttons: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS

@@ -5,8 +5,20 @@
 # https://translate.discourse.org/
 
 da:
+  markdown_endpoints:
+    latest: "Seneste"
+    categories: "Kategorier"
+    tags: "Mærker"
+    previous_page: "Forrige side"
+    next_page: "Næste side"
+    replies: "Svar"
+    last_updated: "Sidst opdateret"
+    event:
+      location: "Sted"
+      link: "Link"
   mcp:
     errors:
+      category_not_found: "Denne kategori blev ikke fundet"
       topic_not_found: "Emne ikke fundet"
     oauth:
       deny: "Nægt"

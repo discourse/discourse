@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import RestModel from "discourse/models/rest";
-import StickyNote from "./sticky-note";
-import { serializeConnections } from "./workflow-connection";
-import WorkflowNode from "./workflow-node";
+import StickyNote from "./sticky-note.js";
+import { serializeConnections } from "./workflow-connection.js";
+import WorkflowNode from "./workflow-node.js";
 
 export default class DiscourseWorkflowsWorkflow extends RestModel {
   static munge(json) {
@@ -53,6 +53,9 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
     if (Object.hasOwn(json, "pin_data")) {
       result.pinData = json.pin_data;
     }
+    if (Object.hasOwn(json, "variables")) {
+      result.variables = json.variables;
+    }
 
     return result;
   }
@@ -70,6 +73,7 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked settings;
   @tracked staticData;
   @tracked pinData;
+  @tracked variables = [];
   @tracked nodes = [];
   @tracked connections = [];
   @tracked stickyNotes = [];

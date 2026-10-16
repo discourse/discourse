@@ -4,7 +4,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper.js";
 
 module("Integration | Initializers | plugin-component-templates", function () {
   module("template-only component definition behaviour", function (hooks) {

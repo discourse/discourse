@@ -126,14 +126,12 @@ module("Integration | Component | SearchMenu", function (hooks) {
   });
 
   test("@hideResults closes the menu and keeps it closed", async function (assert) {
-    const state = new (class {
-      @tracked hidden = false;
-    })();
+    const hidden = tracked(false);
 
     await render(
       <template>
         <SearchMenu
-          @hideResults={{state.hidden}}
+          @hideResults={{hidden.value}}
           @location="test"
           @searchInputId="icon-search-input"
         />
@@ -143,7 +141,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await click("#icon-search-input");
     assert.dom(".menu-panel").exists("menu opens from the input");
 
-    state.hidden = true;
+    hidden.value = true;
     await settled();
     assert
       .dom(".menu-panel")
@@ -154,7 +152,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .dom(".menu-panel")
       .doesNotExist("menu cannot open while results are hidden");
 
-    state.hidden = false;
+    hidden.value = false;
     await settled();
     assert
       .dom(".menu-panel")
@@ -174,15 +172,13 @@ module("Integration | Component | SearchMenu", function (hooks) {
   });
 
   test("updates when the input placeholder changes", async function (assert) {
-    const state = new (class {
-      @tracked placeholder = "search.title";
-    })();
+    const placeholder = tracked("search.title");
 
     await render(
       <template>
         <SearchMenu
           @location="test"
-          @searchInputPlaceholder={{state.placeholder}}
+          @searchInputPlaceholder={{placeholder.value}}
         />
       </template>
     );
@@ -192,7 +188,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .hasAttribute("placeholder", i18n("search.title"))
       .hasAttribute("aria-label", i18n("search.title"));
 
-    state.placeholder = "welcome_banner.search_placeholder";
+    placeholder.value = "welcome_banner.search_placeholder";
     await settled();
 
     assert

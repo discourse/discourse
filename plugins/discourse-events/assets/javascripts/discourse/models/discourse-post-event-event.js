@@ -6,8 +6,8 @@ import User from "discourse/models/user";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
 };
-import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
-import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
+import DiscoursePostEventEventStats from "./discourse-post-event-event-stats.js";
+import DiscoursePostEventInvitee from "./discourse-post-event-invitee.js";
 
 const DEFAULT_REMINDER = {
   type: "notification",

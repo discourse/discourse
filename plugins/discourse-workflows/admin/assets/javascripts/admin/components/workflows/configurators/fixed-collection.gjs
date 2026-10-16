@@ -20,9 +20,9 @@ import {
   normalizeSchema,
   propertyDescription,
   propertyLabel,
-} from "../../../lib/workflows/property-engine";
-import WorkflowsEmptyState from "../empty-state";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import WorkflowsEmptyState from "../empty-state.gjs";
+import Field from "./field.gjs";
 
 function isCollection(field) {
   return fieldType(field) === "fixed_collection";

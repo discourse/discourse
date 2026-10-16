@@ -5,7 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Bookmark from "discourse/models/bookmark";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import { selectKitOptions } from "./select-kit";
+import { selectKitOptions } from "./select-kit.js";
 
 const _customButtons = [];
 const _customActions = {};

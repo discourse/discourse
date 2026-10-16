@@ -32,17 +32,25 @@ export function addBulkDropdownAction(name, customAction) {
 export default class BulkTopicActions extends Component {
   @service toasts;
 
+  /** @type {import("@glint/template").ComponentLike | null} */
   @tracked activeComponent = null;
+
+  /** @type {Record<string, unknown> | null} */
   @tracked activeComponentProps = null;
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
   @tracked notifyUsers = false;
+
+  /** @type {string | null} */
   @tracked closeNote = null;
+
+  /** @type {{ message: string, count: number, trustHtml?: boolean }[] | null} */
   @tracked failureMessages = null;
   @tracked successTopicCount = 0;
   @tracked skippedTopicCount = 0;
 
+  /** @type {string | null | undefined} */
   @tracked notificationLevelId = null;
   @tracked customSubmitDisabled = false;
 

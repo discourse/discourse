@@ -24,6 +24,23 @@ sr:
           title: "Sigurnosne kopije"
       read_post:
         unknown_post: "post"
+      chat_tool_approval:
+        topic_states:
+          open: "Otvori"
+          active: "Aktivni"
+        solution_post: "Poruka #%{number}"
+        user_duration:
+          one: "%{count} дан"
+          few: "%{count} дана"
+          other: "%{count} dana"
+        posts_label: "Poruka"
+        category_label: "Kategorija"
+        category_fields:
+          name: "ime foruma"
+          description: "opis"
+          color: "boja"
+        approve_label: "Da"
+        reject_label: "Ne"
       tool_summary:
         search: "Pretraži"
         time: "Vreme"

@@ -5,8 +5,18 @@
 # https://translate.discourse.org/
 
 ug:
+  markdown_endpoints:
+    latest: "ئاخىرقى"
+    categories: "سەھىپە"
+    tags: "بەلگە"
+    replies: "جاۋاب"
+    last_updated: "ئاخىرقى يېڭىلانغان ۋاقىت"
+    event:
+      location: "ئورنى"
+      link: "ئۇلانما"
   mcp:
     errors:
+      category_not_found: "سەھىپە تېپىلمىدى"
       draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"
       post_not_found: "يازما تېپىلمىدى"
       topic_not_found: "تېما تېپىلمىدى"

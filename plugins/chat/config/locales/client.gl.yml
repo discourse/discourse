@@ -184,6 +184,8 @@ gl:
       chat_message_created:
         channel_id: "Canle"
       send_chat_message:
+        targets:
+          channel: "Canle"
         channel_id: "Canle"
         message: "Mensaxe"
       chat_approval:

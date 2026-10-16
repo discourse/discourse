@@ -62,6 +62,51 @@ RSpec.describe Jobs::PublishTopicToCategory do
     end
   end
 
+  it "keeps the publishing timer when the destination rejects a topic tag" do
+    user = Fabricate(:trust_level_4)
+
+    forbidden_tag = Fabricate(:tag)
+    allowed_tag = Fabricate(:tag)
+    allowed_tag_group = Fabricate(:tag_group, tags: [allowed_tag])
+    another_category.update!(tag_groups: [allowed_tag_group])
+
+    topic.update!(user: user, tags: [forbidden_tag], visible: false, created_at: 1.hour.ago)
+    timer = topic.public_topic_timer
+    timer.update!(user: user)
+    timestamp_attributes = %w[created_at bumped_at updated_at last_posted_at]
+    original_timestamps = topic.reload.attributes.slice(*timestamp_attributes)
+
+    expect { described_class.new.execute(topic_timer_id: timer.id) }.to raise_error(
+      ActiveRecord::RecordInvalid,
+    )
+
+    topic.reload
+    expect(topic.category).to eq(category)
+    expect(topic).not_to be_visible
+    expect(topic.attributes.slice(*timestamp_attributes)).to eq(original_timestamps)
+    expect(topic.public_topic_timer).to eq(timer)
+    expect(
+      UserHistory.exists?(
+        action: UserHistory.actions[:topic_published],
+        acting_user_id: user.id,
+        topic_id: topic.id,
+      ),
+    ).to eq(false)
+  end
+
+  it "publishes when the topic is already in the destination category" do
+    topic.update!(visible: false)
+    timer = topic.public_topic_timer
+    timer.update!(category_id: category.id)
+
+    described_class.new.execute(topic_timer_id: timer.id)
+
+    topic.reload
+    expect(topic.category).to eq(category)
+    expect(topic).to be_visible
+    expect(topic.public_topic_timer).to be_nil
+  end
+
   describe "when topic is a private message" do
     it "publishes the topic to the new category" do
       freeze_time 1.hour.ago do

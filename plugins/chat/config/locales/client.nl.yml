@@ -799,8 +799,12 @@ nl:
       chat_message_created:
         channel_id: "Kanaal"
       send_chat_message:
+        targets:
+          channel: "Kanaal"
         channel_id: "Kanaal"
+        target_usernames: "Ontvangers"
         message: "Bericht"
+        actor_username: "Afzender"
       chat_approval:
         message: "Bericht"
         buttons: "Knoppen"

@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
@@ -43,7 +44,7 @@ import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import { hasMark, inNode, isNodeActive } from "./plugin-utils";
+import { hasMark, inNode, isNodeActive } from "./plugin-utils.js";
 
 export type EditorCommands = Record<string, (...args: unknown[]) => unknown> & {
   formatCode: (state: EditorState, dispatch: EditorView["dispatch"]) => boolean;
@@ -118,6 +119,16 @@ function isPlainTextFragment(fragment: Fragment, schema: Schema): boolean {
 
     return false;
   });
+}
+
+/**
+ * The first block of a document parsed from markdown. Non-empty markdown always
+ * yields at least one block, which every caller here relies on.
+ */
+function firstBlockOf(doc: Node): Node {
+  const block = doc.content.firstChild;
+  assert("Parsed markdown has a first block", block);
+  return block;
 }
 
 export default class ProsemirrorTextManipulation implements TextManipulation {
@@ -248,7 +259,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
 
     const modifier = dAutocomplete.setupAutocomplete(
-      getOwner(this),
+      getOwner(this)!,
       this.view.dom,
       this.autocompleteHandler,
       options
@@ -301,13 +312,9 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   addText(sel: SelectedText, text: string): void {
-    const doc = this.convertFromMarkdown(text);
-
     // assumes it returns a single block node
-    const content =
-      doc.content.firstChild.type.name === "paragraph"
-        ? doc.content.firstChild.content
-        : doc.content.firstChild;
+    const block = firstBlockOf(this.convertFromMarkdown(text));
+    const content = block.type.name === "paragraph" ? block.content : block;
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, content)
@@ -408,7 +415,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     let index = 0;
 
     const value = this.autocompleteHandler.getValue();
-    const match = value.match(/\B:([\p{L}\p{N}_]*)$/u);
+    const match = /\B:([\p{L}\p{N}_]*)$/u.exec(value);
     if (match) {
       index = value.length - match.index;
     }
@@ -473,12 +480,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   insertText(text: string): void {
-    const doc = this.convertFromMarkdown(text);
+    const block = firstBlockOf(this.convertFromMarkdown(text));
 
     this.view.dispatch(
-      this.view.state.tr
-        .replaceSelectionWith(doc.content.firstChild)
-        .scrollIntoView()
+      this.view.state.tr.replaceSelectionWith(block).scrollIntoView()
     );
 
     this.focus();
@@ -551,7 +556,11 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
 
     const imagesToWrapGrid = new Set(consecutiveImages);
-    const placeholderNodes = [];
+    const placeholderNodes: Array<{
+      node: Node;
+      pos: number;
+      filename: string;
+    }> = [];
 
     this.view.state.doc.descendants((node, pos) => {
       if (node.type === this.schema.nodes.grid) {
@@ -1071,15 +1080,14 @@ class ProsemirrorAutocompleteHandler implements AutocompleteHandler {
    */
   replaceTerm(start: number, end: number, term: string): void {
     const node = this.view.state.selection.$head.nodeBefore;
+    assert("Autocomplete replaces a term before the caret", node);
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
-
-    const doc = this.convertFromMarkdown(term);
 
     const tr = this.view.state.tr.replaceWith(
       from,
       to,
-      doc.content.firstChild.content
+      firstBlockOf(this.convertFromMarkdown(term)).content
     );
     tr.insertText(" ", tr.selection.from);
 
@@ -1102,6 +1110,7 @@ class ProsemirrorAutocompleteHandler implements AutocompleteHandler {
 
   getCaretCoords(start: number): { left: number; top: number } {
     const node = this.view.state.selection.$head.nodeBefore;
+    assert("Autocomplete measures a term before the caret", node);
     const pos = this.view.state.selection.from - node.nodeSize + start;
     const { left, top } = this.view.coordsAtPos(pos);
 
@@ -1221,9 +1230,10 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
     const wasSelected = this.view.state.selection.from === found.pos;
 
     // keeping compatibility with plugins that change the upload markdown
-    const doc = this.convertFromMarkdown(markdown);
     const tr = this.view.state.tr;
-    const replacement = doc.content.firstChild.content;
+    const replacement = firstBlockOf(
+      this.convertFromMarkdown(markdown)
+    ).content;
 
     if (found.node.type === this.schema.nodes.image) {
       this.#revokeBlobUrl(found.node);
@@ -1257,7 +1267,7 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
       }
     }
 
-    this.view.dispatch(tr);
+    this.view.dispatch(tr.setMeta("uploadPlaceholderResolved", true));
   }
 
   #revokeBlobUrl(node: Node): void {

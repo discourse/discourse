@@ -93,6 +93,7 @@ zh_CN:
     event_participation_buttons: "用户可以使用的活动参与按钮列表。"
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
+    calendar_upcoming_events_default_category: "用于从即将举行的活动日历中创建新活动的类别。如果为空或成员无法在此类别中创建主题，则使用 {{setting:default_composer_category}}。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
     enable_improved_event_reminders: "允许成员选择活动提醒：个人消息、通知发送，或者完全不发送。"
     livestream_allowed_hosts: "可以用作活动直播的主机。"

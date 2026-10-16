@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class McpController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr,
+                     :preload_json,
+                     :verify_authenticity_token,
+                     :redirect_to_login_if_required
   before_action :ensure_mcp_enabled
   before_action :validate_origin
 

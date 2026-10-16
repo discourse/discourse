@@ -750,8 +750,11 @@ ug:
       chat_message_created:
         channel_id: "قانال"
       send_chat_message:
+        targets:
+          channel: "قانال"
         channel_id: "قانال"
         message: "ئۇچۇر"
+        actor_username: "يوللىغۇچى"
       chat_approval:
         message: "ئۇچۇر"
         buttons: "توپچە"

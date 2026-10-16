@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import VoteButton from "./vote-button";
-import VoteCount from "./vote-count";
+import VoteButton from "./vote-button.gjs";
+import VoteCount from "./vote-count.gjs";
 
 export default class VoteBox extends Component {
   @service currentUser;

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import getUrl from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import WizardField from "./wizard-field";
+import WizardField from "./wizard-field.gjs";
 
 export default class WizardStepComponent extends Component {
   @tracked hasError = false;

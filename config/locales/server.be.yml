@@ -5,8 +5,17 @@
 # https://translate.discourse.org/
 
 be:
+  markdown_endpoints:
+    latest: "Апошняя"
+    categories: "катэгорыі"
+    tags: "Цэтлікі"
+    replies: "Адказы"
+    event:
+      location: "Месцазнаходжанне"
+      link: "Спасылка"
   mcp:
     errors:
+      category_not_found: "Катэгорыя не знойдзена"
       topic_not_found: "Тэма не знойдзена"
     oauth:
       approve: "Аўтарызаваць"

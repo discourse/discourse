@@ -6,7 +6,18 @@ export default class SiteText extends RestModel {
   revert(locale) {
     return ajax(`/admin/customize/site_texts/${this.id}?locale=${locale}`, {
       type: "DELETE",
-    }).then((result) => getProperties(result.site_text, "value", "can_revert"));
+    }).then((result) =>
+      getProperties(
+        result.site_text,
+        "value",
+        "can_revert",
+        "overridden",
+        "status",
+        "old_default",
+        "new_default",
+        "interpolation_keys"
+      )
+    );
   }
 
   dismissOutdated(locale) {

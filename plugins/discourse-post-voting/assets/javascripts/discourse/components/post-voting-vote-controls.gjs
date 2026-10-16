@@ -6,9 +6,9 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { i18n } from "discourse-i18n";
-import { castVote, removeVote } from "../lib/post-voting-utilities";
-import PostVotingButton from "./post-voting-button";
-import PostVotingWhoVotedList from "./post-voting-who-voted-list";
+import { castVote, removeVote } from "../lib/post-voting-utilities.js";
+import PostVotingButton from "./post-voting-button.gjs";
+import PostVotingWhoVotedList from "./post-voting-who-voted-list.gjs";
 
 export default class PostVotingVoteControls extends Component {
   @service currentUser;

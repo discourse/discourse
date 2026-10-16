@@ -5,8 +5,21 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  markdown_endpoints:
+    latest: "En son"
+    categories: "Kategoriler"
+    tags: "Etiketler"
+    previous_page: "Önceki sayfa"
+    next_page: "Sonraki sayfa"
+    replies: "Yanıtlar"
+    last_updated: "Son güncelleme"
+    event:
+      name: "Etkinlik"
+      location: "Konum"
+      link: "Bağlantı"
   mcp:
     errors:
+      category_not_found: "Kategori bulunamadı"
       draft_too_long: "Taslak fazla uzun"
       post_not_found: "Gönderi bulunamadı"
       topic_not_found: "Konu bulunamadı."
@@ -839,6 +852,7 @@ tr_TR:
       description_too_long:
         one: "Açıklama çok uzun (maksimum %{count} karakter)."
         other: "Açıklama çok uzun (maksimum %{count} karakter)."
+      special_category_permissions: "Bu önceden belirlenmiş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız, yeniden kullanmak yerine silin."
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi bulunur, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konu, bu kategori tarafından izin verilmeyen etiketlere sahip: \"%{tags}\""
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
@@ -2478,7 +2492,6 @@ tr_TR:
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
     enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
-    enable_new_post_reactions_menu: "Sonsuz kaydırma özelliği ve mobil cihazlara özel bir deneyim sunan, yeniden tasarlanan gönderi beğenileri ve tepkileri menüsünü etkinleştirin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"

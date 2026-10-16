@@ -136,6 +136,8 @@ plugins:
       - data_explorer_queries
       - data_explorer_query_groups
       - data_explorer_query_stats
+      - data_explorer_query_tags
+      - data_explorer_tags
     columns: {}
   discourse-events:
     tables:
@@ -266,8 +268,8 @@ plugin_checksums:
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
-  discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
-  discourse-events: 4bd525eef635a0ca1e118ca237cfcef7
+  discourse-data-explorer: c6b824f9409ce4407895bdcb5563b5a0
+  discourse-events: 5d4a88ec24f58c6ea11f53e76a23bfb8
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20

@@ -9,7 +9,6 @@ de:
     chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
     chat_enabled: "Chat aktivieren."
     chat_pinned_messages: "Angeheftete Nachrichten in Chat-Kanälen aktivieren."
-    enable_new_chat_reactions_popup: "Aktiviere das neu gestaltete Reaktionen-Popup für Chat-Nachrichten, das anzeigt, wer reagiert hat – mit unendlichem Bildlauf und einer nativen mobilen Benutzererfahrung."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Beachte, dass Administratoren und Moderatoren immer auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -249,13 +248,10 @@ de:
       default_deny_label: "ablehnen"
     errors:
       send_chat_message:
-        invalid_params: "Ungültige Parameter: %{errors}"
         channel_not_found: "Kanal nicht gefunden: %{channel_id}"
-        failed: "Chat-Nachricht konnte nicht gesendet werden."
       chat_approval:
         channel_not_found: "Chat-Nachricht fehlgeschlagen: Kanal „%{channel_id}“ wurde nicht gefunden."
         invalid_params: "Chat-Nachricht fehlgeschlagen: %{errors}"
-        failed: "Chat-Nachricht fehlgeschlagen: %{steps}"
         timeout_must_be_positive: "Die Zeitüberschreitungsdauer in Minuten muss größer als 0 sein."
   reviewable_score_types:
     needs_review:

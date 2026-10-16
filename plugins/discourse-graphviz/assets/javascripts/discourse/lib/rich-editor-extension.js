@@ -3,8 +3,8 @@ import {
   previewSourceNode,
   selectPreviewSource,
 } from "discourse/lib/composer/preview-block";
-import GraphvizFullscreen from "../components/graphviz-fullscreen";
-import GraphvizPreview from "../components/graphviz-preview";
+import GraphvizFullscreen from "../components/graphviz-fullscreen.gjs";
+import GraphvizPreview from "../components/graphviz-preview.gjs";
 
 const LANGUAGE = "dot";
 

@@ -6,13 +6,19 @@ import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 export default class ResultSet extends LegacyArrayLikeObject {
   @tracked extras;
   @tracked findArgs;
+
+  /** @type {string | null | undefined} */
   @tracked loadMoreUrl = null;
   @tracked loading = false;
   @tracked loadingMore = false;
+
+  /** @type {string | null | undefined} */
   @tracked refreshUrl = null;
   @tracked refreshing = false;
   @tracked resultSetMeta;
   @tracked totalRows = 0;
+
+  /** @type {import("discourse/services/store").default | null} */
   store = null;
   __type;
 

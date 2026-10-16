@@ -85,7 +85,7 @@ module JsonApiKit
 
             def raw_sort = options[:raw_parameters][:sort]
 
-            def ordering = raw_sort.nil? ? {} : INDIFFERENT_HASH.cast(raw_sort)
+            def ordering = INDIFFERENT_HASH.cast(raw_sort)
 
             def sortable?
               return false unless ordering

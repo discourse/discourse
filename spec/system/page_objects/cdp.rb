@@ -162,7 +162,7 @@ module PageObjects
           "Network.emulateNetworkConditions",
           params: {
             offline: false,
-            latency: 20_000,
+            latency: 0,
             downloadThroughput: -1,
             uploadThroughput: 1,
           },

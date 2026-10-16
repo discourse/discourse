@@ -493,9 +493,22 @@ class Group < ActiveRecord::Base
 
     result = guardian.filter_allowed_categories(result)
     result = guardian.filter_hidden_posts(result)
-    result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
+    if opts[:before_post_id]
+      before_post_id = opts[:before_post_id].to_i
+      before_post_created_at = result.where(posts: { id: before_post_id }).pick("posts.created_at")
+      result =
+        if before_post_created_at
+          result.where(
+            "(posts.created_at, posts.id) < (:created_at, :id)",
+            created_at: before_post_created_at,
+            id: before_post_id,
+          )
+        else
+          result.none
+        end
+    end
     result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
-    result.order("posts.created_at desc")
+    result.order("posts.created_at DESC, posts.id DESC")
   end
 
   def self.trust_group_ids
@@ -548,8 +561,11 @@ class Group < ActiveRecord::Base
   end
 
   def self.can_use_name?(name, group)
-    UsernameValidator.new(name, skip_length_validation: group.automatic).valid_format? &&
-      (group.name == name || !User.username_exists?(name))
+    UsernameValidator.new(
+      name,
+      skip_length_validation: group.automatic,
+      skip_watched_words: true,
+    ).valid_format? && (group.name == name || !User.username_exists?(name))
   end
 
   def self.refresh_automatic_group!(name)
@@ -1101,7 +1117,12 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, "name", skip_length_validation: automatic) ||
+    UsernameValidator.perform_validation(
+      self,
+      "name",
+      skip_length_validation: automatic,
+      skip_watched_words: true,
+    ) ||
       begin
         normalized_name = User.normalize_username(name)
 

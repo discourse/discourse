@@ -9,6 +9,7 @@ import {
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
+import { HIDEABLE_BUTTONS } from "discourse/lib/composer/toolbar";
 import {
   INTERFACE_COLOR_MODES,
   SEND_SHORTCUT_ENTER,
@@ -50,9 +51,12 @@ export default class InterfaceController extends Controller {
   @service session;
   @controller("preferences") preferencesController;
 
+  /** @type {number | null} */
   @tracked selectedInterfaceColorModeId = null;
   currentThemeId = currentThemeId();
   previewingColorScheme = false;
+
+  /** @type {number | null | undefined} */
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
   subpageTitle = i18n("user.preferences_nav.interface");
@@ -91,6 +95,7 @@ export default class InterfaceController extends Controller {
       "send_shortcut",
       "automatically_translate",
       "understood_languages",
+      "hidden_composer_toolbar_buttons",
     ];
 
     if (this.siteSettings.allow_user_locale) {
@@ -104,6 +109,19 @@ export default class InterfaceController extends Controller {
     return applyValueTransformer("preferences-save-attributes", attrs, {
       page: "interface",
     });
+  }
+
+  @computed("model.user_option.hidden_composer_toolbar_buttons.[]")
+  get composerToolbarButtons() {
+    const hidden = this.model.user_option.hidden_composer_toolbar_buttons ?? [];
+
+    return HIDEABLE_BUTTONS.filter(({ id }) =>
+      this.#composerToolbarButtonAvailable(id)
+    ).map(({ id, label }) => ({
+      id,
+      label,
+      shown: !hidden.includes(id),
+    }));
   }
 
   @computed("model.user_option.understood_languages.[]")
@@ -398,6 +416,21 @@ export default class InterfaceController extends Controller {
   }
 
   @action
+  toggleComposerToolbarButton(buttonId) {
+    const hidden = new Set(
+      this.model.user_option.hidden_composer_toolbar_buttons ?? []
+    );
+
+    if (hidden.has(buttonId)) {
+      hidden.delete(buttonId);
+    } else {
+      hidden.add(buttonId);
+    }
+
+    this.model.set("user_option.hidden_composer_toolbar_buttons", [...hidden]);
+  }
+
+  @action
   setUnderstoodLanguages(locales) {
     this.model.set(
       "user_option.understood_languages",
@@ -640,6 +673,21 @@ export default class InterfaceController extends Controller {
     this.model.set("user_option.skip_new_user_tips", false);
     this.model.set("user_option.seen_popups", null);
     return this.model.save(["skip_new_user_tips", "seen_popups"]);
+  }
+
+  #composerToolbarButtonAvailable(buttonId) {
+    switch (buttonId) {
+      case "emoji":
+        return this.siteSettings.enable_emoji;
+      case "gifs":
+        return this.siteSettings.enable_gifs;
+      case "toggle-direction":
+        return this.siteSettings.support_mixed_text_direction;
+      case "post-language-selector":
+        return this.siteSettings.content_localization_enabled;
+      default:
+        return true;
+    }
   }
 
   #shouldEnablePreview(isDarkMode) {

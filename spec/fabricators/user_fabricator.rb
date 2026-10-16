@@ -6,6 +6,7 @@ Fabricator(:user, class_name: :user) do
   transient refresh_auto_groups: false
   transient trust_level: nil
   transient search_index: false
+  transient timezone: "Etc/UTC"
   transient composition_mode: UserOption.composition_mode_types[:markdown]
   transient seen_before: false
 
@@ -24,10 +25,13 @@ Fabricator(:user, class_name: :user) do
     end
     SearchIndexer.disable if transients[:search_index]
 
-    # TODO (martin) It would be good to remove this at some point once specs are updated
+    # TODO (martin) It would be good to remove the composition mode override once specs are updated
     # to use the rich editor by default. Otherwise, if this is not done, there are tons
     # of specs failing when setting SiteSetting.default_composition_mode default to rich
-    user.user_option.update!(composition_mode: transients[:composition_mode])
+    user.user_option.update!(
+      composition_mode: transients[:composition_mode],
+      timezone: transients[:timezone],
+    )
 
     if transients[:seen_before]
       user.update!(last_seen_at: 2.days.ago, previous_visit_at: 2.days.ago)

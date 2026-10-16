@@ -61,6 +61,22 @@ export function extendThemeCookie() {
   }
 }
 
+/**
+ * A theme the current user can choose. The site default has a `null` id when
+ * no theme is marked as the default.
+ *
+ * @typedef {object} SelectableTheme
+ * @property {string} name
+ * @property {number | null} id
+ * @property {number | null} [color_scheme_id]
+ * @property {number | null} [dark_color_scheme_id]
+ * @property {boolean} [only_theme_color_schemes]
+ */
+
+/**
+ * @param {import("discourse/models/site").default} site
+ * @returns {SelectableTheme[] | null}
+ */
 export function listThemes(site) {
   let themes = site.get("user_themes");
 

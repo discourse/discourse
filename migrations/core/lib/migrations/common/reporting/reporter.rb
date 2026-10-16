@@ -114,12 +114,15 @@ module Migrations
           yield begin_progress(max_progress:)
         end
 
-        # Ends the step. It runs from an `ensure`, so `$!` (the exception in
-        # flight, if any) tells us how the step ended: a SignalException means
-        # Ctrl-C (interrupted), any other exception means it failed, and no
-        # exception means it finished cleanly.
-        def finish
-          outcome =
+        # Ends the step. With no `outcome` it runs from an `ensure` and reads `$!`
+        # (the exception in flight, if any) to tell how the step ended: a
+        # SignalException means Ctrl-C (interrupted), any other exception means it
+        # failed, and no exception means it finished cleanly. Pass `outcome:`
+        # explicitly when the step ended without an exception in flight — e.g. a
+        # threaded pipeline that catches SIGINT with a flag and drains, so `$!` is
+        # already nil by the time the step finishes.
+        def finish(outcome: nil)
+          outcome ||=
             case $!
             when nil
               :done

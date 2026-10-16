@@ -18,7 +18,6 @@ ko:
       admin_dashboard_card:
         no_results: "결과 없음"
     explorer:
-      default_query: "기본"
       or: "또는"
       admins_only: "데이터 탐색기는 관리자 만 사용할 수 있습니다."
       allow_groups: "그룹이이 쿼리에 액세스하도록 허용"
@@ -53,6 +52,7 @@ ko:
         other: "%{count}개의 결과."
       query_name: "쿼리"
       query_groups: "그룹"
+      query_tags: "태그"
       link: "링크"
       report_name: "보고서"
       query_description: "내용"

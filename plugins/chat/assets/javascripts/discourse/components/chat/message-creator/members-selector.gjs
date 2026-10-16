@@ -6,10 +6,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import ChatablesLoader from "./lib/chatables-loader";
-import List from "./list";
-import ListHandler from "./list-handler";
-import Members from "./members";
+import ChatablesLoader from "./lib/chatables-loader.js";
+import List from "./list.gjs";
+import ListHandler from "./list-handler.gjs";
+import Members from "./members.gjs";
 
 export default class MembersSelector extends Component {
   @service siteSettings;

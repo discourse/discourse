@@ -603,7 +603,10 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
     it "raises when the user does not exist" do
       expect do
         execute_node(configuration: { "operation" => "get", "username" => "missing_user" })
-      end.to raise_error(DiscourseWorkflows::NodeError, "User 'missing_user' not found")
+      end.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(:not_found, scope: :actor, username: "missing_user"),
+      )
     end
   end
 

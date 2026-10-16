@@ -290,7 +290,7 @@ module DiscourseAi
             end
           end
 
-        bot.reply(context, llm_args: { max_tokens: 1024 }, &buffer_blk)
+        bot.reply(context, llm_args: { max_response_tokens: 1024 }, &buffer_blk)
 
         raw_caption = ""
 
@@ -310,6 +310,11 @@ module DiscourseAi
         raise Discourse::InvalidAccess if !user.in_any_groups?(ai_agent.allowed_group_ids.to_a)
 
         ai_agent
+      end
+
+      def ensure_mode_access_for_location!(helper_mode, user, location)
+        ensure_mode_access!(helper_mode, user)
+        raise Discourse::InvalidAccess if !location_map(helper_mode).include?(location)
       end
 
       private

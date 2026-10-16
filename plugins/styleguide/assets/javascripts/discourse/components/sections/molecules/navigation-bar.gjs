@@ -1,11 +1,11 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import GroupNavPillsExample from "../../examples/molecules/group-nav-pills";
+import GroupNavPillsExample from "../../examples/molecules/group-nav-pills.gjs";
 import groupNavPillsSource from "../../examples/molecules/group-nav-pills?source=file";
-import NavigationBarExample from "../../examples/molecules/navigation-bar";
+import NavigationBarExample from "../../examples/molecules/navigation-bar.gjs";
 import navigationBarSource from "../../examples/molecules/navigation-bar?source=file";
-import OverflowingNavExample from "../../examples/molecules/overflowing-nav";
+import OverflowingNavExample from "../../examples/molecules/overflowing-nav.gjs";
 import overflowingNavSource from "../../examples/molecules/overflowing-nav?source=file";
-import UserNavPillsExample from "../../examples/molecules/user-nav-pills";
+import UserNavPillsExample from "../../examples/molecules/user-nav-pills.gjs";
 import userNavPillsSource from "../../examples/molecules/user-nav-pills?source=file";
 
 export default <template>

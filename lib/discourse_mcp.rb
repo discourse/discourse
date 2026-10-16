@@ -4,6 +4,8 @@ module DiscourseMcp
   module Scopes
     PROFILE_READ = "mcp:profile:read"
     PROFILE_WRITE = "mcp:profile:write"
+    CATEGORIES_READ = "mcp:categories:read"
+    CATEGORIES_WRITE = "mcp:categories:write"
     CONTENT_READ = "mcp:content:read"
     CONTENT_WRITE = "mcp:content:write"
     DRAFTS_READ = "mcp:drafts:read"
@@ -14,6 +16,12 @@ module DiscourseMcp
     MODERATION_WRITE = "mcp:moderation:write"
     SITE_SETTINGS_READ = "mcp:site-settings:read"
     SITE_SETTINGS_WRITE = "mcp:site-settings:write"
+    THEMES_READ = "mcp:themes:read"
+    THEMES_WRITE = "mcp:themes:write"
+    GROUPS_READ = "mcp:groups:read"
+    GROUPS_WRITE = "mcp:groups:write"
+    USERS_READ = "mcp:users:read"
+    USERS_WRITE = "mcp:users:write"
   end
 
   PROTOCOL_VERSION = "2026-07-28"

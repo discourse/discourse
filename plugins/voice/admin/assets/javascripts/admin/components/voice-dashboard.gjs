@@ -78,28 +78,42 @@ export default class VoiceDashboard extends Component {
 
         {{#if this.rooms.length}}
           <h3>{{i18n "voice.admin.dashboard.top_rooms"}}</h3>
-          <table class="d-admin-table voice-dashboard__rooms-table">
-            <thead>
+          <table class="d-table voice-dashboard__rooms-table">
+            <thead class="d-table__header">
               <tr>
-                <th>{{i18n "voice.admin.dashboard.room_name"}}</th>
-                <th>{{i18n "voice.admin.dashboard.unique_users"}}</th>
-                <th>{{i18n "voice.admin.dashboard.total_time"}}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.room_name"
+                  }}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.unique_users"
+                  }}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.total_time"
+                  }}</th>
               </tr>
             </thead>
             <tbody>
               {{#each this.rooms as |room|}}
-                <tr class="d-admin-row__content">
-                  <td class="d-admin-row__overview">
+                <tr class="d-table__row">
+                  <td class="d-table__cell --overview">
                     {{#if room.room_name}}
                       {{room.room_name}}
                     {{else}}
                       {{i18n "voice.admin.dashboard.deleted_room"}}
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__detail">{{room.unique_users}}</td>
-                  <td class="d-admin-row__detail">{{formatDuration
-                      room.total_seconds
-                    }}</td>
+                  <td class="d-table__cell --detail">
+                    <div class="d-table__mobile-label">
+                      {{i18n "voice.admin.dashboard.unique_users"}}
+                    </div>
+                    {{room.unique_users}}
+                  </td>
+                  <td class="d-table__cell --detail">
+                    <div class="d-table__mobile-label">
+                      {{i18n "voice.admin.dashboard.total_time"}}
+                    </div>
+                    {{formatDuration room.total_seconds}}
+                  </td>
                 </tr>
               {{/each}}
             </tbody>
@@ -108,18 +122,24 @@ export default class VoiceDashboard extends Component {
 
         {{#if this.users.length}}
           <h3>{{i18n "voice.admin.dashboard.top_users"}}</h3>
-          <table class="d-admin-table voice-dashboard__users-table">
-            <thead>
+          <table class="d-table voice-dashboard__users-table">
+            <thead class="d-table__header">
               <tr>
-                <th>{{i18n "voice.admin.dashboard.user"}}</th>
-                <th>{{i18n "voice.admin.dashboard.sessions"}}</th>
-                <th>{{i18n "voice.admin.dashboard.total_time"}}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.user"
+                  }}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.sessions"
+                  }}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "voice.admin.dashboard.total_time"
+                  }}</th>
               </tr>
             </thead>
             <tbody>
               {{#each this.users as |u|}}
-                <tr class="d-admin-row__content">
-                  <td class="d-admin-row__overview">
+                <tr class="d-table__row">
+                  <td class="d-table__cell --overview">
                     {{#if u.username}}
                       <a
                         class="voice-dashboard__user-cell"
@@ -133,10 +153,18 @@ export default class VoiceDashboard extends Component {
                       {{i18n "voice.admin.dashboard.deleted_user"}}
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__detail">{{u.session_count}}</td>
-                  <td class="d-admin-row__detail">{{formatDuration
-                      u.total_seconds
-                    }}</td>
+                  <td class="d-table__cell --detail">
+                    <div class="d-table__mobile-label">
+                      {{i18n "voice.admin.dashboard.sessions"}}
+                    </div>
+                    {{u.session_count}}
+                  </td>
+                  <td class="d-table__cell --detail">
+                    <div class="d-table__mobile-label">
+                      {{i18n "voice.admin.dashboard.total_time"}}
+                    </div>
+                    {{formatDuration u.total_seconds}}
+                  </td>
                 </tr>
               {{/each}}
             </tbody>

@@ -23,6 +23,41 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     sinon.restore();
   });
 
+  test("channel manager updates model attribution when streaming finishes", function (assert) {
+    const channel = this.fabricators.channel();
+    const message = this.fabricators.message({ channel, streaming: true });
+    channel.messagesManager.addMessages([message]);
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+
+    manager.handleEditMessage({
+      chat_message: {
+        id: message.id,
+        streaming: false,
+        ai_llm_name: "Model 猫",
+      },
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
+  test("thread manager updates model attribution when streaming finishes", function (assert) {
+    const channel = this.fabricators.channel();
+    const thread = this.fabricators.thread({ channel });
+    const message = this.fabricators.message({ channel, streaming: true });
+    thread.messagesManager.addMessages([message]);
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+
+    manager.handleEditMessage({
+      chat_message: {
+        id: message.id,
+        streaming: false,
+        ai_llm_name: "Model 猫",
+      },
+    });
+
+    assert.strictEqual(message.aiLlmName, "Model 猫");
+  });
+
   test("channel manager syncs uploads when matching staged message is sent", function (assert) {
     const channel = this.fabricators.channel({ id: 11 });
     const manager = new ChatChannelSubscriptionManager(this, channel);
@@ -114,6 +149,71 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.strictEqual(
       stagedMessage.uploads[0].short_path,
       "/uploads/short-url/server-thread"
+    );
+  });
+
+  test("channel manager moves a confirmed message to its server position", function (assert) {
+    const channel = this.fabricators.channel({ id: 15 });
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-3",
+      channel,
+      staged: true,
+      user: { id: 1, username: "current_user" },
+    });
+    const laterMessage = this.fabricators.message({
+      id: 101,
+      channel,
+      created_at: "2024-01-01T00:00:01.000Z",
+      user: { id: 2, username: "other_user" },
+    });
+    channel.messagesManager.addMessages([stagedMessage, laterMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-3",
+      chat_message: buildChatMessagePayload({ id: 100, uploads: [] }),
+    });
+
+    assert.deepEqual(
+      channel.messagesManager.messages.map((message) => message.id),
+      [100, 101],
+      "the confirmed message moves above the message created after it"
+    );
+  });
+
+  test("thread manager moves a confirmed message to its server position", function (assert) {
+    const channel = this.fabricators.channel({ id: 16 });
+    const thread = this.fabricators.thread({ id: 224, channel });
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-4",
+      channel,
+      staged: true,
+      user: { id: 1, username: "current_user" },
+    });
+    const laterMessage = this.fabricators.message({
+      id: 111,
+      channel,
+      created_at: "2024-01-01T00:00:01.000Z",
+      user: { id: 2, username: "other_user" },
+    });
+    thread.messagesManager.addMessages([stagedMessage, laterMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-4",
+      chat_message: buildChatMessagePayload({ id: 110, uploads: [] }),
+    });
+
+    assert.deepEqual(
+      thread.messagesManager.messages.map((message) => message.id),
+      [110, 111],
+      "the confirmed message moves above the message created after it"
     );
   });
 

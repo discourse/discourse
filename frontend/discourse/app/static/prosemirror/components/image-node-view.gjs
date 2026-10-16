@@ -13,7 +13,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ImageAltTextInput from "./image-alt-text-input";
+import ImageAltTextInput from "./image-alt-text-input.gjs";
 
 const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
@@ -171,6 +171,15 @@ export default class ImageNodeView extends Component {
 
   get altInputHasFocus() {
     return !!this.altMenuInstance?.content?.contains(document.activeElement);
+  }
+
+  update(node) {
+    if (this.#progressEvent && !node.attrs.placeholder) {
+      this.args.dom.classList.remove(...PLACEHOLDER_CLASSES);
+      delete this.args.dom.dataset.uploadId;
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+      this.#progressEvent = null;
+    }
   }
 
   stopEvent(event) {

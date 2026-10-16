@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import EmbeddableChatChannelConnector from "../../discourse/connectors/before-main-outlet/embeddable-chat-channel-connector";
+import EmbeddableChatChannelConnector from "discourse/plugins/discourse-events/discourse/connectors/before-main-outlet/embeddable-chat-channel-connector";
 
 module(
   "Integration | Component | Livestream | embeddable chat channel connector",

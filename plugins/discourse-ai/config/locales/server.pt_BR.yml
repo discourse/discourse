@@ -104,7 +104,6 @@ pt_BR:
     ai_bot_enabled: "Ative o módulo de Bot com IA."
     ai_bot_enabled_llms: "LLMs disponíveis para selecionar em conversas com bots de IA"
     ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por mensagem privada for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
     ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
     ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público por meio de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
     ai_bot_add_to_header: "Exibir botão no cabeçalho para começar uma mensagem privada com um Bot de IA"
@@ -334,6 +333,28 @@ pt_BR:
       read_post:
         unknown_post: "postar"
       chat_tool_approval:
+        topic_states:
+          open: "Aberto (open)"
+          closed: "Fechado (closed)"
+          active: "Ativo(a)"
+          deleted: "Excluído"
+        solution_post: "Postagem #%{number}"
+        duration_label: "Duração:"
+        user_duration:
+          one: "%{count} dia"
+          other: "%{count} dias"
+        post_states:
+          locked: "Bloqueado"
+        posts_label: "Postagens"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrição"
+          color: "cor"
+          text_color: "cor do texto"
+        approve_label: "Sim"
+        reject_label: "Não"
+        empty_value: "Vazio"
         unexpected_error: "ocorreu um erro inesperado."
       agents:
         cannot_have_duplicate_tools: "Não pode haver ferramentas duplicadas"
@@ -689,8 +710,8 @@ pt_BR:
         disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
         choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."
         model_test_failed: "Não foi possível gerar uma incorporação de teste com este modelo. Verifique se ele está configurado corretamente."
-    secrets:
-      delete_failed_in_use: "Esta credencial está atualmente em uso por um ou mais LLMs, incorporações ou ferramentas e não pode ser excluída."
+    decision_models:
+      secret_not_found: "A credencial selecionada não existe"
     llm_models:
       missing_provider_param: "%{param} Não pode ficar em branco"
       secret_required: "É necessário selecionar uma credencial."

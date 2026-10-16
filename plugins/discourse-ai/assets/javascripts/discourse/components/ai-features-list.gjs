@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import AiFeatureCard from "./ai-feature-card";
+import AiFeatureCard from "./ai-feature-card.gjs";
 
 export default class AiFeaturesList extends Component {
   @service router;

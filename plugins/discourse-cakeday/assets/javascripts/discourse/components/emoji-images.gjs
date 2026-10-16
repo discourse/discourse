@@ -1,24 +1,21 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class EmojiImages extends Component {
-  @computed("list")
+  @service siteSettings;
+
   get emojiHTML() {
-    return this.list
+    return this.args.list
       .split("|")
       .map((et) => emojiUnescape(`:${et}:`, { skipTitle: true }));
   }
 
-  @computed("title")
   get titleText() {
-    return i18n(this.title);
+    return i18n(this.args.title);
   }
 
   <template>

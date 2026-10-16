@@ -32,20 +32,20 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatChannelEmptyState from "./chat/channel/empty-state";
-import ChatComposerChannel from "./chat/composer/channel";
-import ChatPinnedMessageBar from "./chat/pinned-message-bar";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelFilter from "./chat-channel-filter";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import ChatMentionWarnings from "./chat-mention-warnings";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatNotices from "./chat-notices";
-import ChatSkeleton from "./chat-skeleton";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatChannelEmptyState from "./chat/channel/empty-state.gjs";
+import ChatComposerChannel from "./chat/composer/channel.js";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar.gjs";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelFilter from "./chat-channel-filter.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import ChatMentionWarnings from "./chat-mention-warnings.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatNotices from "./chat-notices.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatChannel extends Component {
   @service capabilities;
@@ -341,7 +341,10 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser.user_option.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -619,6 +622,10 @@ export default class ChatChannel extends Component {
 
   @action
   async onSendMessage(message) {
+    if (this.pane.sending) {
+      return;
+    }
+
     if (
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
@@ -630,11 +637,17 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    await message.cook();
-    if (message.editing) {
-      await this.#sendEditMessage(message);
-    } else {
-      await this.#sendNewMessage(message);
+    this.pane.sending = true;
+
+    try {
+      await message.cook();
+      if (message.editing) {
+        await this.#sendEditMessage(message);
+      } else {
+        await this.#sendNewMessage(message);
+      }
+    } finally {
+      this.pane.sending = false;
     }
   }
 
@@ -676,8 +689,6 @@ export default class ChatChannel extends Component {
   }
 
   async #sendEditMessage(message) {
-    this.pane.sending = true;
-
     const data = {
       message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
@@ -691,13 +702,10 @@ export default class ChatChannel extends Component {
       popupAjaxError(e);
     } finally {
       message.editing = false;
-      this.pane.sending = false;
     }
   }
 
   async #sendNewMessage(message) {
-    this.pane.sending = true;
-
     await this.args.channel.stageMessage(message);
 
     message.manager = this.args.channel.messagesManager;
@@ -713,15 +721,12 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 
       this.scrollToLatestMessage();
     } catch (error) {
       this._onSendError(message.id, error);
-    } finally {
-      this.pane.sending = false;
     }
   }
 

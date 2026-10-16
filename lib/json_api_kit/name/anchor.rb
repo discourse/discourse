@@ -2,6 +2,6 @@
 
 module JsonApiKit
   module Name
-    Anchor = Data.define(:value, :type) { include Name }
+    Anchor = Data.define(:value, :type) { include Name::ResourceScope }
   end
 end

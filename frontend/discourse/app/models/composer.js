@@ -102,6 +102,7 @@ const CLOSED = "closed",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
+    adminOnboardingTopicOption: "adminOnboardingTopicOption",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
@@ -218,7 +219,11 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
+
+  /** @type {number | null} */
   @tracked reply_to_post_number = null;
+
+  /** @type {{ id?: number, username: string, name?: string | null, avatar_template: string } | null} */
   @tracked reply_to_user = null;
   @tracked
   locale = this.siteSettings.content_localization_enabled
@@ -231,6 +236,7 @@ export default class Composer extends RestModel {
   draftForceSave = false;
   showFullScreenExitPrompt = false;
 
+  /** @type {number | null} */
   @tracked _categoryId = null;
 
   @tracked _archetypesOverride;
@@ -297,6 +303,7 @@ export default class Composer extends RestModel {
 
   // We wrap categoryId this way so we can fire `applyTopicTemplate` with
   // the previous value as well as the new value
+  /** @param {number | null | undefined} categoryId */
   set categoryId(categoryId) {
     const oldCategoryId = this._categoryId;
 
@@ -547,10 +554,7 @@ export default class Composer extends RestModel {
     if (this.canEditTopicFeaturedLink) {
       return "composer.title_or_link_placeholder";
     }
-
-    return this.siteSettings.enable_composer_redesign
-      ? "composer.title_placeholder_redesign"
-      : "composer.title_placeholder";
+    return "composer.title_placeholder";
   }
 
   @computed("category.topic_title_placeholder")
@@ -560,6 +564,16 @@ export default class Composer extends RestModel {
 
   @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
+    /**
+     * @type {{
+     *   userLink: { href: string, anchor: string } | null,
+     *   topicLink: { href: string, anchor: string } | null,
+     *   postLink: { href: string, anchor: string } | null,
+     *   userAvatar: string | null,
+     *   originalUser: { username: string, avatar: string } | null,
+     *   label?: string,
+     * }}
+     */
     const options = {
       userLink: null,
       topicLink: null,
@@ -1035,7 +1049,7 @@ export default class Composer extends RestModel {
    @param {Boolean} [opts.whisper]
    @param {Boolean} [opts.noBump]
    @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
-   @param {Object} [opts.metaData]
+   @param {Record<string, unknown>} [opts.metaData]
    @param {Number} [opts.categoryId]
    @param {Number} [opts.postId]
    @param {Number} [opts.destinationCategoryId]
@@ -1541,6 +1555,7 @@ export default class Composer extends RestModel {
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
       metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
+      adminOnboardingTopicOption: opts.adminOnboardingTopicOption ?? null,
       reply: opts.reply || this.reply || "",
     });
 

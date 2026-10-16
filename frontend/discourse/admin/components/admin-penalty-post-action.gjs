@@ -13,8 +13,13 @@ const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
 export default class AdminPenaltyPostAction extends Component {
   @tracked confirmDeleteAll = false;
 
+  /** @type {number | null | undefined} */
   postId = null;
+
+  /** @type {string | null} */
   postAction = null;
+
+  /** @type {string | null | undefined} */
   postEdit = null;
 
   @computed("postAction")

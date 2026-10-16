@@ -100,6 +100,111 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     upload.teardown();
   });
 
+  test("a successful upload is not reported as cancelled", async function (assert) {
+    const completed = [];
+    const cancelled = [];
+
+    pretender.post(UPLOAD_URL, (request) =>
+      uploadResponse(request.requestBody.get("file").name)
+    );
+
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-success-test",
+      type: "composer",
+      uploadDone: ({ file_name }) => completed.push(file_name),
+    });
+
+    upload.setup(this.fileInput);
+    getOwner(this)
+      .lookup("service:app-events")
+      .on("upload-mixin:uppy-upload-success-test:upload-cancelled", (fileId) =>
+        cancelled.push(fileId)
+      );
+    getOwner(this)
+      .lookup("service:app-events")
+      .on("upload-mixin:uppy-upload-success-test:uploads-cancelled", () =>
+        cancelled.push("uploads-cancelled")
+      );
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+
+    await waitUntil(() => !upload.uploading && completed.length > 0, {
+      timeout: 5000,
+    });
+
+    assert.deepEqual(completed, [SIBLING_FILE], "the upload finishes");
+    assert.deepEqual(
+      cancelled,
+      [],
+      "the finished upload is not reported as cancelled"
+    );
+
+    upload.teardown();
+  });
+
+  test("explicit single-file cancellation is reported", async function (assert) {
+    const cancellations = [];
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-cancel-single-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    getOwner(this)
+      .lookup("service:app-events")
+      .on(
+        "upload-mixin:uppy-upload-cancel-single-test:upload-cancelled",
+        (fileId) => cancellations.push(fileId)
+      );
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    const fileId = upload.uppyWrapper.uppyInstance.getFiles()[0].id;
+    upload.cancelSingleUpload({ fileId });
+
+    assert.deepEqual(
+      cancellations,
+      [fileId],
+      "explicit cancellation reports the removed file once"
+    );
+    assert.deepEqual(
+      upload.uppyWrapper.uppyInstance.getFiles(),
+      [],
+      "the cancelled file is removed"
+    );
+
+    upload.teardown();
+  });
+
+  test("explicit cancel all is reported as cancelled", async function (assert) {
+    const cancellations = [];
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-cancel-all-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    getOwner(this)
+      .lookup("service:app-events")
+      .on("upload-mixin:uppy-upload-cancel-all-test:uploads-cancelled", () =>
+        cancellations.push("uploads-cancelled")
+      );
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    upload.cancelAllUploads();
+
+    assert.deepEqual(
+      cancellations,
+      ["uploads-cancelled"],
+      "explicit cancel all reports one cancellation"
+    );
+
+    upload.teardown();
+  });
+
   test("a batch drained by a cancel still reports the failure", async function (assert) {
     const alert = sinon.stub(dialog, "alert");
 
