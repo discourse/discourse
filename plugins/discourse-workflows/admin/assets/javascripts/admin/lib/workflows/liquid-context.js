@@ -115,7 +115,7 @@ export function buildLiquidScope({
   inputFields = [],
   branchFields = [],
   siteSettings,
-  workflowVars,
+  globalVars,
   nodes,
   perItem = false,
 } = {}) {
@@ -128,7 +128,7 @@ export function buildLiquidScope({
       fields ? [buildTemplateItem(buildScopeFromFields(fields))] : []
     ),
     items_count: 0,
-    vars: buildVarsScope(workflowVars),
+    vars: buildVarsScope(globalVars),
     workflow: { id: "", name: "", active: true },
     execution: {
       id: execution.id,

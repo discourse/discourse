@@ -90,7 +90,7 @@ export default class LiquidControl extends Component {
       inputFields: branchFields[0] || [],
       branchFields,
       siteSettings: this.siteSettings,
-      workflowVars: this.workflowsNodeTypes.workflowVars,
+      globalVars: this.workflowsNodeTypes.workflowVars,
       nodes: graph.nodes,
       perItem: () => this.#perItem,
     });

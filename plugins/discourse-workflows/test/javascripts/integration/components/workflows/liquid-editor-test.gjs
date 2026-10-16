@@ -4,6 +4,7 @@ import {
   render,
   settled,
   triggerEvent,
+  triggerKeyEvent,
   waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -136,17 +137,7 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     const view = find(".codemirror-editor").codemirrorView;
     view.dispatch({ selection: { anchor: view.state.doc.length } });
     view.focus();
-    // Plugins cannot import the editor's modules, so open the list the way a
-    // user would.
-    view.contentDOM.dispatchEvent(
-      new KeyboardEvent("keydown", {
-        key: " ",
-        code: "Space",
-        ctrlKey: true,
-        bubbles: true,
-        cancelable: true,
-      })
-    );
+    await triggerKeyEvent(view.contentDOM, "keydown", 32, { ctrlKey: true });
     await waitFor(".cm-completionLabel");
 
     assert
