@@ -66,6 +66,29 @@ acceptance("Permalink redirect for /t/:slug_or_id", function (needs) {
   });
 });
 
+acceptance("Permalink check failure for /t/:slug_or_id", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/t/id_for/:slug", () => helper.response(404, {}));
+    let permalinkRequests = 0;
+    server.get("/permalink-check.json", () => {
+      permalinkRequests++;
+      if (permalinkRequests === 1) {
+        return helper.response(500, {});
+      }
+      return helper.response({
+        found: false,
+        html: "<div class='page-not-found'>not found</div>",
+      });
+    });
+  });
+
+  test("falls back to the original 404 when the permalink check fails", async function (assert) {
+    await visit("/t/some-slug-that-does-not-exist");
+
+    assert.dom(".page-not-found").exists("the not found page is rendered");
+  });
+});
+
 acceptance("Permalink redirect for /t/:slug (embedded)", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/id_for/:slug", () => helper.response(404, {}));
@@ -178,6 +201,23 @@ acceptance("Permalink not found for /t/:slug/:id", function (needs) {
   });
 });
 
+acceptance("Permalink check failure for /t/:slug/:id", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/t/999999.json", () =>
+      helper.response(404, {
+        extras: { html: "<div class='page-not-found'>not found</div>" },
+      })
+    );
+    server.get("/permalink-check.json", () => helper.response(500, {}));
+  });
+
+  test("renders the server 404 page when the permalink check fails", async function (assert) {
+    await visit("/t/some-slug-that-does-not-exist/999999");
+
+    assert.dom(".not-found").exists("the not found page is rendered");
+  });
+});
+
 acceptance("Permalink redirect for /c/:slug", function (needs) {
   let requestedPath;
 
@@ -238,6 +278,25 @@ acceptance("Permalink redirect for /c/:slug/:id", function (needs) {
 acceptance("Permalink not found for /c/:slug", function () {
   test("shows the 404 page when no permalink matches", async function (assert) {
     await visit("/c/some-category-that-does-not-exist/999999");
+
+    assert.strictEqual(currentURL(), "/404");
+  });
+});
+
+acceptance("Permalink check failure for /c/:slug", function (needs) {
+  needs.pretender((server, helper) => {
+    let permalinkRequests = 0;
+    server.get("/permalink-check.json", () => {
+      permalinkRequests++;
+      if (permalinkRequests === 1) {
+        return helper.response(500, {});
+      }
+      return helper.response({ found: false });
+    });
+  });
+
+  test("shows the 404 page when the permalink check fails", async function (assert) {
+    await visit("/c/some-category-that-does-not-exist");
 
     assert.strictEqual(currentURL(), "/404");
   });

@@ -49,8 +49,8 @@ class AbstractCategoryRoute extends DiscourseRoute {
         `/c/${params.category_slug_path_with_id}`,
         transition,
         this.router
-      );
-      if (result.type === "not-found") {
+      ).catch(() => null);
+      if (result?.type !== "redirect") {
         this.router.replaceWith("/404");
       }
       return;
