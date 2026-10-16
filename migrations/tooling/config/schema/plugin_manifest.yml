@@ -103,6 +103,10 @@ plugins:
       - chat_message_custom_prompts
       - classification_results
       - completion_prompts
+      - decision_model_credit_allocations
+      - decision_model_credit_daily_usages
+      - decision_model_feature_credit_costs
+      - decision_models
       - discourse_ai_ai_bot_conversation_stars
       - embedding_definitions
       - inferred_concept_posts
@@ -263,10 +267,10 @@ plugins:
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
   boards: 7196f10413674b3c08480ff2aa42b2e8
-  chat: f877c05bc8351a6b8e56fa18f7c8b1fd
+  chat: dfdf8b56a5fcd06326c693011990c36a
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: a0b9da2c5e40e59e18f96e4cd73a1761
+  discourse-ai: b47b48ca0392f474aef832b46d5b6bf8
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: 9c98c6231f69399ad711b7ef2b858d87
@@ -293,9 +297,9 @@ plugin_checksums:
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 9d0535677407702fa312965e20ac8fcb
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: 01df3d5dba78b183fecea62bf6ef648f
+  discourse-workflows: af0c2fc0b7e1f38cf57abe16633ab2a1
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
-  live: 5d2055c156c12692f3a93b32b49826ea
+  live: 4dc04fc7516e9509dc986ff3b102572a
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
 failed_plugins: []
