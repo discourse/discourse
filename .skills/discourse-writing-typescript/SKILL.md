@@ -370,7 +370,7 @@ file after `bin/lint --fix`** to confirm the placement still reads well.
 ## Verification (all three, in order)
 
 1. `bin/lint --fix <files>`: clean.
-2. `pnpm lint:types` from the **repo root** (composite `ember-tsc -b`): **0 errors**. It
+2. `pnpm lint:types` from the **repo root** (composite `tsc -b --runExternalCode`): **0 errors**. It
    also surfaces consumer fallout when you tighten a previously loose type (e.g. an untyped
    helper's return).
 3. `bin/qunit` for the touched files' tests: behavior plus the runtime module-resolution

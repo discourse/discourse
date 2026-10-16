@@ -396,6 +396,9 @@ interface OutletInfoSignature {
     outletArgs: Record<string, unknown>;
     error: Error | null;
   };
+  Blocks: {
+    default: [];
+  };
 }
 
 /**
