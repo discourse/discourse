@@ -6,7 +6,7 @@
     "dbaeumer.vscode-eslint",
     "lifeart.vscode-glimmer-syntax",
     "typed-ember.glint2-vscode",
-    "TypeScript.native-preview",
+    "TypeScriptTeam.native-preview",
     "stylelint.vscode-stylelint",
   ]
 }
