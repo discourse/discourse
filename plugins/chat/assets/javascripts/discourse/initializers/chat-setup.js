@@ -150,6 +150,36 @@ class ChatSetupInit {
       }
 
       api.registerChatComposerButton({
+        id: "toggle-formatting",
+        icon: "font",
+        title() {
+          return this.showFormattingBar
+            ? "chat.composer.hide_formatting"
+            : "chat.composer.show_formatting";
+        },
+        label() {
+          return this.showFormattingBar
+            ? "chat.composer.hide_formatting"
+            : "chat.composer.show_formatting";
+        },
+        ariaLabel() {
+          return this.showFormattingBar
+            ? "chat.composer.hide_formatting"
+            : "chat.composer.show_formatting";
+        },
+        classNames() {
+          return this.showFormattingBar ? ["--active"] : [];
+        },
+        position() {
+          return this.site.desktopView ? "inline" : "dropdown";
+        },
+        action: "toggleFormattingBar",
+        displayed() {
+          return !!this.currentUser;
+        },
+      });
+
+      api.registerChatComposerButton({
         id: "toggle-editor",
         icon() {
           return this.useRichEditor ? "fab-markdown" : "a";
