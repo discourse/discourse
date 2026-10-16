@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import { find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { settleGestureFrame } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import {
   disableVirtualization,
   enableVirtualization,
@@ -257,7 +257,7 @@ module(
       height.value = 80;
       // The browser reports the resize in the next frame; the deferred flush is then covered by
       // `settled()` through its waiter.
-      await settleGestureFrame();
+      await settledAfterFrame();
 
       assert
         .dom(".d-virtual-list__item[data-index='0']")

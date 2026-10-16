@@ -15,12 +15,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   logIn,
+  settledAfterFrame,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  settleGestureFrame,
-  stubPointerCapture,
-} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
 const FakeReportRenderer = <template>
@@ -554,8 +552,8 @@ module("Integration | Component | DashboardReports", function (hooks) {
       clientX: 0,
       clientY: Math.ceil(unit * 0.6),
     });
-    await settleGestureFrame();
-    await settleGestureFrame();
+    await settledAfterFrame();
+    await settledAfterFrame();
 
     assert
       .dom('[data-identifier="test_source:signups"]')
@@ -694,8 +692,8 @@ module("Integration | Component | DashboardReports", function (hooks) {
       clientX: Math.ceil(unit * 0.6),
       clientY: 1,
     });
-    await settleGestureFrame();
-    await settleGestureFrame();
+    await settledAfterFrame();
+    await settledAfterFrame();
 
     assert
       .dom('[data-identifier="test_source:signups"]')
@@ -818,8 +816,8 @@ module("Integration | Component | DashboardReports", function (hooks) {
       clientX: -Math.ceil(colUnit * 0.6),
       clientY: 1,
     });
-    await settleGestureFrame();
-    await settleGestureFrame();
+    await settledAfterFrame();
+    await settledAfterFrame();
 
     assert
       .dom('[data-identifier="test_source:signups"]')
@@ -869,8 +867,8 @@ module("Integration | Component | DashboardReports", function (hooks) {
       clientX: Math.ceil(colUnit * 0.6),
       clientY: 1,
     });
-    await settleGestureFrame();
-    await settleGestureFrame();
+    await settledAfterFrame();
+    await settledAfterFrame();
 
     assert
       .dom('[data-identifier="test_source:signups"]')

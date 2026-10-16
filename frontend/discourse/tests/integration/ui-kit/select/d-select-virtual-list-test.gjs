@@ -17,7 +17,7 @@ import {
   EngineProbe,
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
-import { settleGestureFrame } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import {
   disableVirtualization,
   enableVirtualization,
@@ -348,7 +348,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
     await openSelect();
 
     state.tall = true;
-    await settleGestureFrame();
+    await settledAfterFrame();
 
     await triggerKeyEvent("[role='combobox']", "keydown", "End");
 

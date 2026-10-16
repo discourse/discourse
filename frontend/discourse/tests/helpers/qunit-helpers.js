@@ -721,3 +721,15 @@ export function normalizeHtml(html) {
 }
 
 export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };
+
+/**
+ * Waits one animation frame, then for everything `settled` tracks.
+ *
+ * `settled` does not await frames, so work a browser schedules for the next frame (a coalesced
+ * pointer move, a ResizeObserver report) has not landed when it returns. Await this between an
+ * action and any assertion about work that arrives on the next frame.
+ */
+export async function settledAfterFrame() {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await settled();
+}
