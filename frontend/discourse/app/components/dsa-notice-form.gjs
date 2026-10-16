@@ -6,6 +6,7 @@ import Form from "discourse/components/form";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { emailValid } from "discourse/lib/utilities";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
@@ -42,6 +43,16 @@ export default class DsaNoticeForm extends Component {
       window.scrollTo(0, 0);
     } catch (error) {
       popupAjaxError(error);
+    }
+  }
+
+  @action
+  validateEmail(name, value, { addError }) {
+    if (value && !emailValid(value.trim())) {
+      addError(name, {
+        title: i18n("dsa_notice.email"),
+        message: i18n("user.email.invalid"),
+      });
     }
   }
 
@@ -107,6 +118,7 @@ export default class DsaNoticeForm extends Component {
                   @name="email"
                   @title={{i18n "dsa_notice.email"}}
                   @type="input-email"
+                  @validate={{this.validateEmail}}
                   @validation="required"
                   as |field|
                 >

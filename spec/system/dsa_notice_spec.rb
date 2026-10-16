@@ -37,8 +37,13 @@ RSpec.describe "Illegal content notices" do
 
     notice_page.fill_notice(explanation:)
     notice_page.form.field("name").fill_in("Alex Morgan")
-    notice_page.form.field("email").fill_in("alex@example.invalid")
+    notice_page.form.field("email").fill_in("invalid-address")
     notice_page.form.field("declaration").check
+    notice_page.form.submit
+    expect(notice_page.form.field("email")).to have_errors("Please enter a valid email address")
+    expect(page).to have_no_content("Notice received")
+
+    notice_page.form.field("email").fill_in("alex@example.invalid")
     notice_page.form.submit
     expect(notice_page).to have_confirmation
     expect(notice_page).to have_focused_confirmation
