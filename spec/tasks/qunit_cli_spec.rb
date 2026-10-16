@@ -206,6 +206,12 @@ describe "bin/qunit" do
     expect(result.args).to include("--file-path", "discourse/plugins/chat/")
   end
 
+  it "rejects directories outside the test directories" do
+    result = run("frontend/discourse")
+    expect(result.status).to eq(1)
+    expect(result.err).to include("frontend/discourse is not a test directory")
+  end
+
   it "collapses a long file list into fully selected directories" do
     result = run(*core_test_files_in("unit"))
     expect(result.status).to eq(0)

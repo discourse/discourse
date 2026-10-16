@@ -219,6 +219,10 @@ class QunitRunner
 
     @file_paths.each do |path|
       if File.directory?(path)
+        if !test_directory?(path)
+          abort "Error: #{path} is not a test directory. Pass frontend/discourse/tests, one of its subdirectories, or a plugin directory."
+        end
+
         test_files = Dir.glob(File.join(path, "**", TEST_FILE_GLOB))
         if test_files.empty?
           abort "Error: No test files found in directory: #{path}"
@@ -233,6 +237,13 @@ class QunitRunner
     end
 
     @file_paths = expanded.uniq
+  end
+
+  # Directories become path-prefix filters, so they must map onto test module paths
+  def test_directory?(path)
+    expanded = File.expand_path(path)
+    tests_dir = File.join(frontend_dir, "tests")
+    expanded == tests_dir || expanded.start_with?("#{tests_dir}/") || plugin_path?(expanded)
   end
 
   def run_tests
