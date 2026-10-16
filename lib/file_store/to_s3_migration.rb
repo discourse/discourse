@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sdk-s3"
+require "file_store/object_storage/s3"
 
 module FileStore
   ToS3MigrationError = Class.new(RuntimeError)
@@ -9,12 +10,13 @@ module FileStore
     MISSING_UPLOADS_RAKE_TASK_NAME = "posts:missing_uploads"
     UPLOAD_CONCURRENCY = 20
 
-    def initialize(s3_options:, dry_run: false, migrate_to_multisite: false)
+    def initialize(s3_options:, dry_run: false, migrate_to_multisite: false, object_storage: nil)
       @s3_bucket = s3_options[:bucket]
       @s3_client_options = s3_options[:client_options]
       @dry_run = dry_run
       @migrate_to_multisite = migrate_to_multisite
       @current_db = RailsMultisite::ConnectionManagement.current_db
+      @object_storage = object_storage
     end
 
     def self.s3_options_from_site_settings
@@ -171,6 +173,16 @@ module FileStore
       else
         bucket, folder = @s3_bucket, ""
       end
+      storage =
+        @object_storage ||
+          ObjectStorage::S3.new(
+            S3Helper.new(
+              bucket,
+              "",
+              client: s3,
+              bucket: Aws::S3::Resource.new(client: s3).bucket(bucket),
+            ),
+          )
 
       log "Uploading files to S3..."
       log " - Listing local files"
@@ -189,15 +201,14 @@ module FileStore
       s3_objects = []
       prefix = @migrate_to_multisite ? "uploads/#{@current_db}/original/" : "original/"
 
-      options = { bucket: bucket, prefix: folder + prefix }
-
-      loop do
-        response = s3.list_objects_v2(options)
-        s3_objects.concat(response.contents)
-        putc "."
-        break if response.next_continuation_token.blank?
-        options[:continuation_token] = response.next_continuation_token
-      end
+      # A dot per 1,000 keys, S3's listing page size: the progress the paged
+      # listing printed.
+      storage
+        .list(folder + prefix)
+        .each_with_index do |object, index|
+          putc "." if (index % 1000).zero?
+          s3_objects << object
+        end
 
       log " => #{s3_objects.size} files"
       log " - Syncing files to S3"
@@ -211,22 +222,19 @@ module FileStore
         UPLOAD_CONCURRENCY.times.map do
           Thread.new do
             while obj = queue.pop
-              opts_with_file = obj[:options].merge(body: File.open(obj[:path], "rb"))
-              begin
-                if s3.put_object(opts_with_file)
+              File.open(obj[:path], "rb") do |file|
+                if storage.put(
+                     file,
+                     obj[:key],
+                     visibility: obj[:visibility],
+                     headers: obj[:headers],
+                     content_md5: obj[:content_md5],
+                   )
                   putc "."
                   lock.synchronize { synced += 1 }
                 else
                   putc "X"
                   lock.synchronize { failed << obj[:path] }
-                end
-              rescue Aws::S3::Errors::MetadataTooLarge
-                if opts_with_file[:content_disposition].present?
-                  opts_with_file.delete(:content_disposition)
-                  opts_with_file[:body].rewind if opts_with_file[:body].respond_to?(:rewind)
-                  retry
-                else
-                  raise
                 end
               end
             end
@@ -246,29 +254,27 @@ module FileStore
           next
         end
 
-        options = {
-          bucket: bucket,
-          content_type: MiniMime.lookup_by_filename(name)&.content_type,
-          content_md5: content_md5,
-          key: key,
-        }.merge(FileStore::S3Store.default_s3_options(secure: false))
+        headers = { content_type: MiniMime.lookup_by_filename(name)&.content_type }
 
         upload = Upload.find_by(url: "/#{file}")
 
-        options[:content_disposition] = FileStore::S3Store.content_disposition_for(
+        headers[:content_disposition] = FileStore::S3Store.content_disposition_for(
           upload&.original_filename || name,
         )
 
-        if upload&.secure
-          options[:acl] = FileStore::S3Store.acl_option_value(secure: true)
-          options[:tagging] = FileStore::S3Store.visibility_tagging_option_value(secure: true)
-        end
+        visibility = upload&.secure ? :private : :public
 
         if @dry_run
-          log "#{file} => #{options[:key]}"
+          log "#{file} => #{key}"
           synced += 1
         else
-          queue << { path: path, options: options, content_md5: content_md5 }
+          queue << {
+            path: path,
+            key: key,
+            visibility: visibility,
+            headers: headers,
+            content_md5: content_md5,
+          }
         end
       end
 
@@ -384,6 +390,8 @@ module FileStore
       migration_successful?(should_raise: true)
 
       log "Done!"
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     ensure
       Jobs.run_later!
     end

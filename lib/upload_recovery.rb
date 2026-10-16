@@ -114,27 +114,7 @@ class UploadRecovery
   end
 
   def recover_from_s3(sha1:, user_id:)
-    @object_keys ||=
-      begin
-        s3_helper = Discourse.store.s3_helper
-
-        if Rails.configuration.multisite
-          current_db = RailsMultisite::ConnectionManagement.current_db
-          s3_helper
-            .list("uploads/#{current_db}/original")
-            .map(&:key)
-            .concat(
-              s3_helper.list(
-                "uploads/#{FileStore::S3Store::TOMBSTONE_PREFIX}#{current_db}/original",
-              ).map(&:key),
-            )
-        else
-          s3_helper
-            .list("original")
-            .map(&:key)
-            .concat(s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key))
-        end
-      end
+    @object_keys ||= s3_object_keys
 
     upload_exists = Upload.exists?(sha1: sha1)
 
@@ -169,6 +149,24 @@ class UploadRecovery
         end
       end
     end
+  end
+
+  # The keys of every original upload, then of every tombstoned one.
+  def s3_object_keys
+    prefixes =
+      if Rails.configuration.multisite
+        current_db = RailsMultisite::ConnectionManagement.current_db
+        [
+          "uploads/#{current_db}/original",
+          "uploads/#{FileStore::S3Store::TOMBSTONE_PREFIX}#{current_db}/original",
+        ]
+      else
+        ["original", "#{FileStore::S3Store::TOMBSTONE_PREFIX}original"]
+      end
+    storage = Discourse.store.object_storage
+    prefixes.flat_map { |prefix| storage.list(prefix).map(&:key).to_a }
+  rescue FileStore::ObjectStorage::Error => error
+    FileStore::ObjectStorage::S3.raise_legacy(error)
   end
 
   def create_upload(file, filename, user_id)

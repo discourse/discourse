@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "file_store/object_storage/service_error"
+require "file_store/object_storage/upload_not_found"
+require "file_store/object_storage/object_not_found"
+
 # Extends controllers with the methods required to do direct
 # external uploads.
 module ExternalUploadHelpers
@@ -143,7 +147,7 @@ module ExternalUploadHelpers
 
     presigned_urls = {}
     part_numbers.each do |part_number|
-      presigned_urls[part_number] = store.presign_multipart_part(
+      presigned_urls[part_number] = store.object_storage.presign_multipart_part(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         part_number: part_number,
@@ -156,12 +160,12 @@ module ExternalUploadHelpers
   def check_multipart_upload_exists(external_upload_stub)
     store = multipart_store(external_upload_stub.upload_type)
     begin
-      store.list_multipart_parts(
+      store.object_storage.list_multipart_parts(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         max_parts: 1,
       )
-    rescue Aws::S3::Errors::NoSuchUpload => err
+    rescue FileStore::ObjectStorage::UploadNotFound => err
       return(
         debug_upload_error(
           err,
@@ -192,11 +196,11 @@ module ExternalUploadHelpers
     store = multipart_store(external_upload_stub.upload_type)
 
     begin
-      store.abort_multipart(
+      store.object_storage.abort_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
       )
-    rescue Aws::S3::Errors::ServiceError => err
+    rescue FileStore::ObjectStorage::ServiceError => err
       return(
         render_json_error(
           debug_upload_error(
@@ -255,12 +259,12 @@ module ExternalUploadHelpers
         .sort_by { |part| part[:part_number] }
 
     begin
-      store.complete_multipart(
+      store.object_storage.complete_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         parts: parts,
       )
-    rescue Aws::S3::Errors::ServiceError => err
+    rescue FileStore::ObjectStorage::ServiceError => err
       return(
         render_json_error(
           debug_upload_error(
@@ -324,7 +328,9 @@ module ExternalUploadHelpers
         ),
         status: 422,
       )
-    rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
+    rescue ExternalUploadManager::DownloadFailedError,
+           Aws::S3::Errors::NotFound,
+           FileStore::ObjectStorage::ObjectNotFound => err
       render_json_error(
         debug_upload_error(err, I18n.t("upload.download_failure", additional_detail: err.message)),
         status: 422,

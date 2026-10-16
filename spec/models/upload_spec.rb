@@ -1075,6 +1075,8 @@ RSpec.describe Upload do
     it "can be backfilled" do
       expect(white_image.dominant_color).to eq(nil)
       expect(red_image.dominant_color).to eq(nil)
+      white_image.save!
+      red_image.save!
 
       Upload.backfill_dominant_colors!(5)
 
@@ -1088,6 +1090,8 @@ RSpec.describe Upload do
     it "is backfilled by the job" do
       expect(white_image.dominant_color).to eq(nil)
       expect(red_image.dominant_color).to eq(nil)
+      white_image.save!
+      red_image.save!
 
       Jobs::BackfillDominantColors.new.execute({})
 

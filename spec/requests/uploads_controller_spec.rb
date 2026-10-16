@@ -1212,13 +1212,20 @@ RSpec.describe UploadsController do
       end
 
       it "returns 422 when the create request errors" do
-        FileStore::S3Store
-          .any_instance
-          .stubs(:create_multipart)
-          .raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        stub_create_multipart_request(status: 403, body: "<Error><Code>AccessDenied</Code></Error>")
         post "/uploads/create-multipart.json",
              **{ params: { file_name: "test.png", file_size: 1024, upload_type: "composer" } }
         expect(response.status).to eq(422)
+      end
+
+      it "does not turn a storage outage into a validation error when creating" do
+        FileStore::ObjectStorage::S3
+          .any_instance
+          .stubs(:create_multipart)
+          .raises(FileStore::ObjectStorage::ConnectionError.new("timed out"))
+        post "/uploads/create-multipart.json",
+             **{ params: { file_name: "test.png", file_size: 1024, upload_type: "composer" } }
+        expect(response.status).to eq(500)
       end
 
       it "returns 422 when the file is an attachment and it's too big" do
@@ -1252,7 +1259,7 @@ RSpec.describe UploadsController do
         expect(response.body).to include(I18n.t("upload.size_zero_failure"))
       end
 
-      def stub_create_multipart_request
+      def stub_create_multipart_request(status: 200, body: nil)
         FileStore::S3Store
           .any_instance
           .stubs(:temporary_upload_path)
@@ -1270,7 +1277,7 @@ RSpec.describe UploadsController do
         stub_request(
           :post,
           "https://s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png?uploads",
-        ).to_return({ status: 200, body: create_multipart_result })
+        ).to_return(status: status, body: body || create_multipart_result)
       end
 
       def stub_create_multipart_backup_request
@@ -1345,13 +1352,12 @@ RSpec.describe UploadsController do
         expect(response.body).to include(I18n.t("invalid_access"))
       end
 
-      it "includes accepted metadata when calling the store to create_multipart, but only allowed keys" do
-        stub_create_multipart_request
-        FileStore::S3Store
-          .any_instance
-          .expects(:create_multipart)
-          .with("test.png", "image/png", metadata: { "sha1-checksum" => "testing" })
-          .returns({ key: "test" })
+      it "sends only accepted metadata to storage when creating a multipart upload" do
+        request =
+          stub_create_multipart_request.with do |http_request|
+            http_request.headers.select { |name, _| name.start_with?("X-Amz-Meta-") } ==
+              { "X-Amz-Meta-Sha1-Checksum" => "testing" }
+          end
 
         post "/uploads/create-multipart.json",
              **{
@@ -1367,6 +1373,7 @@ RSpec.describe UploadsController do
              }
 
         expect(response.status).to eq(200)
+        expect(request).to have_been_requested.once
       end
 
       describe "rate limiting" do
@@ -1510,10 +1517,10 @@ RSpec.describe UploadsController do
       end
 
       it "returns 404 when the multipart upload does not exist" do
-        FileStore::S3Store
+        FileStore::ObjectStorage::S3
           .any_instance
           .stubs(:list_multipart_parts)
-          .raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
+          .raises(FileStore::ObjectStorage::UploadNotFound.new("test"))
         post "/uploads/batch-presign-multipart-parts.json",
              params: {
                unique_identifier: external_upload_stub.unique_identifier,
@@ -1729,10 +1736,10 @@ RSpec.describe UploadsController do
       end
 
       it "returns 422 when the complete request errors" do
-        FileStore::S3Store
+        FileStore::ObjectStorage::S3
           .any_instance
           .stubs(:complete_multipart)
-          .raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+          .raises(FileStore::ObjectStorage::ServiceError.new("test"))
         stub_list_multipart_request
         post "/uploads/complete-multipart.json",
              params: {
@@ -1740,6 +1747,20 @@ RSpec.describe UploadsController do
                parts: [{ part_number: 1, etag: "test1" }],
              }
         expect(response.status).to eq(422)
+      end
+
+      it "does not turn a storage outage into a validation error when completing" do
+        FileStore::ObjectStorage::S3
+          .any_instance
+          .stubs(:complete_multipart)
+          .raises(FileStore::ObjectStorage::CredentialsUnavailable.new("no credentials"))
+        stub_list_multipart_request
+        post "/uploads/complete-multipart.json",
+             params: {
+               unique_identifier: external_upload_stub.unique_identifier,
+               parts: [{ part_number: 1, etag: "test1" }],
+             }
+        expect(response.status).to eq(500)
       end
 
       it "returns 404 when the upload stub does not belong to the user" do
@@ -1753,10 +1774,10 @@ RSpec.describe UploadsController do
       end
 
       it "returns 404 when the multipart upload does not exist" do
-        FileStore::S3Store
+        FileStore::ObjectStorage::S3
           .any_instance
           .stubs(:list_multipart_parts)
-          .raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
+          .raises(FileStore::ObjectStorage::UploadNotFound.new("test"))
         post "/uploads/complete-multipart.json",
              params: {
                unique_identifier: external_upload_stub.unique_identifier,
@@ -1815,7 +1836,10 @@ RSpec.describe UploadsController do
         before { sign_in(admin) }
 
         it "passes site_setting_name to ExternalUploadManager" do
-          FileStore::S3Store.any_instance.stubs(:list_multipart_parts).returns({ parts: [] })
+          FileStore::ObjectStorage::S3
+            .any_instance
+            .stubs(:list_multipart_parts)
+            .returns({ parts: [] })
 
           temp_location = "#{upload_base_url}/#{text_upload_stub.key}"
           stub_request(
@@ -1924,7 +1948,7 @@ RSpec.describe UploadsController do
       end
 
       it "returns 200 when the stub does not exist, assumes it has already been deleted" do
-        FileStore::S3Store.any_instance.expects(:abort_multipart).never
+        FileStore::ObjectStorage::S3.any_instance.expects(:abort_multipart).never
         post "/uploads/abort-multipart.json", params: { external_upload_identifier: "unknown" }
         expect(response.status).to eq(200)
       end
@@ -1951,15 +1975,27 @@ RSpec.describe UploadsController do
       end
 
       it "returns 422 when the abort request errors" do
-        FileStore::S3Store
+        FileStore::ObjectStorage::S3
           .any_instance
           .stubs(:abort_multipart)
-          .raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+          .raises(FileStore::ObjectStorage::ServiceError.new("test"))
         post "/uploads/abort-multipart.json",
              params: {
                external_upload_identifier: external_upload_stub.external_upload_identifier,
              }
         expect(response.status).to eq(422)
+      end
+
+      it "does not turn a storage outage into a validation error when aborting" do
+        FileStore::ObjectStorage::S3
+          .any_instance
+          .stubs(:abort_multipart)
+          .raises(FileStore::ObjectStorage::ConnectionError.new("timed out"))
+        post "/uploads/abort-multipart.json",
+             params: {
+               external_upload_identifier: external_upload_stub.external_upload_identifier,
+             }
+        expect(response.status).to eq(500)
       end
     end
 
@@ -2047,27 +2083,20 @@ RSpec.describe UploadsController do
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.cannot_promote_failure"))
       end
 
-      it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
-        ExternalUploadManager
-          .any_instance
-          .stubs(:transform!)
-          .raises(ExternalUploadManager::DownloadFailedError)
-        post "/uploads/complete-external-upload.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-             }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
-        ExternalUploadManager
-          .any_instance
-          .stubs(:transform!)
-          .raises(Aws::S3::Errors::NotFound.new("error", "not found"))
-        post "/uploads/complete-external-upload.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-             }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
+      it "handles download failures and missing storage objects" do
+        [
+          ExternalUploadManager::DownloadFailedError.new,
+          FileStore::ObjectStorage::ObjectNotFound.new("not found"),
+          Aws::S3::Errors::NotFound.new(nil, "not found"),
+        ].each do |error|
+          ExternalUploadManager.any_instance.stubs(:transform!).raises(error)
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+               }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
+        end
       end
 
       it "handles a generic upload failure" do

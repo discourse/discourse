@@ -2,6 +2,7 @@
 
 require "aws-sdk-s3"
 require "csv"
+require "file_store/object_storage/s3"
 
 class S3Inventory
   attr_reader :type, :inventory_date, :s3_helper
@@ -17,9 +18,11 @@ class S3Inventory
     s3_inventory_bucket:,
     preloaded_inventory_file: nil,
     preloaded_inventory_date: nil,
-    s3_options: {}
+    s3_options: {},
+    object_storage: nil
   )
     @s3_helper = S3Helper.new(s3_inventory_bucket, "", s3_options)
+    @object_storage = object_storage
 
     if preloaded_inventory_file && preloaded_inventory_date
       # Data preloaded, so we don't need to fetch it again
@@ -174,7 +177,7 @@ class S3Inventory
     log "Downloading inventory file '#{file[:key]}' to tmp directory..."
     failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
 
-    @s3_helper.download_file(file[:key], file[:filename], failure_message)
+    download_object(file[:key], file[:filename], failure_message)
   end
 
   def decompress_inventory_file(file)
@@ -214,7 +217,17 @@ class S3Inventory
     @s3_helper.s3_client
   end
 
+  def object_storage
+    @object_storage ||= FileStore::ObjectStorage::S3.new(@s3_helper)
+  end
+
   private
+
+  def download_object(key, filename, failure_message)
+    object_storage.download(key, filename, failure_message:)
+  rescue => error
+    raise failure_message, cause: FileStore::ObjectStorage::S3.legacy_error(error)
+  end
 
   def cleanup!
     return if @preloaded_inventory_file
@@ -253,7 +266,7 @@ class S3Inventory
         failure_message = "Failed to download symlink file to tmp directory."
         filename = File.join(tmp_directory, File.basename(symlink_file.key))
 
-        @s3_helper.download_file(symlink_file.key, filename, failure_message)
+        download_object(symlink_file.key, filename, failure_message)
 
         return [] if !File.exist?(filename)
 
@@ -296,11 +309,15 @@ class S3Inventory
   def unsorted_files
     objects = []
     hive_path = File.join(bucket_folder_path, "hive")
-    @s3_helper.list(hive_path).each { |obj| objects << obj if obj.key.match?(/symlink\.txt\z/i) }
+    object_storage
+      .list(hive_path)
+      .each { |obj| objects << obj if obj.key.match?(/symlink\.txt\z/i) }
 
     objects
-  rescue Aws::Errors::ServiceError => e
-    log("Failed to list inventory from S3", e)
+  rescue FileStore::ObjectStorage::Error => error
+    original = FileStore::ObjectStorage::S3.legacy_error(error)
+    raise original, cause: original.cause unless original.is_a?(Aws::Errors::ServiceError)
+    log("Failed to list inventory from S3", original)
     []
   end
 

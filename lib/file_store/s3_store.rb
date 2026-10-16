@@ -5,19 +5,26 @@ require "mini_mime"
 require "file_store/base_store"
 require "s3_helper"
 require "file_helper"
+require "file_store/object_storage/s3"
 
 module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX = "tombstone/"
 
+    # Legacy callers may depend on SDK response objects. Core uses object_storage.
     delegate :abort_multipart,
              :presign_multipart_part,
              :list_multipart_parts,
              :complete_multipart,
              to: :s3_helper
 
-    def initialize(s3_helper = nil)
+    def initialize(s3_helper = nil, object_storage: nil)
       @s3_helper = s3_helper
+      @object_storage = object_storage
+    end
+
+    def object_storage
+      @object_storage ||= ObjectStorage::S3.new(s3_helper)
     end
 
     def s3_helper
@@ -100,7 +107,7 @@ module FileStore
         cache_control: cache_control,
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
-      }.merge(default_s3_options(secure: opts[:private]))
+      }
 
       # Only serve inline for allowlisted safe file types (non-SVG images and PDFs)
       # to prevent XSS via HTML/XML/SVG uploads. All other files force download.
@@ -112,31 +119,51 @@ module FileStore
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
         original_path = opts[:existing_external_upload_key]
-        options[:apply_metadata_to_destination] = true
-        path, etag = s3_helper.copy(original_path, path, options: options)
+        result =
+          object_storage.copy(
+            original_path,
+            path,
+            visibility: opts[:private] ? :private : :public,
+            headers: options,
+            replace_metadata: true,
+          )
         delete_file(original_path)
       else
-        path, etag = s3_helper.upload(file, path, options)
+        result =
+          object_storage.upload(
+            file,
+            path,
+            visibility: opts[:private] ? :private : :public,
+            headers: options,
+          )
       end
 
       # return the upload url and etag
-      [File.join(absolute_base_url, path), etag]
+      [File.join(absolute_base_url, result.key), result.etag]
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def delete_file(path)
       # delete the object outright without moving to tombstone,
       # not recommended for most use cases
-      s3_helper.delete_object(path)
+      object_storage.delete(path, exact: true)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def remove_file(url, path)
       return unless has_been_uploaded?(url)
-      # copy the removed file to tombstone
-      s3_helper.remove(path, true)
+      object_storage.remove(path)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def copy_file(source:, destination:, secure:)
-      s3_helper.copy(source, destination, options: default_s3_options(secure:))
+      result = object_storage.copy(source, destination, visibility: secure ? :private : :public)
+      [result.key, result.etag]
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def has_been_uploaded?(url)
@@ -261,14 +288,20 @@ module FileStore
       expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
       metadata: {}
     )
+      request = prepare_direct_upload(file_name, expires_in:, metadata:)
+      [request.url, request.headers]
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
+    end
+
+    def prepare_direct_upload(
+      file_name,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      metadata: {}
+    )
       key = temporary_upload_path(file_name)
 
-      s3_helper.presigned_request(
-        key,
-        method: :put_object,
-        expires_in: expires_in,
-        opts: { metadata: metadata }.merge(default_s3_options(secure: true)),
-      )
+      object_storage.upload_request(key, visibility: :private, expires_in: expires_in, metadata:)
     end
 
     def temporary_upload_path(file_name)
@@ -284,7 +317,10 @@ module FileStore
     def cache_avatar(avatar, user_id)
       source = avatar.url.sub(absolute_base_url + "/", "")
       destination = avatar_template(avatar, user_id).sub(absolute_base_url + "/", "")
-      s3_helper.copy(source, destination)
+      result = object_storage.copy(source, destination, visibility: :bucket_default)
+      [result.key, result.etag]
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def avatar_template(avatar, user_id)
@@ -296,6 +332,18 @@ module FileStore
         raise Discourse::SiteSettingMissing.new("s3_upload_bucket")
       end
       SiteSetting.Upload.s3_upload_bucket.downcase
+    end
+
+    def stat_file(key)
+      object_storage.stat(key)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
+    end
+
+    def remove_temporary_file(key)
+      object_storage.remove(key, tombstone: false)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def list_missing_uploads(skip_optimized: false)
@@ -315,6 +363,8 @@ module FileStore
         list_missing(Upload.by_users, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized
       end
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def update_upload_access_control(upload, remove_existing_acl: false)
@@ -347,7 +397,15 @@ module FileStore
     end
 
     def download_file(upload, destination_path)
-      s3_helper.download_file(get_upload_key(upload), destination_path)
+      key = get_upload_key(upload)
+      begin
+        object_storage.download(key, destination_path)
+      rescue ObjectStorage::Error => error
+        # Preserve the legacy store API while the adapter exposes typed failures.
+        raise error.message
+      rescue => error
+        raise "Failed to download #{key} because #{error.message.presence || error.class}"
+      end
     end
 
     def copy_from(source_path)
@@ -376,8 +434,14 @@ module FileStore
     end
 
     def create_multipart(file_name, content_type, metadata: {})
+      prepare_multipart_upload(file_name, content_type, metadata:)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
+    end
+
+    def prepare_multipart_upload(file_name, content_type, metadata: {})
       key = temporary_upload_path(file_name)
-      s3_helper.create_multipart(key, content_type, metadata:, **default_s3_options(secure: true))
+      object_storage.create_multipart(key, content_type, metadata:, visibility: :private)
     end
 
     # The following are canned ACLs defined by AWS S3 and not some generic value which we decide to use.
@@ -386,8 +450,7 @@ module FileStore
     CANNED_ACL_PRIVATE = "private"
 
     def self.acl_option_value(secure:)
-      return if !SiteSetting.s3_use_acls
-      secure ? CANNED_ACL_PRIVATE : CANNED_ACL_PUBLIC_READ
+      ObjectStorage::S3.acl_for(secure ? :private : :public)
     end
 
     def acl_option_value(secure:)
@@ -395,37 +458,11 @@ module FileStore
     end
 
     def self.visibility_tagging_option_value(secure:, encode_form: true)
-      return if !SiteSetting.s3_enable_access_control_tags
-
-      key = SiteSetting.s3_access_control_tag_key
-      return if key.blank?
-
-      option_value = {
-        key =>
-          (
-            if secure
-              SiteSetting.s3_access_control_tag_private_value
-            else
-              SiteSetting.s3_access_control_tag_public_value
-            end
-          ),
-      }
-
-      encode_form ? URI.encode_www_form(option_value) : option_value
+      ObjectStorage::S3.tags_for(secure ? :private : :public, encode_form:)
     end
 
     def self.default_s3_options(secure:)
-      options = {}
-
-      if acl_value = acl_option_value(secure:)
-        options[:acl] = acl_value
-      end
-
-      if tagging_option_value = visibility_tagging_option_value(secure:)
-        options[:tagging] = tagging_option_value
-      end
-
-      options
+      ObjectStorage::S3.visibility_options(secure ? :private : :public)
     end
 
     def default_s3_options(secure:)
@@ -477,19 +514,18 @@ module FileStore
       filename: false,
       expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds
     )
-      opts = { expires_in: expires_in }
+      content_disposition = nil
 
       if filename
         disposition =
           (force_download || !FileHelper.is_inline_safe?(filename)) ? "attachment" : "inline"
-        opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition:,
-          filename:,
-        )
+        content_disposition =
+          ActionDispatch::Http::ContentDisposition.format(disposition:, filename:)
       end
 
-      obj = object_from_path(url)
-      obj.presigned_url(:get, opts)
+      object_storage.download_url(url, expires_in:, content_disposition:)
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def get_upload_key(upload)
@@ -501,38 +537,20 @@ module FileStore
     end
 
     def update_access_control(key, secure, remove_existing_acl: false)
-      acl = self.class.acl_option_value(secure:)
-
-      if acl.present? || remove_existing_acl
-        begin
-          object_from_path(key).acl.put(acl:)
-        rescue Aws::S3::Errors::NotImplemented => err
-          Discourse.warn_exception(
-            err,
-            message: "The file store object storage provider does not support setting ACLs",
-          )
-        end
-      end
-
-      if tagging_option_value =
-           self.class.visibility_tagging_option_value(secure:, encode_form: false)
-        s3_helper.upsert_tag(
-          key,
-          tag_key: tagging_option_value.keys.first,
-          tag_value: tagging_option_value.values.first,
-        )
-      end
-    rescue Aws::S3::Errors::NoSuchKey
-      Rails.logger.warn(
-        "Could not update access control on upload with key: '#{key}'. Upload is missing.",
+      object_storage.set_visibility(
+        key,
+        visibility: secure ? :private : :public,
+        reset_existing_permissions: remove_existing_acl,
       )
+    rescue ObjectStorage::Error => error
+      ObjectStorage::S3.raise_legacy(error)
     end
 
     def list_missing(model, prefix)
       connection = ActiveRecord::Base.connection.raw_connection
       connection.exec("CREATE TEMP TABLE verified_ids(val integer PRIMARY KEY)")
       marker = nil
-      files = s3_helper.list(prefix, marker)
+      files = object_storage.list(prefix, marker:)
 
       while files.count > 0
         verified_ids = []
@@ -546,7 +564,7 @@ module FileStore
         verified_id_clause =
           verified_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
         connection.exec("INSERT INTO verified_ids VALUES #{verified_id_clause}")
-        files = s3_helper.list(prefix, marker)
+        files = object_storage.list(prefix, marker:)
       end
 
       missing_uploads =
