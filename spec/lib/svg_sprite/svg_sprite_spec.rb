@@ -104,6 +104,12 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
   end
 
+  it "renders legacy icon names without offering them in the full picker list" do
+    expect(SvgSprite.search("user-large")).to match(/user-large/)
+    expect(SvgSprite.picker_icon_ids(nil, false)).to include("user")
+    expect(SvgSprite.picker_icon_ids(nil, false)).not_to include("user-large")
+  end
+
   it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
     expect(SvgSprite.all_icons).to include("far fa-building")
