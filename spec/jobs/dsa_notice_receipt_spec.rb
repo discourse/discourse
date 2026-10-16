@@ -71,12 +71,12 @@ RSpec.describe Jobs::DsaNoticeReceipt do
     end
 
     %w[yes non-staff].each do |suppression|
-      it "uses normal job failure recovery when email suppression is #{suppression}" do
+      it "skips delivery when email suppression is #{suppression}" do
         SiteSetting.disable_emails = suppression
         post_id = topic.first_post.id
-        expect do
-          expect { job.execute(post_id:) }.to raise_error(described_class::DeliverySuppressed)
-        end.not_to change { [ActionMailer::Base.deliveries.size, described_class.jobs.size] }
+        expect do job.execute(post_id:) end.not_to change {
+          [ActionMailer::Base.deliveries.size, described_class.jobs.size]
+        }
         expect(Dsa::Notice.from_post(topic.first_post.reload)).not_to be_receipt_sent
 
         SiteSetting.disable_emails = "no"
