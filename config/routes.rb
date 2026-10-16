@@ -684,6 +684,8 @@ Discourse::Application.routes.draw do
     get "password-reset" => "static#show", :id => "password_reset"
     get "privacy" => "static#show", :id => "privacy", :as => "privacy"
     get "tos" => "static#show", :id => "tos", :as => "tos"
+    get "dsa/illegal-content" => "dsa_notices#index"
+    post "dsa/illegal-content" => "dsa_notices#create"
     get "faq" => "static#show", :id => "faq"
     %w[guidelines rules conduct].each do |guidelines_alias|
       get guidelines_alias => "static#show", :id => "guidelines", :as => guidelines_alias

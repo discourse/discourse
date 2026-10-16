@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+class DsaNoticesController < ApplicationController
+  skip_before_action :check_xhr, only: :index
+  skip_before_action :redirect_to_login_if_required, :redirect_to_profile_if_required
+  before_action :ensure_enabled
+
+  def index
+    respond_to { |format| format.html { render "default/empty" } }
+  end
+
+  def create
+    Dsa::SubmitNotice.call(service_params.merge(options: { ip_address: request.remote_ip })) do
+      on_success do |notice:|
+        render json: {
+                 reference: notice.reference,
+                 contact: notice.email.present?,
+               },
+               status: :created
+      end
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages, status: 422)
+      end
+      on_failure { render_json_error(I18n.t("js.generic_error")) }
+    end
+  end
+
+  private
+
+  def ensure_enabled
+    raise Discourse::NotFound unless SiteSetting.dsa_reporting_enabled
+  end
+end

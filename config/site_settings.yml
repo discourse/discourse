@@ -4896,7 +4896,12 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    area: "experimental"
   dsa_reporting_enabled:
+    client: true
     default: false
     hidden: true
     area: "experimental"
