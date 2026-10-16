@@ -8,8 +8,9 @@ import {
 import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
 import { splitListItem } from "prosemirror-schema-list";
+import { TextSelection } from "prosemirror-state";
 import { atBlockStart, inNode } from "../lib/plugin-utils.js";
-import { insertTableBreak } from "../lib/table/commands.js";
+import { cellAround } from "../lib/table/grid.js";
 
 const BACKSPACE_UNSET_NODES = ["heading", "code_block"];
 
@@ -85,12 +86,7 @@ export function buildKeymap(
 
   const schema = params.schema;
 
-  // Cells are isolating, so the default Enter chain cannot split them.
-  keys.Enter = keys.Enter
-    ? chainCommands(insertTableBreak, keys.Enter)
-    : insertTableBreak;
-
-  chainWithExisting("Shift-Enter", exitCode, (state, dispatch) => {
+  const insertHardBreak = (state, dispatch) => {
     if (dispatch) {
       dispatch(
         state.tr
@@ -99,7 +95,9 @@ export function buildKeymap(
       );
     }
     return true;
-  });
+  };
+
+  chainWithExisting("Shift-Enter", exitCode, insertHardBreak);
 
   const doubleSpaceHardBreak = (state, dispatch) => {
     const { $from } = state.selection;
@@ -121,6 +119,14 @@ export function buildKeymap(
     }
     return false;
   };
+
+  // Cells are isolating, so the default Enter chain cannot split them.
+  const cellBreak = (state, dispatch) =>
+    state.selection instanceof TextSelection &&
+    !!cellAround(state.selection.$from) &&
+    ((state.selection.empty && doubleSpaceHardBreak(state, dispatch)) ||
+      insertHardBreak(state, dispatch));
+  keys.Enter = keys.Enter ? chainCommands(cellBreak, keys.Enter) : cellBreak;
 
   chainWithExisting(
     "Enter",

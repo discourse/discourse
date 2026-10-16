@@ -10,36 +10,6 @@ import {
   tableGrid,
 } from "./grid.js";
 
-/**
- * Enter inside a cell: cells hold inline content only, so a line break stands
- * in for the block split.
- */
-export function insertTableBreak(state, dispatch) {
-  const { selection } = state;
-  if (!(selection instanceof TextSelection) || !cellAround(selection.$from)) {
-    return false;
-  }
-
-  if (dispatch) {
-    const tr = state.tr;
-    const hardBreak = state.schema.nodes.hard_break.create();
-    const { $from } = selection;
-
-    if (
-      selection.empty &&
-      $from.nodeBefore?.isText &&
-      $from.nodeBefore.text.endsWith("  ")
-    ) {
-      // Markdown line-break syntax, as the paragraph Enter handler treats it.
-      tr.replaceRangeWith($from.pos - 2, $from.pos, hardBreak);
-    } else {
-      tr.replaceSelectionWith(hardBreak);
-    }
-    dispatch(tr.scrollIntoView());
-  }
-  return true;
-}
-
 export function runCommand(view, command) {
   if (!view.editable) {
     return false;
