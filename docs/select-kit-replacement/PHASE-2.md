@@ -32,8 +32,9 @@ facade and codemod plan this phase used to carry is superseded.
   opt-out moves to wave 1 with the discourse-ai port; per-use telemetry is dropped, since
   reporting once per select per plugin already measures use. Row `classNames` is not bridged:
   callers move to the `select-item-class` transformer when they are ported.
-- ☐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported
-  APIs they move to.
+- ◐ **Patch replacement matrix** for the known `modifyClass` customizations, with the supported
+  APIs they move to. The verified audit is done (see `ROLLOUT.md`, blast radius). Its per-repo
+  list names customer repos, so it is kept outside the repository. The matrix itself is next.
 - ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`
   helper, `form-kit-helper.js`, and callers that pass `.select-kit` roots. Specs pin the flag.
 - ☐ **Prep that also works with select-kit:** explicit `onChange` at the two-way sites, stable hooks

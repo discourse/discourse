@@ -46,13 +46,24 @@ Paths are relative to the repository root.
   page object. Some page objects pass `.select-kit` roots into it
   (`spec/system/page_objects/pages/tag.rb:40`, `spec/system/page_objects/pages/group.rb:32`), and
   `frontend/discourse/tests/helpers/form-kit-helper.js:52` builds a `.select-kit` selector.
-- **`api.modifyClass` on select-kit, across all repos: 29 calls in 16 repos.** One is bundled
-  (discourse-assign patches `topic-notifications-button` at
-  `plugins/discourse-assign/assets/javascripts/discourse/initializers/extend-for-assigns.js:330`;
-  that component is not a select-kit subclass). Ten are customer repos and five third-party. They
-  apply today because the resolver's suffix lookup
-  (`frontend/discourse/app/resolver.js:115-128`) maps names like `component:category-drop` to the
-  select-kit module.
+- **`api.modifyClass` on select-kit, across all repos: 30 calls in 17 repos**, from a verified
+  audit on 2026-10-16. Each call was checked against what core renders today.
+  - 15 calls, in 9 repos, change core's selects today.
+  - 2 change only the patching plugin's own selects.
+  - 1 only does harm: it skips a lifecycle `super`.
+  - 11 are already dead: they override removed members, sit in files whose imports no longer
+    resolve, or patch classes core no longer renders.
+  - discourse-assign's patch on `topic-notifications-button`
+    (`plugins/discourse-assign/assets/javascripts/discourse/initializers/extend-for-assigns.js:330`)
+    is out of scope. That component is a Glimmer wrapper around the DMenu-based
+    `NotificationsTracking`.
+
+  Name-based patches reach select-kit through the resolver's suffix lookup
+  (`frontend/discourse/app/resolver.js:115-128`), which maps names like `component:category-drop`
+  to the select-kit module. A patch on `dropdown-select-box` reaches only direct
+  `DropdownSelectBox` invocations, not subclasses that declare their own options. An earlier count
+  gave 29 calls in 16 repos; its list was not kept, so the difference is unattributed. The per-repo
+  list names customer repos, so it is kept outside the repository.
 - **`api.modifySelectKit`, across all repos:** discourse-ai (bundled) and one customer plugin,
   which reads `component.content`, `elementId`, `value` and `selectKit.options`, beyond what the
   bridge facade offers today.
@@ -136,10 +147,17 @@ Paths are relative to the repository root.
   migrated bundled-plugin call sites keep importing legacy select-kit for their `{{else}}` branch
   until cleanup, so it would fire for converted code too. Third-party code that renders select-kit
   doesn't break, so this is a nudge, not a guard.
-- **Supported replacements for today's patches.** A patch-by-patch matrix maps each known
-  customization (caret and icon, `showFullTitle`, content filtering, row titles, selection labels,
-  opening behaviour, notifications `reasonText`) to a supported API. A family joins only once its
-  ports are done.
+- **Supported replacements for today's patches.** A patch-by-patch matrix maps each live
+  customization to a supported API:
+  - caret icons;
+  - hiding the title text;
+  - filtering the category list;
+  - shortcut rows with their own change routing;
+  - the none-row label;
+  - row tooltips from item descriptions;
+  - disabling choosers from an outside flow.
+
+  A family joins only once its ports are done.
 - **CSS.** DSelect uses the `.d-select` BEM root
   (`app/assets/stylesheets/common/components/d-select.scss`), which replaced the temporary
   `.d-combobox` in wave 0. Each family migrates the core and plugin SCSS that targets it. Layout
@@ -161,7 +179,7 @@ Based on the WAI-ARIA APG menu button and select-only combobox patterns:
 
 Applied to the ambiguous consumers:
 
-- **DSelect:** the notifications-button family, period chooser, notifications filter, group
+- **DSelect:** the period chooser, notifications filter, group
   dropdown, the composer's translation selector
   (`frontend/discourse/app/components/composer-container.gjs:371`), and the sidebar's edit filter
   (`frontend/discourse/app/components/sidebar/edit-navigation-menu/modal.gjs:90`).
@@ -171,6 +189,10 @@ Applied to the ambiguous consumers:
   category and tag admin dropdowns, and bulk-select bookmarks. These still have to run
   `modifySelectKit` callbacks registered on their identifiers, since DMenu has no bridge.
 - **Per registration:** `registerTopicFooterDropdown` gets an opt-in key.
+- **No conversion needed:** the select-kit notifications-button family (`NotificationsButton` and
+  its topic, group, category and tag subclasses). Core no longer renders any of them: topic
+  notifications use the DMenu-based `NotificationsTracking`
+  (`frontend/discourse/app/components/notifications-tracking.gjs`).
 
 ## Waves
 
@@ -199,9 +221,9 @@ customization ports are done.
   color, font and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its
   `FutureDateInputSelector`, and `d-access-control`.
-- **Wave 3, menu-shaped value selects and action menus.** The notifications buttons, group
-  dropdown and value-type `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`.
-  Customer ports for the notifications buttons and discourse-assign's `reasonText` patch land here.
+- **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type
+  `DropdownSelectBox` uses become `DSelect`; action menus become `DMenu`. Customer ports for the
+  live patches on direct `DropdownSelectBox` invocations (caret icons and hidden titles) land here.
 - **Wave 4, generic value selects and native selects.** `ComboBox` and `MultiSelect` with static
   content, FormKit's `select`, `DNativeSelect` (value types, empty values, disabled state, labels and
   errors, form participation, and query parameters in
